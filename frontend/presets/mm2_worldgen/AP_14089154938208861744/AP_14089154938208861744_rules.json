@@ -132,7 +132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Atomic Fire - Received",
@@ -146,7 +146,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Item 1 - Received",
@@ -160,7 +160,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Heat Man Stage - 1-Up",
@@ -174,7 +174,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -194,7 +194,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Air Shooter - Received",
@@ -208,7 +208,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Item 2 - Received",
@@ -222,7 +222,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -242,7 +242,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Leaf Shield - Received",
@@ -256,7 +256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -276,7 +276,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bubble Lead - Received",
@@ -290,7 +290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -310,7 +310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quick Boomerang - Received",
@@ -324,7 +324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quick Man Stage - 1-Up 1",
@@ -345,7 +345,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quick Man Stage - E-Tank",
@@ -359,7 +359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quick Man Stage - 1-Up 2",
@@ -373,7 +373,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Quick Man Stage - 1-Up 3",
@@ -387,7 +387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -407,7 +407,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Time Stopper - Received",
@@ -421,7 +421,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Item 3 - Received",
@@ -435,7 +435,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flash Man Stage - 1-Up",
@@ -456,7 +456,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flash Man Stage - E-Tank",
@@ -470,7 +470,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -490,7 +490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Blade - Received",
@@ -504,7 +504,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Man Stage - E-Tank 1",
@@ -518,7 +518,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Man Stage - 1-Up",
@@ -538,7 +538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Man Stage - E-Tank 2",
@@ -558,7 +558,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -578,7 +578,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crash Bomber - Received",
@@ -592,7 +592,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crash Man Stage - E-Tank",
@@ -606,7 +606,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crash Man Stage - 1-Up",
@@ -627,7 +627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -658,7 +658,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 1 - Completed",
@@ -687,7 +687,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -718,7 +718,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 2 - Completed",
@@ -747,7 +747,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 2 - 1-Up 1",
@@ -761,7 +761,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 2 - 1-Up 2",
@@ -778,7 +778,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 2 - E-Tank 2",
@@ -795,7 +795,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -826,7 +826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 3 - Completed",
@@ -858,7 +858,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -892,7 +892,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 4 - Completed",
@@ -924,7 +924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 4 - E-Tank 1",
@@ -938,7 +938,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -961,14 +961,61 @@
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_enough_rbms",
-                "inferred": true,
-                "description": "Requires ability to defeat enough rbms",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_enough_rbms",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "wily_5_requirement"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "E-Tank",
@@ -976,20 +1023,67 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wily Stage 5 - Completed",
             "id": null,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_enough_rbms",
-                "inferred": true,
-                "description": "Requires ability to defeat enough rbms",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_enough_rbms",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "wily_5_requirement"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Wily Stage 5 - Completed",
@@ -2157,8 +2251,7 @@
           ]
         },
         "param_mappings": {
-          "required": "wily_5_requirement",
-          "boss_requirements": "wily_5_weapons"
+          "required": "wily_5_requirement"
         }
       }
     }

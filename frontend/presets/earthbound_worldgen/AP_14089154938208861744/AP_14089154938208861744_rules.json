@@ -216,7 +216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sanctuary Goal",
@@ -292,7 +292,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Tracy's Room Present",
@@ -306,7 +306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Hilltop Present",
@@ -320,7 +320,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Meteor Item",
@@ -334,7 +334,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Buzz Buzz",
@@ -348,7 +348,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Mani Mani Statue",
@@ -362,7 +362,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -427,7 +427,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Library Bookshelf",
@@ -441,7 +441,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Burger Shop Trashcan",
@@ -455,7 +455,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Treehouse Guy",
@@ -469,7 +469,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - South Road Present",
@@ -486,7 +486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Hotel Trashcan",
@@ -500,7 +500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Arcade Trashcan",
@@ -514,7 +514,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Mayor Pirkle",
@@ -528,7 +528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Onett - Traveling Entertainer",
@@ -545,7 +545,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -571,7 +571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Giant Step - Floor 2 Cave Present",
@@ -585,7 +585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Giant Step - Floor 3 Present",
@@ -599,7 +599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Giant Step Sanctuary",
@@ -695,7 +695,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Antique Shop",
@@ -709,7 +709,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Paula's Room Present",
@@ -723,7 +723,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Apple Kid Trashcan",
@@ -737,7 +737,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - South of Town Present",
@@ -751,7 +751,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Orange Kid Donation",
@@ -765,7 +765,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Apple Kid Invention",
@@ -779,7 +779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Apple Kid's Mouse",
@@ -793,7 +793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Paula's Mother",
@@ -810,7 +810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Twoson - Insignificant Location",
@@ -827,7 +827,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -856,7 +856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -897,7 +897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Peaceful Rest Valley - Hill Nook Present",
@@ -911,7 +911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Peaceful Rest Valley - South of Bridge Present",
@@ -925,7 +925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Peaceful Rest Valley - Dead End Present",
@@ -939,7 +939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Peaceful Rest Valley - River Overlook Present",
@@ -953,7 +953,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Peaceful Rest Valley - North Side Present",
@@ -967,7 +967,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1016,7 +1016,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Happy-Happy Village - Prisoner Item",
@@ -1030,7 +1030,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Happy-Happy Village - Prisoner",
@@ -1047,7 +1047,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1067,7 +1067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Happy-Happy Village - Left HQ Present",
@@ -1081,7 +1081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Happy-Happy Village - Defeat Carpainter",
@@ -1098,7 +1098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Carpainter Defeated",
@@ -1136,7 +1136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lilliput Steps - East Cliff Present",
@@ -1150,7 +1150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lilliput Steps - North Stream Present",
@@ -1164,7 +1164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lilliput Steps Sanctuary",
@@ -1260,7 +1260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed - Downtown Trashcan",
@@ -1274,7 +1274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed - East Side Trashcan",
@@ -1288,7 +1288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed - Northeast Shack Trashcan",
@@ -1302,7 +1302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed - Hospital Drawer",
@@ -1316,7 +1316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed - Zombie Prisoner",
@@ -1333,7 +1333,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1361,7 +1361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Threed Underground - Right Coffin",
@@ -1375,7 +1375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1398,7 +1398,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1443,7 +1443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grapefruit Falls - North Present",
@@ -1457,7 +1457,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grapefruit Falls - Saturn Cave Present",
@@ -1471,7 +1471,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1502,7 +1502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch's Factory - Pit Room Trashcan #1",
@@ -1516,7 +1516,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch's Factory - Pit Room Trashcan #2",
@@ -1530,7 +1530,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch's Factory - Balcony Room Trashcan #1",
@@ -1544,7 +1544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch's Factory - Balcony Room Trashcan #2",
@@ -1558,7 +1558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch's Factory - Balcony Room Trashcan #3",
@@ -1572,7 +1572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Belch Defeated",
@@ -1632,7 +1632,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Trashcan #1",
@@ -1646,7 +1646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Trashcan #2",
@@ -1660,7 +1660,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Trashcan #3",
@@ -1674,7 +1674,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Post Belch Gift #1",
@@ -1691,7 +1691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Post Belch Gift #2",
@@ -1708,7 +1708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Saturn Valley - Post Belch Gift #3",
@@ -1725,7 +1725,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1763,7 +1763,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1783,7 +1783,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Milky Well Sanctuary",
@@ -1863,7 +1863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - South Side Present",
@@ -1877,7 +1877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Surrounding Rocks Present",
@@ -1891,7 +1891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Black Sesame Present",
@@ -1905,7 +1905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Oasis Present",
@@ -1919,7 +1919,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Northeast Corner Present",
@@ -1933,7 +1933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - North Central Present",
@@ -1947,7 +1947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Shining Spot",
@@ -1961,7 +1961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - East Peninsula Present",
@@ -1975,7 +1975,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dusty Dunes - Mine Reward",
@@ -1992,7 +1992,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2012,7 +2012,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - Mouse Crossroad Present #2",
@@ -2026,7 +2026,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - B1F Lonely Mole Present",
@@ -2040,7 +2040,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - South Hall Present",
@@ -2054,7 +2054,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - South Corner Present",
@@ -2068,7 +2068,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - South Mole Present #1",
@@ -2082,7 +2082,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - South Mole Present #2",
@@ -2096,7 +2096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - North Crossroad Detour Present",
@@ -2110,7 +2110,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - North Mole Present",
@@ -2124,7 +2124,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - West Mole Present",
@@ -2138,7 +2138,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - B1F Isolated Present",
@@ -2152,7 +2152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - West Crossroad Detour Present",
@@ -2166,7 +2166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - B1F Junction Present",
@@ -2180,7 +2180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gold Mine - B1F Junction Mole Present",
@@ -2194,7 +2194,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2214,7 +2214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - 1F Left Chest",
@@ -2228,7 +2228,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - West 2F Left Chest",
@@ -2256,7 +2256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - West 2F Right Chest #1",
@@ -2270,7 +2270,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - West 2F Right Chest #2",
@@ -2284,7 +2284,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East 2F Left Chest",
@@ -2312,7 +2312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East 2F Right Chest",
@@ -2326,7 +2326,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East West 3F Right Chest #1",
@@ -2354,7 +2354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East West 3F Right Chest #2",
@@ -2382,7 +2382,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - West End Chest",
@@ -2396,7 +2396,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - West End Trashcan",
@@ -2410,7 +2410,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East End Chest",
@@ -2438,7 +2438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - East End Trashcan",
@@ -2466,7 +2466,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - Bow Monkey Gift",
@@ -2480,7 +2480,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - Talah Rama Chest #1",
@@ -2519,7 +2519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - Talah Rama Chest #2",
@@ -2558,7 +2558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - Talah Rama Gift",
@@ -2597,7 +2597,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monkey Caves - Monkey Power",
@@ -2636,7 +2636,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2721,7 +2721,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fourside - Bakery 2F Gift",
@@ -2738,7 +2738,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2766,7 +2766,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Moonside - Two Trees Present",
@@ -2780,7 +2780,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Moonside - East Island Present",
@@ -2794,7 +2794,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Moonside - Businessman Present",
@@ -2808,7 +2808,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Moonside - West Island Present",
@@ -2822,7 +2822,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Moonside - Hospital Present",
@@ -2836,7 +2836,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2859,7 +2859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2879,7 +2879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magnet Hill - First Room Free Door Trashcan",
@@ -2893,7 +2893,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magnet Hill - First Room Barrel Door Trashcan",
@@ -2907,7 +2907,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magnet Hill - Second Room Dead End Trashcan",
@@ -2921,7 +2921,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magnet Hill - Final Room Door Trashcan",
@@ -2935,7 +2935,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fourside - Magnet Hill Chest",
@@ -2949,7 +2949,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magnet Hill Sanctuary",
@@ -2984,7 +2984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monotoli Building - Two Table Present",
@@ -2998,7 +2998,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monotoli Building - Electra Gift",
@@ -3012,7 +3012,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monotoli Building - Monotoli Gift",
@@ -3026,7 +3026,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Monotoli Building - Monotoli Character",
@@ -3040,7 +3040,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3088,7 +3088,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3108,7 +3108,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #2",
@@ -3122,7 +3122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #3",
@@ -3136,7 +3136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #4",
@@ -3150,7 +3150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #5",
@@ -3164,7 +3164,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #6",
@@ -3178,7 +3178,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Many Present Room Present #7",
@@ -3192,7 +3192,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Upper Right Locker",
@@ -3209,7 +3209,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Upper Left Locker",
@@ -3226,7 +3226,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Bottom Right Locker",
@@ -3243,7 +3243,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Bottom Left Locker",
@@ -3260,7 +3260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Maxwell Item",
@@ -3274,7 +3274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Snow Wood - Bedroom",
@@ -3288,7 +3288,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3336,7 +3336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brick Road Maze - Guarded Present",
@@ -3350,7 +3350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brick Road Maze - Out of the Way Present",
@@ -3364,7 +3364,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brick Road Maze - Alcove Present",
@@ -3378,7 +3378,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Brick Road Maze - Near Exit Present",
@@ -3392,7 +3392,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3427,7 +3427,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rainy Circle - East Cliff Present",
@@ -3441,7 +3441,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rainy Circle - Near Ropes Present",
@@ -3455,7 +3455,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rainy Circle Sanctuary",
@@ -3515,7 +3515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Andonuts Lab - Mouse",
@@ -3529,7 +3529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3549,7 +3549,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Dead End Present",
@@ -3563,7 +3563,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Near End of the Maze Present",
@@ -3577,7 +3577,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Bridge Room East Balcony Present",
@@ -3591,7 +3591,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Bridge Room Lower Present",
@@ -3605,7 +3605,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Flashing Room Right Path Present",
@@ -3619,7 +3619,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Flashing Room Center Present",
@@ -3633,7 +3633,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Flashing Room Upper Present",
@@ -3647,7 +3647,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Kidnapped Mr. Saturn",
@@ -3661,7 +3661,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stonehenge - Tony Item",
@@ -3675,7 +3675,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3720,7 +3720,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3743,7 +3743,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3774,7 +3774,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Throne Room Chest #2",
@@ -3788,7 +3788,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Throne Room Chest #3",
@@ -3802,7 +3802,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Trial of Mu",
@@ -3819,7 +3819,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Restaurant Chest #1",
@@ -3833,7 +3833,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Restaurant Chest #2",
@@ -3847,7 +3847,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Do Do Guy's House Chest",
@@ -3861,7 +3861,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Upper House Chest",
@@ -3875,7 +3875,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dalaam - Throne Character",
@@ -3889,7 +3889,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3909,7 +3909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pink Cloud - Left Hole Present",
@@ -3923,7 +3923,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pink Cloud - Ground Floor Present",
@@ -3937,7 +3937,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pink Cloud Sanctuary",
@@ -3997,7 +3997,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4025,7 +4025,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Northwest Door Sarcophagus",
@@ -4039,7 +4039,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Hallway Sarcophagus #1",
@@ -4053,7 +4053,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Hallway Sarcophagus #2",
@@ -4067,7 +4067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Switch Room Sarcophagus",
@@ -4081,7 +4081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Pedestal Item",
@@ -4095,7 +4095,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid - Way Out Sarcophagus",
@@ -4109,7 +4109,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4140,7 +4140,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scaraba - Key Holder",
@@ -4154,7 +4154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4185,7 +4185,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 1F Long Walk Present",
@@ -4199,7 +4199,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 1F Disappointing Present",
@@ -4213,7 +4213,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 1F Opinion Present",
@@ -4227,7 +4227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 1F No Sign Present",
@@ -4241,7 +4241,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 2F Unnecessary Billboard Present",
@@ -4255,7 +4255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 2F Dungeon Exploration Present",
@@ -4269,7 +4269,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 2F South Ledge Present",
@@ -4283,7 +4283,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 2F North Alcove Present",
@@ -4297,7 +4297,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 3F Present",
@@ -4311,7 +4311,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 2F Hole Present",
@@ -4325,7 +4325,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man - 1F Exit Ledge Present",
@@ -4339,7 +4339,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon Man Submarine",
@@ -4385,7 +4385,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Crest of Darkness Present",
@@ -4399,7 +4399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4434,7 +4434,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Yellow Bird Present",
@@ -4448,7 +4448,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Swamp Present",
@@ -4462,7 +4462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Corner Present",
@@ -4476,7 +4476,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Alcove Present",
@@ -4490,7 +4490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - North Alcove Truffle",
@@ -4507,7 +4507,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Near Land Truffle",
@@ -4524,7 +4524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Present Truffle",
@@ -4541,7 +4541,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Village Truffle",
@@ -4558,7 +4558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Entrance Truffle",
@@ -4575,7 +4575,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Darkness - Barf Character",
@@ -4589,7 +4589,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4633,7 +4633,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tenda Village - Tenda Tea",
@@ -4650,7 +4650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tenda Village - Tenda Gift",
@@ -4667,7 +4667,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tenda Village - Tenda Gift #2",
@@ -4684,7 +4684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4712,7 +4712,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - 1F North Path Present",
@@ -4726,7 +4726,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - B1F Thankful Rock Corner Present",
@@ -4740,7 +4740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - B1F Thankful Rock Junction Present",
@@ -4754,7 +4754,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - 1F Above Belly Button Present",
@@ -4768,7 +4768,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - B1F Belly Button Present",
@@ -4782,7 +4782,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - 1F Near Exit Present",
@@ -4796,7 +4796,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - 1F Dead End Present",
@@ -4810,7 +4810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall - B1F West Alcove Present",
@@ -4824,7 +4824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lumine Hall Sanctuary",
@@ -4870,7 +4870,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Underworld - East Present",
@@ -4884,7 +4884,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Underworld - Northeast Present",
@@ -4898,7 +4898,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Underworld - Northeast of Tenda Tribe Present",
@@ -4912,7 +4912,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Underworld - Southwest of Tenda Tribe Present",
@@ -4926,7 +4926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Underworld - Evacuation Present",
@@ -4940,7 +4940,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4960,7 +4960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fire Spring - East Corner Present",
@@ -4974,7 +4974,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fire Spring - Volcano Present",
@@ -4988,7 +4988,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fire Spring - Lone Cave Present",
@@ -5002,7 +5002,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fire Spring - Upper Volcano Present",
@@ -5016,7 +5016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fire Spring Sanctuary",
@@ -5069,7 +5069,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magicant - Present Near Ness",
@@ -5083,7 +5083,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magicant - Lonely Present",
@@ -5097,7 +5097,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magicant - North Present",
@@ -5111,7 +5111,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magicant - Hills Present",
@@ -5125,7 +5125,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Magicant - Town Present",
@@ -5139,7 +5139,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5159,7 +5159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5190,7 +5190,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cave of the Present - Broken Phase Distorter",
@@ -5204,7 +5204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5235,7 +5235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },

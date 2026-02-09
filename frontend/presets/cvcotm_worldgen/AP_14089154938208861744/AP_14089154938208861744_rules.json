@@ -21,11 +21,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_1",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -47,7 +47,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Push crate treasure room",
@@ -64,7 +64,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Lower",
@@ -84,7 +84,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Fleamen brain room - Upper",
@@ -97,17 +97,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_1",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -117,7 +117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon dash room",
@@ -131,7 +131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Tackle block treasure room",
@@ -148,7 +148,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Lower",
@@ -162,7 +162,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Earth Demon bone pit - Upper",
@@ -172,11 +172,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_3",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -186,7 +186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Below right column save room",
@@ -200,7 +200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Right column fake wall",
@@ -214,7 +214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Right column Spirit room",
@@ -228,7 +228,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Lower",
@@ -242,7 +242,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Muddy Mudman platforms room - Upper",
@@ -252,11 +252,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_1",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -266,7 +266,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Slide space zone",
@@ -280,7 +280,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Pre-Cerberus lone Skeleton room",
@@ -294,7 +294,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Pre-Cerberus Hopper treasure room",
@@ -308,7 +308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Behind Cerberus",
@@ -322,7 +322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacomb: Mummies' fake wall",
@@ -342,7 +342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -376,7 +376,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Loopback drop",
@@ -390,7 +390,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -415,11 +415,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -435,21 +435,21 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_2",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -462,11 +462,11 @@
               "children": [
                 {
                   "rule": "broke_iron_maidens",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_push",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -528,7 +528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss Staircase: Upper fake wall",
@@ -542,7 +542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Skeleton foyer fake wall",
@@ -556,7 +556,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Main gallery fake wall",
@@ -570,7 +570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below coyote jump",
@@ -584,7 +584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Push crate gallery",
@@ -601,7 +601,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Past coyote jump",
@@ -615,7 +615,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Tackle block gallery",
@@ -632,7 +632,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Lower",
@@ -646,7 +646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Wicked roc chamber - Upper",
@@ -663,7 +663,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Upper Devil Tower hallway",
@@ -677,7 +677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Lower",
@@ -691,7 +691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior - Upper",
@@ -701,11 +701,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -715,7 +715,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Right exterior fake wall",
@@ -729,7 +729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: 100 meter skelly dash hallway",
@@ -739,11 +739,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -753,7 +753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Lower Devil Tower hallway fake wall",
@@ -767,7 +767,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Behind Necromancer",
@@ -781,7 +781,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower roc ledge",
@@ -791,11 +791,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_5",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_tackle",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -805,7 +805,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Below Machine Tower push crate room",
@@ -815,11 +815,11 @@
               "children": [
                 {
                   "rule": "has_push",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_tackle",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -829,7 +829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Left",
@@ -842,17 +842,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -862,7 +862,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Audience Room: Roc horse jaguar armory - Right",
@@ -875,17 +875,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -895,7 +895,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Left roc ledge",
@@ -912,7 +912,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Right-brained ledge",
@@ -922,11 +922,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_5",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -936,7 +936,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Outer Wall: Fake Nightmare floor",
@@ -950,7 +950,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Skeleton slopes fake wall",
@@ -964,7 +964,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Triumph Hallway: Entrance Flame Armor climb",
@@ -977,17 +977,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_kick",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -997,7 +997,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1025,7 +1025,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Knight fox meeting room",
@@ -1039,7 +1039,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Boneheaded argument wall kicks room",
@@ -1049,11 +1049,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1063,7 +1063,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Foxy fake wall",
@@ -1077,7 +1077,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Skelly-rang wall kicks room",
@@ -1087,11 +1087,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1101,7 +1101,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Fake Lilim wall",
@@ -1115,7 +1115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone fake wall",
@@ -1129,7 +1129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Thunderous zone lone Stone Armor room",
@@ -1143,7 +1143,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1163,7 +1163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Stone fox hallway",
@@ -1180,7 +1180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Pre-Iron Golem fake wall",
@@ -1194,7 +1194,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Machine Tower: Behind Iron Golem",
@@ -1208,7 +1208,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1233,11 +1233,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -1256,7 +1256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1288,11 +1288,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_3",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -1311,7 +1311,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Corridor: Skelly-rang fake wall",
@@ -1325,7 +1325,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Flame Armor climb room",
@@ -1335,11 +1335,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1349,7 +1349,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel push crate room",
@@ -1366,7 +1366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Lower chapel fake wall",
@@ -1380,7 +1380,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Beastly wall kicks room - Brain side",
@@ -1394,7 +1394,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Beastly wall kicks room - Brawn side",
@@ -1408,7 +1408,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel fake wall",
@@ -1422,7 +1422,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Middle chapel push crate room",
@@ -1439,7 +1439,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Sharp mind climb room",
@@ -1449,11 +1449,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1463,7 +1463,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper chapel fake wall",
@@ -1477,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1492,11 +1492,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_push",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -1515,7 +1515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Upper belfry fake wall",
@@ -1529,7 +1529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Iron maiden switch",
@@ -1543,7 +1543,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Behind Adramelech iron maiden",
@@ -1560,7 +1560,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1579,17 +1579,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1599,7 +1599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chapel Tower: Outside Battle Arena - Lower",
@@ -1612,17 +1612,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1632,7 +1632,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1670,7 +1670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor upper push crate room",
@@ -1687,7 +1687,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Conveyor lower push crate room",
@@ -1704,7 +1704,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Harpy climb room - Lower",
@@ -1714,11 +1714,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1728,7 +1728,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Harpy climb room - Upper",
@@ -1738,11 +1738,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_4",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1752,7 +1752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1786,7 +1786,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Handy bee hallway",
@@ -1800,7 +1800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Myconid fake wall",
@@ -1814,7 +1814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Crumble bridge fake wall",
@@ -1828,7 +1828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Gallery: Behind Dragon Zombies",
@@ -1842,7 +1842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1873,7 +1873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1893,7 +1893,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fox room",
@@ -1907,7 +1907,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Crate-nudge fake wall",
@@ -1921,7 +1921,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Succubus shaft roc ledge",
@@ -1934,17 +1934,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_4",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_5",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1954,7 +1954,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Fake Lilith wall",
@@ -1968,7 +1968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Optional puzzle ceiling fake wall",
@@ -1978,11 +1978,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1992,7 +1992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Left",
@@ -2006,7 +2006,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Holy fox hideout - Right roc ledge",
@@ -2019,17 +2019,17 @@
                   "children": [
                     {
                       "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_jump_level_2",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -2039,7 +2039,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Forest Armor's domain fake wall",
@@ -2053,7 +2053,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death",
@@ -2067,7 +2067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Behind Death fake wall",
@@ -2081,7 +2081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Warehouse: Dryad expulsion chamber",
@@ -2095,7 +2095,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2126,7 +2126,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2154,7 +2154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Beyond illusory wall",
@@ -2168,7 +2168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Ice Armor's domain fake wall",
@@ -2182,7 +2182,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Brain freeze room",
@@ -2192,11 +2192,11 @@
               "children": [
                 {
                   "rule": "has_ice_or_stone",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_jump_level_3",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -2206,7 +2206,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Middle lone Ice Armor room",
@@ -2220,7 +2220,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc fake ceiling",
@@ -2237,7 +2237,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Bottom",
@@ -2251,7 +2251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Wicked Fishhead moat - Top",
@@ -2265,7 +2265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Lizard-man turf - Bottom",
@@ -2279,7 +2279,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2302,7 +2302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft",
@@ -2319,7 +2319,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Behind Camilla",
@@ -2336,7 +2336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Underground Waterway: Roc exit shaft fake wall",
@@ -2353,7 +2353,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2373,7 +2373,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza fake wall",
@@ -2387,7 +2387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Legion plaza Minotaur hallway",
@@ -2401,7 +2401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Siren balcony fake wall",
@@ -2415,7 +2415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Evil Pillar pit fake wall",
@@ -2429,7 +2429,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Alraune garden",
@@ -2443,7 +2443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Dark Armor's domain fake wall",
@@ -2457,7 +2457,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Catoblepeas hallway",
@@ -2471,7 +2471,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Near warp room fake wall",
@@ -2485,7 +2485,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Observation Tower: Behind Hugh",
@@ -2499,7 +2499,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2515,11 +2515,11 @@
               "children": [
                 {
                   "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_kick",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -2529,7 +2529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dracula",

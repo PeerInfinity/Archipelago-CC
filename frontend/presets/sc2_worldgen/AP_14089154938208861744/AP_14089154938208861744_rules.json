@@ -113,7 +113,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -159,7 +159,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -205,7 +205,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -388,7 +388,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -490,7 +490,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -536,7 +536,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -582,7 +582,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -765,7 +765,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -867,7 +867,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -913,7 +913,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -959,7 +959,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -1142,7 +1142,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -1244,7 +1244,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -1290,7 +1290,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -1336,7 +1336,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -1519,7 +1519,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -1621,7 +1621,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -1667,7 +1667,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -1713,7 +1713,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -1896,7 +1896,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -1998,7 +1998,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -2044,7 +2044,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -2090,7 +2090,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -2273,7 +2273,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -2375,7 +2375,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -2421,7 +2421,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -2467,7 +2467,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -2650,7 +2650,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -2897,11 +2897,11 @@
               "children": [
                 {
                   "rule": "terran_early_tech",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -3014,7 +3014,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -3030,11 +3030,11 @@
                 },
                 {
                   "rule": "terran_early_tech",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -3054,11 +3054,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -3140,7 +3140,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -3183,11 +3183,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -3269,7 +3269,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -3312,11 +3312,11 @@
               "children": [
                 {
                   "rule": "terran_early_tech",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -3992,15 +3992,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -4062,7 +4062,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -4108,7 +4108,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -4144,7 +4144,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -4277,7 +4277,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -4409,7 +4409,7 @@
             "id": 2202,
             "access_rule": {
               "rule": "terran_maw_requirement",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "All-Terrain Treads (Siege Tank)",
@@ -4424,7 +4424,7 @@
             "id": 2203,
             "access_rule": {
               "rule": "terran_maw_requirement",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Internal Tech Module (Banshee)",
@@ -4445,15 +4445,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -4515,7 +4515,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -4561,7 +4561,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -4597,7 +4597,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -4730,7 +4730,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -4854,15 +4854,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -4924,7 +4924,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -4970,7 +4970,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -5006,7 +5006,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -5139,7 +5139,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -5263,15 +5263,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -5333,7 +5333,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -5379,7 +5379,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -5415,7 +5415,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -5548,7 +5548,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -5666,7 +5666,7 @@
             "id": 2207,
             "access_rule": {
               "rule": "terran_maw_requirement",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Crius Suit (Ghost)",
@@ -5687,15 +5687,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -5757,7 +5757,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -5803,7 +5803,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -5839,7 +5839,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -5972,7 +5972,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -6096,15 +6096,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -6166,7 +6166,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -6212,7 +6212,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -6248,7 +6248,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -6381,7 +6381,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -6505,15 +6505,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -6575,7 +6575,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -6621,7 +6621,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -6657,7 +6657,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -6790,7 +6790,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -6914,15 +6914,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -6984,7 +6984,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -7030,7 +7030,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -7066,7 +7066,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -7199,7 +7199,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -7323,15 +7323,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -7393,7 +7393,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -7439,7 +7439,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -7475,7 +7475,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -7608,7 +7608,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -7732,15 +7732,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -7802,7 +7802,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -7848,7 +7848,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -7884,7 +7884,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -8017,7 +8017,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -8141,15 +8141,15 @@
                   "children": [
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "terran_sustainable_mech_heal",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -8211,7 +8211,7 @@
                           "children": [
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "Has",
@@ -8257,7 +8257,7 @@
                     },
                     {
                       "rule": "terran_competent_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Or",
@@ -8293,7 +8293,7 @@
                             },
                             {
                               "rule": "terran_bio_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -8426,7 +8426,7 @@
                             },
                             {
                               "rule": "terran_sustainable_mech_heal",
-                              "_original_ast_type": "helper"
+                              "_original_ast_type": "rb_defined_helper"
                             },
                             {
                               "rule": "HasAny",
@@ -8720,7 +8720,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -8729,7 +8729,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -8779,7 +8779,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -8909,7 +8909,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -8918,7 +8918,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -8968,7 +8968,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -9070,7 +9070,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -9079,7 +9079,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9129,7 +9129,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -9245,7 +9245,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -9254,7 +9254,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9304,7 +9304,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -9406,7 +9406,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -9415,7 +9415,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9465,7 +9465,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -9567,7 +9567,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     },
@@ -9576,7 +9576,7 @@
                       "children": [
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9626,7 +9626,7 @@
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         }
                       ]
                     }
@@ -9676,7 +9676,7 @@
                       "children": [
                         {
                           "rule": "terran_common_unit",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9691,7 +9691,7 @@
                     },
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -9703,7 +9703,7 @@
                       "children": [
                         {
                           "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9718,7 +9718,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -9757,7 +9757,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "HasAny",
@@ -9772,7 +9772,7 @@
                 },
                 {
                   "rule": "terran_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -9908,7 +9908,7 @@
                       "children": [
                         {
                           "rule": "terran_common_unit",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9923,7 +9923,7 @@
                     },
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -9935,7 +9935,7 @@
                       "children": [
                         {
                           "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9950,7 +9950,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -9978,7 +9978,7 @@
                       "children": [
                         {
                           "rule": "terran_common_unit",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -9993,7 +9993,7 @@
                     },
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -10005,7 +10005,7 @@
                       "children": [
                         {
                           "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -10020,7 +10020,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -10048,7 +10048,7 @@
                       "children": [
                         {
                           "rule": "terran_common_unit",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -10063,7 +10063,7 @@
                     },
                     {
                       "rule": "terran_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -10075,7 +10075,7 @@
                       "children": [
                         {
                           "rule": "terran_moderate_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -10090,7 +10090,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -10122,7 +10122,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10138,15 +10138,15 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10169,7 +10169,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10185,11 +10185,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10212,7 +10212,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10228,11 +10228,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10255,7 +10255,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10271,11 +10271,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10292,7 +10292,7 @@
             "id": 1904,
             "access_rule": {
               "rule": "marine_medic_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Resource Efficiency (Wraith)",
@@ -10313,7 +10313,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10329,11 +10329,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10356,7 +10356,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10372,15 +10372,15 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10403,7 +10403,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10419,15 +10419,15 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10450,7 +10450,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10466,15 +10466,15 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -10497,7 +10497,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10513,11 +10513,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -10599,7 +10599,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -10671,11 +10671,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -10704,7 +10704,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -10754,7 +10754,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -10770,11 +10770,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -10856,7 +10856,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -10928,11 +10928,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -10961,7 +10961,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -11011,7 +11011,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -11027,7 +11027,7 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -11109,7 +11109,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11181,11 +11181,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -11214,7 +11214,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -11264,7 +11264,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "False_"
@@ -11280,15 +11280,15 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "marine_medic_upgrade",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -11315,7 +11315,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11498,7 +11498,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11539,7 +11539,7 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -11559,7 +11559,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11664,7 +11664,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11721,7 +11721,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11778,7 +11778,7 @@
               "children": [
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -11842,11 +11842,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12030,11 +12030,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12136,11 +12136,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12171,7 +12171,7 @@
             "id": 1802,
             "access_rule": {
               "rule": "terran_common_unit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Kinetic Foam (Marauder)",
@@ -12189,11 +12189,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12213,11 +12213,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12237,11 +12237,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12261,11 +12261,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12285,7 +12285,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Compare",
@@ -12367,7 +12367,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -12410,11 +12410,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -12585,7 +12585,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12604,7 +12604,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12635,7 +12635,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12654,7 +12654,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12685,7 +12685,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12704,7 +12704,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12735,7 +12735,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12754,7 +12754,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12785,7 +12785,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12804,7 +12804,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12835,7 +12835,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12854,7 +12854,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12885,7 +12885,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12904,7 +12904,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12935,7 +12935,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -12954,7 +12954,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -12985,7 +12985,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -13004,7 +13004,7 @@
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -13124,7 +13124,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -13134,7 +13134,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13175,7 +13175,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13221,7 +13221,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -13404,7 +13404,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -13432,11 +13432,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -13456,7 +13456,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -13466,7 +13466,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13507,7 +13507,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13553,7 +13553,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -13736,7 +13736,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -13764,7 +13764,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -13774,7 +13774,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13815,7 +13815,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -13861,7 +13861,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -14044,7 +14044,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -14072,7 +14072,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14106,7 +14106,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -14128,7 +14128,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14162,7 +14162,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -14184,7 +14184,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14218,7 +14218,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -14240,7 +14240,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14274,7 +14274,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -14296,7 +14296,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14330,7 +14330,7 @@
                     },
                     {
                       "rule": "terran_air_anti_air",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -14366,7 +14366,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14376,7 +14376,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -14417,7 +14417,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -14463,7 +14463,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -14646,7 +14646,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -14674,7 +14674,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14684,7 +14684,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -14725,7 +14725,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -14771,7 +14771,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -14954,7 +14954,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -14982,7 +14982,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -14992,7 +14992,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -15033,7 +15033,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -15079,7 +15079,7 @@
                                 },
                                 {
                                   "rule": "terran_bio_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             },
@@ -15262,7 +15262,7 @@
                                 },
                                 {
                                   "rule": "terran_sustainable_mech_heal",
-                                  "_original_ast_type": "helper"
+                                  "_original_ast_type": "rb_defined_helper"
                                 }
                               ]
                             }
@@ -15297,7 +15297,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -15333,7 +15333,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -15466,7 +15466,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -15550,7 +15550,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -15586,7 +15586,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -15719,7 +15719,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -15803,7 +15803,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -15839,7 +15839,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -15972,7 +15972,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16056,7 +16056,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -16092,7 +16092,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16225,7 +16225,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16309,7 +16309,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -16345,7 +16345,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16478,7 +16478,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16562,7 +16562,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -16598,7 +16598,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16731,7 +16731,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16815,7 +16815,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -16851,7 +16851,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -16984,7 +16984,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17068,7 +17068,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -17104,7 +17104,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17237,7 +17237,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17321,7 +17321,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -17357,7 +17357,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17490,7 +17490,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17574,7 +17574,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -17610,7 +17610,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17743,7 +17743,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -17834,11 +17834,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17858,11 +17858,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17882,11 +17882,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17906,11 +17906,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17930,11 +17930,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17954,11 +17954,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -17978,11 +17978,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -18002,11 +18002,11 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -18639,7 +18639,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -18711,11 +18711,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -18744,7 +18744,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -18810,7 +18810,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -18937,11 +18937,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -18970,7 +18970,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -19036,7 +19036,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -19163,11 +19163,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -19196,7 +19196,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -19335,11 +19335,11 @@
                         },
                         {
                           "rule": "terran_air_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -19368,7 +19368,7 @@
                       "children": [
                         {
                           "rule": "terran_competent_anti_air",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Or",
@@ -19462,7 +19462,7 @@
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -19498,7 +19498,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -19631,7 +19631,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -19896,7 +19896,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -19932,7 +19932,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20065,7 +20065,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20149,7 +20149,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -20185,7 +20185,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20318,7 +20318,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20402,7 +20402,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -20438,7 +20438,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20571,7 +20571,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20655,7 +20655,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -20691,7 +20691,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20824,7 +20824,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -20908,7 +20908,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -20944,7 +20944,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21077,7 +21077,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21161,7 +21161,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -21197,7 +21197,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21330,7 +21330,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21414,7 +21414,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -21450,7 +21450,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21583,7 +21583,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21667,7 +21667,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -21703,7 +21703,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21836,7 +21836,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -21920,7 +21920,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -21956,7 +21956,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -22089,7 +22089,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -22187,7 +22187,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -22223,7 +22223,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -22356,7 +22356,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -22532,7 +22532,7 @@
             "id": 3700,
             "access_rule": {
               "rule": "marine_medic_firebat_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Widow Mine",
@@ -22561,7 +22561,7 @@
             "id": 3702,
             "access_rule": {
               "rule": "marine_medic_firebat_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Railgun Turret (Raven)",
@@ -22576,7 +22576,7 @@
             "id": 3703,
             "access_rule": {
               "rule": "marine_medic_firebat_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Smart Servos (Liberator)",
@@ -22619,7 +22619,7 @@
             "id": 3706,
             "access_rule": {
               "rule": "marine_medic_firebat_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Advanced Healing AI (Medivac)",
@@ -22634,7 +22634,7 @@
             "id": null,
             "access_rule": {
               "rule": "marine_medic_firebat_upgrade",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Beat Belly of the Beast",
@@ -22865,7 +22865,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -22878,11 +22878,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -22944,7 +22944,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -22957,7 +22957,7 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -22977,7 +22977,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -23013,7 +23013,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23146,7 +23146,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23230,7 +23230,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -23266,7 +23266,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23399,7 +23399,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23483,7 +23483,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -23519,7 +23519,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23652,7 +23652,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23736,7 +23736,7 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -23772,7 +23772,7 @@
                         },
                         {
                           "rule": "terran_bio_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -23905,7 +23905,7 @@
                         },
                         {
                           "rule": "terran_sustainable_mech_heal",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "HasAny",
@@ -24017,7 +24017,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -24030,7 +24030,7 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -24053,7 +24053,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -24066,7 +24066,7 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -24089,7 +24089,7 @@
                   "args": {
                     "left": {
                       "rule": "terran_defense_rating",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "True_"
@@ -24102,11 +24102,11 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "terran_basic_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -24133,14 +24133,14 @@
               "children": [
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -24182,7 +24182,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -24236,7 +24236,7 @@
               "children": [
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -24262,14 +24262,14 @@
               "children": [
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -24297,14 +24297,14 @@
               "children": [
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -24332,14 +24332,14 @@
               "children": [
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -24367,14 +24367,14 @@
               "children": [
                 {
                   "rule": "terran_moderate_anti_air",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "terran_common_unit",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
