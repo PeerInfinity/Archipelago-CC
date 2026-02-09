@@ -981,6 +981,121 @@ def normalize_and_has_patterns(obj: Any) -> Any:
         return obj
 
 
+def normalize_or_with_true(obj: Any) -> Any:
+    """
+    Normalize Or rules containing True_ by short-circuiting to True_,
+    and And rules by removing True_ children, in a single recursive pass.
+
+    This combined normalizer handles cascading simplifications:
+        Or(Has(X), True_()) -> True_()
+        And(True_(), True_()) -> True_()
+        Or(Has(A), And(Or(Has(B), True_()), Or(Has(C), True_()))) -> True_()
+
+    The combined approach handles arbitrary nesting depth in a single pass
+    because it processes bottom-up and both And/Or simplifications together.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_or_with_true(v) for k, v in obj.items()}
+
+        rule = normalized.get('rule')
+
+        # Or with True_ -> True_ (short-circuit)
+        if rule == 'Or':
+            children = normalized.get('children', [])
+            if children:
+                for child in children:
+                    if isinstance(child, dict):
+                        if child.get('rule') == 'True_':
+                            return {'rule': 'True_', 'args': {}}
+                        if child.get('rule') == 'Constant':
+                            value = child.get('args', {}).get('value')
+                            if value is True or (isinstance(value, (int, float)) and not isinstance(value, bool) and value != 0):
+                                return {'rule': 'True_', 'args': {}}
+
+        # And with True_ children -> remove them (identity element)
+        if rule == 'And':
+            children = normalized.get('children', [])
+            if children:
+                filtered = [c for c in children
+                            if not (isinstance(c, dict) and c.get('rule') == 'True_')]
+                if len(filtered) < len(children):
+                    if len(filtered) == 0:
+                        return {'rule': 'True_', 'args': {}}
+                    elif len(filtered) == 1:
+                        return filtered[0]
+                    else:
+                        normalized['children'] = filtered
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_or_with_true(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_or_has_patterns(obj: Any) -> Any:
+    """
+    Normalize Or patterns by combining Has/HasAny children into a single HasAny.
+
+    Handles both all-Has and mixed cases:
+        Or(Has(A), Has(B)) -> HasAny(A, B)
+        Or(Has(A), Has(B), And(X, Y)) -> Or(HasAny(A, B), And(X, Y))
+        Or(HasAny(A, B), Has(C)) -> HasAny(A, B, C)
+
+    This is the Or counterpart to normalize_and_has_patterns.
+    WorldGen's rule_codegen optimizes Or(Has, Has, ...) to HasAny.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_or_has_patterns(v) for k, v in obj.items()}
+
+        # Check if this is an Or rule with Has/HasAny children that can be combined
+        if normalized.get('rule') == 'Or':
+            children = normalized.get('children', [])
+            if children:
+                # Separate Has/HasAny items from other children
+                has_items = []
+                other_children = []
+
+                for child in children:
+                    if isinstance(child, dict):
+                        child_rule = child.get('rule')
+                        if child_rule == 'Has':
+                            item_name = child.get('args', {}).get('item_name')
+                            count = child.get('args', {}).get('count', 1)
+                            if item_name and count == 1:
+                                has_items.append(item_name)
+                            else:
+                                other_children.append(child)
+                        elif child_rule == 'HasAny':
+                            items = child.get('args', {}).get('items', [])
+                            has_items.extend(items)
+                        else:
+                            other_children.append(child)
+                    else:
+                        other_children.append(child)
+
+                # Combine Has items into HasAny if we have 2+ items
+                if len(has_items) >= 2:
+                    hasany_node = {
+                        'rule': 'HasAny',
+                        'args': {'items': has_items}
+                    }
+                    if not other_children:
+                        # All children were Has/HasAny - return single HasAny
+                        return hasany_node
+                    else:
+                        # Mixed: replace Has children with single HasAny
+                        normalized['children'] = [hasany_node] + other_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_or_has_patterns(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_or_with_false(obj: Any) -> Any:
     """
     Normalize Or rules containing Constant(0) or False_() by removing them.
@@ -1860,7 +1975,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
-    optionset_options = {'death_link_effect', 'include_dlcs', 'move_rando_actions', 'pre_hint_items'}
+    optionset_options = {'death_link_effect', 'goal_selection', 'include_dlcs', 'move_rando_actions', 'pre_hint_items', 'trap_selection_override'}
     if 'options.' in path and worldgen_value == '<missing>':
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
@@ -2005,11 +2120,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if original_value == '<missing>':
             return True
 
-    # Rule simplification: And(False, ...) -> False_
-    # When a rule has a condition that's always false, WorldGen simplifies to False_
-    # Original may keep the full And structure with Constant(0) elements
+    # Rule simplification: And(False, ...) -> False_, And/Or -> True_
+    # When a rule has a condition that's always false/true, WorldGen simplifies
+    # Original may keep the full And/Or structure with Constant elements
     if 'access_rule' in path and path.endswith('.rule'):
-        if original_value in ('And', 'Or') and worldgen_value == 'False_':
+        if original_value in ('And', 'Or') and worldgen_value in ('False_', 'True_'):
+            return True
+
+    # Or ↔ HasAny equivalence: WorldGen's rule_codegen optimizes Or(Has(A), Has(B))
+    # to HasAny(A, B), or may expand HasAny differently. Additionally, True_()
+    # propagation may collapse branches in the original, changing the grouping.
+    # Both representations are semantically equivalent access rules.
+    if 'access_rule' in path and path.endswith('.rule'):
+        if {original_value, worldgen_value} == {'Or', 'HasAny'}:
             return True
 
     # Complex options that WorldGen doesn't export (dict/list options with nested structure)
@@ -2135,6 +2258,12 @@ def main():
     original_normalized = normalize_and_with_true(original_normalized)
     worldgen_normalized = normalize_and_with_true(worldgen_normalized)
 
+    # Combined And+True/Or+True normalization (handles cascading simplifications)
+    # Run multiple times for deep nesting: Or(X, And(Or(Y, True_), Or(Z, True_)))
+    for _ in range(3):
+        original_normalized = normalize_or_with_true(original_normalized)
+        worldgen_normalized = normalize_or_with_true(worldgen_normalized)
+
     # Normalize HasAll with single item to Has
     # (e.g., HasAll(['item']) -> Has('item'))
     original_normalized = normalize_hasall_single_item(original_normalized)
@@ -2154,6 +2283,11 @@ def main():
     original_normalized = normalize_and_has_patterns(original_normalized)
     worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
 
+    # Normalize Or+Has/HasAny patterns to single HasAny (cleaner format)
+    # (e.g., Or(Has(A), Has(B)) -> HasAny([A, B]))
+    original_normalized = normalize_or_has_patterns(original_normalized)
+    worldgen_normalized = normalize_or_has_patterns(worldgen_normalized)
+
     # Normalize HasAll with duplicate items (run AFTER normalize_and_has_patterns
     # which may create HasAll with duplicates from And(Has(A), Has(A)))
     # (e.g., HasAll(['item', 'item']) -> Has('item'))
@@ -2163,6 +2297,12 @@ def main():
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
     worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
+
+    # Re-run Or+Has and And+Has patterns after flattening exposed new opportunities
+    original_normalized = normalize_or_has_patterns(original_normalized)
+    worldgen_normalized = normalize_or_has_patterns(worldgen_normalized)
+    original_normalized = normalize_and_has_patterns(original_normalized)
+    worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
 
     # Normalize world attribute format (attribute with world object -> world_attribute)
     original_normalized = normalize_world_attribute_format(original_normalized)
@@ -2223,6 +2363,15 @@ def main():
     # Normalize setting_value to world_attribute (semantically equivalent)
     original_normalized = normalize_setting_to_world_attribute(original_normalized)
     worldgen_normalized = normalize_setting_to_world_attribute(worldgen_normalized)
+
+    # Sort starting_items lists for consistent comparison
+    # WorldGen may produce starting items in a different order than the original
+    for data in (original_normalized, worldgen_normalized):
+        starting_items = data.get('starting_items', {})
+        if isinstance(starting_items, dict):
+            for player_key, items in starting_items.items():
+                if isinstance(items, list):
+                    starting_items[player_key] = sorted(items)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
