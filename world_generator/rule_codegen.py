@@ -7242,6 +7242,11 @@ class HelperCodeGenerator:
                     return 'None'
                 if isinstance(value, bool):
                     return 'True' if value else 'False'
+                # Delegate to _expr_constant for proper handling of dicts and lists.
+                # This converts numeric string keys to integers (JSON uses string keys
+                # but the original Python code may have used integer keys).
+                if isinstance(value, (dict, list)):
+                    return self._expr_constant({'value': value})
                 return repr(value)
 
             # Handle Has rules (Rule Builder format)
