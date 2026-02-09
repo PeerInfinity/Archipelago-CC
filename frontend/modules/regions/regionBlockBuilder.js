@@ -86,10 +86,11 @@ export class RegionBlockBuilder {
     if (this.regionUI.showAll) {
       // For 'Show All', UIDs might be like 'all_RegionName'. Expansion state comes from regionInfo.expanded.
     } else {
-      // Not 'Show All', rely on visitedRegions for state if an entry exists
+      // Not 'Show All', rely on visitedRegions for UID lookup
+      // Note: expansion state comes from currentExpandedState (via ExpansionStateManager),
+      // NOT from visitedEntry.expanded which is stale and not kept in sync.
       if (visitedEntry && visitedEntry.uid === currentUid) {
         uid = visitedEntry.uid;
-        expanded = visitedEntry.expanded;
       } else if (!uid) {
         uid = this.regionUI.nextUID++;
         // Add to visitedRegions if not already there and we are managing it (not showAll)
@@ -271,11 +272,11 @@ export class RegionBlockBuilder {
       headerEl.appendChild(colorblindSpan);
     }
 
-    // Add expand/collapse button
-    const collapseBtn = document.createElement('button');
-    collapseBtn.className = 'collapse-btn';
-    collapseBtn.textContent = expanded ? 'Collapse' : 'Expand';
-    headerEl.appendChild(collapseBtn);
+    // Add expand/collapse indicator arrow
+    const expandIndicator = document.createElement('span');
+    expandIndicator.className = 'region-expand-indicator';
+    expandIndicator.textContent = expanded ? '\u25BC' : '\u25B6';
+    headerEl.appendChild(expandIndicator);
 
     // Add accessibility classes to header
     headerEl.classList.toggle('accessible', regionIsReachable);
@@ -1259,26 +1260,13 @@ export class RegionBlockBuilder {
    * Attaches event listeners to the header element
    */
   attachEventListeners(headerEl, uid, regionName) {
-    // Header click listener
-    headerEl.addEventListener('click', (e) => {
-      if (e.target.classList.contains('collapse-btn')) {
-        e.stopPropagation();
-      }
-
+    // Header click listener - entire header is clickable to toggle expand/collapse
+    headerEl.addEventListener('click', () => {
       // Publish click event for Discovery module to handle
       eventBus.publish('ui:regionHeaderClicked', { regionName }, 'regions');
 
       this.regionUI.toggleRegionByUID(uid);
     });
-
-    // Collapse button listener
-    const collapseBtn = headerEl.querySelector('.collapse-btn');
-    if (collapseBtn) {
-      collapseBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.regionUI.toggleRegionByUID(uid);
-      });
-    }
   }
 
   /**
