@@ -47,7 +47,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verse Cave right area, bulb in the path right of the skeleton room",
@@ -61,14 +61,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verse Cave right area, Big Seed",
             "id": 698175,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Cold Borscht",
@@ -76,7 +76,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -111,7 +111,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb in the center part",
@@ -125,7 +125,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb in the right part",
@@ -139,14 +139,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb under the rock at the end of the path",
             "id": 698023,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Crab Cake",
@@ -154,7 +154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -187,7 +187,7 @@
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -195,7 +195,7 @@
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -206,11 +206,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -229,7 +229,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the little room above the grouper fish",
@@ -243,7 +243,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the end of the path close to the Verse Cave",
@@ -257,7 +257,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the top left path",
@@ -271,7 +271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb close to Naija's Home",
@@ -285,14 +285,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb under the rock in the left path from the Verse Cave",
             "id": 698065,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Nature Form",
@@ -300,7 +300,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -312,7 +312,7 @@
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -329,7 +329,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Nautilus Prime",
@@ -452,7 +452,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -473,7 +473,7 @@
             "id": 698119,
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Hearty Soup",
@@ -481,14 +481,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Naija's Home, bulb under the rock at the right of the main path",
             "id": 698120,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Swamp Cake",
@@ -496,7 +496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -524,7 +524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, bulb in the top right part",
@@ -538,7 +538,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, bulb in the big anemone room",
@@ -552,7 +552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, bulb in the path to the singing statues",
@@ -566,14 +566,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, bulb under the rock in the path to the singing statues",
             "id": 698074,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Spicy Roll",
@@ -581,14 +581,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, bulb under the rock close to the song door",
             "id": 698075,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Baby Nautilus",
@@ -596,14 +596,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, Verse Egg",
             "id": 698160,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Jelly Plant",
@@ -611,7 +611,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, Jelly Beacon",
@@ -625,14 +625,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Song Cave, Anemone Seed",
             "id": 698162,
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Fish Form",
@@ -640,7 +640,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -659,7 +659,7 @@
             "connected_region": "Energy Temple second area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -667,7 +667,7 @@
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -675,7 +675,7 @@
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -692,14 +692,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Energy Temple first area, bulb in the bottom room blocked by a rock",
             "id": 698027,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Special Bulb",
@@ -707,7 +707,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -719,7 +719,7 @@
             "connected_region": "Energy Temple first area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -736,7 +736,7 @@
             "id": 698028,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rotten Meat x 2",
@@ -744,7 +744,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -766,11 +766,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -789,7 +789,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -804,11 +804,11 @@
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -818,7 +818,7 @@
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -835,7 +835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Fallen God",
@@ -870,7 +870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Blaster Peg Prime",
@@ -900,11 +900,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -923,7 +923,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -965,7 +965,7 @@
             "id": 698001,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Ice Cream",
@@ -973,14 +973,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top left area, bulb under the rock in the left path",
             "id": 698002,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Golden Gear",
@@ -988,7 +988,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top left area, bulb to the right of the save crystal",
@@ -1002,7 +1002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1021,7 +1021,7 @@
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1032,11 +1032,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_damaging_item",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     [
                       "Energy Form",
@@ -1077,7 +1077,7 @@
             "connected_region": "The Veil bottom right area",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1087,7 +1087,7 @@
             "id": 698004,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Seed Bag",
@@ -1095,7 +1095,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the path from the left entrance",
@@ -1109,7 +1109,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the clearing close to the bottom exit",
@@ -1123,7 +1123,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the big clearing close to the save crystal",
@@ -1137,7 +1137,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the big clearing to the top exit",
@@ -1151,7 +1151,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1259,7 +1259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, Transturtle",
@@ -1273,7 +1273,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1306,7 +1306,7 @@
             "connected_region": "Abyss left area",
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1323,14 +1323,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters bottom left area, bulb inside the lowest fish pass",
             "id": 698010,
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Healing Poultice x 2",
@@ -1338,7 +1338,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1364,7 +1364,7 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1372,7 +1372,7 @@
             "connected_region": "Arnassi Ruins",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1393,7 +1393,7 @@
             "connected_region": "Open Waters skeleton path spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1410,7 +1410,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters skeleton path, bulb behind the chomper fish",
@@ -1424,7 +1424,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1436,7 +1436,7 @@
             "connected_region": "Open Waters skeleton path",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1453,7 +1453,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1488,7 +1488,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, bulb in the left part",
@@ -1502,7 +1502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, bulb in the center part",
@@ -1516,14 +1516,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, Song Plant Spore",
             "id": 698179,
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Poison Loaf",
@@ -1531,7 +1531,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, Arnassi Armor",
@@ -1541,11 +1541,11 @@
               "children": [
                 {
                   "rule": "_has_beast_and_soup_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             },
@@ -1555,7 +1555,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1574,7 +1574,7 @@
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1585,18 +1585,18 @@
               "children": [
                 {
                   "rule": "_has_beast_form_or_arnassi_armor",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "_has_energy_attack_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "_has_nature_form",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 }
@@ -1617,7 +1617,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1629,7 +1629,7 @@
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1726,7 +1726,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1754,7 +1754,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Crabbius Maximus",
@@ -1870,7 +1870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Simon Says area, Transturtle",
@@ -1884,7 +1884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1903,7 +1903,7 @@
             "connected_region": "Mithalas City urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1911,7 +1911,7 @@
             "connected_region": "Mithalas City top path",
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1919,7 +1919,7 @@
             "connected_region": "Mithalas City fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1943,7 +1943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in the left city part",
@@ -1957,7 +1957,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the right part",
@@ -1971,7 +1971,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb at the top of the city",
@@ -1985,7 +1985,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, first bulb in a broken home",
@@ -1999,7 +1999,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in a broken home",
@@ -2013,7 +2013,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the bottom left part",
@@ -2027,7 +2027,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, first bulb in one of the homes",
@@ -2041,7 +2041,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in one of the homes",
@@ -2055,7 +2055,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Second Secret",
@@ -2092,11 +2092,11 @@
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_nature_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -2115,7 +2115,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb at the end of the top path",
@@ -2129,7 +2129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the top path",
@@ -2143,7 +2143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, Mithalas Pot",
@@ -2157,14 +2157,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, urn in the Castle flower tube entrance",
             "id": 698128,
             "access_rule": {
               "rule": "_has_damaging_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Baby Piranha",
@@ -2172,7 +2172,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2184,7 +2184,7 @@
             "connected_region": "Mithalas City",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2201,14 +2201,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, urn inside a home fish pass",
             "id": 698129,
             "access_rule": {
               "rule": "_has_damaging_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Red Bulb x 2",
@@ -2216,7 +2216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2235,7 +2235,7 @@
             "connected_region": "Mithalas castle urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2243,7 +2243,7 @@
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2251,7 +2251,7 @@
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2259,7 +2259,7 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2267,7 +2267,7 @@
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2284,7 +2284,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, Blue Banner",
@@ -2298,7 +2298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2310,7 +2310,7 @@
             "connected_region": "Mithalas City top path",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2318,7 +2318,7 @@
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2326,7 +2326,7 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2343,7 +2343,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Mithalan priests",
@@ -2370,7 +2370,7 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2387,7 +2387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2399,7 +2399,7 @@
             "connected_region": "Mithalas Cathedral start urns",
             "access_rule": {
               "rule": "_has_damaging_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2407,7 +2407,7 @@
             "connected_region": "Mithalas Cathedral end",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2424,14 +2424,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, Mithalan Dress",
             "id": 698189,
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Ice Cream",
@@ -2439,7 +2439,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2459,7 +2459,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the top right room",
@@ -2473,7 +2473,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, third urn in the top right room",
@@ -2487,7 +2487,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn behind the flesh vein",
@@ -2501,7 +2501,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn in the top left eyes boss room",
@@ -2515,7 +2515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, first urn in the path behind the flesh vein",
@@ -2529,7 +2529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the path behind the flesh vein",
@@ -2543,7 +2543,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, third urn in the path behind the flesh vein",
@@ -2557,7 +2557,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, fourth urn in the top right room",
@@ -2571,7 +2571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn below the left entrance",
@@ -2585,7 +2585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2597,7 +2597,7 @@
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2605,7 +2605,7 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2622,7 +2622,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the bottom right path",
@@ -2636,7 +2636,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2648,7 +2648,7 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2659,11 +2659,11 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_damaging_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -2689,7 +2689,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cathedral Underground, first bulb in the top left part",
@@ -2703,7 +2703,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cathedral Underground, second bulb in the top left part",
@@ -2717,7 +2717,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cathedral Underground, third bulb in the top left part",
@@ -2731,7 +2731,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cathedral Underground, bulb close to the save crystal",
@@ -2745,7 +2745,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cathedral Underground, bulb in the bottom right path",
@@ -2759,7 +2759,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2771,7 +2771,7 @@
             "connected_region": "Mithalas castle",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2795,7 +2795,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Mithalan God",
@@ -2822,7 +2822,7 @@
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2833,11 +2833,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -2863,19 +2863,19 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_nature_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -2908,7 +2908,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, bulb in the path down from the top left clearing",
@@ -2922,7 +2922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, bulb in the top left clearing",
@@ -2936,14 +2936,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, Jelly Egg",
             "id": 698185,
             "access_rule": {
               "rule": "_has_beast_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Sea Cake",
@@ -2951,7 +2951,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2963,7 +2963,7 @@
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2980,7 +2980,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, Verse Egg",
@@ -2994,7 +2994,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3020,7 +3020,7 @@
             "connected_region": "Kelp Forest top right area fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3037,7 +3037,7 @@
             "id": 698048,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Mithalas Doll",
@@ -3045,7 +3045,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb at the left of the center clearing",
@@ -3059,7 +3059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb in the left path's big room",
@@ -3073,7 +3073,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb in the left path's small room",
@@ -3087,7 +3087,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb at the top of the center clearing",
@@ -3101,14 +3101,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, Black Pearl",
             "id": 698167,
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Girl Costume",
@@ -3116,7 +3116,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3128,7 +3128,7 @@
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3152,7 +3152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3174,11 +3174,11 @@
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -3202,7 +3202,7 @@
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3299,7 +3299,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3327,14 +3327,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest bottom left area, Walker Baby",
             "id": 698186,
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Eel Oil x 2",
@@ -3342,7 +3342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3384,7 +3384,7 @@
             "id": 698168,
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Tasty Cake",
@@ -3392,7 +3392,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3420,7 +3420,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Drunian God",
@@ -3447,7 +3447,7 @@
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3462,7 +3462,7 @@
             "connected_region": "Kelp Forest Drunian God room",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3479,7 +3479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3498,7 +3498,7 @@
             "connected_region": "Sprite cave after the plant tube",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3515,7 +3515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3527,7 +3527,7 @@
             "connected_region": "Sprite cave",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3544,7 +3544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest sprite cave, Seed Bag",
@@ -3558,7 +3558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3580,11 +3580,11 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -3603,7 +3603,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3618,11 +3618,11 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -3641,7 +3641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Mergog",
@@ -3684,7 +3684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3703,7 +3703,7 @@
             "connected_region": "The Veil top left area fish pass",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3814,14 +3814,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Veil top left area, bulb under the rock in the top right path",
             "id": 698078,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Plant Leaf x 3",
@@ -3829,14 +3829,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Veil top left area, bulb hidden behind the blocking rock",
             "id": 698076,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Spicy Roll",
@@ -3844,7 +3844,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Veil top left area, Transturtle",
@@ -3858,7 +3858,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3870,7 +3870,7 @@
             "connected_region": "The Veil top left area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3887,7 +3887,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3906,7 +3906,7 @@
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3996,7 +3996,7 @@
             "id": 698080,
             "access_rule": {
               "rule": "_has_beast_and_soup_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Healing Poultice",
@@ -4004,7 +4004,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Veil top right area, Transturtle",
@@ -4018,7 +4018,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4030,7 +4030,7 @@
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4041,15 +4041,15 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4088,7 +4088,7 @@
             "id": 698079,
             "access_rule": {
               "rule": "_has_beast_form_or_arnassi_armor",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Swamp Cake",
@@ -4096,7 +4096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Veil top right area, Golden Starfish",
@@ -4110,7 +4110,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4139,11 +4139,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4153,7 +4153,7 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4170,7 +4170,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4182,7 +4182,7 @@
             "connected_region": "The Veil bottom left area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4190,7 +4190,7 @@
             "connected_region": "The Veil bottom right area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4207,7 +4207,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4222,11 +4222,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4245,7 +4245,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4264,7 +4264,7 @@
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4288,7 +4288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4316,7 +4316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Octopus Prime",
@@ -4359,7 +4359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4387,7 +4387,7 @@
             "id": 698184,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Turtle Soup",
@@ -4395,7 +4395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4423,14 +4423,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Turtle cave, Urchin Costume",
             "id": 698193,
             "access_rule": {
               "rule": "_has_hot_soup",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Arcane Poultice",
@@ -4438,7 +4438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4473,7 +4473,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb in the top right part",
@@ -4487,7 +4487,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb at the top of the high dark room",
@@ -4501,7 +4501,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, Golden Gear",
@@ -4515,7 +4515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Third Secret",
@@ -4542,7 +4542,7 @@
             "connected_region": "Sun Temple right area",
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4560,11 +4560,11 @@
               "children": [
                 {
                   "rule": "_has_light",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_crystal",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4590,11 +4590,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_light",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4613,7 +4613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb on the right part",
@@ -4627,7 +4627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb in the hidden room of the right part",
@@ -4641,7 +4641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple, Sun Key",
@@ -4655,7 +4655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Crystal",
@@ -4685,11 +4685,11 @@
               "children": [
                 {
                   "rule": "_has_light",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_crystal",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4699,7 +4699,7 @@
             "connected_region": "Sun Temple boss area",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4716,7 +4716,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, second path bulb",
@@ -4730,7 +4730,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, first cliff bulb",
@@ -4740,7 +4740,7 @@
               "children": [
                 {
                   "rule": "_has_beast_and_soup_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -4759,7 +4759,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, second cliff bulb",
@@ -4769,7 +4769,7 @@
               "children": [
                 {
                   "rule": "_has_beast_and_soup_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -4788,7 +4788,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4800,7 +4800,7 @@
             "connected_region": "Sun Temple before boss area",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4824,7 +4824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Lumerean God",
@@ -4858,7 +4858,7 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4872,17 +4872,17 @@
                   "children": [
                     {
                       "rule": "_has_beast_form",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "_has_energy_form",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
                 {
                   "rule": "_has_dual_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -4908,7 +4908,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss left area, bulb in the right part",
@@ -4922,7 +4922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss left area, Glowing Seed",
@@ -4936,7 +4936,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss left area, Glowing Plant",
@@ -4950,7 +4950,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4962,7 +4962,7 @@
             "connected_region": "Abyss left area",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4970,7 +4970,7 @@
             "connected_region": "Sunken City right area",
             "access_rule": {
               "rule": "_has_li",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4978,7 +4978,7 @@
             "connected_region": "The Body center area",
             "access_rule": {
               "rule": "_has_tongue_cleared",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4988,7 +4988,7 @@
             "id": 698026,
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Special Cake",
@@ -4996,7 +4996,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5025,11 +5025,11 @@
               "children": [
                 {
                   "rule": "_has_spirit_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5049,19 +5049,19 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_spirit_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5071,7 +5071,7 @@
             "connected_region": "Ice Cavern",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -5081,7 +5081,7 @@
             "id": 698110,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Red Bulb x 2",
@@ -5089,7 +5089,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss right area, bulb behind the rock in the middle path",
@@ -5103,7 +5103,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyss right area, bulb in the left green room",
@@ -5117,7 +5117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5132,11 +5132,11 @@
               "children": [
                 {
                   "rule": "_has_spirit_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5155,7 +5155,7 @@
             "id": 698109,
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Mutant Costume",
@@ -5163,7 +5163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5175,7 +5175,7 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5272,7 +5272,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5284,7 +5284,7 @@
             "connected_region": "Abyss right area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5308,7 +5308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ice Cavern, first bulb in the top exit room",
@@ -5322,7 +5322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ice Cavern, second bulb in the top exit room",
@@ -5336,7 +5336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ice Cavern, third bulb in the top exit room",
@@ -5350,7 +5350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ice Cavern, bulb in the left room",
@@ -5364,7 +5364,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5386,11 +5386,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_nature_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5409,7 +5409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bubble Cave, bulb in the right cave wall (behind the ice crystal)",
@@ -5423,7 +5423,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5451,7 +5451,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating Mantis Shrimp Prime",
@@ -5494,7 +5494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "King Jellyfish Cave, Jellyfish Costume",
@@ -5508,7 +5508,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating King Jellyfish God Prime",
@@ -5551,7 +5551,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5570,7 +5570,7 @@
             "connected_region": "Sunken City left area, bedroom",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5578,7 +5578,7 @@
             "connected_region": "Sunken City left area crates",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5589,19 +5589,19 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5617,7 +5617,7 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_li",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5632,7 +5632,7 @@
             "connected_region": "Sunken City right area crates",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -5649,19 +5649,19 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -5680,7 +5680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beating the Golem",
@@ -5722,7 +5722,7 @@
             "connected_region": "Sunken City left area",
             "access_rule": {
               "rule": "_has_spirit_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -5739,7 +5739,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5751,7 +5751,7 @@
             "connected_region": "Abyss left bottom area",
             "access_rule": {
               "rule": "_has_light",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5759,7 +5759,7 @@
             "connected_region": "The Body left area",
             "access_rule": {
               "rule": "_has_energy_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5774,7 +5774,7 @@
             "connected_region": "The Body right area, bottom path",
             "access_rule": {
               "rule": "_has_energy_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5782,7 +5782,7 @@
             "connected_region": "The Body bottom area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -5792,7 +5792,7 @@
             "id": 698201,
             "access_rule": {
               "rule": "_has_tongue_cleared",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Spider Roll",
@@ -5800,7 +5800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body center area, bulb on the main path blocking tube",
@@ -5814,7 +5814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5842,7 +5842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body left area, second bulb in the top face room",
@@ -5856,7 +5856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body left area, bulb below the water stream",
@@ -5870,7 +5870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body left area, bulb in the top path to the top face room",
@@ -5884,7 +5884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body left area, bulb in the bottom face room",
@@ -5898,7 +5898,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5926,7 +5926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5954,7 +5954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body right area, bulb in the bottom face room",
@@ -5968,7 +5968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5980,7 +5980,7 @@
             "connected_region": "The Body center area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -5988,7 +5988,7 @@
             "connected_region": "The Body, before final boss",
             "access_rule": {
               "rule": "_has_dual_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -6005,7 +6005,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body bottom area, bulb in the nautilus room",
@@ -6019,7 +6019,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Body bottom area, Mutant Costume",
@@ -6033,7 +6033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6045,7 +6045,7 @@
             "connected_region": "The Body bottom area",
             "access_rule": {
               "rule": "_has_dual_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6053,7 +6053,7 @@
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6064,19 +6064,19 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_dual_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6092,7 +6092,7 @@
             "connected_region": "The Body, before final boss",
             "access_rule": {
               "rule": "_has_nature_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6189,7 +6189,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Boss area, second bulb in the turtle room",
@@ -6203,7 +6203,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Boss area, third bulb in the turtle room",
@@ -6217,7 +6217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Boss area, Transturtle",
@@ -6231,7 +6231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6259,7 +6259,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6295,19 +6295,19 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_spirit_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_sun_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6340,7 +6340,7 @@
             "connected_region": "Energy Temple first area",
             "access_rule": {
               "rule": "_has_fish_form",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6351,11 +6351,11 @@
               "children": [
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_fish_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6374,7 +6374,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6394,7 +6394,7 @@
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6405,15 +6405,15 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_nature_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6440,11 +6440,11 @@
               "children": [
                 {
                   "rule": "_has_beast_form",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_hot_soup",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6470,7 +6470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sunken City left area, crate close to the save crystal",
@@ -6484,7 +6484,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sunken City left area, crate before the bedroom",
@@ -6498,7 +6498,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6519,7 +6519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sunken City right area, crate in the left bottom room",
@@ -6533,7 +6533,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6546,7 +6546,7 @@
             "connected_region": "Home Waters",
             "access_rule": {
               "rule": "_has_bind_song",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6554,7 +6554,7 @@
             "connected_region": "Home Waters, Nautilus nest",
             "access_rule": {
               "rule": "_has_energy_attack_item",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6572,11 +6572,11 @@
               "children": [
                 {
                   "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "_has_energy_attack_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -6595,7 +6595,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the bottom left room",
@@ -6609,7 +6609,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6630,7 +6630,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, second urn in the Mithalas exit",
@@ -6644,7 +6644,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Waters top right area, third urn in the Mithalas exit",
@@ -6658,7 +6658,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6679,7 +6679,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second urn in one of the homes",
@@ -6693,7 +6693,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, first urn in the city reserve",
@@ -6707,7 +6707,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, second urn in the city reserve",
@@ -6721,7 +6721,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City, third urn in the city reserve",
@@ -6735,7 +6735,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -6756,7 +6756,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, first urn of the single lamp path",
@@ -6770,7 +6770,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, second urn of the single lamp path",
@@ -6784,7 +6784,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, urn in the bottom room",
@@ -6798,7 +6798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, first urn on the entrance path",
@@ -6812,7 +6812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, second urn on the entrance path",
@@ -6826,7 +6826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ],
         "dynamically_added": true

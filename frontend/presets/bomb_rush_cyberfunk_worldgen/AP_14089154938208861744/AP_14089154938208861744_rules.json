@@ -1144,7 +1144,7 @@
             "connected_region": "Versum Hill",
             "access_rule": {
               "rule": "versum_hill_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1152,7 +1152,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1160,7 +1160,7 @@
             "connected_region": "Mataan - Streets",
             "access_rule": {
               "rule": "mataan_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1282,7 +1282,7 @@
             "id": 2308008,
             "access_rule": {
               "rule": "bmx",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1305,7 +1305,7 @@
             "id": 2308009,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1328,7 +1328,7 @@
             "id": 2308010,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1351,7 +1351,7 @@
             "id": 2308011,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1386,7 +1386,7 @@
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
               "rule": "versum_hill_ch1_roadblock",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1446,7 +1446,7 @@
             "id": 2308031,
             "access_rule": {
               "rule": "bmx",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1469,7 +1469,7 @@
             "id": 2308037,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (You Can Say Hi)",
@@ -1484,7 +1484,7 @@
             "id": 2308038,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Bel",
@@ -1511,7 +1511,7 @@
             "connected_region": "Versum Hill",
             "access_rule": {
               "rule": "versum_hill_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1519,7 +1519,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1527,7 +1527,7 @@
             "connected_region": "Versum Hill - Underground Mall",
             "access_rule": {
               "rule": "versum_hill_oldhead",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1535,7 +1535,7 @@
             "connected_region": "Versum Hill - Side Street",
             "access_rule": {
               "rule": "versum_hill_all_challenges",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -1543,7 +1543,7 @@
             "connected_region": "Versum Hill - Basketball Court",
             "access_rule": {
               "rule": "versum_hill_basketball_court",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1651,7 +1651,7 @@
             "id": 2308022,
             "access_rule": {
               "rule": "versum_hill_challenge1",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Solace",
@@ -1666,7 +1666,7 @@
             "id": 2308023,
             "access_rule": {
               "rule": "versum_hill_challenge2",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (L - INFINITY)",
@@ -1681,7 +1681,7 @@
             "id": 2308024,
             "access_rule": {
               "rule": "versum_hill_challenge3",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -1696,7 +1696,7 @@
             "id": 2308032,
             "access_rule": {
               "rule": "inline_skates",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1719,7 +1719,7 @@
             "id": 2308035,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1747,7 +1747,7 @@
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
               "rule": "versum_hill_ch1_roadblock",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1793,7 +1793,7 @@
             "id": 2308034,
             "access_rule": {
               "rule": "versum_hill_rave",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1822,7 +1822,7 @@
             "id": 2308039,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (GET ENUF)",
@@ -1842,7 +1842,7 @@
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
               "rule": "versum_hill_ch1_roadblock",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1893,7 +1893,7 @@
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
               "rule": "versum_hill_ch1_roadblock",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1909,7 +1909,7 @@
             "connected_region": "Versum Hill",
             "access_rule": {
               "rule": "versum_hill_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1947,7 +1947,7 @@
             "id": 2308033,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1970,7 +1970,7 @@
             "id": 2308036,
             "access_rule": {
               "rule": "versum_hill_rietveld",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -1999,7 +1999,7 @@
             "id": null,
             "access_rule": {
               "rule": "versum_hill_crew_battle",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2035,7 +2035,7 @@
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
               "rule": "versum_hill_ch1_roadblock",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2051,7 +2051,7 @@
             "connected_region": "Brink Terminal",
             "access_rule": {
               "rule": "brink_terminal_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2059,7 +2059,7 @@
             "connected_region": "Millennium Mall",
             "access_rule": {
               "rule": "millennium_mall_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2067,7 +2067,7 @@
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
               "rule": "pyramid_island_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2075,7 +2075,7 @@
             "connected_region": "Mataan - Streets",
             "access_rule": {
               "rule": "mataan_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2309,7 +2309,7 @@
             "id": 2308056,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Outfit (Red - Winter)",
@@ -2329,7 +2329,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2337,7 +2337,7 @@
             "connected_region": "Brink Terminal - Underground",
             "access_rule": {
               "rule": "brink_terminal_oldhead_underground",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2345,7 +2345,7 @@
             "connected_region": "Brink Terminal - Dock",
             "access_rule": {
               "rule": "brink_terminal_oldhead_dock",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2353,7 +2353,7 @@
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
               "rule": "brink_terminal_plaza",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2363,7 +2363,7 @@
             "id": 2308057,
             "access_rule": {
               "rule": "brink_terminal_challenge1",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (Light Switch)",
@@ -2378,7 +2378,7 @@
             "id": 2308058,
             "access_rule": {
               "rule": "brink_terminal_challenge2",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "16 REP",
@@ -2393,7 +2393,7 @@
             "id": 2308059,
             "access_rule": {
               "rule": "brink_terminal_challenge3",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (L - RECORD.HEAD)",
@@ -2450,7 +2450,7 @@
             "id": 2308063,
             "access_rule": {
               "rule": "bmx",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2529,7 +2529,7 @@
             "id": 2308081,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2552,7 +2552,7 @@
             "id": 2308082,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (M - Pora)",
@@ -2572,7 +2572,7 @@
             "connected_region": "Brink Terminal",
             "access_rule": {
               "rule": "brink_terminal_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2615,7 +2615,7 @@
             "connected_region": "Brink Terminal",
             "access_rule": {
               "rule": "brink_terminal_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2625,7 +2625,7 @@
             "id": 2308069,
             "access_rule": {
               "rule": "brink_terminal_mesh",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2710,7 +2710,7 @@
             "id": 2308080,
             "access_rule": {
               "rule": "brink_terminal_mesh",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2744,7 +2744,7 @@
             "connected_region": "Brink Terminal",
             "access_rule": {
               "rule": "brink_terminal_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2752,7 +2752,7 @@
             "connected_region": "Brink Terminal - Tower",
             "access_rule": {
               "rule": "brink_terminal_tower",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2781,7 +2781,7 @@
             "connected_region": "Brink Terminal",
             "access_rule": {
               "rule": "brink_terminal_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2789,7 +2789,7 @@
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
               "rule": "brink_terminal_plaza",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2813,7 +2813,7 @@
             "id": 2308073,
             "access_rule": {
               "rule": "inline_skates",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2864,7 +2864,7 @@
             "id": null,
             "access_rule": {
               "rule": "brink_terminal_crew_battle",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2900,7 +2900,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2908,7 +2908,7 @@
             "connected_region": "Millennium Mall - Hanging Lights",
             "access_rule": {
               "rule": "millennium_mall_oldhead_ceiling",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2924,7 +2924,7 @@
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
               "rule": "millennium_mall_big",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -2990,7 +2990,7 @@
             "id": 2308086,
             "access_rule": {
               "rule": "inline_skates",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3032,7 +3032,7 @@
             "connected_region": "Millennium Mall",
             "access_rule": {
               "rule": "millennium_mall_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3061,7 +3061,7 @@
             "connected_region": "Millennium Mall",
             "access_rule": {
               "rule": "millennium_mall_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3069,7 +3069,7 @@
             "connected_region": "Millennium Mall - Race Track",
             "access_rule": {
               "rule": "millennium_mall_oldhead_race",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3077,7 +3077,7 @@
             "connected_region": "Millennium Mall - Theater",
             "access_rule": {
               "rule": "millennium_mall_theater",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3109,7 +3109,7 @@
             "id": 2308089,
             "access_rule": {
               "rule": "millennium_mall_challenge1",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (XL - FATE)",
@@ -3124,7 +3124,7 @@
             "id": 2308090,
             "access_rule": {
               "rule": "millennium_mall_challenge2",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "24 REP",
@@ -3139,7 +3139,7 @@
             "id": 2308091,
             "access_rule": {
               "rule": "millennium_mall_challenge3",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -3154,7 +3154,7 @@
             "id": 2308092,
             "access_rule": {
               "rule": "millennium_mall_challenge4",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Inline Skates (Sharpshooters)",
@@ -3225,7 +3225,7 @@
             "id": 2308097,
             "access_rule": {
               "rule": "bmx",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3262,7 +3262,7 @@
             "id": 2308106,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3290,7 +3290,7 @@
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
               "rule": "millennium_mall_big",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3333,7 +3333,7 @@
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
               "rule": "millennium_mall_big",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3355,7 +3355,7 @@
             "connected_region": "Millennium Mall",
             "access_rule": {
               "rule": "millennium_mall_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3421,7 +3421,7 @@
             "id": 2308105,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3444,7 +3444,7 @@
             "id": null,
             "access_rule": {
               "rule": "millennium_mall_crew_battle",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3480,7 +3480,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3488,7 +3488,7 @@
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
               "rule": "pyramid_island_gate",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3540,7 +3540,7 @@
             "id": 2308110,
             "access_rule": {
               "rule": "bmx",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3563,7 +3563,7 @@
             "id": 2308131,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (M - 0m33)",
@@ -3578,7 +3578,7 @@
             "id": 2308132,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (DA PEOPLE)",
@@ -3593,7 +3593,7 @@
             "id": 2308133,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Devil Theory",
@@ -3608,7 +3608,7 @@
             "id": 2308134,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Outfit (Solace - Winter)",
@@ -3628,7 +3628,7 @@
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
               "rule": "pyramid_island_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3636,7 +3636,7 @@
             "connected_region": "Pyramid Island - Maze",
             "access_rule": {
               "rule": "pyramid_island_oldhead",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3644,7 +3644,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "rule": "pyramid_island_upper_half",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3752,7 +3752,7 @@
             "id": 2308117,
             "access_rule": {
               "rule": "pyramid_island_challenge1",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -3767,7 +3767,7 @@
             "id": 2308118,
             "access_rule": {
               "rule": "pyramid_island_challenge2",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "16 REP",
@@ -3782,7 +3782,7 @@
             "id": 2308119,
             "access_rule": {
               "rule": "pyramid_island_challenge3",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -3802,7 +3802,7 @@
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
               "rule": "pyramid_island_gate",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3812,7 +3812,7 @@
             "id": 2308128,
             "access_rule": {
               "rule": "skateboard",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3835,7 +3835,7 @@
             "id": 2308135,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Graffiti (XL - Gold Rush)",
@@ -3850,7 +3850,7 @@
             "id": 2308136,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Outfit (Rave - Autumn)",
@@ -3865,7 +3865,7 @@
             "id": 2308137,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (Funk Express)",
@@ -3880,7 +3880,7 @@
             "id": 2308138,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -3895,7 +3895,7 @@
             "id": 2308139,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "16 REP",
@@ -3910,7 +3910,7 @@
             "id": 2308140,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Music (watchyaback!)",
@@ -3930,7 +3930,7 @@
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
               "rule": "pyramid_island_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3938,7 +3938,7 @@
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
               "rule": "pyramid_island_gate",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -3946,7 +3946,7 @@
             "connected_region": "Pyramid Island - Top",
             "access_rule": {
               "rule": "pyramid_island_top",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -3970,7 +3970,7 @@
             "id": 2308121,
             "access_rule": {
               "rule": "inline_skates",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4049,7 +4049,7 @@
             "id": 2308130,
             "access_rule": {
               "rule": "current_chapter",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4072,7 +4072,7 @@
             "id": null,
             "access_rule": {
               "rule": "pyramid_island_crew_battle",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4108,7 +4108,7 @@
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
               "rule": "pyramid_island_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4116,7 +4116,7 @@
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
               "rule": "pyramid_island_gate",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4124,7 +4124,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "rule": "pyramid_island_upper_half",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4176,7 +4176,7 @@
             "id": 2308129,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "16 REP",
@@ -4203,7 +4203,7 @@
             "connected_region": "Millennium Square",
             "access_rule": {
               "rule": "millennium_square_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4211,7 +4211,7 @@
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
               "rule": "mataan_smoke_wall",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4268,7 +4268,7 @@
             "connected_region": "Mataan - Streets",
             "access_rule": {
               "rule": "mataan_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4276,7 +4276,7 @@
             "connected_region": "Mataan - Deep City",
             "access_rule": {
               "rule": "mataan_deep_city",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4370,7 +4370,7 @@
             "id": 2308167,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "8 REP",
@@ -4390,7 +4390,7 @@
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
               "rule": "mataan_smoke_wall",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4398,7 +4398,7 @@
             "connected_region": "Mataan - Red Light District",
             "access_rule": {
               "rule": "mataan_oldhead",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4406,7 +4406,7 @@
             "connected_region": "Mataan - Lion Statue",
             "access_rule": {
               "rule": "mataan_smoke_wall2",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4458,7 +4458,7 @@
             "id": 2308151,
             "access_rule": {
               "rule": "mataan_challenge1",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4487,7 +4487,7 @@
             "id": 2308152,
             "access_rule": {
               "rule": "mataan_challenge2",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4516,7 +4516,7 @@
             "id": 2308153,
             "access_rule": {
               "rule": "mataan_challenge3",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Outfit (Rave - Winter)",
@@ -4578,7 +4578,7 @@
             "connected_region": "Mataan - Deep City",
             "access_rule": {
               "rule": "mataan_deep_city",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4635,7 +4635,7 @@
             "connected_region": "Mataan - Deep City",
             "access_rule": {
               "rule": "mataan_deep_city",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4657,7 +4657,7 @@
             "connected_region": "Mataan - Skyscrapers",
             "access_rule": {
               "rule": "mataan_deepest",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4700,7 +4700,7 @@
             "connected_region": "Mataan - Streets",
             "access_rule": {
               "rule": "mataan_entrance",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4766,7 +4766,7 @@
             "id": 2308164,
             "access_rule": {
               "rule": "mataan_deepest",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4823,7 +4823,7 @@
             "id": 2308168,
             "access_rule": {
               "rule": "camera",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Outfit (Felix - Winter)",
@@ -4838,7 +4838,7 @@
             "id": null,
             "access_rule": {
               "rule": "mataan_faux",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",

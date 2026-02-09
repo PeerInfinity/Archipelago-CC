@@ -78,7 +78,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 2",
@@ -95,7 +95,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 3",
@@ -112,7 +112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 4",
@@ -129,7 +129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 5",
@@ -146,7 +146,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 6",
@@ -163,7 +163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 7",
@@ -180,7 +180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 8",
@@ -197,7 +197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 9",
@@ -214,7 +214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Chest 10",
@@ -231,7 +231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Shrine 1",
@@ -248,7 +248,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Shrine 2",
@@ -265,7 +265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Shrine 3",
@@ -282,7 +282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Shrine 4",
@@ -299,7 +299,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Shrine 5",
@@ -316,7 +316,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Radio Scanner 1",
@@ -333,7 +333,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost: Newt Altar 1",
@@ -350,7 +350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -381,7 +381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 2",
@@ -398,7 +398,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 3",
@@ -415,7 +415,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 4",
@@ -432,7 +432,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 5",
@@ -449,7 +449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 6",
@@ -466,7 +466,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 7",
@@ -483,7 +483,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 8",
@@ -500,7 +500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 9",
@@ -517,7 +517,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Chest 10",
@@ -534,7 +534,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Shrine 1",
@@ -551,7 +551,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Shrine 2",
@@ -568,7 +568,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Shrine 3",
@@ -585,7 +585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Shrine 4",
@@ -602,7 +602,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Shrine 5",
@@ -619,7 +619,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Radio Scanner 1",
@@ -636,7 +636,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Distant Roost (2): Newt Altar 1",
@@ -653,7 +653,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -684,7 +684,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 2",
@@ -701,7 +701,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 3",
@@ -718,7 +718,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 4",
@@ -735,7 +735,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 5",
@@ -752,7 +752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 6",
@@ -769,7 +769,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 7",
@@ -786,7 +786,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 8",
@@ -803,7 +803,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 9",
@@ -820,7 +820,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Chest 10",
@@ -837,7 +837,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Shrine 1",
@@ -854,7 +854,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Shrine 2",
@@ -871,7 +871,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Shrine 3",
@@ -888,7 +888,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Shrine 4",
@@ -905,7 +905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Shrine 5",
@@ -922,7 +922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Radio Scanner 1",
@@ -939,7 +939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains: Newt Altar 1",
@@ -956,7 +956,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -987,7 +987,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 2",
@@ -1004,7 +1004,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 3",
@@ -1021,7 +1021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 4",
@@ -1038,7 +1038,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 5",
@@ -1055,7 +1055,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 6",
@@ -1072,7 +1072,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 7",
@@ -1089,7 +1089,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 8",
@@ -1106,7 +1106,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 9",
@@ -1123,7 +1123,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Chest 10",
@@ -1140,7 +1140,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Shrine 1",
@@ -1157,7 +1157,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Shrine 2",
@@ -1174,7 +1174,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Shrine 3",
@@ -1191,7 +1191,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Shrine 4",
@@ -1208,7 +1208,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Shrine 5",
@@ -1225,7 +1225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Radio Scanner 1",
@@ -1242,7 +1242,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanic Plains (2): Newt Altar 1",
@@ -1259,7 +1259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1290,7 +1290,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 2",
@@ -1307,7 +1307,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 3",
@@ -1324,7 +1324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 4",
@@ -1341,7 +1341,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 5",
@@ -1358,7 +1358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 6",
@@ -1375,7 +1375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 7",
@@ -1392,7 +1392,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 8",
@@ -1409,7 +1409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 9",
@@ -1426,7 +1426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Chest 10",
@@ -1443,7 +1443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Shrine 1",
@@ -1460,7 +1460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Shrine 2",
@@ -1477,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Shrine 3",
@@ -1494,7 +1494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Shrine 4",
@@ -1511,7 +1511,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Shrine 5",
@@ -1528,7 +1528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Radio Scanner 1",
@@ -1545,7 +1545,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Verdant Falls: Newt Altar 1",
@@ -1562,7 +1562,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1593,7 +1593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 2",
@@ -1610,7 +1610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 3",
@@ -1627,7 +1627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 4",
@@ -1644,7 +1644,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 5",
@@ -1661,7 +1661,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 6",
@@ -1678,7 +1678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 7",
@@ -1695,7 +1695,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 8",
@@ -1712,7 +1712,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 9",
@@ -1729,7 +1729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Chest 10",
@@ -1746,7 +1746,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Shrine 1",
@@ -1763,7 +1763,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Shrine 2",
@@ -1780,7 +1780,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Shrine 3",
@@ -1797,7 +1797,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Shrine 4",
@@ -1814,7 +1814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Shrine 5",
@@ -1831,7 +1831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Radio Scanner 1",
@@ -1848,7 +1848,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abandoned Aqueduct: Newt Altar 1",
@@ -1865,7 +1865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1896,7 +1896,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 2",
@@ -1913,7 +1913,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 3",
@@ -1930,7 +1930,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 4",
@@ -1947,7 +1947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 5",
@@ -1964,7 +1964,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 6",
@@ -1981,7 +1981,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 7",
@@ -1998,7 +1998,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 8",
@@ -2015,7 +2015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 9",
@@ -2032,7 +2032,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Chest 10",
@@ -2049,7 +2049,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Shrine 1",
@@ -2066,7 +2066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Shrine 2",
@@ -2083,7 +2083,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Shrine 3",
@@ -2100,7 +2100,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Shrine 4",
@@ -2117,7 +2117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Shrine 5",
@@ -2134,7 +2134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Radio Scanner 1",
@@ -2151,7 +2151,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wetland Aspect: Newt Altar 1",
@@ -2168,7 +2168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2199,7 +2199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 2",
@@ -2216,7 +2216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 3",
@@ -2233,7 +2233,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 4",
@@ -2250,7 +2250,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 5",
@@ -2267,7 +2267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 6",
@@ -2284,7 +2284,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 7",
@@ -2301,7 +2301,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 8",
@@ -2318,7 +2318,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 9",
@@ -2335,7 +2335,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Chest 10",
@@ -2352,7 +2352,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Shrine 1",
@@ -2369,7 +2369,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Shrine 2",
@@ -2386,7 +2386,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Shrine 3",
@@ -2403,7 +2403,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Shrine 4",
@@ -2420,7 +2420,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Shrine 5",
@@ -2437,7 +2437,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Radio Scanner 1",
@@ -2454,7 +2454,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rallypoint Delta: Newt Altar 1",
@@ -2471,7 +2471,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2502,7 +2502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 2",
@@ -2519,7 +2519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 3",
@@ -2536,7 +2536,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 4",
@@ -2553,7 +2553,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 5",
@@ -2570,7 +2570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 6",
@@ -2587,7 +2587,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 7",
@@ -2604,7 +2604,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 8",
@@ -2621,7 +2621,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 9",
@@ -2638,7 +2638,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Chest 10",
@@ -2655,7 +2655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Shrine 1",
@@ -2672,7 +2672,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Shrine 2",
@@ -2689,7 +2689,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Shrine 3",
@@ -2706,7 +2706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Shrine 4",
@@ -2723,7 +2723,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Shrine 5",
@@ -2740,7 +2740,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Radio Scanner 1",
@@ -2757,7 +2757,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scorched Acres: Newt Altar 1",
@@ -2774,7 +2774,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2805,7 +2805,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 2",
@@ -2822,7 +2822,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 3",
@@ -2839,7 +2839,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 4",
@@ -2856,7 +2856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 5",
@@ -2873,7 +2873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 6",
@@ -2890,7 +2890,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 7",
@@ -2907,7 +2907,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 8",
@@ -2924,7 +2924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 9",
@@ -2941,7 +2941,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Chest 10",
@@ -2958,7 +2958,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Shrine 1",
@@ -2975,7 +2975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Shrine 2",
@@ -2992,7 +2992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Shrine 3",
@@ -3009,7 +3009,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Shrine 4",
@@ -3026,7 +3026,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Shrine 5",
@@ -3043,7 +3043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Radio Scanner 1",
@@ -3060,7 +3060,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Abyssal Depths: Newt Altar 1",
@@ -3077,7 +3077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3108,7 +3108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 2",
@@ -3125,7 +3125,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 3",
@@ -3142,7 +3142,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 4",
@@ -3159,7 +3159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 5",
@@ -3176,7 +3176,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 6",
@@ -3193,7 +3193,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 7",
@@ -3210,7 +3210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 8",
@@ -3227,7 +3227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 9",
@@ -3244,7 +3244,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Chest 10",
@@ -3261,7 +3261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Shrine 1",
@@ -3278,7 +3278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Shrine 2",
@@ -3295,7 +3295,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Shrine 3",
@@ -3312,7 +3312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Shrine 4",
@@ -3329,7 +3329,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Shrine 5",
@@ -3346,7 +3346,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Radio Scanner 1",
@@ -3363,7 +3363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Siren's Call: Newt Altar 1",
@@ -3380,7 +3380,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3411,7 +3411,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 2",
@@ -3428,7 +3428,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 3",
@@ -3445,7 +3445,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 4",
@@ -3462,7 +3462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 5",
@@ -3479,7 +3479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 6",
@@ -3496,7 +3496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 7",
@@ -3513,7 +3513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 8",
@@ -3530,7 +3530,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 9",
@@ -3547,7 +3547,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Chest 10",
@@ -3564,7 +3564,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Shrine 1",
@@ -3581,7 +3581,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Shrine 2",
@@ -3598,7 +3598,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Shrine 3",
@@ -3615,7 +3615,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Shrine 4",
@@ -3632,7 +3632,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Shrine 5",
@@ -3649,7 +3649,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Radio Scanner 1",
@@ -3666,7 +3666,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sundered Grove: Newt Altar 1",
@@ -3683,7 +3683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3721,7 +3721,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 2",
@@ -3738,7 +3738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 3",
@@ -3755,7 +3755,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 4",
@@ -3772,7 +3772,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 5",
@@ -3789,7 +3789,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 6",
@@ -3806,7 +3806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 7",
@@ -3823,7 +3823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 8",
@@ -3840,7 +3840,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 9",
@@ -3857,7 +3857,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Chest 10",
@@ -3874,7 +3874,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Shrine 1",
@@ -3891,7 +3891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Shrine 2",
@@ -3908,7 +3908,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Shrine 3",
@@ -3925,7 +3925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Shrine 4",
@@ -3942,7 +3942,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Shrine 5",
@@ -3959,7 +3959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Radio Scanner 1",
@@ -3976,7 +3976,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Meadow: Newt Altar 1",
@@ -3993,7 +3993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },

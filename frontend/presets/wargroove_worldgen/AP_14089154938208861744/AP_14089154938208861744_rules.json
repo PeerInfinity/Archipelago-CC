@@ -68,7 +68,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Humble Beginnings: Chest 1",
@@ -82,7 +82,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Humble Beginnings: Chest 2",
@@ -96,7 +96,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Humble Beginnings: Victory",
@@ -110,7 +110,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -152,7 +152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Best Friendssss: Victory",
@@ -166,7 +166,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -208,7 +208,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "A Knight's Folly: Victory",
@@ -222,7 +222,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -264,7 +264,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Denrunaway: Victory",
@@ -278,7 +278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -312,7 +312,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -346,7 +346,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Deep Thicket: Victory",
@@ -363,7 +363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -405,7 +405,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -458,7 +458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mage Mayhem: Victory",
@@ -478,7 +478,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -567,7 +567,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -601,7 +601,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ambushed in the Middle: Victory (Green)",
@@ -618,7 +618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -680,7 +680,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -717,7 +717,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Frigid Archery: Victory",
@@ -734,7 +734,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -774,7 +774,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Archery Lessons: Victory",
@@ -794,7 +794,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -828,7 +828,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Surrounded: Victory",
@@ -856,7 +856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -890,7 +890,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -927,7 +927,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -964,7 +964,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Open Season: Victory",
@@ -995,7 +995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1029,7 +1029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doggo Mountain: Victory",
@@ -1057,7 +1057,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1094,7 +1094,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1131,7 +1131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1165,7 +1165,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1199,7 +1199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1233,7 +1233,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rebel Village: Victory (Red)",
@@ -1261,7 +1261,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },

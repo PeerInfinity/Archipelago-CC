@@ -69,7 +69,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -84,14 +84,8 @@
             "name": "Kings Grave Outer Rocks",
             "connected_region": "Kings Grave Area",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_heavy_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift heavy rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_heavy_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -230,7 +224,7 @@
             "connected_region": "Mini Moldorm Cave",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -238,7 +232,7 @@
             "connected_region": "Ice Rod Cave",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -317,28 +311,16 @@
             "name": "Sanctuary Grave",
             "connected_region": "Sewer Drop",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
             "name": "Death Mountain Entrance Rock",
             "connected_region": "Death Mountain Entrance",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -359,7 +341,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -378,7 +360,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -400,7 +382,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -428,7 +410,7 @@
                       "children": [
                         {
                           "rule": "can_lift_rocks",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Has",
@@ -440,7 +422,7 @@
                     },
                     {
                       "rule": "can_lift_heavy_rocks",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -521,7 +503,7 @@
             "connected_region": "Light World Bomb Hut",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -549,14 +531,8 @@
             "name": "20 Rupee Cave",
             "connected_region": "20 Rupee Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -600,14 +576,8 @@
             "name": "50 Rupee Cave",
             "connected_region": "50 Rupee Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -629,7 +599,7 @@
             "connected_region": "Swamp Healer Fairy",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -684,7 +654,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598264,
             "shop_slot_disabled": false
@@ -701,7 +671,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598265,
             "shop_slot_disabled": false
@@ -721,7 +691,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598269,
             "shop_slot_disabled": false
@@ -741,7 +711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598292,
             "shop_slot_disabled": false
@@ -761,7 +731,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598297,
             "shop_slot_disabled": false
@@ -781,7 +751,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event": true,
             "crystal": false,
             "shop_slot_disabled": false
@@ -830,14 +800,8 @@
             "name": "Lake Hylia Central Island Teleporter",
             "connected_region": "Dark Lake Hylia Central Island",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_heavy_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift heavy rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_heavy_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -856,7 +820,7 @@
             "id": 60175,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (5)",
@@ -864,7 +828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598179,
             "shop_slot_disabled": false
@@ -881,7 +845,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598182,
             "shop_slot_disabled": false
@@ -898,7 +862,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598185,
             "shop_slot_disabled": false
@@ -915,7 +879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598188,
             "shop_slot_disabled": false
@@ -932,7 +896,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598191,
             "shop_slot_disabled": false
@@ -967,7 +931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598303,
             "shop_slot_disabled": false
@@ -984,7 +948,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597765,
             "shop_slot_disabled": false
@@ -1011,7 +975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598304,
             "shop_slot_disabled": false
@@ -1031,7 +995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598296,
             "shop_slot_disabled": false
@@ -1058,7 +1022,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597828,
             "shop_slot_disabled": false
@@ -1075,7 +1039,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597861,
             "shop_slot_disabled": false
@@ -1103,14 +1067,8 @@
             "name": "Kings Grave Inner Rocks",
             "connected_region": "Light World",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_heavy_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift heavy rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_heavy_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -1136,7 +1094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597774,
             "shop_slot_disabled": false
@@ -1197,7 +1155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597792,
             "shop_slot_disabled": false
@@ -1232,7 +1190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597840,
             "shop_slot_disabled": false
@@ -1276,7 +1234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597858,
             "shop_slot_disabled": false
@@ -1500,7 +1458,7 @@
             "id": 59881,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Piece of Heart",
@@ -1508,7 +1466,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597885,
             "shop_slot_disabled": false
@@ -1528,7 +1486,7 @@
             "id": 59890,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (20)",
@@ -1536,7 +1494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597894,
             "shop_slot_disabled": false
@@ -1555,14 +1513,8 @@
             "name": "Sahasrahla's Hut - Left",
             "id": 60034,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (20)",
@@ -1570,7 +1522,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598038,
             "shop_slot_disabled": false
@@ -1579,14 +1531,8 @@
             "name": "Sahasrahla's Hut - Middle",
             "id": 60037,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Hookshot",
@@ -1594,7 +1540,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598041,
             "shop_slot_disabled": false
@@ -1603,14 +1549,8 @@
             "name": "Sahasrahla's Hut - Right",
             "id": 60040,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (50)",
@@ -1618,7 +1558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598044,
             "shop_slot_disabled": false
@@ -1638,7 +1578,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598309,
             "shop_slot_disabled": false
@@ -1666,7 +1606,7 @@
             "id": 60046,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (300)",
@@ -1674,7 +1614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598050,
             "shop_slot_disabled": false
@@ -1691,7 +1631,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598053,
             "shop_slot_disabled": false
@@ -1708,7 +1648,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598056,
             "shop_slot_disabled": false
@@ -1725,7 +1665,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598059,
             "shop_slot_disabled": false
@@ -1742,7 +1682,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598062,
             "shop_slot_disabled": false
@@ -1789,7 +1729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598310,
             "shop_slot_disabled": false
@@ -1875,7 +1815,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598302,
             "shop_slot_disabled": false
@@ -1923,7 +1863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598311,
             "shop_slot_disabled": false
@@ -1950,7 +1890,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598312,
             "shop_slot_disabled": false
@@ -1985,7 +1925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598280,
             "shop_slot_disabled": false
@@ -2037,7 +1977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598281,
             "shop_slot_disabled": false
@@ -2098,7 +2038,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598283,
             "shop_slot_disabled": false
@@ -2135,7 +2075,7 @@
             "id": 1572868,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupee (1)",
@@ -2143,7 +2083,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598284,
             "shop_slot_disabled": false
@@ -2170,7 +2110,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598285,
             "shop_slot_disabled": false
@@ -2199,14 +2139,16 @@
             "name": "Mini Moldorm Cave - Far Left",
             "id": 60226,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Cape",
@@ -2214,7 +2156,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598230,
             "shop_slot_disabled": false
@@ -2223,14 +2165,16 @@
             "name": "Mini Moldorm Cave - Left",
             "id": 60229,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bombs (3)",
@@ -2238,7 +2182,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598233,
             "shop_slot_disabled": false
@@ -2247,14 +2191,16 @@
             "name": "Mini Moldorm Cave - Right",
             "id": 60232,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Moon Pearl",
@@ -2262,7 +2208,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598236,
             "shop_slot_disabled": false
@@ -2271,14 +2217,16 @@
             "name": "Mini Moldorm Cave - Far Right",
             "id": 60235,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Rupees (20)",
@@ -2286,7 +2234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598239,
             "shop_slot_disabled": false
@@ -2295,14 +2243,16 @@
             "name": "Mini Moldorm Cave - Generous Guy",
             "id": 1572880,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bombs (3)",
@@ -2310,7 +2260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598298,
             "shop_slot_disabled": false
@@ -2337,7 +2287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598242,
             "shop_slot_disabled": false
@@ -2404,7 +2354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598227,
             "shop_slot_disabled": false
@@ -2434,7 +2384,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598300,
             "shop_slot_disabled": false
@@ -2474,7 +2424,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598301,
             "shop_slot_disabled": false
@@ -2501,7 +2451,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598291,
             "shop_slot_disabled": false
@@ -2546,28 +2496,16 @@
             "name": "Two Brothers House Exit (East)",
             "connected_region": "Light World",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
             "name": "Two Brothers House Exit (West)",
             "connected_region": "Maze Race Ledge",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2601,7 +2539,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598289,
             "shop_slot_disabled": false
@@ -2629,14 +2567,8 @@
             "name": "Desert Palace Entrance (North) Rocks",
             "connected_region": "Desert Palace Entrance (North) Spot",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -2660,7 +2592,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598290,
             "shop_slot_disabled": false
@@ -2678,14 +2610,8 @@
             "name": "Checkerboard Cave",
             "connected_region": "Checkerboard Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2750,14 +2676,8 @@
             "name": "Desert Ledge Return Rocks",
             "connected_region": "Desert Ledge",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -2819,7 +2739,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597795,
             "shop_slot_disabled": false
@@ -2839,7 +2759,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598306,
             "shop_slot_disabled": false
@@ -2856,7 +2776,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597834,
             "shop_slot_disabled": false
@@ -2909,7 +2829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597855,
             "shop_slot_disabled": false
@@ -2918,14 +2838,16 @@
             "name": "Desert Palace - Big Key Chest",
             "id": 59842,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "kill_most_things",
-                "inferred": true,
-                "description": "Requires ability to kill most things",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_kill_most_things",
+              "_original_ast_type": "rb_defined_helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Compass (Desert Palace)",
@@ -2933,7 +2855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597846,
             "shop_slot_disabled": false
@@ -2969,7 +2891,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310768,
             "shop_slot_disabled": false
@@ -2982,7 +2904,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3007,7 +2929,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310762,
             "shop_slot_disabled": false
@@ -3020,7 +2942,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3045,7 +2967,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310759,
             "shop_slot_disabled": false
@@ -3126,7 +3048,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598271,
             "shop_slot_disabled": false
@@ -3257,7 +3179,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597771,
             "shop_slot_disabled": false
@@ -3277,7 +3199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597777,
             "shop_slot_disabled": false
@@ -3294,7 +3216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597831,
             "shop_slot_disabled": false
@@ -3314,7 +3236,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310810,
             "shop_slot_disabled": false
@@ -3327,7 +3249,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3354,7 +3276,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310792,
             "shop_slot_disabled": false
@@ -3367,7 +3289,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3394,7 +3316,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597837,
             "shop_slot_disabled": false
@@ -3411,7 +3333,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597897,
             "shop_slot_disabled": false
@@ -3495,7 +3417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598270,
             "shop_slot_disabled": false
@@ -3614,7 +3536,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598313,
             "shop_slot_disabled": false
@@ -3684,7 +3606,7 @@
               "children": [
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -3755,11 +3677,11 @@
               "children": [
                 {
                   "rule": "basement_key_rule",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3777,7 +3699,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597768,
             "shop_slot_disabled": false
@@ -3794,7 +3716,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598176,
             "shop_slot_disabled": false
@@ -3863,7 +3785,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598173,
             "shop_slot_disabled": false
@@ -3873,7 +3795,7 @@
             "id": 1310775,
             "access_rule": {
               "rule": "can_kill_most_things",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -3889,7 +3811,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310774,
             "shop_slot_disabled": false
@@ -3902,11 +3824,11 @@
               "children": [
                 {
                   "rule": "basement_key_rule",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3924,7 +3846,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310771,
             "shop_slot_disabled": false
@@ -3937,7 +3859,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -3962,7 +3884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310780,
             "shop_slot_disabled": false
@@ -4063,7 +3985,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597762,
             "shop_slot_disabled": false
@@ -4076,7 +3998,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -4101,7 +4023,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310732,
             "shop_slot_disabled": false
@@ -4149,14 +4071,8 @@
             "name": "Sewers Secret Room",
             "connected_region": "Sewers Secret Room",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "bomb_or_bonk",
-                "inferred": true,
-                "description": "Requires ability to bomb or bonk",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_bomb_or_bonk",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4183,7 +4099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598257,
             "shop_slot_disabled": false
@@ -4200,7 +4116,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598260,
             "shop_slot_disabled": false
@@ -4217,7 +4133,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598263,
             "shop_slot_disabled": false
@@ -4252,7 +4168,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598029,
             "shop_slot_disabled": false
@@ -4275,7 +4191,7 @@
               "children": [
                 {
                   "rule": "has_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -4307,7 +4223,7 @@
             "id": 60085,
             "access_rule": {
               "rule": "can_kill_most_things",
-              "_original_ast_type": "helper",
+              "_original_ast_type": "rb_defined_helper",
               "args": [
                 {
                   "rule": "Constant",
@@ -4323,7 +4239,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598089,
             "shop_slot_disabled": false
@@ -4336,7 +4252,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -4363,7 +4279,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598086,
             "shop_slot_disabled": false
@@ -4376,7 +4292,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -4407,7 +4323,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310816,
             "shop_slot_disabled": false
@@ -4420,7 +4336,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -4451,7 +4367,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310801,
             "shop_slot_disabled": false
@@ -4569,7 +4485,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598308,
             "shop_slot_disabled": false
@@ -4795,7 +4711,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598282,
             "shop_slot_disabled": false
@@ -4878,14 +4794,8 @@
             "name": "East Death Mountain Teleporter",
             "connected_region": "Dark Death Mountain (East Bottom)",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_heavy_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift heavy rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_heavy_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4899,14 +4809,8 @@
             "name": "Fairy Ascension Rocks",
             "connected_region": "Fairy Ascension Plateau",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_heavy_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift heavy rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_heavy_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -4955,7 +4859,7 @@
             "connected_region": "Light World Death Mountain Shop",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -4992,15 +4896,15 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -5019,7 +4923,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598206,
             "shop_slot_disabled": false
@@ -5032,15 +4936,15 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -5059,7 +4963,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598209,
             "shop_slot_disabled": false
@@ -5072,15 +4976,15 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -5099,7 +5003,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598212,
             "shop_slot_disabled": false
@@ -5112,15 +5016,15 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -5139,7 +5043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598215,
             "shop_slot_disabled": false
@@ -5152,15 +5056,15 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAny",
@@ -5179,7 +5083,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598218,
             "shop_slot_disabled": false
@@ -5189,7 +5093,7 @@
             "id": 60217,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Book of Mudora",
@@ -5197,7 +5101,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598221,
             "shop_slot_disabled": false
@@ -5207,7 +5111,7 @@
             "id": 60220,
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Rupees (20)",
@@ -5215,7 +5119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598224,
             "shop_slot_disabled": false
@@ -5309,7 +5213,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -5389,7 +5293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597843,
             "shop_slot_disabled": false
@@ -5563,14 +5467,8 @@
             "name": "Ether Tablet",
             "id": 1572886,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "retrieve_tablet",
-                "inferred": true,
-                "description": "Requires ability to retrieve tablet",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_retrieve_tablet",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Arrows (10)",
@@ -5578,7 +5476,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598267,
             "shop_slot_disabled": false
@@ -5613,7 +5511,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598287,
             "shop_slot_disabled": false
@@ -5635,7 +5533,7 @@
               "children": [
                 {
                   "rule": "can_activate_crystal_switch",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -5654,7 +5552,7 @@
               "children": [
                 {
                   "rule": "can_activate_crystal_switch",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -5664,7 +5562,7 @@
                       "children": [
                         {
                           "rule": "can_shoot_arrows",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Has",
@@ -5676,7 +5574,7 @@
                     },
                     {
                       "rule": "has_melee_weapon",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "HasAny",
@@ -5711,14 +5609,8 @@
             "name": "Tower of Hera - Basement Cage",
             "id": 1573218,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "activate_crystal_switch",
-                "inferred": true,
-                "description": "Requires ability to activate crystal switch",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_activate_crystal_switch",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Compass (Tower of Hera)",
@@ -5726,7 +5618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598266,
             "shop_slot_disabled": false
@@ -5735,14 +5627,8 @@
             "name": "Tower of Hera - Map Chest",
             "id": 59821,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "activate_crystal_switch",
-                "inferred": true,
-                "description": "Requires ability to activate crystal switch",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_activate_crystal_switch",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Big Key (Tower of Hera)",
@@ -5750,7 +5636,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597825,
             "shop_slot_disabled": false
@@ -5771,7 +5657,7 @@
             "id": 59878,
             "access_rule": {
               "rule": "has_fire_source",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Bombs (3)",
@@ -5779,7 +5665,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597882,
             "shop_slot_disabled": false
@@ -5807,7 +5693,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597903,
             "shop_slot_disabled": false
@@ -5827,7 +5713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597900,
             "shop_slot_disabled": false
@@ -5885,7 +5771,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598272,
             "shop_slot_disabled": false
@@ -5978,7 +5864,7 @@
                     },
                     {
                       "rule": "cross_peg_bridge",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   ]
                 },
@@ -6094,7 +5980,7 @@
                   "children": [
                     {
                       "rule": "can_lift_rocks",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "HasAny",
@@ -6130,7 +6016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598294,
             "shop_slot_disabled": false
@@ -6148,14 +6034,8 @@
             "name": "Catfish Exit Rock",
             "connected_region": "Northeast Dark World",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -6175,7 +6055,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598305,
             "shop_slot_disabled": false
@@ -6220,7 +6100,7 @@
                   "children": [
                     {
                       "rule": "can_lift_rocks",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -6243,14 +6123,8 @@
             "name": "Catfish Entrance Rock",
             "connected_region": "Catfish",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "lift_rocks",
-                "inferred": true,
-                "description": "Requires ability to lift rocks",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_lift_rocks",
+              "_original_ast_type": "rb_defined_helper"
             }
           },
           {
@@ -6317,7 +6191,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6343,7 +6217,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6448,7 +6322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598314,
             "shop_slot_disabled": false
@@ -6468,7 +6342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598295,
             "shop_slot_disabled": false
@@ -6487,14 +6361,8 @@
             "name": "Bombos Tablet",
             "id": 1572887,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "retrieve_tablet",
-                "inferred": true,
-                "description": "Requires ability to retrieve tablet",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_retrieve_tablet",
+              "_original_ast_type": "rb_defined_helper"
             },
             "item": {
               "name": "Hammer",
@@ -6502,7 +6370,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598268,
             "shop_slot_disabled": false
@@ -6622,7 +6490,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6648,7 +6516,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6698,7 +6566,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6714,7 +6582,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598194,
             "shop_slot_disabled": false
@@ -6727,7 +6595,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6743,7 +6611,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598197,
             "shop_slot_disabled": false
@@ -6756,7 +6624,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6772,7 +6640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598200,
             "shop_slot_disabled": false
@@ -6785,7 +6653,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6801,7 +6669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598203,
             "shop_slot_disabled": false
@@ -6818,7 +6686,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598299,
             "shop_slot_disabled": false
@@ -6860,7 +6728,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6929,7 +6797,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -6968,7 +6836,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -7017,7 +6885,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -7108,7 +6976,7 @@
               "children": [
                 {
                   "rule": "can_lift_heavy_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -7247,7 +7115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598286,
             "shop_slot_disabled": false
@@ -7277,7 +7145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597780,
             "shop_slot_disabled": false
@@ -7297,7 +7165,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597783,
             "shop_slot_disabled": false
@@ -7327,7 +7195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597888,
             "shop_slot_disabled": false
@@ -7357,7 +7225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597891,
             "shop_slot_disabled": false
@@ -7387,7 +7255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598315,
             "shop_slot_disabled": false
@@ -7506,7 +7374,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598293,
             "shop_slot_disabled": false
@@ -7616,11 +7484,11 @@
               "children": [
                 {
                   "rule": "has_misery_mire_medallion",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -7718,7 +7586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598023,
             "shop_slot_disabled": false
@@ -7738,7 +7606,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598026,
             "shop_slot_disabled": false
@@ -7842,7 +7710,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -7871,11 +7739,11 @@
               "children": [
                 {
                   "rule": "has_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "has_turtle_rock_medallion",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "CanReachRegion",
@@ -8034,7 +7902,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598032,
             "shop_slot_disabled": false
@@ -8054,7 +7922,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598035,
             "shop_slot_disabled": false
@@ -8100,7 +7968,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -8110,7 +7978,7 @@
                       "children": [
                         {
                           "rule": "can_extend_magic",
-                          "_original_ast_type": "helper",
+                          "_original_ast_type": "rb_defined_helper",
                           "args": [
                             {
                               "rule": "Constant",
@@ -8139,7 +8007,7 @@
                           "children": [
                             {
                               "rule": "can_extend_magic",
-                              "_original_ast_type": "helper",
+                              "_original_ast_type": "rb_defined_helper",
                               "args": [
                                 {
                                   "rule": "Constant",
@@ -8154,7 +8022,7 @@
                             },
                             {
                               "rule": "has_hearts",
-                              "_original_ast_type": "helper",
+                              "_original_ast_type": "rb_defined_helper",
                               "args": [
                                 {
                                   "rule": "Constant",
@@ -8199,7 +8067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598047,
             "shop_slot_disabled": false
@@ -8231,7 +8099,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -8262,7 +8130,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598245,
             "shop_slot_disabled": false
@@ -8285,7 +8153,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598248,
             "shop_slot_disabled": false
@@ -8319,7 +8187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598254,
             "shop_slot_disabled": false
@@ -8342,7 +8210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598251,
             "shop_slot_disabled": false
@@ -8368,7 +8236,7 @@
             "connected_region": "Hookshot Cave",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -8428,7 +8296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598288,
             "shop_slot_disabled": false
@@ -8554,7 +8422,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597849,
             "shop_slot_disabled": false
@@ -8627,7 +8495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598065,
             "shop_slot_disabled": false
@@ -8674,7 +8542,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -8690,7 +8558,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597786,
             "shop_slot_disabled": false
@@ -8710,7 +8578,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310744,
             "shop_slot_disabled": false
@@ -8742,7 +8610,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310741,
             "shop_slot_disabled": false
@@ -8810,7 +8678,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597789,
             "shop_slot_disabled": false
@@ -8830,7 +8698,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598068,
             "shop_slot_disabled": false
@@ -8853,7 +8721,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310738,
             "shop_slot_disabled": false
@@ -8873,7 +8741,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310735,
             "shop_slot_disabled": false
@@ -8904,7 +8772,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598074,
             "shop_slot_disabled": false
@@ -8924,7 +8792,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598071,
             "shop_slot_disabled": false
@@ -8955,7 +8823,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598077,
             "shop_slot_disabled": false
@@ -8975,7 +8843,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598080,
             "shop_slot_disabled": false
@@ -8995,7 +8863,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310729,
             "shop_slot_disabled": false
@@ -9015,7 +8883,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598083,
             "shop_slot_disabled": false
@@ -9091,7 +8959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598274,
             "shop_slot_disabled": false
@@ -9216,7 +9084,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597912,
             "shop_slot_disabled": false
@@ -9236,7 +9104,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597909,
             "shop_slot_disabled": false
@@ -9256,7 +9124,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597915,
             "shop_slot_disabled": false
@@ -9276,7 +9144,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597918,
             "shop_slot_disabled": false
@@ -9299,7 +9167,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -9340,7 +9208,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597921,
             "shop_slot_disabled": false
@@ -9375,7 +9243,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597924,
             "shop_slot_disabled": false
@@ -9395,7 +9263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310813,
             "shop_slot_disabled": false
@@ -9418,7 +9286,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310798,
             "shop_slot_disabled": false
@@ -9441,7 +9309,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597927,
             "shop_slot_disabled": false
@@ -9521,7 +9389,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598276,
             "shop_slot_disabled": false
@@ -9658,7 +9526,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597807,
             "shop_slot_disabled": false
@@ -9712,7 +9580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597852,
             "shop_slot_disabled": false
@@ -9776,7 +9644,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597798,
             "shop_slot_disabled": false
@@ -9796,7 +9664,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597813,
             "shop_slot_disabled": false
@@ -9831,7 +9699,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -9850,7 +9718,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597804,
             "shop_slot_disabled": false
@@ -9917,7 +9785,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597810,
             "shop_slot_disabled": false
@@ -9937,7 +9805,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310765,
             "shop_slot_disabled": false
@@ -9960,7 +9828,7 @@
               "children": [
                 {
                   "rule": "has_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -10002,7 +9870,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597906,
             "shop_slot_disabled": false
@@ -10033,7 +9901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310747,
             "shop_slot_disabled": false
@@ -10109,7 +9977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598275,
             "shop_slot_disabled": false
@@ -10208,11 +10076,11 @@
               "children": [
                 {
                   "rule": "can_melt_things",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -10240,7 +10108,7 @@
               "children": [
                 {
                   "rule": "can_melt_things",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -10256,7 +10124,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310723,
             "shop_slot_disabled": false
@@ -10269,7 +10137,7 @@
               "children": [
                 {
                   "rule": "can_melt_things",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -10288,7 +10156,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597864,
             "shop_slot_disabled": false
@@ -10331,7 +10199,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310753,
             "shop_slot_disabled": false
@@ -10417,7 +10285,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Or",
@@ -10478,7 +10346,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597801,
             "shop_slot_disabled": false
@@ -10498,7 +10366,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310789,
             "shop_slot_disabled": false
@@ -10521,7 +10389,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597822,
             "shop_slot_disabled": false
@@ -10541,7 +10409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597879,
             "shop_slot_disabled": false
@@ -10564,7 +10432,7 @@
               "children": [
                 {
                   "rule": "can_lift_rocks",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -10592,7 +10460,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597876,
             "shop_slot_disabled": false
@@ -10623,7 +10491,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597816,
             "shop_slot_disabled": false
@@ -10643,7 +10511,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597873,
             "shop_slot_disabled": false
@@ -10663,7 +10531,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310756,
             "shop_slot_disabled": false
@@ -10743,7 +10611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598277,
             "shop_slot_disabled": false
@@ -10838,11 +10706,11 @@
                   "children": [
                     {
                       "rule": "can_shoot_arrows",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_sword",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "HasAny",
@@ -10991,7 +10859,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598011,
             "shop_slot_disabled": false
@@ -11010,7 +10878,7 @@
                       "children": [
                         {
                           "rule": "can_activate_crystal_switch",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Has",
@@ -11044,7 +10912,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598014,
             "shop_slot_disabled": false
@@ -11063,7 +10931,7 @@
                       "children": [
                         {
                           "rule": "can_activate_crystal_switch",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "rb_defined_helper"
                         },
                         {
                           "rule": "Has",
@@ -11097,7 +10965,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598002,
             "shop_slot_disabled": false
@@ -11117,7 +10985,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598005,
             "shop_slot_disabled": false
@@ -11133,7 +11001,7 @@
                   "children": [
                     {
                       "rule": "has_hearts",
-                      "_original_ast_type": "helper",
+                      "_original_ast_type": "rb_defined_helper",
                       "args": [
                         {
                           "rule": "Constant",
@@ -11168,7 +11036,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597870,
             "shop_slot_disabled": false
@@ -11188,7 +11056,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310804,
             "shop_slot_disabled": false
@@ -11231,7 +11099,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310795,
             "shop_slot_disabled": false
@@ -11263,7 +11131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310819,
             "shop_slot_disabled": false
@@ -11287,7 +11155,7 @@
               "children": [
                 {
                   "rule": "has_fire_source",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -11303,7 +11171,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598008,
             "shop_slot_disabled": false
@@ -11316,7 +11184,7 @@
               "children": [
                 {
                   "rule": "has_fire_source",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -11332,7 +11200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598017,
             "shop_slot_disabled": false
@@ -11355,7 +11223,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -11445,7 +11313,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598278,
             "shop_slot_disabled": false
@@ -11603,7 +11471,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597942,
             "shop_slot_disabled": false
@@ -11627,7 +11495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597936,
             "shop_slot_disabled": false
@@ -11651,7 +11519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597939,
             "shop_slot_disabled": false
@@ -11735,7 +11603,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -11759,7 +11627,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310807,
             "shop_slot_disabled": false
@@ -11850,15 +11718,15 @@
                   "children": [
                     {
                       "rule": "can_shoot_arrows",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "has_beam_sword",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "HasAny",
@@ -11889,7 +11757,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597930,
             "shop_slot_disabled": false
@@ -11922,11 +11790,11 @@
               "children": [
                 {
                   "rule": "can_bomb_or_bonk",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -11956,7 +11824,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -11968,7 +11836,7 @@
                 },
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -11993,7 +11861,7 @@
                     "item_name": "Small Key (Turtle Rock)",
                     "count": {
                       "rule": "tr_big_key_chest_keys_needed",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     }
                   }
                 },
@@ -12011,7 +11879,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597945,
             "shop_slot_disabled": false
@@ -12024,7 +11892,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -12048,7 +11916,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310726,
             "shop_slot_disabled": false
@@ -12075,7 +11943,7 @@
             "connected_region": "Turtle Rock (Second Section)",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -12156,7 +12024,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597933,
             "shop_slot_disabled": false
@@ -12206,7 +12074,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597960,
             "shop_slot_disabled": false
@@ -12270,7 +12138,7 @@
             "connected_region": "Turtle Rock (Eye Bridge)",
             "access_rule": {
               "rule": "can_use_bombs",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "rb_defined_helper"
             }
           }
         ],
@@ -12327,7 +12195,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -12370,7 +12238,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597957,
             "shop_slot_disabled": false
@@ -12405,7 +12273,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597954,
             "shop_slot_disabled": false
@@ -12440,7 +12308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597951,
             "shop_slot_disabled": false
@@ -12475,7 +12343,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597948,
             "shop_slot_disabled": false
@@ -12555,7 +12423,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598279,
             "shop_slot_disabled": false
@@ -12657,11 +12525,11 @@
               "children": [
                 {
                   "rule": "can_bomb_or_bonk",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 }
               ]
             }
@@ -12690,7 +12558,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597999,
             "shop_slot_disabled": false
@@ -12784,7 +12652,7 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -12823,7 +12691,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597969,
             "shop_slot_disabled": false
@@ -12843,7 +12711,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597981,
             "shop_slot_disabled": false
@@ -12874,7 +12742,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597963,
             "shop_slot_disabled": false
@@ -12909,7 +12777,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -12925,7 +12793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597966,
             "shop_slot_disabled": false
@@ -12945,7 +12813,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597990,
             "shop_slot_disabled": false
@@ -13049,7 +12917,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597975,
             "shop_slot_disabled": false
@@ -13072,7 +12940,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597984,
             "shop_slot_disabled": false
@@ -13095,7 +12963,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597987,
             "shop_slot_disabled": false
@@ -13126,7 +12994,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597993,
             "shop_slot_disabled": false
@@ -13146,7 +13014,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597996,
             "shop_slot_disabled": false
@@ -13159,7 +13027,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "HasAll",
@@ -13178,7 +13046,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597972,
             "shop_slot_disabled": false
@@ -13209,7 +13077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1597978,
             "shop_slot_disabled": false
@@ -13289,7 +13157,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598273,
             "shop_slot_disabled": false
@@ -13415,7 +13283,7 @@
               "children": [
                 {
                   "rule": "can_shoot_arrows",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -13453,7 +13321,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598307,
             "shop_slot_disabled": false
@@ -13473,7 +13341,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598125,
             "shop_slot_disabled": false
@@ -13493,7 +13361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598128,
             "shop_slot_disabled": false
@@ -13513,7 +13381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310783,
             "shop_slot_disabled": false
@@ -13615,7 +13483,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598134,
             "shop_slot_disabled": false
@@ -13785,7 +13653,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598137,
             "shop_slot_disabled": false
@@ -13884,7 +13752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598140,
             "shop_slot_disabled": false
@@ -13983,7 +13851,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598143,
             "shop_slot_disabled": false
@@ -14082,7 +13950,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598146,
             "shop_slot_disabled": false
@@ -14181,7 +14049,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310777,
             "shop_slot_disabled": false
@@ -14288,7 +14156,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598092,
             "shop_slot_disabled": false
@@ -14311,7 +14179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598095,
             "shop_slot_disabled": false
@@ -14334,7 +14202,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598098,
             "shop_slot_disabled": false
@@ -14357,7 +14225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598101,
             "shop_slot_disabled": false
@@ -14373,7 +14241,7 @@
                   "children": [
                     {
                       "rule": "can_use_bombs",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "rb_defined_helper"
                     },
                     {
                       "rule": "Has",
@@ -14397,7 +14265,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310786,
             "shop_slot_disabled": false
@@ -14428,7 +14296,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598119,
             "shop_slot_disabled": false
@@ -14611,7 +14479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598116,
             "shop_slot_disabled": false
@@ -14711,7 +14579,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598104,
             "shop_slot_disabled": false
@@ -14792,7 +14660,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598107,
             "shop_slot_disabled": false
@@ -14873,7 +14741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598110,
             "shop_slot_disabled": false
@@ -14954,7 +14822,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598113,
             "shop_slot_disabled": false
@@ -14985,7 +14853,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598131,
             "shop_slot_disabled": false
@@ -15008,7 +14876,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598122,
             "shop_slot_disabled": false
@@ -15089,7 +14957,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598152,
             "shop_slot_disabled": false
@@ -15170,7 +15038,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598155,
             "shop_slot_disabled": false
@@ -15251,7 +15119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598149,
             "shop_slot_disabled": false
@@ -15364,7 +15232,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -15393,7 +15261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598161,
             "shop_slot_disabled": false
@@ -15413,7 +15281,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598164,
             "shop_slot_disabled": false
@@ -15426,7 +15294,7 @@
               "children": [
                 {
                   "rule": "can_use_bombs",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -15449,7 +15317,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598167,
             "shop_slot_disabled": false
@@ -15462,7 +15330,7 @@
               "children": [
                 {
                   "rule": "can_kill_most_things",
-                  "_original_ast_type": "helper",
+                  "_original_ast_type": "rb_defined_helper",
                   "args": [
                     {
                       "rule": "Constant",
@@ -15486,7 +15354,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1310750,
             "shop_slot_disabled": false
@@ -15594,7 +15462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "crystal": false,
             "player_address": 1598170,
             "shop_slot_disabled": false
@@ -15686,7 +15554,7 @@
               "children": [
                 {
                   "rule": "has_beam_sword",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 {
                   "rule": "Has",
@@ -15740,7 +15608,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event": true,
             "crystal": false,
             "shop_slot_disabled": false

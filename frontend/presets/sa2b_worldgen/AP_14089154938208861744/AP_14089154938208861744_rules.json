@@ -39,7 +39,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - 2",
@@ -56,7 +56,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 1",
@@ -70,7 +70,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 2",
@@ -84,7 +84,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - Chao Key 3",
@@ -98,7 +98,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - Gold Beetle",
@@ -112,7 +112,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "City Escape - Upgrade",
@@ -132,7 +132,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -155,7 +155,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - 2",
@@ -183,7 +183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 1",
@@ -197,7 +197,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 2",
@@ -214,7 +214,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - Chao Key 3",
@@ -231,7 +231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - Gold Beetle",
@@ -245,7 +245,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Harbor - Upgrade",
@@ -259,7 +259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -279,7 +279,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - 2",
@@ -296,7 +296,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 1",
@@ -310,7 +310,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 2",
@@ -324,7 +324,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - Chao Key 3",
@@ -338,7 +338,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - Gold Beetle",
@@ -352,7 +352,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Green Forest - Upgrade",
@@ -366,7 +366,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -389,7 +389,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - 2",
@@ -406,7 +406,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 1",
@@ -420,7 +420,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 2",
@@ -437,7 +437,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Chao Key 3",
@@ -458,7 +458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Gold Beetle",
@@ -475,7 +475,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pyramid Cave - Upgrade",
@@ -489,7 +489,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -516,7 +516,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - 2",
@@ -544,7 +544,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 1",
@@ -561,7 +561,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 2",
@@ -578,7 +578,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Chao Key 3",
@@ -599,7 +599,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Gold Beetle",
@@ -620,7 +620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Crazy Gadget - Upgrade",
@@ -637,7 +637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -660,7 +660,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - 2",
@@ -677,7 +677,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 1",
@@ -691,7 +691,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 2",
@@ -705,7 +705,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - Chao Key 3",
@@ -722,7 +722,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - Gold Beetle",
@@ -736,7 +736,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Rush - Upgrade",
@@ -753,7 +753,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -773,7 +773,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - 2",
@@ -790,7 +790,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 1",
@@ -807,7 +807,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 2",
@@ -824,7 +824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - Chao Key 3",
@@ -838,7 +838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - Gold Beetle",
@@ -852,7 +852,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prison Lane - Upgrade",
@@ -869,7 +869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -892,7 +892,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - 2",
@@ -920,7 +920,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 1",
@@ -937,7 +937,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 2",
@@ -954,7 +954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - Chao Key 3",
@@ -971,7 +971,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - Gold Beetle",
@@ -988,7 +988,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mission Street - Upgrade",
@@ -1002,7 +1002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1022,7 +1022,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Route 101 - 2",
@@ -1039,7 +1039,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1062,7 +1062,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hidden Base - 2",
@@ -1090,7 +1090,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hidden Base - Chao Key 1",
@@ -1107,7 +1107,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hidden Base - Chao Key 2",
@@ -1124,7 +1124,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hidden Base - Gold Beetle",
@@ -1141,7 +1141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hidden Base - Upgrade",
@@ -1161,7 +1161,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1187,7 +1187,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - 2",
@@ -1215,7 +1215,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 1",
@@ -1232,7 +1232,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 2",
@@ -1252,7 +1252,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - Chao Key 3",
@@ -1269,7 +1269,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - Gold Beetle",
@@ -1289,7 +1289,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Eternal Engine - Upgrade",
@@ -1306,7 +1306,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1326,7 +1326,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - 2",
@@ -1343,7 +1343,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 1",
@@ -1357,7 +1357,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 2",
@@ -1371,7 +1371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - Chao Key 3",
@@ -1385,7 +1385,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - Gold Beetle",
@@ -1399,7 +1399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wild Canyon - Upgrade",
@@ -1416,7 +1416,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1439,7 +1439,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - 2",
@@ -1456,7 +1456,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 1",
@@ -1470,7 +1470,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 2",
@@ -1484,7 +1484,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Chao Key 3",
@@ -1498,7 +1498,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Hill - Upgrade",
@@ -1512,7 +1512,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1535,7 +1535,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - 2",
@@ -1552,7 +1552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 1",
@@ -1566,7 +1566,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 2",
@@ -1580,7 +1580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Chao Key 3",
@@ -1594,7 +1594,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Gold Beetle",
@@ -1608,7 +1608,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Aquatic Mine - Upgrade",
@@ -1622,7 +1622,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1648,7 +1648,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - 2",
@@ -1679,7 +1679,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 1",
@@ -1696,7 +1696,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 2",
@@ -1713,7 +1713,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - Chao Key 3",
@@ -1733,7 +1733,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - Gold Beetle",
@@ -1753,7 +1753,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Death Chamber - Upgrade",
@@ -1767,7 +1767,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1793,7 +1793,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - 2",
@@ -1810,7 +1810,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 1",
@@ -1824,7 +1824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 2",
@@ -1838,7 +1838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - Chao Key 3",
@@ -1852,7 +1852,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - Gold Beetle",
@@ -1866,7 +1866,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meteor Herd - Upgrade",
@@ -1883,7 +1883,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1903,7 +1903,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - 2",
@@ -1920,7 +1920,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 1",
@@ -1934,7 +1934,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 2",
@@ -1948,7 +1948,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - Chao Key 3",
@@ -1962,7 +1962,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - Gold Beetle",
@@ -1976,7 +1976,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radical Highway - Upgrade",
@@ -1993,7 +1993,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2016,7 +2016,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - 2",
@@ -2033,7 +2033,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 1",
@@ -2047,7 +2047,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 2",
@@ -2064,7 +2064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - Chao Key 3",
@@ -2081,7 +2081,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - Gold Beetle",
@@ -2098,7 +2098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Jungle - Upgrade",
@@ -2112,7 +2112,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2132,7 +2132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - 2",
@@ -2149,7 +2149,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 1",
@@ -2163,7 +2163,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 2",
@@ -2177,7 +2177,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - Chao Key 3",
@@ -2191,7 +2191,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - Gold Beetle",
@@ -2205,7 +2205,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sky Rail - Upgrade",
@@ -2219,7 +2219,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2239,7 +2239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - 2",
@@ -2256,7 +2256,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 1",
@@ -2270,7 +2270,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 2",
@@ -2284,7 +2284,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - Chao Key 3",
@@ -2298,7 +2298,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - Gold Beetle",
@@ -2312,7 +2312,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Chase - Upgrade",
@@ -2326,7 +2326,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2346,7 +2346,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - 2",
@@ -2363,7 +2363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 1",
@@ -2377,7 +2377,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 2",
@@ -2391,7 +2391,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - Chao Key 3",
@@ -2405,7 +2405,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - Gold Beetle",
@@ -2419,7 +2419,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Iron Gate - Upgrade",
@@ -2436,7 +2436,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2456,7 +2456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - 2",
@@ -2473,7 +2473,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 1",
@@ -2487,7 +2487,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 2",
@@ -2501,7 +2501,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - Chao Key 3",
@@ -2515,7 +2515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - Gold Beetle",
@@ -2529,7 +2529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sand Ocean - Upgrade",
@@ -2546,7 +2546,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2569,7 +2569,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - 2",
@@ -2597,7 +2597,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 1",
@@ -2611,7 +2611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 2",
@@ -2625,7 +2625,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - Chao Key 3",
@@ -2642,7 +2642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - Gold Beetle",
@@ -2659,7 +2659,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Colony - Upgrade",
@@ -2673,7 +2673,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2699,7 +2699,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Weapons Bed - 2",
@@ -2730,7 +2730,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 1",
@@ -2744,7 +2744,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 2",
@@ -2764,7 +2764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Weapons Bed - Chao Key 3",
@@ -2784,7 +2784,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Weapons Bed - Upgrade",
@@ -2798,7 +2798,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2821,7 +2821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - 2",
@@ -2849,7 +2849,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 1",
@@ -2866,7 +2866,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 2",
@@ -2883,7 +2883,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Chao Key 3",
@@ -2900,7 +2900,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Gold Beetle",
@@ -2917,7 +2917,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cosmic Wall - Upgrade",
@@ -2934,7 +2934,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2954,7 +2954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - 2",
@@ -2971,7 +2971,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 1",
@@ -2985,7 +2985,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 2",
@@ -2999,7 +2999,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Chao Key 3",
@@ -3013,7 +3013,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Gold Beetle",
@@ -3034,7 +3034,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dry Lagoon - Upgrade",
@@ -3051,7 +3051,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3074,7 +3074,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - 2",
@@ -3091,7 +3091,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 1",
@@ -3105,7 +3105,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 2",
@@ -3119,7 +3119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - Chao Key 3",
@@ -3136,7 +3136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - Gold Beetle",
@@ -3150,7 +3150,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Egg Quarters - Upgrade",
@@ -3164,7 +3164,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3187,7 +3187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - 2",
@@ -3215,7 +3215,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 1",
@@ -3229,7 +3229,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 2",
@@ -3243,7 +3243,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - Chao Key 3",
@@ -3260,7 +3260,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - Gold Beetle",
@@ -3274,7 +3274,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Security Hall - Upgrade",
@@ -3294,7 +3294,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3314,7 +3314,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Route 280 - 2",
@@ -3331,7 +3331,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3357,7 +3357,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - 2",
@@ -3385,7 +3385,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 1",
@@ -3399,7 +3399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 2",
@@ -3416,7 +3416,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - Chao Key 3",
@@ -3433,7 +3433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - Gold Beetle",
@@ -3450,7 +3450,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mad Space - Upgrade",
@@ -3464,7 +3464,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3504,7 +3504,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cannon's Core - 2",
@@ -3535,7 +3535,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 1",
@@ -3556,7 +3556,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 2",
@@ -3576,7 +3576,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cannon's Core - Chao Key 3",
@@ -3599,7 +3599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cannon's Core - Gold Beetle",
@@ -3621,7 +3621,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3908,7 +3908,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4016,7 +4016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4113,7 +4113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
