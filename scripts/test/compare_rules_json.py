@@ -610,6 +610,119 @@ def normalize_rule_format(obj: Any) -> Any:
         return obj
 
 
+def _extract_constant_value(obj: Any) -> Any:
+    """Extract value from a constant wrapper, or return the value if already unwrapped."""
+    if isinstance(obj, dict) and obj.get('type') == 'constant':
+        return obj.get('value')
+    return obj
+
+
+def _convert_ast_function_to_rule(func: dict) -> Any:
+    """
+    Convert an inner AST function definition to Rule Builder format.
+
+    Handles:
+    - item_check -> Has
+    - state_method/has_all -> HasAll
+    - state_method/has_any -> HasAny
+    - state_method/has -> Has
+    - state_method/can_reach with Region -> CanReachRegion
+    - state_method/can_reach with Location -> CanReachLocation
+    - state_method/can_reach_location -> CanReachLocation
+    - and -> And (with recursively converted children)
+    - or -> Or (with recursively converted children)
+    """
+    if not isinstance(func, dict):
+        return None
+
+    func_type = func.get('type')
+
+    # item_check -> Has
+    if func_type == 'item_check':
+        item = _extract_constant_value(func.get('item'))
+        return {'rule': 'Has', 'args': {'item_name': item}}
+
+    # state_method -> various rules
+    if func_type == 'state_method':
+        method = func.get('method')
+        method_args = func.get('args', [])
+
+        if method == 'has_all' and len(method_args) >= 1:
+            items = _extract_constant_value(method_args[0])
+            if isinstance(items, list):
+                return {'rule': 'HasAll', 'args': {'items': items}}
+
+        if method == 'has_any' and len(method_args) >= 1:
+            items = _extract_constant_value(method_args[0])
+            if isinstance(items, list):
+                return {'rule': 'HasAny', 'args': {'items': items}}
+
+        if method == 'has' and len(method_args) >= 1:
+            item = _extract_constant_value(method_args[0])
+            return {'rule': 'Has', 'args': {'item_name': item}}
+
+        if method == 'can_reach' and len(method_args) >= 2:
+            target = _extract_constant_value(method_args[0])
+            kind = _extract_constant_value(method_args[1])
+            if kind == 'Region':
+                return {'rule': 'CanReachRegion', 'args': {'region_name': target}}
+            elif kind == 'Location':
+                return {'rule': 'CanReachLocation', 'args': {'location_name': target}}
+
+        if method == 'can_reach_location' and len(method_args) >= 1:
+            loc = _extract_constant_value(method_args[0])
+            return {'rule': 'CanReachLocation', 'args': {'location_name': loc}}
+
+    # and -> And with recursively converted children
+    if func_type == 'and':
+        conditions = func.get('conditions', [])
+        children = []
+        for cond in conditions:
+            converted = _convert_ast_function_to_rule(cond)
+            children.append(converted if converted is not None else cond)
+        return {'rule': 'And', 'children': children}
+
+    # or -> Or with recursively converted children
+    if func_type == 'or':
+        conditions = func.get('conditions', [])
+        children = []
+        for cond in conditions:
+            converted = _convert_ast_function_to_rule(cond)
+            children.append(converted if converted is not None else cond)
+        return {'rule': 'Or', 'children': children}
+
+    # Can't convert - return None to keep the original
+    return None
+
+
+def normalize_ast_function_call(obj: Any) -> Any:
+    """
+    Normalize AST_function_call rules to their equivalent Rule Builder rules.
+
+    Original exports may wrap rules in AST_function_call format:
+        {"rule": "AST_function_call", "args": {"function": {"type": "item_check", "item": "X"}, ...}}
+
+    WorldGen exports the equivalent Rule Builder rules directly:
+        {"rule": "Has", "args": {"item_name": "X"}}
+
+    This converts AST_function_call rules by interpreting the inner function AST
+    and producing the equivalent Rule Builder format. Subsequent normalizers
+    (normalize_hasall_single_item, normalize_and_has_patterns, etc.) handle
+    further simplifications.
+    """
+    if isinstance(obj, dict):
+        if obj.get('rule') == 'AST_function_call':
+            function = obj.get('args', {}).get('function', {})
+            converted = _convert_ast_function_to_rule(function)
+            if converted is not None:
+                return normalize_ast_function_call(converted)
+        # Recursively normalize nested objects
+        return {k: normalize_ast_function_call(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_ast_function_call(item) for item in obj]
+    return obj
+
+
 def normalize_state_method_to_rule(obj: Any) -> Any:
     """
     Normalize StateMethod rules to their equivalent Rule Builder rules.
@@ -2224,6 +2337,11 @@ def main():
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize AST_function_call rules to Rule Builder equivalents
+    # (e.g., AST_function_call(item_check("X")) -> Has("X"))
+    original_normalized = normalize_ast_function_call(original_normalized)
+    worldgen_normalized = normalize_ast_function_call(worldgen_normalized)
 
     # Normalize StateMethod rules to Rule Builder equivalents
     # (e.g., StateMethod(has_any, items) -> HasAny(items))
