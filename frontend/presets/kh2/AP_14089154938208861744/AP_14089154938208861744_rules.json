@@ -32314,7 +32314,7 @@
         ],
         "title": "Archipelago Seed - Player1",
         "originalAuthor": "JaredWeakStrike",
-        "description": "Seed 14089154938208861744 was generated for Player1 - Player 1 at 09Feb2026-002543 UTC. Have fun! \nCredit to delilahisdidi for the icons!"
+        "description": "Seed 14089154938208861744 was generated for Player1 - Player 1 at 08Feb2026-224452 UTC. Have fun! \nCredit to delilahisdidi for the icons!"
       },
       "pooh_text": [
         {
@@ -32644,6 +32644,62 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
@@ -32701,62 +32757,6 @@
                   {
                     "type": "constant",
                     "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ]
               },

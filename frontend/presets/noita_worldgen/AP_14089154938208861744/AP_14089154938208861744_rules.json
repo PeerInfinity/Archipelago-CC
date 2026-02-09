@@ -66,7 +66,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Chest 2",
@@ -80,7 +80,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Chest 3",
@@ -94,7 +94,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 1",
@@ -108,7 +108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 2",
@@ -122,7 +122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 3",
@@ -136,7 +136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 4",
@@ -150,7 +150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 5",
@@ -164,7 +164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Pedestal 6",
@@ -178,7 +178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 2",
@@ -221,7 +221,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Holy Mountain Shop Item 2",
@@ -235,7 +235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Holy Mountain Shop Item 3",
@@ -249,7 +249,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Holy Mountain Shop Item 4",
@@ -263,7 +263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Holy Mountain Shop Item 5",
@@ -277,7 +277,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Coal Pits Holy Mountain Spell Refresh",
@@ -291,7 +291,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -416,7 +416,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Chest 2",
@@ -430,7 +430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Chest 3",
@@ -444,7 +444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 1",
@@ -458,7 +458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 2",
@@ -472,7 +472,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 3",
@@ -486,7 +486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 4",
@@ -500,7 +500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 5",
@@ -514,7 +514,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Pedestal 6",
@@ -528,7 +528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 4",
@@ -571,7 +571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Holy Mountain Shop Item 2",
@@ -585,7 +585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Holy Mountain Shop Item 3",
@@ -599,7 +599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Holy Mountain Shop Item 4",
@@ -613,7 +613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Holy Mountain Shop Item 5",
@@ -627,7 +627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hiisi Base Holy Mountain Spell Refresh",
@@ -641,7 +641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -669,7 +669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Laboratory Holy Mountain Shop Item 2",
@@ -683,7 +683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Laboratory Holy Mountain Shop Item 3",
@@ -697,7 +697,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Laboratory Holy Mountain Shop Item 4",
@@ -711,7 +711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Laboratory Holy Mountain Shop Item 5",
@@ -725,7 +725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Laboratory Holy Mountain Spell Refresh",
@@ -739,7 +739,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -831,7 +831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Chest 2",
@@ -845,7 +845,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Chest 3",
@@ -859,7 +859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 1",
@@ -873,7 +873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 2",
@@ -887,7 +887,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 3",
@@ -901,7 +901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 4",
@@ -915,7 +915,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 5",
@@ -929,7 +929,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mines Pedestal 6",
@@ -943,7 +943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 1",
@@ -1016,7 +1016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Secret Shop Item 2",
@@ -1030,7 +1030,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Secret Shop Item 3",
@@ -1044,7 +1044,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Secret Shop Item 4",
@@ -1058,7 +1058,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1106,7 +1106,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Chest 2",
@@ -1120,7 +1120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Chest 3",
@@ -1134,7 +1134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 1",
@@ -1148,7 +1148,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 2",
@@ -1162,7 +1162,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 3",
@@ -1176,7 +1176,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 4",
@@ -1190,7 +1190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 5",
@@ -1204,7 +1204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Pedestal 6",
@@ -1218,7 +1218,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 3",
@@ -1261,7 +1261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Holy Mountain Shop Item 2",
@@ -1275,7 +1275,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Holy Mountain Shop Item 3",
@@ -1289,7 +1289,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Holy Mountain Shop Item 4",
@@ -1303,7 +1303,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Holy Mountain Shop Item 5",
@@ -1317,7 +1317,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Snowy Depths Holy Mountain Spell Refresh",
@@ -1331,7 +1331,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1379,7 +1379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Chest 2",
@@ -1393,7 +1393,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Chest 3",
@@ -1407,7 +1407,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 1",
@@ -1421,7 +1421,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 2",
@@ -1435,7 +1435,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 3",
@@ -1449,7 +1449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 4",
@@ -1463,7 +1463,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 5",
@@ -1477,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Pedestal 6",
@@ -1491,7 +1491,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 7",
@@ -1534,7 +1534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Holy Mountain Shop Item 2",
@@ -1548,7 +1548,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Holy Mountain Shop Item 3",
@@ -1562,7 +1562,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Holy Mountain Shop Item 4",
@@ -1576,7 +1576,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Holy Mountain Shop Item 5",
@@ -1590,7 +1590,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Temple of the Art Holy Mountain Spell Refresh",
@@ -1604,7 +1604,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1692,7 +1692,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Chest 2",
@@ -1706,7 +1706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Chest 3",
@@ -1720,7 +1720,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 1",
@@ -1734,7 +1734,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 2",
@@ -1748,7 +1748,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 3",
@@ -1762,7 +1762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 4",
@@ -1776,7 +1776,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 5",
@@ -1790,7 +1790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Vault Pedestal 6",
@@ -1804,7 +1804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 6",
@@ -1909,7 +1909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Chest 2",
@@ -1923,7 +1923,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Chest 3",
@@ -1937,7 +1937,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 1",
@@ -1951,7 +1951,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 2",
@@ -1965,7 +1965,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 3",
@@ -1979,7 +1979,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 4",
@@ -1993,7 +1993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 5",
@@ -2007,7 +2007,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Pedestal 6",
@@ -2021,7 +2021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Portal to Holy Mountain 5",
@@ -2064,7 +2064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Holy Mountain Shop Item 2",
@@ -2078,7 +2078,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Holy Mountain Shop Item 3",
@@ -2092,7 +2092,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Holy Mountain Shop Item 4",
@@ -2106,7 +2106,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Holy Mountain Shop Item 5",
@@ -2120,7 +2120,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Jungle Holy Mountain Spell Refresh",
@@ -2134,7 +2134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2162,7 +2162,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Vault Holy Mountain Shop Item 2",
@@ -2176,7 +2176,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Vault Holy Mountain Shop Item 3",
@@ -2190,7 +2190,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Vault Holy Mountain Shop Item 4",
@@ -2204,7 +2204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Vault Holy Mountain Shop Item 5",
@@ -2218,7 +2218,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Vault Holy Mountain Spell Refresh",
@@ -2232,7 +2232,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },

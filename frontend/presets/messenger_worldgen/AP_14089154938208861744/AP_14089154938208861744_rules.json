@@ -128,7 +128,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -175,7 +175,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 27
           },
           {
@@ -194,7 +194,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 318
           },
           {
@@ -213,7 +213,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 467
           },
           {
@@ -232,7 +232,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 675
           },
           {
@@ -251,7 +251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 92
           },
           {
@@ -270,7 +270,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 201
           },
           {
@@ -289,7 +289,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 546
           },
           {
@@ -308,7 +308,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 1368
           },
           {
@@ -327,7 +327,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 1881
           },
           {
@@ -346,7 +346,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 2140
           },
           {
@@ -365,7 +365,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 67
           },
           {
@@ -384,7 +384,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 237
           },
           {
@@ -403,7 +403,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 743
           },
           {
@@ -422,7 +422,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 1124
           },
           {
@@ -441,7 +441,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 3532
           },
           {
@@ -460,7 +460,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 56
           },
           {
@@ -479,7 +479,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 142
           },
           {
@@ -498,7 +498,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 621
           },
           {
@@ -517,7 +517,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "cost": 1034
           }
         ]
@@ -538,7 +538,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Blue Kappa Figurine",
@@ -552,7 +552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Ountarde Figurine",
@@ -566,7 +566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Red Kappa Figurine",
@@ -580,7 +580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Demon King Figurine",
@@ -594,7 +594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Quillshroom Figurine",
@@ -608,7 +608,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Jumping Quillshroom Figurine",
@@ -622,7 +622,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Scurubu Figurine",
@@ -636,7 +636,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Jumping Scurubu Figurine",
@@ -650,7 +650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Wallaxer Figurine",
@@ -664,7 +664,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Barmath'azel Figurine",
@@ -678,7 +678,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Queen of Quills Figurine",
@@ -692,7 +692,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Demon Hive Figurine",
@@ -706,7 +706,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -729,7 +729,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -802,7 +802,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Ninja Village - Astral Seed",
@@ -816,7 +816,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Ninja Village Seal - Tree House",
@@ -833,7 +833,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Ninja Village"
@@ -992,7 +992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Autumn Hills Seal - Trip Saws",
@@ -1009,7 +1009,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Autumn Hills"
@@ -1150,7 +1150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Autumn Hills"
@@ -1230,7 +1230,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Autumn Hills"
@@ -1300,7 +1300,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Autumn Hills"
@@ -1336,7 +1336,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Autumn Hills Seal - Spike Ball Darts",
@@ -1356,7 +1356,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Autumn Hills"
@@ -1606,7 +1606,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Forlorn Temple"
@@ -1689,7 +1689,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Forlorn Temple"
@@ -1744,7 +1744,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Forlorn Temple"
@@ -1780,7 +1780,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Catacombs"
@@ -1886,7 +1886,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Catacombs"
@@ -1922,7 +1922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Catacombs - Ruxxtin",
@@ -1936,7 +1936,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Catacombs"
@@ -2028,7 +2028,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Catacombs Seal - Dirty Pond",
@@ -2042,7 +2042,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Catacombs"
@@ -2141,7 +2141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Bamboo Creek"
@@ -2198,7 +2198,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Bamboo Creek - Claustro",
@@ -2251,7 +2251,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Bamboo Creek"
@@ -2283,7 +2283,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Bamboo Creek"
@@ -2477,7 +2477,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Howling Grotto Seal - Windy Saws and Balls",
@@ -2494,7 +2494,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Howling Grotto"
@@ -2578,7 +2578,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Howling Grotto"
@@ -2620,7 +2620,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Howling Grotto"
@@ -2741,7 +2741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Howling Grotto"
@@ -2875,7 +2875,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Quillshroom Marsh"
@@ -2925,7 +2925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Quillshroom Marsh"
@@ -2961,7 +2961,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Quillshroom Marsh"
@@ -2997,7 +2997,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Quillshroom Marsh"
@@ -3054,7 +3054,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Quillshroom Marsh"
@@ -3216,7 +3216,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Searing Crags Portal",
@@ -3273,7 +3273,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Searing Crags"
@@ -3443,7 +3443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Searing Crags - Power Thistle",
@@ -3457,7 +3457,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Searing Crags - Astral Tea Leaves",
@@ -3474,7 +3474,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Searing Crags"
@@ -3503,7 +3503,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Searing Crags"
@@ -3556,7 +3556,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Searing Crags"
@@ -3592,7 +3592,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Searing Crags"
@@ -3758,7 +3758,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Glacial Peak"
@@ -3880,7 +3880,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Glacial Peak"
@@ -3916,7 +3916,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Glacial Peak"
@@ -4014,7 +4014,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Tower of Time"
@@ -4144,7 +4144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Tower of Time"
@@ -4176,7 +4176,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Tower of Time"
@@ -4446,7 +4446,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Cloud Ruins"
@@ -4495,7 +4495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Cloud Ruins"
@@ -4613,7 +4613,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Cloud Ruins"
@@ -4658,7 +4658,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Cloud Ruins"
@@ -4700,7 +4700,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Cloud Ruins"
@@ -4766,7 +4766,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Underworld"
@@ -4810,7 +4810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underworld Seal - Fireball Wave",
@@ -4830,7 +4830,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Underworld"
@@ -4953,7 +4953,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Underworld"
@@ -5043,7 +5043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Underworld"
@@ -5226,7 +5226,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Riviere Turquoise"
@@ -5288,7 +5288,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Riviere Turquoise"
@@ -5345,7 +5345,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Riviere Turquoise"
@@ -5366,7 +5366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Riviere Turquoise"
@@ -5467,7 +5467,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Elemental Skylands"
@@ -5572,7 +5572,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Elemental Skylands"
@@ -5637,7 +5637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Elemental Skylands"
@@ -5683,7 +5683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Elemental Skylands"
@@ -5773,7 +5773,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sunken Shrine Portal",
@@ -5845,7 +5845,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"
@@ -5933,7 +5933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"
@@ -5986,7 +5986,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"
@@ -6022,7 +6022,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"
@@ -6064,7 +6064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"
@@ -6100,7 +6100,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ],
         "parent": "Sunken Shrine"

@@ -60,7 +60,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Animation Pack",
@@ -84,7 +84,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Audio Pack",
@@ -108,7 +108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Pause Menu Pack",
@@ -132,7 +132,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Move Right coins",
@@ -198,7 +198,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Psychological Warfare Pack",
@@ -222,7 +222,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Armor for your Horse Pack",
@@ -246,7 +246,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shepherd Sheep",
@@ -263,7 +263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Movement Pack coins",
@@ -329,7 +329,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Map Pack",
@@ -353,7 +353,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Between Trees Sheep",
@@ -367,7 +367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hole in the Wall Sheep",
@@ -381,7 +381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Behind Tree coins",
@@ -430,7 +430,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Psychological Warfare coins",
@@ -496,7 +496,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Top Hat Pack",
@@ -520,7 +520,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "North West Alcove Sheep",
@@ -537,7 +537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Jump Total Left coins",
@@ -572,7 +572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Jump Total Left Cave coins",
@@ -610,7 +610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Jump Total Left Roof coins",
@@ -663,7 +663,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Jump Alcove Sheep",
@@ -677,7 +677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sexy Outfits Sheep",
@@ -691,7 +691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Jump Behind Tree coins",
@@ -726,7 +726,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cutscene Sheep",
@@ -740,7 +740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "True Double Jump Behind Tree coins",
@@ -806,7 +806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Night Map Pack",
@@ -830,7 +830,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Forest coins",
@@ -886,7 +886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest Low Sheep",
@@ -900,7 +900,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Forest with double Jump coins",
@@ -935,7 +935,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The Forest with double Jump Part 2 coins",
@@ -980,7 +980,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Winning Basic",

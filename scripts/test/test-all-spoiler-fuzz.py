@@ -154,6 +154,7 @@ def is_option_error(output: str) -> bool:
         "cannot be used with",
         "must have .* enabled",
         "needs at least .* levels",  # Overcooked! 2 level count error
+        "Not enough filler/trap items",  # FFMQ: brown_boxes!=include with 0 excludable items
     ]
 
     import re

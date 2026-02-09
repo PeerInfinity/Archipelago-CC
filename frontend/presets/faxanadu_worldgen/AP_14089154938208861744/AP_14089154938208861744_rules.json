@@ -53,16 +53,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Elixir",
@@ -70,16 +74,20 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key King",
@@ -87,16 +95,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key Jack",
@@ -104,16 +116,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Black Onyx",
@@ -121,16 +137,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wingboots",
@@ -138,7 +158,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -169,7 +189,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Apolune Death",
@@ -186,7 +206,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -227,7 +247,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Apolune Hand Dagger",
@@ -241,7 +261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Apolune Deluge",
@@ -255,7 +275,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Apolune Red Potion",
@@ -269,7 +289,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Apolune Key Jack",
@@ -286,7 +306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -321,7 +341,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Trunk Hidden Hourglass",
@@ -335,7 +355,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Trunk Boss Mattock",
@@ -349,7 +369,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -377,7 +397,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Forepaw Glove",
@@ -397,7 +417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -425,7 +445,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Studded Mail",
@@ -439,7 +459,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Small Shield",
@@ -453,7 +473,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Red Potion",
@@ -467,7 +487,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Wingboots",
@@ -481,7 +501,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Key Jack",
@@ -495,7 +515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forepaw Key Queen",
@@ -509,7 +529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -578,7 +598,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Trunk Hidden Red Potion",
@@ -592,7 +612,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Trunk Red Potion",
@@ -609,7 +629,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sky Spring",
@@ -647,7 +667,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Joker Spring",
@@ -682,7 +702,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Poison 2",
@@ -696,7 +716,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Hidden Wingboots",
@@ -710,7 +730,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Ointment",
@@ -724,7 +744,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Boss Wingboots",
@@ -738,7 +758,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Elixir",
@@ -752,7 +772,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Guru",
@@ -769,7 +789,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Fortress Spring",
@@ -837,7 +857,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -857,7 +877,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -885,7 +905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mascon Thunder",
@@ -899,7 +919,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mascon Mattock",
@@ -913,7 +933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mascon Red Potion",
@@ -927,7 +947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mascon Key Jack",
@@ -941,7 +961,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mascon Key Queen",
@@ -955,7 +975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -999,7 +1019,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty Shop Hourglass",
@@ -1013,7 +1033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty Shop Elixir",
@@ -1027,7 +1047,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty Shop Red Potion",
@@ -1041,16 +1061,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -1058,7 +1078,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1093,7 +1113,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Suffer Hidden Hourglass",
@@ -1107,7 +1127,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Suffer Pendant",
@@ -1121,7 +1141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1149,7 +1169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Victim Mattock",
@@ -1166,7 +1186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Victim Red Potion",
@@ -1180,7 +1200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Victim Key King",
@@ -1194,7 +1214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Victim Key Queen",
@@ -1208,7 +1228,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1262,7 +1282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mist Hidden Poison 1",
@@ -1276,7 +1296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mist Hidden Poison 2",
@@ -1290,7 +1310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mist Hidden Wingboots",
@@ -1304,7 +1324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty Magic Hall",
@@ -1318,7 +1338,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Misty House",
@@ -1335,7 +1355,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1355,7 +1375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1375,7 +1395,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Mist Elixir",
@@ -1389,7 +1409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Mist Black Onyx",
@@ -1403,7 +1423,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1451,7 +1471,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Conflate Poison",
@@ -1465,7 +1485,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1485,7 +1505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Helm Branch Battle Helmet",
@@ -1499,7 +1519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1519,7 +1539,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Conflate Magic Shield",
@@ -1533,7 +1553,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Conflate Wingboots",
@@ -1547,7 +1567,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Conflate Red Potion",
@@ -1561,7 +1581,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Conflate Guru",
@@ -1579,7 +1599,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1607,7 +1627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Branches Poison",
@@ -1621,7 +1641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Branches Hidden Mattock",
@@ -1638,7 +1658,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Branches Hidden Hourglass",
@@ -1652,7 +1672,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1680,7 +1700,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Daybreak Magical Rod",
@@ -1694,7 +1714,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Daybreak Hidden Wingboots 2",
@@ -1708,7 +1728,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Daybreak Poison",
@@ -1722,7 +1742,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Daybreak Glove",
@@ -1739,7 +1759,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Path to Daybreak Battle Suit",
@@ -1753,7 +1773,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1784,7 +1804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Daybreak Giant Blade",
@@ -1798,7 +1818,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Daybreak Red Potion",
@@ -1812,7 +1832,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Daybreak Key King",
@@ -1826,7 +1846,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Daybreak Key Queen",
@@ -1840,7 +1860,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1888,16 +1908,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Ring of Elf",
@@ -1905,7 +1925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1925,7 +1945,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Dartmoor Red Potion",
@@ -1939,7 +1959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Dartmoor Key King",
@@ -1953,7 +1973,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1973,16 +1993,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -1990,7 +2010,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Poison 1",
@@ -2004,7 +2024,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Poison 2",
@@ -2018,7 +2038,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Poison 3",
@@ -2032,7 +2052,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Hidden Hourglass",
@@ -2046,7 +2066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Dragon Slayer",
@@ -2060,7 +2080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fraternal Castle Guru",
@@ -2078,7 +2098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2098,7 +2118,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil Fortress Poison 1",
@@ -2112,7 +2132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil Fortress Glove",
@@ -2126,7 +2146,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil Fortress Poison 2",
@@ -2140,7 +2160,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil Fortress Poison 3",
@@ -2154,7 +2174,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil Fortress Hidden Glove",
@@ -2168,7 +2188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Evil One",

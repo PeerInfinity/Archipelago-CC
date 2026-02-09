@@ -100,7 +100,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -141,7 +141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -172,7 +172,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -203,7 +203,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -238,7 +238,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -276,7 +276,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -317,7 +317,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -354,7 +354,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -380,7 +380,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       }

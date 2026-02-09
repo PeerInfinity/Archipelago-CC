@@ -142,7 +142,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Intro Checkpoint",
@@ -156,7 +156,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -234,7 +234,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "South-East Tower Top Strawberry",
@@ -254,7 +254,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Theo Strawberry",
@@ -275,7 +275,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Fall Through Spike Floor Strawberry",
@@ -292,7 +292,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "South-West Dash Refills Strawberry",
@@ -312,7 +312,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "South-East Tower Side Strawberry",
@@ -329,7 +329,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Theo Tower Lower Cassette Strawberry",
@@ -351,7 +351,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Theo Tower Upper Cassette Strawberry",
@@ -373,7 +373,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "You Are Ready Cassette Strawberry",
@@ -395,7 +395,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Granny Checkpoint",
@@ -409,7 +409,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "South-East Tower Checkpoint",
@@ -423,7 +423,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Climb Sign Checkpoint",
@@ -437,7 +437,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -499,7 +499,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Falling Blocks Strawberry",
@@ -513,7 +513,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Girders Strawberry",
@@ -533,7 +533,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Breakable Blocks Strawberry",
@@ -567,7 +567,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "South End of Bridge Cassette Strawberry",
@@ -589,7 +589,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "North End of Bridge Cassette Strawberry",
@@ -610,7 +610,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Freeway Checkpoint",
@@ -624,7 +624,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Freeway Feather Checkpoint",
@@ -638,7 +638,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -669,7 +669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -737,7 +737,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Feather Chain Strawberry",
@@ -758,7 +758,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Feather Hidden Strawberry",
@@ -775,7 +775,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Distant Feather Cassette Strawberry",
@@ -798,7 +798,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Feather Arches Cassette Strawberry",
@@ -821,7 +821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Feather Maze Checkpoint",
@@ -835,7 +835,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -897,7 +897,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Dash Spike Climb Strawberry",
@@ -918,7 +918,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Dash Spring Strawberry",
@@ -940,7 +940,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cassette Hidden in the House Strawberry",
@@ -962,7 +962,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Double Dash House Checkpoint",
@@ -976,7 +976,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1032,7 +1032,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Badeline Tower Breakable Bottom Strawberry",
@@ -1053,7 +1053,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1143,7 +1143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Badeline Tower Checkpoint",
@@ -1157,7 +1157,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1218,7 +1218,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Badeline Island Checkpoint",
@@ -1232,7 +1232,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       }

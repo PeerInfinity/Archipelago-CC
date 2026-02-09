@@ -96,7 +96,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Getting into it",
@@ -110,7 +110,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "GPS",
@@ -124,7 +124,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -144,7 +144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -169,10 +169,14 @@
             "name": "Cutting with half cutter",
             "connected_region": "Achievements with half cutter",
             "access_rule": {
-              "rule": "can_cut_half",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "cut_half",
+                "inferred": true,
+                "description": "Requires ability to cut half",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -189,10 +193,14 @@
             "name": "Stacking shapes",
             "connected_region": "Achievements with stacker",
             "access_rule": {
-              "rule": "can_stack",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "stack",
+                "inferred": true,
+                "description": "Requires ability to stack",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -243,8 +251,6 @@
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -253,15 +259,11 @@
                 },
                 {
                   "rule": "can_mix_colors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_paint",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -276,15 +278,14 @@
             "name": "Building a MAM",
             "connected_region": "Achievements needing a MAM",
             "access_rule": {
-              "rule": "can_build_mam",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "build_mam",
+                "inferred": true,
+                "description": "Requires ability to build mam",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -296,8 +297,6 @@
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -306,15 +305,11 @@
                 },
                 {
                   "rule": "can_mix_colors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_paint",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -323,62 +318,20 @@
             "name": "Using first level building",
             "connected_region": "Levels with 1 building",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer",
-                  "Stacker"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           },
           {
             "name": "Using first upgrade building",
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Stacker",
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           },
           {
@@ -392,10 +345,14 @@
             "name": "Cutting in single half",
             "connected_region": "Shapesanity Half Uncolored",
             "access_rule": {
-              "rule": "can_make_half_shape",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "make_half_shape",
+                "inferred": true,
+                "description": "Requires ability to make half shape",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -409,15 +366,11 @@
                   "children": [
                     {
                       "rule": "can_cut_half",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_rotate_90",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
@@ -434,35 +387,42 @@
             "name": "Cutting and stacking into two halves",
             "connected_region": "Shapesanity Half-Half Uncolored",
             "access_rule": {
-              "rule": "can_make_half_half_shape",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "make_half_half_shape",
+                "inferred": true,
+                "description": "Requires ability to make half half shape",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Stitching complex shapes",
             "connected_region": "Shapesanity Stitched Uncolored",
             "access_rule": {
-              "rule": "can_make_stitched_shape",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "make_stitched_shape",
+                "inferred": true,
+                "description": "Requires ability to make stitched shape",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Rotating and stitching a single windmill half",
             "connected_region": "Shapesanity East Windmill Uncolored",
             "access_rule": {
-              "rule": "can_make_east_windmill",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "make_east_windmill",
+                "inferred": true,
+                "description": "Requires ability to make east windmill",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -474,8 +434,6 @@
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -484,9 +442,7 @@
                 },
                 {
                   "rule": "can_use_quad_painter",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -502,23 +458,17 @@
                   "children": [
                     {
                       "rule": "can_make_east_windmill",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -539,23 +489,17 @@
                   "children": [
                     {
                       "rule": "can_make_half_half_shape",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -576,23 +520,17 @@
                   "children": [
                     {
                       "rule": "can_make_half_shape",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
                 {
                   "rule": "can_make_stitched_shape",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "False_"
@@ -616,7 +554,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "PRIORITY"
           },
           {
@@ -631,7 +569,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "PRIORITY"
           },
           {
@@ -646,7 +584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 3",
@@ -660,7 +598,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Belt Upgrade Tier II",
@@ -674,7 +612,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier II",
@@ -688,7 +626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier II",
@@ -702,7 +640,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier II",
@@ -716,7 +654,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "It's a mess",
@@ -730,7 +668,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Oops",
@@ -744,7 +682,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -755,31 +693,10 @@
             "name": "Using second level building",
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer",
-                  "Stacker"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -796,7 +713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 5",
@@ -810,7 +727,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 6",
@@ -824,7 +741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 7",
@@ -838,7 +755,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -849,31 +766,10 @@
             "name": "Using third level building",
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer",
-                  "Stacker"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  }
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -890,7 +786,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 9",
@@ -904,7 +800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 10",
@@ -918,7 +814,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 11",
@@ -932,7 +828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -943,31 +839,10 @@
             "name": "Using fourth level building",
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer",
-                  "Stacker"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -984,7 +859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 13",
@@ -998,7 +873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 14",
@@ -1012,7 +887,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 15",
@@ -1026,7 +901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1037,31 +912,10 @@
             "name": "Using fifth level building",
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer",
-                  "Stacker"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -1078,7 +932,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 17",
@@ -1092,7 +946,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 18",
@@ -1106,7 +960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 19",
@@ -1120,7 +974,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1140,7 +994,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 20 Additional 2",
@@ -1154,7 +1008,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 20",
@@ -1168,7 +1022,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 21",
@@ -1182,7 +1036,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 22",
@@ -1196,7 +1050,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 23",
@@ -1210,7 +1064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 24",
@@ -1224,7 +1078,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Level 25",
@@ -1238,7 +1092,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Wires",
@@ -1252,7 +1106,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Goal",
@@ -1278,31 +1132,10 @@
             "name": "Using second upgrade building",
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Stacker",
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -1319,7 +1152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier III",
@@ -1333,7 +1166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier III",
@@ -1347,7 +1180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier III",
@@ -1361,7 +1194,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1372,31 +1205,10 @@
             "name": "Using third upgrade building",
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Stacker",
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  }
-                },
-                {
-                  "rule": "True_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -1413,7 +1225,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier IV",
@@ -1427,7 +1239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier IV",
@@ -1441,7 +1253,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier IV",
@@ -1455,7 +1267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1466,31 +1278,10 @@
             "name": "Using fourth upgrade building",
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Stacker",
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -1507,7 +1298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier V",
@@ -1521,7 +1312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier V",
@@ -1535,7 +1326,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier V",
@@ -1549,7 +1340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Faster",
@@ -1563,7 +1354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1574,31 +1365,10 @@
             "name": "Using fifth upgrade building",
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                [
-                  "Stacker",
-                  "Cutter",
-                  "Rotator",
-                  "Painter",
-                  "Color Mixer"
-                ],
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  }
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Logic_List_Building"
+              }
             }
           }
         ],
@@ -1615,7 +1385,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier VI",
@@ -1629,7 +1399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier VI",
@@ -1643,7 +1413,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier VI",
@@ -1657,7 +1427,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1677,7 +1447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier VII",
@@ -1691,7 +1461,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier VII",
@@ -1705,7 +1475,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier VII",
@@ -1719,7 +1489,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Belt Upgrade Tier VIII",
@@ -1733,7 +1503,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Miner Upgrade Tier VIII",
@@ -1747,7 +1517,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Processors Upgrade Tier VIII",
@@ -1761,7 +1531,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Painting Upgrade Tier VIII",
@@ -1775,7 +1545,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Even faster",
@@ -1789,7 +1559,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1809,7 +1579,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1829,7 +1599,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1849,7 +1619,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1869,7 +1639,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Stack overflow",
@@ -1883,7 +1653,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1903,7 +1673,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1923,7 +1693,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1943,7 +1713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Copy-Pasta",
@@ -1957,7 +1727,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1977,7 +1747,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "The next dimension",
@@ -1991,7 +1761,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2011,7 +1781,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2022,18 +1792,10 @@
             "name": "Delivering per second with 1.6x belt speed",
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
-              "rule": "has_x_belt_multiplier",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1.6
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "X_Belt_Multiplier"
+              }
             }
           }
         ],
@@ -2050,7 +1812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "To the moon",
@@ -2064,7 +1826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "It's piling up",
@@ -2078,7 +1840,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "I'll use it later",
@@ -2092,7 +1854,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "I've seen that before ...",
@@ -2106,7 +1868,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Memories from the past",
@@ -2120,7 +1882,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Preparing to launch",
@@ -2134,7 +1896,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "SpaceY",
@@ -2148,7 +1910,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Efficiency 1",
@@ -2162,7 +1924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Branding specialist 1",
@@ -2176,7 +1938,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2196,7 +1958,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Branding specialist 2",
@@ -2210,7 +1972,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2221,10 +1983,14 @@
             "name": "Painting a full shape",
             "connected_region": "Shapesanity Full Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2241,7 +2007,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 2",
@@ -2255,7 +2021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 3",
@@ -2269,7 +2035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2280,10 +2046,14 @@
             "name": "Mixing colors for a full shape",
             "connected_region": "Shapesanity Full Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2300,7 +2070,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2320,7 +2090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2331,10 +2101,14 @@
             "name": "Painting a half shape",
             "connected_region": "Shapesanity Half Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2347,10 +2121,14 @@
             "name": "Mixing colors for a half shape",
             "connected_region": "Shapesanity Half Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2367,7 +2145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 17",
@@ -2381,7 +2159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2401,7 +2179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 20",
@@ -2415,7 +2193,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2426,10 +2204,14 @@
             "name": "Painting a piece shape",
             "connected_region": "Shapesanity Piece Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2442,10 +2224,14 @@
             "name": "Mixing colors for a piece shape",
             "connected_region": "Shapesanity Piece Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2462,7 +2248,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 14",
@@ -2476,7 +2262,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 24",
@@ -2490,7 +2276,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2510,7 +2296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 9",
@@ -2524,7 +2310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 18",
@@ -2538,7 +2324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2549,10 +2335,14 @@
             "name": "Painting a stitched shape",
             "connected_region": "Shapesanity Stitched Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2569,7 +2359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2580,10 +2370,14 @@
             "name": "Mixing colors for a stitched shape",
             "connected_region": "Shapesanity Stitched Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2600,7 +2394,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 12",
@@ -2614,7 +2408,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 19",
@@ -2628,7 +2422,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 21",
@@ -2642,7 +2436,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 23",
@@ -2656,7 +2450,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 29",
@@ -2670,7 +2464,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 31",
@@ -2684,7 +2478,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 32",
@@ -2698,7 +2492,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2718,7 +2512,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 15",
@@ -2732,7 +2526,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 27",
@@ -2746,7 +2540,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 30",
@@ -2760,7 +2554,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 33",
@@ -2774,7 +2568,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 34",
@@ -2788,7 +2582,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 35",
@@ -2802,7 +2596,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 38",
@@ -2816,7 +2610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 40",
@@ -2830,7 +2624,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 41",
@@ -2844,7 +2638,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 42",
@@ -2858,7 +2652,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 43",
@@ -2872,7 +2666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 44",
@@ -2886,7 +2680,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 45",
@@ -2900,7 +2694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 46",
@@ -2914,7 +2708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 47",
@@ -2928,7 +2722,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 48",
@@ -2942,7 +2736,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2953,10 +2747,14 @@
             "name": "Painting a east windmill shape",
             "connected_region": "Shapesanity East Windmill Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2973,7 +2771,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2984,10 +2782,14 @@
             "name": "Mixing colors for a east windmill shape",
             "connected_region": "Shapesanity East Windmill Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3004,7 +2806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3024,7 +2826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3035,10 +2837,14 @@
             "name": "Painting a half-half shape",
             "connected_region": "Shapesanity Half-Half Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3051,10 +2857,14 @@
             "name": "Mixing colors for a half-half shape",
             "connected_region": "Shapesanity Half-Half Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3076,7 +2886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3087,10 +2897,14 @@
             "name": "Painting a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3103,10 +2917,14 @@
             "name": "Mixing colors for a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3119,10 +2937,14 @@
             "name": "Painting a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3135,10 +2957,14 @@
             "name": "Mixing colors for a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3160,7 +2986,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 50",
@@ -3174,7 +3000,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3185,10 +3011,14 @@
             "name": "Painting a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3201,10 +3031,14 @@
             "name": "Mixing colors for a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3226,7 +3060,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 28",
@@ -3240,7 +3074,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Shapesanity 39",
@@ -3254,7 +3088,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3265,10 +3099,14 @@
             "name": "Painting a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Painted",
             "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "paint",
+                "inferred": true,
+                "description": "Requires ability to paint",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3281,10 +3119,14 @@
             "name": "Mixing colors for a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Mixed",
             "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "mix_colors",
+                "inferred": true,
+                "description": "Requires ability to mix colors",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],

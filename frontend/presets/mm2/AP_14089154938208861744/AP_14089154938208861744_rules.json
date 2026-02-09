@@ -987,34 +987,14 @@
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
             "access_rule": {
-              "rule": "can_defeat_enough_rbms",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "OptionValue",
-                  "args": {
-                    "option": "wily_5_requirement"
-                  }
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_enough_rbms",
+                "inferred": true,
+                "description": "Requires ability to defeat enough rbms",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "E-Tank",
@@ -1028,34 +1008,14 @@
             "name": "Wily Stage 5 - Completed",
             "id": null,
             "access_rule": {
-              "rule": "can_defeat_enough_rbms",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "OptionValue",
-                  "args": {
-                    "option": "wily_5_requirement"
-                  }
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_enough_rbms",
+                "inferred": true,
+                "description": "Requires ability to defeat enough rbms",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wily Stage 5 - Completed",

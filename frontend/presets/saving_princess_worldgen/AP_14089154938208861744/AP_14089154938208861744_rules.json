@@ -39,7 +39,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cave: Balcony",
@@ -53,7 +53,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cave: Spike pit",
@@ -67,7 +67,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cave: Powered Blaster chest",
@@ -84,7 +84,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cave: Wallboss (Boss)",
@@ -98,7 +98,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Cave: Guard (Boss)",
@@ -115,7 +115,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -131,9 +131,7 @@
               "children": [
                 {
                   "rule": "can_hover",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -149,7 +147,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Volcanic: Under bridge",
@@ -163,7 +161,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Volcanic: Behind wall",
@@ -177,16 +175,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Volcanic: Flamethrower chest",
             "id": 91630179862869,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Cave Key",
@@ -194,16 +190,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Volcanic: Cliff (Boss)",
             "id": 91630179862888,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Clip Extension",
@@ -211,7 +205,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -231,7 +225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Arctic: After Guard",
@@ -245,7 +239,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Arctic: Under snow",
@@ -262,16 +256,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Arctic: Ice Spreadshot chest",
             "id": 91630179862873,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Faster Reload",
@@ -279,7 +271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Arctic: Jacket chest",
@@ -296,16 +288,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Arctic: Ace (Boss)",
             "id": 91630179862889,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Life Extension",
@@ -313,7 +303,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -361,10 +351,13 @@
             "name": "Electrical entrance",
             "connected_region": "Electrical",
             "access_rule": {
-              "rule": "is_gate_unlocked",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_generic_helper",
+              "args": {
+                "name": "is_gate_unlocked",
+                "description": "Requires is gate unlocked",
+                "_original_ast_type": "generic_helper"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -384,7 +377,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hub: Hidden near Cave",
@@ -398,7 +391,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hub: Hidden near Swamp",
@@ -412,7 +405,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hub: Console login",
@@ -426,7 +419,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Hub: Ninja scare (Boss?)",
@@ -443,7 +436,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -455,10 +448,14 @@
             "name": "Swamp: Bramble room",
             "id": 91630179862878,
             "access_rule": {
-              "rule": "can_hover",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "hover",
+                "inferred": true,
+                "description": "Requires ability to hover",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Volt Laser",
@@ -466,7 +463,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Swamp: Down the chimney",
@@ -480,7 +477,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Swamp: Wall maze",
@@ -494,16 +491,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Swamp: Special Extension chest",
             "id": 91630179862881,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Life Extension",
@@ -511,16 +506,14 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Swamp: Snake (Boss)",
             "id": 91630179862892,
             "access_rule": {
               "rule": "nice_check",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Ice Trap",
@@ -528,7 +521,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -539,10 +532,13 @@
             "name": "Electrical (Power On) entrance",
             "connected_region": "Electrical (Power On)",
             "access_rule": {
-              "rule": "is_power_on",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_generic_helper",
+              "args": {
+                "name": "is_power_on",
+                "description": "Requires is power on",
+                "_original_ast_type": "generic_helper"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -559,7 +555,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Volt Laser chest",
@@ -573,7 +569,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Generator (Boss)",
@@ -587,7 +583,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Tesla orb",
@@ -604,7 +600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -624,7 +620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Behind wall",
@@ -638,7 +634,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Before Malakhov",
@@ -652,7 +648,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: Malakhov (Boss)",
@@ -666,16 +662,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Electrical: BRAINOS (Boss)",
             "id": 91630179862897,
             "access_rule": {
               "rule": "all_weapons",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Life Extension",
@@ -683,16 +677,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Mission objective",
             "id": null,
             "access_rule": {
               "rule": "all_weapons",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "PRINCESS",

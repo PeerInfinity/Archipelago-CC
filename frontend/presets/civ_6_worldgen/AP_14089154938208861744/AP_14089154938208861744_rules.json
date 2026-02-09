@@ -35,8 +35,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -49,8 +47,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -77,7 +73,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_01",
@@ -91,7 +87,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_02",
@@ -105,7 +101,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_03",
@@ -119,7 +115,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_04",
@@ -133,7 +129,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_05",
@@ -147,7 +143,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_06",
@@ -161,7 +157,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_07",
@@ -175,7 +171,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_08",
@@ -189,7 +185,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_09",
@@ -203,7 +199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_10",
@@ -217,7 +213,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_00",
@@ -231,7 +227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_01",
@@ -245,7 +241,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_02",
@@ -259,7 +255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_03",
@@ -273,7 +269,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_04",
@@ -287,7 +283,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_05",
@@ -301,7 +297,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_06",
@@ -315,7 +311,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "GOODY_HUT_1",
@@ -329,7 +325,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -344,7 +340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -359,7 +355,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -374,7 +370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -389,7 +385,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -404,7 +400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -419,7 +415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -434,7 +430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -449,7 +445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           },
           {
@@ -464,7 +460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "progress_type": "EXCLUDED"
           }
         ]
@@ -481,8 +477,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -495,8 +489,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -523,7 +515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_12",
@@ -537,7 +529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_13",
@@ -551,7 +543,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_14",
@@ -565,7 +557,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_15",
@@ -579,7 +571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_16",
@@ -593,7 +585,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_17",
@@ -607,7 +599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_CLASSICAL_18",
@@ -621,7 +613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_07",
@@ -635,7 +627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_08",
@@ -649,7 +641,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_09",
@@ -663,7 +655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_10",
@@ -677,7 +669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_11",
@@ -691,7 +683,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_12",
@@ -705,7 +697,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_CLASSICAL_13",
@@ -719,7 +711,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -735,8 +727,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -749,8 +739,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -777,7 +765,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_20",
@@ -791,7 +779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_21",
@@ -805,7 +793,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_22",
@@ -819,7 +807,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_23",
@@ -833,7 +821,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_24",
@@ -847,7 +835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_25",
@@ -861,7 +849,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MEDIEVAL_67",
@@ -875,7 +863,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_14",
@@ -889,7 +877,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_15",
@@ -903,7 +891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_16",
@@ -917,7 +905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_17",
@@ -931,7 +919,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_18",
@@ -945,7 +933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_19",
@@ -959,7 +947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_20",
@@ -973,7 +961,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -989,8 +977,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1003,8 +989,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1031,7 +1015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_27",
@@ -1045,7 +1029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_28",
@@ -1059,7 +1043,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_29",
@@ -1073,7 +1057,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_30",
@@ -1087,7 +1071,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_31",
@@ -1101,7 +1085,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_32",
@@ -1115,7 +1099,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_33",
@@ -1129,7 +1113,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_RENAISSANCE_34",
@@ -1143,7 +1127,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_21",
@@ -1157,7 +1141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_22",
@@ -1171,7 +1155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_23",
@@ -1185,7 +1169,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_24",
@@ -1199,7 +1183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_25",
@@ -1213,7 +1197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_26",
@@ -1227,7 +1211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1243,8 +1227,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1257,8 +1239,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1285,7 +1265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_36",
@@ -1299,7 +1279,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_37",
@@ -1313,7 +1293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_38",
@@ -1327,7 +1307,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_39",
@@ -1341,7 +1321,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_40",
@@ -1355,7 +1335,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_41",
@@ -1369,7 +1349,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INDUSTRIAL_42",
@@ -1383,7 +1363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_27",
@@ -1397,7 +1377,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_28",
@@ -1411,7 +1391,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_29",
@@ -1425,7 +1405,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_30",
@@ -1439,7 +1419,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_31",
@@ -1453,7 +1433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_32",
@@ -1467,7 +1447,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_33",
@@ -1481,7 +1461,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1497,8 +1477,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1511,8 +1489,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1539,7 +1515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_44",
@@ -1553,7 +1529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_45",
@@ -1567,7 +1543,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_46",
@@ -1581,7 +1557,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_47",
@@ -1595,7 +1571,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_48",
@@ -1609,7 +1585,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_49",
@@ -1623,7 +1599,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_MODERN_68",
@@ -1637,7 +1613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_34",
@@ -1651,7 +1627,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_35",
@@ -1665,7 +1641,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_36",
@@ -1679,7 +1655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_37",
@@ -1693,7 +1669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_38",
@@ -1707,7 +1683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_39",
@@ -1721,7 +1697,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_40",
@@ -1735,7 +1711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_41",
@@ -1749,7 +1725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_MODERN_42",
@@ -1763,7 +1739,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1779,8 +1755,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1793,8 +1767,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -1821,7 +1793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_51",
@@ -1835,7 +1807,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_52",
@@ -1849,7 +1821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_53",
@@ -1863,7 +1835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_54",
@@ -1877,7 +1849,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_55",
@@ -1891,7 +1863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_56",
@@ -1905,7 +1877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_ATOMIC_57",
@@ -1919,7 +1891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ATOMIC_43",
@@ -1933,7 +1905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ATOMIC_44",
@@ -1947,7 +1919,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ATOMIC_45",
@@ -1961,7 +1933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ATOMIC_46",
@@ -1975,7 +1947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ATOMIC_47",
@@ -1989,7 +1961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2005,8 +1977,6 @@
                 {
                   "rule": "has_non_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -2019,8 +1989,6 @@
                 {
                   "rule": "has_progressive_items",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -2047,7 +2015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_59",
@@ -2061,7 +2029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_60",
@@ -2075,7 +2043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_61",
@@ -2089,7 +2057,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_62",
@@ -2103,7 +2071,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_63",
@@ -2117,7 +2085,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_64",
@@ -2131,7 +2099,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_65",
@@ -2145,7 +2113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_INFORMATION_66",
@@ -2159,7 +2127,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_48",
@@ -2173,7 +2141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_49",
@@ -2187,7 +2155,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_51",
@@ -2201,7 +2169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_52",
@@ -2215,7 +2183,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_53",
@@ -2229,7 +2197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_54",
@@ -2243,7 +2211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_INFORMATION_55",
@@ -2257,7 +2225,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2277,7 +2245,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_70",
@@ -2291,7 +2259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_71",
@@ -2305,7 +2273,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_72",
@@ -2319,7 +2287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_73",
@@ -2333,7 +2301,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_74",
@@ -2347,7 +2315,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_75",
@@ -2361,7 +2329,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "TECH_AP_FUTURE_76",
@@ -2375,7 +2343,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_50",
@@ -2389,7 +2357,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_56",
@@ -2403,7 +2371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_57",
@@ -2417,7 +2385,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_58",
@@ -2431,7 +2399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_59",
@@ -2445,7 +2413,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "CIVIC_AP_FUTURE_60",
@@ -2459,7 +2427,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Complete a victory type",

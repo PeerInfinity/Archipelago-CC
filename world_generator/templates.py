@@ -149,7 +149,7 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
     helper_name = None
     if rule_type == 'helper':
         helper_name = rule.get('name', '')
-    elif rule.get('_original_ast_type') == 'helper':
+    elif rule.get('_original_ast_type', '').endswith('helper'):
         # AST export format: helper name is in 'rule' field
         helper_name = rule.get('rule', '')
 

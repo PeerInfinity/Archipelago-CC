@@ -215,7 +215,7 @@ export class HelperUI {
         args = obj.args;
       }
       // Rule Builder format: { rule: "helper_name", args: [...], _original_ast_type: "helper" }
-      else if (obj.rule && obj._original_ast_type === 'helper' && Array.isArray(obj.args) && obj.args.length > 0) {
+      else if (obj.rule && obj._original_ast_type?.endsWith('helper') && Array.isArray(obj.args) && obj.args.length > 0) {
         helperName = obj.rule;
         args = obj.args;
       }

@@ -72,7 +72,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -88,7 +88,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -104,7 +104,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -120,7 +120,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -136,7 +136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           },
@@ -152,7 +152,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 200,
             "type_string": "shop"
           },
@@ -168,7 +168,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 800,
             "type_string": "shop"
           },
@@ -223,7 +223,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -239,7 +239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -255,7 +255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -311,7 +311,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -343,7 +343,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -359,7 +359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -375,7 +375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -391,7 +391,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -426,7 +426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -442,7 +442,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -458,7 +458,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -474,7 +474,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -490,7 +490,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -506,7 +506,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -522,7 +522,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -538,7 +538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -554,7 +554,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -595,7 +595,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -619,7 +619,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -668,7 +668,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -684,7 +684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -700,7 +700,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           },
@@ -716,7 +716,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 150,
             "type_string": "shop"
           }
@@ -792,7 +792,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -808,7 +808,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -870,7 +870,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -886,7 +886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -902,7 +902,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -918,7 +918,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -977,7 +977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -993,7 +993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           }
@@ -1017,7 +1017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -1033,7 +1033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 35,
             "type_string": "shop"
           },
@@ -1049,7 +1049,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 210,
             "type_string": "shop"
           },
@@ -1065,7 +1065,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -1081,7 +1081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 425,
             "type_string": "shop"
           },
@@ -1097,7 +1097,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           },
@@ -1113,7 +1113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -1148,7 +1148,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1207,7 +1207,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1223,7 +1223,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1239,7 +1239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1255,7 +1255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1271,7 +1271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1287,7 +1287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -1319,7 +1319,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1335,7 +1335,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1351,7 +1351,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1367,7 +1367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1383,7 +1383,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1399,7 +1399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1415,7 +1415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1431,7 +1431,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1447,7 +1447,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1463,7 +1463,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1479,7 +1479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1495,7 +1495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1511,7 +1511,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1527,7 +1527,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1582,7 +1582,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1598,7 +1598,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -1694,7 +1694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1710,7 +1710,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1726,7 +1726,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1742,7 +1742,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1758,7 +1758,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -1774,7 +1774,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -1790,7 +1790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           },
@@ -1806,7 +1806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 40,
             "type_string": "shop"
           },
@@ -1822,7 +1822,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 160,
             "type_string": "shop"
           },
@@ -1838,7 +1838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -1854,7 +1854,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 270,
             "type_string": "shop"
           },
@@ -1870,7 +1870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           },
@@ -1886,7 +1886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           },
@@ -1896,8 +1896,6 @@
             "access_rule": {
               "rule": "_landstalker_has_health",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1913,7 +1911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -1945,7 +1943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -1961,7 +1959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 310,
             "type_string": "shop"
           },
@@ -1977,7 +1975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 125,
             "type_string": "shop"
           }
@@ -2011,7 +2009,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2042,7 +2040,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2058,7 +2056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2074,7 +2072,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2090,7 +2088,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2106,7 +2104,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2122,7 +2120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2138,7 +2136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2170,7 +2168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2186,7 +2184,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2221,7 +2219,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 540,
             "type_string": "shop"
           },
@@ -2237,7 +2235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 20,
             "type_string": "shop"
           },
@@ -2253,7 +2251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 270,
             "type_string": "shop"
           },
@@ -2269,7 +2267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 105,
             "type_string": "shop"
           }
@@ -2348,7 +2346,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2364,7 +2362,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2380,7 +2378,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2396,7 +2394,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2431,7 +2429,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2466,7 +2464,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2498,7 +2496,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -2514,7 +2512,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -2530,7 +2528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -2572,7 +2570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2588,7 +2586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2604,7 +2602,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2620,7 +2618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2636,7 +2634,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2652,7 +2650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2668,7 +2666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2684,7 +2682,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -2723,7 +2721,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2739,7 +2737,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2755,7 +2753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2771,7 +2769,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2787,7 +2785,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2803,7 +2801,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2819,7 +2817,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2835,7 +2833,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2851,7 +2849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2867,7 +2865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2883,7 +2881,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -2899,7 +2897,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -2915,7 +2913,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -2970,7 +2968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -2986,7 +2984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3002,7 +3000,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3018,7 +3016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3034,7 +3032,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3050,7 +3048,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3066,7 +3064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3082,7 +3080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -3117,7 +3115,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3133,7 +3131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -3182,7 +3180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3198,7 +3196,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -3269,7 +3267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3285,7 +3283,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -3339,7 +3337,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -3381,7 +3379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -3397,7 +3395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 30,
             "type_string": "shop"
           },
@@ -3413,7 +3411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 185,
             "type_string": "shop"
           },
@@ -3429,7 +3427,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 310,
             "type_string": "shop"
           }
@@ -3464,7 +3462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3480,7 +3478,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 330,
             "type_string": "shop"
           }
@@ -3536,7 +3534,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3552,7 +3550,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3568,7 +3566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3584,7 +3582,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3600,7 +3598,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3616,7 +3614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3632,7 +3630,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3648,7 +3646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3664,7 +3662,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3680,7 +3678,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3696,7 +3694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -3748,7 +3746,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -3780,7 +3778,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3796,7 +3794,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3812,7 +3810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3828,7 +3826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 50,
             "type_string": "shop"
           },
@@ -3844,7 +3842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -3860,7 +3858,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 1000,
             "type_string": "shop"
           },
@@ -3876,7 +3874,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 310,
             "type_string": "shop"
           },
@@ -3892,7 +3890,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 90,
             "type_string": "shop"
           }
@@ -3938,7 +3936,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -3954,7 +3952,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -3970,7 +3968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 90,
             "type_string": "shop"
           },
@@ -3986,7 +3984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 310,
             "type_string": "shop"
           },
@@ -4002,7 +4000,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 125,
             "type_string": "shop"
           },
@@ -4018,7 +4016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 30,
             "type_string": "shop"
           },
@@ -4034,7 +4032,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           }
@@ -4066,7 +4064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4082,7 +4080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4098,7 +4096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4114,7 +4112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -4153,7 +4151,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4169,7 +4167,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4185,7 +4183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4201,7 +4199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4217,7 +4215,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4233,7 +4231,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4249,7 +4247,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4265,7 +4263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4281,7 +4279,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4297,7 +4295,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4313,7 +4311,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4329,7 +4327,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4345,7 +4343,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4361,7 +4359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4377,7 +4375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4393,7 +4391,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -4435,7 +4433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4451,7 +4449,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4467,7 +4465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4483,7 +4481,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 25,
             "type_string": "shop"
           },
@@ -4499,7 +4497,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 90,
             "type_string": "shop"
           },
@@ -4515,7 +4513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 310,
             "type_string": "shop"
           },
@@ -4531,7 +4529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 30,
             "type_string": "shop"
           }
@@ -4573,7 +4571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -4612,7 +4610,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4628,7 +4626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4644,7 +4642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4660,7 +4658,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4676,7 +4674,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4692,7 +4690,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4708,7 +4706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4724,7 +4722,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4740,7 +4738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4756,7 +4754,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4772,7 +4770,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4788,7 +4786,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4804,7 +4802,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4820,7 +4818,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4836,7 +4834,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4852,7 +4850,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -4868,7 +4866,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4884,7 +4882,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4900,7 +4898,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4916,7 +4914,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4932,7 +4930,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4948,7 +4946,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -4964,7 +4962,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -5026,7 +5024,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5042,7 +5040,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5058,7 +5056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5074,7 +5072,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5090,7 +5088,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5106,7 +5104,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5122,7 +5120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5138,7 +5136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5154,7 +5152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5170,7 +5168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5186,7 +5184,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5202,7 +5200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5218,7 +5216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5234,7 +5232,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -5250,7 +5248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -5323,7 +5321,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5339,7 +5337,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5355,7 +5353,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5371,7 +5369,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5387,7 +5385,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5403,7 +5401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -5442,7 +5440,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 30,
             "type_string": "shop"
           },
@@ -5458,7 +5456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 330,
             "type_string": "shop"
           },
@@ -5474,7 +5472,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 165,
             "type_string": "shop"
           },
@@ -5490,7 +5488,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 415,
             "type_string": "shop"
           },
@@ -5506,7 +5504,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 415,
             "type_string": "shop"
           }
@@ -5558,7 +5556,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5574,7 +5572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5590,7 +5588,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5606,7 +5604,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5622,7 +5620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -5687,7 +5685,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5703,7 +5701,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5719,7 +5717,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5735,7 +5733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5751,7 +5749,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5767,7 +5765,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5783,7 +5781,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5799,7 +5797,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5815,7 +5813,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5831,7 +5829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5847,7 +5845,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5863,7 +5861,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5879,7 +5877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -5895,7 +5893,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -5911,7 +5909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -5927,7 +5925,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -5943,7 +5941,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -5978,7 +5976,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -6010,7 +6008,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -6085,7 +6083,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6101,7 +6099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6117,7 +6115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6133,7 +6131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6149,7 +6147,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6165,7 +6163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -6189,7 +6187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           },
@@ -6205,7 +6203,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "ground"
           }
@@ -6244,7 +6242,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6260,7 +6258,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -6306,7 +6304,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6322,7 +6320,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           },
@@ -6338,7 +6336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "price": 0,
             "type_string": "chest"
           }
@@ -7886,18 +7884,18 @@
         "seed": 1291724455,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (next to Waterfall Shrine entrance)": "I can sense Sword of Gaia in Verla Mines.",
-          "Foxy (atop Mercator Dungeon tower)": "I can sense Gola's Fang inside a tower.",
-          "Foxy (in lava sector of King Nole's Labyrinth)": "Did you know that your world contains 100 percent of all progression items?",
-          "Foxy (in Mir Tower 0F isolated chest room)": "I can sense Armlet near a swamp.",
-          "Foxy (in center of Greenmaze)": "Have you found all of the 283 items in this universe?",
-          "Foxy (looking at river next to Massan teleport tree)": "I can sense Safety Pass in a region inhabited by bears.",
-          "Foxy (in Garlic trial room inside Mir Tower)": "I can sense Snow Spikes in King Nole's domain.",
-          "Foxy (near shortcut cavern entrance in Greenmaze after cutting trees)": "I can sense Buyer Card among the trees.",
-          "Foxy (in room after golem hops riddle in Lake Shrine)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (in room above Iron Boots in King Nole's Labyrinth)": "I can sense Key near a lake.",
-          "Foxy (looking at dead man in Thieves Hideout)": "I can sense Oracle Stone near a swamp.",
-          "Foxy (in empty visible room inside Mountainous Area cave)": "I can sense Garlic in Verla Mines.",
+          "Foxy (next to Waterfall Shrine entrance)": "Have you found all of the 283 items in this universe?",
+          "Foxy (atop Mercator Dungeon tower)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (in lava sector of King Nole's Labyrinth)": "I can sense Yellow Jewel inside a tower.",
+          "Foxy (in Mir Tower 0F isolated chest room)": "I can sense Lantern in the village of Massan.",
+          "Foxy (in center of Greenmaze)": "I can sense Sun Stone on a route.",
+          "Foxy (looking at river next to Massan teleport tree)": "I can sense Idol Stone among the trees.",
+          "Foxy (in Garlic trial room inside Mir Tower)": "I can sense Sword of Gaia in Verla Mines.",
+          "Foxy (near shortcut cavern entrance in Greenmaze after cutting trees)": "I can sense Garlic in King Nole's domain.",
+          "Foxy (in room after golem hops riddle in Lake Shrine)": "I can sense Logs in Destel region.",
+          "Foxy (in room above Iron Boots in King Nole's Labyrinth)": "I can sense Safety Pass in a region inhabited by bears.",
+          "Foxy (looking at dead man in Thieves Hideout)": "I can sense Gola's Fang inside a tower.",
+          "Foxy (in empty visible room inside Mountainous Area cave)": "I can sense Buyer Card among the trees.",
           "Lithograph": "It's barely readable:\nSPECIAL RED MERCATOR\nWELL PURPLE ITEM\nTOWER CHEST GREEN\nTWINKLE ITEM BLUE\nITEM YELLOW ROOM",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },

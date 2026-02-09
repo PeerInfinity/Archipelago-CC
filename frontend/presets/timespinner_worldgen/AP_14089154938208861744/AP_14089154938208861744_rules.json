@@ -47,7 +47,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tutorial: Yo Momma 2",
@@ -61,7 +61,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -76,9 +76,7 @@
               "children": [
                 {
                   "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -97,9 +95,7 @@
               "children": [
                 {
                   "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "CanReachRegion",
@@ -115,9 +111,7 @@
             "connected_region": "Skeleton Shaft",
             "access_rule": {
               "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -155,7 +149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation: Starter chest 3",
@@ -169,7 +163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation: Starter chest 1",
@@ -183,7 +177,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Lower): Timespinner Wheel room",
@@ -197,7 +191,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation: Forget me not chest",
@@ -207,9 +201,7 @@
               "children": [
                 {
                   "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "CanReachRegion",
@@ -225,7 +217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Lower): Chicken chest",
@@ -247,7 +239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -282,7 +274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Secret room",
@@ -315,7 +307,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Double jump cave platform",
@@ -336,7 +328,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Double jump cave floor",
@@ -350,7 +342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Sparrow chest",
@@ -364,7 +356,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Crash site pedestal",
@@ -378,7 +370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Crash site chest 1",
@@ -395,7 +387,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Crash site chest 2",
@@ -412,7 +404,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -466,7 +458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Desolation (Upper): Tank chest",
@@ -488,7 +480,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -538,9 +530,7 @@
               "children": [
                 {
                   "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "CanReachRegion",
@@ -565,7 +555,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -587,9 +577,7 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -669,7 +657,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Warp gate",
@@ -683,7 +671,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Librarian",
@@ -697,7 +685,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Reading nook chest",
@@ -711,7 +699,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Storage room chest 1",
@@ -752,7 +740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Storage room chest 2",
@@ -793,7 +781,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Storage room chest 3",
@@ -834,7 +822,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Terminal 2 (Lachiem)",
@@ -851,7 +839,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Terminal 1 (Windaria)",
@@ -868,7 +856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Terminal 3 (Emperor Nuvius)",
@@ -885,7 +873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: V terminal 1 (War of the Sisters)",
@@ -905,7 +893,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: V terminal 2 (Lake Desolation Map)",
@@ -925,7 +913,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: V terminal 3 (Vilete)",
@@ -945,7 +933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -973,7 +961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Backer room chest 4",
@@ -987,7 +975,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Backer room chest 3",
@@ -1001,7 +989,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Backer room chest 2",
@@ -1015,7 +1003,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Backer room chest 1",
@@ -1029,7 +1017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Library: Backer room terminal (Vandagray Metropolis Map)",
@@ -1046,7 +1034,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1133,9 +1121,7 @@
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1173,7 +1159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Left): Ye olde Timespinner",
@@ -1187,7 +1173,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Left): Bottom floor",
@@ -1227,7 +1213,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Left): Air vents secret",
@@ -1260,7 +1246,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Left): Elevator chest",
@@ -1277,7 +1263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1315,7 +1301,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Elevator card chest",
@@ -1325,9 +1311,7 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1343,7 +1327,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Air vents right chest",
@@ -1353,9 +1337,7 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1371,7 +1353,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Air vents left chest",
@@ -1381,9 +1363,7 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1399,7 +1379,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1456,9 +1436,7 @@
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1541,7 +1519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1576,7 +1554,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Varndagroth",
@@ -1616,7 +1594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Spider Hell",
@@ -1633,7 +1611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
@@ -1643,9 +1621,7 @@
               "children": [
                 {
                   "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1661,7 +1637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1726,7 +1702,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Sirens): Siren room underwater right",
@@ -1743,7 +1719,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Sirens): Siren room underwater left",
@@ -1760,7 +1736,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Sirens): Cave after sirens chest 1",
@@ -1774,7 +1750,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Sirens): Cave after sirens chest 2",
@@ -1788,7 +1764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1840,9 +1816,7 @@
               "children": [
                 {
                   "rule": "can_kill_all_3_bosses",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1877,9 +1851,7 @@
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1895,7 +1867,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: Close combat room",
@@ -1909,7 +1881,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1928,9 +1900,7 @@
             "connected_region": "Lab Entrance",
             "access_rule": {
               "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1947,7 +1917,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: Giantess room",
@@ -1961,7 +1931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: Giantess bridge",
@@ -1975,7 +1945,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: B door chest 2",
@@ -1985,15 +1955,11 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2003,7 +1969,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: B door chest 1",
@@ -2013,15 +1979,11 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2031,7 +1993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Military Fortress: Pedestal",
@@ -2041,15 +2003,11 @@
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2059,7 +2017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2071,9 +2029,7 @@
             "connected_region": "Main Lab",
             "access_rule": {
               "rule": "has_keycard_B",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -2101,9 +2057,7 @@
             "connected_region": "Lab Research",
             "access_rule": {
               "rule": "has_doublejump_of_npc",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -2114,9 +2068,7 @@
               "children": [
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
@@ -2152,7 +2104,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Lower trash right",
@@ -2173,16 +2125,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Lower trash left",
             "id": 1337068,
             "access_rule": {
               "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Shiny Rock",
@@ -2190,7 +2140,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Below lab entrance",
@@ -2211,7 +2161,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Trash jump room",
@@ -2221,9 +2171,7 @@
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Not",
@@ -2239,7 +2187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Experiment #13",
@@ -2267,7 +2215,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Sentry platform terminal (Origins)",
@@ -2281,8 +2229,6 @@
                     {
                       "rule": "can_teleport_to",
                       "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true,
                       "args": [
                         {
                           "rule": "Constant",
@@ -2326,7 +2272,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Experiment 13 terminal (W.R.E.C Farewell)",
@@ -2343,7 +2289,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Left terminal (Biotechnology)",
@@ -2360,7 +2306,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2379,9 +2325,7 @@
                   "children": [
                     {
                       "rule": "has_upwarddash",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -2405,16 +2349,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Spider Hell",
             "id": 1337076,
             "access_rule": {
               "rule": "has_keycard_A",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Goddess Brooch",
@@ -2422,7 +2364,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Middle terminal (Amadeus Laboratory Map)",
@@ -2439,7 +2381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Right terminal (Experiment #11)",
@@ -2456,7 +2398,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2481,9 +2423,7 @@
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -2495,9 +2435,7 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -2532,7 +2470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Download and chest room chest",
@@ -2546,7 +2484,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Lab secret",
@@ -2579,7 +2517,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lab: Download and chest room terminal (Experiment #13)",
@@ -2596,7 +2534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2638,7 +2576,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2662,15 +2600,11 @@
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2680,16 +2614,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Courtyard upper chest",
             "id": 1337079,
             "access_rule": {
               "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Empire Crown",
@@ -2697,7 +2629,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Galactic sage room",
@@ -2711,7 +2643,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Bottom right tower",
@@ -2725,7 +2657,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Wayyyy up there",
@@ -2738,9 +2670,7 @@
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -2752,9 +2682,7 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2764,7 +2692,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Left tower balcony",
@@ -2778,7 +2706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Emperor's Chambers chest",
@@ -2792,7 +2720,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Emperor's Tower: Emperor's Chambers pedestal",
@@ -2806,7 +2734,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Killed Emperor",
@@ -2880,7 +2808,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2937,7 +2865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Double shroom room",
@@ -2951,7 +2879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Jacksquat room",
@@ -2964,9 +2892,7 @@
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -2978,9 +2904,7 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2990,7 +2914,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Below Jacksquat room",
@@ -3004,7 +2928,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Secret room",
@@ -3037,7 +2961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Bottom left room",
@@ -3051,7 +2975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Last chance before Xarion",
@@ -3072,7 +2996,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Sealed Caves (Xarion): Xarion",
@@ -3086,7 +3010,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3142,7 +3066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Refugee Camp: Storage chest 3",
@@ -3156,7 +3080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Refugee Camp: Storage chest 2",
@@ -3170,7 +3094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Refugee Camp: Storage chest 1",
@@ -3184,7 +3108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3206,9 +3130,7 @@
               "children": [
                 {
                   "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3234,9 +3156,7 @@
               "children": [
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Not",
@@ -3267,7 +3187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Bat jump ledge",
@@ -3277,21 +3197,15 @@
               "children": [
                 {
                   "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -3301,7 +3215,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Green platform secret",
@@ -3334,7 +3248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Rats guarded chest",
@@ -3348,7 +3262,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Waterfall chest 1",
@@ -3365,7 +3279,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Waterfall chest 2",
@@ -3382,7 +3296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest: Batcave",
@@ -3396,7 +3310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Ramparts: In the moat",
@@ -3410,7 +3324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3484,7 +3398,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): Under the eels",
@@ -3501,7 +3415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): Past the eels",
@@ -3518,7 +3432,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3556,7 +3470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Upper): Double jump cave platform",
@@ -3577,7 +3491,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Upper): Double jump cave floor",
@@ -3591,7 +3505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Upper): Cave secret",
@@ -3624,7 +3538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene: Before Big Bird",
@@ -3638,7 +3552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene: Behind the vines",
@@ -3652,7 +3566,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene: Pyramid keys room",
@@ -3666,7 +3580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Upper): Chicken ledge",
@@ -3680,7 +3594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3722,7 +3636,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): Water spikes room",
@@ -3736,7 +3650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): Underwater secret",
@@ -3769,7 +3683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): T chest",
@@ -3783,7 +3697,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lake Serene (Lower): Underwater pedestal",
@@ -3797,7 +3711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3849,9 +3763,7 @@
             "id": 1337112,
             "access_rule": {
               "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Max Aura",
@@ -3859,16 +3771,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Secret room",
             "id": 1337113,
             "access_rule": {
               "rule": "can_break_walls",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Ether",
@@ -3876,7 +3786,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Bottom left room",
@@ -3890,7 +3800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Single shroom room",
@@ -3904,16 +3814,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 1",
             "id": 1337116,
             "access_rule": {
               "rule": "has_forwarddash_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Hi-Potion",
@@ -3921,16 +3829,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 2",
             "id": 1337117,
             "access_rule": {
               "rule": "has_forwarddash_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Galaxy Stone",
@@ -3938,16 +3844,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 3",
             "id": 1337118,
             "access_rule": {
               "rule": "has_forwarddash_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Max HP",
@@ -3955,16 +3859,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Jackpot room chest 4",
             "id": 1337119,
             "access_rule": {
               "rule": "has_forwarddash_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Pendulum",
@@ -3972,7 +3874,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Pedestal",
@@ -3986,7 +3888,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3998,9 +3900,7 @@
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
               "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -4054,9 +3954,7 @@
             "id": 1337121,
             "access_rule": {
               "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Timespinner Gear 1",
@@ -4064,7 +3962,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Maw): Plasma Crystal",
@@ -4084,7 +3982,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Killed Maw",
@@ -4122,7 +4020,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4156,7 +4054,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Sirens): Siren room above water chest",
@@ -4170,7 +4068,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater left chest",
@@ -4187,7 +4085,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater right chest",
@@ -4204,7 +4102,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Sirens): Siren room underwater right ground",
@@ -4221,7 +4119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Caves of Banishment (Sirens): Water hook",
@@ -4238,7 +4136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4290,9 +4188,7 @@
               "children": [
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -4308,7 +4204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Ramparts: Freeze the engineer",
@@ -4318,9 +4214,7 @@
               "children": [
                 {
                   "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -4336,7 +4230,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Ramparts: Giantess guarded room",
@@ -4350,7 +4244,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Ramparts: Knight and archer guarded room",
@@ -4364,7 +4258,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Ramparts: Pedestal",
@@ -4378,7 +4272,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4407,18 +4301,14 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "has_pink",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Not",
@@ -4466,7 +4356,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Killed Twins",
@@ -4511,7 +4401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Keep: Twins",
@@ -4533,7 +4423,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Keep: Royal guard tiny room",
@@ -4543,15 +4433,11 @@
               "children": [
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -4561,7 +4447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4600,7 +4486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Basement: Clean the castle basement",
@@ -4614,7 +4500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Basement: Giantess guarded chest",
@@ -4628,7 +4514,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Basement: Omelette chest",
@@ -4642,7 +4528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Basement: Just an egg",
@@ -4656,7 +4542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4678,9 +4564,7 @@
               "children": [
                 {
                   "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -4733,7 +4617,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Floor secret",
@@ -4743,15 +4627,11 @@
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -4761,7 +4641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4803,7 +4683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Long balcony",
@@ -4817,16 +4697,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Past bottom struggle juggle",
             "id": 1337145,
             "access_rule": {
               "rule": "has_doublejump_of_npc",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Eternal Brooch",
@@ -4834,7 +4712,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Bottom struggle juggle",
@@ -4847,9 +4725,7 @@
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -4861,9 +4737,7 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -4873,7 +4747,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Right tower freebie",
@@ -4887,7 +4761,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -4914,9 +4788,7 @@
                   "children": [
                     {
                       "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -4928,9 +4800,7 @@
                 },
                 {
                   "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -4940,7 +4810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: No struggle required",
@@ -4954,7 +4824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Left tower small balcony",
@@ -4968,7 +4838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Left tower royal guard",
@@ -4982,7 +4852,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Before Aelana",
@@ -4996,7 +4866,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Killed Aelana",
@@ -5031,7 +4901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Aelana's chest",
@@ -5045,7 +4915,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Royal Towers: Aelana's pedestal",
@@ -5059,7 +4929,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -5128,7 +4998,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -5147,9 +5017,7 @@
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
               "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -5187,16 +5055,14 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Ancient Pyramid: Pit secret room",
             "id": 1337248,
             "access_rule": {
               "rule": "can_break_walls",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Sand Bottle",
@@ -5204,7 +5070,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Ancient Pyramid: Regret chest",
@@ -5214,15 +5080,11 @@
               "children": [
                 {
                   "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -5232,7 +5094,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -5244,9 +5106,7 @@
             "connected_region": "Ancient Pyramid (left)",
             "access_rule": {
               "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -5284,7 +5144,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Killed Nightmare",
@@ -5328,8 +5188,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5352,8 +5210,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5376,8 +5232,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5400,8 +5254,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5424,8 +5276,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5448,8 +5298,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5472,8 +5320,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5496,8 +5342,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5520,8 +5364,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5544,8 +5386,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5568,8 +5408,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5592,8 +5430,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5616,8 +5452,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5640,8 +5474,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5664,8 +5496,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5688,8 +5518,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5712,8 +5540,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -5739,8 +5565,6 @@
                 {
                   "rule": "can_teleport_to",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -5759,8 +5583,6 @@
                 {
                   "rule": "can_teleport_to",
                   "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true,
                   "args": [
                     {
                       "rule": "Constant",
@@ -5785,8 +5607,6 @@
             "access_rule": {
               "rule": "can_teleport_to",
               "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",

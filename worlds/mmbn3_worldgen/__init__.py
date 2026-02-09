@@ -1068,12 +1068,7 @@ class MMBN3World(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            # Place item without setting locked=True, so the exporter writes
-            # locked=false in rules.json (matching the original world's behavior).
-            # place_locked_item() would mark these as locked, causing the frontend
-            # spoiler test to skip them.
-            location.item = item
-            item.location = location
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

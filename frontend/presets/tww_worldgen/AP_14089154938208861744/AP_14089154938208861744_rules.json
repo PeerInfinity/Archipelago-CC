@@ -17,330 +17,462 @@
             "name": "Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern",
             "connected_region": "Dragon Roost Cavern",
             "access_rule": {
-              "rule": "can_access_dungeon_entrance_on_dragon_roost_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_dungeon_entrance_on_dragon_roost_island",
+                "inferred": true,
+                "description": "Requires ability to access dungeon entrance on dragon roost island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Dungeon Entrance in Forest Haven Sector -> Forbidden Woods",
             "connected_region": "Forbidden Woods",
             "access_rule": {
-              "rule": "can_access_dungeon_entrance_in_forest_haven_sector",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_dungeon_entrance_in_forest_haven_sector",
+                "inferred": true,
+                "description": "Requires ability to access dungeon entrance in forest haven sector",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods",
             "connected_region": "Tower of the Gods",
             "access_rule": {
-              "rule": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_dungeon_entrance_in_tower_of_the_gods_sector",
+                "inferred": true,
+                "description": "Requires ability to access dungeon entrance in tower of the gods sector",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Dungeon Entrance on Headstone Island -> Earth Temple",
             "connected_region": "Earth Temple",
             "access_rule": {
-              "rule": "can_access_dungeon_entrance_on_headstone_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_dungeon_entrance_on_headstone_island",
+                "inferred": true,
+                "description": "Requires ability to access dungeon entrance on headstone island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Dungeon Entrance on Gale Isle -> Wind Temple",
             "connected_region": "Wind Temple",
             "access_rule": {
-              "rule": "can_access_dungeon_entrance_on_gale_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_dungeon_entrance_on_gale_isle",
+                "inferred": true,
+                "description": "Requires ability to access dungeon entrance on gale isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Miniboss Entrance in Hyrule Castle -> Master Sword Chamber",
             "connected_region": "Master Sword Chamber",
             "access_rule": {
-              "rule": "can_access_miniboss_entrance_in_hyrule_castle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_miniboss_entrance_in_hyrule_castle",
+                "inferred": true,
+                "description": "Requires ability to access miniboss entrance in hyrule castle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena",
             "connected_region": "Helmaroc King Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_forsaken_fortress",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_forsaken_fortress",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in forsaken fortress",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Outset Island -> Savage Labyrinth",
             "connected_region": "Savage Labyrinth",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_outset_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_outset_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on outset island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave",
             "connected_region": "Dragon Roost Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_dragon_roost_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_dragon_roost_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on dragon roost island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave",
             "connected_region": "Fire Mountain Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_fire_mountain",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_fire_mountain",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on fire mountain",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave",
             "connected_region": "Ice Ring Isle Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_ice_ring_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_ice_ring_isle",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on ice ring isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Private Oasis -> Cabana Labyrinth",
             "connected_region": "Cabana Labyrinth",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_private_oasis",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_private_oasis",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on private oasis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave",
             "connected_region": "Needle Rock Isle Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_needle_rock_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_needle_rock_isle",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on needle rock isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave",
             "connected_region": "Angular Isles Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_angular_isles",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_angular_isles",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on angular isles",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Boating Course -> Boating Course Secret Cave",
             "connected_region": "Boating Course Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_boating_course",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_boating_course",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on boating course",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave",
             "connected_region": "Stone Watcher Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_stone_watcher_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_stone_watcher_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on stone watcher island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave",
             "connected_region": "Overlook Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_overlook_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_overlook_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on overlook island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave",
             "connected_region": "Bird's Peak Rock Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_birds_peak_rock",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_birds_peak_rock",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on birds peak rock",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave",
             "connected_region": "Pawprint Isle Chuchu Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_pawprint_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_pawprint_isle",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on pawprint isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave",
             "connected_region": "Pawprint Isle Wizzrobe Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_pawprint_isle_side_isle",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on pawprint isle side isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave",
             "connected_region": "Diamond Steppe Island Warp Maze Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_diamond_steppe_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_diamond_steppe_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on diamond steppe island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave",
             "connected_region": "Bomb Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_bomb_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_bomb_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on bomb island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave",
             "connected_region": "Rock Spire Isle Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_rock_spire_isle",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_rock_spire_isle",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on rock spire isle",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Shark Island -> Shark Island Secret Cave",
             "connected_region": "Shark Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_shark_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_shark_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on shark island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave",
             "connected_region": "Cliff Plateau Isles Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_cliff_plateau_isles",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on cliff plateau isles",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave",
             "connected_region": "Horseshoe Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_horseshoe_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_horseshoe_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on horseshoe island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Secret Cave Entrance on Star Island -> Star Island Secret Cave",
             "connected_region": "Star Island Secret Cave",
             "access_rule": {
-              "rule": "can_access_secret_cave_entrance_on_star_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_secret_cave_entrance_on_star_island",
+                "inferred": true,
+                "description": "Requires ability to access secret cave entrance on star island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain",
             "connected_region": "Outset Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_outset_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_outset_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on outset island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain",
             "connected_region": "Thorned Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_thorned_fairy_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on thorned fairy island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain",
             "connected_region": "Eastern Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_eastern_fairy_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on eastern fairy island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain",
             "connected_region": "Western Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_western_fairy_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_western_fairy_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on western fairy island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain",
             "connected_region": "Southern Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_southern_fairy_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on southern fairy island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain",
             "connected_region": "Northern Fairy Fountain",
             "access_rule": {
-              "rule": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_fairy_fountain_entrance_on_northern_fairy_island",
+                "inferred": true,
+                "description": "Requires ability to access fairy fountain entrance on northern fairy island",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -349,10 +481,14 @@
             "name": "Defeat Ganondorf",
             "id": null,
             "access_rule": {
-              "rule": "can_reach_and_defeat_ganondorf",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_and_defeat_ganondorf",
+                "inferred": true,
+                "description": "Requires ability to reach and defeat ganondorf",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Victory",
@@ -370,10 +506,14 @@
             "name": "Forsaken Fortress - Chest Guarded By Bokoblin",
             "id": 2326645,
             "access_rule": {
-              "rule": "can_get_inside_forsaken_fortress",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "get_inside_forsaken_fortress",
+                "inferred": true,
+                "description": "Requires ability to get inside forsaken fortress",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "FF Dungeon Map",
@@ -381,7 +521,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 117,
             "region": "The Great Sea",
@@ -391,10 +531,14 @@
             "name": "Forsaken Fortress - Chest Inside Lower Jail Cell",
             "id": 2326644,
             "access_rule": {
-              "rule": "can_get_inside_forsaken_fortress",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "get_inside_forsaken_fortress",
+                "inferred": true,
+                "description": "Requires ability to get inside forsaken fortress",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Triforce Shard 2",
@@ -402,7 +546,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 116,
             "region": "The Great Sea",
@@ -449,7 +593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 115,
             "region": "The Great Sea",
@@ -460,9 +604,7 @@
             "id": 2326646,
             "access_rule": {
               "rule": "can_get_inside_forsaken_fortress",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Orange Rupee",
@@ -470,7 +612,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 118,
             "region": "The Great Sea",
@@ -480,10 +622,14 @@
             "name": "Forsaken Fortress - Phantom Ganon",
             "id": 2326642,
             "access_rule": {
-              "rule": "can_reach_and_defeat_phantom_ganon",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_and_defeat_phantom_ganon",
+                "inferred": true,
+                "description": "Requires ability to reach and defeat phantom ganon",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Orange Rupee",
@@ -491,7 +637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 16,
             "code": 114,
             "region": "The Great Sea",
@@ -505,15 +651,11 @@
               "children": [
                 {
                   "rule": "can_defeat_phantom_ganon",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_ganons_tower_phantom_ganon_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -523,7 +665,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 164,
             "region": "The Great Sea",
@@ -544,7 +686,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 4,
             "region": "The Great Sea",
@@ -554,10 +696,10 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
             "id": 2326758,
             "access_rule": {
-              "rule": "has_any_wallet_upgrade",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Wallet_Upgrade"
+              }
             },
             "item": {
               "name": "Bomb Bag Capacity Upgrade",
@@ -565,7 +707,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 230,
             "region": "The Great Sea",
@@ -575,10 +717,10 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
             "id": 2326760,
             "access_rule": {
-              "rule": "has_any_wallet_upgrade",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Wallet_Upgrade"
+              }
             },
             "item": {
               "name": "Progressive Shield",
@@ -586,7 +728,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 232,
             "region": "The Great Sea",
@@ -596,10 +738,10 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
             "id": 2326759,
             "access_rule": {
-              "rule": "has_any_wallet_upgrade",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Wallet_Upgrade"
+              }
             },
             "item": {
               "name": "Orange Rupee",
@@ -607,7 +749,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 231,
             "region": "The Great Sea",
@@ -625,7 +767,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 178,
             "region": "The Great Sea",
@@ -643,7 +785,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 53,
             "code": 9,
             "region": "The Great Sea",
@@ -661,7 +803,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 54,
             "code": 10,
             "region": "The Great Sea",
@@ -679,7 +821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 25,
             "region": "The Great Sea",
@@ -700,7 +842,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 30,
             "region": "The Great Sea",
@@ -715,10 +857,14 @@
             "name": "Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena",
             "connected_region": "Gohma Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_dragon_roost_cavern",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_dragon_roost_cavern",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in dragon roost cavern",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -738,7 +884,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 57,
             "region": "Dragon Roost Cavern",
@@ -752,15 +898,11 @@
               "children": [
                 {
                   "rule": "can_reach_dragon_roost_cavern_gaping_maw",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_stun_magtails",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -776,7 +918,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 12,
             "code": 71,
             "region": "Dragon Roost Cavern",
@@ -798,7 +940,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 63,
             "region": "Dragon Roost Cavern",
@@ -819,7 +961,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 59,
             "region": "Dragon Roost Cavern",
@@ -829,10 +971,14 @@
             "name": "Dragon Roost Cavern - Boss Stairs Left Chest",
             "id": 2326601,
             "access_rule": {
-              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_dragon_roost_cavern_boss_stairs",
+                "inferred": true,
+                "description": "Requires ability to reach dragon roost cavern boss stairs",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "DRC Dungeon Map",
@@ -840,7 +986,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 10,
             "code": 73,
             "region": "Dragon Roost Cavern",
@@ -850,10 +996,14 @@
             "name": "Dragon Roost Cavern - Boss Stairs Right Chest",
             "id": 2326600,
             "access_rule": {
-              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_dragon_roost_cavern_boss_stairs",
+                "inferred": true,
+                "description": "Requires ability to reach dragon roost cavern boss stairs",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Deku Leaf",
@@ -861,7 +1011,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 11,
             "code": 72,
             "region": "Dragon Roost Cavern",
@@ -921,7 +1071,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 13,
             "code": 60,
             "region": "Dragon Roost Cavern",
@@ -943,7 +1093,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 64,
             "region": "Dragon Roost Cavern",
@@ -961,7 +1111,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 56,
             "region": "Dragon Roost Cavern",
@@ -983,7 +1133,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 17,
             "code": 68,
             "region": "Dragon Roost Cavern",
@@ -1005,7 +1155,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 67,
             "region": "Dragon Roost Cavern",
@@ -1027,7 +1177,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 14,
             "code": 61,
             "region": "Dragon Roost Cavern",
@@ -1049,7 +1199,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 62,
             "region": "Dragon Roost Cavern",
@@ -1066,9 +1216,7 @@
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_outdoors",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -1093,7 +1241,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 69,
             "region": "Dragon Roost Cavern",
@@ -1108,20 +1256,28 @@
             "name": "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena",
             "connected_region": "Forbidden Woods Miniboss Arena",
             "access_rule": {
-              "rule": "can_access_miniboss_entrance_in_forbidden_woods",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_miniboss_entrance_in_forbidden_woods",
+                "inferred": true,
+                "description": "Requires ability to access miniboss entrance in forbidden woods",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena",
             "connected_region": "Kalle Demos Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_forbidden_woods",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_forbidden_woods",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in forbidden woods",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1134,15 +1290,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "HasAll",
@@ -1161,7 +1313,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 93,
             "region": "Forbidden Woods",
@@ -1175,15 +1327,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "HasAll",
@@ -1202,7 +1350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 11,
             "code": 90,
             "region": "Forbidden Woods",
@@ -1216,15 +1364,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "HasAll",
@@ -1243,7 +1387,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 9,
             "code": 92,
             "region": "Forbidden Woods",
@@ -1257,15 +1401,11 @@
               "children": [
                 {
                   "rule": "can_defeat_door_flowers",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -1275,7 +1415,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 80,
             "region": "Forbidden Woods",
@@ -1289,30 +1429,22 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_defeat_mothulas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_defeat_door_flowers",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -1330,7 +1462,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 14,
             "code": 94,
             "region": "Forbidden Woods",
@@ -1348,7 +1480,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 78,
             "region": "Forbidden Woods",
@@ -1362,15 +1494,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -1380,7 +1508,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 82,
             "region": "Forbidden Woods",
@@ -1394,15 +1522,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_defeat_door_flowers",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -1412,7 +1536,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 79,
             "region": "Forbidden Woods",
@@ -1426,15 +1550,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1450,7 +1570,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 8,
             "code": 83,
             "region": "Forbidden Woods",
@@ -1510,7 +1630,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 89,
             "region": "Forbidden Woods",
@@ -1565,7 +1685,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 12,
             "code": 87,
             "region": "Forbidden Woods",
@@ -1579,15 +1699,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1603,7 +1719,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 84,
             "region": "Forbidden Woods",
@@ -1617,15 +1733,11 @@
               "children": [
                 {
                   "rule": "can_defeat_boko_babas",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fly_with_deku_leaf_indoors",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1641,7 +1753,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 85,
             "region": "Forbidden Woods",
@@ -1656,20 +1768,28 @@
             "name": "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena",
             "connected_region": "Tower of the Gods Miniboss Arena",
             "access_rule": {
-              "rule": "can_access_miniboss_entrance_in_tower_of_the_gods",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_miniboss_entrance_in_tower_of_the_gods",
+                "inferred": true,
+                "description": "Requires ability to access miniboss entrance in tower of the gods",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena",
             "connected_region": "Gohdan Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_tower_of_the_gods",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_tower_of_the_gods",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in tower of the gods",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1678,10 +1798,14 @@
             "name": "Tower of the Gods - Big Key Chest",
             "id": 2326639,
             "access_rule": {
-              "rule": "can_reach_tower_of_the_gods_third_floor",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_tower_of_the_gods_third_floor",
+                "inferred": true,
+                "description": "Requires ability to reach tower of the gods third floor",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Empty Bottle",
@@ -1689,7 +1813,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 111,
             "region": "Tower of the Gods",
@@ -1710,7 +1834,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 97,
             "region": "Tower of the Gods",
@@ -1724,15 +1848,11 @@
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_heros_bow",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -1742,7 +1862,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 104,
             "region": "Tower of the Gods",
@@ -1810,7 +1930,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 108,
             "region": "Tower of the Gods",
@@ -1828,7 +1948,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 99,
             "region": "Tower of the Gods",
@@ -1849,7 +1969,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 10,
             "code": 100,
             "region": "Tower of the Gods",
@@ -1863,15 +1983,11 @@
               "children": [
                 {
                   "rule": "can_play_winds_requiem",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1887,7 +2003,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 8,
             "code": 107,
             "region": "Tower of the Gods",
@@ -1901,9 +2017,7 @@
               "children": [
                 {
                   "rule": "has_heros_bow",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1919,7 +2033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 9,
             "code": 102,
             "region": "Tower of the Gods",
@@ -1940,7 +2054,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 101,
             "region": "Tower of the Gods",
@@ -1954,9 +2068,7 @@
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -1972,7 +2084,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 105,
             "region": "Tower of the Gods",
@@ -1986,15 +2098,11 @@
               "children": [
                 {
                   "rule": "can_reach_tower_of_the_gods_second_floor",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_heros_bow",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2004,7 +2112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 11,
             "code": 109,
             "region": "Tower of the Gods",
@@ -2019,20 +2127,28 @@
             "name": "Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena",
             "connected_region": "Earth Temple Miniboss Arena",
             "access_rule": {
-              "rule": "can_access_miniboss_entrance_in_earth_temple",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_miniboss_entrance_in_earth_temple",
+                "inferred": true,
+                "description": "Requires ability to access miniboss entrance in earth temple",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Boss Entrance in Earth Temple -> Jalhalla Boss Arena",
             "connected_region": "Jalhalla Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_earth_temple",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_earth_temple",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in earth temple",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2141,7 +2257,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 146,
             "region": "Earth Temple",
@@ -2151,10 +2267,14 @@
             "name": "Earth Temple - Casket in Second Crypt",
             "id": 2326664,
             "access_rule": {
-              "rule": "can_reach_earth_temple_moblins_and_poes_room",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "reach_earth_temple_moblins_and_poes_room",
+                "inferred": true,
+                "description": "Requires ability to reach earth temple moblins and poes room",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "ET Dungeon Map",
@@ -2162,7 +2282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 14,
             "code": 136,
             "region": "Earth Temple",
@@ -2176,15 +2296,11 @@
               "children": [
                 {
                   "rule": "can_reach_earth_temple_right_path",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_mirror_shield",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2194,7 +2310,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 12,
             "code": 133,
             "region": "Earth Temple",
@@ -2208,24 +2324,18 @@
               "children": [
                 {
                   "rule": "can_reach_earth_temple_moblins_and_poes_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 }
@@ -2237,7 +2347,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 135,
             "region": "Earth Temple",
@@ -2251,36 +2361,26 @@
               "children": [
                 {
                   "rule": "can_defeat_floormasters",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_earth_temple_left_path",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "has_fire_arrows",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
@@ -2298,7 +2398,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 134,
             "region": "Earth Temple",
@@ -2309,9 +2409,7 @@
             "id": 2326670,
             "access_rule": {
               "rule": "can_reach_earth_temple_third_crypt",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Wallet Capacity Upgrade",
@@ -2319,7 +2417,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 142,
             "region": "Earth Temple",
@@ -2333,24 +2431,18 @@
               "children": [
                 {
                   "rule": "can_reach_earth_temple_redead_hub_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 }
@@ -2362,7 +2454,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 139,
             "region": "Earth Temple",
@@ -2376,30 +2468,22 @@
               "children": [
                 {
                   "rule": "can_defeat_floormasters",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_earth_temple_redead_hub_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_aim_mirror_shield",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "can_play_command_melody",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 }
@@ -2411,7 +2495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 11,
             "code": 140,
             "region": "Earth Temple",
@@ -2425,21 +2509,15 @@
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_play_command_melody",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -2455,7 +2533,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 10,
             "code": 144,
             "region": "Earth Temple",
@@ -2469,15 +2547,11 @@
               "children": [
                 {
                   "rule": "can_play_command_melody",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2487,7 +2561,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 9,
             "code": 143,
             "region": "Earth Temple",
@@ -2501,15 +2575,11 @@
               "children": [
                 {
                   "rule": "can_defeat_stalfos",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_earth_temple_many_mirrors_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2519,7 +2589,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 14,
             "code": 145,
             "region": "Earth Temple",
@@ -2530,9 +2600,7 @@
             "id": 2326658,
             "access_rule": {
               "rule": "can_play_command_melody",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Hookshot",
@@ -2540,7 +2608,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 130,
             "region": "Earth Temple",
@@ -2554,24 +2622,18 @@
               "children": [
                 {
                   "rule": "can_reach_earth_temple_right_path",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_play_command_melody",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "has_mirror_shield",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     }
                   ]
                 },
@@ -2589,7 +2651,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 132,
             "region": "Earth Temple",
@@ -2604,20 +2666,28 @@
             "name": "Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena",
             "connected_region": "Wind Temple Miniboss Arena",
             "access_rule": {
-              "rule": "can_access_miniboss_entrance_in_wind_temple",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_miniboss_entrance_in_wind_temple",
+                "inferred": true,
+                "description": "Requires ability to access miniboss entrance in wind temple",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Boss Entrance in Wind Temple -> Molgera Boss Arena",
             "connected_region": "Molgera Boss Arena",
             "access_rule": {
-              "rule": "can_access_boss_entrance_in_wind_temple",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_boss_entrance_in_wind_temple",
+                "inferred": true,
+                "description": "Requires ability to access boss entrance in wind temple",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2630,27 +2700,19 @@
               "children": [
                 {
                   "rule": "can_defeat_darknuts",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_fan_with_deku_leaf",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_play_wind_gods_aria",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -2666,7 +2728,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 8,
             "code": 153,
             "region": "Wind Temple",
@@ -2680,15 +2742,11 @@
               "children": [
                 {
                   "rule": "can_activate_wind_temple_giant_fan",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_defeat_armos",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2698,7 +2756,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 4,
             "code": 161,
             "region": "Wind Temple",
@@ -2712,9 +2770,7 @@
               "children": [
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "HasAll",
@@ -2733,7 +2789,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 151,
             "region": "Wind Temple",
@@ -2744,9 +2800,7 @@
             "id": 2326676,
             "access_rule": {
               "rule": "can_play_command_melody",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Delivery Bag",
@@ -2754,7 +2808,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 148,
             "region": "Wind Temple",
@@ -2869,7 +2923,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 11,
             "code": 154,
             "region": "Wind Temple",
@@ -2879,10 +2933,14 @@
             "name": "Wind Temple - Chest In Middle Of Hub Room",
             "id": 2326684,
             "access_rule": {
-              "rule": "can_open_wind_temple_upper_giant_grate",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "open_wind_temple_upper_giant_grate",
+                "inferred": true,
+                "description": "Requires ability to open wind temple upper giant grate",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -2890,7 +2948,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 13,
             "code": 156,
             "region": "Wind Temple",
@@ -2900,10 +2958,14 @@
             "name": "Wind Temple - Chest at Top of Hub Room",
             "id": 2326688,
             "access_rule": {
-              "rule": "can_activate_wind_temple_giant_fan",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "activate_wind_temple_giant_fan",
+                "inferred": true,
+                "description": "Requires ability to activate wind temple giant fan",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "WT Small Key",
@@ -2911,7 +2973,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 160,
             "region": "Wind Temple",
@@ -2925,15 +2987,11 @@
               "children": [
                 {
                   "rule": "can_fan_with_deku_leaf",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_wind_temple_kidnapping_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -2949,7 +3007,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 152,
             "region": "Wind Temple",
@@ -2963,27 +3021,19 @@
               "children": [
                 {
                   "rule": "can_defeat_morths",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_defeat_stalfos",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_defeat_wizzrobes",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_reach_wind_temple_tall_basement_room",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -2993,7 +3043,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 12,
             "code": 162,
             "region": "Wind Temple",
@@ -3007,9 +3057,7 @@
               "children": [
                 {
                   "rule": "can_open_wind_temple_upper_giant_grate",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3025,7 +3073,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 10,
             "code": 158,
             "region": "Wind Temple",
@@ -3039,9 +3087,7 @@
               "children": [
                 {
                   "rule": "can_open_wind_temple_upper_giant_grate",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3057,7 +3103,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 9,
             "code": 157,
             "region": "Wind Temple",
@@ -3073,10 +3119,14 @@
             "name": "Forbidden Woods - Mothula Miniboss Room",
             "id": 2326616,
             "access_rule": {
-              "rule": "can_defeat_winged_mothulas",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_winged_mothulas",
+                "inferred": true,
+                "description": "Requires ability to defeat winged mothulas",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "FW Compass",
@@ -3084,7 +3134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 10,
             "code": 88,
             "region": "Forbidden Woods Miniboss Arena",
@@ -3101,9 +3151,7 @@
             "id": 2326634,
             "access_rule": {
               "rule": "can_defeat_darknuts",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Telescope",
@@ -3111,7 +3159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 106,
             "region": "Tower of the Gods Miniboss Arena",
@@ -3131,9 +3179,7 @@
               "children": [
                 {
                   "rule": "can_defeat_stalfos",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3149,7 +3195,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 137,
             "region": "Earth Temple Miniboss Arena",
@@ -3169,15 +3215,11 @@
               "children": [
                 {
                   "rule": "can_defeat_darknuts",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_remove_peahat_armor",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -3187,7 +3229,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 159,
             "region": "Wind Temple Miniboss Arena",
@@ -3203,10 +3245,14 @@
             "name": "Hyrule - Master Sword Chamber",
             "id": 2326641,
             "access_rule": {
-              "rule": "can_defeat_mighty_darknuts",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_mighty_darknuts",
+                "inferred": true,
+                "description": "Requires ability to defeat mighty darknuts",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -3214,7 +3260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 113,
             "region": "Master Sword Chamber",
@@ -3231,9 +3277,7 @@
             "id": 2326603,
             "access_rule": {
               "rule": "can_defeat_gohma",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Piece of Heart",
@@ -3241,7 +3285,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 75,
             "region": "Gohma Boss Arena",
@@ -3258,9 +3302,7 @@
             "id": 2326623,
             "access_rule": {
               "rule": "can_defeat_kalle_demos",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Iron Boots",
@@ -3268,7 +3310,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 95,
             "region": "Kalle Demos Boss Arena",
@@ -3284,10 +3326,14 @@
             "name": "Tower of the Gods - Gohdan Heart Container",
             "id": 2326640,
             "access_rule": {
-              "rule": "can_defeat_gohdan",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_gohdan",
+                "inferred": true,
+                "description": "Requires ability to defeat gohdan",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "TotG Compass",
@@ -3295,7 +3341,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 112,
             "region": "Gohdan Boss Arena",
@@ -3311,10 +3357,14 @@
             "name": "Forsaken Fortress - Helmaroc King Heart Container",
             "id": 2326647,
             "access_rule": {
-              "rule": "can_defeat_helmaroc_king",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "defeat_helmaroc_king",
+                "inferred": true,
+                "description": "Requires ability to defeat helmaroc king",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Triforce Shard 6",
@@ -3322,7 +3372,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 119,
             "region": "Helmaroc King Boss Arena",
@@ -3339,9 +3389,7 @@
             "id": 2326675,
             "access_rule": {
               "rule": "can_defeat_jalhalla",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Ghost Ship Chart",
@@ -3349,7 +3397,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 147,
             "region": "Jalhalla Boss Arena",
@@ -3366,9 +3414,7 @@
             "id": 2326691,
             "access_rule": {
               "rule": "can_defeat_molgera",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Progressive Magic Meter",
@@ -3376,7 +3422,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 21,
             "code": 163,
             "region": "Molgera Boss Arena",
@@ -3409,10 +3455,14 @@
             "name": "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave",
             "connected_region": "Ice Ring Isle Inner Cave",
             "access_rule": {
-              "rule": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_inner_entrance_in_ice_ring_isle_secret_cave",
+                "inferred": true,
+                "description": "Requires ability to access inner entrance in ice ring isle secret cave",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3429,7 +3479,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 126,
             "region": "Ice Ring Isle Secret Cave",
@@ -3456,7 +3506,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 22,
             "code": 184,
             "region": "Cabana Labyrinth",
@@ -3470,9 +3520,7 @@
               "children": [
                 {
                   "rule": "can_play_winds_requiem",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3488,7 +3536,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 17,
             "code": 185,
             "region": "Cabana Labyrinth",
@@ -3504,10 +3552,10 @@
             "name": "Needle Rock Isle - Cave",
             "id": 2326718,
             "access_rule": {
-              "rule": "has_fire_arrows",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire_Arrows"
+              }
             },
             "item": {
               "name": "Boomerang",
@@ -3515,7 +3563,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 9,
             "code": 190,
             "region": "Needle Rock Isle Secret Cave",
@@ -3535,18 +3583,14 @@
               "children": [
                 {
                   "rule": "can_aim_mirror_shield",
-                  "_original_ast_type": "helper",
-                  "_rb_helper": true,
-                  "_rb_helper_defined": true
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "can_fly_with_deku_leaf_indoors",
-                      "_original_ast_type": "helper",
-                      "_rb_helper": true,
-                      "_rb_helper_defined": true
+                      "_original_ast_type": "helper"
                     },
                     {
                       "rule": "Has",
@@ -3564,7 +3608,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 6,
             "code": 193,
             "region": "Angular Isles Secret Cave",
@@ -3598,10 +3642,14 @@
             "name": "Bird's Peak Rock - Cave",
             "id": 2326730,
             "access_rule": {
-              "rule": "can_play_winds_requiem",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "play_winds_requiem",
+                "inferred": true,
+                "description": "Requires ability to play winds requiem",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Bracelets",
@@ -3609,7 +3657,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 16,
             "code": 202,
             "region": "Bird's Peak Rock Secret Cave",
@@ -3625,10 +3673,14 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Left Boulder",
             "id": 2326732,
             "access_rule": {
-              "rule": "can_move_boulders",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "move_boulders",
+                "inferred": true,
+                "description": "Requires ability to move boulders",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Silver Rupee",
@@ -3636,7 +3688,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 24,
             "code": 204,
             "region": "Pawprint Isle Chuchu Cave",
@@ -3646,10 +3698,14 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Right Boulder",
             "id": 2326733,
             "access_rule": {
-              "rule": "can_move_boulders",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "move_boulders",
+                "inferred": true,
+                "description": "Requires ability to move boulders",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Silver Rupee",
@@ -3657,7 +3713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 25,
             "code": 205,
             "region": "Pawprint Isle Chuchu Cave",
@@ -3675,7 +3731,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 26,
             "code": 203,
             "region": "Pawprint Isle Chuchu Cave",
@@ -3696,7 +3752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 206,
             "region": "Pawprint Isle Chuchu Cave",
@@ -3726,7 +3782,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 23,
             "code": 223,
             "region": "Diamond Steppe Island Warp Maze Cave",
@@ -3744,7 +3800,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 224,
             "region": "Diamond Steppe Island Warp Maze Cave",
@@ -3760,10 +3816,14 @@
             "name": "Bomb Island - Cave",
             "id": 2326754,
             "access_rule": {
-              "rule": "can_stun_magtails",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "stun_magtails",
+                "inferred": true,
+                "description": "Requires ability to stun magtails",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Progressive Bow",
@@ -3771,7 +3831,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 226,
             "region": "Bomb Island Secret Cave",
@@ -3798,10 +3858,14 @@
             "name": "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave",
             "connected_region": "Cliff Plateau Isles Inner Cave",
             "access_rule": {
-              "rule": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
-              "_original_ast_type": "helper",
-              "_rb_helper": true,
-              "_rb_helper_defined": true
+              "rule": "AST_capability",
+              "args": {
+                "capability": "access_inner_entrance_in_cliff_plateau_isles_secret_cave",
+                "inferred": true,
+                "description": "Requires ability to access inner entrance in cliff plateau isles secret cave",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3848,7 +3912,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 7,
             "code": 238,
             "region": "Cliff Plateau Isles Secret Cave",
@@ -3890,7 +3954,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 239,
             "region": "Cliff Plateau Isles Inner Cave",
@@ -3920,7 +3984,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 0,
             "code": 209,
             "region": "Thorned Fairy Fountain",
@@ -3944,7 +4008,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 3,
             "code": 212,
             "region": "Eastern Fairy Fountain",
@@ -3968,7 +4032,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 1,
             "code": 214,
             "region": "Western Fairy Fountain",
@@ -3992,7 +4056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 2,
             "code": 216,
             "region": "Southern Fairy Fountain",
@@ -4016,7 +4080,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false,
+            "locked": true,
             "bit": 5,
             "code": 219,
             "region": "Northern Fairy Fountain",

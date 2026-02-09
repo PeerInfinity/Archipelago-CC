@@ -123,7 +123,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Grab practice pillars - Top",
@@ -137,7 +137,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: King Skeleton's bridge",
@@ -151,7 +151,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Moon gazebo inside",
@@ -165,7 +165,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Moon gazebo roof",
@@ -179,7 +179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Sun gazebo inside",
@@ -193,7 +193,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Sun gazebo roof",
@@ -207,7 +207,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Were-tiger switch",
@@ -221,7 +221,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Dirge maiden gate",
@@ -235,7 +235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Dirge maiden crypt - Upper",
@@ -249,7 +249,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Dirge maiden pedestal plaque",
@@ -263,7 +263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Tri-corpse save junction",
@@ -277,7 +277,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Descending bridge wall side",
@@ -291,7 +291,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Descending bridge switch side",
@@ -305,7 +305,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -333,7 +333,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Three-crypt plaza main path crypt - Upper-front",
@@ -347,7 +347,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front",
@@ -361,7 +361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Upper",
@@ -375,7 +375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Invisible bridge platform",
@@ -389,7 +389,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Werewolf crypt - Right",
@@ -403,7 +403,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Werewolf statue plaque",
@@ -417,7 +417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Werewolf path near tree",
@@ -431,7 +431,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Forest of Silence: Three-crypt plaza switch",
@@ -445,7 +445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -496,7 +496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: White Dragons switch door",
@@ -510,7 +510,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Central rampart near right tower",
@@ -524,7 +524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Central rampart near left tower",
@@ -538,7 +538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Sandbag shelf - Visible",
@@ -552,7 +552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Sandbag shelf - Invisible",
@@ -566,7 +566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -586,7 +586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -614,7 +614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Left tower child ledge",
@@ -628,7 +628,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Wall: Dracula cutscene switch door",
@@ -642,7 +642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -670,7 +670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Outer front gate - Right",
@@ -684,7 +684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Outer front gate platform",
@@ -698,7 +698,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Inner front gate dog food",
@@ -712,7 +712,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -763,7 +763,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Front yard cross grave near porch",
@@ -777,7 +777,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Front yard visitor's tombstone",
@@ -791,7 +791,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Front-left",
@@ -805,7 +805,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Front-right",
@@ -819,7 +819,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Middle-left",
@@ -833,7 +833,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Middle-right",
@@ -847,7 +847,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Rear-left",
@@ -861,7 +861,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Midnight fountain - Rear-right",
@@ -875,7 +875,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer lower level - Front-right",
@@ -889,7 +889,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer lower level - Front-left",
@@ -903,7 +903,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer lower level - Middle-left",
@@ -917,7 +917,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer lower level - Rear-right",
@@ -931,7 +931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer lower level - Rear-left",
@@ -945,7 +945,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer upper-right pot",
@@ -959,7 +959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer upper-left pot",
@@ -973,7 +973,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Foyer sofa",
@@ -987,7 +987,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rose garden staircase bottom",
@@ -1001,7 +1001,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Bedroom near chairs",
@@ -1015,7 +1015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Bedroom near bed",
@@ -1029,7 +1029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Vincent",
@@ -1043,7 +1043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Mary's room table",
@@ -1057,7 +1057,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Dining room rose vase",
@@ -1071,7 +1071,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Living room - Right pot",
@@ -1085,7 +1085,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Living room - Left pot",
@@ -1099,7 +1099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Living room clawed painting",
@@ -1113,7 +1113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Living room ceiling light",
@@ -1127,7 +1127,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Living room lion head",
@@ -1141,7 +1141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Maze garden exit knight",
@@ -1155,7 +1155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1186,7 +1186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Storeroom - Right",
@@ -1200,7 +1200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Storeroom statue",
@@ -1214,7 +1214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1234,7 +1234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Archives rear corner",
@@ -1248,7 +1248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1289,7 +1289,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Front maze garden - Malus's hiding bush",
@@ -1303,7 +1303,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Front maze garden - Frankie's left dead-end",
@@ -1317,7 +1317,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Front maze garden - Frankie's right dead-end urn",
@@ -1331,7 +1331,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Front",
@@ -1345,7 +1345,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front",
@@ -1359,7 +1359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear",
@@ -1373,7 +1373,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Rear",
@@ -1387,7 +1387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Viewing platform dead-end",
@@ -1401,7 +1401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Rear maze garden - Past-exit dead-end",
@@ -1415,7 +1415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Servants' path small alcove",
@@ -1429,7 +1429,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1457,7 +1457,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1499,7 +1499,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt bridge upstream",
@@ -1513,7 +1513,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt - Left from entrance",
@@ -1527,7 +1527,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt - Right from entrance",
@@ -1541,7 +1541,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt - Left wall",
@@ -1555,7 +1555,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt - Right wall",
@@ -1569,7 +1569,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Villa: Crypt - Right of coffin",
@@ -1583,7 +1583,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1611,7 +1611,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Landing point rock crusher",
@@ -1625,7 +1625,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Stepping stone alcove - Left",
@@ -1639,7 +1639,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Twin arrow signs",
@@ -1653,7 +1653,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Near lonesome bucket",
@@ -1667,7 +1667,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Lonesome bucket poison pit",
@@ -1681,7 +1681,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Lonesome bucket-Albert junction",
@@ -1695,7 +1695,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Albert's campsite",
@@ -1709,7 +1709,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Albert's poison pit",
@@ -1723,7 +1723,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Gondola rock crusher sun door - Middle",
@@ -1737,7 +1737,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Gondola rock crusher sun door - Right",
@@ -1751,7 +1751,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Gondola rock crusher",
@@ -1765,7 +1765,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Red gondola station",
@@ -1779,7 +1779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Gondola transfer point",
@@ -1793,7 +1793,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1821,7 +1821,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Corpse bucket moon door - Right",
@@ -1835,7 +1835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel poison pit start",
@@ -1849,7 +1849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Exit door poison pit start",
@@ -1863,7 +1863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel poison pit end",
@@ -1877,7 +1877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Exit door poison pit end",
@@ -1891,7 +1891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel",
@@ -1905,7 +1905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel zone save junction",
@@ -1919,7 +1919,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel zone moon door - Left",
@@ -1933,7 +1933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel zone sun door - Left",
@@ -1947,7 +1947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tunnel: Shovel zone sun door - Middle",
@@ -1961,7 +1961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -1989,7 +1989,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Waterway: Across from entrance",
@@ -2003,7 +2003,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Waterway: Across poison parkour ledges",
@@ -2017,7 +2017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Waterway: Waterfall alcove ledge",
@@ -2031,7 +2031,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Waterway: Brick platforms save corridor",
@@ -2045,7 +2045,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Underground Waterway: Above skeleton crusher ledge",
@@ -2059,7 +2059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2139,7 +2139,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Basement hallway junction",
@@ -2153,7 +2153,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Torture chamber hallway",
@@ -2167,7 +2167,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Left far-front torch",
@@ -2181,7 +2181,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Left mid-front torch",
@@ -2195,7 +2195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Left mid-rear torch",
@@ -2209,7 +2209,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Left far-rear torch",
@@ -2223,7 +2223,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Right far-front torch",
@@ -2237,7 +2237,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Right mid-front torch",
@@ -2251,7 +2251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Right mid-rear torch",
@@ -2265,7 +2265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Behemoth arena - Right far-rear torch",
@@ -2279,7 +2279,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Near elevator room machine",
@@ -2293,7 +2293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Atop elevator room machine",
@@ -2307,7 +2307,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Elevator pipe device",
@@ -2321,7 +2321,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Elevator room staircase",
@@ -2335,7 +2335,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Red carpet hall knight",
@@ -2349,7 +2349,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Gear room side",
@@ -2363,7 +2363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Gear room center",
@@ -2377,7 +2377,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Gear room corner",
@@ -2391,7 +2391,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Lizard locker knight",
@@ -2405,7 +2405,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Lizard locker room near pit",
@@ -2419,7 +2419,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Lizard locker room corner",
@@ -2433,7 +2433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Broken staircase floor",
@@ -2447,7 +2447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Broken staircase knight",
@@ -2461,7 +2461,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Above broken staircase savepoint",
@@ -2475,7 +2475,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Stained Glass Knight room - Left",
@@ -2489,7 +2489,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Stained Glass Knight room - Right",
@@ -2503,7 +2503,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Butler bros. room near door",
@@ -2517,7 +2517,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Butler bros. room inner",
@@ -2531,7 +2531,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Past butler room flamethrowers",
@@ -2545,7 +2545,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Inside cracked wall hallway flamethrower",
@@ -2559,7 +2559,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Past upper cracked wall flamethrowers",
@@ -2573,7 +2573,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Heinrich Meyer",
@@ -2587,7 +2587,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Nitro room crates",
@@ -2601,7 +2601,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Magical Nitro shelf - Heinrich side",
@@ -2615,7 +2615,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Hell Knight landing corner knight",
@@ -2629,7 +2629,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Maid sisters room vase",
@@ -2643,7 +2643,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Maid sisters room outer table",
@@ -2657,7 +2657,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Maid sisters room inner table",
@@ -2671,7 +2671,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Invention room maid sisters door",
@@ -2685,7 +2685,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Invention room spike crusher door",
@@ -2699,7 +2699,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Invention room giant Famicart",
@@ -2713,7 +2713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Invention room zeppelin",
@@ -2727,7 +2727,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Invention room round machine",
@@ -2741,7 +2741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Inside nitro hallway flamethrower",
@@ -2755,7 +2755,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Past nitro room flamethrowers",
@@ -2769,7 +2769,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Magical Nitro shelf - Invention side",
@@ -2783,7 +2783,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2803,7 +2803,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Mandragora shelf - Right",
@@ -2817,7 +2817,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Torture chamber instrument rack",
@@ -2831,7 +2831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Torture chamber rafters",
@@ -2845,7 +2845,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2865,7 +2865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Center: Library bookshelf",
@@ -2879,7 +2879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -2963,7 +2963,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Duel Tower: Invisible bridge balcony - Right",
@@ -2977,7 +2977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Duel Tower: Stepping stone path start",
@@ -2991,7 +2991,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Duel Tower: Above Were-bull arena",
@@ -3005,7 +3005,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3050,7 +3050,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Execution: Past mid-savepoint spikes - Left",
@@ -3064,7 +3064,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Execution: Electric grate ledge",
@@ -3078,7 +3078,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Execution: Invisible bridge ledge",
@@ -3092,7 +3092,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Execution: Guillotine tower top level",
@@ -3106,7 +3106,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3126,7 +3126,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3174,7 +3174,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Science: Plain sight side room",
@@ -3188,7 +3188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Science: Staircase side room",
@@ -3202,7 +3202,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3222,7 +3222,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3270,7 +3270,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Science: Spiky conveyor side room",
@@ -3284,7 +3284,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Science: Exit hallway",
@@ -3298,7 +3298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3318,7 +3318,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Science: Locked Key3 room - Left",
@@ -3332,7 +3332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3367,7 +3367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Mid-savepoint platform",
@@ -3381,7 +3381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Trick shot from mid-savepoint platform",
@@ -3395,7 +3395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Above yellow bubble",
@@ -3409,7 +3409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Above tiny blue platforms start",
@@ -3423,7 +3423,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Lone red platform side island",
@@ -3437,7 +3437,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Tower of Sorcery: Invisible bridge platform",
@@ -3451,7 +3451,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3479,7 +3479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Room of Clocks: Right from entrance hallway",
@@ -3493,7 +3493,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Room of Clocks: Right of Contract",
@@ -3507,7 +3507,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3538,7 +3538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Clock Tower: Gear climb room corner",
@@ -3552,7 +3552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3593,7 +3593,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Clock Tower: Bone Pillar chasm room - Front-right",
@@ -3607,7 +3607,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Clock Tower: Bone Pillar chasm room key alcove",
@@ -3621,7 +3621,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3662,7 +3662,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -3690,7 +3690,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Keep: Right Dracula door flame",
@@ -3704,7 +3704,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Keep: Behind Dracula's chamber",
@@ -3718,7 +3718,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Castle Keep: Dracula's floating cube",
@@ -3732,7 +3732,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
