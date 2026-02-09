@@ -208,6 +208,30 @@ def fill_dungeons_restrictive(multiworld: MultiWorld):
 
     if localized:
         in_dungeon_items = [item for item in get_dungeon_item_pool(multiworld) if (item.player, item.name) in localized]
+
+        # Remove dungeon items that were already placed (e.g., by plando)
+        all_dungeon_locs = [
+            location
+            for world in multiworld.get_game_worlds("A Link to the Past")
+            for dungeon in world.dungeons.values()
+            for region in dungeon.regions
+            for location in region.locations
+        ]
+        already_placed: typing.Counter[typing.Tuple[int, str]] = typing.Counter()
+        for loc in all_dungeon_locs:
+            if loc.item and (loc.item.player, loc.item.name) in localized:
+                already_placed[(loc.item.player, loc.item.name)] += 1
+        if already_placed:
+            for key, count in already_placed.items():
+                to_remove = count
+                i = 0
+                while to_remove > 0 and i < len(in_dungeon_items):
+                    if (in_dungeon_items[i].player, in_dungeon_items[i].name) == key:
+                        in_dungeon_items.pop(i)
+                        to_remove -= 1
+                    else:
+                        i += 1
+
         if in_dungeon_items:
             restricted_players = {world.player for world in multiworld.get_game_worlds("A Link to the Past") if
                                   world.options.restrict_dungeon_item_on_boss}
