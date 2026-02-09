@@ -210,8 +210,6 @@ class WorldGenerator:
             "authors": ["World Generator"],
             "minimum_ap_version": self.data.metadata.archipelago_version or "0.6.0",
             "world_version": "1.0.0",
-            "version": 7,
-            "compatible_version": 7
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
