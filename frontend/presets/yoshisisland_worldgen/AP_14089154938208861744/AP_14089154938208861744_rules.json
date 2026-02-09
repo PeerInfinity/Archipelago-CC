@@ -460,7 +460,9 @@
             "connected_region": "6-8",
             "access_rule": {
               "rule": "castle_access",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -488,7 +490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 0
           },
           {
@@ -509,7 +511,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 0
           },
           {
@@ -531,7 +533,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 0
           },
           {
@@ -549,7 +551,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 0
           }
         ]
@@ -576,7 +578,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 1
           },
           {
@@ -597,7 +599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 1
           },
           {
@@ -608,7 +610,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -624,7 +628,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 1
           },
           {
@@ -642,7 +646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 1
           }
         ]
@@ -666,7 +670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 2
           },
           {
@@ -684,7 +688,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 2
           },
           {
@@ -699,7 +703,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 2
           },
           {
@@ -714,7 +718,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 2
           }
         ]
@@ -727,7 +731,9 @@
             "connected_region": "Burt The Bashful's Boss Room",
             "access_rule": {
               "rule": "_14Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -747,7 +753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 3
           },
           {
@@ -761,7 +767,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -789,7 +797,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 3
           },
           {
@@ -803,7 +811,9 @@
                   "children": [
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -827,7 +837,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 3
           },
           {
@@ -835,7 +845,9 @@
             "id": 3166255,
             "access_rule": {
               "rule": "_14CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Magnifying Glass",
@@ -843,7 +855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 3
           }
         ]
@@ -857,7 +869,9 @@
             "id": null,
             "access_rule": {
               "rule": "_14Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -887,7 +901,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 4
           },
           {
@@ -902,7 +916,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 4
           },
           {
@@ -913,11 +927,15 @@
               "children": [
                 {
                   "rule": "cansee_clouds",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -927,7 +945,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 4
           },
           {
@@ -942,7 +960,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 4
           }
         ]
@@ -971,7 +989,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 5
           },
           {
@@ -989,7 +1007,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 5
           },
           {
@@ -1006,7 +1024,9 @@
                       "children": [
                         {
                           "rule": "has_midring",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "Has",
@@ -1021,7 +1041,9 @@
                       "children": [
                         {
                           "rule": "has_midring",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "Has",
@@ -1047,7 +1069,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 5
           },
           {
@@ -1068,7 +1090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 5
           }
         ]
@@ -1097,7 +1119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 6
           },
           {
@@ -1112,7 +1134,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 6
           },
           {
@@ -1126,7 +1148,9 @@
                   "children": [
                     {
                       "rule": "cansee_clouds",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "HasAll",
@@ -1142,7 +1166,9 @@
                 },
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -1152,7 +1178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 6
           },
           {
@@ -1167,7 +1193,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 6
           },
           {
@@ -1175,7 +1201,9 @@
             "id": null,
             "access_rule": {
               "rule": "_17Game",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -1197,7 +1225,9 @@
             "connected_region": "Salvo The Slime's Boss Room",
             "access_rule": {
               "rule": "_18Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -1217,7 +1247,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 7
           },
           {
@@ -1235,7 +1265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 7
           },
           {
@@ -1246,7 +1276,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Or",
@@ -1276,7 +1308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 7
           },
           {
@@ -1284,7 +1316,9 @@
             "id": 3166272,
             "access_rule": {
               "rule": "_18CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -1292,7 +1326,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 7
           }
         ]
@@ -1306,7 +1340,9 @@
             "id": null,
             "access_rule": {
               "rule": "_18Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -1343,7 +1379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 12
           },
           {
@@ -1364,7 +1400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 12
           },
           {
@@ -1375,7 +1411,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -1391,7 +1429,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 12
           },
           {
@@ -1409,7 +1447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 12
           }
         ]
@@ -1439,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 13
           },
           {
@@ -1463,7 +1501,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 13
           },
           {
@@ -1474,7 +1512,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -1496,7 +1536,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 13
           },
           {
@@ -1519,7 +1559,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 13
           }
         ]
@@ -1543,7 +1583,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 14
           },
           {
@@ -1564,7 +1604,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 14
           },
           {
@@ -1579,7 +1619,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 14
           },
           {
@@ -1600,7 +1640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 14
           }
         ]
@@ -1613,7 +1653,9 @@
             "connected_region": "Bigger Boo's Boss Room",
             "access_rule": {
               "rule": "_24Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -1637,7 +1679,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 15
           },
           {
@@ -1659,7 +1701,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 15
           },
           {
@@ -1670,7 +1712,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -1690,7 +1734,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 15
           },
           {
@@ -1698,7 +1742,9 @@
             "id": 3166288,
             "access_rule": {
               "rule": "_24CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Egg Plant",
@@ -1706,7 +1752,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 15
           }
         ]
@@ -1720,7 +1766,9 @@
             "id": null,
             "access_rule": {
               "rule": "_24Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -1753,7 +1801,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 16
           },
           {
@@ -1775,7 +1823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 16
           },
           {
@@ -1790,7 +1838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 16
           },
           {
@@ -1808,7 +1856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 16
           }
         ]
@@ -1832,7 +1880,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 17
           },
           {
@@ -1853,7 +1901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 17
           },
           {
@@ -1864,7 +1912,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -1880,7 +1930,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 17
           },
           {
@@ -1898,7 +1948,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 17
           },
           {
@@ -1906,7 +1956,9 @@
             "id": null,
             "access_rule": {
               "rule": "_26Game",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Bandit Watermelons",
@@ -1935,7 +1987,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "HasAny",
@@ -1962,7 +2016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 18
           },
           {
@@ -1976,7 +2030,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -2003,7 +2059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 18
           },
           {
@@ -2014,7 +2070,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2030,7 +2088,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 18
           },
           {
@@ -2051,7 +2109,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 18
           },
           {
@@ -2059,7 +2117,9 @@
             "id": null,
             "access_rule": {
               "rule": "_27Game",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -2081,7 +2141,9 @@
             "connected_region": "Roger The Ghost's Boss Room",
             "access_rule": {
               "rule": "_28Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -2105,7 +2167,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 19
           },
           {
@@ -2128,7 +2190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 19
           },
           {
@@ -2139,7 +2201,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -2159,7 +2223,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 19
           },
           {
@@ -2167,7 +2231,9 @@
             "id": 3166304,
             "access_rule": {
               "rule": "_28CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "+10 Stars",
@@ -2175,7 +2241,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 19
           }
         ]
@@ -2189,7 +2255,9 @@
             "id": null,
             "access_rule": {
               "rule": "_28Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -2219,7 +2287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 24
           },
           {
@@ -2234,7 +2302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 24
           },
           {
@@ -2242,7 +2310,9 @@
             "id": 3166307,
             "access_rule": {
               "rule": "has_midring",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Anytime Egg",
@@ -2250,7 +2320,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 24
           },
           {
@@ -2265,7 +2335,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 24
           }
         ]
@@ -2292,7 +2362,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 25
           },
           {
@@ -2313,7 +2383,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 25
           },
           {
@@ -2324,7 +2394,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2340,7 +2412,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 25
           },
           {
@@ -2361,7 +2433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 25
           }
         ]
@@ -2388,7 +2460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 26
           },
           {
@@ -2409,7 +2481,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 26
           },
           {
@@ -2420,7 +2492,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -2439,7 +2513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 26
           },
           {
@@ -2460,7 +2534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 26
           }
         ]
@@ -2473,7 +2547,9 @@
             "connected_region": "Prince Froggy's Boss Room",
             "access_rule": {
               "rule": "_34Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -2493,7 +2569,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 27
           },
           {
@@ -2507,7 +2583,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -2532,7 +2610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 27
           },
           {
@@ -2540,7 +2618,9 @@
             "id": 3166319,
             "access_rule": {
               "rule": "has_midring",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -2548,7 +2628,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 27
           },
           {
@@ -2556,7 +2636,9 @@
             "id": 3166320,
             "access_rule": {
               "rule": "_34CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pocket Melon",
@@ -2564,7 +2646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 27
           }
         ]
@@ -2578,7 +2660,9 @@
             "id": null,
             "access_rule": {
               "rule": "_34Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -2608,7 +2692,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 28
           },
           {
@@ -2619,7 +2703,9 @@
               "children": [
                 {
                   "rule": "melon_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2635,7 +2721,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 28
           },
           {
@@ -2649,14 +2735,18 @@
                   "children": [
                     {
                       "rule": "cansee_clouds",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Or",
                       "children": [
                         {
                           "rule": "has_midring",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "Has",
@@ -2673,7 +2763,9 @@
                   "children": [
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -2691,7 +2783,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 28
           },
           {
@@ -2706,7 +2798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 28
           }
         ]
@@ -2735,7 +2827,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 29
           },
           {
@@ -2759,7 +2851,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 29
           },
           {
@@ -2770,7 +2862,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -2793,7 +2887,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 29
           },
           {
@@ -2815,7 +2909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 29
           }
         ]
@@ -2844,7 +2938,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 30
           },
           {
@@ -2865,7 +2959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 30
           },
           {
@@ -2883,7 +2977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 30
           },
           {
@@ -2901,7 +2995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 30
           }
         ]
@@ -2914,7 +3008,9 @@
             "connected_region": "Naval Piranha's Boss Room",
             "access_rule": {
               "rule": "_38Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -2927,7 +3023,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2944,7 +3042,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 31
           },
           {
@@ -2955,7 +3053,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2972,7 +3072,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 31
           },
           {
@@ -2983,7 +3083,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -2999,7 +3101,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 31
           },
           {
@@ -3007,7 +3109,9 @@
             "id": 3166336,
             "access_rule": {
               "rule": "_38CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "10-Up",
@@ -3015,7 +3119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 31
           }
         ]
@@ -3029,7 +3133,9 @@
             "id": null,
             "access_rule": {
               "rule": "_38Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -3062,7 +3168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 36
           },
           {
@@ -3080,7 +3186,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 36
           },
           {
@@ -3094,7 +3200,9 @@
                   "children": [
                     {
                       "rule": "cansee_clouds",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3106,7 +3214,9 @@
                 },
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -3116,7 +3226,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 36
           },
           {
@@ -3134,7 +3244,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 36
           }
         ]
@@ -3162,7 +3272,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 37
           },
           {
@@ -3183,7 +3293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 37
           },
           {
@@ -3204,7 +3314,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 37
           },
           {
@@ -3222,7 +3332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 37
           }
         ]
@@ -3250,7 +3360,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 38
           },
           {
@@ -3271,7 +3381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 38
           },
           {
@@ -3282,7 +3392,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -3301,7 +3413,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 38
           },
           {
@@ -3319,7 +3431,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 38
           }
         ]
@@ -3332,7 +3444,9 @@
             "connected_region": "Marching Milde's Boss Room",
             "access_rule": {
               "rule": "_44Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -3348,7 +3462,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3378,7 +3494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 39
           },
           {
@@ -3392,7 +3508,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3421,7 +3539,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 39
           },
           {
@@ -3435,11 +3553,15 @@
                   "children": [
                     {
                       "rule": "cansee_clouds",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3463,7 +3585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 39
           },
           {
@@ -3471,7 +3593,9 @@
             "id": 3166352,
             "access_rule": {
               "rule": "_44CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "2-Up",
@@ -3479,7 +3603,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 39
           }
         ]
@@ -3493,7 +3617,9 @@
             "id": null,
             "access_rule": {
               "rule": "_44Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -3531,7 +3657,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 40
           },
           {
@@ -3554,7 +3680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 40
           },
           {
@@ -3577,7 +3703,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 40
           },
           {
@@ -3592,7 +3718,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 40
           }
         ]
@@ -3612,7 +3738,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3639,7 +3767,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 41
           },
           {
@@ -3653,7 +3781,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3680,7 +3810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 41
           },
           {
@@ -3697,7 +3827,9 @@
                       "children": [
                         {
                           "rule": "cansee_clouds",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "Has",
@@ -3709,7 +3841,9 @@
                     },
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     }
                   ]
                 },
@@ -3718,7 +3852,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -3736,7 +3872,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 41
           },
           {
@@ -3747,7 +3883,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -3763,7 +3901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 41
           }
         ]
@@ -3787,7 +3925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 42
           },
           {
@@ -3805,7 +3943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 42
           },
           {
@@ -3816,7 +3954,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -3835,7 +3975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 42
           },
           {
@@ -3853,7 +3993,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 42
           },
           {
@@ -3861,7 +4001,9 @@
             "id": null,
             "access_rule": {
               "rule": "_47Game",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -3883,7 +4025,9 @@
             "connected_region": "Hookbill The Koopa's Boss Room",
             "access_rule": {
               "rule": "_48Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -3907,7 +4051,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 43
           },
           {
@@ -3929,7 +4073,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 43
           },
           {
@@ -3940,7 +4084,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAny",
@@ -3959,7 +4105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 43
           },
           {
@@ -3967,7 +4113,9 @@
             "id": 3166368,
             "access_rule": {
               "rule": "_48CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "+10 Stars",
@@ -3975,7 +4123,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 43
           }
         ]
@@ -3989,7 +4137,9 @@
             "id": null,
             "access_rule": {
               "rule": "_48Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4025,7 +4175,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 48
           },
           {
@@ -4040,7 +4190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 48
           },
           {
@@ -4054,7 +4204,9 @@
                   "children": [
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -4066,7 +4218,9 @@
                 },
                 {
                   "rule": "cansee_clouds",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4082,7 +4236,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 48
           },
           {
@@ -4097,7 +4251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 48
           }
         ]
@@ -4118,7 +4272,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 49
           },
           {
@@ -4133,7 +4287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 49
           },
           {
@@ -4144,7 +4298,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4160,7 +4316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 49
           },
           {
@@ -4175,7 +4331,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 49
           }
         ]
@@ -4195,7 +4351,9 @@
                   "children": [
                     {
                       "rule": "melon_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -4225,7 +4383,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 50
           },
           {
@@ -4239,7 +4397,9 @@
                   "children": [
                     {
                       "rule": "melon_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -4267,7 +4427,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 50
           },
           {
@@ -4278,14 +4438,18 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "melon_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -4309,7 +4473,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 50
           },
           {
@@ -4331,7 +4495,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 50
           }
         ]
@@ -4344,7 +4508,9 @@
             "connected_region": "Sluggy The Unshaven's Boss Room",
             "access_rule": {
               "rule": "_54Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -4368,7 +4534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 51
           },
           {
@@ -4390,7 +4556,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 51
           },
           {
@@ -4404,7 +4570,9 @@
                   "children": [
                     {
                       "rule": "cansee_clouds",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "HasAll",
@@ -4422,7 +4590,9 @@
                   "children": [
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "HasAll",
@@ -4443,7 +4613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 51
           },
           {
@@ -4451,7 +4621,9 @@
             "id": 3166384,
             "access_rule": {
               "rule": "_54CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "1-Up",
@@ -4459,7 +4631,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 51
           }
         ]
@@ -4473,7 +4645,9 @@
             "id": null,
             "access_rule": {
               "rule": "_54Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4509,7 +4683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 52
           },
           {
@@ -4530,7 +4704,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 52
           },
           {
@@ -4538,7 +4712,9 @@
             "id": 3166387,
             "access_rule": {
               "rule": "has_midring",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "+20 Stars",
@@ -4546,7 +4722,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 52
           },
           {
@@ -4567,7 +4743,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 52
           }
         ]
@@ -4588,7 +4764,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 53
           },
           {
@@ -4603,7 +4779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 53
           },
           {
@@ -4614,7 +4790,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4630,7 +4808,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 53
           },
           {
@@ -4645,7 +4823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 53
           }
         ]
@@ -4662,7 +4840,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4678,7 +4858,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 54
           },
           {
@@ -4689,7 +4869,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4705,7 +4887,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 54
           },
           {
@@ -4713,7 +4895,9 @@
             "id": 3166395,
             "access_rule": {
               "rule": "has_midring",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pocket Melon",
@@ -4721,7 +4905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 54
           },
           {
@@ -4736,7 +4920,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 54
           }
         ]
@@ -4749,7 +4933,9 @@
             "connected_region": "Raphael The Raven's Boss Room",
             "access_rule": {
               "rule": "_58Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -4772,7 +4958,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 55
           },
           {
@@ -4793,7 +4979,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 55
           },
           {
@@ -4804,7 +4990,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4820,7 +5008,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 55
           },
           {
@@ -4828,7 +5016,9 @@
             "id": 3166400,
             "access_rule": {
               "rule": "_58CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "+20 Stars",
@@ -4836,7 +5026,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 55
           }
         ]
@@ -4850,7 +5040,9 @@
             "id": null,
             "access_rule": {
               "rule": "_58Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4886,7 +5078,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 60
           },
           {
@@ -4907,7 +5099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 60
           },
           {
@@ -4918,7 +5110,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -4934,7 +5128,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 60
           },
           {
@@ -4955,7 +5149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 60
           }
         ]
@@ -4979,7 +5173,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 61
           },
           {
@@ -4997,7 +5191,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 61
           },
           {
@@ -5008,11 +5202,15 @@
               "children": [
                 {
                   "rule": "cansee_clouds",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -5022,7 +5220,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 61
           },
           {
@@ -5040,7 +5238,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 61
           }
         ]
@@ -5061,7 +5259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 62
           },
           {
@@ -5076,7 +5274,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 62
           },
           {
@@ -5091,7 +5289,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 62
           },
           {
@@ -5106,7 +5304,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 62
           }
         ]
@@ -5119,7 +5317,9 @@
             "connected_region": "Tap-Tap The Red Nose's Boss Room",
             "access_rule": {
               "rule": "_64Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -5135,7 +5335,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -5165,7 +5367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 63
           },
           {
@@ -5179,7 +5381,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -5209,7 +5413,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 63
           },
           {
@@ -5220,7 +5424,9 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -5241,7 +5447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 63
           },
           {
@@ -5249,7 +5455,9 @@
             "id": 3166416,
             "access_rule": {
               "rule": "_64CanFightBoss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "2-Up",
@@ -5257,7 +5465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 63
           }
         ]
@@ -5271,7 +5479,9 @@
             "id": null,
             "access_rule": {
               "rule": "_64Boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Boss Clear",
@@ -5300,7 +5510,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -5325,7 +5537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 64
           },
           {
@@ -5339,7 +5551,9 @@
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -5364,7 +5578,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 64
           },
           {
@@ -5375,14 +5589,18 @@
               "children": [
                 {
                   "rule": "has_midring",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Or",
                   "children": [
                     {
                       "rule": "combat_item",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "Has",
@@ -5407,7 +5625,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 64
           },
           {
@@ -5422,7 +5640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 64
           }
         ]
@@ -5450,7 +5668,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 65
           },
           {
@@ -5472,7 +5690,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 65
           },
           {
@@ -5486,7 +5704,9 @@
                   "children": [
                     {
                       "rule": "has_midring",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     {
                       "rule": "HasAll",
@@ -5518,7 +5738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 65
           },
           {
@@ -5541,7 +5761,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 65
           }
         ]
@@ -5558,7 +5778,9 @@
               "children": [
                 {
                   "rule": "combat_item",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -5574,7 +5796,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 66
           },
           {
@@ -5592,7 +5814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 66
           },
           {
@@ -5600,7 +5822,9 @@
             "id": 3166427,
             "access_rule": {
               "rule": "has_midring",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Anywhere Pow",
@@ -5608,7 +5832,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 66
           },
           {
@@ -5623,7 +5847,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 66
           }
         ]
@@ -5636,7 +5860,9 @@
             "connected_region": "Bowser's Room",
             "access_rule": {
               "rule": "castle_clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -5649,7 +5875,9 @@
               "children": [
                 {
                   "rule": "_68CollectibleRoute",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -5668,7 +5896,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 67
           },
           {
@@ -5679,7 +5907,9 @@
               "children": [
                 {
                   "rule": "_68CollectibleRoute",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -5698,7 +5928,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 67
           },
           {
@@ -5709,7 +5939,9 @@
               "children": [
                 {
                   "rule": "_68Route",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "HasAll",
@@ -5728,7 +5960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "level_id": 67
           }
         ]
@@ -5742,7 +5974,9 @@
             "id": null,
             "access_rule": {
               "rule": "_68Clear",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Saved Baby Luigi",

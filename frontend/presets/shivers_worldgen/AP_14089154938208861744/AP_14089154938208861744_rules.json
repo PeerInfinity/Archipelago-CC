@@ -67,7 +67,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Gears",
@@ -81,7 +81,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Stone Henge",
@@ -95,7 +95,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Office Elevator",
@@ -134,7 +134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Three Floor Elevator",
@@ -173,7 +173,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mailbox",
@@ -187,7 +187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Orange Symbol",
@@ -201,7 +201,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Silver Symbol",
@@ -215,7 +215,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Green Symbol",
@@ -229,7 +229,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: White Symbol",
@@ -243,7 +243,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Brown Symbol",
@@ -257,7 +257,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tan Symbol",
@@ -271,7 +271,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -339,7 +339,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -367,7 +367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Windlenot's Body",
@@ -497,7 +497,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Desk Drawer",
@@ -526,7 +526,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Tape Recorder Heard",
@@ -540,7 +540,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Bedroom Elevator",
@@ -560,7 +560,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -595,7 +595,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Workshop Drawers",
@@ -624,7 +624,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -688,7 +688,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -753,7 +753,9 @@
               "children": [
                 {
                   "rule": "oil_capturable",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -930,7 +932,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Brochure",
@@ -944,7 +946,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Slide",
@@ -1033,7 +1035,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained In Search of the Unexplained",
@@ -1047,7 +1049,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained South American Pictographs",
@@ -1061,7 +1063,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Mythology of the Stars",
@@ -1075,7 +1077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Black Book",
@@ -1089,7 +1091,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Library Cabinet",
@@ -1167,7 +1169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1255,7 +1257,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beth's Body",
@@ -1324,7 +1326,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1385,7 +1387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1459,7 +1461,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Clock Chains",
@@ -1503,7 +1505,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Clock Tower",
@@ -1535,7 +1537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Jukebox",
@@ -1616,7 +1618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Viewed Theater Movie",
@@ -1805,7 +1807,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Organ",
@@ -1819,7 +1821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Museum Blueprints",
@@ -1833,7 +1835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Ocean",
@@ -1862,7 +1864,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1903,7 +1905,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1945,7 +1947,9 @@
               "children": [
                 {
                   "rule": "oil_capturable",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "Has",
@@ -1970,7 +1974,9 @@
             "id": null,
             "access_rule": {
               "rule": "oil_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Wax Pot Bottom DUPE",
@@ -2056,7 +2062,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Burial Door",
@@ -2070,7 +2076,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Egypt",
@@ -2099,7 +2105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Set Skull Dial: Egypt",
@@ -2167,7 +2173,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Merrick's Notebook",
@@ -2181,7 +2187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Chinese Solitaire",
@@ -2263,7 +2269,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Shaman Hut",
@@ -2333,7 +2339,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Solved Red Door",
@@ -2350,7 +2356,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Lyre",
@@ -2409,7 +2415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Norse Stone",
@@ -2473,7 +2479,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flashback Memory Obtained Ancient Astrology",
@@ -2487,7 +2493,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Skeleton",
@@ -2633,7 +2639,9 @@
             "connected_region": "Water Capture",
             "access_rule": {
               "rule": "cloth_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           },
           {
@@ -2650,7 +2658,9 @@
             "id": null,
             "access_rule": {
               "rule": "cloth_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Lightning Pot Bottom DUPE",
@@ -2710,7 +2720,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: UFO",
@@ -2756,7 +2766,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Orrery",
@@ -2844,7 +2854,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2879,7 +2889,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2907,7 +2917,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Riddle: Fortune Teller",
@@ -2921,7 +2931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Viewed Fortune",
@@ -2985,7 +2995,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Alchemy",
@@ -3078,7 +3088,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage: Gallows",
@@ -3107,7 +3117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3135,7 +3145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Guillotine",
@@ -3189,7 +3199,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Puzzle Hint Found: Mastermind Information Plaque",
@@ -3203,7 +3213,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3238,7 +3248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3257,7 +3267,9 @@
             "connected_region": "Slide Room",
             "access_rule": {
               "rule": "all_skull_dials_set",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             }
           }
         ],
@@ -3282,7 +3294,9 @@
             "id": 27023,
             "access_rule": {
               "rule": "all_skull_dials_set",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Wax Pot Bottom",
@@ -3290,7 +3304,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3326,7 +3340,9 @@
             "id": 27040,
             "access_rule": {
               "rule": "water_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Metal Pot Top",
@@ -3334,7 +3350,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3348,7 +3364,9 @@
             "id": 27041,
             "access_rule": {
               "rule": "wax_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Key for Library",
@@ -3356,7 +3374,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3370,7 +3388,9 @@
             "id": 27042,
             "access_rule": {
               "rule": "ash_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Crystal Pot Bottom",
@@ -3378,7 +3398,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3392,7 +3412,9 @@
             "id": 27043,
             "access_rule": {
               "rule": "oil_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Lightning Pot Top",
@@ -3400,7 +3422,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3414,7 +3436,9 @@
             "id": 27044,
             "access_rule": {
               "rule": "cloth_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Water Pot Top",
@@ -3422,7 +3446,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3436,7 +3460,9 @@
             "id": 27045,
             "access_rule": {
               "rule": "wood_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Key for Greenhouse",
@@ -3444,7 +3470,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3458,7 +3484,9 @@
             "id": 27046,
             "access_rule": {
               "rule": "crystal_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Wood Pot Bottom",
@@ -3466,7 +3494,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3480,7 +3508,9 @@
             "id": 27047,
             "access_rule": {
               "rule": "sand_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Oil Pot Bottom",
@@ -3488,7 +3518,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3502,7 +3532,9 @@
             "id": 27048,
             "access_rule": {
               "rule": "metal_capturable",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Lightning Pot Bottom",
@@ -3510,7 +3542,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "PRIORITY"
           }
         ]
@@ -3531,7 +3563,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }

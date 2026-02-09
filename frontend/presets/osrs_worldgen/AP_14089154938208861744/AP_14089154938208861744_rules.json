@@ -37,7 +37,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reach a Level 20",
@@ -51,7 +51,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Total XP 125,000",
@@ -61,7 +61,9 @@
               "args": {
                 "left": {
                   "rule": "quest_points",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 6
@@ -73,7 +75,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Total Level 150",
@@ -83,7 +85,9 @@
               "args": {
                 "left": {
                   "rule": "quest_points",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -95,7 +99,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Get Prompted to Buy Membership",
@@ -109,7 +113,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Total Level 50",
@@ -123,7 +127,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Burn a Log",
@@ -137,7 +141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Combat Level 15",
@@ -151,7 +155,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Total XP 25,000",
@@ -165,7 +169,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Activate the \"Protect Item\" Prayer",
@@ -175,7 +179,9 @@
               "args": {
                 "left": {
                   "rule": "quest_points",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -187,7 +193,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -508,7 +514,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Cook's Assistant",
@@ -560,7 +566,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: The Restless Ghost",
@@ -612,7 +618,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Rune Mysteries",
@@ -664,7 +670,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: X Marks the Spot",
@@ -782,7 +788,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Misthalin Mystery",
@@ -817,7 +823,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1005,7 +1011,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Sheep Shearer",
@@ -1617,7 +1623,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Demon Slayer",
@@ -1675,7 +1681,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Romeo & Juliet",
@@ -1733,7 +1739,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Shield of Arrav",
@@ -1785,7 +1791,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2243,7 +2249,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2758,7 +2764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Ernest the Chicken",
@@ -2949,7 +2955,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Doric's Quest",
@@ -3073,7 +3079,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 12
@@ -3123,7 +3131,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Black Knights' Fortress",
@@ -3154,7 +3162,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 16
@@ -3210,7 +3220,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Below Ice Mountain",
@@ -3308,7 +3318,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Goblin Diplomacy",
@@ -3416,7 +3426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3691,7 +3701,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: The Knight's Sword",
@@ -3882,7 +3892,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">=",
                     "right": 32
@@ -4048,7 +4060,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Pirate's Treasure",
@@ -4188,7 +4200,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">=",
                     "right": 32
@@ -4395,7 +4409,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 32
@@ -4651,7 +4667,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Witch's Potion",
@@ -4703,7 +4719,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: The Corsair Curse",
@@ -4785,7 +4801,9 @@
                       "children": [
                         {
                           "rule": "can_gold",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -4824,7 +4842,9 @@
                       "children": [
                         {
                           "rule": "can_silver",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -4854,7 +4874,9 @@
                     },
                     {
                       "rule": "can_tan",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     }
                   ]
                 },
@@ -4921,7 +4943,9 @@
                       "children": [
                         {
                           "rule": "can_gold",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -4960,7 +4984,9 @@
                       "children": [
                         {
                           "rule": "can_silver",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -4990,7 +5016,9 @@
                     },
                     {
                       "rule": "can_tan",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     }
                   ]
                 },
@@ -5215,7 +5243,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Vampyre Slayer",
@@ -5250,7 +5278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5309,7 +5337,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Imp Catcher",
@@ -5560,7 +5588,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Points: Prince Ali Rescue",
@@ -5606,7 +5634,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6033,7 +6061,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 8
@@ -6047,7 +6077,9 @@
                       "children": [
                         {
                           "rule": "can_gold",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -6086,7 +6118,9 @@
                       "children": [
                         {
                           "rule": "can_silver",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -6116,7 +6150,9 @@
                     },
                     {
                       "rule": "can_tan",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     }
                   ]
                 },
@@ -6134,7 +6170,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cut a Ruby",
@@ -6147,7 +6183,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 4
@@ -6161,7 +6199,9 @@
                       "children": [
                         {
                           "rule": "can_gold",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -6200,7 +6240,9 @@
                       "children": [
                         {
                           "rule": "can_silver",
-                          "_original_ast_type": "helper"
+                          "_original_ast_type": "helper",
+                          "_rb_helper": true,
+                          "_rb_helper_defined": true
                         },
                         {
                           "rule": "CanReachRegion",
@@ -6230,7 +6272,9 @@
                     },
                     {
                       "rule": "can_tan",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     }
                   ]
                 },
@@ -6248,7 +6292,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6329,7 +6373,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6380,7 +6424,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6405,7 +6449,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 6
@@ -6478,7 +6524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6542,7 +6588,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6561,7 +6607,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 6
@@ -6599,7 +6647,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6685,7 +6733,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6734,7 +6782,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 6
@@ -6852,7 +6902,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6916,7 +6966,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6956,7 +7006,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6991,7 +7041,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7014,7 +7064,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7039,7 +7089,9 @@
                   "args": {
                     "left": {
                       "rule": "quest_points",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 2
@@ -7059,7 +7111,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7129,7 +7181,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7188,7 +7240,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7229,7 +7281,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },

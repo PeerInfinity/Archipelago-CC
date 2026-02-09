@@ -80,7 +80,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Bubbler C Trade",
@@ -97,7 +97,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Recov120 S Trade",
@@ -114,7 +114,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC School Desk",
@@ -128,7 +128,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Class 5B Bookshelf",
@@ -142,7 +142,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 Entrance BMD",
@@ -156,7 +156,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 North Central BMD",
@@ -170,7 +170,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 Far West BMD 2",
@@ -184,7 +184,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 KeyDataA BMD",
@@ -198,7 +198,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 KeyDataB BMD",
@@ -212,7 +212,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 1 KeyDataC BMD",
@@ -226,7 +226,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 South BMD",
@@ -240,7 +240,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 Entrance BMD",
@@ -254,7 +254,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 Mainframe BMD",
@@ -268,7 +268,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 CodeA BMD",
@@ -282,7 +282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 CodeB BMD",
@@ -296,7 +296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "School 2 CodeC BMD",
@@ -310,7 +310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Dog House BMD",
@@ -324,7 +324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Lan's Security Panel BMD",
@@ -338,7 +338,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Yai's Phone BMD",
@@ -352,7 +352,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC NumberMan Display BMD",
@@ -366,7 +366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Tank BMD 1",
@@ -380,7 +380,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC Tank BMD 2",
@@ -394,7 +394,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC School Server BMD 1",
@@ -408,7 +408,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC School Server BMD 2",
@@ -422,7 +422,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC School Blackboard BMD",
@@ -436,7 +436,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 01",
@@ -450,7 +450,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 02",
@@ -464,7 +464,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 03",
@@ -478,7 +478,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 04",
@@ -492,7 +492,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 05",
@@ -506,7 +506,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 06",
@@ -520,7 +520,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 07",
@@ -534,7 +534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 08",
@@ -548,7 +548,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 09",
@@ -558,7 +558,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -570,7 +572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 10",
@@ -580,7 +582,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -592,7 +596,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 11",
@@ -602,7 +606,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -614,7 +620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 12",
@@ -624,7 +630,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -636,7 +644,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 13",
@@ -646,7 +654,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -658,7 +668,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 14",
@@ -668,7 +678,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -680,7 +692,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 15",
@@ -690,7 +702,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -702,7 +716,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 16",
@@ -712,7 +726,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 2
@@ -724,7 +740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 17",
@@ -734,7 +750,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -746,7 +764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 18",
@@ -756,7 +774,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -768,7 +788,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 19",
@@ -778,7 +798,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -790,7 +812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 20",
@@ -800,7 +822,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -812,7 +836,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 21",
@@ -822,7 +846,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -834,7 +860,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 22",
@@ -844,7 +870,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -856,7 +884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 23",
@@ -866,7 +894,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -878,7 +908,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 24",
@@ -888,7 +918,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 4
@@ -900,7 +932,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 25",
@@ -910,7 +942,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 8
@@ -922,7 +956,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 26",
@@ -932,7 +966,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 8
@@ -944,7 +980,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 27",
@@ -954,7 +990,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 8
@@ -966,7 +1004,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 28",
@@ -976,7 +1014,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 8
@@ -988,7 +1028,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 29",
@@ -998,7 +1038,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 10
@@ -1010,7 +1052,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 30",
@@ -1020,7 +1062,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 10
@@ -1032,7 +1076,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Numberman Code 31",
@@ -1042,7 +1086,9 @@
               "args": {
                 "left": {
                   "rule": "explore_score",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 "op": ">",
                 "right": 10
@@ -1054,7 +1100,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mayl's HP BMD",
@@ -1068,7 +1114,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yai's HP BMD 1",
@@ -1082,7 +1128,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yai's HP BMD 2",
@@ -1096,7 +1142,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dex's HP BMD 1",
@@ -1110,7 +1156,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dex's HP BMD 2",
@@ -1124,7 +1170,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mayl's HP PMD",
@@ -1165,7 +1211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1260,7 +1306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 1 Northeast BMD",
@@ -1274,7 +1320,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 1 PMD",
@@ -1284,11 +1330,15 @@
               "children": [
                 {
                   "rule": "can_unlock",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "has_www_id",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -1298,7 +1348,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 2 Center BMD",
@@ -1312,7 +1362,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 2 North BMD",
@@ -1326,7 +1376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 3 Southwest BMD",
@@ -1340,7 +1390,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "ACDC 3 Northeast BMD",
@@ -1354,7 +1404,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1426,7 +1476,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Garbage Can",
@@ -1440,7 +1490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Vending Machine BMD",
@@ -1454,7 +1504,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Virus Lab Door BMD 1",
@@ -1468,7 +1518,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Virus Lab Door BMD 2",
@@ -1482,7 +1532,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Dad's Computer BMD",
@@ -1496,7 +1546,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab Dad's Computer PMD",
@@ -1537,7 +1587,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Please deliver this",
@@ -1565,7 +1615,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: My Navi is sick",
@@ -1582,7 +1632,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Help me with my son!",
@@ -1610,7 +1660,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Transmission error",
@@ -1627,7 +1677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Chip Prices",
@@ -1655,7 +1705,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: I'm broke?!",
@@ -1683,7 +1733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Rare chips for cheap!",
@@ -1700,7 +1750,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Be my boyfriend",
@@ -1717,7 +1767,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Will you deliver?",
@@ -1751,7 +1801,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Somebody, please help!",
@@ -1768,7 +1818,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Looking for condor",
@@ -1802,7 +1852,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Help with rehab",
@@ -1819,7 +1869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Help with rehab bonus",
@@ -1836,7 +1886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Old Master",
@@ -1864,7 +1914,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Catching gang members",
@@ -1892,7 +1942,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Please adopt a virus!",
@@ -1909,7 +1959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Legendary Tomes",
@@ -1952,7 +2002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Legendary Tomes - Treasure",
@@ -1980,7 +2030,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! First Child",
@@ -1997,7 +2047,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Second Child",
@@ -2014,7 +2064,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Third Child",
@@ -2031,7 +2081,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Fourth Child",
@@ -2048,7 +2098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Hide and seek! Completion",
@@ -2065,7 +2115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Finding the blue Navi",
@@ -2082,7 +2132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Give your support",
@@ -2099,7 +2149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Stamp collecting",
@@ -2145,7 +2195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Job: Help with a will",
@@ -2197,7 +2247,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2285,7 +2335,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab 1 WWW BMD",
@@ -2302,7 +2352,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab 2 South BMD",
@@ -2316,7 +2366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SciLab 2 West BMD",
@@ -2330,7 +2380,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2407,7 +2457,9 @@
                   "args": {
                     "left": {
                       "rule": "explore_score",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 12
@@ -2436,7 +2488,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Quiz Master",
@@ -2450,7 +2502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka FireSwrd P Trade",
@@ -2467,7 +2519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Inn Jars",
@@ -2481,7 +2533,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Zoo Garbage",
@@ -2495,7 +2547,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo Panda PMD",
@@ -2536,7 +2588,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 1 East BMD",
@@ -2550,7 +2602,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 1 North BMD",
@@ -2564,7 +2616,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 1 Central BMD",
@@ -2578,7 +2630,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 2 East BMD",
@@ -2592,7 +2644,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 2 Central BMD",
@@ -2606,7 +2658,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 2 West BMD",
@@ -2620,7 +2672,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 3 North BMD",
@@ -2634,7 +2686,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 3 Central BMD",
@@ -2648,7 +2700,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 3 Path BMD",
@@ -2662,7 +2714,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 3 Northwest BMD",
@@ -2676,7 +2728,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 4 West BMD",
@@ -2690,7 +2742,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 4 Northwest BMD",
@@ -2704,7 +2756,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zoo 4 Southeast BMD",
@@ -2718,7 +2770,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka TV BMD",
@@ -2732,7 +2784,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Armor BMD",
@@ -2746,7 +2798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Hot Spring BMD",
@@ -2760,7 +2812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Ticket Machine BMD",
@@ -2774,7 +2826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Giraffe BMD",
@@ -2788,7 +2840,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka Panda BMD",
@@ -2802,7 +2854,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tamako's HP BMD",
@@ -2816,7 +2868,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tamako's HP PMD",
@@ -2857,7 +2909,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Comedian",
@@ -2874,7 +2926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 01",
@@ -2888,7 +2940,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 02",
@@ -2902,7 +2954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 03",
@@ -2916,7 +2968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 04",
@@ -2930,7 +2982,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 05",
@@ -2944,7 +2996,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 06",
@@ -2958,7 +3010,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 07",
@@ -2972,7 +3024,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 08",
@@ -2986,7 +3038,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 09",
@@ -3000,7 +3052,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 10",
@@ -3014,7 +3066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 11",
@@ -3028,7 +3080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 12",
@@ -3042,7 +3094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 13",
@@ -3056,7 +3108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 14",
@@ -3070,7 +3122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 15",
@@ -3084,7 +3136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 16",
@@ -3098,7 +3150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 17",
@@ -3112,7 +3164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 18",
@@ -3126,7 +3178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 19",
@@ -3140,7 +3192,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 20",
@@ -3154,7 +3206,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 21",
@@ -3168,7 +3220,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 22",
@@ -3182,7 +3234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 23",
@@ -3196,7 +3248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 24",
@@ -3210,7 +3262,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 25",
@@ -3224,7 +3276,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 26",
@@ -3238,7 +3290,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 27",
@@ -3252,7 +3304,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 28",
@@ -3266,7 +3318,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 29",
@@ -3280,7 +3332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 30",
@@ -3294,7 +3346,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 31",
@@ -3308,7 +3360,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chocolate Shop 32",
@@ -3322,7 +3374,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3392,7 +3444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka 1 WWW BMD",
@@ -3409,7 +3461,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka 1 PMD",
@@ -3419,11 +3471,15 @@
               "children": [
                 {
                   "rule": "can_unlock",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 },
                 {
                   "rule": "has_press",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "helper",
+                  "_rb_helper": true,
+                  "_rb_helper_defined": true
                 }
               ]
             },
@@ -3433,7 +3489,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka 2 Lower BMD",
@@ -3447,7 +3503,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Yoka 2 Upper BMD",
@@ -3464,7 +3520,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3523,7 +3579,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hades Quiz King",
@@ -3537,7 +3593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital DynaWav V Trade",
@@ -3554,7 +3610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN WideSwrd C Trade",
@@ -3571,7 +3627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN HoleMetr H Trade",
@@ -3588,7 +3644,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Shadow J Trade",
@@ -3605,7 +3661,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hades GrabBack K Trade",
@@ -3622,7 +3678,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Department Store",
@@ -3636,7 +3692,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Plaque",
@@ -3650,7 +3706,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Pink Door",
@@ -3664,7 +3720,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Tree",
@@ -3678,7 +3734,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Hidden Conversation",
@@ -3692,7 +3748,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Girl",
@@ -3706,7 +3762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Kiosk",
@@ -3720,7 +3776,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Boxes",
@@ -3734,7 +3790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Poster",
@@ -3748,7 +3804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hades Boat Dock",
@@ -3762,7 +3818,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hades South BMD",
@@ -3779,7 +3835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hades Gargoyle BMD",
@@ -3793,7 +3849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 1 North BMD",
@@ -3807,7 +3863,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 1 West BMD",
@@ -3821,7 +3877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 1 Center BMD",
@@ -3835,7 +3891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 2 Island BMD",
@@ -3849,7 +3905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 2 Central BMD",
@@ -3863,7 +3919,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 2 Southwest BMD",
@@ -3877,7 +3933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 3 West BMD",
@@ -3891,7 +3947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 3 Central BMD",
@@ -3905,7 +3961,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 3 Northwest BMD",
@@ -3919,7 +3975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 4 North BMD",
@@ -3933,7 +3989,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 4 Central BMD",
@@ -3947,7 +4003,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 4 Southeast BMD",
@@ -3961,7 +4017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 5 Island BMD",
@@ -3975,7 +4031,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 5 Northeast BMD",
@@ -3989,7 +4045,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hospital 5 Southwest BMD",
@@ -4003,7 +4059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Hospital Bed BMD",
@@ -4017,7 +4073,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach TV BMD",
@@ -4031,7 +4087,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Vending Machine BMD",
@@ -4045,7 +4101,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach News Van BMD",
@@ -4059,7 +4115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Battle Console BMD",
@@ -4073,7 +4129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Security System BMD",
@@ -4087,7 +4143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach Broadcast Computer BMD",
@@ -4101,7 +4157,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Security Panel PMD",
@@ -4142,7 +4198,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach DNN Main Console PMD",
@@ -4183,7 +4239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 6 TV BMD",
@@ -4197,7 +4253,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4275,7 +4331,9 @@
                   "args": {
                     "left": {
                       "rule": "explore_score",
-                      "_original_ast_type": "helper"
+                      "_original_ast_type": "helper",
+                      "_rb_helper": true,
+                      "_rb_helper_defined": true
                     },
                     "op": ">",
                     "right": 8
@@ -4304,7 +4362,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach 1 PMD",
@@ -4345,7 +4403,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach 2 East BMD",
@@ -4362,7 +4420,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beach 2 West BMD",
@@ -4376,7 +4434,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Villain",
@@ -4393,7 +4451,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4413,7 +4471,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 1 WWW BMD",
@@ -4430,7 +4488,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 2 Lower BMD",
@@ -4444,7 +4502,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 2 Upper BMD",
@@ -4458,7 +4516,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 3 South BMD",
@@ -4472,7 +4530,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 3 Central BMD",
@@ -4486,7 +4544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 4 Pillar Prog",
@@ -4500,7 +4558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 4 Top North BMD",
@@ -4514,7 +4572,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 4 Bottom West BMD",
@@ -4528,7 +4586,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 4 Top Pillar BMD",
@@ -4542,7 +4600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 5 Upper BMD",
@@ -4556,7 +4614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4576,7 +4634,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 6 East BMD",
@@ -4590,7 +4648,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 6 Central BMD",
@@ -4604,7 +4662,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 7 PMD",
@@ -4645,7 +4703,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 7 West BMD",
@@ -4659,7 +4717,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 7 Northeast BMD",
@@ -4673,7 +4731,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 7 Northwest BMD",
@@ -4687,7 +4745,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Undernet 7 Upper BMD",
@@ -4701,7 +4759,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4721,7 +4779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW Wily's Desk",
@@ -4735,7 +4793,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW Wall BMD",
@@ -4749,7 +4807,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 1 East BMD",
@@ -4763,7 +4821,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 1 West BMD",
@@ -4777,7 +4835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 1 Central BMD",
@@ -4791,7 +4849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 2 East BMD",
@@ -4805,7 +4863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 2 Northwest BMD",
@@ -4819,7 +4877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 3 East BMD",
@@ -4833,7 +4891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 3 North BMD",
@@ -4847,7 +4905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 4 Central BMD",
@@ -4861,7 +4919,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WWW 4 Northwest BMD",
@@ -4875,7 +4933,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Defeated",
@@ -4910,7 +4968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -4925,7 +4983,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -4940,7 +4998,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -4955,7 +5013,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -4970,7 +5028,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -4985,7 +5043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -5003,7 +5061,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -5018,7 +5076,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -5036,7 +5094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -5051,7 +5109,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           }
         ]

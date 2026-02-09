@@ -55,6 +55,8 @@
                       "child": {
                         "rule": "is_auto_scroll",
                         "_original_ast_type": "helper",
+                        "_rb_helper": true,
+                        "_rb_helper_defined": true,
                         "args": [
                           {
                             "rule": "Constant",
@@ -147,7 +149,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mushroom Zone - Midway Bell",
@@ -161,7 +163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -181,7 +183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -194,6 +196,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -218,7 +222,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tree Zone 1 - Midway Bell",
@@ -232,7 +236,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -245,6 +249,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -278,7 +284,9 @@
             "id": 6,
             "access_rule": {
               "rule": "tree_zone_2_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -286,14 +294,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tree Zone 2 - Secret Exit",
             "id": 7,
             "access_rule": {
               "rule": "tree_zone_2_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -301,14 +311,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tree Zone 2 - Midway Bell",
             "id": 8,
             "access_rule": {
               "rule": "tree_zone_2_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Space Zone Secret",
@@ -316,7 +328,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -337,7 +349,9 @@
             "id": 9,
             "access_rule": {
               "rule": "tree_zone_3_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -345,7 +359,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -358,6 +372,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -381,7 +397,9 @@
             "id": 10,
             "access_rule": {
               "rule": "tree_zone_4_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -389,14 +407,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tree Zone 4 - Midway Bell",
             "id": 11,
             "access_rule": {
               "rule": "tree_zone_4_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Macro Zone Secret 1",
@@ -404,7 +424,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -417,7 +437,9 @@
             "id": null,
             "access_rule": {
               "rule": "tree_zone_5_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Tree Coin",
@@ -440,7 +462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -460,7 +482,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -473,7 +495,9 @@
             "id": 15,
             "access_rule": {
               "rule": "hippo_zone_normal_or_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -481,7 +505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -504,6 +528,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -521,7 +547,9 @@
             "id": 16,
             "access_rule": {
               "rule": "space_zone_1_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Turtle Zone Progression",
@@ -529,14 +557,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Space Zone 1 - Secret Exit",
             "id": 17,
             "access_rule": {
               "rule": "space_zone_1_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Macro Zone Progression",
@@ -544,7 +574,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Space Zone 1 - Midway Bell",
@@ -558,7 +588,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -578,7 +608,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -591,7 +621,9 @@
             "id": null,
             "access_rule": {
               "rule": "space_zone_2_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Space Coin",
@@ -607,7 +639,9 @@
             "id": 21,
             "access_rule": {
               "rule": "space_zone_2_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Mario Zone Progression",
@@ -615,7 +649,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -628,6 +662,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -655,7 +691,9 @@
             "id": 22,
             "access_rule": {
               "rule": "macro_zone_1_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -663,14 +701,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Macro Zone 1 - Secret Exit",
             "id": 23,
             "access_rule": {
               "rule": "macro_zone_1_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Turtle Zone Progression",
@@ -678,14 +718,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Macro Zone 1 - Midway Bell",
             "id": 24,
             "access_rule": {
               "rule": "macro_zone_1_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -693,7 +735,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -706,6 +748,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -729,7 +773,9 @@
             "id": 25,
             "access_rule": {
               "rule": "macro_zone_2_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pumpkin Zone Progression",
@@ -737,14 +783,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Macro Zone 2 - Midway Bell",
             "id": 26,
             "access_rule": {
               "rule": "macro_zone_2_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -752,7 +800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -765,6 +813,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -788,7 +838,9 @@
             "id": 27,
             "access_rule": {
               "rule": "macro_zone_3_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -796,14 +848,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Macro Zone 3 - Midway Bell",
             "id": 28,
             "access_rule": {
               "rule": "macro_zone_3_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -811,7 +865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -835,7 +889,9 @@
             "id": null,
             "access_rule": {
               "rule": "macro_zone_4_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Macro Coin",
@@ -858,7 +914,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -889,7 +945,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -902,6 +958,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -919,7 +977,9 @@
             "id": 32,
             "access_rule": {
               "rule": "pumpkin_zone_1_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -927,14 +987,16 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Zone 1 - Midway Bell",
             "id": 33,
             "access_rule": {
               "rule": "pumpkin_zone_1_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pumpkin Zone Secret 1",
@@ -942,7 +1004,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -955,6 +1017,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -988,7 +1052,9 @@
             "id": 34,
             "access_rule": {
               "rule": "pumpkin_zone_2_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Space Zone Progression",
@@ -996,14 +1062,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Zone 2 - Secret Exit",
             "id": 35,
             "access_rule": {
               "rule": "pumpkin_zone_2_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Mushroom",
@@ -1011,7 +1079,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Zone 2 - Midway Bell",
@@ -1025,7 +1093,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1038,6 +1106,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1078,14 +1148,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Zone 3 - Secret Exit",
             "id": 38,
             "access_rule": {
               "rule": "pumpkin_zone_3_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Macro Zone Secret 2",
@@ -1093,7 +1165,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pumpkin Zone 3 - Midway Bell",
@@ -1107,7 +1179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1120,7 +1192,9 @@
             "id": null,
             "access_rule": {
               "rule": "pumpkin_zone_4_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Pumpkin Coin",
@@ -1143,7 +1217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1163,7 +1237,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1183,7 +1257,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1196,6 +1270,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1213,7 +1289,9 @@
             "id": 44,
             "access_rule": {
               "rule": "mario_zone_1_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -1221,14 +1299,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mario Zone 1 - Midway Bell",
             "id": 45,
             "access_rule": {
               "rule": "mario_zone_1_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Space Physics",
@@ -1236,7 +1316,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1249,6 +1329,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1279,7 +1361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mario Zone 2 - Midway Bell",
@@ -1293,7 +1375,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1306,6 +1388,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1336,7 +1420,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mario Zone 3 - Midway Bell",
@@ -1350,7 +1434,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1363,7 +1447,9 @@
             "id": null,
             "access_rule": {
               "rule": "mario_zone_4_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Mario Coin",
@@ -1386,7 +1472,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1399,6 +1485,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1416,7 +1504,9 @@
             "id": 52,
             "access_rule": {
               "rule": "turtle_zone_1_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1424,7 +1514,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Turtle Zone 1 - Midway Bell",
@@ -1438,7 +1528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1451,6 +1541,8 @@
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true,
               "args": [
                 {
                   "rule": "Constant",
@@ -1484,7 +1576,9 @@
             "id": 54,
             "access_rule": {
               "rule": "turtle_zone_2_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Macro Zone Progression",
@@ -1492,14 +1586,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Turtle Zone 2 - Secret Exit",
             "id": 55,
             "access_rule": {
               "rule": "turtle_zone_2_secret_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Hippo Bubble",
@@ -1507,14 +1603,16 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Turtle Zone 2 - Midway Bell",
             "id": 56,
             "access_rule": {
               "rule": "turtle_zone_2_midway_bell",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1522,7 +1620,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1535,7 +1633,9 @@
             "id": null,
             "access_rule": {
               "rule": "turtle_zone_3_boss",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Turtle Coin",
@@ -1558,7 +1658,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1571,7 +1671,9 @@
             "id": 59,
             "access_rule": {
               "rule": "turtle_zone_secret_course_normal_exit",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Water Physics",
@@ -1579,7 +1681,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1592,7 +1694,9 @@
             "id": null,
             "access_rule": {
               "rule": "marios_castle_wario",
-              "_original_ast_type": "helper"
+              "_original_ast_type": "helper",
+              "_rb_helper": true,
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Wario Defeated",
