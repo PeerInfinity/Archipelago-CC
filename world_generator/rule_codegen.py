@@ -1218,17 +1218,17 @@ class RuleCodeGenerator:
                     return self._convert_rule_builder_format(rule, rb_rule, rule_type)
 
                 # Check if this is a weighted_sum helper (used by Overcooked 2 and similar games)
-                if rb_rule == 'weighted_sum' and rule.get('_original_ast_type') == 'helper':
+                if rb_rule == 'weighted_sum' and rule.get('_original_ast_type', '').endswith('helper'):
                     return self._convert_weighted_sum(rule)
 
                 # Check if this is a unique_count helper (used by A Hat in Time for Enemy/Boss counting)
-                if rb_rule == 'unique_count' and rule.get('_original_ast_type') == 'helper':
+                if rb_rule == 'unique_count' and rule.get('_original_ast_type', '').endswith('helper'):
                     return self._convert_unique_count(rule)
 
                 # Check if this is a helper call from AST exporter format
                 # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
                 # Also check known_helpers for helpers without the _original_ast_type marker
-                if rule.get('_original_ast_type') == 'helper' or rb_rule in self.known_helpers:
+                if rule.get('_original_ast_type', '').endswith('helper') or rb_rule in self.known_helpers:
                     return self._convert_rule_builder_helper(rule, rb_rule)
 
                 # Check if this is an AST_count_true rule (exported from AST format count_true)
@@ -3222,7 +3222,7 @@ class RuleCodeGenerator:
         # Handle integer-returning helpers used as Compare operands
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
         # They are blacklisted from normal helper export but need to be converted to CountItem
-        if operand.get('_original_ast_type') == 'helper':
+        if operand.get('_original_ast_type', '').endswith('helper'):
             helper_name = operand.get('rule', '')
             args = operand.get('args', [])
 
@@ -5878,7 +5878,7 @@ class RuleCodeGenerator:
             return 'None'
 
         # ===== Nested Helper Calls =====
-        if arg.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+        if arg.get('_original_ast_type', '').endswith('helper') or rule_type in self.known_helpers:
             nested_helper = rule_type
             if nested_helper in self.known_helpers:
                 helper_body = self.helper_bodies.get(nested_helper, {})
@@ -7384,7 +7384,7 @@ class HelperCodeGenerator:
                 return f'{rule_type}()'
 
             # Handle helper calls with _original_ast_type marker
-            if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+            if expr.get('_original_ast_type', '').endswith('helper') or rule_type in self.known_helpers:
                 helper_name = rule_type
                 # Only generate function call if helper is known (has a definition)
                 # Unknown helpers should return True as a placeholder to avoid NameError

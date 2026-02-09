@@ -414,6 +414,103 @@ class TestHelperCallRule:
         assert result.get("rule") == "check_item"
         assert result.get("_original_ast_type") == "helper"
 
+    def test_helper_call_without_body_has_no_rb_flags(self):
+        """Test that HelperCall without body omits legacy _rb_helper flags."""
+        rule = HelperCall(helper_name="can_fight", args=[])
+        result = rule.to_dict()
+
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
+    def test_helper_call_with_body_rule_to_dict(self):
+        """Test that HelperCall with body_rule produces rb_defined_helper type."""
+        rule = HelperCall(
+            helper_name="can_swim",
+            body_rule=Has("Flippers"),
+        )
+        result = rule.to_dict()
+
+        assert result.get("rule") == "can_swim"
+        assert result.get("_original_ast_type") == "rb_defined_helper"
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
+    def test_helper_call_with_helper_func_to_dict(self):
+        """Test that HelperCall with helper_func produces rb_defined_helper type."""
+        rule = HelperCall(
+            helper_name="can_swim",
+            helper_func=lambda state, player: True,
+        )
+        result = rule.to_dict()
+
+        assert result.get("rule") == "can_swim"
+        assert result.get("_original_ast_type") == "rb_defined_helper"
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
+
+class TestHelperCallResolvedToDict:
+    """Tests for HelperCall.Resolved.to_dict() _original_ast_type values."""
+
+    def test_resolved_without_body_produces_rb_helper(self):
+        """Resolved helper without body_rule/helper_func produces rb_helper type."""
+        resolved = HelperCall.Resolved(
+            helper_func=None,
+            helper_name="can_fight",
+            args=(),
+            kwargs={},
+            body_rule=None,
+            body_data=None,
+            player=1,
+            caching_enabled=False,
+        )
+        result = resolved.to_dict()
+
+        assert result.get("rule") == "can_fight"
+        assert result.get("_original_ast_type") == "rb_helper"
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
+    def test_resolved_with_body_rule_produces_rb_defined_helper(self):
+        """Resolved helper with body_rule produces rb_defined_helper type."""
+        body = Has("Flippers")
+        # Resolved body_rule needs a Resolved rule, but to_dict() only checks `is not None`
+        resolved = HelperCall.Resolved(
+            helper_func=None,
+            helper_name="can_swim",
+            args=(),
+            kwargs={},
+            body_rule=body,  # Not truly resolved, but to_dict() only checks `is not None`
+            body_data=None,
+            player=1,
+            caching_enabled=False,
+        )
+        result = resolved.to_dict()
+
+        assert result.get("rule") == "can_swim"
+        assert result.get("_original_ast_type") == "rb_defined_helper"
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
+    def test_resolved_with_helper_func_produces_rb_defined_helper(self):
+        """Resolved helper with helper_func produces rb_defined_helper type."""
+        resolved = HelperCall.Resolved(
+            helper_func=lambda state, player: True,
+            helper_name="can_swim",
+            args=(),
+            kwargs={},
+            body_rule=None,
+            body_data=None,
+            player=1,
+            caching_enabled=False,
+        )
+        result = resolved.to_dict()
+
+        assert result.get("rule") == "can_swim"
+        assert result.get("_original_ast_type") == "rb_defined_helper"
+        assert "_rb_helper" not in result
+        assert "_rb_helper_defined" not in result
+
 
 class TestRuleOperatorComposition:
     """Tests for composing rules with operators."""

@@ -60,23 +60,19 @@ class RuleExpansionMixin:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
-        # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
-        if rule.get('_original_ast_type') == 'helper':
+        # Handle helper type: {'rule': 'helper_name', '_original_ast_type': '...helper', 'args': [...]}
+        ast_type = rule.get('_original_ast_type', '')
+        if ast_type.endswith('helper'):
             helper_name = rule.get('rule', '')
             if helper_name:
-                # If this helper has a defined body (from HelperCall with body_rule/helper_func),
-                # preserve it as a helper reference. The helper's definition will be exported
-                # separately in the helpers section. Don't pattern-expand it.
-                if rule.get('_rb_helper_defined'):
+                # rb_defined_helper: has a body definition, skip all expansion
+                if ast_type == 'rb_defined_helper':
                     return rule
 
                 helper_args = rule.get('args', [])
 
-                # Skip pattern-based expansion for Rule Builder native helpers.
-                # These have their body defined in the helpers section of rules.json
-                # and should be preserved as helper calls for frontend evaluation.
-                if not rule.get('_rb_helper'):
-                    # Hook: try pattern-based expansion first (for GenericGameExportHandler)
+                # Only AST-exported helpers get pattern expansion
+                if ast_type == 'helper':
                     pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
                     if pattern_result is not None:
                         return self.expand_rule(pattern_result, _depth + 1)
