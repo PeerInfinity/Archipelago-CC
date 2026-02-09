@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-09 03:10:14 UTC
+**Generated:** 2026-02-09 04:56:17 UTC
 
-**Source Data Created:** 2026-02-09T03:10:13.908097+00:00
+**Source Data Created:** 2026-02-09T04:56:17.368598+00:00
 
-**Source Data Last Updated:** 2026-02-09T03:10:13.908106+00:00
+**Source Data Last Updated:** 2026-02-09T04:56:17.368607+00:00
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,12 +21,12 @@
 ## Summary
 
 - **Total Games:** 75
-- **Games with 100% Pass Rate:** 64 (85.3%)
-- **Games with Failures:** 11 (14.7%)
+- **Games with 100% Pass Rate:** 65 (86.7%)
+- **Games with Failures:** 10 (13.3%)
 - **Total Fuzz Runs:** 750
-- **Successful Runs:** 661 (88.1%)
+- **Successful Runs:** 670 (89.3%)
 - **Generation Failures:** 12
-- **Test Failures:** 50
+- **Test Failures:** 42
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -82,18 +82,18 @@
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 123.7KB |
 | Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 205.9KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 146.1KB |
-| Satisfactory | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 1431.4KB |
+| Satisfactory | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1431.4KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 33.8KB |
 | Secret of Evermore | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 418.7KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 151.5KB |
 | Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 266.2KB |
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1126.8KB |
-| Stardew Valley | ❌ | 10 | 3 | 0 | 7 | 0 | ❌ 30.0% | 2430.2KB |
+| Stardew Valley | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.8KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 982.7KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 2 | 4 | 0 | ❌ 0.0% | 625.4KB |
+| Super Metroid | ❌ | 10 | 0 | 2 | 5 | 0 | ❌ 0.0% | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TUNIC | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 653.3KB |

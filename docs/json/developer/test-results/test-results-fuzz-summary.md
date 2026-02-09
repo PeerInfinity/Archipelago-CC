@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-09 03:10:14 UTC
+**Generated:** 2026-02-09 04:56:17 UTC
 
 **Source Data Created:** 2026-02-08T01:19:08.985783
 
@@ -24,7 +24,7 @@ This summary combines results from fuzz tests that validate game configurations 
 
 ### Individual Test Results
 
-- **Javascript:** 64/75 passed (85.3%)
+- **Javascript:** 65/75 passed (86.7%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Worldgen:** 73/87 passed (83.9%)
 - **UT Fuzz Pickle:** 75/87 passed (86.2%)
@@ -35,8 +35,8 @@ This summary combines results from fuzz tests that validate game configurations 
 - **Games passing all 5 fuzz tests:** 31/87 (35.6%)
 - **Games passing 4 fuzz tests:** 33/87 (37.9%)
 - **Games passing 3 fuzz tests:** 7/87 (8.0%)
-- **Games passing 2 fuzz tests:** 9/87 (10.3%)
-- **Games passing 1 fuzz test:** 3/87 (3.4%)
+- **Games passing 2 fuzz tests:** 10/87 (11.5%)
+- **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
 ### Combined Results (Excluding UT Original)
@@ -45,8 +45,8 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 
 - **Games passing all 4 fuzz tests:** 58/87 (66.7%)
 - **Games passing 3 fuzz tests:** 12/87 (13.8%)
-- **Games passing 2 fuzz tests:** 10/87 (11.5%)
-- **Games passing 1 fuzz test:** 3/87 (3.4%)
+- **Games passing 2 fuzz tests:** 11/87 (12.6%)
+- **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
 ## Test Results
@@ -110,13 +110,13 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Raft | ✅ | ✅ | ✅ | ✅ | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
-| Satisfactory | ❌ 0% | — | ✅ | ❌ 0% | — | 1431.4KB |
+| Satisfactory | ✅ | — | ✅ | ❌ 0% | — | 1431.4KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | 🔶 70% | ✅ | ✅ | ❌ 0% | ✅ | 418.7KB |
 | Shivers | ✅ | ❌ 0% | ✅ | ❌ 0% | ✅ | 151.5KB |
 | Sonic Adventure 2 Battle | ✅ | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.8KB |
-| Stardew Valley | ❌ 30% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
+| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.8KB |
