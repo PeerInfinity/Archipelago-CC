@@ -1,4 +1,4 @@
-from collections import Counter, namedtuple
+from collections import namedtuple
 import logging
 
 from BaseClasses import ItemClassification
@@ -222,91 +222,6 @@ items_reduction_table = (
 )
 
 
-def _get_plando_from_pool_counts(alttp_world):
-    """Count items requested by plando with from_pool=true.
-
-    Returns a Counter of item_name -> count for items that plando
-    will try to take from the pool. Used to detect conflicts between
-    pool composition and plando requirements.
-    """
-    counts = Counter()
-    for block in alttp_world.options.plando_items:
-        if block.from_pool:
-            block_items = block.items
-            if isinstance(block_items, str):
-                block_items = [block_items]
-            elif isinstance(block_items, dict):
-                block_items = list(block_items.keys())
-            for item_name in block_items:
-                counts[item_name] += 1
-    return counts
-
-
-def _adjust_pool_for_plando(pool, alttp_world):
-    """Adjust pool contents to match plando from_pool=true requirements.
-
-    When plando items are requested with from_pool=true but the pool doesn't
-    contain enough of that item, swap surplus items for the needed ones.
-    This prevents the plando system from creating new items (which causes
-    pool imbalance and fill errors).
-
-    Only swaps items that the pool has in excess of plando needs, ensuring
-    all plando requests can be satisfied from the pool.
-    """
-    plando_counts = _get_plando_from_pool_counts(alttp_world)
-    if not plando_counts:
-        return
-
-    pool_counts = Counter(pool)
-
-    # Find items where plando needs more than pool has
-    deficits = {}
-    for item_name, needed in plando_counts.items():
-        have = pool_counts.get(item_name, 0)
-        if needed > have:
-            deficits[item_name] = needed - have
-
-    if not deficits:
-        return
-
-    # Find surplus items: pool has more than plando needs
-    surplus = Counter()
-    for item_name, count in pool_counts.items():
-        plando_need = plando_counts.get(item_name, 0)
-        if count > plando_need:
-            surplus[item_name] = count - plando_need
-
-    # Prefer swapping low-value filler items first
-    filler_priority = [
-        'Rupees (5)', 'Rupee (1)', 'Arrows (10)',
-        'Rupees (50)', 'Single Arrow', 'Rupees (100)', 'Rupees (300)',
-    ]
-
-    for deficit_item, deficit_count in deficits.items():
-        for _ in range(deficit_count):
-            swapped = False
-            for filler in filler_priority:
-                if surplus.get(filler, 0) > 0:
-                    idx = pool.index(filler)
-                    pool[idx] = deficit_item
-                    surplus[filler] -= 1
-                    swapped = True
-                    break
-            if not swapped:
-                # Try any surplus item (prefer items with most surplus)
-                for item_name in sorted(surplus, key=lambda x: -surplus[x]):
-                    if surplus[item_name] > 0:
-                        idx = pool.index(item_name)
-                        pool[idx] = deficit_item
-                        surplus[item_name] -= 1
-                        swapped = True
-                        break
-            if not swapped:
-                logging.warning(
-                    f"ALTTP pool adjustment: could not add '{deficit_item}' to pool for plando"
-                )
-
-
 def generate_itempool(world):
     player: int = world.player
     multiworld = world.multiworld
@@ -394,14 +309,6 @@ def generate_itempool(world):
                         not in possible_weapons):
                     possible_weapons.append(item)
 
-            # Exclude items that are plandoed at other locations to avoid conflicts.
-            # If plando places Bow at Eastern Palace, Uncle shouldn't randomly take Bow.
-            plando_items = _get_plando_from_pool_counts(world)
-            if plando_items:
-                filtered = [w for w in possible_weapons if w not in plando_items]
-                if filtered:
-                    possible_weapons = filtered
-
             starting_weapon = multiworld.random.choice(possible_weapons)
             placed_items["Link's Uncle"] = starting_weapon
             pool.remove(starting_weapon)
@@ -414,9 +321,6 @@ def generate_itempool(world):
                     world.escape_assist.append('magic')
             else:
                 world.escape_assist.append('bombs')
-
-    # Adjust pool to ensure plando from_pool=true items are available
-    _adjust_pool_for_plando(pool, world)
 
     for (location, item) in placed_items.items():
         multiworld.get_location(location, player).place_locked_item(item_factory(item, world))
@@ -733,21 +637,11 @@ def get_pool_core(world, player: int):
 
     # expert+ difficulties produce the same contents for
     # all bottles, since only one bottle is available
-    # Check plando for specific bottle types to ensure pool matches
-    plando_counts = _get_plando_from_pool_counts(world.worlds[player])
-    plando_bottles = []
-    bottle_names = set(diff.bottles) | {'Bottle'}
-    for item_name in plando_counts:
-        if item_name in bottle_names:
-            plando_bottles.extend([item_name] * plando_counts[item_name])
     thisbottle = None
-    for i in range(diff.bottle_count):
-        if i < len(plando_bottles):
-            pool.append(plando_bottles[i])
-        else:
-            if not diff.same_bottle or not thisbottle:
-                thisbottle = world.random.choice(diff.bottles)
-            pool.append(thisbottle)
+    for _ in range(diff.bottle_count):
+        if not diff.same_bottle or not thisbottle:
+            thisbottle = world.random.choice(diff.bottles)
+        pool.append(thisbottle)
 
     if want_progressives(world.random):
         pool.extend(diff.progressiveshield)
