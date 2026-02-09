@@ -52,7 +52,8 @@ export class RegionBlockBuilder {
     staticData,
     isSkipIndicator = false,
     sectionOrder = 'entrances-exits-locations',
-    discoverySettings = null
+    discoverySettings = null,
+    navigationContext = null
   ) {
     // Handle skip indicator specially
     if (isSkipIndicator || currentUid === 'skip_indicator') {
@@ -185,7 +186,8 @@ export class RegionBlockBuilder {
       isDiscoveryModeActive,
       sectionOrder,
       isRegionDiscovered,
-      settings
+      settings,
+      navigationContext
     );
 
     // Append header and content
@@ -299,7 +301,8 @@ export class RegionBlockBuilder {
     isDiscoveryModeActive,
     sectionOrder = 'entrances-exits-locations',
     isRegionDiscovered = true,
-    discoverySettings = {}
+    discoverySettings = {},
+    navigationContext = null
   ) {
     const contentEl = document.createElement('div');
     contentEl.classList.add('region-content');
@@ -313,11 +316,11 @@ export class RegionBlockBuilder {
 
     // Parse the section order and add sections in the specified order
     const sections = sectionOrder.split('-');
-    
+
     for (const section of sections) {
       switch (section) {
         case 'entrances':
-          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind);
+          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext);
           break;
         case 'exits':
           this.addExits(
@@ -331,7 +334,8 @@ export class RegionBlockBuilder {
             uid,
             isDiscoveryModeActive,
             isRegionDiscovered,
-            discoverySettings
+            discoverySettings,
+            navigationContext
           );
           break;
         case 'locations':
@@ -395,9 +399,26 @@ export class RegionBlockBuilder {
   }
 
   /**
+   * Creates a circular badge with a right-pointing arrow image.
+   * Used to indicate which entrance/exit was used on the navigation path.
+   * @returns {HTMLElement} The badge element
+   */
+  createPathUsedBadge() {
+    const badge = document.createElement('span');
+    badge.classList.add('path-used-badge');
+    badge.title = 'Used on current path';
+    const img = document.createElement('img');
+    // Inline SVG data URI: right-pointing arrow
+    img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M4 12h13.17l-4.88-4.88a1 1 0 1 1 1.42-1.42l6.59 6.59a.5.5 0 0 1 0 .71l-6.59 6.59a1 1 0 0 1-1.42-1.42L17.17 13H4a1 1 0 0 1 0-2z'/%3E%3C/svg%3E";
+    img.alt = '→';
+    badge.appendChild(img);
+    return badge;
+  }
+
+  /**
    * Adds entrances list to the content element
    */
-  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind) {
+  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext = null) {
     const entrancesList = document.createElement('ul');
     entrancesList.classList.add('region-entrances-list');
     
@@ -452,19 +473,33 @@ export class RegionBlockBuilder {
       entrances.forEach((entrance) => {
         const li = document.createElement('li');
         li.classList.add('entrance-item');
-        
+
         // Create a wrapper div for the entire clickable area
         const entranceWrapper = document.createElement('div');
         entranceWrapper.classList.add('entrance-wrapper');
-        
+
+        // Check if this entrance was used on the navigation path
+        const isPathUsedEntrance = navigationContext?.exitUsed &&
+          entrance.exitName === navigationContext.exitUsed;
+        if (isPathUsedEntrance) {
+          entranceWrapper.classList.add('path-used');
+        }
+
         // Create a header row for entrance info and status
         const headerRow = document.createElement('div');
         headerRow.style.display = 'flex';
         headerRow.style.justifyContent = 'space-between';
         headerRow.style.alignItems = 'center';
-        
+        headerRow.style.gap = '8px';
+
+        // Add path-used badge on left side if this entrance was used
+        if (isPathUsedEntrance) {
+          headerRow.insertBefore(this.createPathUsedBadge(), headerRow.firstChild);
+        }
+
         // Create entrance info span
         const entranceInfo = document.createElement('span');
+        entranceInfo.style.flex = '1';
         const regionLink = commonUI.createRegionLink(
           entrance.sourceRegion,
           useColorblind,
@@ -537,8 +572,11 @@ export class RegionBlockBuilder {
         headerRow.appendChild(statusIndicator);
         entranceWrapper.appendChild(headerRow);
         
-        // Apply border color based on status
-        if (!entrance.isBidirectional) {
+        // Apply border color based on status (path-used overrides)
+        if (isPathUsedEntrance) {
+          entranceWrapper.style.borderColor = '#FFC107';
+          entranceWrapper.style.backgroundColor = 'rgba(255, 193, 7, 0.12)';
+        } else if (!entrance.isBidirectional) {
           // Gray border for unidirectional entrances
           entranceWrapper.style.borderColor = '#888';
           entranceWrapper.style.backgroundColor = 'rgba(136, 136, 136, 0.1)';
@@ -642,7 +680,8 @@ export class RegionBlockBuilder {
     uid,
     isDiscoveryModeActive,
     isRegionDiscovered = true,
-    discoverySettings = {}
+    discoverySettings = {},
+    navigationContext = null
   ) {
     const exitsHeader = document.createElement('h4');
     exitsHeader.textContent = 'Exits:';
@@ -707,19 +746,28 @@ export class RegionBlockBuilder {
         li.classList.add('exit-item');
         const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
         const exitNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : exitDef.name;
-        
+
+        // Check if this exit was used on the navigation path
+        const isPathUsedExit = navigationContext?.exitUsedFromHere &&
+          exitDef.name === navigationContext.exitUsedFromHere;
+
         // Create a wrapper div for the entire clickable area
         const exitWrapper = document.createElement('div');
         exitWrapper.classList.add('exit-wrapper');
-        
+        if (isPathUsedExit) {
+          exitWrapper.classList.add('path-used');
+        }
+
         // Create a header row for exit info and status
         const headerRow = document.createElement('div');
         headerRow.style.display = 'flex';
         headerRow.style.justifyContent = 'space-between';
         headerRow.style.alignItems = 'center';
-        
+        headerRow.style.gap = '8px';
+
         // Create exit info span
         const exitInfo = document.createElement('span');
+        exitInfo.style.flex = '1';
         exitInfo.appendChild(document.createTextNode(`${exitNameDisplay} → `));
         exitInfo.appendChild(
           commonUI.createRegionLink(
@@ -729,7 +777,7 @@ export class RegionBlockBuilder {
           )
         );
         headerRow.appendChild(exitInfo);
-        
+
         // Add status indicator
         const statusIndicator = document.createElement('span');
         statusIndicator.classList.add('exit-status');
@@ -741,15 +789,24 @@ export class RegionBlockBuilder {
           statusIndicator.classList.add('status-blocked');
         }
         headerRow.appendChild(statusIndicator);
+
+        // Add path-used badge on right side if this exit was used
+        if (isPathUsedExit) {
+          headerRow.appendChild(this.createPathUsedBadge());
+        }
+
         exitWrapper.appendChild(headerRow);
 
         // Apply classes and styling
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
         li.classList.toggle('undiscovered', showAsPlaceholder);
-        
-        // Apply border color based on status
-        if (isTraversable) {
+
+        // Apply border color based on status (path-used overrides)
+        if (isPathUsedExit) {
+          exitWrapper.style.borderColor = '#FFC107';
+          exitWrapper.style.backgroundColor = 'rgba(255, 193, 7, 0.12)';
+        } else if (isTraversable) {
           exitWrapper.style.borderColor = '#4CAF50';
           exitWrapper.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
         } else {
