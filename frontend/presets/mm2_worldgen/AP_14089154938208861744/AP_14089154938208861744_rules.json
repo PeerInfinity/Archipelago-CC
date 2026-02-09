@@ -975,42 +975,15 @@
                   "rule": "Constant",
                   "args": {
                     "value": {
-                      "0": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "1": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "2": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "3": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "4": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "5": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "6": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "7": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "12": {
-                        "type": "list",
-                        "value": []
-                      }
+                      "0": [],
+                      "1": [],
+                      "2": [],
+                      "3": [],
+                      "4": [],
+                      "5": [],
+                      "6": [],
+                      "7": [],
+                      "12": []
                     }
                   },
                   "_converted_from_ast": true
@@ -1043,42 +1016,15 @@
                   "rule": "Constant",
                   "args": {
                     "value": {
-                      "0": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "1": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "2": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "3": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "4": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "5": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "6": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "7": {
-                        "type": "list",
-                        "value": []
-                      },
-                      "12": {
-                        "type": "list",
-                        "value": []
-                      }
+                      "0": [],
+                      "1": [],
+                      "2": [],
+                      "3": [],
+                      "4": [],
+                      "5": [],
+                      "6": [],
+                      "7": [],
+                      "12": []
                     }
                   },
                   "_converted_from_ast": true
