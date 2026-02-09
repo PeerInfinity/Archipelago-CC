@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachRegion, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -76,7 +76,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Lobby From Outside", player),
-        True_()
+        Has('Key for Front Door', 1)
     )
 
     world.set_rule(
@@ -156,7 +156,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Outside From Lobby", player),
-        True_()
+        Has('Key for Front Door', 1)
     )
 
     multiworld.get_entrance("To Victory", player).access_rule = \

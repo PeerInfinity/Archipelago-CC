@@ -113,6 +113,23 @@ class DataStructureVisitorMixin:
                 # For constant values, extract the value; otherwise keep the structure
                 if value_result.get('type') == 'constant':
                     dict_data[key] = value_result['value']
+                elif value_result.get('type') == 'list':
+                    # Extract plain list if all elements are constants (or list is empty)
+                    elements = value_result.get('value', [])
+                    plain_elements = []
+                    all_constant = True
+                    for elem in elements:
+                        if isinstance(elem, dict) and elem.get('type') == 'constant':
+                            plain_elements.append(elem['value'])
+                        elif not isinstance(elem, dict):
+                            plain_elements.append(elem)
+                        else:
+                            all_constant = False
+                            break
+                    if all_constant:
+                        dict_data[key] = plain_elements
+                    else:
+                        dict_data[key] = value_result
                 else:
                     dict_data[key] = value_result
 

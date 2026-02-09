@@ -37,7 +37,10 @@
             "name": "Overworld -> World 1",
             "connected_region": "World 1",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "World 1 Gate"
+              }
             }
           },
           {

@@ -1009,7 +1009,7 @@
   },
   "Satisfactory": {
     "exporter_path": "exporter/games/official/satisfactory.py",
-    "exporter_size": 42157,
+    "exporter_size": 42606,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
