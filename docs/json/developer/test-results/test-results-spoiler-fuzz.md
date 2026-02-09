@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-08 01:58:03
+**Generated:** 2026-02-08 23:45:52 UTC
 
-**Source Data Created:** 2026-02-08T01:58:02.965160
+**Source Data Created:** 2026-02-08T23:45:52.136182+00:00
 
-**Source Data Last Updated:** 2026-02-08T01:58:02.965166
+**Source Data Last Updated:** 2026-02-08T23:45:52.136192+00:00
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,12 +21,12 @@
 ## Summary
 
 - **Total Games:** 75
-- **Games with 100% Pass Rate:** 63 (84.0%)
-- **Games with Failures:** 12 (16.0%)
+- **Games with 100% Pass Rate:** 64 (85.3%)
+- **Games with Failures:** 11 (14.7%)
 - **Total Fuzz Runs:** 750
-- **Successful Runs:** 665 (88.7%)
-- **Generation Failures:** 14
-- **Test Failures:** 46
+- **Successful Runs:** 670 (89.3%)
+- **Generation Failures:** 13
+- **Test Failures:** 42
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -58,7 +58,7 @@
 | EarthBound | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 343.8KB |
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 295.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ | 10 | 5 | 2 | 3 | 0 | ⚠️ 50.0% | 549.5KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 549.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 367.5KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 84.2KB |
@@ -91,7 +91,7 @@
 | Stardew Valley | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
-| Super Mario Land 2 | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 982.7KB |
+| Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 982.7KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 2 | 5 | 0 | ❌ 0.0% | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |

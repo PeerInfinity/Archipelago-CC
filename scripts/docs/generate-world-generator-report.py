@@ -413,11 +413,9 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
     """Generate the summary statistics table."""
     meta = results.get('metadata', {})
 
-    # If metadata has counts, use them; otherwise compute from results
-    if meta.get('total_templates', 0) > 0:
-        stats = meta
-    else:
-        stats = compute_summary_stats(results)
+    # Always compute stats from actual results data
+    # (metadata.total_templates may be stale from combine-test-results splits)
+    stats = compute_summary_stats(results)
 
     # Calculate totals for each step
     orig_gen_total = stats.get('successful_generations', 0) + stats.get('failed_generations', 0)
