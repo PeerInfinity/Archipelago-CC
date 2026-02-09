@@ -461,6 +461,38 @@ def normalize_none_to_null(obj: Any) -> Any:
         return obj
 
 
+def normalize_and_or_args_to_children(obj: Any) -> Any:
+    """
+    Normalize And/Or rule format from args.rules to children.
+
+    Original exports use:
+        {"rule": "And", "args": {"rules": [child1, child2]}}
+    WorldGen exports use:
+        {"rule": "And", "children": [child1, child2]}
+
+    Both are semantically equivalent. Normalize to the children format
+    so that downstream normalizers (normalize_and_has_patterns, etc.) work correctly.
+    """
+    if isinstance(obj, dict):
+        rule_type = obj.get('rule')
+        if rule_type in ('And', 'Or'):
+            args = obj.get('args', {})
+            rules = args.get('rules')
+            if rules is not None and 'children' not in obj:
+                # Convert args.rules to children format
+                remaining_args = {k: v for k, v in args.items() if k != 'rules'}
+                result = {'rule': rule_type, 'children': [normalize_and_or_args_to_children(r) for r in rules]}
+                if remaining_args:
+                    result['args'] = {k: normalize_and_or_args_to_children(v) for k, v in remaining_args.items()}
+                return result
+        # Recursively normalize nested objects
+        return {k: normalize_and_or_args_to_children(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_and_or_args_to_children(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -2074,6 +2106,12 @@ def main():
     # (e.g., StateMethod(has_any, items) -> HasAny(items))
     original_normalized = normalize_state_method_to_rule(original_normalized)
     worldgen_normalized = normalize_state_method_to_rule(worldgen_normalized)
+
+    # Normalize And/Or rule format (args.rules -> children)
+    # Original uses {"rule": "And", "args": {"rules": [...]}}
+    # WorldGen uses {"rule": "And", "children": [...]}
+    original_normalized = normalize_and_or_args_to_children(original_normalized)
+    worldgen_normalized = normalize_and_or_args_to_children(worldgen_normalized)
 
     # Evaluate SettingValue rules based on actual option values (if --ignore-canonical)
     # This allows comparing rules that have option-dependent branches
