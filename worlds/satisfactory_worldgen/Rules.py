@@ -117,22 +117,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-1", player),
-        True_()
+        And(Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-2", player),
-        True_()
+        And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-3", player),
-        True_()
+        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-4", player),
-        True_()
+        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
     )
 
     world.set_rule(
@@ -142,72 +142,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-1", player),
-        True_()
+        And(Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-2", player),
-        True_()
+        And(Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-3", player),
-        True_()
+        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-4", player),
-        True_()
+        And(Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-5", player),
-        True_()
+        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-1", player),
-        True_()
+        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-2", player),
-        True_()
+        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-3", player),
-        True_()
+        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-4", player),
-        True_()
+        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-1", player),
-        True_()
+        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-2", player),
-        True_()
+        And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-3", player),
-        True_()
+        And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-4", player),
-        True_()
+        And(Or(And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Has('Recipe: Encased Industrial Beam')), Has('Can Produce: Encased Industrial Beam')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-5", player),
-        True_()
+        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Has('Recipe: Copper Sheet')), Has('Can Produce: Copper Sheet')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Has('Recipe: Encased Industrial Beam')), Has('Can Produce: Encased Industrial Beam')))
     )
 
     world.set_rule(

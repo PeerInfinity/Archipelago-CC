@@ -4426,7 +4426,10 @@
             "name": "Automate logistic-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "logistic-science-pack"
+              }
             },
             "item": {
               "name": "Automated logistic-science-pack",

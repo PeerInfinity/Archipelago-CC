@@ -5609,8 +5609,8 @@
             "38": "master",
             "39": "random-middle",
             "40": "random-low",
-            "41": "random-high",
-            "42": "random-sinistral"
+            "41": "random-sinistral",
+            "42": "random-high"
           },
           "default": 38,
           "display_name": "Boss"
