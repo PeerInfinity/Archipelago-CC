@@ -10,6 +10,14 @@ patches, vanilla plando fails due to:
 3. Pool counts: Some vanilla items exceed pool counts (Lamp x3 vs pool x1, etc.)
 4. Dungeon items: Dungeon fill doesn't account for already-placed items
 
+Additionally, post-fill logic patches fix accessibility check failures:
+
+5. Key logic: ALTTP's pessimistic key requirements create circular dependencies
+   with vanilla placements (e.g., Desert Palace East Wing needs 4 keys, but 3
+   keys are behind doors requiring items from inside East Wing)
+6. Silver Arrows vs Silver Bow: Vanilla places "Silver Arrows" but the
+   GanonDefeatRule checks for "Silver Bow" — a different item in Archipelago
+
 Usage:
     from scripts.vanilla_alttp import vanilla_patches
     vanilla_patches.install()
@@ -286,15 +294,56 @@ def _make_patched_fill_dungeons(original_fill_dungeons):
     return patched_fill_dungeons_restrictive
 
 
+def _with_relaxed_logic(func):
+    """Decorator that temporarily relaxes key logic and Silver Bow handling.
+
+    Used to wrap fulfills_accessibility and create_playthrough so that
+    vanilla placements pass the logic checks without affecting the fill phase.
+    """
+    from BaseClasses import CollectionState
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Save originals
+        orig_has_key = CollectionState._lttp_has_key
+        orig_collect = CollectionState.collect
+
+        # Patch _lttp_has_key to always return True
+        CollectionState._lttp_has_key = lambda self, item, player, count=1: True
+
+        # Patch collect to credit Silver Bow when Silver Arrows collected
+        @functools.wraps(orig_collect)
+        def patched_collect(self, item, event=False, location=None):
+            orig_collect(self, item, event, location)
+            if getattr(item, 'name', None) == 'Silver Arrows' and \
+               getattr(item, 'game', None) == 'A Link to the Past':
+                self.prog_items[item.player]['Silver Bow'] += 1
+
+        CollectionState.collect = patched_collect
+
+        try:
+            return func(*args, **kwargs)
+        finally:
+            CollectionState._lttp_has_key = orig_has_key
+            CollectionState.collect = orig_collect
+
+    return wrapper
+
+
 def install():
     """Install vanilla plando patches.
 
-    Patches:
+    Fill-time patches (active during entire pipeline):
     - ItemPool.get_pool_core: Fix bottles, uncle weapons, pool adjustment
     - Dungeons.fill_dungeons_restrictive: Skip already-placed dungeon items
+
+    Post-fill logic patches (active only during accessibility/playthrough):
+    - MultiWorld.fulfills_accessibility: Relaxes key logic and Silver Bow handling
+    - Spoiler.create_playthrough: Relaxes key logic and Silver Bow handling
     """
     import worlds.alttp.ItemPool as ItemPoolModule
     import worlds.alttp.Dungeons as DungeonsModule
+    from BaseClasses import MultiWorld, Spoiler
 
     if _originals:
         logger.warning("Vanilla patches already installed")
@@ -312,6 +361,23 @@ def install():
         DungeonsModule.fill_dungeons_restrictive
     )
 
+    # Patch fulfills_accessibility to use relaxed key logic.
+    # This is applied only during the accessibility check, not during the fill,
+    # because the fill phase (especially pre_fill dungeon prize placement) needs
+    # the original key logic to function correctly.
+    _originals['fulfills_accessibility'] = MultiWorld.fulfills_accessibility
+    MultiWorld.fulfills_accessibility = _with_relaxed_logic(
+        MultiWorld.fulfills_accessibility
+    )
+
+    # Patch create_playthrough to use relaxed key logic.
+    # The playthrough calculation does its own sphere sweep that also needs
+    # the relaxed logic to progress through all spheres.
+    _originals['create_playthrough'] = Spoiler.create_playthrough
+    Spoiler.create_playthrough = _with_relaxed_logic(
+        Spoiler.create_playthrough
+    )
+
     logger.info("Installed ALTTP vanilla plando patches")
 
 
@@ -319,6 +385,7 @@ def uninstall():
     """Uninstall vanilla plando patches, restoring original functions."""
     import worlds.alttp.ItemPool as ItemPoolModule
     import worlds.alttp.Dungeons as DungeonsModule
+    from BaseClasses import MultiWorld, Spoiler
 
     if not _originals:
         logger.warning("No vanilla patches to uninstall")
@@ -329,6 +396,12 @@ def uninstall():
 
     if 'fill_dungeons_restrictive' in _originals:
         DungeonsModule.fill_dungeons_restrictive = _originals.pop('fill_dungeons_restrictive')
+
+    if 'fulfills_accessibility' in _originals:
+        MultiWorld.fulfills_accessibility = _originals.pop('fulfills_accessibility')
+
+    if 'create_playthrough' in _originals:
+        Spoiler.create_playthrough = _originals.pop('create_playthrough')
 
     logger.info("Uninstalled ALTTP vanilla plando patches")
 
