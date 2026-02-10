@@ -309,3 +309,47 @@ with open(safe_filepath, 'w') as f:
     f.write(safe_yaml)
 
 print(f"Also created: {safe_filename} ({len(safe_entries)} plando entries - pool-balanced, should work)")
+
+# Generate the FULL vanilla YAML with all placements
+# With code changes to ItemPool.py and Dungeons.py:
+# - Regular items (including overcounts, weapons, bottles): from_pool=true
+# - Prizes: from_pool=false (not in pool, handled by pre_fill skip logic)
+# - Dungeon items: from_pool=false (not in pool, dungeon fill skips already-placed)
+# - Link's Uncle: SKIP (code auto-selects Fighter Sword when weapons are plandoed)
+full_entries = []
+for location, data in vanilla_data.items():
+    item = data['item']
+
+    # Skip Link's Uncle (code forces Fighter Sword when other weapons are plandoed)
+    if location == "Link's Uncle":
+        continue
+
+    # Prizes use from_pool=false (they're not in the item pool)
+    if location in PRIZE_LOCATIONS:
+        full_entries.append((location, item, False))
+    # Dungeon items use from_pool=false (handled by dungeon system, not pool)
+    elif is_dungeon_item(item):
+        full_entries.append((location, item, False))
+    else:
+        # All regular items use from_pool=true
+        # Pool adjustment in ItemPool.py ensures the pool matches
+        full_entries.append((location, item, True))
+
+full_filename = "A Link to the Past - vanilla-full.yaml"
+full_filepath = os.path.join(TEMPLATE_DIR, full_filename)
+full_yaml = BASE_OPTIONS.format(group_num="full")
+if full_entries:
+    full_yaml += "\n  plando_items:\n"
+    for location, item, from_pool in full_entries:
+        full_yaml += generate_plando_entry(location, item, from_pool) + "\n"
+
+with open(full_filepath, 'w') as f:
+    f.write(full_yaml)
+
+from_pool_true = sum(1 for _, _, fp in full_entries if fp)
+from_pool_false = sum(1 for _, _, fp in full_entries if not fp)
+print(f"\nAlso created: {full_filename}")
+print(f"  {len(full_entries)} total plando entries")
+print(f"  {from_pool_true} from_pool=true (regular items)")
+print(f"  {from_pool_false} from_pool=false (prizes)")
+print(f"  Requires ItemPool.py code changes: bottle fix, uncle weapon fix, pool adjustment")
