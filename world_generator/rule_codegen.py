@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Set, Tuple, Optional
 
 from rule_builder import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
+    ANALYZER_BOOL_TYPES,
+    ANALYZER_RUNTIME_TYPES,
     is_placement_lookup,
     extract_placement_location,
     extract_items_from_list,
@@ -25,28 +27,6 @@ from ._rule_analysis import RuleAnalysisMixin
 from ._rule_expressions import RuleExpressionMixin
 from ._rule_converters import RuleConverterMixin
 from ._helper_codegen import HelperCodeGenerator
-
-logger = logging.getLogger(__name__)
-
-# AST analyzer output types that produce complete boolean expressions
-# and can be converted to Rule Builder format.
-ANALYZER_BOOL_TYPES: frozenset[str] = frozenset({
-    'and', 'or', 'not', 'constant',
-    'item_check', 'item_check_any', 'item_check_all',
-    'count_check', 'group_check',
-    'state_method',
-    'can_reach', 'region_check', 'location_check', 'can_reach_entrance',
-    'compare', 'comparison',
-})
-
-# Subset: types that depend on runtime player state
-# (cannot be evaluated at compile time, need lambda wrappers in conditionals)
-ANALYZER_RUNTIME_TYPES: frozenset[str] = frozenset({
-    'state_method',
-    'item_check', 'item_check_any', 'item_check_all',
-    'count_check', 'group_check',
-    'helper',
-})
 
 
 class RuleCodeGenerator(

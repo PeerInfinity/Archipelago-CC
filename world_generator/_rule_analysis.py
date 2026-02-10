@@ -7,6 +7,7 @@ import logging
 from typing import Any, Dict, List, Set, Optional
 
 from ._codegen_utils import (
+    ANALYZER_RUNTIME_TYPES,
     is_placement_lookup,
     extract_placement_location,
     check_placement_comparison,
@@ -16,15 +17,6 @@ from ._codegen_utils import (
     get_helper_function_name,
     generate_world_attribute_expr,
 )
-
-logger = logging.getLogger(__name__)
-
-ANALYZER_RUNTIME_TYPES: frozenset[str] = frozenset({
-    'state_method',
-    'item_check', 'item_check_any', 'item_check_all',
-    'count_check', 'group_check',
-    'helper',
-})
 
 
 class RuleAnalysisMixin:
