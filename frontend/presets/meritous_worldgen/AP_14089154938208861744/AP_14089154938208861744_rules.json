@@ -1767,7 +1767,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1779,7 +1778,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 25
       },
@@ -1791,7 +1789,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 23
       },
@@ -1803,7 +1800,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 22
       },
@@ -1815,7 +1811,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1828,7 +1823,6 @@
           "Important Artifacts"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1840,7 +1834,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1853,7 +1846,6 @@
           "Important Artifacts"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1866,7 +1858,6 @@
           "Important Artifacts"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1879,7 +1870,6 @@
           "Important Artifacts"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1891,7 +1881,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1903,7 +1892,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1915,7 +1903,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1927,7 +1914,6 @@
           "PSI Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1939,7 +1925,6 @@
           "PSI Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1951,7 +1936,6 @@
           "PSI Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1962,7 +1946,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1973,7 +1956,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1984,7 +1966,6 @@
           "Everything"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -1996,7 +1977,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -2008,7 +1988,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -2020,7 +1999,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -2031,7 +2009,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2309,7 +2286,7 @@
         },
         "include_psi_keys": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Include PSI Keys"
         },
         "item_cache_cost": {

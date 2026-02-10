@@ -9183,7 +9183,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9195,7 +9194,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9207,7 +9205,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9219,7 +9216,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9231,7 +9227,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9243,7 +9238,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9255,7 +9249,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9266,7 +9259,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9278,7 +9270,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 39
       },
@@ -9290,7 +9281,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 23
       },
@@ -9302,7 +9292,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -9314,7 +9303,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -9326,7 +9314,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 18
       },
@@ -9338,7 +9325,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 26
       },
@@ -9350,7 +9336,6 @@
           "Powerups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -9361,7 +9346,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 32
       },
@@ -9373,7 +9357,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 28
       },
@@ -9385,7 +9368,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 29
       },
@@ -9397,7 +9379,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 37
       },
@@ -9409,7 +9390,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 40
       },
@@ -9421,7 +9401,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Underhalls (MAP02)   Red keycard"
@@ -9434,7 +9413,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Underhalls (MAP02)   Blue keycard"
@@ -9447,7 +9425,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gantlet (MAP03)   Blue keycard"
@@ -9460,7 +9437,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gantlet (MAP03)   Red keycard"
@@ -9473,7 +9449,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Focus (MAP04)   Blue keycard"
@@ -9486,7 +9461,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Focus (MAP04)   Red keycard"
@@ -9499,7 +9473,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Focus (MAP04)   Yellow keycard"
@@ -9512,7 +9485,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Waste Tunnels (MAP05)   Blue keycard"
@@ -9525,7 +9497,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Waste Tunnels (MAP05)   Red keycard"
@@ -9538,7 +9509,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Waste Tunnels (MAP05)   Yellow keycard"
@@ -9551,7 +9521,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crusher (MAP06)   Red keycard"
@@ -9564,7 +9533,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crusher (MAP06)   Yellow keycard"
@@ -9577,7 +9545,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crusher (MAP06)   Blue keycard"
@@ -9590,7 +9557,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tricks and Traps (MAP08)   Yellow skull key"
@@ -9603,7 +9569,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tricks and Traps (MAP08)   Red skull key"
@@ -9616,7 +9581,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Pit (MAP09)   Blue keycard"
@@ -9629,7 +9593,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Pit (MAP09)   Yellow keycard"
@@ -9642,7 +9605,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Refueling Base (MAP10)   Blue keycard"
@@ -9655,7 +9617,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Refueling Base (MAP10)   Yellow keycard"
@@ -9668,7 +9629,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Circle of Death (MAP11)   Red keycard"
@@ -9681,7 +9641,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Circle of Death (MAP11)   Blue keycard"
@@ -9694,7 +9653,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Factory (MAP12)   Blue keycard"
@@ -9707,7 +9665,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Factory (MAP12)   Yellow keycard"
@@ -9720,7 +9677,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Downtown (MAP13)   Blue keycard"
@@ -9733,7 +9689,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Downtown (MAP13)   Yellow keycard"
@@ -9746,7 +9701,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Downtown (MAP13)   Red keycard"
@@ -9759,7 +9713,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Inmost Dens (MAP14)   Red skull key"
@@ -9772,7 +9725,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Inmost Dens (MAP14)   Blue skull key"
@@ -9785,7 +9737,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Industrial Zone (MAP15)   Yellow keycard"
@@ -9798,7 +9749,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Industrial Zone (MAP15)   Red keycard"
@@ -9811,7 +9761,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Industrial Zone (MAP15)   Blue keycard"
@@ -9824,7 +9773,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Suburbs (MAP16)   Blue skull key"
@@ -9837,7 +9785,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Suburbs (MAP16)   Red skull key"
@@ -9850,7 +9797,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tenements (MAP17)   Red keycard"
@@ -9863,7 +9809,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tenements (MAP17)   Blue keycard"
@@ -9876,7 +9821,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tenements (MAP17)   Yellow skull key"
@@ -9889,7 +9833,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Courtyard (MAP18)   Yellow skull key"
@@ -9902,7 +9845,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Courtyard (MAP18)   Blue skull key"
@@ -9915,7 +9857,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (MAP19)   Blue skull key"
@@ -9928,7 +9869,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (MAP19)   Red skull key"
@@ -9941,7 +9881,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (MAP19)   Yellow skull key"
@@ -9954,7 +9893,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Nirvana (MAP21)   Yellow skull key"
@@ -9967,7 +9905,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Nirvana (MAP21)   Blue skull key"
@@ -9980,7 +9917,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Nirvana (MAP21)   Red skull key"
@@ -9993,7 +9929,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (MAP22)   Blue skull key"
@@ -10006,7 +9941,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (MAP22)   Red skull key"
@@ -10019,7 +9953,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Barrels o' Fun (MAP23)   Yellow skull key"
@@ -10032,7 +9965,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (MAP24)   Blue keycard"
@@ -10045,7 +9977,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (MAP24)   Red keycard"
@@ -10058,7 +9989,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Bloodfalls (MAP25)   Blue skull key"
@@ -10071,7 +10001,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Abandoned Mines (MAP26)   Blue keycard"
@@ -10084,7 +10013,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Abandoned Mines (MAP26)   Red keycard"
@@ -10097,7 +10025,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Abandoned Mines (MAP26)   Yellow keycard"
@@ -10110,7 +10037,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Monster Condo (MAP27)   Yellow skull key"
@@ -10123,7 +10049,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Monster Condo (MAP27)   Red skull key"
@@ -10136,7 +10061,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Monster Condo (MAP27)   Blue skull key"
@@ -10149,7 +10073,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Spirit World (MAP28)   Yellow skull key"
@@ -10162,7 +10085,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Spirit World (MAP28)   Red skull key"
@@ -10175,7 +10097,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10186,7 +10107,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Entryway (MAP01)   Complete"
@@ -10199,7 +10119,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Entryway (MAP01)   Computer area map"
@@ -10212,7 +10131,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10223,7 +10141,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Underhalls (MAP02)   Complete"
@@ -10236,7 +10153,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Underhalls (MAP02)   Computer area map"
@@ -10249,7 +10165,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10260,7 +10175,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gantlet (MAP03)   Complete"
@@ -10273,7 +10187,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gantlet (MAP03)   Computer area map"
@@ -10286,7 +10199,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10297,7 +10209,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Focus (MAP04)   Complete"
@@ -10310,7 +10221,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Focus (MAP04)   Computer area map"
@@ -10323,7 +10233,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10334,7 +10243,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Waste Tunnels (MAP05)   Complete"
@@ -10347,7 +10255,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Waste Tunnels (MAP05)   Computer area map"
@@ -10360,7 +10267,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10371,7 +10277,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crusher (MAP06)   Complete"
@@ -10384,7 +10289,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crusher (MAP06)   Computer area map"
@@ -10397,7 +10301,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10408,7 +10311,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Dead Simple (MAP07)   Complete"
@@ -10421,7 +10323,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Dead Simple (MAP07)   Computer area map"
@@ -10434,7 +10335,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10445,7 +10345,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tricks and Traps (MAP08)   Complete"
@@ -10458,7 +10357,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tricks and Traps (MAP08)   Computer area map"
@@ -10471,7 +10369,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10482,7 +10379,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Pit (MAP09)   Complete"
@@ -10495,7 +10391,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Pit (MAP09)   Computer area map"
@@ -10508,7 +10403,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10519,7 +10413,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Refueling Base (MAP10)   Complete"
@@ -10532,7 +10425,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Refueling Base (MAP10)   Computer area map"
@@ -10545,7 +10437,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10556,7 +10447,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Circle of Death (MAP11)   Complete"
@@ -10569,7 +10459,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Circle of Death (MAP11)   Computer area map"
@@ -10582,7 +10471,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10593,7 +10481,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Factory (MAP12)   Complete"
@@ -10606,7 +10493,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Factory (MAP12)   Computer area map"
@@ -10619,7 +10505,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10630,7 +10515,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Downtown (MAP13)   Complete"
@@ -10643,7 +10527,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Downtown (MAP13)   Computer area map"
@@ -10656,7 +10539,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10667,7 +10549,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Inmost Dens (MAP14)   Complete"
@@ -10680,7 +10561,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Inmost Dens (MAP14)   Computer area map"
@@ -10693,7 +10573,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10704,7 +10583,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Industrial Zone (MAP15)   Complete"
@@ -10717,7 +10595,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Industrial Zone (MAP15)   Computer area map"
@@ -10730,7 +10607,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10741,7 +10617,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Suburbs (MAP16)   Complete"
@@ -10754,7 +10629,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Suburbs (MAP16)   Computer area map"
@@ -10767,7 +10641,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10778,7 +10651,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tenements (MAP17)   Complete"
@@ -10791,7 +10663,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Tenements (MAP17)   Computer area map"
@@ -10804,7 +10675,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10815,7 +10685,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Courtyard (MAP18)   Complete"
@@ -10828,7 +10697,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Courtyard (MAP18)   Computer area map"
@@ -10841,7 +10709,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10852,7 +10719,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (MAP19)   Complete"
@@ -10865,7 +10731,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (MAP19)   Computer area map"
@@ -10878,7 +10743,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10889,7 +10753,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Gotcha! (MAP20)   Complete"
@@ -10902,7 +10765,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Gotcha! (MAP20)   Computer area map"
@@ -10915,7 +10777,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10926,7 +10787,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Nirvana (MAP21)   Complete"
@@ -10939,7 +10799,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Nirvana (MAP21)   Computer area map"
@@ -10952,7 +10811,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10963,7 +10821,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (MAP22)   Complete"
@@ -10976,7 +10833,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (MAP22)   Computer area map"
@@ -10989,7 +10845,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11000,7 +10855,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Barrels o' Fun (MAP23)   Complete"
@@ -11013,7 +10867,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Barrels o' Fun (MAP23)   Computer area map"
@@ -11026,7 +10879,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11037,7 +10889,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (MAP24)   Complete"
@@ -11050,7 +10901,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (MAP24)   Computer area map"
@@ -11063,7 +10913,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11074,7 +10923,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Bloodfalls (MAP25)   Complete"
@@ -11087,7 +10935,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Bloodfalls (MAP25)   Computer area map"
@@ -11100,7 +10947,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11111,7 +10957,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Abandoned Mines (MAP26)   Complete"
@@ -11124,7 +10969,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Abandoned Mines (MAP26)   Computer area map"
@@ -11137,7 +10981,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11148,7 +10991,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Monster Condo (MAP27)   Complete"
@@ -11161,7 +11003,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Monster Condo (MAP27)   Computer area map"
@@ -11174,7 +11015,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11185,7 +11025,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Spirit World (MAP28)   Complete"
@@ -11198,7 +11037,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Spirit World (MAP28)   Computer area map"
@@ -11211,7 +11049,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11222,7 +11059,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Living End (MAP29)   Complete"
@@ -11235,7 +11071,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Living End (MAP29)   Computer area map"
@@ -11248,7 +11083,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11259,7 +11093,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Icon of Sin (MAP30)   Complete"
@@ -11272,7 +11105,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Icon of Sin (MAP30)   Computer area map"
@@ -11285,7 +11117,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11296,7 +11127,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11308,7 +11138,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11320,7 +11149,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11331,7 +11159,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11343,7 +11170,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11354,7 +11180,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11365,7 +11190,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11376,7 +11200,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11387,7 +11210,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -12157,17 +11979,17 @@
         },
         "episode1": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 1"
         },
         "episode2": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 2"
         },
         "episode3": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 3"
         },
         "episode4": {
@@ -12263,7 +12085,7 @@
         },
         "reset_level_on_death": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Reset Level on Death"
         },
         "split_backpack": {

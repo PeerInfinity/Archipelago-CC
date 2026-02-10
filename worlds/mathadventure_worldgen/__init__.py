@@ -49,7 +49,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class MathAdventureWorldGenWeb(WebWorld):
     """Web interface for Math Adventure WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Mathematical Proof Guide",
@@ -268,6 +268,10 @@ class MathAdventureWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

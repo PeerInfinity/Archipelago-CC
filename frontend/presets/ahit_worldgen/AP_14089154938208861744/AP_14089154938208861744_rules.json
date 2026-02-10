@@ -6148,7 +6148,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 50,
         "classification_counts": {
@@ -6163,7 +6162,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 40,
         "classification_counts": {
@@ -6178,7 +6176,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6190,7 +6187,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6202,7 +6198,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6214,7 +6209,6 @@
           "Train"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6226,7 +6220,6 @@
           "Train"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6238,7 +6231,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6250,7 +6242,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6262,7 +6253,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6274,7 +6264,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Relic (Tin foil Hat Cow)"
@@ -6287,7 +6276,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6299,7 +6287,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6311,7 +6298,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6323,7 +6309,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6335,7 +6320,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6347,7 +6331,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6359,7 +6342,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6371,7 +6353,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6383,7 +6364,6 @@
           "Necklace"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6395,7 +6375,6 @@
           "Necklace"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6406,7 +6385,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6417,7 +6395,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6428,7 +6405,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6439,7 +6415,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6450,7 +6425,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6461,7 +6435,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6472,7 +6445,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6483,7 +6455,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6494,7 +6465,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6505,7 +6475,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 39
       },
@@ -6516,7 +6485,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 17
       },
@@ -6527,7 +6495,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -6538,7 +6505,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -6549,7 +6515,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6560,7 +6525,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6571,7 +6535,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6582,7 +6545,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6593,7 +6555,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6604,7 +6565,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -6615,7 +6575,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 30
       },
@@ -6626,7 +6585,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6637,7 +6595,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6648,7 +6605,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6659,7 +6615,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6670,7 +6625,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6681,7 +6635,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6692,7 +6645,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6703,7 +6655,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6714,7 +6665,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6725,7 +6675,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Snatcher's Contract   The Subcon Well"
@@ -6737,7 +6686,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Snatcher's Contract   Toilet of Doom"
@@ -6749,7 +6697,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Snatcher's Contract   Queen Vanessa's Manor"
@@ -6761,7 +6708,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Snatcher's Contract   Mail Delivery Service"
@@ -6773,7 +6719,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6784,7 +6729,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6795,7 +6739,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6806,7 +6749,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7373,7 +7315,7 @@
         },
         "DWAutoCompleteBonuses": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Auto Complete Bonus Stamps"
         },
         "DWEnableBonus": {
@@ -7383,17 +7325,17 @@
         },
         "DWExcludeAnnoyingBonuses": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Annoying Death Wish Full Completions"
         },
         "DWExcludeAnnoyingContracts": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Annoying Death Wish Contracts"
         },
         "DWExcludeCandles": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Candle Death Wishes"
         },
         "DWShuffle": {
@@ -7610,7 +7552,7 @@
         },
         "ShuffleActContracts": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Shuffle Contracts"
         },
         "ShuffleAlpineZiplines": {
@@ -7625,7 +7567,7 @@
         },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Shuffle Storybook Pages"
         },
         "ShuffleSubconPaintings": {
@@ -7635,7 +7577,7 @@
         },
         "StartWithCompassBadge": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Start with Compass Badge"
         },
         "StartingChapter": {

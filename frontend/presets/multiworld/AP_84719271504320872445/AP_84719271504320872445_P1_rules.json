@@ -6470,7 +6470,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 50,
         "classification_counts": {
@@ -6485,7 +6484,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 40,
         "classification_counts": {
@@ -6500,7 +6498,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6512,7 +6509,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6524,7 +6520,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6536,7 +6531,6 @@
           "Train"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6548,7 +6542,6 @@
           "Train"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6560,7 +6553,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6572,7 +6564,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6584,7 +6575,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6597,7 +6587,6 @@
           "UFO"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6609,7 +6598,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6621,7 +6609,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6633,7 +6620,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6645,7 +6631,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6657,7 +6642,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6669,7 +6653,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6681,7 +6664,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6693,7 +6675,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6705,7 +6686,6 @@
           "Necklace"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6717,7 +6697,6 @@
           "Necklace"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6728,7 +6707,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6739,7 +6717,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6750,7 +6727,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6761,7 +6737,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6772,7 +6747,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6783,7 +6757,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6794,7 +6767,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6805,7 +6777,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6816,7 +6787,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6827,7 +6797,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 46
       },
@@ -6838,7 +6807,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -6849,7 +6817,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -6860,7 +6827,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 16
       },
@@ -6871,7 +6837,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6882,7 +6847,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6893,7 +6857,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6904,7 +6867,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6915,7 +6877,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6926,7 +6887,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -6937,7 +6897,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 29
       },
@@ -6948,7 +6907,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6959,7 +6917,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6970,7 +6927,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6981,7 +6937,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6992,7 +6947,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7003,7 +6957,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7014,7 +6967,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7025,7 +6977,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7036,7 +6987,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7048,7 +6998,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7059,7 +7008,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7070,7 +7018,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7081,7 +7028,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7092,7 +7038,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7103,7 +7048,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7114,7 +7058,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7125,7 +7068,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7234,7 +7176,6 @@
         "id": 53,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7244,7 +7185,6 @@
         "id": 40,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7253,7 +7193,6 @@
         "id": 82002,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7262,7 +7201,6 @@
         "id": 118000260,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7272,7 +7210,6 @@
         "id": 100,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7281,7 +7218,6 @@
         "id": 82021,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7291,7 +7227,6 @@
         "id": 8,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7301,7 +7236,6 @@
         "id": 70,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7311,7 +7245,6 @@
         "id": 54,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7321,7 +7254,6 @@
         "id": 23,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7330,7 +7262,6 @@
         "id": 82037,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7340,7 +7271,6 @@
         "id": 68,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7349,7 +7279,6 @@
         "id": 118000258,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7359,7 +7288,6 @@
         "id": 45,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7368,7 +7296,6 @@
         "id": 82007,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7377,7 +7304,6 @@
         "id": 82006,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7386,7 +7312,6 @@
         "id": 82003,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7395,7 +7320,6 @@
         "id": 82031,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7405,7 +7329,6 @@
         "id": 33,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7414,7 +7337,6 @@
         "id": 82033,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7424,7 +7346,6 @@
         "id": 29,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7433,7 +7354,6 @@
         "id": 118000261,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7442,7 +7362,6 @@
         "id": 82029,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7451,7 +7370,6 @@
         "id": 82032,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7460,7 +7378,6 @@
         "id": 118000257,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7470,7 +7387,6 @@
         "id": 25,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7479,7 +7395,6 @@
         "id": 82004,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7489,7 +7404,6 @@
         "id": 62,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7498,7 +7412,6 @@
         "id": 82036,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7508,7 +7421,6 @@
         "id": 20,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7517,7 +7429,6 @@
         "id": 16,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7527,7 +7438,6 @@
         "id": 61,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7536,7 +7446,6 @@
         "id": 82022,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7545,7 +7454,6 @@
         "id": 17,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7554,7 +7462,6 @@
         "id": 82011,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7563,7 +7470,6 @@
         "id": 82009,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7573,7 +7479,6 @@
         "id": 95,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7582,7 +7487,6 @@
         "id": 118000009,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7592,7 +7496,6 @@
         "id": 52,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7601,7 +7504,6 @@
         "id": 118000017,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7610,7 +7512,6 @@
         "id": 82035,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7619,7 +7520,6 @@
         "id": 82016,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7629,7 +7529,6 @@
         "id": 97,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7638,7 +7537,6 @@
         "id": 82015,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7648,7 +7546,6 @@
         "id": 94,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": "Sword",
         "max_count": 1
       },
@@ -7658,7 +7555,6 @@
         "id": 30,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7668,7 +7564,6 @@
         "id": 9,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7677,7 +7572,6 @@
         "id": 118000010,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7687,7 +7581,6 @@
         "id": 60,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7697,7 +7590,6 @@
         "id": 7,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7706,7 +7598,6 @@
         "id": 15,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7715,7 +7606,6 @@
         "id": 82001,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7724,7 +7614,6 @@
         "id": 82010,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7734,7 +7623,6 @@
         "id": 65,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7743,7 +7631,6 @@
         "id": 82028,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7753,7 +7640,6 @@
         "id": 49,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7763,7 +7649,6 @@
         "id": 21,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7772,7 +7657,6 @@
         "id": 82005,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7781,7 +7665,6 @@
         "id": 82027,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7791,7 +7674,6 @@
         "id": 12,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7801,7 +7683,6 @@
         "id": 67,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -7994,7 +7875,7 @@
         },
         "BaseballBat": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Baseball Bat"
         },
         "CTRLogic": {
@@ -8034,32 +7915,32 @@
         },
         "DWAutoCompleteBonuses": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Auto Complete Bonus Stamps"
         },
         "DWEnableBonus": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Death Wish Full Completions"
         },
         "DWExcludeAnnoyingBonuses": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Annoying Death Wish Full Completions"
         },
         "DWExcludeAnnoyingContracts": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Annoying Death Wish Contracts"
         },
         "DWExcludeCandles": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Exclude Candle Death Wishes"
         },
         "DWShuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Wish Shuffle"
         },
         "DWShuffleCountMax": {
@@ -8085,22 +7966,22 @@
         },
         "DeathWishOnly": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Wish Only"
         },
         "EnableDLC1": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Chapter 6"
         },
         "EnableDLC2": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Chapter 7"
         },
         "EnableDeathWish": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Death Wish"
         },
         "EndGoal": {
@@ -8115,7 +7996,7 @@
         },
         "ExcludeTour": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Exclude Tour Time Rift"
         },
         "FinalChapterMaxCost": {
@@ -8134,12 +8015,12 @@
         },
         "FinaleShuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Finale Shuffle"
         },
         "HatItems": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hat Items"
         },
         "HighestChapterCost": {
@@ -8218,7 +8099,7 @@
         },
         "NoPaintingSkips": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Subcon Fire Wall Skips"
         },
         "NoTicketSkips": {
@@ -8271,32 +8152,32 @@
         },
         "ShuffleActContracts": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Shuffle Contracts"
         },
         "ShuffleAlpineZiplines": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Alpine Ziplines"
         },
         "ShuffleDirectorTokens": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Director Tokens"
         },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Shuffle Storybook Pages"
         },
         "ShuffleSubconPaintings": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Subcon Paintings"
         },
         "StartWithCompassBadge": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Start with Compass Badge"
         },
         "StartingChapter": {
@@ -8312,7 +8193,7 @@
         },
         "Tasksanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tasksanity"
         },
         "TasksanityCheckCount": {
@@ -8345,7 +8226,7 @@
         },
         "UmbrellaLogic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Umbrella Logic"
         },
         "YarnAvailable": {
@@ -8387,7 +8268,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "death_link_amnesty": {

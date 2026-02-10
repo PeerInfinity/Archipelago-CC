@@ -250,7 +250,7 @@ class _ShopWrapper:
 class ALinktothePastWorldGen2Web(WebWorld):
     """Web interface for A Link to the Past WorldGen2."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -1115,6 +1115,10 @@ class ALTTPWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

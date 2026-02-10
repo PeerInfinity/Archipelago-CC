@@ -11591,7 +11591,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11603,7 +11602,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11615,7 +11613,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11627,7 +11624,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11639,7 +11635,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11651,7 +11646,6 @@
           "Key Items"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11663,7 +11657,6 @@
           "Key Items"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11675,7 +11668,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11687,7 +11679,6 @@
           "Key Items"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11699,7 +11690,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11711,7 +11701,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11723,7 +11712,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11736,7 +11724,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11749,7 +11736,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11762,7 +11748,6 @@
           "Key Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11775,7 +11760,6 @@
           "Key Items"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11787,7 +11771,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 61
       },
@@ -11799,7 +11782,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 52
       },
@@ -11811,7 +11793,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -11823,7 +11804,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 17
       },
@@ -11835,7 +11815,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11847,7 +11826,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11859,7 +11837,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11871,7 +11848,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11883,7 +11859,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11895,7 +11870,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11907,7 +11881,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11919,7 +11892,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11931,7 +11903,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11943,7 +11914,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11955,7 +11925,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11967,7 +11936,6 @@
           "Spells"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11980,7 +11948,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11993,7 +11960,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12006,7 +11972,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12019,7 +11984,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12032,7 +11996,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12045,7 +12008,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12058,7 +12020,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12071,7 +12032,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12084,7 +12044,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12097,7 +12056,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12110,7 +12068,6 @@
           "Weapons"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12123,7 +12080,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12135,7 +12091,6 @@
           "Helms"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12147,7 +12102,6 @@
           "Helms"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12159,7 +12113,6 @@
           "Helms"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12171,7 +12124,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12183,7 +12135,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12195,7 +12146,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12207,7 +12157,6 @@
           "Shields"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12219,7 +12168,6 @@
           "Shields"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12231,7 +12179,6 @@
           "Shields"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12243,7 +12190,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12255,7 +12201,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12267,7 +12212,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12279,7 +12223,6 @@
           "Refills"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 19
       },
@@ -12291,7 +12234,6 @@
           "Refills"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 50
       },
@@ -12303,7 +12245,6 @@
           "Key Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12316,7 +12257,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12329,7 +12269,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12342,7 +12281,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12355,7 +12293,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12367,7 +12304,6 @@
           "Helms"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12379,7 +12315,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12391,7 +12326,6 @@
           "Shields"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12403,7 +12337,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13306,7 +13239,7 @@
         },
         "crest_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Crest Shuffle"
         },
         "doom_castle_mode": {
@@ -13321,7 +13254,7 @@
         },
         "doom_castle_shortcut": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Doom Castle Shortcut"
         },
         "enemies_density": {
@@ -13392,7 +13325,7 @@
         },
         "kaelis_mom_fight_minotaur": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Kaeli's Mom Fights Minotaur"
         },
         "leveling_curve": {
@@ -13455,7 +13388,7 @@
         },
         "progressive_gear": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Progressive Gear"
         },
         "shattered_sky_coin_quantity": {
@@ -13472,17 +13405,17 @@
         },
         "shuffle_battlefield_rewards": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Battlefield Rewards"
         },
         "shuffle_enemies_position": {
           "type": "toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Shuffle Enemies' Positions"
         },
         "shuffle_res_weak_types": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Resistance/Weakness Types"
         },
         "sky_coin_mode": {
@@ -13523,7 +13456,7 @@
         },
         "tweak_frustrating_dungeons": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tweak Frustrating Dungeons"
         }
       },
