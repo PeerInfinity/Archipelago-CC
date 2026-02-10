@@ -47,11 +47,32 @@ def _import_logic_mixin():
         from worlds.AutoWorld import LogicMixin
         return LogicMixin
 
-LogicMixin = _import_logic_mixin()
-del _import_logic_mixin
+def _get_logic_mixin():
+    """Get LogicMixin lazily to avoid circular imports with AutoWorld."""
+    global _LogicMixin
+    if _LogicMixin is None:
+        _LogicMixin = _import_logic_mixin()
+    return _LogicMixin
+
+_LogicMixin = None
 
 
-class RuleBuilderLogicMixin(LogicMixin):
+class _LogicMixinMeta(type):
+    """Metaclass that resolves LogicMixin as base class lazily."""
+    _resolved = False
+
+    def __instancecheck__(cls, instance):
+        cls._ensure_bases()
+        return super().__instancecheck__(instance)
+
+    def _ensure_bases(cls):
+        if not cls._resolved:
+            cls._resolved = True
+            base = _get_logic_mixin()
+            cls.__bases__ = (base,) + tuple(b for b in cls.__bases__ if b is not object)
+
+
+class RuleBuilderLogicMixin(metaclass=_LogicMixinMeta):
     """A LogicMixin that adds rule caching support to CollectionState.
 
     This mixin is required for worlds that use the Rule Builder's caching system.
