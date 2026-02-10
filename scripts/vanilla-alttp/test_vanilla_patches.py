@@ -49,7 +49,8 @@ def run_seed(seed_num):
         from Generate import mystery_argparse, main as generate_main
         parsed_args = mystery_argparse(
             ['--weights_file_path', 'Templates/A Link to the Past - vanilla-full.yaml',
-             '--multi', '1', '--seed', str(seed_num), '--skip_output']
+             '--multi', '1', '--seed', str(seed_num), '--skip_output',
+             '--plando', 'bosses, connections, texts, items']
         )
         args, seed = generate_main(parsed_args)
 
