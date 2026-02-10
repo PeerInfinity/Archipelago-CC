@@ -264,6 +264,34 @@
         }
       },
       "additionalProperties": false
+    },
+    "helpers": {
+      "type": "object",
+      "description": "Helper function definitions, keyed by player slot ID (string).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "Helper definitions for a player, keyed by helper name.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "seed_name": {
+      "type": "string",
+      "description": "The seed name string for this generation."
+    },
+    "canonical_placements": {
+      "type": "object",
+      "description": "Canonical item placements for deterministic seed generation, keyed by player slot ID (string).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "Mapping of location name to placed item name.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
     }
   },
   "required": [
@@ -272,7 +300,6 @@
     "archipelago_version",
     "generation_seed",
     "player_names",
-    "world_classes",
     "regions",
     "start_regions",
     "items",
@@ -283,7 +310,42 @@
   ],
   "$defs": {
     "rule": {
-      "description": "A rule object defining access conditions.",
+      "description": "A rule object in either AST format (has 'type' field) or Rule Builder format (has 'rule' field).",
+      "oneOf": [
+        { "$ref": "#/$defs/astRule" },
+        { "$ref": "#/$defs/ruleBuilderRule" }
+      ]
+    },
+    "ruleBuilderRule": {
+      "description": "A Rule Builder rule object. Built-in rules include True_, False_, Has, HasAll, HasAny, HasGroup, HasAllCounts, HasFromList, CountItem, And, Or, CanReachRegion, CanReachLocation, OptionValue, Compare, Conditional, Constant. Game-specific helper rules use arbitrary names.",
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string",
+          "description": "The rule type name (e.g., 'Has', 'And', 'True_') or a game-specific helper name."
+        },
+        "args": {
+          "description": "Rule arguments. Object for named args (e.g., {\"item_name\": \"Sword\"}), array for positional args."
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Sub-rules for composite rules like 'And' and 'Or'."
+        },
+        "_original_ast_type": {
+          "type": "string",
+          "description": "Metadata: the original AST rule type before conversion."
+        },
+        "_converted_from_ast": {
+          "type": "boolean",
+          "description": "Metadata: whether this rule was converted from AST format."
+        }
+      },
+      "required": ["rule"],
+      "additionalProperties": true
+    },
+    "astRule": {
+      "description": "An AST-format rule object defining access conditions.",
       "type": "object",
       "properties": {
         "type": { "type": "string" },
@@ -528,8 +590,8 @@
         "player": { "type": "integer" },
         "advancement": { "type": "boolean" },
         "type": {
-          "type": ["string", "null"],
-          "description": "Generic classification of the item."
+          "type": ["string", "integer", "null"],
+          "description": "Item type classification. String or integer depending on exporter version."
         }
       },
       "required": ["name", "player", "advancement", "type"]
@@ -632,37 +694,62 @@
           "description": "Archipelago Item ID. Can be a single integer, null, or an array of integers for composite items like pendants and crystals."
         },
         "groups": { "type": "array", "items": { "type": "string" } },
-        "advancement": { "type": "boolean" },
-        "useful": { "type": "boolean" },
-        "trap": { "type": "boolean" },
+        "classification": {
+          "type": "string",
+          "description": "Item classification string (e.g., 'progression', 'useful', 'trap', 'filler', 'progression_skip_balancing')."
+        },
+        "advancement": {
+          "type": "boolean",
+          "description": "Legacy: whether item is progression. Replaced by 'classification' in newer exports."
+        },
+        "useful": {
+          "type": "boolean",
+          "description": "Legacy: whether item is useful. Replaced by 'classification' in newer exports."
+        },
+        "trap": {
+          "type": "boolean",
+          "description": "Legacy: whether item is a trap. Replaced by 'classification' in newer exports."
+        },
         "event": { "type": "boolean" },
         "type": {
           "type": ["string", "null"],
-          "description": "Generic item classification."
+          "description": "Generic item type."
         },
         "max_count": {
           "type": "integer",
           "description": "Maximum count of this item."
+        },
+        "hint_text": {
+          "type": "string",
+          "description": "Hint text for this item. Optional, only present for some games."
+        },
+        "classification_counts": {
+          "type": "object",
+          "description": "Counts per classification when multiple copies of an item exist with different classifications.",
+          "patternProperties": {
+            "^.*$": { "type": "integer" }
+          },
+          "additionalProperties": false
         }
       },
-      "required": [
-        "name",
-        "id",
-        "groups",
-        "advancement",
-        "useful",
-        "trap",
-        "event",
-        "type",
-        "max_count"
-      ]
+      "required": ["name"],
+      "additionalProperties": true
     },
     "progressionMappingDetail": {
       "type": "object",
       "properties": {
         "items": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/progressiveItemLevel" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/progressiveItemLevel" }
+            },
+            {
+              "type": "object",
+              "description": "Mapping of item name to count (alternative format used by some games).",
+              "additionalProperties": { "type": "integer" }
+            }
+          ]
         },
         "base_item": {
           "type": "string",

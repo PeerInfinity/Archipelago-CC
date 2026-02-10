@@ -528,13 +528,20 @@ class GeneralOptions(Group):
     skip_required_files: bool = False
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # Options: "rule_builder", "ast", "both"
+    save_tracker_pickle: bool = False  # Export multiworld as pickle for tracker (alternative to rules_json)
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False
     verbose_sphere_log: bool = False
     extend_sphere_log_to_all_locations: bool = False
     log_fractional_sphere_details: bool = True
     log_integer_sphere_details: bool = False
+    auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
+    filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
     update_frontend_presets: bool = False
+    clear_game_presets: bool = False  # Delete all existing presets for the current game before generating new ones
+    clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones
+    resolve_options_to_constants: bool = True  # Resolve world.options.X.value to constants at export time (default: True)
+    use_tracking_mode_config: bool = False  # Use tracking-mode-config.json for per-game export decisions
 
 
 class ServerOptions(Group):
@@ -921,5 +928,5 @@ def get_settings() -> Settings:
             # Update the global variable after loading/creating settings
             global skip_required_files
             skip_required_files = res.general_options.skip_required_files
-            
+
         return res

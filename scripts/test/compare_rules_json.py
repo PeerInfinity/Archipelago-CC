@@ -95,31 +95,6 @@ def normalize_helper_body(obj: Any) -> Any:
         return obj
 
 
-def normalize_toggle_defaults(obj: Any) -> Any:
-    """
-    Normalize toggle option defaults to boolean values.
-
-    The exporter is inconsistent - sometimes it exports toggle defaults as `false`
-    (boolean) and sometimes as `0` (integer). Both are semantically equivalent,
-    so normalize them to boolean for comparison.
-    """
-    if isinstance(obj, dict):
-        # Check if this is a toggle option definition
-        if obj.get('type') == 'toggle' and 'default' in obj:
-            result = dict(obj)
-            # Normalize 0/false to False, 1/true to True
-            default = obj['default']
-            if default == 0 or default is False:
-                result['default'] = False
-            elif default == 1 or default is True:
-                result['default'] = True
-            return {k: normalize_toggle_defaults(v) for k, v in result.items()}
-        return {k: normalize_toggle_defaults(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [normalize_toggle_defaults(item) for item in obj]
-    else:
-        return obj
-
 
 def normalize_list_representation(obj: Any) -> Any:
     """
@@ -461,6 +436,38 @@ def normalize_none_to_null(obj: Any) -> Any:
         return obj
 
 
+def normalize_and_or_args_to_children(obj: Any) -> Any:
+    """
+    Normalize And/Or rule format from args.rules to children.
+
+    Original exports use:
+        {"rule": "And", "args": {"rules": [child1, child2]}}
+    WorldGen exports use:
+        {"rule": "And", "children": [child1, child2]}
+
+    Both are semantically equivalent. Normalize to the children format
+    so that downstream normalizers (normalize_and_has_patterns, etc.) work correctly.
+    """
+    if isinstance(obj, dict):
+        rule_type = obj.get('rule')
+        if rule_type in ('And', 'Or'):
+            args = obj.get('args', {})
+            rules = args.get('rules')
+            if rules is not None and 'children' not in obj:
+                # Convert args.rules to children format
+                remaining_args = {k: v for k, v in args.items() if k != 'rules'}
+                result = {'rule': rule_type, 'children': [normalize_and_or_args_to_children(r) for r in rules]}
+                if remaining_args:
+                    result['args'] = {k: normalize_and_or_args_to_children(v) for k, v in remaining_args.items()}
+                return result
+        # Recursively normalize nested objects
+        return {k: normalize_and_or_args_to_children(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_and_or_args_to_children(item) for item in obj]
+    else:
+        return obj
+
+
 def normalize_rule_format(obj: Any) -> Any:
     """
     Normalize rule format differences between original exports and WorldGen exports.
@@ -468,7 +475,7 @@ def normalize_rule_format(obj: Any) -> Any:
     This handles semantically-equivalent representations:
     1. Remove _converted_from_ast metadata flags (only in original)
     2. Normalize set type with elements to constant type with array value
-    3. Remove default values like event: False, count: 1
+    3. Remove default values like count: 1
     4. Normalize Constant rule wrapper to flat array
     5. Normalize AST_prog_item_count to CountItem (equivalent rule formats)
     6. Normalize Not rule args.condition to child format
@@ -507,10 +514,6 @@ def normalize_rule_format(obj: Any) -> Any:
 
             # Skip _original_ast_type metadata (only present in original, not in WorldGen)
             if k == '_original_ast_type':
-                continue
-
-            # Skip event: False (default value - original includes it, WorldGen omits it)
-            if k == 'event' and v is False:
                 continue
 
             normalized_v = normalize_rule_format(v)
@@ -576,6 +579,119 @@ def normalize_rule_format(obj: Any) -> Any:
         return [normalize_rule_format(item) for item in obj]
     else:
         return obj
+
+
+def _extract_constant_value(obj: Any) -> Any:
+    """Extract value from a constant wrapper, or return the value if already unwrapped."""
+    if isinstance(obj, dict) and obj.get('type') == 'constant':
+        return obj.get('value')
+    return obj
+
+
+def _convert_ast_function_to_rule(func: dict) -> Any:
+    """
+    Convert an inner AST function definition to Rule Builder format.
+
+    Handles:
+    - item_check -> Has
+    - state_method/has_all -> HasAll
+    - state_method/has_any -> HasAny
+    - state_method/has -> Has
+    - state_method/can_reach with Region -> CanReachRegion
+    - state_method/can_reach with Location -> CanReachLocation
+    - state_method/can_reach_location -> CanReachLocation
+    - and -> And (with recursively converted children)
+    - or -> Or (with recursively converted children)
+    """
+    if not isinstance(func, dict):
+        return None
+
+    func_type = func.get('type')
+
+    # item_check -> Has
+    if func_type == 'item_check':
+        item = _extract_constant_value(func.get('item'))
+        return {'rule': 'Has', 'args': {'item_name': item}}
+
+    # state_method -> various rules
+    if func_type == 'state_method':
+        method = func.get('method')
+        method_args = func.get('args', [])
+
+        if method == 'has_all' and len(method_args) >= 1:
+            items = _extract_constant_value(method_args[0])
+            if isinstance(items, list):
+                return {'rule': 'HasAll', 'args': {'items': items}}
+
+        if method == 'has_any' and len(method_args) >= 1:
+            items = _extract_constant_value(method_args[0])
+            if isinstance(items, list):
+                return {'rule': 'HasAny', 'args': {'items': items}}
+
+        if method == 'has' and len(method_args) >= 1:
+            item = _extract_constant_value(method_args[0])
+            return {'rule': 'Has', 'args': {'item_name': item}}
+
+        if method == 'can_reach' and len(method_args) >= 2:
+            target = _extract_constant_value(method_args[0])
+            kind = _extract_constant_value(method_args[1])
+            if kind == 'Region':
+                return {'rule': 'CanReachRegion', 'args': {'region_name': target}}
+            elif kind == 'Location':
+                return {'rule': 'CanReachLocation', 'args': {'location_name': target}}
+
+        if method == 'can_reach_location' and len(method_args) >= 1:
+            loc = _extract_constant_value(method_args[0])
+            return {'rule': 'CanReachLocation', 'args': {'location_name': loc}}
+
+    # and -> And with recursively converted children
+    if func_type == 'and':
+        conditions = func.get('conditions', [])
+        children = []
+        for cond in conditions:
+            converted = _convert_ast_function_to_rule(cond)
+            children.append(converted if converted is not None else cond)
+        return {'rule': 'And', 'children': children}
+
+    # or -> Or with recursively converted children
+    if func_type == 'or':
+        conditions = func.get('conditions', [])
+        children = []
+        for cond in conditions:
+            converted = _convert_ast_function_to_rule(cond)
+            children.append(converted if converted is not None else cond)
+        return {'rule': 'Or', 'children': children}
+
+    # Can't convert - return None to keep the original
+    return None
+
+
+def normalize_ast_function_call(obj: Any) -> Any:
+    """
+    Normalize AST_function_call rules to their equivalent Rule Builder rules.
+
+    Original exports may wrap rules in AST_function_call format:
+        {"rule": "AST_function_call", "args": {"function": {"type": "item_check", "item": "X"}, ...}}
+
+    WorldGen exports the equivalent Rule Builder rules directly:
+        {"rule": "Has", "args": {"item_name": "X"}}
+
+    This converts AST_function_call rules by interpreting the inner function AST
+    and producing the equivalent Rule Builder format. Subsequent normalizers
+    (normalize_hasall_single_item, normalize_and_has_patterns, etc.) handle
+    further simplifications.
+    """
+    if isinstance(obj, dict):
+        if obj.get('rule') == 'AST_function_call':
+            function = obj.get('args', {}).get('function', {})
+            converted = _convert_ast_function_to_rule(function)
+            if converted is not None:
+                return normalize_ast_function_call(converted)
+        # Recursively normalize nested objects
+        return {k: normalize_ast_function_call(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_ast_function_call(item) for item in obj]
+    return obj
 
 
 def normalize_state_method_to_rule(obj: Any) -> Any:
@@ -945,6 +1061,121 @@ def normalize_and_has_patterns(obj: Any) -> Any:
         return normalized
     elif isinstance(obj, list):
         return [normalize_and_has_patterns(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_or_with_true(obj: Any) -> Any:
+    """
+    Normalize Or rules containing True_ by short-circuiting to True_,
+    and And rules by removing True_ children, in a single recursive pass.
+
+    This combined normalizer handles cascading simplifications:
+        Or(Has(X), True_()) -> True_()
+        And(True_(), True_()) -> True_()
+        Or(Has(A), And(Or(Has(B), True_()), Or(Has(C), True_()))) -> True_()
+
+    The combined approach handles arbitrary nesting depth in a single pass
+    because it processes bottom-up and both And/Or simplifications together.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_or_with_true(v) for k, v in obj.items()}
+
+        rule = normalized.get('rule')
+
+        # Or with True_ -> True_ (short-circuit)
+        if rule == 'Or':
+            children = normalized.get('children', [])
+            if children:
+                for child in children:
+                    if isinstance(child, dict):
+                        if child.get('rule') == 'True_':
+                            return {'rule': 'True_', 'args': {}}
+                        if child.get('rule') == 'Constant':
+                            value = child.get('args', {}).get('value')
+                            if value is True or (isinstance(value, (int, float)) and not isinstance(value, bool) and value != 0):
+                                return {'rule': 'True_', 'args': {}}
+
+        # And with True_ children -> remove them (identity element)
+        if rule == 'And':
+            children = normalized.get('children', [])
+            if children:
+                filtered = [c for c in children
+                            if not (isinstance(c, dict) and c.get('rule') == 'True_')]
+                if len(filtered) < len(children):
+                    if len(filtered) == 0:
+                        return {'rule': 'True_', 'args': {}}
+                    elif len(filtered) == 1:
+                        return filtered[0]
+                    else:
+                        normalized['children'] = filtered
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_or_with_true(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_or_has_patterns(obj: Any) -> Any:
+    """
+    Normalize Or patterns by combining Has/HasAny children into a single HasAny.
+
+    Handles both all-Has and mixed cases:
+        Or(Has(A), Has(B)) -> HasAny(A, B)
+        Or(Has(A), Has(B), And(X, Y)) -> Or(HasAny(A, B), And(X, Y))
+        Or(HasAny(A, B), Has(C)) -> HasAny(A, B, C)
+
+    This is the Or counterpart to normalize_and_has_patterns.
+    WorldGen's rule_codegen optimizes Or(Has, Has, ...) to HasAny.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_or_has_patterns(v) for k, v in obj.items()}
+
+        # Check if this is an Or rule with Has/HasAny children that can be combined
+        if normalized.get('rule') == 'Or':
+            children = normalized.get('children', [])
+            if children:
+                # Separate Has/HasAny items from other children
+                has_items = []
+                other_children = []
+
+                for child in children:
+                    if isinstance(child, dict):
+                        child_rule = child.get('rule')
+                        if child_rule == 'Has':
+                            item_name = child.get('args', {}).get('item_name')
+                            count = child.get('args', {}).get('count', 1)
+                            if item_name and count == 1:
+                                has_items.append(item_name)
+                            else:
+                                other_children.append(child)
+                        elif child_rule == 'HasAny':
+                            items = child.get('args', {}).get('items', [])
+                            has_items.extend(items)
+                        else:
+                            other_children.append(child)
+                    else:
+                        other_children.append(child)
+
+                # Combine Has items into HasAny if we have 2+ items
+                if len(has_items) >= 2:
+                    hasany_node = {
+                        'rule': 'HasAny',
+                        'args': {'items': has_items}
+                    }
+                    if not other_children:
+                        # All children were Has/HasAny - return single HasAny
+                        return hasany_node
+                    else:
+                        # Mixed: replace Has children with single HasAny
+                        normalized['children'] = [hasany_node] + other_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_or_has_patterns(item) for item in obj]
     else:
         return obj
 
@@ -1714,6 +1945,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '.value.attr' in path:
             return True
 
+    # Helper bodies fully resolved to constants by WorldGen.
+    # When a helper depends on an option-derived world attribute (e.g., has_midring depends
+    # on midring_start which is `not shuffle_midrings`), WorldGen resolves the attribute at
+    # generation time. If the resolved value makes the helper trivially true/false, the
+    # entire body becomes a constant. The original preserves the dynamic expression.
+    if 'helpers.' in path and path.endswith('.type'):
+        if worldgen_value == 'constant':
+            return True
+    if 'helpers.' in path and path.endswith('.value') and original_value == '<missing>':
+        return True
+    if 'helpers.' in path and path.endswith('.conditions') and worldgen_value == '<missing>':
+        return True
+
     # param_mappings is exporter metadata that maps helper parameters to slot_data keys.
     # WorldGen generates different Python code that doesn't use the same patterns, so
     # this metadata isn't preserved during the roundtrip. It's used for frontend rule
@@ -1828,7 +2072,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # OptionSet options that WorldGen doesn't fully extract (e.g., death_link_effect, pre_hint_items)
     # These are complex option types that the world generator doesn't generate Options.py classes for
-    optionset_options = {'death_link_effect', 'include_dlcs', 'move_rando_actions', 'pre_hint_items'}
+    optionset_options = {'death_link_effect', 'goal_selection', 'include_dlcs', 'move_rando_actions', 'pre_hint_items', 'trap_selection_override'}
     if 'options.' in path and worldgen_value == '<missing>':
         for opt in optionset_options:
             if path.endswith(f'.{opt}'):
@@ -1973,11 +2217,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if original_value == '<missing>':
             return True
 
-    # Rule simplification: And(False, ...) -> False_
-    # When a rule has a condition that's always false, WorldGen simplifies to False_
-    # Original may keep the full And structure with Constant(0) elements
+    # Rule simplification: And(False, ...) -> False_, And/Or -> True_
+    # When a rule has a condition that's always false/true, WorldGen simplifies
+    # Original may keep the full And/Or structure with Constant elements
     if 'access_rule' in path and path.endswith('.rule'):
-        if original_value in ('And', 'Or') and worldgen_value == 'False_':
+        if original_value in ('And', 'Or') and worldgen_value in ('False_', 'True_'):
+            return True
+
+    # Or ↔ HasAny equivalence: WorldGen's rule_codegen optimizes Or(Has(A), Has(B))
+    # to HasAny(A, B), or may expand HasAny differently. Additionally, True_()
+    # propagation may collapse branches in the original, changing the grouping.
+    # Both representations are semantically equivalent access rules.
+    if 'access_rule' in path and path.endswith('.rule'):
+        if {original_value, worldgen_value} == {'Or', 'HasAny'}:
             return True
 
     # Complex options that WorldGen doesn't export (dict/list options with nested structure)
@@ -2062,18 +2314,25 @@ def main():
     original_normalized = normalize_helper_body(original_normalized)
     worldgen_normalized = normalize_helper_body(worldgen_normalized)
 
-    # Normalize toggle defaults (0 vs false, 1 vs true)
-    original_normalized = normalize_toggle_defaults(original_normalized)
-    worldgen_normalized = normalize_toggle_defaults(worldgen_normalized)
-
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize AST_function_call rules to Rule Builder equivalents
+    # (e.g., AST_function_call(item_check("X")) -> Has("X"))
+    original_normalized = normalize_ast_function_call(original_normalized)
+    worldgen_normalized = normalize_ast_function_call(worldgen_normalized)
 
     # Normalize StateMethod rules to Rule Builder equivalents
     # (e.g., StateMethod(has_any, items) -> HasAny(items))
     original_normalized = normalize_state_method_to_rule(original_normalized)
     worldgen_normalized = normalize_state_method_to_rule(worldgen_normalized)
+
+    # Normalize And/Or rule format (args.rules -> children)
+    # Original uses {"rule": "And", "args": {"rules": [...]}}
+    # WorldGen uses {"rule": "And", "children": [...]}
+    original_normalized = normalize_and_or_args_to_children(original_normalized)
+    worldgen_normalized = normalize_and_or_args_to_children(worldgen_normalized)
 
     # Evaluate SettingValue rules based on actual option values (if --ignore-canonical)
     # This allows comparing rules that have option-dependent branches
@@ -2097,6 +2356,12 @@ def main():
     original_normalized = normalize_and_with_true(original_normalized)
     worldgen_normalized = normalize_and_with_true(worldgen_normalized)
 
+    # Combined And+True/Or+True normalization (handles cascading simplifications)
+    # Run multiple times for deep nesting: Or(X, And(Or(Y, True_), Or(Z, True_)))
+    for _ in range(3):
+        original_normalized = normalize_or_with_true(original_normalized)
+        worldgen_normalized = normalize_or_with_true(worldgen_normalized)
+
     # Normalize HasAll with single item to Has
     # (e.g., HasAll(['item']) -> Has('item'))
     original_normalized = normalize_hasall_single_item(original_normalized)
@@ -2116,6 +2381,11 @@ def main():
     original_normalized = normalize_and_has_patterns(original_normalized)
     worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
 
+    # Normalize Or+Has/HasAny patterns to single HasAny (cleaner format)
+    # (e.g., Or(Has(A), Has(B)) -> HasAny([A, B]))
+    original_normalized = normalize_or_has_patterns(original_normalized)
+    worldgen_normalized = normalize_or_has_patterns(worldgen_normalized)
+
     # Normalize HasAll with duplicate items (run AFTER normalize_and_has_patterns
     # which may create HasAll with duplicates from And(Has(A), Has(A)))
     # (e.g., HasAll(['item', 'item']) -> Has('item'))
@@ -2125,6 +2395,12 @@ def main():
     # Normalize And/Or structure (flatten nested, sort children)
     original_normalized = normalize_and_or_structure(original_normalized)
     worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
+
+    # Re-run Or+Has and And+Has patterns after flattening exposed new opportunities
+    original_normalized = normalize_or_has_patterns(original_normalized)
+    worldgen_normalized = normalize_or_has_patterns(worldgen_normalized)
+    original_normalized = normalize_and_has_patterns(original_normalized)
+    worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
 
     # Normalize world attribute format (attribute with world object -> world_attribute)
     original_normalized = normalize_world_attribute_format(original_normalized)
@@ -2185,6 +2461,15 @@ def main():
     # Normalize setting_value to world_attribute (semantically equivalent)
     original_normalized = normalize_setting_to_world_attribute(original_normalized)
     worldgen_normalized = normalize_setting_to_world_attribute(worldgen_normalized)
+
+    # Sort starting_items lists for consistent comparison
+    # WorldGen may produce starting items in a different order than the original
+    for data in (original_normalized, worldgen_normalized):
+        starting_items = data.get('starting_items', {})
+        if isinstance(starting_items, dict):
+            for player_key, items in starting_items.items():
+                if isinstance(items, list):
+                    starting_items[player_key] = sorted(items)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)

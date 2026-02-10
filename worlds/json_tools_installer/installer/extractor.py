@@ -24,6 +24,8 @@ class Component:
     source_patterns: List[str] = field(default_factory=list)  # Glob patterns for matching
     required: bool = False
     size_estimate_mb: float = 0.0
+    detect_path: Optional[str] = None  # If set, use this path instead of source_paths for install detection
+    clean_before_extract: bool = False  # If True, remove source_paths directories before extracting
 
 
 @dataclass
@@ -52,6 +54,8 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["rule_builder"],
         required=False,
         size_estimate_mb=0.5,
+        detect_path="rule_builder/_ast_utils.py",  # CC-specific; vanilla has its own rule_builder
+        clean_before_extract=True,  # Vanilla has different files that must be removed
     ),
     "world_generator": Component(
         name="world_generator",
@@ -97,7 +101,7 @@ COMPONENTS: Dict[str, Component] = {
         name="main_patches",
         display_name="Main Patches",
         description="Patched core files for JSON export support",
-        source_paths=["json_tools_patches/0.6.5/main"],
+        source_paths=["json_tools_patches/0.6.7/main"],
         required=False,
         size_estimate_mb=0.2,
     ),
@@ -105,29 +109,14 @@ COMPONENTS: Dict[str, Component] = {
         name="romless_patches",
         display_name="ROM-less Generation Patches",
         description="Patched world files for generation without ROMs",
-        source_paths=["json_tools_patches/0.6.5/romless"],
+        source_paths=["json_tools_patches/0.6.7/romless"],
         required=False,
         size_estimate_mb=0.3,
-    ),
-    "demo_worlds": Component(
-        name="demo_worlds",
-        display_name="Demo Worlds",
-        description="Example worlds (bakingadventure, codingadventure, etc.)",
-        source_paths=[
-            "worlds/bakingadventure",
-            "worlds/codingadventure",
-            "worlds/mathadventure",
-            "worlds/metamath",
-            "worlds/toem_original",
-            "worlds/toem_rule_builder",
-        ],
-        required=False,
-        size_estimate_mb=1.0,
     ),
     "tracker": Component(
         name="tracker",
         display_name="Tracker Integration",
-        description="PopTracker integration world for auto-tracking",
+        description="Auto-tracking world based on Universal Tracker",
         source_paths=["worlds/tracker"],
         required=False,
         size_estimate_mb=0.5,
@@ -142,6 +131,21 @@ COMPONENTS: Dict[str, Component] = {
             "playwright.config.js",
             "vitest.config.js",
             "tests",
+        ],
+        required=False,
+        size_estimate_mb=1.0,
+    ),
+    "demo_worlds": Component(
+        name="demo_worlds",
+        display_name="Demo Worlds",
+        description="Example worlds (bakingadventure, codingadventure, etc.)",
+        source_paths=[
+            "worlds/bakingadventure",
+            "worlds/codingadventure",
+            "worlds/mathadventure",
+            "worlds/metamath",
+            "worlds/toem_original",
+            "worlds/toem_rule_builder",
         ],
         required=False,
         size_estimate_mb=1.0,
@@ -167,7 +171,8 @@ DEFAULT_COMPONENTS = {
     "scripts",
     "main_patches",
     "romless_patches",
-    "demo_worlds",
+    "tracker",
+    "testing",
 }
 
 # Patterns to always exclude
@@ -270,6 +275,15 @@ def extract_tools(
 
     result = ExtractionResult(success=True)
 
+    # Clean directories for components that require it (e.g., rule_builder replaces vanilla's version)
+    for comp_name in components:
+        comp = COMPONENTS.get(comp_name)
+        if comp and comp.clean_before_extract:
+            for source_path in comp.source_paths:
+                clean_path = dest_root / source_path
+                if clean_path.is_dir():
+                    shutil.rmtree(clean_path)
+
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
             # Get list of all files
@@ -369,12 +383,15 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
     for comp_name, comp in COMPONENTS.items():
         is_installed = False
 
-        # Check if any source path exists
-        for source_path in comp.source_paths:
-            check_path = root / source_path
-            if check_path.exists():
-                is_installed = True
-                break
+        # Use detect_path if set, otherwise check source_paths
+        if comp.detect_path:
+            is_installed = (root / comp.detect_path).exists()
+        else:
+            for source_path in comp.source_paths:
+                check_path = root / source_path
+                if check_path.exists():
+                    is_installed = True
+                    break
 
         # Check if any source pattern matches existing files
         if not is_installed and comp.source_patterns:
