@@ -24,6 +24,8 @@ class Component:
     source_patterns: List[str] = field(default_factory=list)  # Glob patterns for matching
     required: bool = False
     size_estimate_mb: float = 0.0
+    detect_path: Optional[str] = None  # If set, use this path instead of source_paths for install detection
+    clean_before_extract: bool = False  # If True, remove source_paths directories before extracting
 
 
 @dataclass
@@ -52,6 +54,8 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=["rule_builder"],
         required=False,
         size_estimate_mb=0.5,
+        detect_path="rule_builder/_ast_utils.py",  # CC-specific; vanilla has its own rule_builder
+        clean_before_extract=True,  # Vanilla has different files that must be removed
     ),
     "world_generator": Component(
         name="world_generator",
@@ -271,6 +275,15 @@ def extract_tools(
 
     result = ExtractionResult(success=True)
 
+    # Clean directories for components that require it (e.g., rule_builder replaces vanilla's version)
+    for comp_name in components:
+        comp = COMPONENTS.get(comp_name)
+        if comp and comp.clean_before_extract:
+            for source_path in comp.source_paths:
+                clean_path = dest_root / source_path
+                if clean_path.is_dir():
+                    shutil.rmtree(clean_path)
+
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
             # Get list of all files
@@ -370,12 +383,15 @@ def list_installed_components(root: Optional[Path] = None) -> List[str]:
     for comp_name, comp in COMPONENTS.items():
         is_installed = False
 
-        # Check if any source path exists
-        for source_path in comp.source_paths:
-            check_path = root / source_path
-            if check_path.exists():
-                is_installed = True
-                break
+        # Use detect_path if set, otherwise check source_paths
+        if comp.detect_path:
+            is_installed = (root / comp.detect_path).exists()
+        else:
+            for source_path in comp.source_paths:
+                check_path = root / source_path
+                if check_path.exists():
+                    is_installed = True
+                    break
 
         # Check if any source pattern matches existing files
         if not is_installed and comp.source_patterns:

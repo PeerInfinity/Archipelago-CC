@@ -560,6 +560,9 @@ def _create_hash_fn(resolved_rule_cls: "CustomRuleRegister") -> Callable[..., in
 class CustomRuleRegister(type):
     """A metaclass to contain world custom rules and automatically convert resolved rules to frozen dataclasses"""
 
+    resolved_rules: ClassVar[dict[int, "Rule.Resolved"]] = {}
+    """A cache of resolved rules to turn each unique one into a singleton"""
+
     custom_rules: ClassVar[dict[str, dict[str, type["Rule[Any]"]]]] = {}
     """A mapping of game name to mapping of rule name to rule class"""
 
@@ -582,6 +585,15 @@ class CustomRuleRegister(type):
         new_cls.rule_name = rule_name
         return dataclasses.dataclass(frozen=True)(new_cls)
 
+    @override
+    def __call__(cls, *args: Any, **kwds: Any) -> Any:
+        rule = super().__call__(*args, **kwds)
+        rule_hash = hash(rule)
+        if rule_hash in cls.resolved_rules:
+            return cls.resolved_rules[rule_hash]
+        cls.resolved_rules[rule_hash] = rule
+        return rule
+
     @classmethod
     def get_rule_cls(cls, game_name: str, rule_name: str) -> type["Rule[Any]"]:
         """Returns the world-registered or default rule with the given name"""
@@ -598,6 +610,9 @@ class Rule(Generic[TWorld]):
     options: Iterable[OptionFilter[Any]] = dataclasses.field(default=(), kw_only=True)
     """An iterable of OptionFilters to restrict what options are required for this rule to be active"""
 
+    filtered_resolution: bool = dataclasses.field(default=False, kw_only=True)
+    """If this rule should default to True or False when filtered by its options"""
+
     game_name: ClassVar[str]
     """The name of the game this rule belongs to, default rules belong to 'Archipelago'"""
 
@@ -613,7 +628,7 @@ class Rule(Generic[TWorld]):
         """Resolve a rule with the given world"""
         for option_filter in self.options:
             if not option_filter.check(world.options):
-                return world.false_rule
+                return True_().resolve(world) if self.filtered_resolution else world.false_rule
         return self._instantiate(world)
 
     def to_dict(self) -> dict[str, Any]:
@@ -624,8 +639,12 @@ class Rule(Generic[TWorld]):
         result: dict[str, Any] = {"rule": self.__class__.__qualname__}
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
+        if self.filtered_resolution:
+            result["filtered_resolution"] = self.filtered_resolution
         args = {
-            field.name: getattr(self, field.name, None) for field in dataclasses.fields(self) if field.name != "options"
+            field.name: getattr(self, field.name, None)
+            for field in dataclasses.fields(self)
+            if field.name not in ("options", "filtered_resolution")
         }
         if args:
             result["args"] = args
@@ -635,7 +654,7 @@ class Rule(Generic[TWorld]):
     def from_dict(cls, data: Mapping[str, Any], world_cls: type[RuleWorldMixin]) -> Self:
         """Returns a new instance of this rule from a serialized dict representation"""
         options = OptionFilter.multiple_from_dict(data.get("options", ()))
-        return cls(**data.get("args", {}), options=options)
+        return cls(**data.get("args", {}), options=options, filtered_resolution=data.get("filtered_resolution", False))
 
     def __and__(self, other: "Rule[Any]") -> "Rule[TWorld]":
         """Combines two rules into an And rule"""
@@ -862,7 +881,7 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
     def from_dict(cls, data: Mapping[str, Any], world_cls: type[RuleWorldMixin]) -> Self:
         children = [world_cls.rule_from_dict(c) for c in data.get("children", ())]
         options = OptionFilter.multiple_from_dict(data.get("options", ()))
-        return cls(*children, options=options)
+        return cls(*children, options=options, filtered_resolution=data.get("filtered_resolution", False))
 
     @override
     def __str__(self) -> str:
@@ -1029,7 +1048,7 @@ class WrapperRule(Rule[TWorld], game="Archipelago"):
         if child is None:
             raise ValueError("Child rule cannot be None")
         options = OptionFilter.multiple_from_dict(data.get("options", ()))
-        return cls(world_cls.rule_from_dict(child), options=options)
+        return cls(world_cls.rule_from_dict(child), options=options, filtered_resolution=data.get("filtered_resolution", False))
 
     @override
     def __str__(self) -> str:
@@ -1154,6 +1173,8 @@ class Has(Rule[TWorld], game="Archipelago"):
         result: dict[str, Any] = {"rule": self.__class__.__qualname__}
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
+        if self.filtered_resolution:
+            result["filtered_resolution"] = self.filtered_resolution
         args = {"item_name": self.item_name}
         # Handle both static and Rule counts
         if isinstance(self.count, Rule):
@@ -3556,6 +3577,8 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         }
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
+        if self.filtered_resolution:
+            result["filtered_resolution"] = self.filtered_resolution
         if self.args:
             # Convert boolean args to AST format for frontend compatibility
             exported_args = []
@@ -4006,10 +4029,13 @@ class OptionValue(Rule[TWorld], game="Archipelago"):
 
     @override
     def to_dict(self) -> dict[str, Any]:
-        return {
+        result: dict[str, Any] = {
             "rule": "OptionValue",
             "args": {"option": self.option_name}
         }
+        if self.filtered_resolution:
+            result["filtered_resolution"] = self.filtered_resolution
+        return result
 
     class Resolved(Rule.Resolved):
         option_name: str
