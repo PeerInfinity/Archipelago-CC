@@ -294,11 +294,28 @@ def _make_patched_fill_dungeons(original_fill_dungeons):
     return patched_fill_dungeons_restrictive
 
 
+# Dungeons whose pessimistic key logic creates circular dependencies
+# with vanilla item placements. Each is essential — removing any one
+# from this set causes the accessibility check to fail.
+# Identified by progressive bypass analysis (analyze_key_checks.py).
+_VANILLA_KEY_BYPASS_DUNGEONS = frozenset({
+    'Small Key (Desert Palace)',     # East Wing needs 4 keys; 3 are behind Power Glove door
+    'Small Key (Agahnims Tower)',    # Need 4 keys to reach Agahnim 1 (Dark World access)
+    'Small Key (Palace of Darkness)',  # Need 6 keys; dungeon is deep in Dark World
+    'Small Key (Swamp Palace)',      # Need 6 keys; progression through Dark World
+    'Small Key (Ganons Tower)',      # Need 8 keys; final dungeon
+})
+
+
 def _with_relaxed_logic(func):
     """Decorator that temporarily relaxes key logic and Silver Bow handling.
 
     Used to wrap fulfills_accessibility and create_playthrough so that
     vanilla placements pass the logic checks without affecting the fill phase.
+
+    Only bypasses key checks for the 5 dungeons that have circular
+    dependencies with vanilla placements. The other 8 dungeons use
+    the original key logic.
     """
     from BaseClasses import CollectionState
 
@@ -308,8 +325,13 @@ def _with_relaxed_logic(func):
         orig_has_key = CollectionState._lttp_has_key
         orig_collect = CollectionState.collect
 
-        # Patch _lttp_has_key to always return True
-        CollectionState._lttp_has_key = lambda self, item, player, count=1: True
+        # Patch _lttp_has_key: bypass only the 5 problematic dungeons
+        def targeted_has_key(self, item, player, count=1):
+            if item in _VANILLA_KEY_BYPASS_DUNGEONS:
+                return True
+            return orig_has_key(self, item, player, count)
+
+        CollectionState._lttp_has_key = targeted_has_key
 
         # Patch collect to credit Silver Bow when Silver Arrows collected
         @functools.wraps(orig_collect)
