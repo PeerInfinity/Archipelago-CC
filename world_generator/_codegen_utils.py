@@ -7,6 +7,26 @@ extracted to reduce duplication between the two generator classes.
 
 from typing import Any, Dict, Optional
 
+# AST analyzer output types that produce complete boolean expressions
+# and can be converted to Rule Builder format.
+ANALYZER_BOOL_TYPES: frozenset[str] = frozenset({
+    'and', 'or', 'not', 'constant',
+    'item_check', 'item_check_any', 'item_check_all',
+    'count_check', 'group_check',
+    'state_method',
+    'can_reach', 'region_check', 'location_check', 'can_reach_entrance',
+    'compare', 'comparison',
+})
+
+# Subset: types that depend on runtime player state
+# (cannot be evaluated at compile time, need lambda wrappers in conditionals)
+ANALYZER_RUNTIME_TYPES: frozenset[str] = frozenset({
+    'state_method',
+    'item_check', 'item_check_any', 'item_check_all',
+    'count_check', 'group_check',
+    'helper',
+})
+
 
 def is_placement_lookup(operand: Any) -> bool:
     """

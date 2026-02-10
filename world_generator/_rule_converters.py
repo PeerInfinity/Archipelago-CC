@@ -1471,8 +1471,7 @@ class RuleConverterMixin:
         (like And, Or, Has) - these are produced by bunny rule analysis in
         ALttP where path_to_access_rule returns nested rule expressions.
         """
-        # Import here to avoid circular dependency at module level
-        from .rule_codegen import ANALYZER_RUNTIME_TYPES
+        from ._codegen_utils import ANALYZER_RUNTIME_TYPES
 
         args = rule.get('args', {})
         function = args.get('function', {})
