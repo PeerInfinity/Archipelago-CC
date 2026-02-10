@@ -106,7 +106,6 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                     'advancement': False,
                     'useful': False,
                     'trap': False,
-                    'event': False,
                     'type': 'computed',  # Mark as computed/tracking item
                     'max_count': 9999  # These can have high counts
                 }
