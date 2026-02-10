@@ -1229,7 +1229,6 @@ class BaseGameExportHandler(
                     'advancement': is_advancement,
                     'useful': is_useful,
                     'trap': is_trap,
-                    'event': False,  # Regular items are not events
                     'type': item_type,
                     'max_count': 1
                 }
@@ -1976,7 +1975,7 @@ class BaseGameExportHandler(
                 return {
                     'name': name, 'id': None, 'groups': [group],
                     'advancement': True, 'useful': False, 'trap': False,
-                    'event': False, 'type': item_type,
+                    'type': item_type,
                     'max_count': max_count if is_target else 1
                 }
 

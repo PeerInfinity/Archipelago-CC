@@ -118,8 +118,26 @@ export class RegionRenderer {
 
     const isAccessibilitySort = sortMethod.includes('accessibility');
 
+    // Pre-compute exitUsedFromHere for each region in navigation mode.
+    // For region at index i, the next region (i+1) has exitUsed which is the exit
+    // name used FROM region i to reach region i+1.
+    const exitUsedFromHereMap = new Map();
+    for (let i = 0; i < regionsToRender.length - 1; i++) {
+      const current = regionsToRender[i];
+      const next = regionsToRender[i + 1];
+      if (current.mode === 'navigation' && next.exitUsed) {
+        exitUsedFromHereMap.set(current.uid, next.exitUsed);
+      }
+    }
+
     regionsToRender.forEach((regionInfo) => {
       let regionBlock;
+
+      // Build navigation context for path-based highlighting
+      const navigationContext = regionInfo.mode === 'navigation' ? {
+        exitUsed: regionInfo.exitUsed || null,
+        exitUsedFromHere: exitUsedFromHereMap.get(regionInfo.uid) || null
+      } : null;
 
       if (regionInfo.isSkipIndicator) {
         // Build skip indicator using RegionBlockBuilder (it has special handling for skip indicators)
@@ -135,7 +153,8 @@ export class RegionRenderer {
           staticData,
           true, // isSkipIndicator
           sectionOrder,
-          discoverySettings
+          discoverySettings,
+          navigationContext
         );
       } else {
         // Get static region data
@@ -158,7 +177,8 @@ export class RegionRenderer {
           staticData,
           false, // Not a skip indicator
           sectionOrder,
-          discoverySettings
+          discoverySettings,
+          navigationContext
         );
 
         if (!regionBlock) {

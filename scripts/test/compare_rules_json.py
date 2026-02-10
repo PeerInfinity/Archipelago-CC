@@ -95,31 +95,6 @@ def normalize_helper_body(obj: Any) -> Any:
         return obj
 
 
-def normalize_toggle_defaults(obj: Any) -> Any:
-    """
-    Normalize toggle option defaults to boolean values.
-
-    The exporter is inconsistent - sometimes it exports toggle defaults as `false`
-    (boolean) and sometimes as `0` (integer). Both are semantically equivalent,
-    so normalize them to boolean for comparison.
-    """
-    if isinstance(obj, dict):
-        # Check if this is a toggle option definition
-        if obj.get('type') == 'toggle' and 'default' in obj:
-            result = dict(obj)
-            # Normalize 0/false to False, 1/true to True
-            default = obj['default']
-            if default == 0 or default is False:
-                result['default'] = False
-            elif default == 1 or default is True:
-                result['default'] = True
-            return {k: normalize_toggle_defaults(v) for k, v in result.items()}
-        return {k: normalize_toggle_defaults(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [normalize_toggle_defaults(item) for item in obj]
-    else:
-        return obj
-
 
 def normalize_list_representation(obj: Any) -> Any:
     """
@@ -500,7 +475,7 @@ def normalize_rule_format(obj: Any) -> Any:
     This handles semantically-equivalent representations:
     1. Remove _converted_from_ast metadata flags (only in original)
     2. Normalize set type with elements to constant type with array value
-    3. Remove default values like event: False, count: 1
+    3. Remove default values like count: 1
     4. Normalize Constant rule wrapper to flat array
     5. Normalize AST_prog_item_count to CountItem (equivalent rule formats)
     6. Normalize Not rule args.condition to child format
@@ -539,10 +514,6 @@ def normalize_rule_format(obj: Any) -> Any:
 
             # Skip _original_ast_type metadata (only present in original, not in WorldGen)
             if k == '_original_ast_type':
-                continue
-
-            # Skip event: False (default value - original includes it, WorldGen omits it)
-            if k == 'event' and v is False:
                 continue
 
             normalized_v = normalize_rule_format(v)
@@ -2342,10 +2313,6 @@ def main():
     # Normalize helper body formats (location_check -> state_method, etc.)
     original_normalized = normalize_helper_body(original_normalized)
     worldgen_normalized = normalize_helper_body(worldgen_normalized)
-
-    # Normalize toggle defaults (0 vs false, 1 vs true)
-    original_normalized = normalize_toggle_defaults(original_normalized)
-    worldgen_normalized = normalize_toggle_defaults(worldgen_normalized)
 
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)

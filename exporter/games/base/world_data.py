@@ -197,10 +197,10 @@ class WorldDataMixin:
                         option_def['default'] = option_class.default
                     elif isinstance(option, DefaultOnToggle):
                         option_def['type'] = 'default_on_toggle'
-                        option_def['default'] = option_class.default
+                        option_def['default'] = bool(option_class.default)
                     elif isinstance(option, Toggle):
                         option_def['type'] = 'toggle'
-                        option_def['default'] = option_class.default
+                        option_def['default'] = bool(option_class.default)
                     elif isinstance(option, Choice):
                         option_def['type'] = 'choice'
                         option_def['name_lookup'] = {normalize_key(k): v for k, v in option_class.name_lookup.items()}
