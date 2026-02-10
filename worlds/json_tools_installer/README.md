@@ -184,8 +184,8 @@ By default, the installer configures `host.yaml` with the `normal` preset. Use `
 
 In the installer GUI, you'll see options under "Configure export settings in host.yaml:":
 - **Configure host.yaml** (checked by default) - Whether to update export settings
-- **Normal** - Standard settings with export disabled
-- **Minimal spoilers** - Enables JSON export and sphere logging
+- **Disable JSON Export** - Standard settings with export disabled
+- **Enable JSON Export - Minimal Spoilers** - Enables JSON export and sphere logging
 
 ## Backup and Restore
 
@@ -237,10 +237,10 @@ The `export_settings` section mirrors the settings written to `host.yaml` and se
 
 | AP Version | Support Level | Method |
 |------------|---------------|--------|
-| 0.6.5 | Full | File patches |
-| 0.6.x | Full | File patches |
-| 0.5.x | Experimental | Monkey patches |
-| < 0.5.0 | Unsupported | N/A |
+| 0.6.7 | Full | File patches |
+| 0.6.3–0.6.6 | Supported | Monkey patches |
+| > 0.6.7 | Experimental | Monkey patches |
+| < 0.6.3 | Unsupported | N/A |
 
 ## Troubleshooting
 
@@ -314,7 +314,7 @@ worlds/json_tools_installer/
 
 # Patches are downloaded to (not bundled in the module):
 json_tools_patches/
-└── 0.6.5/
+└── 0.6.7/
     ├── main/             # Main patches (Main.py, BaseClasses.py, settings.py)
     └── romless/          # ROM-less world patches
 ```
