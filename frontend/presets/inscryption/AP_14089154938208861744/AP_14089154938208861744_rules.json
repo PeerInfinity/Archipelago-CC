@@ -2298,7 +2298,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2309,7 +2308,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2320,7 +2318,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2331,7 +2328,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2342,7 +2338,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2353,7 +2348,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2364,7 +2358,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2375,7 +2368,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2386,7 +2378,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2397,7 +2388,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2408,7 +2398,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2419,7 +2408,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2430,7 +2418,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2441,7 +2428,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2452,7 +2438,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2463,7 +2448,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2474,7 +2458,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2485,7 +2468,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2496,7 +2478,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -2507,7 +2488,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2518,7 +2498,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2529,7 +2508,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2540,7 +2518,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2551,7 +2528,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2562,7 +2538,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2573,7 +2548,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2584,7 +2558,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2595,7 +2568,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2606,7 +2578,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2617,7 +2588,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2628,7 +2598,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2639,7 +2608,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2650,7 +2618,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2661,7 +2628,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2672,7 +2638,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2683,7 +2648,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2694,7 +2658,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2705,7 +2668,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2716,7 +2678,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -2727,7 +2688,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2738,7 +2698,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 25
       },
@@ -2749,7 +2708,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 24
       }
@@ -2864,7 +2822,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "epitaph_pieces_randomization": {
@@ -2916,7 +2874,7 @@
         },
         "randomize_codes": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Codes"
         },
         "randomize_deck": {
@@ -2942,12 +2900,12 @@
         },
         "skip_epilogue": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Epilogue"
         },
         "skip_tutorial": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Skip Tutorial"
         },
         "start_inventory_from_pool": {

@@ -4134,7 +4134,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 29
       },
@@ -4145,7 +4144,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 33
       },
@@ -4156,7 +4154,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -4167,7 +4164,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4178,7 +4174,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 21
       },
@@ -4189,7 +4184,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 24
       },
@@ -4200,7 +4194,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -4211,7 +4204,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -4222,7 +4214,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -4233,7 +4224,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -4244,7 +4234,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4255,7 +4244,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4266,7 +4254,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4277,7 +4264,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4288,7 +4274,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4301,7 +4286,6 @@
           "Ingredient"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4314,7 +4298,6 @@
           "Ingredient"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4325,7 +4308,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -4336,7 +4318,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -4347,7 +4328,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4358,7 +4338,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4369,7 +4348,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4380,7 +4358,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4391,7 +4368,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4402,7 +4378,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4413,7 +4388,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4424,7 +4398,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4435,7 +4408,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4446,7 +4418,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4457,7 +4428,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4468,7 +4438,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4479,7 +4448,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4490,7 +4458,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 18
       },
@@ -4501,7 +4468,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -4512,7 +4478,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -4523,7 +4488,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4704,7 +4668,7 @@
         },
         "big_toss": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Big Toss"
         },
         "bosses_required": {
@@ -4716,7 +4680,7 @@
         },
         "carrie_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Carrie Logic"
         },
         "character_stages": {
@@ -4732,7 +4696,7 @@
         },
         "cinematic_experience": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Cinematic Experience"
         },
         "countdown": {
@@ -4757,7 +4721,7 @@
         },
         "disable_time_restrictions": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Time Requirements"
         },
         "draculas_condition": {
@@ -4773,27 +4737,27 @@
         },
         "drop_previous_sub_weapon": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Drop Previous Sub-weapon"
         },
         "empty_breakables": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Empty Breakables"
         },
         "fall_guard": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Fall Guard"
         },
         "hard_item_pool": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Item Pool"
         },
         "hard_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Logic"
         },
         "ice_trap_appearance": {
@@ -4815,12 +4779,12 @@
         },
         "increase_item_limit": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Increase Item Limit"
         },
         "increase_shimmy_speed": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Increase Shimmy Speed"
         },
         "invisible_items": {
@@ -4836,12 +4800,12 @@
         },
         "lizard_locker_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Lizard Locker Items"
         },
         "loading_zone_heals": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Loading Zone Heals"
         },
         "map_lighting": {
@@ -4869,12 +4833,12 @@
         },
         "multi_hit_breakables": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Multi-hit Breakables"
         },
         "nerf_healing_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Nerf Healing Items"
         },
         "panther_dash": {
@@ -4896,7 +4860,7 @@
         },
         "permanent_powerups": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Permanent PowerUps"
         },
         "post_behemoth_boss": {
@@ -4949,17 +4913,17 @@
         },
         "shopsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shopsanity"
         },
         "skip_gondolas": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Gondolas"
         },
         "skip_waterway_blocks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Skip Waterway Blocks"
         },
         "spare_keys": {
@@ -4981,7 +4945,7 @@
         },
         "stage_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Stage Shuffle"
         },
         "start_inventory_from_pool": {

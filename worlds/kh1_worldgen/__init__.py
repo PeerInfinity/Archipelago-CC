@@ -331,7 +331,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class KingdomHeartsWorldGenWeb(WebWorld):
     """Web interface for Kingdom Hearts WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

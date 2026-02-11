@@ -38,8 +38,10 @@ class VersionInfo:
 # Known version support levels
 # Key is version string, value is (support_level, notes)
 KNOWN_VERSIONS: Dict[str, Tuple[SupportLevel, str]] = {
-    "0.6.5": (SupportLevel.FULL, "Fully supported with pre-made patches"),
-    "0.6.5-rc1": (SupportLevel.FULL, "Fully supported with pre-made patches"),
+    "0.6.7": (SupportLevel.FULL, "Fully supported with pre-made patches"),
+    "0.6.6": (SupportLevel.MONKEY, "Supported via monkey patching"),
+    "0.6.5": (SupportLevel.MONKEY, "Supported via monkey patching"),
+    "0.6.5-rc1": (SupportLevel.MONKEY, "Supported via monkey patching"),
     "0.6.4": (SupportLevel.MONKEY, "Supported via monkey patching"),
     "0.6.3": (SupportLevel.MONKEY, "Supported via monkey patching"),
 }
@@ -48,8 +50,7 @@ KNOWN_VERSIONS: Dict[str, Tuple[SupportLevel, str]] = {
 # Format: {version: {filename: sha256_hash}}
 KNOWN_FILE_HASHES: Dict[str, Dict[str, str]] = {
     # These will be populated with actual hashes
-    "0.6.5": {},
-    "0.6.5-rc1": {},
+    "0.6.7": {},
 }
 
 
@@ -122,7 +123,7 @@ def _get_support_level(
         return level, f"{notes} (version {version_string})"
 
     # Unknown version - try to determine based on version number
-    if version_tuple >= (0, 6, 5):
+    if version_tuple >= (0, 6, 7):
         return SupportLevel.EXPERIMENTAL, "Untested version, may work with monkey patching"
     elif version_tuple >= (0, 6, 0):
         return SupportLevel.MONKEY, "Older version, monkey patching only"

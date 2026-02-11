@@ -3344,7 +3344,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3357,7 +3356,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3371,7 +3369,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3384,7 +3381,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3396,7 +3392,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3410,7 +3405,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3424,7 +3418,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3437,7 +3430,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3450,7 +3442,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3464,7 +3455,6 @@
           "Processing Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3476,7 +3466,6 @@
           "Most Useful Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3488,7 +3477,6 @@
           "Most Useful Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3500,7 +3488,6 @@
           "Most Useful Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3512,7 +3499,6 @@
           "Most Useful Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3524,7 +3510,6 @@
           "Most Useful Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3536,7 +3521,6 @@
           "Most Useful Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3548,7 +3532,6 @@
           "Most Useful Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3560,7 +3543,6 @@
           "Top Row Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3572,7 +3554,6 @@
           "Top Row Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3585,7 +3566,6 @@
           "Top Row Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3597,7 +3577,6 @@
           "Top Row Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3609,7 +3588,6 @@
           "Top Row Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3623,7 +3601,6 @@
           "Wires Layer Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3636,7 +3613,6 @@
           "Wires Layer Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3648,7 +3624,6 @@
           "Wires Layer Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3660,7 +3635,6 @@
           "Wires Layer Buildings"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3672,7 +3646,6 @@
           "Gameplay Mechanics"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3685,7 +3658,6 @@
           "Upgrades"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -3698,7 +3670,6 @@
           "Upgrades"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -3711,7 +3682,6 @@
           "Upgrades"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -3724,7 +3694,6 @@
           "Upgrades"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -3737,7 +3706,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -3750,7 +3718,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -3763,7 +3730,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -3776,7 +3742,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -3789,7 +3754,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3802,7 +3766,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3815,7 +3778,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3828,7 +3790,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3841,7 +3802,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3854,7 +3814,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3867,7 +3826,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3880,7 +3838,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3892,7 +3849,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3904,7 +3860,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3918,7 +3873,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3932,7 +3886,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3946,7 +3899,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3960,7 +3912,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3974,7 +3925,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3988,7 +3938,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4002,7 +3951,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4016,7 +3964,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4028,7 +3975,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -4040,7 +3986,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -4052,7 +3997,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -4064,7 +4008,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4076,7 +4019,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4088,7 +4030,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4100,7 +4041,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4112,7 +4052,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4124,7 +4063,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4136,7 +4074,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4148,7 +4085,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4160,7 +4096,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4172,7 +4107,6 @@
           "Most Important Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4184,7 +4118,6 @@
           "Most Important Buildings"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },

@@ -66,7 +66,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SuperMetroidWorldGenWeb(WebWorld):
     """Web interface for Super Metroid WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

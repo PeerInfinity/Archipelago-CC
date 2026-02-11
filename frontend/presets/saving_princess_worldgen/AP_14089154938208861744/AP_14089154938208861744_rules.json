@@ -701,7 +701,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -713,7 +712,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -725,7 +723,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -737,7 +734,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -749,7 +745,6 @@
           "Upgrades"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "classification_counts": {
@@ -765,7 +760,6 @@
           "Upgrades"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "classification_counts": {
@@ -781,7 +775,6 @@
           "Upgrades"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "classification_counts": {
@@ -797,7 +790,6 @@
           "Upgrades"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -808,7 +800,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -820,7 +811,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -832,7 +822,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -844,7 +833,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -856,7 +844,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -867,7 +854,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -879,7 +865,6 @@
           "Filler"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -891,7 +876,6 @@
           "Filler"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -903,7 +887,6 @@
           "Filler"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -915,7 +898,6 @@
           "Traps"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -927,7 +909,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -939,7 +920,6 @@
           "Traps"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -1104,7 +1084,7 @@
         },
         "expanded_pool": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Expanded Item Pool"
         },
         "iframes_duration": {
@@ -1116,7 +1096,7 @@
         },
         "instant_saving": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Instant Saving"
         },
         "music_shuffle": {

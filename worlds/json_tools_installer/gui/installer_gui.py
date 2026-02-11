@@ -15,6 +15,7 @@ os.environ.setdefault("KIVY_NO_ARGS", "1")
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -53,7 +54,7 @@ class InstallerApp(App):
     comp_scripts = BooleanProperty(True)
     comp_main_patches = BooleanProperty(True)
     comp_romless_patches = BooleanProperty(True)
-    comp_demo_worlds = BooleanProperty(True)
+    comp_demo_worlds = BooleanProperty(False)
     comp_tracker = BooleanProperty(False)
     comp_testing = BooleanProperty(False)
     comp_worldgen_worlds = BooleanProperty(False)
@@ -78,6 +79,7 @@ class InstallerApp(App):
 
     def build(self):
         """Build the UI."""
+        Window.maximize()
         root = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
         # Header
@@ -108,18 +110,22 @@ class InstallerApp(App):
         version_select_box = BoxLayout(size_hint_y=None, height=40)
         version_select_box.add_widget(Label(text='Version:', size_hint_x=0.3))
 
-        stable_box = BoxLayout()
-        stable_cb = CheckBox(group='version', active=True)
+        stable_box = BoxLayout(size_hint_x=0.3)
+        stable_cb = CheckBox(group='version', active=True, size_hint_x=None, width=40)
         stable_cb.bind(active=self.on_version_stable)
         stable_box.add_widget(stable_cb)
-        stable_box.add_widget(Label(text='Stable'))
+        stable_label = Label(text='Stable', halign='left', valign='middle')
+        stable_label.bind(size=stable_label.setter('text_size'))
+        stable_box.add_widget(stable_label)
         version_select_box.add_widget(stable_box)
 
-        dev_box = BoxLayout()
-        dev_cb = CheckBox(group='version', active=False)
+        dev_box = BoxLayout(size_hint_x=0.3)
+        dev_cb = CheckBox(group='version', active=False, size_hint_x=None, width=40)
         dev_cb.bind(active=self.on_version_dev)
         dev_box.add_widget(dev_cb)
-        dev_box.add_widget(Label(text='Dev'))
+        dev_label = Label(text='Dev', halign='left', valign='middle')
+        dev_label.bind(size=dev_label.setter('text_size'))
+        dev_box.add_widget(dev_label)
         version_select_box.add_widget(dev_box)
 
         root.add_widget(version_select_box)
@@ -199,10 +205,8 @@ class InstallerApp(App):
 
             components_box.add_widget(row)
 
-        # Wrap in ScrollView for when there are many components
+        # Wrap in ScrollView - takes all remaining vertical space
         scroll_view = ScrollView(
-            size_hint_y=None,
-            height=min(200, num_components * row_height),  # Max height of 200, scrollable if more
             do_scroll_x=False,
             bar_width=10,
         )
@@ -231,7 +235,7 @@ class InstallerApp(App):
         self.monkey_patch_cb.bind(active=self.on_monkey_patch_toggle)
         monkey_row.add_widget(self.monkey_patch_cb)
         monkey_label = Label(
-            text='Monkey patch',
+            text='Monkey Patch for JSON Export',
             halign='left',
             valign='middle',
         )
@@ -249,7 +253,7 @@ class InstallerApp(App):
         self.main_patch_cb.bind(active=self.on_main_patch_toggle)
         main_patch_row.add_widget(self.main_patch_cb)
         main_patch_label = Label(
-            text='Main patches',
+            text='3 Main Files Patch for JSON Export',
             halign='left',
             valign='middle',
         )
@@ -267,7 +271,7 @@ class InstallerApp(App):
         self.romless_patch_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches', val))
         romless_row.add_widget(self.romless_patch_cb)
         romless_label = Label(
-            text='ROM-less patches',
+            text='11 ROM-less World File Patches',
             halign='left',
             valign='middle',
         )
@@ -318,7 +322,7 @@ class InstallerApp(App):
         self.preset_normal_cb.bind(active=self.on_preset_normal)
         normal_row.add_widget(self.preset_normal_cb)
         normal_label = Label(
-            text='Normal',
+            text='Disable JSON Export',
             halign='left',
             valign='middle',
         )
@@ -337,7 +341,7 @@ class InstallerApp(App):
         self.preset_minimal_cb.bind(active=self.on_preset_minimal)
         minimal_row.add_widget(self.preset_minimal_cb)
         minimal_label = Label(
-            text='Minimal spoilers',
+            text='Enable JSON Export - Minimal Spoilers',
             halign='left',
             valign='middle',
         )
@@ -557,13 +561,13 @@ class InstallerApp(App):
 PATCH OPTIONS
 The installer offers three ways to enable JSON export functionality:
 
-[b]Monkey Patch[/b] (Recommended)
+[b]Monkey Patch for JSON Export[/b] (Recommended)
 Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
 
-[b]Main Patches[/b]
+[b]3 Main Files Patch for JSON Export[/b]
 Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
 
-[b]ROM-less Patches[/b]
+[b]11 ROM-less World File Patches[/b]
 Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
 
 Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
@@ -574,10 +578,10 @@ Configure how Archipelago exports game data to host.yaml:
 [b]Configure host.yaml[/b]
 When enabled, the installer automatically adds export settings to your host.yaml file. This eliminates the need to manually run setup scripts after installation.
 
-[b]Normal[/b]
+[b]Disable JSON Export[/b]
 Standard settings with JSON export disabled. Use this if you only want the tools installed but don't need automatic JSON export during seed generation.
 
-[b]Minimal spoilers[/b]
+[b]Enable JSON Export - Minimal Spoilers[/b]
 Enables JSON rules export and sphere logging. This is what you need to use the frontend web UI for viewing game logic and playthroughs. Automatically updates frontend presets when generating seeds.
 
 COMPONENTS
@@ -586,7 +590,6 @@ Select which parts of JSON Tools to install:
 - Frontend web UI for viewing game logic
 - Scripts for testing and setup
 - Documentation
-- Demo worlds for learning
 
 VERSION
 - Stable: Release-quality code from JSONExport branch

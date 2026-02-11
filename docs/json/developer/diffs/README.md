@@ -1,10 +1,10 @@
 # Diff Files from Upstream
 
-This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository at commit `1dd91ec85b894c2a1d62ad688af074f2166ee621` (February 5, 2026, 0.6.5+80).
+This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The patches are designed for **Archipelago 0.6.7**. The diffs were originally generated against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621` (February 5, 2026, 0.6.5+80) and have been updated for 0.6.7.
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (194 lines)
+### 1. `core-files.diff` (155 lines)
 Changes to the main Archipelago core files:
 - **BaseClasses.py** - Core data structures and sphere logging modifications
 - **Main.py** - Main generation logic, vanilla placement trigger, JSON export, pickle export, and workflow changes
@@ -12,7 +12,7 @@ Changes to the main Archipelago core files:
 
 These are the most significant changes that affect core Archipelago functionality.
 
-### 2. `config-files.diff` (169 lines)
+### 2. `config-files.diff` (175 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
@@ -28,7 +28,7 @@ Bug fixes for ALttP's `set_bunny_rules()` function:
 
 These bugs caused superbunny access rules to always evaluate to `True` in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `world-init-files.diff` (494 lines)
+### 4. `world-init-files.diff` (472 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -74,8 +74,8 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 
 ## Notes
 
-- These diffs were last updated on 2026-02-06 against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
-- Total lines changed across all diffs: 884 lines (194 + 169 + 27 + 494)
+- These diffs are designed for Archipelago **0.6.7**, originally generated against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
+- Total lines changed across all diffs: 829 lines (155 + 175 + 27 + 472)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
@@ -121,11 +121,15 @@ python -m worlds.json_tools_installer status
 
 | Component | Description | Default |
 |-----------|-------------|---------|
-| `core` | Exporter, rule_builder, world_generator modules | Yes |
-| `scripts` | Utility scripts (setup, test, build) | Yes |
-| `frontend` | Web-based frontend for presets | No |
-| `presets` | Preset configurations (requires frontend) | No |
-| `docs` | Documentation files | No |
+| `exporter` | Export game logic to JSON format | Yes |
+| `rule_builder` | Build access rules from JSON definitions | Yes |
+| `world_generator` | Generate world packages from JSON rules | Yes |
+| `frontend` | Web UI for viewing game logic (excludes presets) | Yes |
+| `presets` | Pre-generated game data (~75MB, requires frontend) | No |
+| `docs` | JSON Tools documentation | Yes |
+| `scripts` | Utility scripts for testing and setup | Yes |
+| `main_patches` | Patched core files for JSON export support | Yes |
+| `romless_patches` | Patched world files for generation without ROMs | Yes |
 
 ### Version Sources
 

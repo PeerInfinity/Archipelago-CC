@@ -853,7 +853,7 @@ STARTING_ITEMS: Dict[str, int] = {{
 class {class_name}Web(WebWorld):
     """Web interface for {game_name}."""
     theme = "{web_theme}"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = {tutorials_content}
 
 

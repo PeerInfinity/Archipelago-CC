@@ -4288,7 +4288,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4299,7 +4298,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 27,
         "hint_text": "1 Up Balloon"
@@ -4311,7 +4309,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 18
       },
@@ -4322,7 +4319,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 85
       },
@@ -4333,7 +4329,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 41
       },
@@ -4344,7 +4339,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4355,7 +4349,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -4366,7 +4359,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3
       }
@@ -4624,7 +4616,7 @@
         },
         "autosave": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Autosave"
         },
         "difficulty": {

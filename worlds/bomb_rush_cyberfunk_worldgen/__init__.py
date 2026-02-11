@@ -206,7 +206,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class BombRushCyberfunkWorldGenWeb(WebWorld):
     """Web interface for Bomb Rush Cyberfunk WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

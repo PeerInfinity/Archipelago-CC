@@ -1086,7 +1086,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1098,7 +1097,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1110,7 +1108,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1122,7 +1119,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1134,7 +1130,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1146,7 +1141,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1158,7 +1152,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1170,7 +1163,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1182,7 +1174,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Item 1   Propeller"
@@ -1195,7 +1186,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Item 2   Rocket"
@@ -1208,7 +1198,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Item 3   Bouncy"
@@ -1220,7 +1209,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5,
         "hint_text": "1 Up"
@@ -1232,7 +1220,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -1243,7 +1230,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -1254,7 +1240,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "E Tank"
@@ -1267,7 +1252,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1279,7 +1263,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1291,7 +1274,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1303,7 +1285,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1315,7 +1296,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1327,7 +1307,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1339,7 +1318,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1351,7 +1329,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1627,7 +1604,7 @@
         },
         "quickswap": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Quickswap"
         },
         "random_music": {

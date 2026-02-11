@@ -16609,7 +16609,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "ETank",
         "max_count": 14
       },
@@ -16620,7 +16619,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Missile",
         "max_count": 30,
         "classification_counts": {
@@ -16635,7 +16633,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Super",
         "max_count": 25,
         "classification_counts": {
@@ -16650,7 +16647,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "PowerBomb",
         "max_count": 11,
         "classification_counts": {
@@ -16665,7 +16661,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Bomb",
         "max_count": 1
       },
@@ -16676,7 +16671,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Charge",
         "max_count": 1
       },
@@ -16687,7 +16681,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Ice",
         "max_count": 1
       },
@@ -16699,7 +16692,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "HiJump",
         "max_count": 1
       },
@@ -16710,7 +16702,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "SpeedBooster",
         "max_count": 1
       },
@@ -16721,7 +16712,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Wave",
         "max_count": 1
       },
@@ -16732,7 +16722,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Spazer",
         "max_count": 1
       },
@@ -16743,7 +16732,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "SpringBall",
         "max_count": 1
       },
@@ -16754,7 +16742,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Varia",
         "max_count": 1
       },
@@ -16765,7 +16752,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Gravity",
         "max_count": 1
       },
@@ -16777,7 +16763,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "XRayScope",
         "max_count": 1
       },
@@ -16788,7 +16773,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Plasma",
         "max_count": 1
       },
@@ -16799,7 +16783,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Grapple",
         "max_count": 1
       },
@@ -16810,7 +16793,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "SpaceJump",
         "max_count": 1
       },
@@ -16821,7 +16803,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "ScrewAttack",
         "max_count": 1
       },
@@ -16832,7 +16813,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Morph",
         "max_count": 1
       },
@@ -16843,7 +16823,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Reserve",
         "max_count": 4
       },
@@ -16854,7 +16833,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": "ArchipelagoItem",
         "max_count": 1
       },
@@ -16865,7 +16843,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": "Nothing",
         "max_count": 1
       },
@@ -16876,7 +16853,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": "NoEnergy",
         "max_count": 1
       },
@@ -17112,17 +17088,17 @@
         },
         "allow_grey_doors": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Allow Grey Doors"
         },
         "animals": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Animals"
         },
         "area_layout": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Area Layout"
         },
         "area_randomization": {
@@ -17137,12 +17113,12 @@
         },
         "boss_randomization": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Boss Randomization"
         },
         "custom_objective": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Custom objectives"
         },
         "custom_objective_count": {
@@ -17164,12 +17140,12 @@
         },
         "doors_colors_rando": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Doors Colors Rando"
         },
         "elevators_speed": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Elevators speed"
         },
         "energy_qty": {
@@ -17185,27 +17161,27 @@
         },
         "escape_rando": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize the escape sequence"
         },
         "fast_doors": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Doors speed"
         },
         "fun_combat": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Fun Combat"
         },
         "fun_movement": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Fun Movement"
         },
         "fun_suits": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Fun Suits"
         },
         "gravity_behaviour": {
@@ -17220,22 +17196,22 @@
         },
         "hide_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hide half the items"
         },
         "hud": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hud"
         },
         "infinite_space_jump": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Infinite Space Jump"
         },
         "layout_patches": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Layout Patches"
         },
         "max_difficulty": {
@@ -17277,12 +17253,12 @@
         },
         "nerfed_charge": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Nerfed Charge"
         },
         "no_music": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "No Music"
         },
         "power_bomb_qty": {
@@ -17320,42 +17296,42 @@
         },
         "rando_speed": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Momentum conservation (a.k.a. Speedkeep)"
         },
         "random_music": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Music"
         },
         "refill_before_save": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Refill Before Save"
         },
         "relaxed_round_robin_cf": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Relaxed round robin Crystal Flash"
         },
         "remote_items": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Remote Items"
         },
         "remove_escape_enemies": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Remove enemies during escape"
         },
         "spin_jump_restart": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Spin Jump Restart"
         },
         "start_inventory_removes_from_pool": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "StartItems Removes From Item Pool"
         },
         "start_location": {
@@ -17382,7 +17358,7 @@
         },
         "strict_minors": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Strict Minors"
         },
         "super_qty": {
@@ -17404,7 +17380,7 @@
         },
         "varia_tweaks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Varia Tweaks"
         }
       },
