@@ -185,7 +185,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SecretofEvermoreWorldGenWeb(WebWorld):
     """Web interface for Secret of Evermore WorldGen."""
     theme = "jungle"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

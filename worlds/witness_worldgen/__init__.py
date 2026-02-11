@@ -67,7 +67,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class TheWitnessWorldGenWeb(WebWorld):
     """Web interface for The Witness WorldGen."""
     theme = "jungle"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

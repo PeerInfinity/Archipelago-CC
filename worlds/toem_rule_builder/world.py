@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 class ToemWebWorld(WebWorld):
     theme: ClassVar[str] = "grassFlowers"
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials: list[Tutorial] = [  # noqa: RUF012
         Tutorial(
             tutorial_name="Setup Guide",

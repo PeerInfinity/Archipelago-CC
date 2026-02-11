@@ -1015,7 +1015,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class YuGiOh2006WorldGenWeb(WebWorld):
     """Web interface for Yu-Gi-Oh! 2006 WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

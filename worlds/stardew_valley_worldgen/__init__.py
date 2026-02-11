@@ -372,7 +372,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class StardewValleyWorldGenWeb(WebWorld):
     """Web interface for Stardew Valley WorldGen."""
     theme = "dirt"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

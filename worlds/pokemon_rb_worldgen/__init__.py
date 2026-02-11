@@ -995,7 +995,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class PokemonRedandBlueWorldGenWeb(WebWorld):
     """Web interface for Pokemon Red and Blue WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

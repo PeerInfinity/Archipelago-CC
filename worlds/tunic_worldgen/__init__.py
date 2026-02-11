@@ -174,7 +174,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class TUNICWorldGenWeb(WebWorld):
     """Web interface for TUNIC WorldGen."""
     theme = "grassFlowers"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

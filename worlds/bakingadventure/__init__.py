@@ -10,7 +10,7 @@ from .Options import BakingAdventureOptions
 
 class BakingAdventureWeb(WebWorld):
     theme = "partyTime"
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
         "A guide to setting up the Archipelago Baking Adventure randomizer on your computer.",

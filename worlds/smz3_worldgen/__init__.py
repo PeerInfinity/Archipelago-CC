@@ -205,7 +205,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SMZ3WorldGenWeb(WebWorld):
     """Web interface for SMZ3 WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
