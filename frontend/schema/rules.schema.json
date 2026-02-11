@@ -281,6 +281,11 @@
       "type": "string",
       "description": "The seed name string for this generation."
     },
+    "placement_type": {
+      "type": ["string", "null"],
+      "enum": ["vanilla", "canonical", null],
+      "description": "Type of item placement in this rules file. 'vanilla' = items in their original locations from the non-randomized game. 'canonical' = items placed back where they were when this rules.json was originally exported (worldgen deterministic placement). null or absent = standard randomized placement."
+    },
     "canonical_placements": {
       "type": "object",
       "description": "Canonical item placements for deterministic seed generation, keyed by player slot ID (string).",

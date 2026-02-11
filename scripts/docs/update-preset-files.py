@@ -507,6 +507,42 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
     return updated_preset_files
 
 
+def update_placement_types(preset_files: Dict[str, Any], presets_dir: str) -> int:
+    """Scan rules.json files for placement_type and add to folder entries in preset_files.
+
+    Returns the number of folders updated.
+    """
+    updated_count = 0
+    for game_id, game_data in preset_files.items():
+        if game_id == 'metadata' or not isinstance(game_data, dict):
+            continue
+        folders = game_data.get('folders', {})
+        for folder_name, folder_data in folders.items():
+            if not isinstance(folder_data, dict):
+                continue
+            # Skip if placement_type already set
+            if 'placement_type' in folder_data:
+                continue
+            # Find the rules.json file in this folder
+            files = folder_data.get('files', [])
+            rules_file = next((f for f in files if f.endswith('_rules.json')), None)
+            if not rules_file:
+                continue
+            rules_path = os.path.join(presets_dir, game_id, folder_name, rules_file)
+            if not os.path.exists(rules_path):
+                continue
+            try:
+                with open(rules_path, 'r') as f:
+                    rules_data = json.load(f)
+                placement_type = rules_data.get('placement_type')
+                if placement_type:
+                    folder_data['placement_type'] = placement_type
+                    updated_count += 1
+            except (json.JSONDecodeError, IOError):
+                pass
+    return updated_count
+
+
 def save_preset_files(preset_files: Dict[str, Any], output_path: str):
     """Save the updated preset_files.json."""
     try:
@@ -622,7 +658,13 @@ def main():
     # Update preset files with test data from all sources
     print(f"\nUpdating preset files with test data...")
     updated_preset_files = update_preset_files_with_all_test_data(preset_files, all_test_results)
-    
+
+    # Scan rules.json files for placement_type metadata and backfill into preset_files
+    presets_dir = os.path.join(project_root, os.path.dirname(args.preset_files))
+    placement_count = update_placement_types(updated_preset_files, presets_dir)
+    if placement_count > 0:
+        print(f"\nUpdated {placement_count} folder(s) with placement_type from rules.json files")
+
     # Save or display results
     if args.dry_run:
         print(f"\nDry run complete. Would update: {output_path}")

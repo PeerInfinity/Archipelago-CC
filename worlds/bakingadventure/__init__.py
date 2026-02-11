@@ -42,6 +42,9 @@ class BakingAdventureWorld(World):
         "Event": frozenset(["Victory"]),
     }
 
+    # Placement type: "vanilla" = original game's intended item layout
+    placement_type: ClassVar[str] = "vanilla"
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

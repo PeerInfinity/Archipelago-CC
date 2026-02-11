@@ -6146,7 +6146,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6162,7 +6163,8 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -6178,7 +6180,8 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       }
     },
     "test_result": {
@@ -6262,7 +6265,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6278,7 +6282,8 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -6294,7 +6299,8 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       }
     },
     "test_result": {
@@ -6378,7 +6384,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6394,7 +6401,8 @@
           "AP_01043188731678011336_Spoiler.txt",
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -6410,7 +6418,8 @@
           "AP_84719271504320872445_Spoiler.txt",
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "vanilla"
       }
     },
     "test_result": {
@@ -6730,7 +6739,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6751,7 +6761,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6772,7 +6783,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6793,7 +6805,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6814,7 +6827,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6835,7 +6849,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6856,7 +6871,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6877,7 +6893,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6898,7 +6915,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6919,7 +6937,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6940,7 +6959,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6961,7 +6981,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -6982,7 +7003,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7003,7 +7025,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7024,7 +7047,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7045,7 +7069,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7066,7 +7091,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7087,7 +7113,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7108,7 +7135,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7129,7 +7157,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7150,7 +7179,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7171,7 +7201,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7192,7 +7223,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7213,7 +7245,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7234,7 +7267,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7255,7 +7289,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7276,7 +7311,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7297,7 +7333,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7318,7 +7355,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7339,7 +7377,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7360,7 +7399,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7381,7 +7421,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7402,7 +7443,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7423,7 +7465,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7444,7 +7487,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7465,7 +7509,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7486,7 +7531,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7507,7 +7553,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7528,7 +7575,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7549,7 +7597,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7570,7 +7619,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7591,7 +7641,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7612,7 +7663,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7633,7 +7685,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7654,7 +7707,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7675,7 +7729,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7696,7 +7751,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7717,7 +7773,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7738,7 +7795,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7759,7 +7817,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7780,7 +7839,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7801,7 +7861,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7822,7 +7883,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7843,7 +7905,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7864,7 +7927,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7885,7 +7949,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7906,7 +7971,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7927,7 +7993,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7948,7 +8015,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7969,7 +8037,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -7990,7 +8059,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8011,7 +8081,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8032,7 +8103,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8053,7 +8125,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8074,7 +8147,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8095,7 +8169,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8116,7 +8191,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8137,7 +8213,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8179,7 +8256,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8200,7 +8278,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8221,7 +8300,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8242,7 +8322,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8263,7 +8344,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   },
@@ -8284,7 +8366,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "placement_type": "canonical"
       }
     }
   }

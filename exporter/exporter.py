@@ -1262,6 +1262,18 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
             export_data['canonical_placements'][player_str] = {}
 
+    # Determine placement_type from world class attributes
+    # Check all players' worlds - if any has a placement_type, use it
+    placement_type = None
+    for player in multiworld.player_ids:
+        world = multiworld.worlds[player]
+        pt = getattr(world.__class__, 'placement_type', None) or getattr(world, 'placement_type', None)
+        if pt:
+            placement_type = pt
+            break
+    if placement_type:
+        export_data['placement_type'] = placement_type
+
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
     #    export_data['debug_spoiler_entrances'] = {}
@@ -2976,11 +2988,17 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 })
 
             # Update preset entry
-            preset_index[clean_game_name]["folders"][filename_base] = {
+            folder_entry = {
                 "seed": multiworld.seed,
                 "games": player_game_data,
                 "files": preset_files
             }
+
+            # Add placement_type if present in export data
+            if export_data.get('placement_type'):
+                folder_entry["placement_type"] = export_data['placement_type']
+
+            preset_index[clean_game_name]["folders"][filename_base] = folder_entry
             
             # Write updated index
             try:

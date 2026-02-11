@@ -419,6 +419,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         return super().collect_item(state, item, remove)
 '''
 
+    # Generate placement_type class attribute (for exporter to read)
+    if canonical_seed is not None and canonical_class_attr_content:
+        placement_type_section = '''
+    # Placement type: "canonical" = items placed back where they were when this rules.json was exported
+    placement_type: ClassVar[str] = "canonical"
+'''
+    else:
+        placement_type_section = ''
+
     # Generate canonical_placements class attribute (for exporter to read)
     if canonical_seed is not None and canonical_class_attr_content:
         canonical_placements_section = f'''
@@ -885,7 +894,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
