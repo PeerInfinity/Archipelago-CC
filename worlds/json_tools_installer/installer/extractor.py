@@ -238,7 +238,7 @@ def should_extract_file(
             if rel_path.startswith(source_path + "/") or rel_path == source_path:
                 # Special case: exclude presets from frontend if presets not selected
                 if comp_name == "frontend" and "presets" not in components:
-                    if "presets" in rel_path:
+                    if rel_path.startswith("frontend/presets/"):
                         return False
                 return True
 

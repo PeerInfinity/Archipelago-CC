@@ -5,6 +5,7 @@ Provides a menu to launch utility scripts and quick actions.
 """
 
 import os
+import queue
 import subprocess
 import sys
 import threading
@@ -20,6 +21,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 
 from Utils import local_path
@@ -293,11 +295,11 @@ class ScriptsApp(App):
 
         # Run command
         if action.command:
-            self.run_command_in_terminal(action.command, action.name)
+            self.run_command_with_output(action.command, action.name)
         elif action.script_path:
             script_path = Path(local_path(action.script_path))
             if script_path.exists():
-                self.run_command_in_terminal([sys.executable, str(script_path)], action.name)
+                self.run_command_with_output([sys.executable, str(script_path)], action.name)
             else:
                 self.show_message("Error", f"Script not found: {action.script_path}")
 
@@ -468,50 +470,103 @@ class ScriptsApp(App):
         thread.daemon = True
         thread.start()
 
-    def run_command_in_terminal(self, command: list, title: str):
-        """Run a command in a new terminal window."""
+    def run_command_with_output(self, command: list, title: str):
+        """Run a command and show its output in a popup window."""
         project_root = local_path()
 
-        try:
-            if sys.platform == 'win32':
-                # Windows: open in new cmd window
-                cmd_str = ' '.join(f'"{c}"' if ' ' in str(c) else str(c) for c in command)
-                subprocess.Popen(
-                    f'start cmd /k "cd /d {project_root} && {cmd_str}"',
-                    shell=True,
-                )
-            elif sys.platform == 'darwin':
-                # macOS: open in Terminal
-                cmd_str = ' '.join(f'"{c}"' if ' ' in str(c) else str(c) for c in command)
-                subprocess.Popen([
-                    'osascript', '-e',
-                    f'tell application "Terminal" to do script "cd {project_root} && {cmd_str}"'
-                ])
-            else:
-                # Linux: try common terminals
-                terminals = ['gnome-terminal', 'konsole', 'xfce4-terminal', 'xterm']
-                for term in terminals:
-                    try:
-                        if term == 'gnome-terminal':
-                            subprocess.Popen([
-                                term, '--', *command
-                            ], cwd=project_root)
-                        else:
-                            cmd_str = ' '.join(f'"{c}"' if ' ' in str(c) else str(c) for c in command)
-                            subprocess.Popen([
-                                term, '-e', cmd_str
-                            ], cwd=project_root)
-                        break
-                    except FileNotFoundError:
-                        continue
-                else:
-                    # Fallback: run directly (output won't be visible)
-                    subprocess.Popen(command, cwd=project_root)
+        # Build the output popup
+        content = BoxLayout(orientation='vertical', padding=10, spacing=5)
 
-            self.show_message("Launched", f"Running: {title}")
+        output_widget = TextInput(
+            text='',
+            readonly=True,
+            size_hint_y=1,
+            multiline=True,
+            font_size='12sp',
+            background_color=(0.1, 0.1, 0.1, 1),
+            foreground_color=(0.9, 0.9, 0.9, 1),
+        )
+        content.add_widget(output_widget)
+
+        close_btn = Button(text='Close', size_hint_y=None, height=40)
+        content.add_widget(close_btn)
+
+        popup = Popup(title=title, content=content, size_hint=(0.95, 0.85))
+        close_btn.bind(on_press=popup.dismiss)
+        popup.open()
+
+        output_queue = queue.Queue()
+
+        def read_output(process):
+            """Read subprocess output line by line into the queue."""
+            try:
+                for line in process.stdout:
+                    output_queue.put(line)
+            except Exception:
+                pass
+            finally:
+                process.wait()
+                exit_code = process.returncode
+                if exit_code == 0:
+                    output_queue.put(f"\n--- Finished (exit code {exit_code}) ---\n")
+                else:
+                    output_queue.put(f"\n--- Failed (exit code {exit_code}) ---\n")
+                output_queue.put(None)  # Sentinel
+
+        def drain_queue(dt):
+            """Drain queued output into the text widget (runs on main thread)."""
+            try:
+                while True:
+                    line = output_queue.get_nowait()
+                    if line is None:
+                        # Process finished, stop polling
+                        Clock.unschedule(drain_queue)
+                        return
+                    output_widget.text += line
+                    # Auto-scroll to bottom
+                    output_widget.cursor = (0, len(output_widget._lines) - 1)
+            except queue.Empty:
+                pass
+
+        try:
+            # Strip 'input()' calls from inline Python commands since we capture output
+            cleaned_command = list(command)
+            for i, arg in enumerate(cleaned_command):
+                if isinstance(arg, str) and "input('Press Enter" in arg:
+                    cleaned_command[i] = arg.replace(
+                        "input('Press Enter to close...')", "pass"
+                    )
+
+            env = os.environ.copy()
+            env["PYTHONUNBUFFERED"] = "1"
+
+            process = subprocess.Popen(
+                cleaned_command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                cwd=project_root,
+                env=env,
+                text=True,
+                bufsize=1,
+            )
+
+            reader_thread = threading.Thread(target=read_output, args=(process,))
+            reader_thread.daemon = True
+            reader_thread.start()
+
+            # Poll the queue every 100ms to update the UI
+            Clock.schedule_interval(drain_queue, 0.1)
+
+            # Kill the subprocess if the popup is closed early
+            def on_popup_dismiss(instance):
+                if process.poll() is None:
+                    process.terminate()
+                Clock.unschedule(drain_queue)
+
+            popup.bind(on_dismiss=on_popup_dismiss)
 
         except Exception as e:
-            self.show_message("Error", f"Failed to run: {e}")
+            output_widget.text = f"Failed to run command: {e}"
 
     def open_scripts_folder(self, instance):
         """Open the scripts folder in file manager."""
