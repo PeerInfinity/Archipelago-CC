@@ -10617,7 +10617,6 @@
           "Train Upgrade"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 637
       },
@@ -10629,7 +10628,6 @@
           "Train Upgrade"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -10641,7 +10639,6 @@
           "Train Upgrade"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10652,7 +10649,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -10664,7 +10660,6 @@
           "Train Upgrade"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10676,7 +10671,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10688,7 +10682,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10700,7 +10693,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10712,7 +10704,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10724,7 +10715,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10736,7 +10726,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10748,7 +10737,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10760,7 +10748,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10772,7 +10759,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10784,7 +10770,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -10796,7 +10781,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10808,7 +10792,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10820,7 +10803,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10832,7 +10814,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -10844,7 +10825,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10856,7 +10836,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10868,7 +10847,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10880,7 +10858,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10892,7 +10869,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10904,7 +10880,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10916,7 +10891,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10928,7 +10902,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10940,7 +10913,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10952,7 +10924,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10964,7 +10935,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10976,7 +10946,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10988,7 +10957,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11000,7 +10968,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11012,7 +10979,6 @@
           "Paint Can"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11024,7 +10990,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11036,7 +11001,6 @@
           "Weapons"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11048,7 +11012,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11060,7 +11023,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11072,7 +11034,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11084,7 +11045,6 @@
           "Mission Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11096,7 +11056,6 @@
           "Mission Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11108,7 +11067,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11120,7 +11078,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },

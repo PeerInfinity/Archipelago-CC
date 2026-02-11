@@ -18675,7 +18675,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18687,7 +18686,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18699,7 +18697,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18711,7 +18708,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18723,7 +18719,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18735,7 +18730,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18747,7 +18741,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18759,7 +18752,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18771,7 +18763,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18783,7 +18774,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18795,7 +18785,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18807,7 +18796,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18819,7 +18807,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18831,7 +18818,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18842,7 +18828,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 23,
         "classification_counts": {
@@ -18858,7 +18843,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -18869,7 +18853,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18880,7 +18863,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -18891,7 +18873,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18902,7 +18883,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18913,7 +18893,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -18924,7 +18903,6 @@
           "Everything"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -18935,7 +18913,6 @@
           "Everything"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -18946,7 +18923,6 @@
           "Everything"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -19486,7 +19462,7 @@
         },
         "boss_requirement_random": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Purification Requirement"
         },
         "boss_shuffle": {
@@ -19502,7 +19478,7 @@
         },
         "consumables": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Consumable-sanity"
         },
         "copy_ability_randomization": {
@@ -19517,7 +19493,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "filler_percentage": {
@@ -19538,7 +19514,7 @@
         },
         "gifting": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Gifting"
         },
         "goal": {
@@ -19646,7 +19622,7 @@
         },
         "open_world": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Open World"
         },
         "ow_boss_requirement": {
@@ -19670,7 +19646,7 @@
         },
         "remote_items": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Remote Items"
         },
         "slow_trap_weight": {
@@ -19693,12 +19669,12 @@
         },
         "starsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Starsanity"
         },
         "strict_bosses": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Strict Bosses"
         },
         "total_heart_stars": {

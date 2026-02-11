@@ -221,7 +221,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -232,7 +231,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -243,7 +241,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -254,7 +251,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -265,7 +261,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -276,7 +271,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -287,7 +281,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -383,17 +376,17 @@
         },
         "extra_starting_chest": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Extra Starting Chest"
         },
         "hammer": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hammer"
         },
         "hard_mode": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hard Mode"
         },
         "player_sprite": {
@@ -416,7 +409,7 @@
         },
         "start_with_one_confetti_cannon": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Start With One Confetti Cannon"
         },
         "trap_chance": {

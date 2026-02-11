@@ -12413,7 +12413,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12425,7 +12424,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12444,7 +12442,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12463,7 +12460,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12482,7 +12478,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12494,7 +12489,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12513,7 +12507,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12525,7 +12518,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12537,7 +12529,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12556,7 +12547,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12568,7 +12558,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12587,7 +12576,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12599,7 +12587,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12618,7 +12605,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12637,7 +12623,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12656,7 +12641,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12668,7 +12652,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12680,7 +12663,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12692,7 +12674,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12704,7 +12685,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12723,7 +12703,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12747,7 +12726,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12766,7 +12744,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12778,7 +12755,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12797,7 +12773,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12809,7 +12784,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12821,7 +12795,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12833,7 +12806,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12857,7 +12829,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12869,7 +12840,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12881,7 +12851,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12893,7 +12862,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12912,7 +12880,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12924,7 +12891,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12935,7 +12901,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -12946,7 +12911,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12965,7 +12929,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -12989,7 +12952,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13013,7 +12975,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13042,7 +13003,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13081,7 +13041,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13110,7 +13069,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13144,7 +13102,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13177,7 +13134,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13195,7 +13151,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13206,7 +13161,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3,
         "provides": [
@@ -13225,7 +13179,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13237,7 +13190,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -13249,7 +13201,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -13262,7 +13213,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -13273,7 +13223,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3,
         "provides": [
@@ -13293,7 +13242,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -13306,7 +13254,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13319,7 +13266,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 23
       },
@@ -13332,7 +13278,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -13345,7 +13290,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13357,7 +13301,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 12,
         "provides": [
@@ -13377,7 +13320,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13390,7 +13332,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -13403,7 +13344,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -13416,7 +13356,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13428,7 +13367,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13441,7 +13379,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -13453,7 +13390,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13466,7 +13402,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -13479,7 +13414,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13492,7 +13426,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -13505,7 +13438,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13517,7 +13449,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -13530,7 +13461,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13543,7 +13473,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13554,7 +13483,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3,
         "provides": [
@@ -13574,7 +13502,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -13585,7 +13512,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -13605,7 +13531,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13618,7 +13543,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13631,7 +13555,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13644,7 +13567,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13657,7 +13579,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13669,7 +13590,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13680,7 +13600,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4,
         "provides": [
@@ -13700,7 +13619,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13712,7 +13630,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13725,7 +13642,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13738,7 +13654,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13749,7 +13664,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13760,7 +13674,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13772,7 +13685,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -13785,7 +13697,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -13798,7 +13709,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13810,7 +13720,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -13821,7 +13730,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 5,
         "provides": [
@@ -13841,7 +13749,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13854,7 +13761,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13866,7 +13772,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2,
         "provides": [
@@ -13886,7 +13791,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -13899,7 +13803,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13912,7 +13815,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -13925,7 +13827,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13938,7 +13839,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13951,7 +13851,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13964,7 +13863,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -13977,7 +13875,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -13990,7 +13887,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14003,7 +13899,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14015,7 +13910,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14028,7 +13922,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14041,7 +13934,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14054,7 +13946,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -14067,7 +13958,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14079,7 +13969,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14091,7 +13980,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14111,7 +13999,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14124,7 +14011,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -14137,7 +14023,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14150,7 +14035,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14161,7 +14045,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14172,7 +14055,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -14185,7 +14067,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14198,7 +14079,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14211,7 +14091,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14223,7 +14102,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14235,7 +14113,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14248,7 +14125,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14261,7 +14137,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14274,7 +14149,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14287,7 +14161,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14300,7 +14173,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14313,7 +14185,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14326,7 +14197,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14338,7 +14208,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14351,7 +14220,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14364,7 +14232,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14377,7 +14244,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14389,7 +14255,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14402,7 +14267,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14414,7 +14278,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14426,7 +14289,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14471,7 +14333,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -14484,7 +14345,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14497,7 +14357,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14510,7 +14369,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14522,7 +14380,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14555,7 +14412,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14580,7 +14436,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14591,7 +14446,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14614,7 +14468,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14633,7 +14486,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14673,7 +14525,6 @@
           "Ingredients"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14684,7 +14535,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14702,7 +14552,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "provides": [
@@ -14721,7 +14570,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14733,7 +14581,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14745,7 +14592,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14757,7 +14603,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14769,7 +14614,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14780,7 +14624,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14791,7 +14634,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14802,7 +14644,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14813,7 +14654,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14824,7 +14664,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14835,7 +14674,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14846,7 +14684,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14857,7 +14694,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -14868,7 +14704,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },

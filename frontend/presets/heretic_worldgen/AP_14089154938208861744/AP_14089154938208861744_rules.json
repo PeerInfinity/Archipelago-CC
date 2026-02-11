@@ -9680,7 +9680,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9692,7 +9691,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9704,7 +9702,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9716,7 +9713,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9728,7 +9724,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9740,7 +9735,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9751,7 +9745,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -9763,7 +9756,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -9775,7 +9767,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -9787,7 +9778,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -9799,7 +9789,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 22
       },
@@ -9811,7 +9800,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -9823,7 +9811,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -9835,7 +9822,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 48
       },
@@ -9847,7 +9833,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 48
       },
@@ -9859,7 +9844,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -9871,7 +9855,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 30
       },
@@ -9883,7 +9866,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -9895,7 +9877,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 20
       },
@@ -9907,7 +9888,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 17
       },
@@ -9919,7 +9899,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 30
       },
@@ -9931,7 +9910,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 30
       },
@@ -9943,7 +9921,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 26
       },
@@ -9955,7 +9932,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 30
       },
@@ -9967,7 +9943,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Docks (E1M1)   Yellow key"
@@ -9980,7 +9955,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Dungeons (E1M2)   Yellow key"
@@ -9993,7 +9967,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Dungeons (E1M2)   Green key"
@@ -10006,7 +9979,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Dungeons (E1M2)   Blue key"
@@ -10019,7 +9991,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gatehouse (E1M3)   Yellow key"
@@ -10032,7 +10003,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gatehouse (E1M3)   Green key"
@@ -10045,7 +10015,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Guard Tower (E1M4)   Yellow key"
@@ -10058,7 +10027,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Guard Tower (E1M4)   Green key"
@@ -10071,7 +10039,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (E1M5)   Green key"
@@ -10084,7 +10051,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (E1M5)   Yellow key"
@@ -10097,7 +10063,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (E1M5)   Blue key"
@@ -10110,7 +10075,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cathedral (E1M6)   Yellow key"
@@ -10123,7 +10087,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cathedral (E1M6)   Green key"
@@ -10136,7 +10099,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crypts (E1M7)   Yellow key"
@@ -10149,7 +10111,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crypts (E1M7)   Green key"
@@ -10162,7 +10123,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crypts (E1M7)   Blue key"
@@ -10175,7 +10135,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Graveyard (E1M9)   Yellow key"
@@ -10188,7 +10147,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Graveyard (E1M9)   Green key"
@@ -10201,7 +10159,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Graveyard (E1M9)   Blue key"
@@ -10214,7 +10171,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crater (E2M1)   Yellow key"
@@ -10227,7 +10183,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crater (E2M1)   Green key"
@@ -10240,7 +10195,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Lava Pits (E2M2)   Green key"
@@ -10253,7 +10207,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Lava Pits (E2M2)   Yellow key"
@@ -10266,7 +10219,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The River of Fire (E2M3)   Yellow key"
@@ -10279,7 +10231,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The River of Fire (E2M3)   Blue key"
@@ -10292,7 +10243,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The River of Fire (E2M3)   Green key"
@@ -10305,7 +10255,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ice Grotto (E2M4)   Yellow key"
@@ -10318,7 +10267,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ice Grotto (E2M4)   Blue key"
@@ -10331,7 +10279,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ice Grotto (E2M4)   Green key"
@@ -10344,7 +10291,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (E2M5)   Yellow key"
@@ -10357,7 +10303,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (E2M5)   Blue key"
@@ -10370,7 +10315,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (E2M5)   Green key"
@@ -10383,7 +10327,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Labyrinth (E2M6)   Yellow key"
@@ -10396,7 +10339,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Labyrinth (E2M6)   Blue key"
@@ -10409,7 +10351,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Labyrinth (E2M6)   Green key"
@@ -10422,7 +10363,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Great Hall (E2M7)   Green key"
@@ -10435,7 +10375,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Great Hall (E2M7)   Yellow key"
@@ -10448,7 +10387,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Great Hall (E2M7)   Blue key"
@@ -10461,7 +10399,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Glacier (E2M9)   Yellow key"
@@ -10474,7 +10411,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Glacier (E2M9)   Blue key"
@@ -10487,7 +10423,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Glacier (E2M9)   Green key"
@@ -10500,7 +10435,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Storehouse (E3M1)   Yellow key"
@@ -10513,7 +10447,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Storehouse (E3M1)   Green key"
@@ -10526,7 +10459,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cesspool (E3M2)   Yellow key"
@@ -10539,7 +10471,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cesspool (E3M2)   Green key"
@@ -10552,7 +10483,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cesspool (E3M2)   Blue key"
@@ -10565,7 +10495,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Confluence (E3M3)   Yellow key"
@@ -10578,7 +10507,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Confluence (E3M3)   Green key"
@@ -10591,7 +10519,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Confluence (E3M3)   Blue key"
@@ -10604,7 +10531,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Azure Fortress (E3M4)   Yellow key"
@@ -10617,7 +10543,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Azure Fortress (E3M4)   Green key"
@@ -10630,7 +10555,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ophidian Lair (E3M5)   Yellow key"
@@ -10643,7 +10567,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ophidian Lair (E3M5)   Green key"
@@ -10656,7 +10579,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Halls of Fear (E3M6)   Yellow key"
@@ -10669,7 +10591,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Halls of Fear (E3M6)   Green key"
@@ -10682,7 +10603,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Halls of Fear (E3M6)   Blue key"
@@ -10695,7 +10615,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (E3M7)   Blue key"
@@ -10708,7 +10627,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (E3M7)   Green key"
@@ -10721,7 +10639,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (E3M7)   Yellow key"
@@ -10734,7 +10651,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Aquifer (E3M9)   Blue key"
@@ -10747,7 +10663,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Aquifer (E3M9)   Green key"
@@ -10760,7 +10675,6 @@
           "Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Aquifer (E3M9)   Yellow key"
@@ -10773,7 +10687,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10785,7 +10698,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10797,7 +10709,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10809,7 +10720,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10821,7 +10731,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10833,7 +10742,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10845,7 +10753,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10857,7 +10764,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10869,7 +10775,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10881,7 +10786,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10893,7 +10797,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10905,7 +10808,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10917,7 +10819,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10929,7 +10830,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10941,7 +10841,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10953,7 +10852,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10965,7 +10863,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10977,7 +10874,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -10989,7 +10885,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11001,7 +10896,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11013,7 +10907,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11025,7 +10918,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11037,7 +10929,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11049,7 +10940,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11061,7 +10951,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11073,7 +10962,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11085,7 +10973,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11097,7 +10984,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11109,7 +10995,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11121,7 +11006,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11133,7 +11017,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11145,7 +11028,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11157,7 +11039,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11169,7 +11050,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11181,7 +11061,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11193,7 +11072,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11205,7 +11083,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11217,7 +11094,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11229,7 +11105,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11241,7 +11116,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11253,7 +11127,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11265,7 +11138,6 @@
           "Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11277,7 +11149,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11288,7 +11159,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Docks (E1M1)   Complete"
@@ -11301,7 +11171,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Docks (E1M1)   Map Scroll"
@@ -11314,7 +11183,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11325,7 +11193,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Dungeons (E1M2)   Complete"
@@ -11338,7 +11205,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Dungeons (E1M2)   Map Scroll"
@@ -11351,7 +11217,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11362,7 +11227,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gatehouse (E1M3)   Complete"
@@ -11375,7 +11239,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Gatehouse (E1M3)   Map Scroll"
@@ -11388,7 +11251,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11399,7 +11261,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Guard Tower (E1M4)   Complete"
@@ -11412,7 +11273,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Guard Tower (E1M4)   Map Scroll"
@@ -11425,7 +11285,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11436,7 +11295,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (E1M5)   Complete"
@@ -11449,7 +11307,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Citadel (E1M5)   Map Scroll"
@@ -11462,7 +11319,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11473,7 +11329,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cathedral (E1M6)   Complete"
@@ -11486,7 +11341,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cathedral (E1M6)   Map Scroll"
@@ -11499,7 +11353,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11510,7 +11363,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crypts (E1M7)   Complete"
@@ -11523,7 +11375,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crypts (E1M7)   Map Scroll"
@@ -11536,7 +11387,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11547,7 +11397,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Hell's Maw (E1M8)   Complete"
@@ -11560,7 +11409,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Hell's Maw (E1M8)   Map Scroll"
@@ -11573,7 +11421,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11584,7 +11431,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Graveyard (E1M9)   Complete"
@@ -11597,7 +11443,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Graveyard (E1M9)   Map Scroll"
@@ -11610,7 +11455,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11621,7 +11465,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crater (E2M1)   Complete"
@@ -11634,7 +11477,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Crater (E2M1)   Map Scroll"
@@ -11647,7 +11489,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11658,7 +11499,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Lava Pits (E2M2)   Complete"
@@ -11671,7 +11511,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Lava Pits (E2M2)   Map Scroll"
@@ -11684,7 +11523,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11695,7 +11533,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The River of Fire (E2M3)   Complete"
@@ -11708,7 +11545,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The River of Fire (E2M3)   Map Scroll"
@@ -11721,7 +11557,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11732,7 +11567,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ice Grotto (E2M4)   Complete"
@@ -11745,7 +11579,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ice Grotto (E2M4)   Map Scroll"
@@ -11758,7 +11591,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11769,7 +11601,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (E2M5)   Complete"
@@ -11782,7 +11613,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Catacombs (E2M5)   Map Scroll"
@@ -11795,7 +11625,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11806,7 +11635,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Labyrinth (E2M6)   Complete"
@@ -11819,7 +11647,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Labyrinth (E2M6)   Map Scroll"
@@ -11832,7 +11659,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11843,7 +11669,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Great Hall (E2M7)   Complete"
@@ -11856,7 +11681,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Great Hall (E2M7)   Map Scroll"
@@ -11869,7 +11693,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11880,7 +11703,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Portals of Chaos (E2M8)   Complete"
@@ -11893,7 +11715,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Portals of Chaos (E2M8)   Map Scroll"
@@ -11906,7 +11727,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11917,7 +11737,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Glacier (E2M9)   Complete"
@@ -11930,7 +11749,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Glacier (E2M9)   Map Scroll"
@@ -11943,7 +11761,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11954,7 +11771,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Storehouse (E3M1)   Complete"
@@ -11967,7 +11783,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Storehouse (E3M1)   Map Scroll"
@@ -11980,7 +11795,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -11991,7 +11805,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cesspool (E3M2)   Complete"
@@ -12004,7 +11817,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Cesspool (E3M2)   Map Scroll"
@@ -12017,7 +11829,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12028,7 +11839,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Confluence (E3M3)   Complete"
@@ -12041,7 +11851,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Confluence (E3M3)   Map Scroll"
@@ -12054,7 +11863,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12065,7 +11873,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Azure Fortress (E3M4)   Complete"
@@ -12078,7 +11885,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Azure Fortress (E3M4)   Map Scroll"
@@ -12091,7 +11897,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12102,7 +11907,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ophidian Lair (E3M5)   Complete"
@@ -12115,7 +11919,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Ophidian Lair (E3M5)   Map Scroll"
@@ -12128,7 +11931,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12139,7 +11941,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Halls of Fear (E3M6)   Complete"
@@ -12152,7 +11953,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Halls of Fear (E3M6)   Map Scroll"
@@ -12165,7 +11965,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12176,7 +11975,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (E3M7)   Complete"
@@ -12189,7 +11987,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Chasm (E3M7)   Map Scroll"
@@ -12202,7 +11999,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12213,7 +12009,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "D'Sparil's Keep (E3M8)   Complete"
@@ -12226,7 +12021,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "D'Sparil's Keep (E3M8)   Map Scroll"
@@ -12239,7 +12033,6 @@
           "Levels"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12250,7 +12043,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Aquifer (E3M9)   Complete"
@@ -12263,7 +12055,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "The Aquifer (E3M9)   Map Scroll"
@@ -12276,7 +12067,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12287,7 +12077,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12299,7 +12088,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12311,7 +12099,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12322,7 +12109,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12334,7 +12120,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12346,7 +12131,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12357,7 +12141,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12369,7 +12152,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12381,7 +12163,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12392,7 +12173,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12404,7 +12184,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12416,7 +12195,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12427,7 +12205,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12439,7 +12216,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12451,7 +12227,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12462,7 +12237,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12474,7 +12248,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12486,7 +12259,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12497,7 +12269,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12509,7 +12280,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12521,7 +12291,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12532,7 +12301,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12544,7 +12312,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12556,7 +12323,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12567,7 +12333,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12579,7 +12344,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12591,7 +12355,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12602,7 +12365,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12614,7 +12376,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12626,7 +12387,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12637,7 +12397,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12649,7 +12408,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12661,7 +12419,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12672,7 +12429,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12684,7 +12440,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12696,7 +12451,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12707,7 +12461,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12719,7 +12472,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12731,7 +12483,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12742,7 +12493,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12754,7 +12504,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12766,7 +12515,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12777,7 +12525,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12789,7 +12536,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12801,7 +12547,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12812,7 +12557,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12824,7 +12568,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12836,7 +12579,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12847,7 +12589,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12859,7 +12600,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12871,7 +12611,6 @@
           "Levels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12882,7 +12621,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12894,7 +12632,6 @@
           "Map Scrolls"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12905,7 +12642,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12916,7 +12652,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12927,7 +12662,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12938,7 +12672,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12949,7 +12682,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -12960,7 +12692,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -13804,17 +13535,17 @@
         },
         "episode1": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 1"
         },
         "episode2": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 2"
         },
         "episode3": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Episode 3"
         },
         "episode4": {
@@ -13928,7 +13659,7 @@
         },
         "reset_level_on_death": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Reset Level on Death"
         },
         "split_bag_of_holding": {

@@ -2198,7 +2198,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2209,7 +2208,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -2220,7 +2218,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2231,7 +2228,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2242,7 +2238,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2253,7 +2248,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2264,7 +2258,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2275,7 +2268,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2286,7 +2278,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2297,7 +2288,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2308,7 +2298,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2319,7 +2308,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2330,7 +2318,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2341,7 +2328,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2352,7 +2338,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2363,7 +2348,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2374,7 +2358,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2385,7 +2368,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2396,7 +2378,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2407,7 +2388,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2418,7 +2398,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2429,7 +2408,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2440,7 +2418,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2451,7 +2428,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -2462,7 +2438,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 35,
         "classification_counts": {
@@ -2477,7 +2452,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2488,7 +2462,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2499,7 +2472,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 8
       },
@@ -2510,7 +2482,6 @@
           "Everything"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 17
       },
@@ -2521,7 +2492,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2661,17 +2631,17 @@
         },
         "include_pendant": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Pendant"
         },
         "include_poisons": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Include Poisons"
         },
         "keep_shop_red_potions": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Keep Shop Red Potions"
         },
         "progression_balancing": {
@@ -2696,27 +2666,27 @@
         },
         "random_musics": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Musics"
         },
         "random_npcs": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random NPCs"
         },
         "random_rewards": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Rewards"
         },
         "random_sounds": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Sounds"
         },
         "require_dragon_slayer": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Require Dragon Slayer"
         },
         "start_inventory_from_pool": {

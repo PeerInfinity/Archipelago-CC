@@ -6386,7 +6386,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 59,
         "classification_counts": {
@@ -6401,7 +6400,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6412,7 +6410,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6423,7 +6420,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6434,7 +6430,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6445,7 +6440,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6456,7 +6450,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6467,7 +6460,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6478,7 +6470,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6489,7 +6480,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6500,7 +6490,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6511,7 +6500,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6522,7 +6510,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6533,7 +6520,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6544,7 +6530,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6555,7 +6540,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6566,7 +6550,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6577,7 +6560,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -6588,7 +6570,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -6599,7 +6580,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -6610,7 +6590,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -6621,7 +6600,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6632,7 +6610,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6643,7 +6620,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6654,7 +6630,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6665,7 +6640,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6676,7 +6650,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -6687,7 +6660,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -6698,7 +6670,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6709,7 +6680,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6720,7 +6690,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6731,7 +6700,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6742,7 +6710,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6753,7 +6720,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6764,7 +6730,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6775,7 +6740,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6786,7 +6750,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -6797,7 +6760,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6808,7 +6770,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6819,7 +6780,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6830,7 +6790,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 18
       },
@@ -6841,7 +6800,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 9
       },
@@ -6852,7 +6810,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -6863,7 +6820,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6874,7 +6830,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6885,7 +6840,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6896,7 +6850,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6907,7 +6860,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6918,7 +6870,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6929,7 +6880,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6940,7 +6890,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6951,7 +6900,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6962,7 +6910,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6973,7 +6920,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 80,
         "classification_counts": {
@@ -6988,7 +6934,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6999,7 +6944,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7010,7 +6954,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -7021,7 +6964,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -7032,7 +6974,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -7043,7 +6984,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -7054,7 +6994,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -7065,7 +7004,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -7586,7 +7524,7 @@
         },
         "allow_whistle_usage_behind_trees": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Allow Using Einstein Whistle Behind Trees"
         },
         "combat_difficulty": {
@@ -7608,7 +7546,7 @@
         },
         "ensure_ekeeke_in_shops": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Ensure EkeEke in Shops"
         },
         "goal": {
@@ -7659,7 +7597,7 @@
         },
         "progressive_armors": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Progressive Armors"
         },
         "randomize_items": {
@@ -7674,7 +7612,7 @@
         },
         "revive_using_ekeeke": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Revive Using EkeEke"
         },
         "shop_prices_factor": {
@@ -7723,12 +7661,12 @@
         },
         "use_record_book": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Use Record Book"
         },
         "use_spell_book": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Use Spell Book"
         }
       },
@@ -7884,18 +7822,18 @@
         "seed": 1291724455,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (next to Waterfall Shrine entrance)": "I can sense Buyer Card among the trees.",
-          "Foxy (atop Mercator Dungeon tower)": "I can sense Yellow Jewel inside a tower.",
-          "Foxy (in lava sector of King Nole's Labyrinth)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in Mir Tower 0F isolated chest room)": "I can sense Red Jewel in a town.",
-          "Foxy (in center of Greenmaze)": "I can sense Garlic in Verla Mines.",
-          "Foxy (looking at river next to Massan teleport tree)": "I can sense Sun Stone on a route.",
+          "Foxy (next to Waterfall Shrine entrance)": "I can sense Blue Jewel in Twinkle village.",
+          "Foxy (atop Mercator Dungeon tower)": "I can sense Logs in Verla Mines.",
+          "Foxy (in lava sector of King Nole's Labyrinth)": "I can sense Fireproof near a lake.",
+          "Foxy (in Mir Tower 0F isolated chest room)": "I can sense Sword of Gaia in Verla Mines.",
+          "Foxy (in center of Greenmaze)": "I can sense Gola's Fang inside a tower.",
+          "Foxy (looking at river next to Massan teleport tree)": "I can sense Green Jewel inside a tower.",
           "Foxy (in Garlic trial room inside Mir Tower)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (near shortcut cavern entrance in Greenmaze after cutting trees)": "I can sense Logs in Verla Mines.",
-          "Foxy (in room after golem hops riddle in Lake Shrine)": "I can sense Gola's Nail on a route.",
-          "Foxy (in room above Iron Boots in King Nole's Labyrinth)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (looking at dead man in Thieves Hideout)": "I can sense Key near a lake.",
-          "Foxy (in empty visible room inside Mountainous Area cave)": "I can sense Green Jewel inside a tower.",
+          "Foxy (near shortcut cavern entrance in Greenmaze after cutting trees)": "I can sense Casino Ticket close to a waterfall.",
+          "Foxy (in room after golem hops riddle in Lake Shrine)": "I can sense Iron Boots in a mountainous area.",
+          "Foxy (in room above Iron Boots in King Nole's Labyrinth)": "I can sense Einstein Whistle in the town of Mercator.",
+          "Foxy (looking at dead man in Thieves Hideout)": "I can sense Gola's Eye on a route.",
+          "Foxy (in empty visible room inside Mountainous Area cave)": "I can sense Lithograph in the village of Massan.",
           "Lithograph": "It's barely readable:\nSPECIAL RED MERCATOR\nWELL PURPLE ITEM\nTOWER CHEST GREEN\nTWINKLE ITEM BLUE\nITEM YELLOW ROOM",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },

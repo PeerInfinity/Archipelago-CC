@@ -2275,7 +2275,6 @@
           "Traps"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -2287,7 +2286,6 @@
           "Pickups"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 20
       },
@@ -2299,7 +2297,6 @@
           "Pickups"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -2310,7 +2307,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -2322,7 +2318,6 @@
           "Gold"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -2334,7 +2329,6 @@
           "Gold"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2346,7 +2340,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2358,7 +2351,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -2370,7 +2362,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -2382,7 +2373,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2394,7 +2384,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2406,7 +2395,6 @@
           "Wands"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2418,7 +2406,6 @@
           "Wands"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2430,7 +2417,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2442,7 +2428,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2454,7 +2439,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2466,7 +2450,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2478,7 +2461,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2490,7 +2472,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2502,7 +2483,6 @@
           "Perks"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "All Seeing Eye Perk"
@@ -2515,7 +2495,6 @@
           "Perks"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2527,7 +2506,6 @@
           "Repeatable Perks"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2539,7 +2517,6 @@
           "Orbs"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2551,7 +2528,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2563,7 +2539,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2575,7 +2550,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -2587,7 +2561,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -2599,7 +2572,6 @@
           "Items"
         ],
         "classification": "trap",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2611,7 +2583,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2623,7 +2594,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2635,7 +2605,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -2647,7 +2616,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -2966,7 +2934,7 @@
         },
         "bad_effects": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Traps"
         },
         "bosses_as_checks": {
