@@ -138,6 +138,25 @@ SCRIPT_CATEGORIES = {
     ],
     "Quick Actions": [
         ScriptAction(
+            "Test Adventure Generation",
+            "Generate Adventure seed with Generate.py",
+            command=[sys.executable, "Generate.py",
+                     "--weights_file_path", "Templates/Adventure.yaml",
+                     "--multi", "1", "--seed", "1"]
+        ),
+        ScriptAction(
+            "Test Adventure Spoiler",
+            "Run spoiler test for Adventure preset",
+            command=["npm", "test", "--", "--mode=test-spoilers", "--game=adventure", "--seed=1"]
+        ),
+        ScriptAction(
+            "Adventure Full Test",
+            "Run full test-all-templates.py for Adventure",
+            script_path="scripts/test/test-all-templates.py",
+            command=[sys.executable, "scripts/test/test-all-templates.py",
+                     "--include-list", "Adventure.yaml", "-p"]
+        ),
+        ScriptAction(
             "Test ALTTP Generation",
             "Generate ALTTP seed with Generate.py",
             command=[sys.executable, "Generate.py",

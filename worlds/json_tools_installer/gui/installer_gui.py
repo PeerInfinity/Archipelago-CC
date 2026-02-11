@@ -55,8 +55,8 @@ class InstallerApp(App):
     comp_main_patches = BooleanProperty(True)
     comp_romless_patches = BooleanProperty(True)
     comp_demo_worlds = BooleanProperty(False)
-    comp_tracker = BooleanProperty(False)
-    comp_testing = BooleanProperty(False)
+    comp_tracker = BooleanProperty(True)
+    comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
 
     # Patch options (monkey patch and main patches are mutually exclusive)
@@ -74,7 +74,7 @@ class InstallerApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.config: InstallerConfig = load_config()
+        self.installer_config: InstallerConfig = load_config()
         self.title = "JSON Tools Installer"
 
     def build(self):
@@ -647,7 +647,7 @@ For more information, see the README.md file."""
 
             version = self.get_selected_version()
             components = self.get_selected_components()
-            source = self.config.get_source(version)
+            source = self.installer_config.get_source(version)
 
             self.update_status(f"Checking connectivity...")
             self.update_progress(5)
@@ -673,16 +673,21 @@ For more information, see the README.md file."""
                     self.show_message("Installer Update Required", error_msg)
                 return
 
-            self.update_status(f"Downloading from {source.repo}...")
+            self.update_status(f"Connecting to {source.repo}...")
             self.update_progress(10)
 
             with tempfile.TemporaryDirectory() as temp_dir:
                 archive_path = Path(temp_dir) / "archive.zip"
 
                 def progress_cb(current, total):
+                    current_mb = current / (1024 * 1024)
                     if total > 0:
                         pct = 10 + (current * 40 // total)
                         self.update_progress(pct)
+                        total_mb = total / (1024 * 1024)
+                        self.update_status(f"Downloading... {current_mb:.1f} / {total_mb:.1f} MB")
+                    else:
+                        self.update_status(f"Downloading... {current_mb:.1f} MB")
 
                 result = download_archive(source, archive_path, progress_cb)
 
@@ -714,7 +719,7 @@ For more information, see the README.md file."""
                     success_count = sum(1 for v in hook_results.values() if v)
                     if success_count < len(hook_results):
                         self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
-                    self.config.patches.method = "monkey"
+                    self.installer_config.patches.method = "monkey"
 
                 elif self.apply_main_patches and "main_patches" in components:
                     # File-based patching - needs confirmation
@@ -743,24 +748,24 @@ For more information, see the README.md file."""
                     if confirm_result and confirm_result[0]:
                         self.update_status("Applying main patches...")
                         self.update_progress(85)
-                        patch_result = apply_bundled_patches(self.config)
+                        patch_result = apply_bundled_patches(self.installer_config)
                         if not patch_result.success:
                             self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
                         else:
-                            self.config.patches.method = "file"
+                            self.installer_config.patches.method = "file"
                     else:
                         self.update_status("File patching cancelled, using no patches...")
-                        self.config.patches.method = "none"
+                        self.installer_config.patches.method = "none"
 
                 else:
                     # No patching selected
-                    self.config.patches.method = "none"
+                    self.installer_config.patches.method = "none"
 
                 # Apply ROM-less patches if checkbox is checked
                 if self.apply_romless_patches and "romless_patches" in components:
                     self.update_status("Applying ROM-less patches...")
                     self.update_progress(90)
-                    romless_result = apply_romless_patches(self.config)
+                    romless_result = apply_romless_patches(self.installer_config)
                     if not romless_result.success:
                         self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
 
@@ -788,11 +793,11 @@ For more information, see the README.md file."""
 
                 # Update config
                 from ..config import update_installation_info
-                update_installation_info(self.config, version, components, commit_hash)
+                update_installation_info(self.installer_config, version, components, commit_hash)
 
                 self.show_message(
                     "Success",
-                    "JSON Tools installed successfully!\n\nRestart Archipelago to use the new tools."
+                    "JSON Tools installed successfully!\n\nComponents are ready to use."
                 )
 
         except Exception as e:
@@ -816,11 +821,11 @@ For more information, see the README.md file."""
         try:
             self.update_status("Reverting main patches...")
             self.update_progress(20)
-            revert_patches(self.config)
+            revert_patches(self.installer_config)
 
             self.update_status("Reverting ROM-less patches...")
             self.update_progress(30)
-            revert_romless_patches(self.config)
+            revert_romless_patches(self.installer_config)
 
             self.update_status("Removing components...")
             self.update_progress(50)
@@ -832,7 +837,7 @@ For more information, see the README.md file."""
                 self.update_progress(50 + (len(installed) * 10))
 
             from ..config import clear_installation
-            clear_installation(self.config)
+            clear_installation(self.installer_config)
 
             self.update_progress(100)
             self.update_status("Uninstall complete!")
@@ -857,12 +862,12 @@ For more information, see the README.md file."""
                 errors = []
 
                 self.update_status("Reverting main patches...")
-                main_result = revert_patches(self.config)
+                main_result = revert_patches(self.installer_config)
                 if main_result.errors:
                     errors.extend(main_result.errors)
 
                 self.update_status("Reverting ROM-less patches...")
-                romless_result = revert_romless_patches(self.config)
+                romless_result = revert_romless_patches(self.installer_config)
                 if romless_result.errors:
                     errors.extend(romless_result.errors)
 

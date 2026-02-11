@@ -371,6 +371,7 @@ def configure_export_settings(
 
     # Find or create host.yaml
     host_yaml_path = get_host_yaml_path()
+    data = None
 
     if host_yaml_path is None:
         if create_if_missing:
@@ -435,10 +436,23 @@ def configure_export_settings(
         host_yaml_path.parent.mkdir(parents=True, exist_ok=True)
         with open(host_yaml_path, "w", encoding="utf-8") as f:
             yaml.dump(data, f, default_flow_style=False, sort_keys=False)
-        return True
     except Exception as e:
         print(f"Warning: Failed to write host.yaml: {e}")
         return False
+
+    # Also update installer config so get_export_setting() works on vanilla AP
+    # (vanilla AP's settings.general_options doesn't have these custom fields,
+    # so the fallback to installer config is needed)
+    try:
+        config = load_config()
+        for key, value in settings.items():
+            if hasattr(config.export_settings, key):
+                setattr(config.export_settings, key, value)
+        save_config(config)
+    except Exception as e:
+        print(f"Warning: Failed to update installer config: {e}")
+
+    return True
 
 
 def get_export_setting(setting_name: str, default: Any = None) -> Any:

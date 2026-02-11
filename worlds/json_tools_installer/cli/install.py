@@ -306,7 +306,7 @@ def do_install(
     print_header("Installation Complete")
     print("  JSON Tools has been installed successfully!")
     print("\n  Next steps:")
-    print("  1. Restart Archipelago to load the new tools")
+    print("  1. Components are ready to use")
     if not configure_export:
         print("  2. Configure host.yaml (run scripts/setup/update_host_settings.py)")
         print("  3. Generate a seed to test the installation")

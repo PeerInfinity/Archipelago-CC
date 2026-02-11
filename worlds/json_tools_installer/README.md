@@ -21,7 +21,7 @@ This installer allows vanilla Archipelago users to easily install the JSON Tools
 
 1. Download `json_tools_installer.apworld` from the [`apworlds/`](../../apworlds/) directory in this repository
 2. Place in your Archipelago `worlds/` directory (or use the APWorld installer)
-3. Restart Archipelago
+3. Restart the Launcher to load the new APWorld
 
 ### Option 2: From Source
 
