@@ -7385,27 +7385,6 @@
       }
     }
   },
-  "pokemon_emerald_worldgen": {
-    "name": "Pokemon Emerald WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Pokemon Emerald WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
   "raft_worldgen": {
     "name": "Raft WorldGen",
     "folders": {
@@ -7794,27 +7773,6 @@
             "player": 1,
             "name": "Player1",
             "game": "Yoshi's Island WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "yugioh06_worldgen": {
-    "name": "Yu-Gi-Oh! 2006 WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Yu-Gi-Oh! 2006 WorldGen"
           }
         ],
         "files": [
@@ -8235,27 +8193,6 @@
             "player": 1,
             "name": "Player1",
             "game": "Yacht Dice WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "tunic_worldgen": {
-    "name": "TUNIC WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TUNIC WorldGen"
           }
         ],
         "files": [
