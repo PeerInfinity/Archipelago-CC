@@ -77,12 +77,18 @@ def print_status(label: str, value: str, ok: bool = True) -> None:
 
 def progress_callback(current: int, total: int) -> None:
     """Print download progress."""
+    from ..installer.downloader import APPROXIMATE_ARCHIVE_SIZE
+    current_mb = current / (1024 * 1024)
     if total > 0:
         pct = current * 100 // total
         bar_len = 40
         filled = bar_len * current // total
         bar = '=' * filled + '-' * (bar_len - filled)
-        print(f"\r  Downloading: [{bar}] {pct}%", end="", flush=True)
+        total_mb = total / (1024 * 1024)
+        print(f"\r  Downloading: [{bar}] {pct}% ({current_mb:.1f}/{total_mb:.1f} MB)", end="", flush=True)
+    else:
+        approx_mb = APPROXIMATE_ARCHIVE_SIZE / (1024 * 1024)
+        print(f"\r  Downloading: {current_mb:.1f} of about {approx_mb:.0f} MB", end="", flush=True)
 
 
 def extract_progress_callback(filename: str, current: int, total: int) -> None:
@@ -200,6 +206,15 @@ def do_install(
 
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
+
+        # Install Python dependencies
+        print("\n  Installing dependencies...")
+        from ..installer.dependencies import install_missing_dependencies
+        dep_ok, dep_msg = install_missing_dependencies()
+        if dep_ok:
+            print(f"  [OK] {dep_msg}")
+        else:
+            print(f"  [WARN] {dep_msg}")
 
         # Apply patches based on selected mode
         if patch_mode == "monkey":

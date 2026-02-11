@@ -679,16 +679,24 @@ For more information, see the README.md file."""
             with tempfile.TemporaryDirectory() as temp_dir:
                 archive_path = Path(temp_dir) / "archive.zip"
 
+                download_attempt = [0]
+
                 def progress_cb(current, total):
+                    if current == 0 or (current > 0 and current <= 8192):
+                        download_attempt[0] += 1
+                    attempt = download_attempt[0]
+                    retry_label = f" (attempt {attempt})" if attempt > 1 else ""
                     current_mb = current / (1024 * 1024)
                     if total > 0:
                         pct = 10 + (current * 40 // total)
                         self.update_progress(pct)
                         total_mb = total / (1024 * 1024)
-                        self.update_status(f"Downloading... {current_mb:.1f} / {total_mb:.1f} MB")
+                        self.update_status(f"Downloading{retry_label}... {current_mb:.1f} / {total_mb:.1f} MB")
                     else:
-                        self.update_status(f"Downloading... {current_mb:.1f} MB")
+                        approx_mb = APPROXIMATE_ARCHIVE_SIZE / (1024 * 1024)
+                        self.update_status(f"Downloading{retry_label}... {current_mb:.1f} of about {approx_mb:.0f} MB")
 
+                from ..installer.downloader import APPROXIMATE_ARCHIVE_SIZE
                 result = download_archive(source, archive_path, progress_cb)
 
                 if not result.success:
@@ -708,6 +716,14 @@ For more information, see the README.md file."""
                 if not extract_result.success:
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
+
+                # Install Python dependencies required by extracted components
+                self.update_status("Installing dependencies...")
+                self.update_progress(82)
+                from ..installer.dependencies import install_missing_dependencies
+                dep_ok, dep_msg = install_missing_dependencies()
+                if not dep_ok:
+                    self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
 
                 # Apply patches based on selected option
                 if self.apply_monkey_patch:
