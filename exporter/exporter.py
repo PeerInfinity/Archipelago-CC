@@ -2881,9 +2881,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
         # Compute placement suffix for preset directory name
         placement_suffix = ''
-        if export_data.get('is_vanilla'):
+        if cleaned_data.get('is_vanilla'):
             placement_suffix += 'v'
-        if export_data.get('is_canonical'):
+        if cleaned_data.get('is_canonical'):
             placement_suffix += 'c'
         preset_folder_name = f"{filename_base}_{placement_suffix}" if placement_suffix else filename_base
 
@@ -3006,9 +3006,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             }
 
             # Add placement flags if present in export data
-            if export_data.get('is_vanilla'):
+            if cleaned_data.get('is_vanilla'):
                 folder_entry["is_vanilla"] = True
-            if export_data.get('is_canonical'):
+            if cleaned_data.get('is_canonical'):
                 folder_entry["is_canonical"] = True
 
             preset_index[clean_game_name]["folders"][preset_folder_name] = folder_entry
