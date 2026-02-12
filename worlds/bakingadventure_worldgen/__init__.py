@@ -103,6 +103,9 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         "Event": frozenset(["Victory"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
@@ -150,7 +153,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         self.world_class_name = 'BakingAdventureWorld'
         self.base_id = 300000000
         self.world_description = 'Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!'
-        self.slot_data = types.SimpleNamespace(randomize_items=False)
+        self.slot_data = types.SimpleNamespace(vanilla_placement=0)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -407,5 +410,5 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "randomize_items": self.options.randomize_items.value,
+            "vanilla_placement": 0,
         }
