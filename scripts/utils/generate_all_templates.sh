@@ -53,6 +53,12 @@ if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
   python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3
 fi
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  # Generate the vanilla-full YAML template (plando with all 226 vanilla placements)
+  python scripts/vanilla-alttp/generate_incremental_yamls.py
+  # Generate vanilla seed with monkey patches applied
+  python scripts/vanilla-alttp/generate_vanilla_alttp.py --seed 1
+fi
 
 python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
@@ -301,6 +307,12 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     echo ""
     echo "===== Generating Vanilla WorldGen worlds ====="
     echo ""
+    python -m world_generator frontend/presets/alttp/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/alttp_vanilla_worldgen \
+        --game-name "A Link to the Past Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
     python -m world_generator frontend/presets/bakingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
         -o worlds/bakingadventure_vanilla_worldgen \
         --game-name "Baking Adventure Vanilla WorldGen" \
@@ -417,6 +429,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
 
   # Vanilla WorldGen presets
   if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/A Link to the Past Vanilla WorldGen.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
@@ -459,6 +472,12 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
     echo ""
     echo "===== Generating Vanilla WorldGen2 worlds (from Vanilla WorldGen) ====="
     echo ""
+    python -m world_generator frontend/presets/alttp_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/alttp_vanilla_worldgen2 \
+        --game-name "A Link to the Past Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
     python -m world_generator frontend/presets/bakingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
         -o worlds/bakingadventure_vanilla_worldgen2 \
         --game-name "Baking Adventure Vanilla WorldGen2" \
@@ -495,6 +514,7 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
 
   # Vanilla WorldGen2 presets
   if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/A Link to the Past Vanilla WorldGen2.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
     python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
