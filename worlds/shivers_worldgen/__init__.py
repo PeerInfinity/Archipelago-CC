@@ -185,6 +185,9 @@ class ShiversWorld(RuleWorldMixin, World):
         "Event": frozenset(["Crystal Pot Bottom DUPE", "Metal Pot Bottom DUPE", "Ash Pot Bottom DUPE", "Water Pot Top DUPE", "Oil Pot Top DUPE", "Sand Pot Bottom DUPE", "Empty", "Water Pot Bottom DUPE", "Wax Pot Top DUPE", "Cloth Pot Top DUPE", "Lightning Pot Top DUPE", "Wax Pot Bottom DUPE", "Cloth Pot Bottom DUPE", "Sand Pot Top DUPE", "Metal Pot Top DUPE", "Oil Pot Bottom DUPE", "Wood Pot Bottom DUPE", "Lightning Pot Bottom DUPE", "Wood Pot Top DUPE", "Crystal Pot Top DUPE", "Ash Pot Top DUPE", "Set Skull Dial: Prehistoric", "Set Skull Dial: Tar River", "Set Skull Dial: Egypt", "Set Skull Dial: Burial", "Set Skull Dial: Gods Room", "Set Skull Dial: Werewolf", "Viewed Theater Movie", "Set Time", "Set Song", "Viewed Fortune", "Aligned Planets", "Viewed Norse Stone", "Viewed Page 17", "Viewed Egyptian Hieroglyphics Explained", "Lost Your Head"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

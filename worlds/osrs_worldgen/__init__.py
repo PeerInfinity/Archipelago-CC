@@ -143,6 +143,9 @@ class OSRSWorld(RuleWorldMixin, World):
         "Event": frozenset(["1 QP (Cook's Assistant)", "3 QP (Demon Slayer)", "1 QP (The Restless Ghost)", "5 QP (Romeo & Juliet)", "1 QP (Sheep Shearer)", "1 QP (Shield of Arrav)", "4 QP (Ernest the Chicken)", "3 QP (Vampyre Slayer)", "1 QP (Imp Catcher)", "3 QP (Prince Ali Rescue)", "1 QP (Doric's Quest)", "3 QP (Black Knights' Fortress)", "1 QP (Witch's Potion)", "1 QP (The Knight's Sword)", "5 QP (Goblin Diplomacy)", "2 QP (Pirate's Treasure)", "1 QP (Rune Mysteries)", "1 QP (Misthalin Mystery)", "2 QP (The Corsair Curse)", "1 QP (X Marks The Spot)", "1 QP (Below Ice Mountain)", "Victory"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

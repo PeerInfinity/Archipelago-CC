@@ -110,6 +110,9 @@ class PaintWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Progressive Canvas Width", "Progressive Canvas Height", "Progressive Color Depth (Red)", "Progressive Color Depth (Green)", "Progressive Color Depth (Blue)", "Free-Form Select", "Select", "Eraser/Color Eraser", "Fill With Color", "Pick Color", "Magnifier", "Pencil", "Brush", "Airbrush", "Text", "Line", "Curve", "Rectangle", "Polygon", "Ellipse", "Rounded Rectangle", "Additional Palette Color", "Undo Trap", "Clear Image Trap", "Invert Colors Trap", "Flip Horizontal Trap", "Flip Vertical Trap"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

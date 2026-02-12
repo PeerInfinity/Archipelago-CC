@@ -122,6 +122,9 @@ class L2ACWorld(RuleWorldMixin, World):
         "Event": frozenset(["Progressive chest access", "Final Floor access"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

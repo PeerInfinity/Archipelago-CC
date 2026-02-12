@@ -108,6 +108,9 @@ class Celeste64World(RuleWorldMixin, World):
         "Everything": frozenset(["Strawberry", "Dash Refills", "Double Dash Refills", "Feathers", "Coins", "Cassettes", "Traffic Blocks", "Springs", "Breakable Blocks", "Raspberry", "Ground Dash", "Air Dash", "Skid Jump", "Climb", "Intro Checkpoint", "Granny Checkpoint", "South-East Tower Checkpoint", "Climb Sign Checkpoint", "Freeway Checkpoint", "Freeway Feather Checkpoint", "Feather Maze Checkpoint", "Double Dash House Checkpoint", "Badeline Tower Checkpoint", "Badeline Island Checkpoint"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

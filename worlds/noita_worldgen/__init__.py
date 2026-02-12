@@ -130,6 +130,9 @@ class NoitaWorld(RuleWorldMixin, World):
         "Event": frozenset(["Victory", "Portal to Holy Mountain 1", "Portal to Holy Mountain 2", "Portal to Holy Mountain 3", "Portal to Holy Mountain 4", "Portal to Holy Mountain 5", "Portal to Holy Mountain 6", "Portal to Holy Mountain 7"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

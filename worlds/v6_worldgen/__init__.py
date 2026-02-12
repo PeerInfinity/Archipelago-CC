@@ -103,6 +103,9 @@ class V6World(RuleWorldMixin, World):
         "Everything": frozenset(["Trinket 01", "Trinket 02", "Trinket 03", "Trinket 04", "Trinket 05", "Trinket 06", "Trinket 07", "Trinket 08", "Trinket 09", "Trinket 10", "Trinket 11", "Trinket 12", "Trinket 13", "Trinket 14", "Trinket 15", "Trinket 16", "Trinket 17", "Trinket 18", "Trinket 19", "Trinket 20"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
