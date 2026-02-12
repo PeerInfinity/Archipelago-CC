@@ -135,6 +135,9 @@ class InscryptionWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Stinkbug Card", "Stunted Wolf Card", "Wardrobe Key", "Skink Card", "Ant Cards", "Caged Wolf Card", "Squirrel Totem Head", "Dagger", "Film Roll", "Ring", "Magnificus Eye", "Oil Painting's Clover Plant", "Extra Candle", "Bee Figurine", "Greater Smoke", "Angler Hook", "Camera Replica", "Pile Of Meat", "Epitaph Piece", "Epitaph Pieces", "Monocle", "Bone Lord Femur", "Bone Lord Horn", "Bone Lord Holo Key", "Mycologists Holo Key", "Ancient Obol", "Great Kraken Card", "Drowned Soul Card", "Salmon Card", "Dock's Clover Plant", "Extra Battery", "Nano Armor Generator", "Mrs. Bomb's Remote", "Inspectometer Battery", "Gems Module", "Lonely Wizbot Card", "Fishbot Card", "Ourobot Card", "Holo Pelt", "Quill", "Currency", "Card Pack"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

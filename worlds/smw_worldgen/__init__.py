@@ -107,6 +107,9 @@ class SMWWorld(RuleWorldMixin, World):
         "Everything": frozenset(["The Princess", "1-Up Mushroom", "Yoshi Egg", "Run", "Carry", "Swim", "Spin Jump", "Climb", "Yoshi", "P-Switch", "Progressive Powerup", "P-Balloon", "Super Star Activate", "Yellow Switch Palace", "Green Switch Palace", "Red Switch Palace", "Blue Switch Palace", "Boss Token", "Ice Trap", "Stun Trap", "Literature Trap", "Timer Trap", "1 coin", "5 coins", "10 coins", "50 coins", "Special Zone Clear", "Reverse Trap", "Thwimp Trap"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

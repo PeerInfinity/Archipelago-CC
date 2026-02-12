@@ -134,6 +134,9 @@ class TLoZWorld(RuleWorldMixin, World):
         "Event": frozenset(["Boss 1 Defeated", "Boss 2 Defeated", "Boss 3 Defeated", "Boss 4 Defeated", "Boss 5 Defeated", "Boss 6 Defeated", "Boss 7 Defeated", "Boss 8 Defeated", "Triforce of Power", "Rescued Zelda!"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

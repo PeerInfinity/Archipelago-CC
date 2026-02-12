@@ -291,6 +291,9 @@ class EarthBoundWorld(RuleWorldMixin, World):
         "Event": frozenset(["Power of the Earth", "ATM Access", "Melody", "Valley Bridge Repair", "Threed Tunnels Clear", "Submarine to Deep Darkness", "Saved Earth"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

@@ -96,6 +96,9 @@ class MetamathWorld(RuleWorldMixin, World):
         "Hints": frozenset(["QED Moment", "Inference Help", "Deduction Tip", "Theorem Insight", "Lemma Note", "Axiom Reference", "Logic Guide", "Proof Hint"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

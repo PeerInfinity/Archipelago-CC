@@ -293,6 +293,9 @@ class Overcooked2World(RuleWorldMixin, World):
         "Event": frozenset(["1-1 Level Complete", "Star", "1-2 Level Complete", "1-3 Level Complete", "1-4 Level Complete", "1-5 Level Complete", "1-6 Level Complete", "2-1 Level Complete", "2-2 Level Complete", "2-3 Level Complete", "2-4 Level Complete", "2-5 Level Complete", "2-6 Level Complete", "3-1 Level Complete", "3-2 Level Complete", "3-3 Level Complete", "3-4 Level Complete", "3-5 Level Complete", "3-6 Level Complete", "4-1 Level Complete", "4-2 Level Complete", "4-3 Level Complete", "4-4 Level Complete", "4-5 Level Complete", "4-6 Level Complete", "5-1 Level Complete", "5-2 Level Complete", "5-3 Level Complete", "5-4 Level Complete", "5-5 Level Complete", "5-6 Level Complete", "6-1 Level Complete", "6-2 Level Complete", "6-3 Level Complete", "6-4 Level Complete", "6-5 Level Complete", "Victory", "Kevin-1 Level Complete", "Kevin-2 Level Complete", "Kevin-3 Level Complete", "Kevin-4 Level Complete", "Kevin-5 Level Complete", "Kevin-6 Level Complete", "Kevin-7 Level Complete", "Kevin-8 Level Complete"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

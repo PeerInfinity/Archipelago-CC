@@ -257,6 +257,9 @@ class AquariaWorld(RuleWorldMixin, World):
         "Event": frozenset(["Nautilus Prime beated", "Blaster Peg Prime beated", "Mergog beated", "Mithalan priests beated", "Octopus Prime beated", "Crabbius Maximus beated", "Mantis Shrimp Prime beated", "King Jellyfish God Prime beated", "Fallen God beated", "Mithalan God beated", "Drunian God beated", "Lumerean God beated", "The Golem beated", "First Secret obtained", "Second Secret obtained", "Third Secret obtained", "Body Tongue cleared", "Has Sun Crystal", "Victory"]),
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
