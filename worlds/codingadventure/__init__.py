@@ -46,9 +46,6 @@ class CodingAdventureWorld(World):
         "Event": frozenset(["Victory"]),
     }
 
-    # This world's placements match the original non-randomized game
-    is_vanilla: ClassVar[bool] = True
-
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
@@ -116,9 +113,9 @@ class CodingAdventureWorld(World):
     }
 
     def generate_early(self) -> None:
-        # If seed is 1, disable randomization to use canonical item placements
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
+        # Set is_vanilla dynamically based on the option
+        if self.options.vanilla_placement.value:
+            self.is_vanilla = True
     
     def create_regions(self) -> None:
         create_regions(self.multiworld, self.player)
@@ -192,8 +189,8 @@ class CodingAdventureWorld(World):
         self.multiworld.itempool += item_pool
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if using vanilla placement."""
+        if self.options.vanilla_placement.value:
             self._place_original_items()
 
     def _place_original_items(self) -> None:
