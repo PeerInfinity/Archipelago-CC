@@ -5,7 +5,6 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
-  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -106,7 +105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Flippers",
@@ -121,7 +120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Birds nest",
@@ -135,7 +134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Battery",
@@ -150,7 +149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Circuit board",
@@ -174,7 +173,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bolt",
@@ -189,7 +188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hinge",
@@ -204,7 +203,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Shear",
@@ -228,7 +227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Net launcher",
@@ -252,7 +251,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Drinking glass",
@@ -267,7 +266,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Clay bowl",
@@ -281,7 +280,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Net canister",
@@ -305,7 +304,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Binoculars",
@@ -333,7 +332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal fishing rod",
@@ -348,7 +347,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Oxygen bottle",
@@ -372,7 +371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sprinkler",
@@ -396,7 +395,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Empty bottle",
@@ -411,7 +410,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cookingpot",
@@ -439,7 +438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Juicer",
@@ -467,7 +466,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stationary anchor",
@@ -491,7 +490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced grill",
@@ -506,7 +505,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal Spear",
@@ -530,7 +529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Storage",
@@ -545,7 +544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Smelter",
@@ -559,7 +558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Paint mill",
@@ -573,7 +572,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hammock",
@@ -597,7 +596,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal axe",
@@ -612,7 +611,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scrap hook",
@@ -627,7 +626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Large crop plot",
@@ -642,7 +641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Sweep net",
@@ -666,7 +665,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Basic bow",
@@ -690,7 +689,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Scarecrow",
@@ -704,7 +703,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal arrow",
@@ -737,7 +736,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Shovel",
@@ -761,7 +760,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced collection net",
@@ -785,7 +784,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bucket",
@@ -799,7 +798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Collection net",
@@ -813,7 +812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Paint brush",
@@ -837,7 +836,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced purifier",
@@ -852,7 +851,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grass plot",
@@ -867,7 +866,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Stone arrow",
@@ -881,7 +880,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Medium crop plot",
@@ -895,7 +894,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lantern",
@@ -909,7 +908,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Small trophy board",
@@ -923,7 +922,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Medium trophy board",
@@ -937,7 +936,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Large trophy board",
@@ -951,7 +950,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Backpack",
@@ -979,7 +978,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Leather helmet",
@@ -1007,7 +1006,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Leather body armor",
@@ -1035,7 +1034,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Leather greaves",
@@ -1063,7 +1062,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beehive",
@@ -1091,7 +1090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Good healing salve",
@@ -1115,7 +1114,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Healing salve",
@@ -1130,7 +1129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1151,7 +1150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Head light blueprint",
@@ -1166,7 +1165,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Recycler blueprint",
@@ -1181,7 +1180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radio Tower Briefcase",
@@ -1196,7 +1195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radio Tower Frequency to Vasagatan",
@@ -1211,7 +1210,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radio Tower Notepad 1",
@@ -1226,7 +1225,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radio Tower Notepad 2",
@@ -1241,7 +1240,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Radio Tower Signalboard Trace",
@@ -1256,7 +1255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1277,7 +1276,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hannes Letter 2",
@@ -1292,7 +1291,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hannes Letter 3",
@@ -1307,7 +1306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Olof Log 1",
@@ -1322,7 +1321,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Olof Log 2",
@@ -1337,7 +1336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Olof Log 3",
@@ -1352,7 +1351,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 1",
@@ -1367,7 +1366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 2",
@@ -1382,7 +1381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vasagatan Recording 3",
@@ -1397,7 +1396,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vasagatan Magazine Clipping",
@@ -1412,7 +1411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vasagatan Frequency to Balboa",
@@ -1427,7 +1426,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Engine blueprint",
@@ -1442,7 +1441,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Steering Wheel blueprint",
@@ -1457,7 +1456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1478,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Correa twins picture",
@@ -1493,7 +1492,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Schedule of engineers",
@@ -1508,7 +1507,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Biofuel refiner blueprint",
@@ -1523,7 +1522,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Note from Henry",
@@ -1547,7 +1546,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 3",
@@ -1571,7 +1570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fuel tank blueprint",
@@ -1595,7 +1594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 1",
@@ -1610,7 +1609,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Correas diary 2",
@@ -1625,7 +1624,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Fuel pipe blueprint",
@@ -1640,7 +1639,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Bear map",
@@ -1655,7 +1654,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Johnny (Balboa Island)",
@@ -1679,7 +1678,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 4",
@@ -1694,7 +1693,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 1",
@@ -1709,7 +1708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 3",
@@ -1724,7 +1723,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 5",
@@ -1739,7 +1738,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Balboa Island Doll murderer 2",
@@ -1754,7 +1753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Relay Station quest",
@@ -1769,7 +1768,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1790,7 +1789,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 2",
@@ -1805,7 +1804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 3",
@@ -1820,7 +1819,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 4",
@@ -1835,7 +1834,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 5",
@@ -1850,7 +1849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Detto journal 6",
@@ -1865,7 +1864,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Olaf speech",
@@ -1880,7 +1879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Raft town article",
@@ -1895,7 +1894,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Doctor's note",
@@ -1910,7 +1909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Firework blueprint",
@@ -1925,7 +1924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Battery Charger quest",
@@ -1940,7 +1939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Zipline quest",
@@ -1968,7 +1967,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Island Frequency to Tangaroa",
@@ -1992,7 +1991,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Engine controls blueprint",
@@ -2016,7 +2015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Metal detector blueprint",
@@ -2031,7 +2030,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2052,7 +2051,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 2",
@@ -2067,7 +2066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 3",
@@ -2082,7 +2081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 4",
@@ -2097,7 +2096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Ruben 5",
@@ -2112,7 +2111,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Gardener Diary",
@@ -2127,7 +2126,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Riot Log",
@@ -2142,7 +2141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Tulley Note",
@@ -2157,7 +2156,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Cipher",
@@ -2172,7 +2171,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tangaroa Frequency to Varuna Point",
@@ -2187,7 +2186,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Water pipe blueprint",
@@ -2202,7 +2201,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Electric purifier blueprint",
@@ -2217,7 +2216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Water tank blueprint",
@@ -2232,7 +2231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Large Storage blueprint",
@@ -2247,7 +2246,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Elaine (Tangaroa)",
@@ -2262,7 +2261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2283,7 +2282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 2",
@@ -2298,7 +2297,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 3",
@@ -2313,7 +2312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 4",
@@ -2328,7 +2327,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 5",
@@ -2343,7 +2342,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Grabber diary 6",
@@ -2358,7 +2357,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Varuna Point Frequency to Temperance",
@@ -2373,7 +2372,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wind Turbine blueprint",
@@ -2388,7 +2387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced Battery blueprint",
@@ -2403,7 +2402,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced Headlight blueprint",
@@ -2418,7 +2417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Electric Grill blueprint",
@@ -2433,7 +2432,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2454,7 +2453,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 2",
@@ -2469,7 +2468,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 3",
@@ -2484,7 +2483,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 4",
@@ -2499,7 +2498,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Bruno diary 5",
@@ -2514,7 +2513,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Sparrow note 1",
@@ -2529,7 +2528,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Sparrow note 2",
@@ -2544,7 +2543,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Frequency to Utopia",
@@ -2559,7 +2558,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Star sign 1",
@@ -2574,7 +2573,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Star sign 2",
@@ -2589,7 +2588,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Star sign 3",
@@ -2604,7 +2603,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Temperance Star sign 4",
@@ -2619,7 +2618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Electric Smelter blueprint",
@@ -2634,7 +2633,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced Biofuel Extractor blueprint",
@@ -2649,7 +2648,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced Stationary Anchor blueprint",
@@ -2664,7 +2663,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Shogo (Temperance)",
@@ -2679,7 +2678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2709,7 +2708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Advanced Backpack blueprint",
@@ -2733,7 +2732,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Titanium Tools blueprint",
@@ -2757,7 +2756,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Utopia Captives note",
@@ -2781,7 +2780,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Utopia Detto map",
@@ -2805,7 +2804,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Utopia Complete",
@@ -6267,157 +6266,157 @@
       "Honey": "Recycler",
       "Flippers": "Fuel tank",
       "Birds nest": "progressive-grill",
+      "Tangaroa Cipher": "progressive-grill",
       "Battery": "progressive-anchor",
+      "Tala (Radio Tower)": "progressive-anchor",
+      "Caravan Island Detto journal 5": "Resource Pack: 2 CopperOre",
       "Circuit board": "Resource Pack: 2 CopperOre",
+      "Temperance Bruno diary 4": "Resource Pack: 2 CopperOre",
       "Bolt": "progressive-biofuel",
+      "Juicer": "progressive-biofuel",
+      "Bucket": "progressive-crop-plot",
       "Hinge": "progressive-crop-plot",
+      "Steering Wheel blueprint": "progressive-crop-plot",
+      "Temperance Sparrow note 1": "progressive-crop-plot",
+      "Vasagatan Recording 2": "progressive-crop-plot",
       "Shear": "Resource Pack: 2 Raw_Beet",
+      "Advanced collection net": "progressive-battery",
+      "Backpack": "progressive-battery",
+      "Balboa Island Doll murderer 5": "progressive-battery",
       "Net launcher": "progressive-battery",
       "Drinking glass": "Hinge",
       "Clay bowl": "progressive-spear",
+      "Empty bottle": "progressive-spear",
+      "Temperance Bruno diary 5": "progressive-spear",
       "Net canister": "Resource Pack: 2 Plastic",
+      "Water tank blueprint": "Resource Pack: 2 Plastic",
       "Binoculars": "Resource Pack: 1 TitaniumOre",
+      "Shovel": "Resource Pack: 1 TitaniumOre",
+      "Varuna Point Grabber diary 3": "Resource Pack: 1 TitaniumOre",
       "Metal fishing rod": "Resource Pack: 5 Sand",
       "Oxygen bottle": "Water pipe",
+      "Small trophy board": "progressive-engine",
       "Sprinkler": "progressive-engine",
-      "Empty bottle": "progressive-spear",
+      "Utopia Detto map": "progressive-engine",
+      "Caravan Island Detto journal 3": "Resource Pack: 5 Stone",
       "Cookingpot": "Resource Pack: 5 Stone",
-      "Juicer": "progressive-biofuel",
       "Stationary anchor": "Resource Pack: 3 TitaniumOre",
       "Advanced grill": "Antenna",
       "Metal Spear": "progressive-headlight",
+      "Varuna Point Grabber diary 6": "progressive-headlight",
       "Storage": "Resource Pack: 1 SeaVine",
+      "Temperance Bruno diary 1": "Resource Pack: 1 SeaVine",
+      "Balboa Island Doll murderer 1": "Resource Pack: 3 Scrap",
+      "Caravan Island Doctor's note": "Resource Pack: 3 Scrap",
       "Smelter": "Resource Pack: 3 Scrap",
       "Paint mill": "Circuit board",
       "Hammock": "Bucket",
       "Metal axe": "Resource Pack: 1 CopperOre",
       "Scrap hook": "Resource Pack: 4 CopperOre",
+      "Firework blueprint": "Resource Pack: 2 TitaniumOre",
       "Large crop plot": "Resource Pack: 2 TitaniumOre",
+      "Advanced Biofuel Extractor blueprint": "Resource Pack: 2 Scrap",
       "Sweep net": "Resource Pack: 2 Scrap",
       "Basic bow": "Receiver",
       "Scarecrow": "Resource Pack: 3 Plank",
+      "Johnny (Balboa Island)": "progressive-bottle",
       "Metal arrow": "progressive-bottle",
-      "Shovel": "Resource Pack: 1 TitaniumOre",
-      "Advanced collection net": "progressive-battery",
-      "Bucket": "progressive-crop-plot",
       "Collection net": "Trashcan",
+      "Head light blueprint": "progressive-metals",
+      "Medium crop plot": "progressive-metals",
       "Paint brush": "progressive-metals",
       "Advanced purifier": "Beehive",
       "Grass plot": "Net canister",
       "Stone arrow": "Firework",
-      "Medium crop plot": "progressive-metals",
+      "Battery Charger quest": "progressive-bow",
       "Lantern": "progressive-bow",
-      "Small trophy board": "progressive-engine",
+      "Olof Log 1": "progressive-bow",
+      "Tangaroa Ruben 3": "progressive-bow",
       "Medium trophy board": "Bolt",
       "Large trophy board": "Resource Pack: 5 CopperOre",
-      "Backpack": "progressive-battery",
       "Leather helmet": "Resource Pack: 1 Scrap",
       "Leather body armor": "Resource Pack: 3 Raw_Beet",
       "Leather greaves": "Resource Pack: 4 Clay",
+      "Temperance Bruno diary 3": "Resource Pack: 4 Clay",
       "Beehive": "Honey",
       "Good healing salve": "Resource Pack: 3 CopperOre",
+      "Biofuel refiner blueprint": "Resource Pack: 1 Plank",
+      "Electric purifier blueprint": "Resource Pack: 1 Plank",
       "Healing salve": "Resource Pack: 1 Plank",
-      "Tala (Radio Tower)": "progressive-anchor",
-      "Head light blueprint": "progressive-metals",
       "Recycler blueprint": "Metal fishing rod",
       "Radio Tower Briefcase": "Sprinkler",
       "Radio Tower Frequency to Vasagatan": "Vasagatan Frequency",
       "Radio Tower Notepad 1": "Resource Pack: 2 Sand",
       "Radio Tower Notepad 2": "Resource Pack: 2 Plank",
+      "Temperance Star sign 4": "Resource Pack: 2 Plank",
       "Radio Tower Signalboard Trace": "Hammock",
       "Hannes Letter 1": "Net launcher",
       "Hannes Letter 2": "Resource Pack: 1 MetalOre",
       "Hannes Letter 3": "Resource Pack: 2 Thatch",
-      "Olof Log 1": "progressive-bow",
+      "Large Storage blueprint": "Resource Pack: 2 Thatch",
+      "Balboa Island Correas diary 3": "progressive-storage",
       "Olof Log 2": "progressive-storage",
+      "Caravan Island Detto journal 2": "progressive-hook",
       "Olof Log 3": "progressive-hook",
+      "Balboa Island Doll murderer 3": "Resource Pack: 2 MetalOre",
       "Vasagatan Recording 1": "Resource Pack: 2 MetalOre",
-      "Vasagatan Recording 2": "progressive-crop-plot",
       "Vasagatan Recording 3": "Juicer",
+      "Balboa Island Note from Henry": "progressive-salve",
       "Vasagatan Magazine Clipping": "progressive-salve",
       "Vasagatan Frequency to Balboa": "Balboa Island Frequency",
       "Engine blueprint": "Resource Pack: 2 SeaVine",
-      "Steering Wheel blueprint": "progressive-crop-plot",
       "Machete blueprint": "Resource Pack: 5 MetalOre",
       "Balboa Island Correa twins picture": "Resource Pack: 5 Scrap",
       "Balboa Island Schedule of engineers": "Water tank",
-      "Biofuel refiner blueprint": "Resource Pack: 1 Plank",
-      "Balboa Island Note from Henry": "progressive-salve",
-      "Balboa Island Correas diary 3": "progressive-storage",
       "Fuel tank blueprint": "Resource Pack: 4 Raw_Potato",
       "Balboa Island Correas diary 1": "Resource Pack: 2 Stone",
       "Balboa Island Correas diary 2": "Flippers",
       "Fuel pipe blueprint": "Resource Pack: 4 Thatch",
+      "Varuna Point Grabber diary 2": "Resource Pack: 4 Thatch",
       "Balboa Island Bear map": "Shovel",
-      "Johnny (Balboa Island)": "progressive-bottle",
       "Balboa Island Doll murderer 4": "Leather greaves",
-      "Balboa Island Doll murderer 1": "Resource Pack: 3 Scrap",
-      "Balboa Island Doll murderer 3": "Resource Pack: 2 MetalOre",
-      "Balboa Island Doll murderer 5": "progressive-battery",
       "Balboa Island Doll murderer 2": "Cookingpot",
       "Relay Station quest": "Tangaroa Frequency",
       "Caravan Island Detto journal 1": "Resource Pack: 5 ExplosiveGoo",
-      "Caravan Island Detto journal 2": "progressive-hook",
-      "Caravan Island Detto journal 3": "Resource Pack: 5 Stone",
       "Caravan Island Detto journal 4": "progressive-zipline",
-      "Caravan Island Detto journal 5": "Resource Pack: 2 CopperOre",
+      "Varuna Point Grabber diary 5": "progressive-zipline",
+      "Zipline quest": "progressive-zipline",
       "Caravan Island Detto journal 6": "Leather body armor",
       "Caravan Island Olaf speech": "Fuel pipe",
       "Caravan Island Raft town article": "Resource Pack: 5 SeaVine",
-      "Caravan Island Doctor's note": "Resource Pack: 3 Scrap",
-      "Firework blueprint": "Resource Pack: 2 TitaniumOre",
-      "Battery Charger quest": "progressive-bow",
-      "Zipline quest": "progressive-zipline",
       "Caravan Island Frequency to Tangaroa": "Varuna Point Frequency",
       "Engine controls blueprint": "progressive-scarecrow",
+      "Shogo (Temperance)": "progressive-scarecrow",
       "Metal detector blueprint": "progressive-backpack",
+      "Titanium Tools blueprint": "progressive-backpack",
       "Tangaroa Ruben 1": "Birds nest",
       "Tangaroa Ruben 2": "Resource Pack: 3 MetalOre",
-      "Tangaroa Ruben 3": "progressive-bow",
       "Tangaroa Ruben 4": "Resource Pack: 4 Raw_Beet",
       "Tangaroa Ruben 5": "Oxygen bottle",
       "Tangaroa Gardener Diary": "Resource Pack: 1 Stone",
       "Tangaroa Riot Log": "Resource Pack: 2 Clay",
       "Tangaroa Tulley Note": "progressive-purifier",
-      "Tangaroa Cipher": "progressive-grill",
+      "Temperance Sparrow note 2": "progressive-purifier",
       "Tangaroa Frequency to Varuna Point": "Caravan Island Frequency",
+      "Electric Smelter blueprint": "progressive-net",
       "Water pipe blueprint": "progressive-net",
-      "Electric purifier blueprint": "Resource Pack: 1 Plank",
-      "Water tank blueprint": "Resource Pack: 2 Plastic",
-      "Large Storage blueprint": "Resource Pack: 2 Thatch",
       "Elaine (Tangaroa)": "Resource Pack: 4 Stone",
       "Varuna Point Grabber diary 1": "Resource Pack: 1 Plastic",
-      "Varuna Point Grabber diary 2": "Resource Pack: 4 Thatch",
-      "Varuna Point Grabber diary 3": "Resource Pack: 1 TitaniumOre",
+      "Temperance Star sign 1": "progressive-containers",
       "Varuna Point Grabber diary 4": "progressive-containers",
-      "Varuna Point Grabber diary 5": "progressive-zipline",
-      "Varuna Point Grabber diary 6": "progressive-headlight",
       "Varuna Point Frequency to Temperance": "Temperance Frequency",
       "Wind Turbine blueprint": "Resource Pack: 1 Clay",
       "Advanced Battery blueprint": "progressive-axe",
+      "Temperance Bruno diary 2": "progressive-axe",
       "Advanced Headlight blueprint": "Leather helmet",
       "Electric Grill blueprint": "Resource Pack: 3 Clay",
-      "Temperance Bruno diary 1": "Resource Pack: 1 SeaVine",
-      "Temperance Bruno diary 2": "progressive-axe",
-      "Temperance Bruno diary 3": "Resource Pack: 4 Clay",
-      "Temperance Bruno diary 4": "Resource Pack: 2 CopperOre",
-      "Temperance Bruno diary 5": "progressive-spear",
-      "Temperance Sparrow note 1": "progressive-crop-plot",
-      "Temperance Sparrow note 2": "progressive-purifier",
       "Temperance Frequency to Utopia": "Utopia Frequency",
-      "Temperance Star sign 1": "progressive-containers",
       "Temperance Star sign 2": "Shear",
       "Temperance Star sign 3": "Resource Pack: 5 TitaniumOre",
-      "Temperance Star sign 4": "Resource Pack: 2 Plank",
-      "Electric Smelter blueprint": "progressive-net",
-      "Advanced Biofuel Extractor blueprint": "Resource Pack: 2 Scrap",
       "Advanced Stationary Anchor blueprint": "Resource Pack: 3 Plastic",
-      "Shogo (Temperance)": "progressive-scarecrow",
       "Electric Zipline blueprint": "Binoculars",
       "Advanced Backpack blueprint": "Sweep net",
-      "Titanium Tools blueprint": "progressive-backpack",
       "Utopia Captives note": "Grass plot",
-      "Utopia Detto map": "progressive-engine",
       "Utopia Complete": "Victory"
     }
   },
@@ -6533,21 +6532,33 @@
   "world": {
     "1": {
       "game": "Raft WorldGen",
-      "world_class_name": "RaftWorldGenWorld",
+      "world_class_name": "RaftWorld",
       "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
+        "big_island_early_crafting": false,
+        "death_link": false,
+        "duplicate_items": 2,
         "exclude_locations": [],
+        "expensive_research": false,
+        "filler_item_types": 0,
+        "island_frequency_locations": 2,
+        "island_generation_distance": 8,
         "item_links": [],
         "local_items": [],
+        "maximum_resource_pack_amount": 5,
+        "minimum_resource_pack_amount": 1,
         "non_local_items": [],
+        "paddleboard_mode": false,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "progressive_items": true,
         "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -6559,6 +6570,85 @@
           "default": 0,
           "display_name": "Accessibility"
         },
+        "big_island_early_crafting": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Early recipes behind big islands"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Death Link"
+        },
+        "duplicate_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "progression",
+            "1": "non_progression",
+            "2": "any"
+          },
+          "default": 2,
+          "display_name": "Duplicate items"
+        },
+        "expensive_research": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Expensive research"
+        },
+        "filler_item_types": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "resource_packs",
+            "1": "duplicates",
+            "2": "both"
+          },
+          "default": 0,
+          "display_name": "Filler items"
+        },
+        "island_frequency_locations": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "random_on_island",
+            "2": "random_island_order",
+            "3": "random_on_island_random_order",
+            "4": "progressive",
+            "5": "anywhere"
+          },
+          "default": 2,
+          "display_name": "Frequency locations"
+        },
+        "island_generation_distance": {
+          "type": "choice",
+          "name_lookup": {
+            "2": "quarter",
+            "4": "half",
+            "8": "vanilla",
+            "16": "double",
+            "32": "quadrouple"
+          },
+          "default": 8,
+          "display_name": "Island distance"
+        },
+        "maximum_resource_pack_amount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 15,
+          "default": 5,
+          "display_name": "Maximum resource pack amount"
+        },
+        "minimum_resource_pack_amount": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 15,
+          "default": 1,
+          "display_name": "Minimum resource pack amount"
+        },
+        "paddleboard_mode": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Paddleboard Mode"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -6566,12 +6656,94 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
+        "progressive_items": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Progressive items"
+        },
         "randomize_items": {
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
+      "extraItemNamePool": [
+        "Resource Pack: 1 Plank",
+        "Resource Pack: 2 Plank",
+        "Resource Pack: 3 Plank",
+        "Resource Pack: 4 Plank",
+        "Resource Pack: 5 Plank",
+        "Resource Pack: 1 Plastic",
+        "Resource Pack: 2 Plastic",
+        "Resource Pack: 3 Plastic",
+        "Resource Pack: 4 Plastic",
+        "Resource Pack: 5 Plastic",
+        "Resource Pack: 1 Clay",
+        "Resource Pack: 2 Clay",
+        "Resource Pack: 3 Clay",
+        "Resource Pack: 4 Clay",
+        "Resource Pack: 5 Clay",
+        "Resource Pack: 1 Stone",
+        "Resource Pack: 2 Stone",
+        "Resource Pack: 3 Stone",
+        "Resource Pack: 4 Stone",
+        "Resource Pack: 5 Stone",
+        "Resource Pack: 1 Scrap",
+        "Resource Pack: 2 Scrap",
+        "Resource Pack: 3 Scrap",
+        "Resource Pack: 4 Scrap",
+        "Resource Pack: 5 Scrap",
+        "Resource Pack: 1 SeaVine",
+        "Resource Pack: 2 SeaVine",
+        "Resource Pack: 3 SeaVine",
+        "Resource Pack: 4 SeaVine",
+        "Resource Pack: 5 SeaVine",
+        "Resource Pack: 1 Thatch",
+        "Resource Pack: 2 Thatch",
+        "Resource Pack: 3 Thatch",
+        "Resource Pack: 4 Thatch",
+        "Resource Pack: 5 Thatch",
+        "Resource Pack: 1 Sand",
+        "Resource Pack: 2 Sand",
+        "Resource Pack: 3 Sand",
+        "Resource Pack: 4 Sand",
+        "Resource Pack: 5 Sand",
+        "Resource Pack: 1 Raw_Beet",
+        "Resource Pack: 2 Raw_Beet",
+        "Resource Pack: 3 Raw_Beet",
+        "Resource Pack: 4 Raw_Beet",
+        "Resource Pack: 5 Raw_Beet",
+        "Resource Pack: 1 Raw_Potato",
+        "Resource Pack: 2 Raw_Potato",
+        "Resource Pack: 3 Raw_Potato",
+        "Resource Pack: 4 Raw_Potato",
+        "Resource Pack: 5 Raw_Potato",
+        "Resource Pack: 1 MetalOre",
+        "Resource Pack: 2 MetalOre",
+        "Resource Pack: 3 MetalOre",
+        "Resource Pack: 4 MetalOre",
+        "Resource Pack: 5 MetalOre",
+        "Resource Pack: 1 TitaniumOre",
+        "Resource Pack: 2 TitaniumOre",
+        "Resource Pack: 3 TitaniumOre",
+        "Resource Pack: 4 TitaniumOre",
+        "Resource Pack: 5 TitaniumOre",
+        "Resource Pack: 1 CopperOre",
+        "Resource Pack: 2 CopperOre",
+        "Resource Pack: 3 CopperOre",
+        "Resource Pack: 4 CopperOre",
+        "Resource Pack: 5 CopperOre",
+        "Resource Pack: 1 ExplosiveGoo",
+        "Resource Pack: 2 ExplosiveGoo",
+        "Resource Pack: 3 ExplosiveGoo",
+        "Resource Pack: 4 ExplosiveGoo",
+        "Resource Pack: 5 ExplosiveGoo"
+      ],
       "world_description": "Raft is a flooded world exploration game. You're stranded on a small raft in the middle of the\nocean, and you must survive on trash floating by you on the top of the water and around/on any\nislands that you come across.",
       "slot_data": {
         "IslandGenerationDistance": 8,
@@ -6616,8 +6788,8 @@
             "name": "bool",
             "args": [
               {
-                "type": "constant",
-                "value": 0
+                "type": "option_value",
+                "option": "big_island_early_crafting"
               }
             ]
           },
@@ -6993,11 +7165,12 @@
         "name": "bool",
         "args": [
           {
-            "type": "constant",
-            "value": 0
+            "type": "option_value",
+            "option": "paddleboard_mode"
           }
         ]
       }
     }
-  }
+  },
+  "is_canonical": true
 }
