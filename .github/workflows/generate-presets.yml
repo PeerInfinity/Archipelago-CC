@@ -13,6 +13,11 @@ on:
         type: boolean
         default: true
 
+      generate_vanilla_seeds:
+        description: 'Generate vanilla placement seeds for adventure games'
+        type: boolean
+        default: true
+
       generate_worldgen:
         description: 'Generate worldgen worlds for standard templates'
         type: boolean
@@ -111,6 +116,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GENERATE_MULTIWORLD: ${{ inputs.generate_multiworld }}
           GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
+          GENERATE_VANILLA_SEEDS: ${{ inputs.generate_vanilla_seeds }}
           GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
           WORLDGEN_CANONICAL_SEED1: ${{ inputs.worldgen_canonical_seed1 }}
           GENERATE_WORLDGEN2: ${{ inputs.generate_worldgen2 }}
