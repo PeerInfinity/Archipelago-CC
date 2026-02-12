@@ -1262,6 +1262,21 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
             export_data['canonical_placements'][player_str] = {}
 
+    # Determine is_vanilla and is_canonical from world class attributes
+    # Check all players' worlds for these flags
+    is_vanilla = False
+    is_canonical = False
+    for player in multiworld.player_ids:
+        world = multiworld.worlds[player]
+        if getattr(world.__class__, 'is_vanilla', False) or getattr(world, 'is_vanilla', False):
+            is_vanilla = True
+        if getattr(world.__class__, 'is_canonical', False) or getattr(world, 'is_canonical', False):
+            is_canonical = True
+    if is_vanilla:
+        export_data['is_vanilla'] = True
+    if is_canonical:
+        export_data['is_canonical'] = True
+
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
     #    export_data['debug_spoiler_entrances'] = {}
@@ -2863,9 +2878,17 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     logger.error(f"Error updating preset_files.json after clearing game presets: {e}")
 
         os.makedirs(game_dir, exist_ok=True)
-        
+
+        # Compute placement suffix for preset directory name
+        placement_suffix = ''
+        if export_data.get('is_vanilla'):
+            placement_suffix += 'v'
+        if export_data.get('is_canonical'):
+            placement_suffix += 'c'
+        preset_folder_name = f"{filename_base}_{placement_suffix}" if placement_suffix else filename_base
+
         # Create a folder for this specific preset
-        preset_dir = os.path.join(game_dir, filename_base)
+        preset_dir = os.path.join(game_dir, preset_folder_name)
 
         # --- Check if preset update is needed ---
         needs_update = True 
@@ -2976,11 +2999,19 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 })
 
             # Update preset entry
-            preset_index[clean_game_name]["folders"][filename_base] = {
+            folder_entry = {
                 "seed": multiworld.seed,
                 "games": player_game_data,
                 "files": preset_files
             }
+
+            # Add placement flags if present in export data
+            if export_data.get('is_vanilla'):
+                folder_entry["is_vanilla"] = True
+            if export_data.get('is_canonical'):
+                folder_entry["is_canonical"] = True
+
+            preset_index[clean_game_name]["folders"][preset_folder_name] = folder_entry
             
             # Write updated index
             try:

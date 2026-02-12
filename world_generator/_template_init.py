@@ -419,6 +419,24 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         return super().collect_item(state, item, remove)
 '''
 
+    # Generate is_vanilla and is_canonical class attributes (for exporter to read)
+    placement_type_section = ''
+    if canonical_seed is not None and canonical_class_attr_content:
+        # All worldgen canonical worlds are is_canonical=True
+        # is_vanilla is inherited from the source rules.json
+        if data.is_vanilla:
+            placement_type_section = '''
+    # Placements match the original non-randomized game
+    is_vanilla: ClassVar[bool] = True
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+'''
+        else:
+            placement_type_section = '''
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+'''
+
     # Generate canonical_placements class attribute (for exporter to read)
     if canonical_seed is not None and canonical_class_attr_content:
         canonical_placements_section = f'''
@@ -885,7 +903,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)

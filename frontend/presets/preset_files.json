@@ -6132,7 +6132,7 @@
   "mathadventure": {
     "name": "Math Adventure",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_v": {
         "seed": 1,
         "games": [
           {
@@ -6146,7 +6146,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6248,7 +6249,7 @@
   "bakingadventure": {
     "name": "Baking Adventure",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_v": {
         "seed": 1,
         "games": [
           {
@@ -6262,7 +6263,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6364,7 +6366,7 @@
   "codingadventure": {
     "name": "Coding Adventure",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_v": {
         "seed": 1,
         "games": [
           {
@@ -6378,7 +6380,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -6716,7 +6719,7 @@
   "ahit_worldgen": {
     "name": "A Hat in Time WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6730,14 +6733,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "alttp_worldgen": {
     "name": "A Link to the Past WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6751,14 +6755,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "shorthike_worldgen": {
     "name": "A Short Hike WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6772,14 +6777,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "adventure_worldgen": {
     "name": "Adventure WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6793,14 +6799,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "aquaria_worldgen": {
     "name": "Aquaria WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6814,14 +6821,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "bomb_rush_cyberfunk_worldgen": {
     "name": "Bomb Rush Cyberfunk WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6835,14 +6843,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "bumpstik_worldgen": {
     "name": "Bumper Stickers WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6856,14 +6865,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "cv64_worldgen": {
     "name": "Castlevania 64 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6877,14 +6887,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "celeste64_worldgen": {
     "name": "Celeste 64 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6898,14 +6909,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "checksfinder_worldgen": {
     "name": "ChecksFinder WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6919,14 +6931,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "cccharles_worldgen": {
     "name": "Choo-Choo Charles WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6940,14 +6953,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "civ_6_worldgen": {
     "name": "Civilization VI WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6961,14 +6975,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "dark_souls_3_worldgen": {
     "name": "Dark Souls III WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -6982,14 +6997,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "dlcquest_worldgen": {
     "name": "DLCQuest WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7003,14 +7019,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "dkc3_worldgen": {
     "name": "Donkey Kong Country 3 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7024,14 +7041,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "doom_1993_worldgen": {
     "name": "DOOM 1993 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7045,14 +7063,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "doom_ii_worldgen": {
     "name": "DOOM II WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7066,14 +7085,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "earthbound_worldgen": {
     "name": "EarthBound WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7087,14 +7107,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "faxanadu_worldgen": {
     "name": "Faxanadu WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7108,14 +7129,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "ffmq_worldgen": {
     "name": "Final Fantasy Mystic Quest WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7129,14 +7151,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "heretic_worldgen": {
     "name": "Heretic WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7150,14 +7173,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "hylics2_worldgen": {
     "name": "Hylics 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7171,14 +7195,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "inscryption_worldgen": {
     "name": "Inscryption WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7192,14 +7217,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "kh1_worldgen": {
     "name": "Kingdom Hearts WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7213,14 +7239,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "landstalker_worldgen": {
     "name": "Landstalker - The Treasures of King Nole WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7234,14 +7261,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "lufia2ac_worldgen": {
     "name": "Lufia II Ancient Cave WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7255,14 +7283,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "mlss_worldgen": {
     "name": "Mario & Luigi Superstar Saga WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7276,14 +7305,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "mmbn3_worldgen": {
     "name": "MegaMan Battle Network 3 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7297,14 +7327,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "meritous_worldgen": {
     "name": "Meritous WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7318,14 +7349,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "noita_worldgen": {
     "name": "Noita WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7339,14 +7371,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "overcooked2_worldgen": {
     "name": "Overcooked! 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7360,14 +7393,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "paint_worldgen": {
     "name": "Paint WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7381,14 +7415,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "raft_worldgen": {
     "name": "Raft WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7402,14 +7437,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "ror2_worldgen": {
     "name": "Risk of Rain 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7423,14 +7459,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "soe_worldgen": {
     "name": "Secret of Evermore WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7444,14 +7481,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "shivers_worldgen": {
     "name": "Shivers WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7465,14 +7503,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "sa2b_worldgen": {
     "name": "Sonic Adventure 2 Battle WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7486,14 +7525,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "satisfactory_worldgen": {
     "name": "Satisfactory WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7507,14 +7547,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "sc2_worldgen": {
     "name": "Starcraft 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7528,14 +7569,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "subnautica_worldgen": {
     "name": "Subnautica WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7549,14 +7591,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "sm64ex_worldgen": {
     "name": "Super Mario 64 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7570,14 +7613,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "marioland2_worldgen": {
     "name": "Super Mario Land 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7591,14 +7635,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "smw_worldgen": {
     "name": "Super Mario World WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7612,14 +7657,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "terraria_worldgen": {
     "name": "Terraria WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7633,14 +7679,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "tloz_worldgen": {
     "name": "The Legend of Zelda WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7654,14 +7701,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "tww_worldgen": {
     "name": "The Wind Waker WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7675,14 +7723,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "timespinner_worldgen": {
     "name": "Timespinner WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7696,14 +7745,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "undertale_worldgen": {
     "name": "Undertale WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7717,14 +7767,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "v6_worldgen": {
     "name": "VVVVVV WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7738,14 +7789,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "wargroove_worldgen": {
     "name": "Wargroove WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7759,14 +7811,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "yoshisisland_worldgen": {
     "name": "Yoshi's Island WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7780,14 +7833,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "toem_original_worldgen": {
     "name": "TOEM original WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7801,14 +7855,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "toem_rule_builder_worldgen": {
     "name": "TOEM rule builder WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7822,14 +7877,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "bakingadventure_worldgen": {
     "name": "Baking Adventure WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_vc": {
         "seed": 1,
         "games": [
           {
@@ -7843,14 +7899,16 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
       }
     }
   },
   "mathadventure_worldgen": {
     "name": "Math Adventure WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_vc": {
         "seed": 1,
         "games": [
           {
@@ -7864,14 +7922,16 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
       }
     }
   },
   "metamath_worldgen": {
     "name": "Metamath WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7885,14 +7945,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "codingadventure_worldgen": {
     "name": "Coding Adventure WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_vc": {
         "seed": 1,
         "games": [
           {
@@ -7906,14 +7967,16 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
       }
     }
   },
   "apquest_worldgen": {
     "name": "APQuest WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7927,14 +7990,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "cvcotm_worldgen": {
     "name": "Castlevania - Circle of the Moon WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7948,14 +8012,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "factorio_worldgen": {
     "name": "Factorio WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7969,14 +8034,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "mm2_worldgen": {
     "name": "Mega Man 2 WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -7990,14 +8056,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "shapez_worldgen": {
     "name": "shapez WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8011,14 +8078,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "witness_worldgen": {
     "name": "The Witness WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8032,14 +8100,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "osrs_worldgen": {
     "name": "Old School Runescape WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8053,14 +8122,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "saving_princess_worldgen": {
     "name": "Saving Princess WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8074,14 +8144,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "sm_worldgen": {
     "name": "Super Metroid WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8095,14 +8166,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "ladx_worldgen": {
     "name": "Links Awakening DX WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8116,14 +8188,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "musedash_worldgen": {
     "name": "Muse Dash WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8137,14 +8210,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "stardew_valley_worldgen": {
     "name": "Stardew Valley WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8158,14 +8232,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "messenger_worldgen": {
     "name": "The Messenger WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8179,14 +8254,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "yachtdice_worldgen": {
     "name": "Yacht Dice WorldGen",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8200,14 +8276,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "alttp_worldgen2": {
     "name": "A Link to the Past WorldGen 2",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8221,14 +8298,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "ahit_worldgen2": {
     "name": "A Hat in Time WorldGen2",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8242,14 +8320,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "shorthike_worldgen2": {
     "name": "A Short Hike WorldGen2",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8263,14 +8342,15 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   },
   "adventure_worldgen2": {
     "name": "Adventure WorldGen2",
     "folders": {
-      "AP_14089154938208861744": {
+      "AP_14089154938208861744_c": {
         "seed": 1,
         "games": [
           {
@@ -8284,7 +8364,8 @@
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
-        ]
+        ],
+        "is_canonical": true
       }
     }
   }
