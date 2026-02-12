@@ -61,7 +61,8 @@ class _LogicMixinMeta(type):
     """Metaclass that resolves LogicMixin as base class lazily."""
     _resolved = False
 
-    def __instancecheck__(cls, instance):
+    @override
+    def __instancecheck__(cls, instance: object) -> bool:
         cls._ensure_bases()
         return super().__instancecheck__(instance)
 
@@ -141,13 +142,15 @@ class RuleWorldMixin(World):
         self.true_rule = self.resolve_rule(True_())
         self.false_rule = self.resolve_rule(False_())
 
+    @override
     @classmethod
-    def get_rule_cls(cls, name: str) -> type["Rule[Self]"]:
+    def get_rule_cls(cls, name: str) -> type["Rule[Self]"]:  # pyright: ignore[reportIncompatibleMethodOverride]
         """Returns the world-registered or default rule with the given name"""
         return CustomRuleRegister.get_rule_cls(cls.game, name)
 
+    @override
     @classmethod
-    def rule_from_dict(cls, data: Mapping[str, Any]) -> "Rule[Self]":
+    def rule_from_dict(cls, data: Mapping[str, Any]) -> "Rule[Self]":  # pyright: ignore[reportIncompatibleMethodOverride]
         """Create a rule instance from a serialized dict representation.
 
         Supports both Rule Builder format and AST format:
@@ -181,6 +184,7 @@ class RuleWorldMixin(World):
         self.rules_by_hash[rule_hash] = resolved_rule
         return resolved_rule
 
+    @override
     def register_rule_dependencies(self, resolved_rule: "Rule.Resolved") -> None:
         """Registers a rule's item, region, location, and entrance dependencies to this world instance"""
         if not self.rule_caching_enabled:
@@ -228,7 +232,8 @@ class RuleWorldMixin(World):
             for region_name in entrance.access_rule.region_dependencies():
                 self.rule_region_dependencies[region_name] |= rule_ids
 
-    def set_rule(self, spot: Location | Entrance, rule: "Rule[Self]") -> None:
+    @override
+    def set_rule(self, spot: Location | Entrance, rule: "Rule[Self]") -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         """Resolve and set a rule on a location or entrance"""
         resolved_rule = self.resolve_rule(rule)
         self.register_rule_dependencies(resolved_rule)
@@ -236,7 +241,8 @@ class RuleWorldMixin(World):
         if self.explicit_indirect_conditions and isinstance(spot, Entrance):
             self.register_rule_connections(resolved_rule, spot)
 
-    def create_entrance(
+    @override
+    def create_entrance(  # pyright: ignore[reportIncompatibleMethodOverride]
         self,
         from_region: Region,
         to_region: Region,
@@ -258,7 +264,8 @@ class RuleWorldMixin(World):
             self.register_rule_connections(resolved_rule, entrance)
         return entrance
 
-    def set_completion_rule(self, rule: "Rule[Self]") -> None:
+    @override
+    def set_completion_rule(self, rule: "Rule[Self]") -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         """Set the completion rule for this world"""
         resolved_rule = self.resolve_rule(rule)
         self.register_rule_dependencies(resolved_rule)
@@ -292,7 +299,7 @@ class RuleWorldMixin(World):
                 children_to_process.extend(child.children)
                 continue
 
-            if isinstance(child, Has.Resolved):
+            if isinstance(child, Has.Resolved) and isinstance(child.count, int):
                 if child.item_name not in items or items[child.item_name] < child.count:
                     items[child.item_name] = child.count
             elif isinstance(child, HasAll.Resolved):
@@ -356,7 +363,7 @@ class RuleWorldMixin(World):
                 children_to_process.extend(child.children)
                 continue
 
-            if isinstance(child, Has.Resolved):
+            if isinstance(child, Has.Resolved) and isinstance(child.count, int):
                 if child.item_name not in items or child.count < items[child.item_name]:
                     items[child.item_name] = child.count
             elif isinstance(child, HasAny.Resolved):
@@ -406,7 +413,7 @@ class RuleWorldMixin(World):
     def collect(self, state: CollectionState, item: Item) -> bool:
         changed = super().collect(state, item)
         if changed and self.rule_caching_enabled and self.rule_item_dependencies:
-            player_results = state.rule_cache[self.player]
+            player_results = cast(dict[int, bool], state.rule_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
             mapped_name = self.item_mapping.get(item.name, "")
             rule_ids = self.rule_item_dependencies[item.name] | self.rule_item_dependencies[mapped_name]
             for rule_id in rule_ids:
@@ -421,7 +428,7 @@ class RuleWorldMixin(World):
         if not changed or not self.rule_caching_enabled:
             return changed
 
-        player_results = state.rule_cache[self.player]
+        player_results = cast(dict[int, bool], state.rule_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
         if self.rule_item_dependencies:
             mapped_name = self.item_mapping.get(item.name, "")
             rule_ids = self.rule_item_dependencies[item.name] | self.rule_item_dependencies[mapped_name]
@@ -452,7 +459,7 @@ class RuleWorldMixin(World):
     def reached_region(self, state: CollectionState, region: Region) -> None:
         super().reached_region(state, region)
         if self.rule_caching_enabled and self.rule_region_dependencies:
-            player_results = state.rule_cache[self.player]
+            player_results = cast(dict[int, bool], state.rule_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
             for rule_id in self.rule_region_dependencies[region.name]:
                 player_results.pop(rule_id, None)
 
@@ -552,14 +559,19 @@ class OptionFilter(Generic[T]):
 
 
 def _make_hashable(value: Any) -> Any:
-    """Convert a value to a hashable form, recursively handling dicts and lists."""
+    """Convert a value to a hashable form, recursively handling dicts, lists, tuples, and sets."""
     if isinstance(value, dict):
         # Convert dict to a sorted tuple of (key, value) pairs
-        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in value.items()))
+        d = cast(dict[Any, Any], value)
+        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in d.items()))
     elif isinstance(value, list):
+        items = cast(list[Any], value)
+        return tuple(_make_hashable(item) for item in items)
+    elif isinstance(value, tuple):
         return tuple(_make_hashable(item) for item in value)
     elif isinstance(value, set):
-        return frozenset(_make_hashable(item) for item in value)
+        items = cast(set[Any], value)
+        return frozenset(_make_hashable(item) for item in items)
     return value
 
 
@@ -762,17 +774,28 @@ class Rule(Generic[TWorld]):
             if not self.caching_enabled:
                 return self._evaluate(state)
 
-            cached_result = state.rule_cache[self.player].get(id(self))
+            player_results = cast(dict[int, bool], state.rule_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+            cached_result = player_results.get(id(self))
             if cached_result is not None:
                 return cached_result
 
             result = self._evaluate(state)
-            state.rule_cache[self.player][id(self)] = result
+            player_results[id(self)] = result
             return result
 
         def _evaluate(self, state: CollectionState) -> bool:
             """Calculate this rule's result with the given state"""
             ...
+
+        def get_value(self, state: CollectionState) -> int | float:
+            """Get the numeric value of this rule for arithmetic/comparison contexts.
+            Override in subclasses that produce numeric values (e.g., CountItem, Arithmetic)."""
+            return 1 if self._evaluate(state) else 0
+
+        def get_count(self, state: CollectionState) -> int | float:
+            """Get the count value of this rule for counting contexts.
+            Override in subclasses that produce count values (e.g., CountItem, CountFromList)."""
+            return 1 if self._evaluate(state) else 0
 
         def item_dependencies(self) -> dict[str, set[int]]:
             """Returns a mapping of item name to set of object ids, used for cache invalidation"""
@@ -881,8 +904,13 @@ class NestedRule(Rule[TWorld], game="Archipelago"):
     children: tuple[Rule[TWorld], ...]
     """The child rules this rule's logic is based on"""
 
-    def __init__(self, *children: Rule[TWorld], options: Iterable[OptionFilter[Any]] = ()) -> None:
-        super().__init__(options=options)
+    def __init__(
+        self,
+        *children: Rule[TWorld],
+        options: Iterable[OptionFilter[Any]] = (),
+        filtered_resolution: bool = False,
+    ) -> None:
+        super().__init__(options=options, filtered_resolution=filtered_resolution)
         self.children = children
 
     @override
@@ -1196,7 +1224,7 @@ class Has(Rule[TWorld], game="Archipelago"):
             result["options"] = [o.to_dict() for o in self.options]
         if self.filtered_resolution:
             result["filtered_resolution"] = self.filtered_resolution
-        args = {"item_name": self.item_name}
+        args: dict[str, Any] = {"item_name": self.item_name}
         # Handle both static and Rule counts
         if isinstance(self.count, Rule):
             args["count"] = self.count.to_dict()
@@ -1210,7 +1238,7 @@ class Has(Rule[TWorld], game="Archipelago"):
         count: "int | Rule.Resolved" = 1
         skip_cache: ClassVar[bool] = True
 
-        def _get_count_value(self, state: CollectionState) -> int:
+        def _get_count_value(self, state: CollectionState) -> int | float:
             """Get the count value, evaluating if it's a Rule.Resolved."""
             if isinstance(self.count, Rule.Resolved):
                 # Check for get_value or get_count methods
@@ -1279,7 +1307,7 @@ class Has(Rule[TWorld], game="Archipelago"):
         @override
         def _get_args_dict(self) -> dict[str, Any]:
             # Only include count if it's not the default (1)
-            args = {"item_name": self.item_name}
+            args: dict[str, Any] = {"item_name": self.item_name}
             # Handle both static and dynamic counts
             if isinstance(self.count, Rule.Resolved):
                 # Serialize the count rule as a dict for JSON export
@@ -2454,7 +2482,7 @@ class EntranceAccessRuleCall(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            result = {"entrance_name": self.entrance_name}
+            result: dict[str, Any] = {"entrance_name": self.entrance_name}
             if self.fake_pearl:
                 result["fake_pearl"] = True
             return result
@@ -2474,7 +2502,7 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
     delegating evaluation to either a pre-computed value or returning True
     as a fallback.
     """
-    rule_data: dict = dataclasses.field(default_factory=dict)
+    rule_data: dict[str, Any] = dataclasses.field(default_factory=lambda: dict[str, Any]())
     """The original AST format rule data"""
 
     @override
@@ -2491,7 +2519,7 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
         return f"ASTRule({rule_type})"
 
     class Resolved(Rule.Resolved):
-        rule_data: dict
+        rule_data: dict[str, Any]
         skip_cache: ClassVar[bool] = True
 
         @override
@@ -2583,6 +2611,7 @@ class CountItem(Rule[TWorld], game="Archipelago"):
         item_name: str
         skip_cache: ClassVar[bool] = True
 
+        @override
         def get_count(self, state: CollectionState) -> int:
             """Get the actual count of this item."""
             return state.count(self.item_name, self.player)
@@ -2643,7 +2672,9 @@ class CountFromList(Rule[TWorld], game="Archipelago"):
     """
     item_names: tuple[str, ...] = ()
 
-    def __init__(self, *item_names: str, options: OptionFilter | tuple[OptionFilter, ...] = ()):
+    def __init__(self, *item_names: str, options: OptionFilter[Any] | tuple[OptionFilter[Any], ...] = ()):
+        if isinstance(options, OptionFilter):
+            options = (options,)
         super().__init__(options=options)
         self.item_names = item_names
 
@@ -2672,6 +2703,7 @@ class CountFromList(Rule[TWorld], game="Archipelago"):
         item_names: tuple[str, ...]
         skip_cache: ClassVar[bool] = True
 
+        @override
         def get_count(self, state: CollectionState) -> int:
             """Get the cumulative count of all items in the list."""
             return state.count_from_list(self.item_names, self.player)
@@ -2748,6 +2780,7 @@ class CountGroup(Rule[TWorld], game="Archipelago"):
         group_name: str
         skip_cache: ClassVar[bool] = True
 
+        @override
         def get_count(self, state: CollectionState) -> int:
             """Get the count of items in this group."""
             return state.count_group(self.group_name, self.player)
@@ -3023,6 +3056,7 @@ class Arithmetic(Rule[TWorld], game="Archipelago"):
                 return 1 if operand(state) else 0
             return operand
 
+        @override
         def get_value(self, state: CollectionState) -> float | int:
             """Get the computed value of this arithmetic expression."""
             left_val = self._get_operand_value(self.left, state)
@@ -3186,6 +3220,7 @@ class MinValue(Rule[TWorld], game="Archipelago"):
                 return 1 if operand(state) else 0
             return operand
 
+        @override
         def get_value(self, state: CollectionState) -> float | int:
             """Get the minimum of the two operands."""
             left_val = self._get_operand_value(self.left, state)
@@ -3316,6 +3351,7 @@ class MaxValue(Rule[TWorld], game="Archipelago"):
                 return 1 if operand(state) else 0
             return operand
 
+        @override
         def get_value(self, state: CollectionState) -> float | int:
             """Get the maximum of the two operands."""
             left_val = self._get_operand_value(self.left, state)
@@ -3444,6 +3480,7 @@ class Conditional(Rule[TWorld], game="Archipelago"):
                 return 1 if branch(state) else 0
             return branch
 
+        @override
         def get_value(self, state: CollectionState) -> float | int:
             """Get the numeric value based on condition."""
             if self.test(state):
@@ -3548,7 +3585,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
     args: tuple[Any, ...] = ()
     kwargs: dict[str, Any] | None = None
     body_rule: "Rule[TWorld] | None" = None
-    body_data: dict | None = None
+    body_data: dict[str, Any] | None = None
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
@@ -3570,7 +3607,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
     @override
     def __str__(self) -> str:
-        parts = []
+        parts: list[str] = []
         if self.args:
             parts.append(", ".join(repr(a) for a in self.args))
         if self.kwargs:
@@ -3602,7 +3639,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             result["filtered_resolution"] = self.filtered_resolution
         if self.args:
             # Convert boolean args to AST format for frontend compatibility
-            exported_args = []
+            exported_args: list[Any] = []
             for arg in self.args:
                 if arg is True:
                     exported_args.append({"rule": "True_"})
@@ -3613,7 +3650,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             result["args"] = exported_args
         if self.kwargs:
             # Convert boolean kwargs to AST format for frontend compatibility
-            exported_kwargs = {}
+            exported_kwargs: dict[str, Any] = {}
             for k, v in self.kwargs.items():
                 if v is True:
                     exported_kwargs[k] = {"rule": "True_"}
@@ -3630,7 +3667,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         args: tuple[Any, ...]
         kwargs: dict[str, Any]
         body_rule: "Rule.Resolved | None"
-        body_data: dict | None
+        body_data: dict[str, Any] | None
         skip_cache: ClassVar[bool] = True
 
         @override
@@ -3646,6 +3683,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             # No evaluation available
             return True
 
+        @override
         def get_value(self, state: CollectionState) -> int | float:
             """Get the numeric value from this helper for use in Arithmetic.
 
@@ -3666,7 +3704,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             if self.helper_func is not None:
                 result = self.helper_func(state, self.player, *self.args, **self.kwargs)
                 # If result is numeric, return it directly
-                if isinstance(result, (int, float)):
+                if isinstance(result, (int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
                     return result
                 # Otherwise treat as boolean
                 return 1 if result else 0
@@ -3757,7 +3795,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             }
             if self.args:
                 # Convert args to proper rule format for frontend compatibility
-                converted_args = []
+                converted_args: list[Any] = []
                 for arg in self.args:
                     if arg is True:
                         # Booleans use True_/False_ rules (required by shapez and others)
@@ -3800,7 +3838,7 @@ class WeightedSum(Rule[TWorld], game="Archipelago"):
         )
     """
     threshold: float = 1.0
-    items: list[tuple[str, float]] = dataclasses.field(default_factory=list)
+    items: list[tuple[str, float]] = dataclasses.field(default_factory=lambda: list[tuple[str, float]]())
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
@@ -3917,7 +3955,7 @@ class UniqueCount(Rule[TWorld], game="Archipelago"):
         )
     """
     threshold: float = 1.0
-    items: list[tuple[str, float]] = dataclasses.field(default_factory=list)
+    items: list[tuple[str, float]] = dataclasses.field(default_factory=lambda: list[tuple[str, float]]())
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
@@ -4067,6 +4105,7 @@ class OptionValue(Rule[TWorld], game="Archipelago"):
             world = state.multiworld.worlds[self.player]
             return getattr(world.options, self.option_name, None)
 
+        @override
         def get_value(self, state: CollectionState) -> int | float:
             """Get the numeric value of the option for Compare/Arithmetic contexts."""
             option = self._get_option(state)

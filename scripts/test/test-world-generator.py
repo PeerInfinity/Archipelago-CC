@@ -257,6 +257,14 @@ def run_generation(
     game_dir = get_world_directory_for_template(template_name, project_root)
     preset_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, seed_id)
 
+    # Also check for suffixed directories (e.g., _c for canonical, _v for vanilla)
+    if not os.path.exists(preset_dir):
+        for suffix in ['_c', '_v', '_vc']:
+            suffixed_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, f'{seed_id}{suffix}')
+            if os.path.exists(suffixed_dir):
+                preset_dir = suffixed_dir
+                break
+
     if os.path.exists(preset_dir):
         result['preset_dir'] = preset_dir
         rules_path = os.path.join(preset_dir, f'{seed_id}_rules.json')
@@ -612,16 +620,19 @@ def run_test_world_tests(
         print(f"\n[5/7] Comparing rules.json files...")
         seed_id = compute_seed_id(seed)
         original_game_dir = get_world_directory_for_game(original_game_name, project_root)
-        test_game_dir = get_world_directory_for_template(test_template_name, project_root)
 
         original_rules_path = os.path.join(
             project_root, 'frontend', 'presets', original_game_dir,
             seed_id, f'{seed_id}_rules.json'
         )
-        worldgen_rules_path = os.path.join(
-            project_root, 'frontend', 'presets', test_game_dir,
-            seed_id, f'{seed_id}_rules.json'
-        )
+        # Use the actual rules path from seed generation (accounts for _c/_v suffixes)
+        worldgen_rules_path = gen_result.get('rules_path', '')
+        if not worldgen_rules_path:
+            test_game_dir = get_world_directory_for_template(test_template_name, project_root)
+            worldgen_rules_path = os.path.join(
+                project_root, 'frontend', 'presets', test_game_dir,
+                seed_id, f'{seed_id}_rules.json'
+            )
 
         comparison_result = run_rules_comparison(
             original_rules_path, worldgen_rules_path, project_root,
@@ -657,16 +668,19 @@ def run_test_world_tests(
             # Get paths
             seed_id = compute_seed_id(seed)
             original_game_dir = get_world_directory_for_game(original_game_name, project_root)
-            test_game_dir = get_world_directory_for_template(test_template_name, project_root)
 
             original_sphere_log = os.path.join(
                 project_root, 'frontend', 'presets', original_game_dir,
                 seed_id, f'{seed_id}_sphere_log.jsonl'
             )
-            test_sphere_log = os.path.join(
-                project_root, 'frontend', 'presets', test_game_dir,
-                seed_id, f'{seed_id}_sphere_log.jsonl'
-            )
+            # Use the actual sphere log path from seed generation (accounts for _c/_v suffixes)
+            test_sphere_log = gen_result.get('sphere_log_path', '')
+            if not test_sphere_log:
+                test_game_dir = get_world_directory_for_template(test_template_name, project_root)
+                test_sphere_log = os.path.join(
+                    project_root, 'frontend', 'presets', test_game_dir,
+                    seed_id, f'{seed_id}_sphere_log.jsonl'
+                )
 
             if os.path.exists(original_sphere_log) and os.path.exists(os.path.dirname(test_sphere_log)):
                 # Backup test sphere log

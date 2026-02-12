@@ -1269,7 +1269,7 @@ class BaseGameExportHandler(
                             # Some items have valid IDs in item_name_to_id but may be placed as events
                             # in certain configurations. We preserve the ID so the worldgen world
                             # knows all possible item IDs, even for items that may sometimes be events.
-                            if not item_data[item_name]['event']:
+                            if not item_data[item_name].get('event', False):
                                 logger.debug(f"Marking {item_name} as event based on runtime placement (item.code=None), preserving original ID")
                                 item_data[item_name]['event'] = True
                                 item_data[item_name]['type'] = 'Event'

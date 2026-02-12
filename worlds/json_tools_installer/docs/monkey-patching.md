@@ -251,5 +251,5 @@ You'll see messages like:
 
 1. **Timing** - Exports happen after generation completes, so they can't be included in the output zip archive
 2. **Settings** - Requires either configured host.yaml or installer config for settings
-3. **Dependencies** - Requires the exporter module to be installed for actual export functionality
+3. **Dependencies** - Requires the exporter module and its dependencies (astunparse, dill) to be installed. The installer auto-installs these during setup.
 4. **Single wrap** - If another system also wraps `Main.main()`, behavior depends on wrap order

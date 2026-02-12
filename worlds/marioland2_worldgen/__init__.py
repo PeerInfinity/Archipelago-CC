@@ -131,6 +131,9 @@ class MarioLand2World(RuleWorldMixin, World):
         "COINS": 0,
     }
 
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {

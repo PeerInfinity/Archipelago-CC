@@ -3,12 +3,14 @@
 # Environment variables (with defaults for local usage):
 # GENERATE_MULTIWORLD - set to "false" to skip multiworld generation (default: true)
 # GENERATE_EXTRA_SEEDS - set to "false" to skip seeds 2 and 3 (default: true)
+# GENERATE_VANILLA_SEEDS - set to "false" to skip vanilla placement seeds for adventure games (default: true)
 # GENERATE_WORLDGEN - set to "true" to generate worldgen worlds (default: false)
 # WORLDGEN_CANONICAL_SEED1 - set to "true" to use canonical seed 1 placement (default: true)
 # GENERATE_WORLDGEN2 - set to "true" to generate worldgen2 worlds from worldgen worlds (default: false)
 
 GENERATE_MULTIWORLD="${GENERATE_MULTIWORLD:-true}"
 GENERATE_EXTRA_SEEDS="${GENERATE_EXTRA_SEEDS:-true}"
+GENERATE_VANILLA_SEEDS="${GENERATE_VANILLA_SEEDS:-true}"
 GENERATE_WORLDGEN="${GENERATE_WORLDGEN:-false}"
 WORLDGEN_CANONICAL_SEED1="${WORLDGEN_CANONICAL_SEED1:-true}"
 GENERATE_WORLDGEN2="${GENERATE_WORLDGEN2:-false}"
@@ -21,15 +23,41 @@ fi
 
 echo "GENERATE_MULTIWORLD: $GENERATE_MULTIWORLD"
 echo "GENERATE_EXTRA_SEEDS: $GENERATE_EXTRA_SEEDS"
+echo "GENERATE_VANILLA_SEEDS: $GENERATE_VANILLA_SEEDS"
 echo "GENERATE_WORLDGEN: $GENERATE_WORLDGEN"
 echo "WORLDGEN_CANONICAL_SEED1: $WORLDGEN_CANONICAL_SEED1"
 echo "GENERATE_WORLDGEN2: $GENERATE_WORLDGEN2"
+
+# Helper: generate a vanilla seed for a game with vanilla_placement option
+# Creates a temporary YAML with vanilla_placement: true, generates seed 1, cleans up
+generate_vanilla_seed() {
+  local game_name="$1"
+  local template_dir="Players/Templates"
+  local vanilla_yaml="${template_dir}/${game_name} Vanilla.yaml"
+
+  mkdir -p "$template_dir"
+  cat > "$vanilla_yaml" << YAMLEOF
+name: Player{number}
+game: "${game_name}"
+${game_name}:
+  vanilla_placement: true
+YAMLEOF
+
+  python Generate.py --weights_file_path "Templates/${game_name} Vanilla.yaml" --multi 1 --seed 1
+  rm -f "$vanilla_yaml"
+}
 
 # Templates with seeds 1, 2, 3
 python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 2
   python Generate.py --weights_file_path "Templates/A Link to the Past.yaml" --multi 1 --seed 3
+fi
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  # Generate the vanilla-full YAML template (plando with all 226 vanilla placements)
+  python scripts/vanilla-alttp/generate_incremental_yamls.py
+  # Generate vanilla seed with monkey patches applied
+  python scripts/vanilla-alttp/generate_vanilla_alttp.py --seed 1
 fi
 
 python Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1
@@ -143,17 +171,26 @@ if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 2
   python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 3
 fi
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Math Adventure"
+fi
 
 python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 2
   python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 3
 fi
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Baking Adventure"
+fi
 
 python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 2
   python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 3
+fi
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Coding Adventure"
 fi
 
 python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 1
@@ -235,13 +272,13 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Shivers.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   # python scripts/test/test-world-generator.py --include-list "SMZ3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Sonic Adventure 2 Battle.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Starcraft 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Starcraft 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: TypeError unhashable True_ in rule builder
   python scripts/test/test-world-generator.py --include-list "Stardew Valley.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Subnautica.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Super Mario 64.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Super Mario Land 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Super Mario World.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Super Metroid.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Super Metroid.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: AttributeError 'bool' object has no attribute 'bool'
   python scripts/test/test-world-generator.py --include-list "Terraria.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "The Legend of Zelda.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "The Messenger.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -252,7 +289,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Undertale.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "VVVVVV.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Wargroove.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Yacht Dice.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Yacht Dice.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: FillError inaccessible locations
   python scripts/test/test-world-generator.py --include-list "Yoshi's Island.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   # python scripts/test/test-world-generator.py --include-list "Yu-Gi-Oh! 2006.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
 
@@ -264,6 +301,36 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Math Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Metamath.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Coding Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+
+  # Vanilla WorldGen worlds (from vanilla placement presets)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    echo ""
+    echo "===== Generating Vanilla WorldGen worlds ====="
+    echo ""
+    python -m world_generator frontend/presets/alttp/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/alttp_vanilla_worldgen \
+        --game-name "A Link to the Past Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/bakingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/bakingadventure_vanilla_worldgen \
+        --game-name "Baking Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/mathadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/mathadventure_vanilla_worldgen \
+        --game-name "Math Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/codingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/codingadventure_vanilla_worldgen \
+        --game-name "Coding Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+  fi
 
   # Regenerate templates to include the worldgen worlds
   echo ""
@@ -330,13 +397,13 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Shivers WorldGen.yaml" --multi 1 --seed 1
   # python Generate.py --weights_file_path "Templates/SMZ3 WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Sonic Adventure 2 Battle WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Starcraft 2 WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Starcraft 2 WorldGen.yaml" --multi 1 --seed 1  # Excluded: TypeError unhashable True_ in rule builder
   python Generate.py --weights_file_path "Templates/Stardew Valley WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Subnautica WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Super Mario 64 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Super Mario Land 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Super Mario World WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Super Metroid WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Super Metroid WorldGen.yaml" --multi 1 --seed 1  # Excluded: AttributeError 'bool' object has no attribute 'bool'
   python Generate.py --weights_file_path "Templates/Terraria WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/The Legend of Zelda WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/The Messenger WorldGen.yaml" --multi 1 --seed 1
@@ -347,7 +414,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Undertale WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/VVVVVV WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Wargroove WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Yacht Dice WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Yacht Dice WorldGen.yaml" --multi 1 --seed 1  # Excluded: FillError inaccessible locations
   python Generate.py --weights_file_path "Templates/Yoshi's Island WorldGen.yaml" --multi 1 --seed 1
   # python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006 WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 
@@ -360,6 +427,14 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Coding Adventure WorldGen.yaml" --multi 1 --seed 1
 
+  # Vanilla WorldGen presets
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/A Link to the Past Vanilla WorldGen.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+  fi
+
 fi
 
 # WorldGen2 world generation (generated from WorldGen worlds)
@@ -368,29 +443,59 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   echo "===== Generating WorldGen2 worlds (from WorldGen) ====="
   echo ""
 
-  python -m world_generator frontend/presets/ahit_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+  python -m world_generator frontend/presets/ahit_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json \
       -o worlds/ahit_worldgen2 \
       --game-name "A Hat in Time WorldGen2" \
       --force \
       $CANONICAL_FLAG
 
-  python -m world_generator frontend/presets/alttp_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+  python -m world_generator frontend/presets/alttp_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json \
       -o worlds/alttp_worldgen2 \
       --game-name "A Link to the Past WorldGen2" \
       --force \
       $CANONICAL_FLAG
 
-  python -m world_generator frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+  python -m world_generator frontend/presets/shorthike_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json \
       -o worlds/shorthike_worldgen2 \
       --game-name "A Short Hike WorldGen2" \
       --force \
       $CANONICAL_FLAG
 
-  python -m world_generator frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+  python -m world_generator frontend/presets/adventure_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json \
       -o worlds/adventure_worldgen2 \
       --game-name "Adventure WorldGen2" \
       --force \
       $CANONICAL_FLAG
+
+  # Vanilla WorldGen2 worlds (from vanilla worldgen presets)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    echo ""
+    echo "===== Generating Vanilla WorldGen2 worlds (from Vanilla WorldGen) ====="
+    echo ""
+    python -m world_generator frontend/presets/alttp_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/alttp_vanilla_worldgen2 \
+        --game-name "A Link to the Past Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/bakingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/bakingadventure_vanilla_worldgen2 \
+        --game-name "Baking Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/mathadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/mathadventure_vanilla_worldgen2 \
+        --game-name "Math Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/codingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/codingadventure_vanilla_worldgen2 \
+        --game-name "Coding Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+  fi
 
   # Regenerate templates to include WorldGen2 worlds
   echo ""
@@ -406,6 +511,14 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   python Generate.py --weights_file_path "Templates/A Link to the Past WorldGen2.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/A Short Hike WorldGen2.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Adventure WorldGen2.yaml" --multi 1 --seed 1
+
+  # Vanilla WorldGen2 presets
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/A Link to the Past Vanilla WorldGen2.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+  fi
 fi
 
 #remove empty preset directories

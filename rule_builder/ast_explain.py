@@ -19,12 +19,11 @@ from ._ast_utils import extract_constant_value
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
 
-# Type alias for JSONMessagePart
-JSONMessagePart = dict[str, Any]
+from NetUtils import JSONMessagePart
 
 
 def explain_ast_rule(
-    rule: dict,
+    rule: dict[str, Any],
     state: "CollectionState | None",
     player: int,
     depth: int = 0

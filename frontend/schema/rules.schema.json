@@ -281,6 +281,14 @@
       "type": "string",
       "description": "The seed name string for this generation."
     },
+    "is_vanilla": {
+      "type": "boolean",
+      "description": "Whether item placements match the original non-randomized game. True for games where items are in their designed/intended locations."
+    },
+    "is_canonical": {
+      "type": "boolean",
+      "description": "Whether item placements are deterministically reproduced by the world generator. True for worldgen worlds generated with --canonical-seed1."
+    },
     "canonical_placements": {
       "type": "object",
       "description": "Canonical item placements for deterministic seed generation, keyed by player slot ID (string).",
