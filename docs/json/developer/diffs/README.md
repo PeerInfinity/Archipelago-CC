@@ -140,7 +140,7 @@ python -m worlds.json_tools_installer status
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
 | `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
 
 ### Version Sources
 

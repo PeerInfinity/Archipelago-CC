@@ -94,7 +94,7 @@ The installer can install these components:
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
 | `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
 | `demo_worlds` | Example worlds (bakingadventure, codingadventure, etc.) | Yes |
 | `tracker` | PopTracker integration world for auto-tracking | No |
 | `testing` | Test config files (package.json, playwright, vitest) | No |

@@ -124,8 +124,9 @@ COMPONENTS: Dict[str, Component] = {
     "testing": Component(
         name="testing",
         display_name="Testing Infrastructure",
-        description="Test config files (package.json, playwright, vitest)",
+        description="Test config files (package.json, playwright, vitest, fuzz)",
         source_paths=[
+            "fuzz.py",
             "package.json",
             "package-lock.json",
             "playwright.config.js",

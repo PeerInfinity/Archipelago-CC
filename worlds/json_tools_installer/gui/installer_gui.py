@@ -568,7 +568,7 @@ Runtime patching that hooks into Archipelago without modifying files. Safe, reve
 Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
 
 [b]11 ROM-less World File Patches[/b]
-Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
+Additional patches that allow seed generation for games that normally require ROM files. Useful for testing. Requires main patches to also be installed (monkey patch alone is not sufficient).
 
 Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
 

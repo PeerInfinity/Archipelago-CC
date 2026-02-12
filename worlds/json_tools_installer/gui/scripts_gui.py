@@ -159,6 +159,22 @@ SCRIPT_CATEGORIES = {
                      "--include-list", "Adventure.yaml", "-p"]
         ),
         ScriptAction(
+            "Test Adventure UT Worldgen",
+            "Run UT worldgen fuzz test for Adventure",
+            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
+                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--ut-version", "worldgen", "--no-use-tracking-config",
+                     "--seed", "1"]
+        ),
+        ScriptAction(
+            "Test Adventure UT Pickle",
+            "Run UT pickle fuzz test for Adventure",
+            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
+                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--ut-version", "pickle", "--no-use-tracking-config",
+                     "--seed", "1"]
+        ),
+        ScriptAction(
             "Test ALTTP Generation",
             "Generate ALTTP seed with Generate.py",
             command=[sys.executable, "Generate.py",
@@ -176,6 +192,22 @@ SCRIPT_CATEGORIES = {
             script_path="scripts/test/test-all-templates.py",
             command=[sys.executable, "scripts/test/test-all-templates.py",
                      "--include-list", "A Link to the Past.yaml", "-p"]
+        ),
+        ScriptAction(
+            "Test ALTTP UT Worldgen",
+            "Run UT worldgen fuzz test for ALTTP",
+            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--ut-version", "worldgen", "--no-use-tracking-config",
+                     "--seed", "1"]
+        ),
+        ScriptAction(
+            "Test ALTTP UT Pickle",
+            "Run UT pickle fuzz test for ALTTP",
+            command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--ut-version", "pickle", "--no-use-tracking-config",
+                     "--seed", "1"]
         ),
     ],
 }
