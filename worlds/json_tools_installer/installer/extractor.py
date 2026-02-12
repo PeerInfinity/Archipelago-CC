@@ -124,8 +124,9 @@ COMPONENTS: Dict[str, Component] = {
     "testing": Component(
         name="testing",
         display_name="Testing Infrastructure",
-        description="Test config files (package.json, playwright, vitest)",
+        description="Test config files (package.json, playwright, vitest, fuzz)",
         source_paths=[
+            "fuzz.py",
             "package.json",
             "package-lock.json",
             "playwright.config.js",
@@ -238,7 +239,7 @@ def should_extract_file(
             if rel_path.startswith(source_path + "/") or rel_path == source_path:
                 # Special case: exclude presets from frontend if presets not selected
                 if comp_name == "frontend" and "presets" not in components:
-                    if "presets" in rel_path:
+                    if rel_path.startswith("frontend/presets/"):
                         return False
                 return True
 
@@ -275,15 +276,6 @@ def extract_tools(
 
     result = ExtractionResult(success=True)
 
-    # Clean directories for components that require it (e.g., rule_builder replaces vanilla's version)
-    for comp_name in components:
-        comp = COMPONENTS.get(comp_name)
-        if comp and comp.clean_before_extract:
-            for source_path in comp.source_paths:
-                clean_path = dest_root / source_path
-                if clean_path.is_dir():
-                    shutil.rmtree(clean_path)
-
     try:
         with zipfile.ZipFile(archive_path, "r") as zf:
             # Get list of all files
@@ -302,6 +294,16 @@ def extract_tools(
                 if not f.endswith("/")  # Skip directories
                 and should_extract_file(f, components, archive_root)
             ]
+
+            # Clean directories for components that require it AFTER validating
+            # the zip, so a bad download doesn't leave the install broken
+            for comp_name in components:
+                comp = COMPONENTS.get(comp_name)
+                if comp and comp.clean_before_extract:
+                    for source_path in comp.source_paths:
+                        clean_path = dest_root / source_path
+                        if clean_path.is_dir():
+                            shutil.rmtree(clean_path)
 
             total = len(files_to_extract)
 

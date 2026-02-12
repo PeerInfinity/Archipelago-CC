@@ -22,6 +22,9 @@ Changes to configuration and repository setup files:
 
 These files configure the development environment and CI/CD pipeline.
 
+**Not included in the diff** (tracked separately):
+- **.github/pyright-config.json** - Removed references to `cached_world.py`, `options.py`, and `test_rule_builder.py` since these are consolidated into `rules.py` in this repo. See [rule-builder-modifications.md](./rule-builder-modifications.md).
+
 ### 3. `alttp-bunny-rules.diff` (27 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
 - **worlds/alttp/Rules.py** - Fixed missing `(state)` invocation and Python late binding bug in superbunny path lambdas
@@ -71,6 +74,14 @@ To see changes for a specific file:
 grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-files.diff | \
   grep -B 999999 "^diff --git" | head -n -1
 ```
+
+## Temporary Upstream Compatibility Fixes
+
+The following upstream files have minor type annotation fixes for pyright strict mode compliance. These are expected to be fixed in upstream and can be dropped on the next merge:
+- **test/param.py** - Added `cast()` for `sorted()` argument type
+- **worlds/AutoSNIClient.py** - Added `cast()` for `Iterable[object]` type
+
+These are not included in the diff files since they are temporary.
 
 ## Notes
 
@@ -129,7 +140,7 @@ python -m worlds.json_tools_installer status
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
 | `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
 
 ### Version Sources
 

@@ -64,7 +64,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class YachtDiceWorldGenWeb(WebWorld):
     """Web interface for Yacht Dice WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

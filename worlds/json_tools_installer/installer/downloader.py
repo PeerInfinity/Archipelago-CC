@@ -17,6 +17,9 @@ from ..config import SourceConfig
 # Requirements file that specifies minimum installer version
 REQUIREMENTS_FILENAME = "json_tools_installer_requirements.json"
 
+# Approximate archive size in bytes (GitHub sometimes omits Content-Length)
+APPROXIMATE_ARCHIVE_SIZE = 37 * 1024 * 1024  # ~37 MB
+
 
 @dataclass
 class InstallerRequirements:
@@ -59,45 +62,18 @@ def get_download_url(source: SourceConfig) -> str:
     return f"https://github.com/{source.repo}/archive/refs/heads/{source.branch}.zip"
 
 
-def download_archive(
-    source: SourceConfig,
-    dest_path: Optional[Path] = None,
+def _download_once(
+    url: str,
+    dest_path: Path,
     progress_callback: Optional[Callable[[int, int], None]] = None,
 ) -> DownloadResult:
-    """
-    Download a repository archive from GitHub.
-
-    Args:
-        source: Source configuration with repo and branch.
-        dest_path: Destination path for the downloaded file.
-                   If None, uses a temporary file.
-        progress_callback: Optional callback(downloaded_bytes, total_bytes)
-                          for progress updates.
-
-    Returns:
-        DownloadResult with success status and filepath or error.
-    """
-    url = get_download_url(source)
-
+    """Download a file from a URL (single attempt)."""
     try:
-        # Create request with user agent to avoid blocks
         request = urllib.request.Request(
             url,
             headers={"User-Agent": "Archipelago-JSON-Tools-Installer/1.0"}
         )
 
-        # Determine destination
-        if dest_path is None:
-            # Use temp file
-            fd, temp_path = tempfile.mkstemp(suffix=".zip")
-            dest_path = Path(temp_path)
-            import os
-            os.close(fd)
-        else:
-            dest_path = Path(dest_path)
-            dest_path.parent.mkdir(parents=True, exist_ok=True)
-
-        # Download with progress tracking
         with urllib.request.urlopen(request, timeout=60) as response:
             total_size = int(response.headers.get("Content-Length", 0))
             downloaded = 0
@@ -112,6 +88,17 @@ def download_archive(
                     downloaded += len(chunk)
                     if progress_callback:
                         progress_callback(downloaded, total_size)
+
+        # Validate the downloaded file is a valid zip
+        import zipfile
+        try:
+            with zipfile.ZipFile(dest_path, "r") as zf:
+                zf.namelist()  # Force reading the central directory
+        except (zipfile.BadZipFile, Exception) as e:
+            return DownloadResult(
+                success=False,
+                error=f"Download incomplete ({downloaded / 1024 / 1024:.1f} MB) - file is not a valid zip",
+            )
 
         return DownloadResult(
             success=True,
@@ -134,6 +121,56 @@ def download_archive(
             success=False,
             error=f"Download failed: {str(e)}",
         )
+
+
+def download_archive(
+    source: SourceConfig,
+    dest_path: Optional[Path] = None,
+    progress_callback: Optional[Callable[[int, int], None]] = None,
+    max_retries: int = 3,
+) -> DownloadResult:
+    """
+    Download a repository archive from GitHub.
+
+    Validates the downloaded zip and retries on failure.
+
+    Args:
+        source: Source configuration with repo and branch.
+        dest_path: Destination path for the downloaded file.
+                   If None, uses a temporary file.
+        progress_callback: Optional callback(downloaded_bytes, total_bytes)
+                          for progress updates.
+        max_retries: Maximum number of download attempts.
+
+    Returns:
+        DownloadResult with success status and filepath or error.
+    """
+    url = get_download_url(source)
+
+    # Determine destination
+    if dest_path is None:
+        fd, temp_path = tempfile.mkstemp(suffix=".zip")
+        dest_path = Path(temp_path)
+        import os
+        os.close(fd)
+    else:
+        dest_path = Path(dest_path)
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        result = _download_once(url, dest_path, progress_callback)
+        if result.success:
+            return result
+        last_error = result.error
+        if attempt < max_retries:
+            import time
+            time.sleep(2)
+
+    return DownloadResult(
+        success=False,
+        error=f"Download failed after {max_retries} attempts: {last_error}",
+    )
 
 
 def get_latest_commit_hash(source: SourceConfig) -> Optional[str]:

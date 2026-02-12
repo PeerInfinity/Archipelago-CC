@@ -9,7 +9,7 @@ from .Rules import set_rules
 
 class CodingAdventureWeb(WebWorld):
     theme = "ocean"
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
         "A guide to setting up Coding Adventure for MultiWorld.",
@@ -113,9 +113,9 @@ class CodingAdventureWorld(World):
     }
 
     def generate_early(self) -> None:
-        # If seed is 1, disable randomization to use canonical item placements
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
+        # Set is_vanilla dynamically based on the option
+        if self.options.vanilla_placement.value:
+            self.is_vanilla = True
     
     def create_regions(self) -> None:
         create_regions(self.multiworld, self.player)
@@ -189,8 +189,8 @@ class CodingAdventureWorld(World):
         self.multiworld.itempool += item_pool
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if using vanilla placement."""
+        if self.options.vanilla_placement.value:
             self._place_original_items()
 
     def _place_original_items(self) -> None:

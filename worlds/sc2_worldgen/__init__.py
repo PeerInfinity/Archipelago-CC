@@ -271,7 +271,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class Starcraft2WorldGenWeb(WebWorld):
     """Web interface for Starcraft 2 WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
