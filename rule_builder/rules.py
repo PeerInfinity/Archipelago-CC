@@ -559,7 +559,7 @@ class OptionFilter(Generic[T]):
 
 
 def _make_hashable(value: Any) -> Any:
-    """Convert a value to a hashable form, recursively handling dicts and lists."""
+    """Convert a value to a hashable form, recursively handling dicts, lists, tuples, and sets."""
     if isinstance(value, dict):
         # Convert dict to a sorted tuple of (key, value) pairs
         d = cast(dict[Any, Any], value)
@@ -567,6 +567,8 @@ def _make_hashable(value: Any) -> Any:
     elif isinstance(value, list):
         items = cast(list[Any], value)
         return tuple(_make_hashable(item) for item in items)
+    elif isinstance(value, tuple):
+        return tuple(_make_hashable(item) for item in value)
     elif isinstance(value, set):
         items = cast(set[Any], value)
         return frozenset(_make_hashable(item) for item in items)
