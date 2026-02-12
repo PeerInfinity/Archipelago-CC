@@ -296,6 +296,30 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Metamath.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Coding Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
 
+  # Vanilla WorldGen worlds (from vanilla placement presets)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    echo ""
+    echo "===== Generating Vanilla WorldGen worlds ====="
+    echo ""
+    python -m world_generator frontend/presets/bakingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/bakingadventure_vanilla_worldgen \
+        --game-name "Baking Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/mathadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/mathadventure_vanilla_worldgen \
+        --game-name "Math Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/codingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json \
+        -o worlds/codingadventure_vanilla_worldgen \
+        --game-name "Coding Adventure Vanilla WorldGen" \
+        --force \
+        $CANONICAL_FLAG
+  fi
+
   # Regenerate templates to include the worldgen worlds
   echo ""
   echo "===== Regenerating templates ====="
@@ -391,6 +415,13 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Coding Adventure WorldGen.yaml" --multi 1 --seed 1
 
+  # Vanilla WorldGen presets
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
+  fi
+
 fi
 
 # WorldGen2 world generation (generated from WorldGen worlds)
@@ -423,6 +454,30 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
       --force \
       $CANONICAL_FLAG
 
+  # Vanilla WorldGen2 worlds (from vanilla worldgen presets)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    echo ""
+    echo "===== Generating Vanilla WorldGen2 worlds (from Vanilla WorldGen) ====="
+    echo ""
+    python -m world_generator frontend/presets/bakingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/bakingadventure_vanilla_worldgen2 \
+        --game-name "Baking Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/mathadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/mathadventure_vanilla_worldgen2 \
+        --game-name "Math Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+
+    python -m world_generator frontend/presets/codingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json \
+        -o worlds/codingadventure_vanilla_worldgen2 \
+        --game-name "Coding Adventure Vanilla WorldGen2" \
+        --force \
+        $CANONICAL_FLAG
+  fi
+
   # Regenerate templates to include WorldGen2 worlds
   echo ""
   echo "===== Regenerating templates (for WorldGen2) ====="
@@ -437,6 +492,13 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   python Generate.py --weights_file_path "Templates/A Link to the Past WorldGen2.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/A Short Hike WorldGen2.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Adventure WorldGen2.yaml" --multi 1 --seed 1
+
+  # Vanilla WorldGen2 presets
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+    python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+  fi
 fi
 
 #remove empty preset directories
