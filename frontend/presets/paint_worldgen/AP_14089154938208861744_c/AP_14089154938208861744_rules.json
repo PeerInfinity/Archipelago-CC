@@ -1,0 +1,3922 @@
+{
+  "schema_version": 3,
+  "game_name": "Paint WorldGen",
+  "game_directory": "paint_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
+  "is_canonical": true,
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Canvas": {
+        "name": "Canvas",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Similarity: 1.0%",
+            "id": 198604,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 1.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 2.0%",
+            "id": 198608,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 2.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 3.0%",
+            "id": 198612,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 3.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 4.0%",
+            "id": 198616,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 4.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 5.0%",
+            "id": 198620,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 5.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 6.0%",
+            "id": 198624,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 6.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 7.0%",
+            "id": 198628,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 7.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 8.0%",
+            "id": 198632,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 8.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 9.0%",
+            "id": 198636,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 9.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Width",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 10.0%",
+            "id": 198640,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 10.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 11.0%",
+            "id": 198644,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 11.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 12.0%",
+            "id": 198648,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 12.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 13.0%",
+            "id": 198652,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 13.0
+              }
+            },
+            "item": {
+              "name": "Pick Color",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 14.0%",
+            "id": 198656,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 14.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 15.0%",
+            "id": 198660,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 15.0
+              }
+            },
+            "item": {
+              "name": "Curve",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 16.0%",
+            "id": 198664,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 16.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 17.0%",
+            "id": 198668,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 17.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 18.0%",
+            "id": 198672,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 18.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 19.0%",
+            "id": 198676,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 19.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Width",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 20.0%",
+            "id": 198680,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 20.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 21.0%",
+            "id": 198684,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 21.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 22.0%",
+            "id": 198688,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 22.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 23.0%",
+            "id": 198692,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 23.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 24.0%",
+            "id": 198696,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 24.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 25.0%",
+            "id": 198700,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 25.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Height",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 26.0%",
+            "id": 198704,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 26.0
+              }
+            },
+            "item": {
+              "name": "Line",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 27.0%",
+            "id": 198708,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 27.0
+              }
+            },
+            "item": {
+              "name": "Eraser/Color Eraser",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 28.0%",
+            "id": 198712,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 28.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Height",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 29.0%",
+            "id": 198716,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 29.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Height",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 30.0%",
+            "id": 198720,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 30.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 31.0%",
+            "id": 198724,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 31.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 32.0%",
+            "id": 198728,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 32.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 33.0%",
+            "id": 198732,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 33.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 34.0%",
+            "id": 198736,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 34.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 35.0%",
+            "id": 198740,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 35.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 36.0%",
+            "id": 198744,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 36.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 37.0%",
+            "id": 198748,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 37.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 38.0%",
+            "id": 198752,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 38.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 39.0%",
+            "id": 198756,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 39.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 40.0%",
+            "id": 198760,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 40.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 41.0%",
+            "id": 198764,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 41.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 42.0%",
+            "id": 198768,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 42.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 43.0%",
+            "id": 198772,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 43.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 44.0%",
+            "id": 198776,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 44.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 45.0%",
+            "id": 198780,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 45.0
+              }
+            },
+            "item": {
+              "name": "Pencil",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 46.0%",
+            "id": 198784,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 46.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 47.0%",
+            "id": 198788,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 47.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 48.0%",
+            "id": 198792,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 48.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 49.0%",
+            "id": 198796,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 49.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 50.0%",
+            "id": 198800,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 50.0
+              }
+            },
+            "item": {
+              "name": "Select",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 50.5%",
+            "id": 198802,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 50.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 51.0%",
+            "id": 198804,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 51.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 51.5%",
+            "id": 198806,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 51.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 52.0%",
+            "id": 198808,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 52.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 52.5%",
+            "id": 198810,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 52.5
+              }
+            },
+            "item": {
+              "name": "Text",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 53.0%",
+            "id": 198812,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 53.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 53.5%",
+            "id": 198814,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 53.5
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Width",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 54.0%",
+            "id": 198816,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 54.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 54.5%",
+            "id": 198818,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 54.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 55.0%",
+            "id": 198820,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 55.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 55.5%",
+            "id": 198822,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 55.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 56.0%",
+            "id": 198824,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 56.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 56.5%",
+            "id": 198826,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 56.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 57.0%",
+            "id": 198828,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 57.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 57.5%",
+            "id": 198830,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 57.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 58.0%",
+            "id": 198832,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 58.0
+              }
+            },
+            "item": {
+              "name": "Progressive Canvas Width",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 58.5%",
+            "id": 198834,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 58.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 59.0%",
+            "id": 198836,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 59.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 59.5%",
+            "id": 198838,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 59.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 60.0%",
+            "id": 198840,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 60.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 60.5%",
+            "id": 198842,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 60.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 61.0%",
+            "id": 198844,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 61.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 61.5%",
+            "id": 198846,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 61.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 62.0%",
+            "id": 198848,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 62.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 62.5%",
+            "id": 198850,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 62.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 63.0%",
+            "id": 198852,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 63.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 63.5%",
+            "id": 198854,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 63.5
+              }
+            },
+            "item": {
+              "name": "Rounded Rectangle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 64.0%",
+            "id": 198856,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 64.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 64.5%",
+            "id": 198858,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 64.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 65.0%",
+            "id": 198860,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 65.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 65.5%",
+            "id": 198862,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 65.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 66.0%",
+            "id": 198864,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 66.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 66.5%",
+            "id": 198866,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 66.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 67.0%",
+            "id": 198868,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 67.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 67.5%",
+            "id": 198870,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 67.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 68.0%",
+            "id": 198872,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 68.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 68.5%",
+            "id": 198874,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 68.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 69.0%",
+            "id": 198876,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 69.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 69.5%",
+            "id": 198878,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 69.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 70.0%",
+            "id": 198880,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 70.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 70.25%",
+            "id": 198881,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 70.25
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 70.5%",
+            "id": 198882,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 70.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 70.75%",
+            "id": 198883,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 70.75
+              }
+            },
+            "item": {
+              "name": "Fill With Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 71.0%",
+            "id": 198884,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 71.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 71.25%",
+            "id": 198885,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 71.25
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 71.5%",
+            "id": 198886,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 71.5
+              }
+            },
+            "item": {
+              "name": "Rectangle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 71.75%",
+            "id": 198887,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 71.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 72.0%",
+            "id": 198888,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 72.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 72.25%",
+            "id": 198889,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 72.25
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 72.5%",
+            "id": 198890,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 72.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 72.75%",
+            "id": 198891,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 72.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 73.0%",
+            "id": 198892,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 73.0
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Red)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 73.25%",
+            "id": 198893,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 73.25
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 73.5%",
+            "id": 198894,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 73.5
+              }
+            },
+            "item": {
+              "name": "Airbrush",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 73.75%",
+            "id": 198895,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 73.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 74.0%",
+            "id": 198896,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 74.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 74.25%",
+            "id": 198897,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 74.25
+              }
+            },
+            "item": {
+              "name": "Free-Form Select",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 74.5%",
+            "id": 198898,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 74.5
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 74.75%",
+            "id": 198899,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 74.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 75.0%",
+            "id": 198900,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 75.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 75.25%",
+            "id": 198901,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 75.25
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Green)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 75.5%",
+            "id": 198902,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 75.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 75.75%",
+            "id": 198903,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 75.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 76.0%",
+            "id": 198904,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 76.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 76.25%",
+            "id": 198905,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 76.25
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 76.5%",
+            "id": 198906,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 76.5
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 76.75%",
+            "id": 198907,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 76.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 77.0%",
+            "id": 198908,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 77.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 77.25%",
+            "id": 198909,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 77.25
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 77.5%",
+            "id": 198910,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 77.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 77.75%",
+            "id": 198911,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 77.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 78.0%",
+            "id": 198912,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 78.0
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 78.25%",
+            "id": 198913,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 78.25
+              }
+            },
+            "item": {
+              "name": "Progressive Color Depth (Blue)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 78.5%",
+            "id": 198914,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 78.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 78.75%",
+            "id": 198915,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 78.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 79.0%",
+            "id": 198916,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 79.0
+              }
+            },
+            "item": {
+              "name": "Ellipse",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 79.25%",
+            "id": 198917,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 79.25
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 79.5%",
+            "id": 198918,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 79.5
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 79.75%",
+            "id": 198919,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 79.75
+              }
+            },
+            "item": {
+              "name": "Additional Palette Color",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Similarity: 80.0%",
+            "id": 198920,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "calculate_paint_percent_available",
+                  "_original_ast_type": "rb_defined_helper"
+                },
+                "op": ">=",
+                "right": 80.0
+              }
+            },
+            "item": {
+              "name": "Polygon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Canvas"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Progressive Canvas Width": {
+        "name": "Progressive Canvas Width",
+        "id": 198501,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 4
+      },
+      "Progressive Canvas Height": {
+        "name": "Progressive Canvas Height",
+        "id": 198502,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "Progressive Color Depth (Red)": {
+        "name": "Progressive Color Depth (Red)",
+        "id": 198503,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 7
+      },
+      "Progressive Color Depth (Green)": {
+        "name": "Progressive Color Depth (Green)",
+        "id": 198504,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 7
+      },
+      "Progressive Color Depth (Blue)": {
+        "name": "Progressive Color Depth (Blue)",
+        "id": 198505,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 7
+      },
+      "Free-Form Select": {
+        "name": "Free-Form Select",
+        "id": 198506,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "Free Form Select"
+      },
+      "Select": {
+        "name": "Select",
+        "id": 198507,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Eraser/Color Eraser": {
+        "name": "Eraser/Color Eraser",
+        "id": 198508,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Fill With Color": {
+        "name": "Fill With Color",
+        "id": 198509,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Pick Color": {
+        "name": "Pick Color",
+        "id": 198510,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Magnifier": {
+        "name": "Magnifier",
+        "id": 198511,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Pencil": {
+        "name": "Pencil",
+        "id": 198512,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Brush": {
+        "name": "Brush",
+        "id": 198513,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Airbrush": {
+        "name": "Airbrush",
+        "id": 198514,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Text": {
+        "name": "Text",
+        "id": 198515,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Line": {
+        "name": "Line",
+        "id": 198516,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Curve": {
+        "name": "Curve",
+        "id": 198517,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Rectangle": {
+        "name": "Rectangle",
+        "id": 198518,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Polygon": {
+        "name": "Polygon",
+        "id": 198519,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Ellipse": {
+        "name": "Ellipse",
+        "id": 198520,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Rounded Rectangle": {
+        "name": "Rounded Rectangle",
+        "id": 198521,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "type": null,
+        "max_count": 1
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 91
+      },
+      "Undo Trap": {
+        "name": "Undo Trap",
+        "id": 198524,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Clear Image Trap": {
+        "name": "Clear Image Trap",
+        "id": 198525,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Invert Colors Trap": {
+        "name": "Invert Colors Trap",
+        "id": 198526,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Flip Horizontal Trap": {
+        "name": "Flip Horizontal Trap",
+        "id": 198527,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Flip Vertical Trap": {
+        "name": "Flip Vertical Trap",
+        "id": 198528,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Additional Palette Color": 91,
+      "Airbrush": 1,
+      "Brush": 1,
+      "Curve": 1,
+      "Ellipse": 1,
+      "Eraser/Color Eraser": 1,
+      "Fill With Color": 1,
+      "Free-Form Select": 1,
+      "Line": 1,
+      "Magnifier": 1,
+      "Pencil": 1,
+      "Pick Color": 1,
+      "Polygon": 1,
+      "Progressive Canvas Height": 3,
+      "Progressive Canvas Width": 4,
+      "Progressive Color Depth (Blue)": 7,
+      "Progressive Color Depth (Green)": 7,
+      "Progressive Color Depth (Red)": 7,
+      "Rectangle": 1,
+      "Rounded Rectangle": 1,
+      "Select": 1,
+      "Text": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "Similarity: 1.0%": "Additional Palette Color",
+      "Similarity: 10.0%": "Additional Palette Color",
+      "Similarity: 11.0%": "Additional Palette Color",
+      "Similarity: 12.0%": "Additional Palette Color",
+      "Similarity: 14.0%": "Additional Palette Color",
+      "Similarity: 2.0%": "Additional Palette Color",
+      "Similarity: 20.0%": "Additional Palette Color",
+      "Similarity: 21.0%": "Additional Palette Color",
+      "Similarity: 23.0%": "Additional Palette Color",
+      "Similarity: 24.0%": "Additional Palette Color",
+      "Similarity: 30.0%": "Additional Palette Color",
+      "Similarity: 31.0%": "Additional Palette Color",
+      "Similarity: 32.0%": "Additional Palette Color",
+      "Similarity: 33.0%": "Additional Palette Color",
+      "Similarity: 34.0%": "Additional Palette Color",
+      "Similarity: 35.0%": "Additional Palette Color",
+      "Similarity: 36.0%": "Additional Palette Color",
+      "Similarity: 37.0%": "Additional Palette Color",
+      "Similarity: 38.0%": "Additional Palette Color",
+      "Similarity: 39.0%": "Additional Palette Color",
+      "Similarity: 40.0%": "Additional Palette Color",
+      "Similarity: 41.0%": "Additional Palette Color",
+      "Similarity: 42.0%": "Additional Palette Color",
+      "Similarity: 43.0%": "Additional Palette Color",
+      "Similarity: 44.0%": "Additional Palette Color",
+      "Similarity: 46.0%": "Additional Palette Color",
+      "Similarity: 48.0%": "Additional Palette Color",
+      "Similarity: 49.0%": "Additional Palette Color",
+      "Similarity: 5.0%": "Additional Palette Color",
+      "Similarity: 50.5%": "Additional Palette Color",
+      "Similarity: 51.0%": "Additional Palette Color",
+      "Similarity: 51.5%": "Additional Palette Color",
+      "Similarity: 52.0%": "Additional Palette Color",
+      "Similarity: 54.0%": "Additional Palette Color",
+      "Similarity: 54.5%": "Additional Palette Color",
+      "Similarity: 55.0%": "Additional Palette Color",
+      "Similarity: 55.5%": "Additional Palette Color",
+      "Similarity: 56.0%": "Additional Palette Color",
+      "Similarity: 56.5%": "Additional Palette Color",
+      "Similarity: 57.0%": "Additional Palette Color",
+      "Similarity: 57.5%": "Additional Palette Color",
+      "Similarity: 58.5%": "Additional Palette Color",
+      "Similarity: 59.0%": "Additional Palette Color",
+      "Similarity: 59.5%": "Additional Palette Color",
+      "Similarity: 6.0%": "Additional Palette Color",
+      "Similarity: 60.5%": "Additional Palette Color",
+      "Similarity: 61.0%": "Additional Palette Color",
+      "Similarity: 61.5%": "Additional Palette Color",
+      "Similarity: 62.0%": "Additional Palette Color",
+      "Similarity: 62.5%": "Additional Palette Color",
+      "Similarity: 63.0%": "Additional Palette Color",
+      "Similarity: 64.0%": "Additional Palette Color",
+      "Similarity: 64.5%": "Additional Palette Color",
+      "Similarity: 65.0%": "Additional Palette Color",
+      "Similarity: 65.5%": "Additional Palette Color",
+      "Similarity: 66.0%": "Additional Palette Color",
+      "Similarity: 66.5%": "Additional Palette Color",
+      "Similarity: 67.5%": "Additional Palette Color",
+      "Similarity: 68.0%": "Additional Palette Color",
+      "Similarity: 68.5%": "Additional Palette Color",
+      "Similarity: 69.5%": "Additional Palette Color",
+      "Similarity: 7.0%": "Additional Palette Color",
+      "Similarity: 70.0%": "Additional Palette Color",
+      "Similarity: 70.5%": "Additional Palette Color",
+      "Similarity: 71.0%": "Additional Palette Color",
+      "Similarity: 71.25%": "Additional Palette Color",
+      "Similarity: 71.75%": "Additional Palette Color",
+      "Similarity: 72.0%": "Additional Palette Color",
+      "Similarity: 72.25%": "Additional Palette Color",
+      "Similarity: 72.5%": "Additional Palette Color",
+      "Similarity: 72.75%": "Additional Palette Color",
+      "Similarity: 73.25%": "Additional Palette Color",
+      "Similarity: 73.75%": "Additional Palette Color",
+      "Similarity: 74.0%": "Additional Palette Color",
+      "Similarity: 74.75%": "Additional Palette Color",
+      "Similarity: 75.0%": "Additional Palette Color",
+      "Similarity: 75.5%": "Additional Palette Color",
+      "Similarity: 75.75%": "Additional Palette Color",
+      "Similarity: 76.0%": "Additional Palette Color",
+      "Similarity: 76.75%": "Additional Palette Color",
+      "Similarity: 77.0%": "Additional Palette Color",
+      "Similarity: 77.25%": "Additional Palette Color",
+      "Similarity: 77.5%": "Additional Palette Color",
+      "Similarity: 77.75%": "Additional Palette Color",
+      "Similarity: 78.0%": "Additional Palette Color",
+      "Similarity: 78.5%": "Additional Palette Color",
+      "Similarity: 78.75%": "Additional Palette Color",
+      "Similarity: 79.25%": "Additional Palette Color",
+      "Similarity: 79.5%": "Additional Palette Color",
+      "Similarity: 79.75%": "Additional Palette Color",
+      "Similarity: 8.0%": "Additional Palette Color",
+      "Similarity: 3.0%": "Progressive Color Depth (Green)",
+      "Similarity: 47.0%": "Progressive Color Depth (Green)",
+      "Similarity: 60.0%": "Progressive Color Depth (Green)",
+      "Similarity: 70.25%": "Progressive Color Depth (Green)",
+      "Similarity: 74.5%": "Progressive Color Depth (Green)",
+      "Similarity: 75.25%": "Progressive Color Depth (Green)",
+      "Similarity: 18.0%": "Progressive Color Depth (Blue)",
+      "Similarity: 22.0%": "Progressive Color Depth (Blue)",
+      "Similarity: 4.0%": "Progressive Color Depth (Blue)",
+      "Similarity: 76.25%": "Progressive Color Depth (Blue)",
+      "Similarity: 76.5%": "Progressive Color Depth (Blue)",
+      "Similarity: 78.25%": "Progressive Color Depth (Blue)",
+      "Similarity: 19.0%": "Progressive Canvas Width",
+      "Similarity: 53.5%": "Progressive Canvas Width",
+      "Similarity: 58.0%": "Progressive Canvas Width",
+      "Similarity: 9.0%": "Progressive Canvas Width",
+      "Similarity: 13.0%": "Pick Color",
+      "Similarity: 15.0%": "Curve",
+      "Similarity: 16.0%": "Progressive Color Depth (Red)",
+      "Similarity: 17.0%": "Progressive Color Depth (Red)",
+      "Similarity: 53.0%": "Progressive Color Depth (Red)",
+      "Similarity: 67.0%": "Progressive Color Depth (Red)",
+      "Similarity: 69.0%": "Progressive Color Depth (Red)",
+      "Similarity: 73.0%": "Progressive Color Depth (Red)",
+      "Similarity: 25.0%": "Progressive Canvas Height",
+      "Similarity: 28.0%": "Progressive Canvas Height",
+      "Similarity: 29.0%": "Progressive Canvas Height",
+      "Similarity: 26.0%": "Line",
+      "Similarity: 27.0%": "Eraser/Color Eraser",
+      "Similarity: 45.0%": "Pencil",
+      "Similarity: 50.0%": "Select",
+      "Similarity: 52.5%": "Text",
+      "Similarity: 63.5%": "Rounded Rectangle",
+      "Similarity: 70.75%": "Fill With Color",
+      "Similarity: 71.5%": "Rectangle",
+      "Similarity: 73.5%": "Airbrush",
+      "Similarity: 74.25%": "Free-Form Select",
+      "Similarity: 79.0%": "Ellipse",
+      "Similarity: 80.0%": "Polygon"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": [
+      "Magnifier",
+      "Brush",
+      "Progressive Color Depth (Red)",
+      "Progressive Color Depth (Green)",
+      "Progressive Color Depth (Blue)"
+    ]
+  },
+  "world": {
+    "1": {
+      "game": "Paint WorldGen",
+      "world_class_name": "PaintWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "canvas_size_increment": 100,
+        "death_link": false,
+        "exclude_locations": [],
+        "goal_image": 1,
+        "goal_percent": 80,
+        "half_percent_checks": 50,
+        "item_links": [],
+        "local_items": [],
+        "logic_percent": 80,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "quarter_percent_checks": 70,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "starting_tool": 0,
+        "trap_count": 0,
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "canvas_size_increment": {
+          "type": "choice",
+          "name_lookup": {
+            "25": "25",
+            "50": "50",
+            "100": "100"
+          },
+          "default": 100,
+          "display_name": "Canvas Size Increment"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Death Link"
+        },
+        "goal_image": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 1,
+          "default": 1,
+          "display_name": "Goal Image"
+        },
+        "goal_percent": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 95,
+          "default": 80,
+          "display_name": "Goal Percent"
+        },
+        "half_percent_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 95,
+          "default": 50,
+          "display_name": "Half Percent Checks"
+        },
+        "logic_percent": {
+          "type": "range",
+          "range_start": 50,
+          "range_end": 95,
+          "default": 80,
+          "display_name": "Logic Percent"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "quarter_percent_checks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 95,
+          "default": 70,
+          "display_name": "Quarter Percent Checks"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "start_inventory_from_pool": {
+          "type": "start_inventory_pool",
+          "default": {},
+          "display_name": "Start Inventory from Pool"
+        },
+        "starting_tool": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "brush",
+            "1": "pencil",
+            "2": "eraser",
+            "3": "airbrush",
+            "4": "line",
+            "5": "rectangle",
+            "6": "ellipse",
+            "7": "rounded_rectangle"
+          },
+          "default": 0
+        },
+        "trap_count": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 100,
+          "default": 0,
+          "display_name": "Trap Fill Percent"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",
+      "slot_data": {
+        "logic_percent": 80,
+        "goal_percent": 80,
+        "goal_image": 1,
+        "death_link": 0,
+        "canvas_size_increment": 100,
+        "version": "0.5.2"
+      },
+      "web": {
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Start Guide",
+            "description": "A guide to playing Paint in Archipelago.",
+            "language": "English",
+            "file_name": "guide_en.md",
+            "link": "guide/en",
+            "authors": [
+              "MarioManTAW"
+            ]
+          }
+        ]
+      },
+      "world_directory": "paint_worldgen"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "calculate_paint_percent_available": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "p",
+            "value": {
+              "type": "item_check",
+              "item": "Pick Color"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "r",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Red)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "g",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Green)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "b",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Blue)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "not",
+              "condition": {
+                "type": "name",
+                "name": "p"
+              }
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "r",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "r"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "assign",
+                "name": "g",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "g"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "assign",
+                "name": "b",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "b"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "assign",
+            "name": "w",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive Canvas Width"
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "h",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive Canvas Height"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "math"
+                            },
+                            "attr": "sqrt"
+                          },
+                          "args": [
+                            {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 2
+                                        },
+                                        "op": "**",
+                                        "right": {
+                                          "type": "binary_op",
+                                          "left": {
+                                            "type": "constant",
+                                            "value": 7
+                                          },
+                                          "op": "-",
+                                          "right": {
+                                            "type": "name",
+                                            "name": "r"
+                                          }
+                                        }
+                                      },
+                                      "op": "-",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    },
+                                    "op": "**",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 2
+                                    }
+                                  },
+                                  "op": "+",
+                                  "right": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 2
+                                        },
+                                        "op": "**",
+                                        "right": {
+                                          "type": "binary_op",
+                                          "left": {
+                                            "type": "constant",
+                                            "value": 7
+                                          },
+                                          "op": "-",
+                                          "right": {
+                                            "type": "name",
+                                            "name": "g"
+                                          }
+                                        }
+                                      },
+                                      "op": "-",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    },
+                                    "op": "**",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 2
+                                    }
+                                  }
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 2
+                                      },
+                                      "op": "**",
+                                      "right": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 7
+                                        },
+                                        "op": "-",
+                                        "right": {
+                                          "type": "name",
+                                          "name": "b"
+                                        }
+                                      }
+                                    },
+                                    "op": "-",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 1
+                                    }
+                                  },
+                                  "op": "**",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 2
+                                  }
+                                }
+                              },
+                              "op": "*",
+                              "right": {
+                                "type": "constant",
+                                "value": 12
+                              }
+                            }
+                          ]
+                        },
+                        "op": "/",
+                        "right": {
+                          "type": "constant",
+                          "value": 765
+                        }
+                      }
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "min",
+                      "args": [
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 400
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "name",
+                              "name": "w"
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "option_value",
+                              "option": "canvas_size_increment"
+                            }
+                          }
+                        },
+                        {
+                          "type": "constant",
+                          "value": 800
+                        }
+                      ]
+                    }
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "constant",
+                          "value": 300
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "name",
+                            "name": "h"
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "option_value",
+                            "option": "canvas_size_increment"
+                          }
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": 600
+                      }
+                    ]
+                  }
+                },
+                "op": "*",
+                "right": {
+                  "type": "option_value",
+                  "option": "logic_percent"
+                }
+              },
+              "op": "/",
+              "right": {
+                "type": "constant",
+                "value": 480000
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

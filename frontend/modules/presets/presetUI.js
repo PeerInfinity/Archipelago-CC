@@ -214,18 +214,22 @@ export class PresetUI {
         // Standard layout for single-player games
         html += `<div class="game-presets">`;
         Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
-          const placementBadge = this.renderPlacementTypeBadge(folderData.placement_type);
-          const placementTitle = folderData.placement_type
-            ? `Seed ${folderData.seed} (${folderData.placement_type} placement)`
+          const placementBadges = this.renderPlacementBadges(folderData);
+          const hasPlacement = folderData.is_vanilla || folderData.is_canonical;
+          const placementParts = [];
+          if (folderData.is_vanilla) placementParts.push('vanilla');
+          if (folderData.is_canonical) placementParts.push('canonical');
+          const placementTitle = hasPlacement
+            ? `Seed ${folderData.seed} (${placementParts.join(' + ')} placement)`
             : `Seed ${folderData.seed}`;
           html += `
-            <button class="preset-button${folderData.placement_type ? ' has-placement-type' : ''}"
+            <button class="preset-button${hasPlacement ? ' has-placement-type' : ''}"
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
                       folderData.description || placementTitle
                     )}">
-              ${this.escapeHtml(folderData.seed)}${placementBadge}
+              ${this.escapeHtml(folderData.seed)}${placementBadges}
             </button>
           `;
         });
@@ -1065,15 +1069,15 @@ export class PresetUI {
     }
   }
 
-  renderPlacementTypeBadge(placementType) {
-    if (!placementType) return '';
-    if (placementType === 'vanilla') {
-      return `<span class="placement-badge placement-vanilla" title="Vanilla: original game item placement">V</span>`;
+  renderPlacementBadges(folderData) {
+    let badges = '';
+    if (folderData.is_vanilla) {
+      badges += `<span class="placement-badge placement-vanilla" title="Vanilla: original game item placement">V</span>`;
     }
-    if (placementType === 'canonical') {
-      return `<span class="placement-badge placement-canonical" title="Canonical: deterministic item placement">C</span>`;
+    if (folderData.is_canonical) {
+      badges += `<span class="placement-badge placement-canonical" title="Canonical: deterministic item placement">C</span>`;
     }
-    return '';
+    return badges;
   }
 
   renderTestResultBadge(gameData) {

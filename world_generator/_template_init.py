@@ -419,14 +419,23 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         return super().collect_item(state, item, remove)
 '''
 
-    # Generate placement_type class attribute (for exporter to read)
+    # Generate is_vanilla and is_canonical class attributes (for exporter to read)
+    placement_type_section = ''
     if canonical_seed is not None and canonical_class_attr_content:
-        placement_type_section = '''
-    # Placement type: "canonical" = items placed back where they were when this rules.json was exported
-    placement_type: ClassVar[str] = "canonical"
+        # All worldgen canonical worlds are is_canonical=True
+        # is_vanilla is inherited from the source rules.json
+        if data.is_vanilla:
+            placement_type_section = '''
+    # Placements match the original non-randomized game
+    is_vanilla: ClassVar[bool] = True
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 '''
-    else:
-        placement_type_section = ''
+        else:
+            placement_type_section = '''
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
+'''
 
     # Generate canonical_placements class attribute (for exporter to read)
     if canonical_seed is not None and canonical_class_attr_content:

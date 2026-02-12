@@ -507,8 +507,8 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
     return updated_preset_files
 
 
-def update_placement_types(preset_files: Dict[str, Any], presets_dir: str) -> int:
-    """Scan rules.json files for placement_type and add to folder entries in preset_files.
+def update_placement_flags(preset_files: Dict[str, Any], presets_dir: str) -> int:
+    """Scan rules.json files for is_vanilla/is_canonical and add to folder entries in preset_files.
 
     Returns the number of folders updated.
     """
@@ -520,8 +520,8 @@ def update_placement_types(preset_files: Dict[str, Any], presets_dir: str) -> in
         for folder_name, folder_data in folders.items():
             if not isinstance(folder_data, dict):
                 continue
-            # Skip if placement_type already set
-            if 'placement_type' in folder_data:
+            # Skip if already has both flags checked
+            if 'is_vanilla' in folder_data or 'is_canonical' in folder_data:
                 continue
             # Find the rules.json file in this folder
             files = folder_data.get('files', [])
@@ -534,9 +534,14 @@ def update_placement_types(preset_files: Dict[str, Any], presets_dir: str) -> in
             try:
                 with open(rules_path, 'r') as f:
                     rules_data = json.load(f)
-                placement_type = rules_data.get('placement_type')
-                if placement_type:
-                    folder_data['placement_type'] = placement_type
+                changed = False
+                if rules_data.get('is_vanilla'):
+                    folder_data['is_vanilla'] = True
+                    changed = True
+                if rules_data.get('is_canonical'):
+                    folder_data['is_canonical'] = True
+                    changed = True
+                if changed:
                     updated_count += 1
             except (json.JSONDecodeError, IOError):
                 pass
@@ -659,11 +664,11 @@ def main():
     print(f"\nUpdating preset files with test data...")
     updated_preset_files = update_preset_files_with_all_test_data(preset_files, all_test_results)
 
-    # Scan rules.json files for placement_type metadata and backfill into preset_files
+    # Scan rules.json files for is_vanilla/is_canonical metadata and backfill into preset_files
     presets_dir = os.path.join(project_root, os.path.dirname(args.preset_files))
-    placement_count = update_placement_types(updated_preset_files, presets_dir)
+    placement_count = update_placement_flags(updated_preset_files, presets_dir)
     if placement_count > 0:
-        print(f"\nUpdated {placement_count} folder(s) with placement_type from rules.json files")
+        print(f"\nUpdated {placement_count} folder(s) with placement flags from rules.json files")
 
     # Save or display results
     if args.dry_run:
