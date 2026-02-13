@@ -192,7 +192,7 @@ export function getSnapshot(sm) {
     // REFACTOR: Add missing properties for canonical state
     debugMode: sm.debugMode || false,
     autoCollectEventsEnabled: sm.autoCollectEventsEnabled !== false, // Default true
-    startRegions: sm.startRegions || ['Menu'],
+    startRegions: sm.startRegions || [],
     // Progressive items tracking (used by games like DLCQuest for coin accumulation)
     prog_items: sm.prog_items || {},
 

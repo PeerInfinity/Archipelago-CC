@@ -54,7 +54,7 @@ export class LoopBlockBuilder {
     regionBlock.classList.add(isExpanded ? 'expanded' : 'collapsed');
 
     // Check if this is the initial start region (starting position)
-    const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? (regionName === 'Menu');
+    const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? false;
     const isInitialMenu = isStartRegion &&
                          actions.length === 1 &&
                          actions[0].index === 0 &&
@@ -178,7 +178,7 @@ export class LoopBlockBuilder {
       detailsEl.className = 'loop-region-details';
 
       // Add explore button if in loop mode (but not for start regions, which are already fully explored)
-      const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? (regionName === 'Menu');
+      const isStartRegion = this.loopUI.playerStateAPI?.isStartRegion?.(regionName) ?? false;
       if (this.loopUI.isLoopModeActive && !isStartRegion) {
         this.addExploreButton(detailsEl, regionName);
       }

@@ -119,8 +119,8 @@ export class LoopState {
     if (this.playerState?.isStartRegion) {
       return this.playerState.isStartRegion(entry.region);
     }
-    // Fallback to checking for 'Menu' if playerState not available
-    return entry.region === 'Menu';
+    // If playerState not available, can't determine start region
+    return false;
   }
 
   /**

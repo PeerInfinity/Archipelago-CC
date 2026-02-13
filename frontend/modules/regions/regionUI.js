@@ -827,7 +827,7 @@ export class RegionUI {
     const sectionOrderSelect = this.rootElement.querySelector('#section-order-select');
     const sectionOrder = sectionOrderSelect ? sectionOrderSelect.value : 'entrances-exits-locations';
 
-    // Filter out regions that don't exist in static data (e.g. placeholder 'Menu' before rules load)
+    // Filter out regions that don't exist in static data (e.g. placeholder region before rules load)
     regionsToRender = regionsToRender.filter(region =>
       region.isSkipIndicator || staticData.regions.has(region.name)
     );

@@ -43,7 +43,14 @@ export class PathAnalyzerLogic {
    * @returns {Array<string>|null} - Array of region names in the path order, or null if no path found
    */
   findPathInLoopMode(targetRegion, staticData) {
-    const startRegion = 'Menu'; // Always start from Menu in loop mode
+    // Get start region from loopState's playerState, or fall back to first static region
+    const startRegion = loopState.playerState?.startRegions?.[0]
+      || (staticData?.regions?.size > 0 ? staticData.regions.keys().next().value : null);
+
+    if (!startRegion) {
+      this._logDebug('Cannot find path in loop mode: No start region available.');
+      return null;
+    }
 
     if (targetRegion === startRegion) {
       return [startRegion];
@@ -208,16 +215,22 @@ export class PathAnalyzerLogic {
       // Continue trying to find paths anyway
     }
 
-    let startRegions = staticData?.startRegions || ['Menu'];
+    let startRegions = staticData?.startRegions;
 
     // Ensure startRegions is always an array
-    if (!Array.isArray(startRegions)) {
+    if (!startRegions) {
+      // Fall back to first region from static data
+      if (regionsData?.size > 0) {
+        startRegions = [regionsData.keys().next().value];
+      } else {
+        startRegions = [];
+      }
+    } else if (!Array.isArray(startRegions)) {
       // If it's an object with a 'default' property, use that
-      if (startRegions && typeof startRegions === 'object' && startRegions.default) {
+      if (typeof startRegions === 'object' && startRegions.default) {
         startRegions = startRegions.default;
       } else {
-        // Otherwise fall back to Menu
-        startRegions = ['Menu'];
+        startRegions = [];
       }
     }
 
