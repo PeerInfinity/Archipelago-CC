@@ -21,7 +21,7 @@ on:
       generate_worldgen:
         description: 'Generate worldgen worlds for standard templates'
         type: boolean
-        default: false
+        default: true
 
       worldgen_canonical_seed:
         description: 'Canonical seed number for worldgen worlds. Leave empty to disable.'
@@ -30,6 +30,11 @@ on:
 
       generate_worldgen2:
         description: 'Generate worldgen2 worlds (from worldgen worlds)'
+        type: boolean
+        default: true
+
+      clean_existing:
+        description: 'Delete existing frontend presets and worldgen worlds before generating'
         type: boolean
         default: false
 
@@ -120,6 +125,7 @@ jobs:
           GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
           WORLDGEN_CANONICAL_SEED: ${{ inputs.worldgen_canonical_seed }}
           GENERATE_WORLDGEN2: ${{ inputs.generate_worldgen2 }}
+          CLEAN_EXISTING: ${{ inputs.clean_existing }}
         run: |
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
