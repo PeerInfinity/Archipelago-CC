@@ -55,18 +55,21 @@ class RuleExpressionMixin:
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
 
-            # Check if this rule references a virtual/computed item that can never be obtained.
-            # Items like "Reachable Orbs" are dynamically computed counters in the original game
-            # via collect_item hooks, but WorldGen worlds can't replicate this mechanism.
+            # Check if this rule references an item that can never be obtained.
+            # If the item is not in the obtainable items set, Has() can never be satisfied,
+            # so use False_() (never accessible). This handles:
+            # - Phantom items used as permanent blocks (e.g., Messenger's closed portal items)
+            # - Event items that are never created (e.g., Landstalker's event_visited_tibor
+            #   when teleport_tree_requirements != clear_tibor)
             if (self.obtainable_items is not None
                     and item_name
                     and item_name not in self.obtainable_items
                     and isinstance(count, int) and count > 0):
                 import sys
                 print(f"LOSSY FALLBACK: Has('{item_name}', {count}) references unobtainable item, "
-                      f"using True_() (always accessible) as fallback", file=sys.stderr)
-                self.required_imports.add('True_')
-                return 'True_()'
+                      f"using False_() (never accessible) as fallback", file=sys.stderr)
+                self.required_imports.add('False_')
+                return 'False_()'
 
             self.required_imports.add('Has')
 
