@@ -10,11 +10,11 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-02-08 20:36:30
+**Generated:** 2026-02-13 03:32:22 UTC
 
-**Source Data Created:** 2026-02-08T20:36:29.478067
+**Source Data Created:** 2026-02-13T03:32:21.647240+00:00
 
-**Source Data Last Updated:** 2026-02-08T20:36:29.478076
+**Source Data Last Updated:** 2026-02-13T03:32:21.647253+00:00
 
 ## Summary
 
@@ -87,7 +87,7 @@
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Satisfactory | ✅ Passed | ✅ Passed | 5 | 5 | 41.2KB | ✅ |
+| Satisfactory | ✅ Passed | ✅ Passed | 5 | 5 | 41.6KB | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
