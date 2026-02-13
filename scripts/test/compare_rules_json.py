@@ -1746,6 +1746,16 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if 'groups' in path:
             return True
 
+    # Location event field: The current exporter only includes event=True (to reduce JSON
+    # size), but older exports included event=False on every non-event location. When
+    # comparing an older original export with a newer WorldGen export, event=False vs
+    # missing is semantically equivalent and should be ignored.
+    if 'regions.' in path and '.locations[' in path and path.endswith('.event'):
+        if original_value is False and worldgen_value == '<missing>':
+            return True
+        if worldgen_value is False and original_value == '<missing>':
+            return True
+
     # Event marking for items with valid IDs: Some original worlds place items with valid
     # IDs as events at runtime (setting item.code=None, location.address=None). The handler
     # detects these and marks them with event=True, type='Event'. WorldGen worlds don't
