@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-02-13 04:01:46 UTC
+**Generated:** 2026-02-13 04:52:43 UTC
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -16,9 +16,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 ## Summary
 
 - **Total Games Tested:** 87
-- **Passing Both:** 67 (77.0%)
+- **Passing Both:** 70 (80.5%)
 - **Passing Worldgen Only:** 3 (3.4%)
-- **Passing Hybrid Only:** 12 (13.8%)
+- **Passing Hybrid Only:** 9 (10.3%)
 - **Passing Neither:** 5 (5.7%)
 - **Passing Hybrid with no custom code:** 44 (50.6%)
 - **Passing Hybrid Only with no custom code:** 2 (2.3%)
@@ -63,9 +63,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Kingdom Hearts | ❌ 40.0% | ✅ 100.0% | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ 0.0% | ❌ 10.0% | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | ❌ 0.0% | ✅ 100.0% | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ⚠️ 60.0% | ✅ 100.0% | 3.6KB | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ✅ 100.0% | ✅ 100.0% | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ 30.0% | ✅ 30.0% | 38.0KB | 10.7KB | 939.9KB |
-| Links Awakening DX | ❌ 0.0% | ✅ 100.0% | 7.4KB | ✅ | 703.0KB |
+| Links Awakening DX | ✅ 100.0% | ✅ 100.0% | 7.4KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 395.4KB |
 | Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -102,7 +102,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | TUNIC | ✅ 100.0% | ✅ 100.0% | 3.1KB | ✅ | 649.1KB |
 | Terraria | ✅ 90.0% | ✅ 90.0% | 16.8KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 554.5KB |
-| The Messenger | ⚠️ 50.0% | ✅ 100.0% | 15.2KB | ✅ | 210.3KB |
+| The Messenger | ✅ 100.0% | ✅ 100.0% | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | ✅ 50.0% | ✅ 50.0% | 7.0KB | ✅ | 250.1KB |
 | The Witness | ✅ 100.0% | ✅ 100.0% | 14.1KB | ✅ | 392.1KB |
 | Timespinner | ✅ 100.0% | ✅ 100.0% | 2.2KB | ✅ | 262.7KB |
@@ -115,7 +115,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 153.7KB |
 
-## Games Passing Both (67)
+## Games Passing Both (70)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -151,7 +151,9 @@ These games have 100% success rate in both Universal Tracker versions.
 | Hylics 2 | ✅ | ✅ | 100.3KB |
 | Inscryption | 8.0KB | ✅ | 83.0KB |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
+| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Lingo | 38.0KB | 10.7KB | 939.9KB |
+| Links Awakening DX | 7.4KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 395.4KB |
 | Math Adventure | ✅ | ✅ | N/A |
@@ -180,6 +182,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TUNIC | 3.1KB | ✅ | 649.1KB |
 | Terraria | 16.8KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ | ✅ | 554.5KB |
+| The Messenger | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | 7.0KB | ✅ | 250.1KB |
 | The Witness | 14.1KB | ✅ | 392.1KB |
 | Timespinner | 2.2KB | ✅ | 262.7KB |
@@ -199,7 +202,7 @@ These games pass in the Worldgen UT but fail in the Hybrid UT.
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
 | Satisfactory | 41.6KB | ✅ | 1618.9KB |
 
-## Games Passing Hybrid Only (12)
+## Games Passing Hybrid Only (9)
 
 These games pass in the Hybrid UT but fail in the Worldgen UT.
 
@@ -208,13 +211,10 @@ These games pass in the Hybrid UT but fail in the Worldgen UT.
 | Hollow Knight | ✅ | ✅ | N/A |
 | Kingdom Hearts | ✅ | ✅ | 748.6KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
-| Links Awakening DX | 7.4KB | ✅ | 703.0KB |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2407.6KB |
-| The Messenger | 15.2KB | ✅ | 210.3KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 

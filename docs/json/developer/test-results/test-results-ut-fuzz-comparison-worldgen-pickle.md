@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-02-13 04:01:46 UTC
+**Generated:** 2026-02-13 04:52:43 UTC
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -16,10 +16,10 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 ## Summary
 
 - **Total Games Tested:** 87
-- **Passing Both:** 66 (75.9%)
-- **Passing Worldgen Only:** 4 (4.6%)
-- **Passing Pickle Only:** 9 (10.3%)
-- **Passing Neither:** 8 (9.2%)
+- **Passing Both:** 67 (77.0%)
+- **Passing Worldgen Only:** 6 (6.9%)
+- **Passing Pickle Only:** 8 (9.2%)
+- **Passing Neither:** 6 (6.9%)
 - **Passing Pickle with no custom code:** 43 (49.4%)
 - **Passing Pickle Only with no custom code:** 1 (1.1%)
 
@@ -63,9 +63,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Kingdom Hearts | ❌ 40.0% | ⚠️ 98.0% | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ 0.0% | ❌ 44.0% | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | ❌ 0.0% | ✅ 97.0% | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ⚠️ 60.0% | ✅ 100.0% | 3.6KB | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ✅ 100.0% | ✅ 100.0% | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ 30.0% | ✅ 45.0% | 38.0KB | 10.7KB | 939.9KB |
-| Links Awakening DX | ❌ 0.0% | ❌ 23.0% | 7.4KB | ✅ | 703.0KB |
+| Links Awakening DX | ✅ 100.0% | ❌ 23.0% | 7.4KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 395.4KB |
 | Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -102,7 +102,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | TUNIC | ✅ 100.0% | ✅ 100.0% | 3.1KB | ✅ | 649.1KB |
 | Terraria | ✅ 90.0% | ✅ 98.0% | 16.8KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 554.5KB |
-| The Messenger | ⚠️ 50.0% | ❌ 2.0% | 15.2KB | ✅ | 210.3KB |
+| The Messenger | ✅ 100.0% | ❌ 2.0% | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | ✅ 50.0% | ✅ 54.0% | 7.0KB | ✅ | 250.1KB |
 | The Witness | ✅ 100.0% | ✅ 100.0% | 14.1KB | ✅ | 392.1KB |
 | Timespinner | ✅ 100.0% | ✅ 99.0% | 2.2KB | ✅ | 262.7KB |
@@ -115,7 +115,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Zillion | ❌ 0.0% | ⚠️ 78.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 153.7KB |
 
-## Games Passing Both (66)
+## Games Passing Both (67)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -152,6 +152,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Hylics 2 | ✅ | ✅ | 100.3KB |
 | Inscryption | 8.0KB | ✅ | 83.0KB |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
+| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Lingo | 38.0KB | 10.7KB | 939.9KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 395.4KB |
@@ -188,18 +189,20 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 295.2KB |
 | shapez | ✅ | ✅ | 153.7KB |
 
-## Games Passing Worldgen Only (4)
+## Games Passing Worldgen Only (6)
 
 These games pass in the Worldgen UT but fail in the Pickle UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
+| Links Awakening DX | 7.4KB | ✅ | 703.0KB |
 | Satisfactory | 41.6KB | ✅ | 1618.9KB |
 | Secret of Evermore | 5.3KB | 7.5KB | 414.9KB |
 | Shivers | ✅ | ✅ | 149.8KB |
+| The Messenger | 15.2KB | ✅ | 210.3KB |
 
-## Games Passing Pickle Only (9)
+## Games Passing Pickle Only (8)
 
 These games pass in the Pickle UT but fail in the Worldgen UT.
 
@@ -207,7 +210,6 @@ These games pass in the Pickle UT but fail in the Worldgen UT.
 |-----------|:--------:|:---------:|:----------:|
 | Hollow Knight | ✅ | ✅ | N/A |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
@@ -215,7 +217,7 @@ These games pass in the Pickle UT but fail in the Worldgen UT.
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 
-## Games Passing Neither (8)
+## Games Passing Neither (6)
 
 These games fail in both Universal Tracker versions.
 
@@ -223,11 +225,9 @@ These games fail in both Universal Tracker versions.
 |-----------|:--------:|:---------:|:----------:|
 | Kingdom Hearts | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1634.7KB |
-| Links Awakening DX | 7.4KB | ✅ | 703.0KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
 | Starcraft 2 | 28.7KB | 90.1KB | 1086.7KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.0KB |
-| The Messenger | 15.2KB | ✅ | 210.3KB |
 | Zillion | ✅ | ✅ | N/A |
 
 ## Notes
