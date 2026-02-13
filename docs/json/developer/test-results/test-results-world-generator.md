@@ -19,7 +19,7 @@ Each game's rules.json is converted to a `_worldgen` world, and the generated
 world is validated to produce equivalent game logic.
 
 Tests are run in two modes:
-- **Canonical**: Uses `--canonical-seed1` which places items in their original locations when seed is 1
+- **Canonical**: Uses `--canonical-seed` which places items in their original locations when seed matches
 - **Random**: Standard randomized item placement
 
 ## Legend
@@ -47,7 +47,7 @@ Tests are run in two modes:
 
 # Canonical Mode Results
 
-Tests run with `--canonical-seed1` (items placed in original locations).
+Tests run with `--canonical-seed` (items placed in original locations).
 
 ## Canonical Summary
 

@@ -84,7 +84,7 @@ jobs:
             git push origin test-results-update
           fi
 
-  # Run canonical tests (--canonical-seed1) - 10 parallel jobs
+  # Run canonical tests (--canonical-seed 1) - 10 parallel jobs
   run-canonical-tests:
     name: Canonical Test (Split ${{ matrix.split_num }})
     runs-on: ubuntu-latest
@@ -189,7 +189,7 @@ jobs:
             --output-file scripts/output/world-generator/test-results-canonical-split-${{ matrix.split_num }}.json \
             --phase all \
             --skip-cleanup \
-            --canonical-seed1 \
+            --canonical-seed 1 \
             ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
 
       - name: Upload test results
@@ -200,7 +200,7 @@ jobs:
           path: scripts/output/world-generator/test-results-canonical-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Run random tests (no --canonical-seed1) - 10 parallel jobs
+  # Run random tests (no --canonical-seed) - 10 parallel jobs
   run-random-tests:
     name: Random Test (Split ${{ matrix.split_num }})
     runs-on: ubuntu-latest

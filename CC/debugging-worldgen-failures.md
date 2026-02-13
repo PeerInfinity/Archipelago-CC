@@ -117,7 +117,7 @@ ERROR: Generation failed: SyntaxError: ...
 source .venv/bin/activate
 
 # Run just the world generation phase
-python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase generate-test-worlds --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase generate-test-worlds --canonical-seed
 
 # Or run the world generator directly for debugging
 python -c "
@@ -447,7 +447,7 @@ The cross-validation test:
 source .venv/bin/activate
 
 # Run the full worldgen test (includes cross-validation)
-python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --canonical-seed
 
 # Check test results
 python -c "
