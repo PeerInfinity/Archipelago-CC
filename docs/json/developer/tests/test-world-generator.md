@@ -79,10 +79,10 @@ The test runs in two modes to test different aspects:
 ### Canonical Mode
 
 ```bash
-python scripts/test/test-world-generator.py --canonical-seed1
+python scripts/test/test-world-generator.py --canonical-seed
 ```
 
-Uses the `--canonical-seed1` flag, which places items in their **original locations** when seed is 1. This creates identical item placements between the original and WorldGen worlds.
+Uses the `--canonical-seed` flag, which places items in their **original locations** when seed is 1. This creates identical item placements between the original and WorldGen worlds.
 
 **Expected Results:**
 - All stages should pass
@@ -163,7 +163,7 @@ worlds/{game}_worldgen/
 ### Full Test (All Phases)
 
 ```bash
-python scripts/test/test-world-generator.py --seed 1 --canonical-seed1
+python scripts/test/test-world-generator.py --seed 1 --canonical-seed
 ```
 
 ### Test Specific Games

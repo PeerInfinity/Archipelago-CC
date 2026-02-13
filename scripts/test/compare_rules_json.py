@@ -10,7 +10,7 @@ Usage:
     python scripts/test/compare_rules_json.py --ignore-canonical <original> <worldgen>
 
 Options:
-    --ignore-canonical  Ignore differences caused by --canonical-seed1 flag:
+    --ignore-canonical  Ignore differences caused by --canonical-seed flag:
                         - canonical_placements section
                         - locked flags on locations
                         - item placements (item.name, item.advancement)
@@ -1615,8 +1615,8 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
 
 
 def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
-    """Check if a difference path is caused by --canonical-seed1 or WorldGen."""
-    # canonical_placements section only exists with --canonical-seed1
+    """Check if a difference path is caused by --canonical-seed or WorldGen."""
+    # canonical_placements section only exists with --canonical-seed
     if 'canonical_placements' in path:
         return True
     # is_canonical flag only exists in WorldGen exports (marks canonical seed generation)
@@ -2153,7 +2153,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 
     # AST_placement_lookup rule simplification: Original rules may contain Compare rules
     # that check if a specific item is placed at a location (e.g., for "locked door" optimization).
-    # When worldgen runs with --canonical-seed1, these placement_lookup comparisons are
+    # When worldgen runs with --canonical-seed, these placement_lookup comparisons are
     # resolved to their actual values. If the comparison evaluates to False (item not at
     # that location), the branch is removed from Or rules, causing structural changes.
     # Example:
@@ -2283,7 +2283,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
 def filter_canonical_differences(
     differences: List[Tuple[str, Any, Any]]
 ) -> List[Tuple[str, Any, Any]]:
-    """Filter out differences caused by --canonical-seed1."""
+    """Filter out differences caused by --canonical-seed."""
     return [diff for diff in differences if not is_canonical_difference(diff[0], diff[1], diff[2])]
 
 
@@ -2315,7 +2315,7 @@ def main():
     print(f"  Original: {original_path}")
     print(f"  WorldGen: {worldgen_path}")
     if ignore_canonical:
-        print(f"  (ignoring canonical-seed1 differences)")
+        print(f"  (ignoring canonical-seed differences)")
     print()
 
     # Load both files
@@ -2502,14 +2502,14 @@ def main():
     if not differences:
         if ignore_canonical and filtered_count > 0:
             print(f"✓ Files are identical (after normalizing names and rules)")
-            print(f"  ({filtered_count} canonical-seed1 differences ignored)")
+            print(f"  ({filtered_count} canonical-seed differences ignored)")
         else:
             print("✓ Files are identical (after normalizing names and rules)")
         return 0
 
     print(f"✗ Found {len(differences)} difference(s):")
     if ignore_canonical and filtered_count > 0:
-        print(f"  ({filtered_count} canonical-seed1 differences ignored)")
+        print(f"  ({filtered_count} canonical-seed differences ignored)")
     print()
 
     for path, val1, val2 in differences[:50]:  # Limit to first 50 differences

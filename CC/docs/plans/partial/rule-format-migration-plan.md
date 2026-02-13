@@ -12,7 +12,7 @@ The goal is to complete the export standardization before documentation and publ
 
 The world generator already performs AST→Rule Builder format conversion. Current results:
 
-**Canonical Mode** (items placed in original locations with `--canonical-seed1`):
+**Canonical Mode** (items placed in original locations with `--canonical-seed`):
 
 | Step | Passed | Failed | Pass Rate |
 |------|--------|--------|-----------|

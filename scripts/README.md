@@ -369,7 +369,7 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   | `GENERATE_MULTIWORLD` | `true` | Generate multiworld presets (4 games combined) |
   | `GENERATE_EXTRA_SEEDS` | `true` | Generate seeds 2 and 3 for core games |
   | `GENERATE_WORLDGEN` | `false` | Generate WorldGen worlds from exported rules |
-  | `WORLDGEN_CANONICAL_SEED1` | `true` | Use canonical seed 1 placement for WorldGen |
+  | `WORLDGEN_CANONICAL_SEED` | `1` | Canonical seed number for WorldGen (empty to disable) |
   | `GENERATE_WORLDGEN2` | `false` | Generate WorldGen2 worlds from WorldGen worlds |
 
   Some games are excluded (commented out) because they take too long: Jak and Daxter, Pokemon Emerald, Pokemon Red and Blue, SMZ3, Yu-Gi-Oh! 2006. Their preset data may be stale.

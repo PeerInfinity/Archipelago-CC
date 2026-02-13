@@ -5,27 +5,27 @@
 # GENERATE_EXTRA_SEEDS - set to "false" to skip seeds 2 and 3 (default: true)
 # GENERATE_VANILLA_SEEDS - set to "false" to skip vanilla placement seeds for adventure games (default: true)
 # GENERATE_WORLDGEN - set to "true" to generate worldgen worlds (default: false)
-# WORLDGEN_CANONICAL_SEED1 - set to "true" to use canonical seed 1 placement (default: true)
+# WORLDGEN_CANONICAL_SEED - set to a seed number for canonical placement (default: "1", empty to disable)
 # GENERATE_WORLDGEN2 - set to "true" to generate worldgen2 worlds from worldgen worlds (default: false)
 
 GENERATE_MULTIWORLD="${GENERATE_MULTIWORLD:-true}"
 GENERATE_EXTRA_SEEDS="${GENERATE_EXTRA_SEEDS:-true}"
 GENERATE_VANILLA_SEEDS="${GENERATE_VANILLA_SEEDS:-true}"
 GENERATE_WORLDGEN="${GENERATE_WORLDGEN:-false}"
-WORLDGEN_CANONICAL_SEED1="${WORLDGEN_CANONICAL_SEED1:-true}"
+WORLDGEN_CANONICAL_SEED="${WORLDGEN_CANONICAL_SEED:-1}"
 GENERATE_WORLDGEN2="${GENERATE_WORLDGEN2:-false}"
 
-# Build the canonical-seed1 flag if enabled (used by WorldGen and WorldGen2)
+# Build the canonical-seed flag if enabled (used by WorldGen and WorldGen2)
 CANONICAL_FLAG=""
-if [ "$WORLDGEN_CANONICAL_SEED1" = "true" ]; then
-  CANONICAL_FLAG="--canonical-seed1"
+if [ -n "$WORLDGEN_CANONICAL_SEED" ]; then
+  CANONICAL_FLAG="--canonical-seed $WORLDGEN_CANONICAL_SEED"
 fi
 
 echo "GENERATE_MULTIWORLD: $GENERATE_MULTIWORLD"
 echo "GENERATE_EXTRA_SEEDS: $GENERATE_EXTRA_SEEDS"
 echo "GENERATE_VANILLA_SEEDS: $GENERATE_VANILLA_SEEDS"
 echo "GENERATE_WORLDGEN: $GENERATE_WORLDGEN"
-echo "WORLDGEN_CANONICAL_SEED1: $WORLDGEN_CANONICAL_SEED1"
+echo "WORLDGEN_CANONICAL_SEED: $WORLDGEN_CANONICAL_SEED"
 echo "GENERATE_WORLDGEN2: $GENERATE_WORLDGEN2"
 
 # Helper: generate a vanilla seed for a game with vanilla_placement option
