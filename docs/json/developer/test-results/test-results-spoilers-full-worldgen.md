@@ -6,7 +6,9 @@
 
 [📖 Learn about this test](../tests/test-spoilers.md)
 
-**Generated:** 2026-02-13 03:08:48 UTC
+[View Original Template Results](./test-results-spoilers-full.md)
+
+**Generated:** 2026-02-13 03:14:47 UTC
 
 **Source Data Created:** 2026-01-27T23:02:47.506780
 
