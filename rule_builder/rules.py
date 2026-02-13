@@ -2617,6 +2617,11 @@ class CountItem(Rule[TWorld], game="Archipelago"):
             return state.count(self.item_name, self.player)
 
         @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
+
+        @override
         def _evaluate(self, state: CollectionState) -> bool:
             # When used as boolean, true if count > 0
             return self.get_count(state) > 0
@@ -2709,6 +2714,11 @@ class CountFromList(Rule[TWorld], game="Archipelago"):
             return state.count_from_list(self.item_names, self.player)
 
         @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
+
+        @override
         def _evaluate(self, state: CollectionState) -> bool:
             # When used as boolean, true if count > 0
             return self.get_count(state) > 0
@@ -2784,6 +2794,11 @@ class CountGroup(Rule[TWorld], game="Archipelago"):
         def get_count(self, state: CollectionState) -> int:
             """Get the count of items in this group."""
             return state.count_group(self.group_name, self.player)
+
+        @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
