@@ -504,7 +504,7 @@ export class PlayerState {
      */
     trimPath(regionName = null, instanceNumber = 1) {
         // Default to first start region if not specified
-        const targetRegion = regionName || this.startRegions[0] || 'Menu';
+        const targetRegion = regionName || this.startRegions[0];
         // Find the nth instance of the specified region (only counting regionMove entries)
         let foundCount = 0;
         let trimIndex = -1;
@@ -609,7 +609,7 @@ export class PlayerState {
      * Reset state to defaults
      */
     reset() {
-        const firstStartRegion = this.startRegions[0] || 'Menu';
+        const firstStartRegion = this.startRegions[0];
         this.currentRegion = firstStartRegion;
         this.path = [
             { type: 'regionMove', region: firstStartRegion, exitUsed: null, instanceNumber: 1 }

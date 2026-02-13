@@ -343,33 +343,46 @@ function prepareStateManagerConfig(genericModuleSpecificConfig, combinedModeData
       combinedModeData.dataSources.rulesConfig &&
       (combinedModeData.dataSources.rulesConfig.source === 'file' ||
        combinedModeData.dataSources.rulesConfig.source === 'urlOverride' ||
-       combinedModeData.dataSources.rulesConfig.source === 'fallback') &&
+       combinedModeData.dataSources.rulesConfig.source === 'fallback' ||
+       combinedModeData.dataSources.rulesConfig.source === 'alphabeticalFallback' ||
+       combinedModeData.dataSources.rulesConfig.source === 'hardcodedFallback') &&
       typeof combinedModeData.dataSources.rulesConfig.details === 'string'
     ) {
-      let pathPrefix;
-      if (combinedModeData.dataSources.rulesConfig.source === 'file') {
-        pathPrefix = 'Loaded from file: ';
-      } else if (combinedModeData.dataSources.rulesConfig.source === 'urlOverride') {
-        pathPrefix = 'Loaded from URL parameter override: ';
-      } else if (combinedModeData.dataSources.rulesConfig.source === 'fallback') {
-        pathPrefix = 'Loaded from "default" mode (fallback): ';
-      }
-
-      if (combinedModeData.dataSources.rulesConfig.details.startsWith(pathPrefix)) {
-        smConfig.sourceName =
-          combinedModeData.dataSources.rulesConfig.details.substring(
-            pathPrefix.length
-          );
+      // For hardcoded fallback, use a fixed source name
+      if (combinedModeData.dataSources.rulesConfig.source === 'hardcodedFallback') {
+        smConfig.sourceName = 'hardcodedFallback:apquest';
         log(
           'info',
-          `[Init _postInitializeSingleModule] Derived sourceName for StateManager: ${smConfig.sourceName} (source: ${combinedModeData.dataSources.rulesConfig.source})`
+          `[Init _postInitializeSingleModule] Using hardcoded fallback sourceName for StateManager: ${smConfig.sourceName}`
         );
       } else {
-        log(
-          'warn',
-          '[Init _postInitializeSingleModule] Could not derive sourceName for StateManager from dataSources.rulesConfig.details:',
-          combinedModeData.dataSources.rulesConfig.details
-        );
+        let pathPrefix;
+        if (combinedModeData.dataSources.rulesConfig.source === 'file') {
+          pathPrefix = 'Loaded from file: ';
+        } else if (combinedModeData.dataSources.rulesConfig.source === 'urlOverride') {
+          pathPrefix = 'Loaded from URL parameter override: ';
+        } else if (combinedModeData.dataSources.rulesConfig.source === 'fallback') {
+          pathPrefix = 'Loaded from "default" mode (fallback): ';
+        } else if (combinedModeData.dataSources.rulesConfig.source === 'alphabeticalFallback') {
+          pathPrefix = 'Loaded from first alphabetical preset (default not found): ';
+        }
+
+        if (combinedModeData.dataSources.rulesConfig.details.startsWith(pathPrefix)) {
+          smConfig.sourceName =
+            combinedModeData.dataSources.rulesConfig.details.substring(
+              pathPrefix.length
+            );
+          log(
+            'info',
+            `[Init _postInitializeSingleModule] Derived sourceName for StateManager: ${smConfig.sourceName} (source: ${combinedModeData.dataSources.rulesConfig.source})`
+          );
+        } else {
+          log(
+            'warn',
+            '[Init _postInitializeSingleModule] Could not derive sourceName for StateManager from dataSources.rulesConfig.details:',
+            combinedModeData.dataSources.rulesConfig.details
+          );
+        }
       }
     } else {
       // Check if data was loaded from localStorage - this is expected behavior

@@ -93,17 +93,10 @@ export class PresetUI {
           log('info', '[PresetUI] Initialized successfully.');
         })
         .catch((error) => {
-          log('error', 'Error loading presets data:', error);
-          if (this.presetsListContainer) {
-            this.presetsListContainer.innerHTML = `
-              <div class="error-message">
-                <h3>Error Loading Presets</h3>
-                <p>${error.message}</p>
-                <p>Make sure the preset_files.json file exists in the presets directory.</p>
-              </div>
-            `;
-          }
-          this.initialized = false;
+          log('warn', 'Presets data not available (this is OK if presets directory is empty):', error.message);
+          this.presets = {};
+          this.renderGamesList();
+          this.initialized = true;
         });
 
       return true;
