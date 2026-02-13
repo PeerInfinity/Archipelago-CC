@@ -672,7 +672,7 @@
   "Minishoot Adventures": {
     "apworld_path": "custom_worlds/minishoot.apworld",
     "exporter_path": "exporter/games/unofficial/minishoot.py",
-    "exporter_size": 26561,
+    "exporter_size": 26572,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -742,7 +742,7 @@
   "Pizza Tower": {
     "apworld_path": "custom_worlds/pizza_tower.apworld",
     "exporter_path": "exporter/games/unofficial/pizza_tower.py",
-    "exporter_size": 7134,
+    "exporter_size": 7145,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1032,7 +1032,7 @@
   "System Shock 2": {
     "apworld_path": "custom_worlds/ss2.apworld",
     "exporter_path": "exporter/games/unofficial/ss2.py",
-    "exporter_size": 15392,
+    "exporter_size": 15403,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1162,7 +1162,7 @@
   "Watery Words": {
     "apworld_path": "custom_worlds/waterywords.apworld",
     "exporter_path": "exporter/games/unofficial/waterywords.py",
-    "exporter_size": 9294,
+    "exporter_size": 9301,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1192,7 +1192,7 @@
   "Yu-Gi-Oh! Dungeon Dice Monsters": {
     "apworld_path": "custom_worlds/yugiohddm.apworld",
     "exporter_path": "exporter/games/unofficial/yugiohddm.py",
-    "exporter_size": 29381,
+    "exporter_size": 29414,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
