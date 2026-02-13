@@ -10,7 +10,7 @@ from .Options import BakingAdventureOptions
 
 class BakingAdventureWeb(WebWorld):
     theme = "partyTime"
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
         "A guide to setting up the Archipelago Baking Adventure randomizer on your computer.",
@@ -86,14 +86,14 @@ class BakingAdventureWorld(World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Fill slot data for the client."""
         return {
-            "randomize_items": self.options.randomize_items.value,
+            "vanilla_placement": self.options.vanilla_placement.value,
         }
-    
+
     def generate_early(self) -> None:
         """Generate early logic."""
-        # If seed is 1, disable randomization to use canonical item placements
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
+        # Set is_vanilla dynamically based on the option
+        if self.options.vanilla_placement.value:
+            self.is_vanilla = True
     
     def generate_basic(self) -> None:
         """Generate basic elements including victory condition."""
@@ -109,8 +109,8 @@ class BakingAdventureWorld(World):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
     
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if using vanilla placement."""
+        if self.options.vanilla_placement.value:
             self._place_original_items()
     
     def _place_original_items(self) -> None:

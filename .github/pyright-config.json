@@ -2,6 +2,7 @@
   "include": [
     "../BizHawkClient.py",
     "../Patch.py",
+    "../rule_builder/rules.py",
     "../test/param.py",
     "../test/general/test_groups.py",
     "../test/general/test_helpers.py",

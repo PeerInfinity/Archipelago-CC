@@ -48,7 +48,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class MetamathWorldGenWeb(WebWorld):
     """Web interface for Metamath WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -95,6 +95,9 @@ class MetamathWorld(RuleWorldMixin, World):
         "Statements": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
         "Hints": frozenset(["QED Moment", "Inference Help", "Deduction Tip", "Theorem Insight", "Lemma Note", "Axiom Reference", "Logic Guide", "Proof Hint"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -268,6 +271,10 @@ class MetamathWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

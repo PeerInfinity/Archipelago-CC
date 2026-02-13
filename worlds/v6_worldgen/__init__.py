@@ -59,7 +59,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class VVVVVVWorldGenWeb(WebWorld):
     """Web interface for VVVVVV WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -102,6 +102,9 @@ class V6World(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Trinket 01", "Trinket 02", "Trinket 03", "Trinket 04", "Trinket 05", "Trinket 06", "Trinket 07", "Trinket 08", "Trinket 09", "Trinket 10", "Trinket 11", "Trinket 12", "Trinket 13", "Trinket 14", "Trinket 15", "Trinket 16", "Trinket 17", "Trinket 18", "Trinket 19", "Trinket 20"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -295,6 +298,10 @@ class V6World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

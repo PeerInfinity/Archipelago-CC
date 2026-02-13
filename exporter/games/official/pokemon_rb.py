@@ -225,7 +225,6 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
                     'advancement': False,
                     'useful': False,
                     'trap': False,
-                    'event': False,
                     'type': None,
                     'max_count': 1
                 }

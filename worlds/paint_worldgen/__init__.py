@@ -64,7 +64,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class PaintWorldGenWeb(WebWorld):
     """Web interface for Paint WorldGen."""
     theme = "partyTime"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Start Guide",
@@ -109,6 +109,9 @@ class PaintWorld(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Progressive Canvas Width", "Progressive Canvas Height", "Progressive Color Depth (Red)", "Progressive Color Depth (Green)", "Progressive Color Depth (Blue)", "Free-Form Select", "Select", "Eraser/Color Eraser", "Fill With Color", "Pick Color", "Magnifier", "Pencil", "Brush", "Airbrush", "Text", "Line", "Curve", "Rectangle", "Polygon", "Ellipse", "Rounded Rectangle", "Additional Palette Color", "Undo Trap", "Clear Image Trap", "Invert Colors Trap", "Flip Horizontal Trap", "Flip Vertical Trap"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -519,6 +522,10 @@ class PaintWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

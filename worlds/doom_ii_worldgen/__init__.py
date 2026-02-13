@@ -207,7 +207,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class DOOMIIWorldGenWeb(WebWorld):
     """Web interface for DOOM II WorldGen."""
     theme = "dirt"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -258,6 +258,9 @@ class DOOM2World(RuleWorldMixin, World):
         "Levels": frozenset(["Entryway (MAP01)", "Underhalls (MAP02)", "The Gantlet (MAP03)", "The Focus (MAP04)", "The Waste Tunnels (MAP05)", "The Crusher (MAP06)", "Dead Simple (MAP07)", "Tricks and Traps (MAP08)", "The Pit (MAP09)", "Refueling Base (MAP10)", "Circle of Death (MAP11)", "The Factory (MAP12)", "Downtown (MAP13)", "The Inmost Dens (MAP14)", "Industrial Zone (MAP15)", "Suburbs (MAP16)", "Tenements (MAP17)", "The Courtyard (MAP18)", "The Citadel (MAP19)", "Gotcha! (MAP20)", "Nirvana (MAP21)", "The Catacombs (MAP22)", "Barrels o' Fun (MAP23)", "The Chasm (MAP24)", "Bloodfalls (MAP25)", "The Abandoned Mines (MAP26)", "Monster Condo (MAP27)", "The Spirit World (MAP28)", "The Living End (MAP29)", "Icon of Sin (MAP30)", "Wolfenstein (MAP31)", "Grosse (MAP32)"]),
         "Computer area maps": frozenset(["Entryway (MAP01) - Computer area map", "Underhalls (MAP02) - Computer area map", "The Gantlet (MAP03) - Computer area map", "The Focus (MAP04) - Computer area map", "The Waste Tunnels (MAP05) - Computer area map", "The Crusher (MAP06) - Computer area map", "Dead Simple (MAP07) - Computer area map", "Tricks and Traps (MAP08) - Computer area map", "The Pit (MAP09) - Computer area map", "Refueling Base (MAP10) - Computer area map", "Circle of Death (MAP11) - Computer area map", "The Factory (MAP12) - Computer area map", "Downtown (MAP13) - Computer area map", "The Inmost Dens (MAP14) - Computer area map", "Industrial Zone (MAP15) - Computer area map", "Suburbs (MAP16) - Computer area map", "Tenements (MAP17) - Computer area map", "The Courtyard (MAP18) - Computer area map", "The Citadel (MAP19) - Computer area map", "Gotcha! (MAP20) - Computer area map", "Nirvana (MAP21) - Computer area map", "The Catacombs (MAP22) - Computer area map", "Barrels o' Fun (MAP23) - Computer area map", "The Chasm (MAP24) - Computer area map", "Bloodfalls (MAP25) - Computer area map", "The Abandoned Mines (MAP26) - Computer area map", "Monster Condo (MAP27) - Computer area map", "The Spirit World (MAP28) - Computer area map", "The Living End (MAP29) - Computer area map", "Icon of Sin (MAP30) - Computer area map", "Wolfenstein (MAP31) - Computer area map", "Grosse (MAP32) - Computer area map"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -1317,6 +1320,10 @@ class DOOM2World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

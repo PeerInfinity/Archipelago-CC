@@ -118,7 +118,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class FactorioWorldGenWeb(WebWorld):
     """Web interface for Factorio WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -208,6 +208,9 @@ class Factorio(RuleWorldMixin, World):
         "progressive-worker-robots-speed": ["worker-robots-speed-1", "worker-robots-speed-2", "worker-robots-speed-3", "worker-robots-speed-4", "worker-robots-speed-5"],
         "progressive-worker-robots-storage": ["worker-robots-storage-1", "worker-robots-storage-2", "worker-robots-storage-3"],
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -736,6 +739,10 @@ class Factorio(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

@@ -70,7 +70,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class LufiaIIAncientCaveWorldGenWeb(WebWorld):
     """Web interface for Lufia II Ancient Cave WorldGen."""
     theme = "dirt"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -121,6 +121,9 @@ class L2ACWorld(RuleWorldMixin, World):
         "Blue chest items": frozenset(["Sizzle sword", "Blaze sword", "Gades blade", "Sky sword", "Snow sword", "Fry sword", "Mega ax", "Spark staff", "Air whip", "Water spear", "Dragon spear", "Mirak plate", "Ruse armor", "Flame shield", "Water gaunt", "Bolt shield", "Cryst shield", "Dark mirror", "Apron shield", "Agony helm", "Boom turban", "Aqua helm", "Ice hairband", "Hairpin", "Earring", "Dia ring", "Sea ring", "Engage ring", "Water jewel", "Thundo jewel", "Earth jewel", "Twist jewel", "Gloom jewel", "Tidal jewel", "Catfish jwl.", "Camu jewel", "Spido jewel", "Gorgan rock", "Black eye", "Silver eye", "Gold eye"]),
         "Event": frozenset(["Progressive chest access", "Final Floor access"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -350,6 +353,10 @@ class L2ACWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

@@ -184,7 +184,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class DOOM1993WorldGenWeb(WebWorld):
     """Web interface for DOOM 1993 WorldGen."""
     theme = "dirt"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -234,6 +234,9 @@ class DOOM1993World(RuleWorldMixin, World):
         "Powerups": frozenset(["Armor", "Mega Armor", "Berserk", "Invulnerability", "Partial invisibility", "Supercharge"]),
         "Ammos": frozenset(["Box of bullets", "Box of rockets", "Box of shotgun shells", "Energy cell pack"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -1083,6 +1086,10 @@ class DOOM1993World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

@@ -1114,7 +1114,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1126,7 +1125,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1138,7 +1136,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1150,7 +1147,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1162,7 +1158,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1174,7 +1169,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1186,7 +1180,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1198,7 +1191,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1211,7 +1203,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1224,7 +1215,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1237,7 +1227,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1249,7 +1238,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -1260,7 +1248,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -1271,7 +1258,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -1283,7 +1269,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -1295,7 +1280,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1307,7 +1291,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1319,7 +1302,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1331,7 +1313,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1343,7 +1324,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1355,7 +1335,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1367,7 +1346,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1379,7 +1357,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1563,22 +1540,22 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "enable_lasers": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Lasers"
         },
         "enemy_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Enemy Weaknesses"
         },
         "energy_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "EnergyLink"
         },
         "palette_shuffle": {
@@ -1601,7 +1578,7 @@
         },
         "quickswap": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Quickswap"
         },
         "random_music": {
@@ -1653,7 +1630,7 @@
         },
         "strict_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Strict Boss Weaknesses"
         },
         "wily_5_requirement": {
@@ -1665,7 +1642,7 @@
         },
         "yoku_jumps": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Yoku Block Jumps"
         }
       },

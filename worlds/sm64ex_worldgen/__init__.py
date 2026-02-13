@@ -56,7 +56,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SuperMario64WorldGenWeb(WebWorld):
     """Web interface for Super Mario 64 WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -100,6 +100,9 @@ class SM64World(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Power Star", "Basement Key", "Second Floor Key", "Progressive Key", "Wing Cap", "Metal Cap", "Vanish Cap", "1Up Mushroom", "Double Jump", "Triple Jump", "Long Jump", "Backflip", "Side Flip", "Wall Kick", "Dive", "Ground Pound", "Kick", "Climb", "Ledge Grab", "Cannon Unlock BoB", "Cannon Unlock WF", "Cannon Unlock JRB", "Cannon Unlock CCM", "Cannon Unlock SSL", "Cannon Unlock SL", "Cannon Unlock WDW", "Cannon Unlock TTM", "Cannon Unlock THI", "Cannon Unlock RR", "Painting Unlock WF", "Painting Unlock JRB", "Painting Unlock CCM", "Painting Unlock LLL", "Painting Unlock SSL", "Painting Unlock DDD", "Painting Unlock SL", "Painting Unlock WDW", "Painting Unlock TTM", "Painting Unlock THI", "Painting Unlock TTC"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -553,6 +556,10 @@ class SM64World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

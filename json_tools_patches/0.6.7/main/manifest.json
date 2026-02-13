@@ -1,0 +1,21 @@
+{
+  "version": "0.6.7",
+  "files": {
+    "Main.py": {
+      "patched_sha256": "03e54a220e3b98c37b1cfc780dae6e4da15e218c24c4d7fe304f061e383ac345",
+      "original_sha256": "179cb2e58d62a7bb626642e04c759dc889debddf51180207fb9c67c9722e11c6"
+    },
+    "BaseClasses.py": {
+      "patched_sha256": "7869c2cbc431e556033732876219d767218657db5095619698df35f7624f6cbe",
+      "original_sha256": "8c0d3f588cdb64a79a92687869d568c8c7d77109fd2f5497984acf0a05110d2c"
+    },
+    "settings.py": {
+      "patched_sha256": "8853884032bb57fe1278faa752647c9e404c0af5d8805c34578e6cc8d7e559fc",
+      "original_sha256": "f45028aedf0e8cfc4cb2f9da8dbabd3a526ddf88e44d839e53bc21809e83831e"
+    },
+    "requirements.txt": {
+      "patched_sha256": "1bbf18a2b82cedc8c12711812bd24a5d9e0ce0a4179a7e22fb1583c41ddc8e49",
+      "original_sha256": "b700e29960db11278978d7a25c1b8f921b6f2991068d1f9622660e59d639e9c9"
+    }
+  }
+}

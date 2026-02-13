@@ -17207,7 +17207,6 @@
           "Swords"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Tempered Sword"
@@ -17221,7 +17220,6 @@
           "Swords"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Golden Sword"
@@ -17235,7 +17233,6 @@
           "Shields"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Blue Shield"
@@ -17249,7 +17246,6 @@
           "Shields"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Red Shield"
@@ -17263,7 +17259,6 @@
           "Shields"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Mirror Shield"
@@ -17277,7 +17272,6 @@
           "Rods"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Fire Rod"
@@ -17291,7 +17285,6 @@
           "Rods"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Ice Rod"
@@ -17304,7 +17297,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Hammer"
@@ -17317,7 +17309,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Hookshot"
@@ -17331,7 +17322,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Bow"
@@ -17345,7 +17335,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Blue Boomerang"
@@ -17358,7 +17347,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Powder"
@@ -17371,7 +17359,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bee"
@@ -17385,7 +17372,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -17398,7 +17384,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -17411,7 +17396,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -17423,7 +17407,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Lamp"
@@ -17436,7 +17419,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Shovel"
@@ -17449,7 +17431,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Flute"
@@ -17463,7 +17444,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Red Cane"
@@ -17477,7 +17457,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -17490,7 +17469,6 @@
           "Non Progression Items"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 24,
         "hint_text": "a heart piece"
@@ -17504,7 +17482,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Blue Cane"
@@ -17517,7 +17494,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Cape"
@@ -17530,7 +17506,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Mirror"
@@ -17544,7 +17519,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Glove"
@@ -17558,7 +17532,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Mitts"
@@ -17571,7 +17544,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Book"
@@ -17584,7 +17556,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Flippers"
@@ -17597,7 +17568,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Moon Pearl"
@@ -17610,7 +17580,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Bug Net"
@@ -17624,7 +17593,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Blue Mail"
@@ -17638,7 +17606,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Red Mail"
@@ -17651,7 +17618,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bomb"
@@ -17664,7 +17630,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 16,
         "hint_text": "three bombs"
@@ -17677,7 +17642,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Mushroom"
@@ -17691,7 +17655,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Red Boomerang"
@@ -17706,7 +17669,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -17721,7 +17683,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -17736,7 +17697,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -17750,7 +17710,6 @@
           "Potions"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a red potion"
@@ -17764,7 +17723,6 @@
           "Potions"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a green potion"
@@ -17778,7 +17736,6 @@
           "Potions"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a blue potion"
@@ -17791,7 +17748,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "ten bombs"
@@ -17805,7 +17761,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "a green rupee"
@@ -17819,7 +17774,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "a blue rupee"
@@ -17833,7 +17787,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 28,
         "hint_text": "a red rupee"
@@ -17847,7 +17800,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Bow"
@@ -17861,7 +17813,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -17875,7 +17826,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "a bottle"
@@ -17888,7 +17838,6 @@
           "Non Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 10,
         "hint_text": "a heart",
@@ -17905,7 +17854,6 @@
           "Non Progression Items"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a heart"
@@ -17919,7 +17867,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "one hundred rupees"
@@ -17933,7 +17880,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7,
         "hint_text": "fifty rupees"
@@ -17946,7 +17892,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a heart"
@@ -17959,7 +17904,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "an arrow"
@@ -17972,7 +17916,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 12,
         "hint_text": "ten arrows"
@@ -17986,7 +17929,6 @@
           "Rupees"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5,
         "hint_text": "three hundred rupees"
@@ -18000,7 +17942,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bottle"
@@ -18014,7 +17955,6 @@
           "Swords"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Small Sword"
@@ -18027,7 +17967,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Flute"
@@ -18040,7 +17979,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Boots"
@@ -18054,7 +17992,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "bomb capacity"
@@ -18068,7 +18005,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "arrow capacity"
@@ -18082,7 +18018,6 @@
           "Upgrades"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Half Magic"
@@ -18096,7 +18031,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Quarter Magic"
@@ -18110,7 +18044,6 @@
           "Swords"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Master Sword"
@@ -18124,7 +18057,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "bomb capacity"
@@ -18138,7 +18070,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "bomb capacity"
@@ -18152,7 +18083,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "arrow capacity"
@@ -18166,7 +18096,6 @@
           "Upgrades"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "arrow capacity"
@@ -18180,7 +18109,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Arrows"
@@ -18193,7 +18121,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a rupoor"
@@ -18206,7 +18133,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "nothing"
@@ -18220,7 +18146,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a red clock"
@@ -18234,7 +18159,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a blue clock"
@@ -18248,7 +18172,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a red clock"
@@ -18262,7 +18185,6 @@
           "Swords"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "a Sword"
@@ -18276,7 +18198,6 @@
           "Shields"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3,
         "hint_text": "a shield"
@@ -18290,7 +18211,6 @@
           "Non Progression Items"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "some armor"
@@ -18304,7 +18224,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "a Glove"
@@ -18317,7 +18236,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a new mystery"
@@ -18330,7 +18248,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a total mystery"
@@ -18344,7 +18261,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "a Bow"
@@ -18358,7 +18274,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a Bow"
@@ -18371,7 +18286,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "the Triforce"
@@ -18384,7 +18298,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a Power Star"
@@ -18397,7 +18310,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a Triforce Piece"
@@ -18411,7 +18323,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Ganon's Tower"
@@ -18425,7 +18336,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Turtle Rock"
@@ -18439,7 +18349,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Thieves' Town"
@@ -18453,7 +18362,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Tower of Hera"
@@ -18467,7 +18375,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Ice Palace"
@@ -18481,7 +18388,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Skull Woods"
@@ -18495,7 +18401,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Misery Mire"
@@ -18509,7 +18414,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Palace of Darkness"
@@ -18523,7 +18427,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Swamp Palace"
@@ -18537,7 +18440,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Castle Tower"
@@ -18551,7 +18453,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Desert Palace"
@@ -18565,7 +18466,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Eastern Palace"
@@ -18579,7 +18479,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a map to Hyrule Castle"
@@ -18593,7 +18492,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Ganon's Tower"
@@ -18607,7 +18505,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Turtle Rock"
@@ -18621,7 +18518,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Thieves' Town"
@@ -18635,7 +18531,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Tower of Hera"
@@ -18649,7 +18544,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Ice Palace"
@@ -18663,7 +18557,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Skull Woods"
@@ -18677,7 +18570,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Misery Mire"
@@ -18691,7 +18583,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Palace of Darkness"
@@ -18705,7 +18596,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Swamp Palace"
@@ -18719,7 +18609,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Castle Tower"
@@ -18733,7 +18622,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Desert Palace"
@@ -18747,7 +18635,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Eastern Palace"
@@ -18761,7 +18648,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a compass to Hyrule Castle"
@@ -18775,7 +18661,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Ganon's Tower"
@@ -18789,7 +18674,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Turtle Rock"
@@ -18803,7 +18687,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Thieves' Town"
@@ -18817,7 +18700,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Tower of Hera"
@@ -18831,7 +18713,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Ice Palace"
@@ -18845,7 +18726,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Skull Woods"
@@ -18859,7 +18739,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Misery Mire"
@@ -18873,7 +18752,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Palace of Darkness"
@@ -18887,7 +18765,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Swamp Palace"
@@ -18901,7 +18778,6 @@
           "Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Castle Tower"
@@ -18915,7 +18791,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Desert Palace"
@@ -18929,7 +18804,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Eastern Palace"
@@ -18943,7 +18817,6 @@
           "Progression Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a big key to Hyrule Castle"
@@ -18957,7 +18830,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "a small key to Hyrule Castle"
@@ -18971,7 +18843,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2,
         "hint_text": "a small key to Eastern Palace"
@@ -18985,7 +18856,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "a small key to Desert Palace"
@@ -18999,7 +18869,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4,
         "hint_text": "a small key to Castle Tower"
@@ -19013,7 +18882,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "hint_text": "a small key to Swamp Palace"
@@ -19027,7 +18895,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "hint_text": "a small key to Palace of Darkness"
@@ -19041,7 +18908,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "hint_text": "a small key to Misery Mire"
@@ -19055,7 +18921,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5,
         "hint_text": "a small key to Skull Woods"
@@ -19069,7 +18934,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "hint_text": "a small key to Ice Palace"
@@ -19083,7 +18947,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a small key to Tower of Hera"
@@ -19097,7 +18960,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3,
         "hint_text": "a small key to Thieves' Town"
@@ -19111,7 +18973,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6,
         "hint_text": "a small key to Turtle Rock"
@@ -19125,7 +18986,6 @@
           "Small Keys"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 8,
         "hint_text": "a small key to Ganon's Tower"
@@ -19139,7 +18999,6 @@
           "Small Keys"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a small key"
@@ -19152,7 +19011,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "Friendship"
@@ -19165,7 +19023,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a faerie"
@@ -19178,7 +19035,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1,
         "hint_text": "a bee"
@@ -19191,7 +19047,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19203,7 +19058,6 @@
           "Non Progression Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19289,7 +19143,6 @@
         "id": 82037,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19298,7 +19151,6 @@
         "id": 82002,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19307,7 +19159,6 @@
         "id": 2000300037,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19316,7 +19167,6 @@
         "id": 2000300034,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19325,7 +19175,6 @@
         "id": 2000300002,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19334,7 +19183,6 @@
         "id": 2000300044,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19343,7 +19191,6 @@
         "id": 82013,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19352,7 +19199,6 @@
         "id": 82001,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19361,7 +19207,6 @@
         "id": 2000300001,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19370,7 +19215,6 @@
         "id": 82007,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19379,7 +19223,6 @@
         "id": 82003,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19388,7 +19231,6 @@
         "id": 118000258,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19397,7 +19239,6 @@
         "id": 82022,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19406,7 +19247,6 @@
         "id": 2000300035,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19415,7 +19255,6 @@
         "id": 82026,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19424,7 +19263,6 @@
         "id": 118000259,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19433,7 +19271,6 @@
         "id": 82028,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19442,7 +19279,6 @@
         "id": 82035,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19451,7 +19287,6 @@
         "id": 2000300029,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19470,7 +19305,6 @@
           "Pendants"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19489,7 +19323,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19499,7 +19332,6 @@
         "id": 2000300013,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19518,7 +19350,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19527,7 +19358,6 @@
         "id": 118000256,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19536,7 +19366,6 @@
         "id": 2000300028,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19545,7 +19374,6 @@
         "id": 2000300007,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19554,7 +19382,6 @@
         "id": 2000300027,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19563,7 +19390,6 @@
         "id": 82009,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19572,7 +19398,6 @@
         "id": 82030,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19581,7 +19406,6 @@
         "id": 82011,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19590,7 +19414,6 @@
         "id": 2000300024,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19609,7 +19432,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19628,7 +19450,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19647,7 +19468,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19666,7 +19486,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19676,7 +19495,6 @@
         "id": 2000300202,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19695,7 +19513,6 @@
           "Crystals"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19714,7 +19531,6 @@
           "Pendants"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19723,7 +19539,6 @@
         "id": 118000260,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19732,7 +19547,6 @@
         "id": 82018,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19751,7 +19565,6 @@
           "Pendants"
         ],
         "classification": "progression",
-        "event": false,
         "type": "Crystal",
         "max_count": 1
       },
@@ -19760,7 +19573,6 @@
         "id": 82023,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19769,7 +19581,6 @@
         "id": 82032,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -19778,7 +19589,6 @@
         "id": 82019,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -20124,7 +19934,7 @@
         },
         "allow_collect": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Allow Collection of checks for other players"
         },
         "beemizer_total_chance": {
@@ -20167,7 +19977,7 @@
         },
         "bombless_start": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bombless Start"
         },
         "boss_shuffle": {
@@ -20184,7 +19994,7 @@
         },
         "bush_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bush Shuffle"
         },
         "compass_shuffle": {
@@ -20233,7 +20043,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "dungeon_counters": {
@@ -20270,7 +20080,7 @@
         },
         "enemy_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enemy Shuffle"
         },
         "entrance_shuffle": {
@@ -20296,7 +20106,7 @@
         },
         "glitch_boots": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Glitched Starting Boots"
         },
         "glitches_required": {
@@ -20389,7 +20199,7 @@
         },
         "include_witch_hut": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Witch's Hut"
         },
         "item_functionality": {
@@ -20416,12 +20226,12 @@
         },
         "key_drop_shuffle": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Key Drop Shuffle"
         },
         "killable_thieves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Killable Thieves"
         },
         "map_shuffle": {
@@ -20472,7 +20282,7 @@
         },
         "music": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Play music"
         },
         "open_pyramid": {
@@ -20514,7 +20324,7 @@
         },
         "pot_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Pot Shuffle"
         },
         "progression_balancing": {
@@ -20536,12 +20346,12 @@
         },
         "quickswap": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "L/R Quickswapping"
         },
         "randomize_cost_types": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Cost Types"
         },
         "randomize_shop_inventories": {
@@ -20556,7 +20366,7 @@
         },
         "randomize_shop_prices": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Randomize Shop Prices"
         },
         "red_clock_time": {
@@ -20568,22 +20378,22 @@
         },
         "reduceflashing": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Reduce Screen Flashes"
         },
         "restrict_dungeon_item_on_boss": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Prevent Dungeon Item on Boss"
         },
         "retro_bow": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Bow"
         },
         "retro_caves": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Retro Caves"
         },
         "scams": {
@@ -20650,7 +20460,7 @@
         },
         "shuffle_shop_inventories": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Shop Inventories"
         },
         "small_key_shuffle": {
@@ -20694,12 +20504,12 @@
         },
         "swordless": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Swordless"
         },
         "tile_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Tile Shuffle"
         },
         "timer": {

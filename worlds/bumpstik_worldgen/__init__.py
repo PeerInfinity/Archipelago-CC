@@ -48,7 +48,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class BumperStickersWorldGenWeb(WebWorld):
     """Web interface for Bumper Stickers WorldGen."""
     theme = "stone"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Bumper Stickers Setup Guide",
@@ -96,6 +96,9 @@ class BumpStikWorld(RuleWorldMixin, World):
         "Targets": frozenset(["Booster Bumper", "Hazard Bumper", "Treasure Bumper"]),
         "Traps": frozenset(["Rainbow Trap", "Spinner Trap", "Killer Trap"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -452,6 +455,10 @@ class BumpStikWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

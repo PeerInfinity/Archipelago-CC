@@ -1,7 +1,7 @@
 from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
 from settings import Group, Bool, UserFolderPath, _world_settings_name_cache
 from typing import Any, ClassVar, NamedTuple, Callable,Optional
-from worlds.AutoWorld import World
+from worlds.AutoWorld import WebWorld, World
 from BaseClasses import CollectionState,Entrance
 from collections import Counter
 from enum import Enum
@@ -86,6 +86,10 @@ class TrackerSettings(Group):
     display_glitched_logic: DisplayGlitchedLogic | bool = True
 
 
+class TrackerWorldWeb(WebWorld):
+    tutorials = []
+    game_info_languages = []
+
 class TrackerWorld(World):
     settings: ClassVar[TrackerSettings]
     settings_key = "universal_tracker"
@@ -93,6 +97,7 @@ class TrackerWorld(World):
     # to make auto world register happy so we can register our settings
     game = "Universal Tracker"
     hidden = True
+    web = TrackerWorldWeb()
     item_name_to_id = {}
     location_name_to_id = {}
 

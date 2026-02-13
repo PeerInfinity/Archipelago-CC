@@ -3,6 +3,7 @@
 
 import { LOCAL_STORAGE_MODE_PREFIX, LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY } from './modeManager.js';
 import { loadAndMergeJsonFiles, getConfigPaths } from '../../utils/settingsMerger.js';
+import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 
 /**
  * Reads the autoLoadMode setting to determine if localStorage data should be loaded.
@@ -242,6 +243,7 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
   const gameParam = urlParams.get('game');
   const seedParam = urlParams.get('seed') || '1'; // Default seed is 1
   const playerParam = urlParams.get('player'); // Player number or name for multiworld
+  const placementParam = urlParams.get('placement'); // Placement variant: "vanilla", "canonical", "vanilla-canonical"
 
   // If game parameter is provided and no rules parameter, look up the rules file
   if (gameParam && !rulesOverride) {
@@ -252,13 +254,14 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
       );
 
       if (presetFiles) {
-        const rulesFile = findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger);
+        const rulesFile = findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger, placementParam);
         if (rulesFile) {
           rulesOverride = rulesFile;
           const playerInfo = playerParam ? ` player="${playerParam}"` : '';
+          const placementInfo = placementParam ? ` placement="${placementParam}"` : '';
           logger.info(
             'init',
-            `Rules file determined from game="${gameParam}" seed="${seedParam}"${playerInfo}: ${rulesFile}`
+            `Rules file determined from game="${gameParam}" seed="${seedParam}"${playerInfo}${placementInfo}: ${rulesFile}`
           );
         }
       }
@@ -297,8 +300,14 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
  * For single-player games:
  *   - Returns the standard rules file (e.g., AP_seed_rules.json)
  *   - playerParam is ignored for non-multiworld games
+ *
+ * Placement variants (placementParam):
+ *   - null/undefined: prefers the randomized version (no is_vanilla/is_canonical flags)
+ *   - "vanilla": selects the folder with is_vanilla=true
+ *   - "canonical": selects the folder with is_canonical=true
+ *   - "vanilla-canonical": selects the folder with both is_vanilla=true and is_canonical=true
  */
-function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger) {
+function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger, placementParam) {
   let gameEntry = null;
   let gameKey = null;
 
@@ -334,64 +343,100 @@ function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerPara
   }
 
   if (gameEntry && gameEntry.folders) {
-    // Find the folder with matching seed number
+    // Collect all folders with matching seed number
+    const matchingFolders = [];
     for (const [folderName, folderData] of Object.entries(gameEntry.folders)) {
       if (folderData.seed && String(folderData.seed) === String(seedParam)) {
-        // Check if this is a multiworld seed (has games array)
-        const isMultiworld = folderData.games && Array.isArray(folderData.games) && folderData.games.length > 1;
+        matchingFolders.push({ folderName, folderData });
+      }
+    }
 
-        if (folderData.files && Array.isArray(folderData.files)) {
-          let rulesFileName = null;
+    // Select the best matching folder based on placement parameter
+    let selectedFolder = null;
+    if (matchingFolders.length > 0) {
+      if (placementParam) {
+        // Match based on placement parameter
+        const wantVanilla = placementParam.includes('vanilla');
+        const wantCanonical = placementParam.includes('canonical');
+        selectedFolder = matchingFolders.find(({ folderData }) =>
+          !!folderData.is_vanilla === wantVanilla && !!folderData.is_canonical === wantCanonical
+        );
+        if (!selectedFolder) {
+          logger.warn(
+            'init',
+            `No "${placementParam}" placement variant found for game="${gameParam}" seed="${seedParam}", ` +
+            `available: ${matchingFolders.map(f => f.folderName).join(', ')}`
+          );
+        }
+      } else {
+        // No placement specified: prefer the randomized version (no flags)
+        selectedFolder = matchingFolders.find(({ folderData }) =>
+          !folderData.is_vanilla && !folderData.is_canonical
+        );
+        // Fall back to first match if no randomized version exists
+        if (!selectedFolder) {
+          selectedFolder = matchingFolders[0];
+        }
+      }
+    }
 
-          if (isMultiworld && playerParam) {
-            // For multiworld with player specified, find player-specific rules file
-            // playerParam can be player number (e.g., "1") or player name (e.g., "Player1")
-            const playerNumber = parseInt(playerParam);
-            const isPlayerNumber = !isNaN(playerNumber) && String(playerNumber) === playerParam;
+    if (selectedFolder) {
+      const { folderName, folderData } = selectedFolder;
+      // Check if this is a multiworld seed (has games array)
+      const isMultiworld = folderData.games && Array.isArray(folderData.games) && folderData.games.length > 1;
 
-            if (isPlayerNumber) {
-              // Look for _P{number}_rules.json
-              rulesFileName = folderData.files.find(file =>
-                file.includes(`_P${playerParam}_rules.json`)
-              );
-            } else {
-              // Look for player by name in games array, then find their rules file
-              const playerInfo = folderData.games.find(g =>
-                g.name && g.name.toLowerCase() === playerParam.toLowerCase()
-              );
-              if (playerInfo && playerInfo.player) {
-                rulesFileName = folderData.files.find(file =>
-                  file.includes(`_P${playerInfo.player}_rules.json`)
-                );
-              }
-            }
+      if (folderData.files && Array.isArray(folderData.files)) {
+        let rulesFileName = null;
 
-            if (!rulesFileName) {
-              logger.warn(
-                'init',
-                `No player-specific rules file found for game="${gameParam}" seed="${seedParam}" player="${playerParam}"`
-              );
-              return null;
-            }
-          } else {
-            // For non-multiworld or multiworld without player specified, find standard rules file
-            // Standard rules file ends with _rules.json but doesn't have _P{number}_ in the name
+        if (isMultiworld && playerParam) {
+          // For multiworld with player specified, find player-specific rules file
+          // playerParam can be player number (e.g., "1") or player name (e.g., "Player1")
+          const playerNumber = parseInt(playerParam);
+          const isPlayerNumber = !isNaN(playerNumber) && String(playerNumber) === playerParam;
+
+          if (isPlayerNumber) {
+            // Look for _P{number}_rules.json
             rulesFileName = folderData.files.find(file =>
-              file.endsWith('_rules.json') && !file.includes('_P')
+              file.includes(`_P${playerParam}_rules.json`)
             );
+          } else {
+            // Look for player by name in games array, then find their rules file
+            const playerInfo = folderData.games.find(g =>
+              g.name && g.name.toLowerCase() === playerParam.toLowerCase()
+            );
+            if (playerInfo && playerInfo.player) {
+              rulesFileName = folderData.files.find(file =>
+                file.includes(`_P${playerInfo.player}_rules.json`)
+              );
+            }
           }
 
-          if (rulesFileName) {
-            return `./presets/${gameKey}/${folderName}/${rulesFileName}`;
+          if (!rulesFileName) {
+            logger.warn(
+              'init',
+              `No player-specific rules file found for game="${gameParam}" seed="${seedParam}" player="${playerParam}"`
+            );
+            return null;
           }
+        } else {
+          // For non-multiworld or multiworld without player specified, find standard rules file
+          // Standard rules file ends with _rules.json but doesn't have _P{number}_ in the name
+          rulesFileName = folderData.files.find(file =>
+            file.endsWith('_rules.json') && !file.includes('_P')
+          );
+        }
+
+        if (rulesFileName) {
+          return `./presets/${gameKey}/${folderName}/${rulesFileName}`;
         }
       }
     }
 
     const playerInfo = playerParam ? ` player="${playerParam}"` : '';
+    const placementInfo = placementParam ? ` placement="${placementParam}"` : '';
     logger.warn(
       'init',
-      `No rules file found for game="${gameParam}" with seed="${seedParam}"${playerInfo}`
+      `No rules file found for game="${gameParam}" with seed="${seedParam}"${playerInfo}${placementInfo}`
     );
   } else {
     logger.warn(
@@ -444,7 +489,7 @@ async function loadConfigKey(params) {
   if (
     configEntry &&
     typeof configEntry === 'object' &&
-    (configEntry.path || configEntry.paths) &&
+    (configEntry.path || configEntry.paths || configEntry.autoResolve) &&
     (typeof configEntry.enabled === 'undefined' || configEntry.enabled)
   ) {
     // Get paths to load (supports both single path and multiple paths)
@@ -794,64 +839,15 @@ async function findFirstAlphabeticalPreset(fetchJson, logger) {
       return null;
     }
 
-    // Filter out non-game keys (metadata, etc.) and find games with folders
-    const gameKeys = Object.keys(presetFiles).filter(key => {
-      // Skip metadata and any key without folders
-      if (key === 'metadata') return false;
-      const entry = presetFiles[key];
-      return entry && entry.folders && Object.keys(entry.folders).length > 0;
-    });
+    const result = resolveFirstPresetPath(presetFiles);
 
-    if (gameKeys.length === 0) {
-      logger.warn('init', 'No game presets found in preset_files.json for alphabetical fallback');
+    if (!result) {
+      logger.warn('init', 'No valid preset found in preset_files.json for alphabetical fallback');
       return null;
     }
 
-    // Sort alphabetically (case-insensitive)
-    gameKeys.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-
-    // Get the first game alphabetically
-    const firstGameKey = gameKeys[0];
-    const gameEntry = presetFiles[firstGameKey];
-    const folders = gameEntry.folders;
-    const folderNames = Object.keys(folders);
-
-    if (folderNames.length === 0) {
-      logger.warn('init', `No folders found for first alphabetical game "${firstGameKey}"`);
-      return null;
-    }
-
-    // Get the first folder (prefer seed 1 if available)
-    let targetFolder = null;
-    let targetFolderName = null;
-
-    for (const folderName of folderNames) {
-      const folderData = folders[folderName];
-      if (folderData.seed === 1) {
-        targetFolder = folderData;
-        targetFolderName = folderName;
-        break;
-      }
-    }
-
-    // If no seed 1, use the first folder
-    if (!targetFolder) {
-      targetFolderName = folderNames[0];
-      targetFolder = folders[targetFolderName];
-    }
-
-    // Find the rules file (standard, not player-specific)
-    const files = targetFolder.files || [];
-    const rulesFile = files.find(f => f.endsWith('_rules.json') && !f.includes('_P'));
-
-    if (!rulesFile) {
-      logger.warn('init', `No rules file found in first alphabetical preset "${firstGameKey}/${targetFolderName}"`);
-      return null;
-    }
-
-    const rulesPath = `./presets/${firstGameKey}/${targetFolderName}/${rulesFile}`;
-    logger.info('init', `Found first alphabetical preset: ${rulesPath} (game: ${gameEntry.name || firstGameKey})`);
-    return rulesPath;
+    logger.info('init', `Found first alphabetical preset: ${result.path} (game: ${result.gameName})`);
+    return result.path;
 
   } catch (error) {
     logger.error('init', 'Error during alphabetical preset fallback lookup:', error);

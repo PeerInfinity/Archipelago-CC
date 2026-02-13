@@ -192,7 +192,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class AquariaWorldGenWeb(WebWorld):
     """Web interface for Aquaria WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -256,6 +256,9 @@ class AquariaWorld(RuleWorldMixin, World):
         "Light": frozenset(["Baby Dumbo", "Sun Form"]),
         "Event": frozenset(["Nautilus Prime beated", "Blaster Peg Prime beated", "Mergog beated", "Mithalan priests beated", "Octopus Prime beated", "Crabbius Maximus beated", "Mantis Shrimp Prime beated", "King Jellyfish God Prime beated", "Fallen God beated", "Mithalan God beated", "Drunian God beated", "Lumerean God beated", "The Golem beated", "First Secret obtained", "Second Secret obtained", "Third Secret obtained", "Body Tongue cleared", "Has Sun Crystal", "Victory"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -884,6 +887,10 @@ class AquariaWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

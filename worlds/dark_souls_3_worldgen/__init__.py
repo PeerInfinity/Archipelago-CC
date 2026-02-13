@@ -800,7 +800,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class DarkSoulsIIIWorldGenWeb(WebWorld):
     """Web interface for Dark Souls III WorldGen."""
     theme = "stone"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -860,6 +860,9 @@ class DarkSouls3World(RuleWorldMixin, World):
         "Spells": frozenset(["Farron Dart", "Great Farron Dart", "Soul Arrow", "Great Soul Arrow", "Heavy Soul Arrow", "Great Heavy Soul Arrow", "Homing Soulmass", "Homing Crystal Soulmass", "Soul Spear", "Crystal Soul Spear", "Deep Soul", "Great Deep Soul", "Magic Weapon", "Great Magic Weapon", "Crystal Magic Weapon", "Magic Shield", "Great Magic Shield", "Hidden Weapon", "Hidden Body", "Cast Light", "Repair", "Spook", "Chameleon", "Aural Decoy", "White Dragon Breath", "Farron Hail", "Crystal Hail", "Soul Greatsword", "Farron Flashsword", "Affinity", "Dark Edge", "Soul Stream", "Twisted Wall of Light", "Pestilent Mist", "Fireball", "Fire Orb", "Firestorm", "Fire Surge", "Black Serpent", "Combustion", "Great Combustion", "Poison Mist", "Toxic Mist", "Acid Surge", "Iron Flesh", "Flash Sweat", "Carthus Flame Arc", "Rapport", "Power Within", "Great Chaos Fire Orb", "Chaos Storm", "Fire Whip", "Black Flame", "Profaned Flame", "Chaos Bed Vestiges", "Warmth", "Profuse Sweat", "Black Fire Orb", "Bursting Fireball", "Boulder Heave", "Sacred Flame", "Carthus Beacon", "Heal Aid", "Heal", "Med Heal", "Great Heal", "Soothing Sunlight", "Replenishment", "Bountiful Sunlight", "Bountiful Light", "Caressing Tears", "Tears of Denial", "Homeward", "Force", "Wrath of the Gods", "Emit Force", "Seek Guidance", "Lightning Spear", "Great Lightning Spear", "Sunlight Spear", "Lightning Storm", "Gnaw", "Dorhys' Gnawing", "Magic Barrier", "Great Magic Barrier", "Sacred Oath", "Vow of Silence", "Lightning Blade", "Darkmoon Blade", "Dark Blade", "Dead Again", "Lightning Stake", "Divine Pillars of Light", "Lifehunt Scythe", "Blessed Weapon", "Deep Protection", "Atonement", "Frozen Weapon", "Old Moonlight", "Great Soul Dregs", "Snap Freeze", "Floating Chaos", "Flame Fan", "Seething Chaos", "Lightning Arrow", "Way of White Corona", "Projected Heal"]),
         "Event": frozenset(["US -> RS", "RS -> FK", "CD -> PW1", "IBV -> ID"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -3401,6 +3404,10 @@ class DarkSouls3World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

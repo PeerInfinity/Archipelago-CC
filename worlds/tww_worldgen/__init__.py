@@ -109,7 +109,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class TheWindWakerWorldGenWeb(WebWorld):
     """Web interface for The Wind Waker WorldGen."""
     theme = "ocean"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -177,6 +177,9 @@ class TWWWorld(RuleWorldMixin, World):
         "Dungeon Items": frozenset(["DRC Dungeon Map", "DRC Compass", "FW Dungeon Map", "FW Compass", "TotG Dungeon Map", "TotG Compass", "FF Dungeon Map", "FF Compass", "ET Dungeon Map", "ET Compass", "WT Dungeon Map", "WT Compass"]),
         "Event": frozenset(["Victory"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -561,6 +564,10 @@ class TWWWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

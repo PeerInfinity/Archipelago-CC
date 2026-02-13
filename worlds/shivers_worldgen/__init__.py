@@ -139,7 +139,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class ShiversWorldGenWeb(WebWorld):
     """Web interface for Shivers WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Shivers Setup Guide",
@@ -184,6 +184,9 @@ class ShiversWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Water Pot Bottom", "Wax Pot Bottom", "Ash Pot Bottom", "Oil Pot Bottom", "Cloth Pot Bottom", "Wood Pot Bottom", "Crystal Pot Bottom", "Lightning Pot Bottom", "Sand Pot Bottom", "Metal Pot Bottom", "Water Pot Top", "Wax Pot Top", "Ash Pot Top", "Oil Pot Top", "Cloth Pot Top", "Wood Pot Top", "Crystal Pot Top", "Lightning Pot Top", "Sand Pot Top", "Metal Pot Top", "Water Pot Complete", "Wax Pot Complete", "Ash Pot Complete", "Oil Pot Complete", "Cloth Pot Complete", "Wood Pot Complete", "Crystal Pot Complete", "Lightning Pot Complete", "Sand Pot Complete", "Metal Pot Complete", "Key for Office Elevator", "Key for Bedroom Elevator", "Key for Three Floor Elevator", "Key for Workshop", "Key for Office", "Key for Prehistoric Room", "Key for Greenhouse", "Key for Ocean Room", "Key for Projector Room", "Key for Generator Room", "Key for Egypt Room", "Key for Library", "Key for Shaman Room", "Key for UFO Room", "Key for Torture Room", "Key for Puzzle Room", "Key for Bedroom", "Key for Underground Lake", "Key for Janitor Closet", "Key for Front Door", "Crawling", "Easier Lyre", "Water Always Available in Lobby", "Wax Always Available in Library", "Wax Always Available in Anansi Room", "Wax Always Available in Shaman Room", "Ash Always Available in Office", "Ash Always Available in Burial Room", "Oil Always Available in Prehistoric Room", "Cloth Always Available in Egypt", "Cloth Always Available in Burial Room", "Wood Always Available in Workshop", "Wood Always Available in Blue Maze", "Wood Always Available in Pegasus Room", "Wood Always Available in Gods Room", "Crystal Always Available in Lobby", "Crystal Always Available in Ocean", "Sand Always Available in Greenhouse", "Sand Always Available in Ocean", "Metal Always Available in Projector Room", "Metal Always Available in Bedroom", "Metal Always Available in Prehistoric", "Heal", "Mt. Pleasant Tribune: 44 year Old Mystery Solved!", "Mt. Pleasant Tribune: 45 year Old Mystery Solved!", "Mt. Pleasant Tribune: 46 year Old Mystery Solved!"]),
         "Event": frozenset(["Crystal Pot Bottom DUPE", "Metal Pot Bottom DUPE", "Ash Pot Bottom DUPE", "Water Pot Top DUPE", "Oil Pot Top DUPE", "Sand Pot Bottom DUPE", "Empty", "Water Pot Bottom DUPE", "Wax Pot Top DUPE", "Cloth Pot Top DUPE", "Lightning Pot Top DUPE", "Wax Pot Bottom DUPE", "Cloth Pot Bottom DUPE", "Sand Pot Top DUPE", "Metal Pot Top DUPE", "Oil Pot Bottom DUPE", "Wood Pot Bottom DUPE", "Lightning Pot Bottom DUPE", "Wood Pot Top DUPE", "Crystal Pot Top DUPE", "Ash Pot Top DUPE", "Set Skull Dial: Prehistoric", "Set Skull Dial: Tar River", "Set Skull Dial: Egypt", "Set Skull Dial: Burial", "Set Skull Dial: Gods Room", "Set Skull Dial: Werewolf", "Viewed Theater Movie", "Set Time", "Set Song", "Viewed Fortune", "Aligned Planets", "Viewed Norse Stone", "Viewed Page 17", "Viewed Egyptian Hieroglyphics Explained", "Lost Your Head"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -564,6 +567,10 @@ class ShiversWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

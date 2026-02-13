@@ -637,7 +637,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -648,7 +647,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -659,7 +657,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -670,7 +667,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -681,7 +677,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -692,7 +687,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -703,7 +697,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -714,7 +707,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -725,7 +717,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -736,7 +727,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -747,7 +737,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 12
       },
@@ -758,7 +747,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -769,7 +757,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -780,7 +767,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -791,7 +777,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -811,7 +796,6 @@
         "id": 82002,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -820,7 +804,6 @@
         "id": 2000300035,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -829,7 +812,6 @@
         "id": 2000300044,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -838,7 +820,6 @@
         "id": 82037,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -847,7 +828,6 @@
         "id": 2000300034,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -857,7 +837,6 @@
         "id": 10,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -866,7 +845,6 @@
         "id": 82015,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -875,7 +853,6 @@
         "id": 2000300002,
         "groups": [],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -885,7 +862,6 @@
         "id": 23,
         "groups": [],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -894,7 +870,6 @@
         "id": 2000300037,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -904,7 +879,6 @@
         "id": 62,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -914,7 +888,6 @@
         "id": 40,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -923,7 +896,6 @@
         "id": 2000300001,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -933,7 +905,6 @@
         "id": 68,
         "groups": [],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -942,7 +913,6 @@
         "id": 82003,
         "groups": [],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -1034,12 +1004,12 @@
         },
         "connector_multi_slot": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Connector Multi-Slot"
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "difficulty_switch_a": {
@@ -1075,7 +1045,7 @@
         },
         "dragon_slay_check": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Slay Dragon Checks"
         },
         "freeincarnate_max": {

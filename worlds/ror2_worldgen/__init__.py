@@ -77,7 +77,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class RiskofRain2WorldGenWeb(WebWorld):
     """Web interface for Risk of Rain 2 WorldGen."""
     theme = "grass"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -128,6 +128,9 @@ class RiskOfRainWorld(RuleWorldMixin, World):
         "Environments": frozenset(["Aphelian Sanctuary", "Void Fields", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Bazaar Between Time", "Distant Roost", "Distant Roost (2)", "Abyssal Depths", "Wetland Aspect", "Rallypoint Delta", "Hidden Realm: Gilded Coast", "Titanic Plains", "Titanic Plains (2)", "Abandoned Aqueduct", "Hidden Realm: A Moment, Whole", "Verdant Falls", "Commencement", "Hidden Realm: A Moment, Fractured", "Sundered Grove", "Siren's Call", "Sky Meadow", "Siphoned Forest", "Sulfur Pools", "The Planetarium", "Void Locus", "Scorched Acres"]),
         "Event": frozenset(["Stage 5", "Victory"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -725,6 +728,10 @@ class RiskOfRainWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

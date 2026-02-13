@@ -5896,7 +5896,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5908,7 +5907,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5920,7 +5918,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5932,7 +5929,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5944,7 +5940,6 @@
           "Morphs"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5956,7 +5951,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5968,7 +5962,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5980,7 +5973,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5992,7 +5984,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6004,7 +5995,6 @@
           "Morphs"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6016,7 +6006,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6028,7 +6017,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6040,7 +6028,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6052,7 +6039,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6064,7 +6050,6 @@
           "Morphs"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6076,7 +6061,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6088,7 +6072,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6100,7 +6083,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6112,7 +6094,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6124,7 +6105,6 @@
           "Morphs"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6136,7 +6116,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6148,7 +6127,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6160,7 +6138,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6172,7 +6149,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6184,7 +6160,6 @@
           "Morphs"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6196,7 +6171,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6208,7 +6182,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6220,7 +6193,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6232,7 +6204,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6244,7 +6215,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -6256,7 +6226,6 @@
           "Gates"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6268,7 +6237,6 @@
           "Gates"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6280,7 +6248,6 @@
           "Gates"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6292,7 +6259,6 @@
           "Gates"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6304,7 +6270,6 @@
           "Gates"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6316,7 +6281,6 @@
           "Gates"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6328,7 +6292,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6340,7 +6303,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6352,7 +6314,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6364,7 +6325,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6376,7 +6336,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6388,7 +6347,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6400,7 +6358,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6412,7 +6369,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6424,7 +6380,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6436,7 +6391,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6448,7 +6402,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6460,7 +6413,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6472,7 +6424,6 @@
           "Panels"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6484,7 +6435,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6496,7 +6446,6 @@
           "Panels"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6508,7 +6457,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6520,7 +6468,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6532,7 +6479,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -6544,7 +6490,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -6556,7 +6501,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6568,7 +6512,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -6580,7 +6523,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6592,7 +6534,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -6604,7 +6545,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -6617,7 +6557,6 @@
           "Lives"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 10
       },
@@ -6630,7 +6569,6 @@
           "Lives"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6643,7 +6581,6 @@
           "Lives"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -6656,7 +6593,6 @@
           "Lives"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -6668,7 +6604,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6680,7 +6615,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6692,7 +6626,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6704,7 +6637,6 @@
           "Traps"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6716,7 +6648,6 @@
           "Items"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6899,7 +6830,7 @@
         },
         "add_secretlens": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Add Secret Lens"
         },
         "baby_mario_sound": {
@@ -6914,7 +6845,7 @@
         },
         "boss_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Boss Shuffle"
         },
         "bowser_door_mode": {
@@ -6946,17 +6877,17 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "disable_autoscroll": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Disable Autoscrolling"
         },
         "extras_enabled": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Include Extra Stages"
         },
         "goal": {
@@ -6981,7 +6912,7 @@
         },
         "item_logic": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Consumable Logic"
         },
         "level_shuffle": {
@@ -7028,22 +6959,22 @@
         },
         "shuffle_midrings": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Shuffle Middle Rings"
         },
         "softlock_prevention": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Softlock Prevention Code"
         },
         "split_bonus": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Bonus Games"
         },
         "split_extras": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Split Extra Stages"
         },
         "stage_logic": {
@@ -7085,7 +7016,7 @@
         },
         "traps_enabled": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Traps Enabled"
         },
         "yoshi_colors": {

@@ -4,7 +4,7 @@ This document provides a brief overview of the modifications made to the Rule Bu
 
 - **Original source:** [drtchops/Archipelago](https://github.com/drtchops/Archipelago/tree/rules-engine) (rules-engine branch)
 - **Location in this repository:** `rule_builder/`
-- **Last updated:** 2026-01-14
+- **Last updated:** 2026-02-11
 
 ## Summary of Changes
 
@@ -22,12 +22,13 @@ These changes integrate Rule Builder with the JSON Export system, enabling round
 
 | File | Lines | Origin | Description |
 |------|-------|--------|-------------|
-| `rules.py` | 3559 | Modified from PR #5048 | Core rule classes, extended with AST rule types |
-| `ast_explain.py` | 805 | **New** | Human-readable explanations for AST rules |
-| `ast_format.py` | 657 | **New** | Parse AST JSON into Rule Builder objects |
-| `pathfinding.py` | 574 | **New** | Pathfinding and accessibility analysis tools |
-| `__init__.py` | 156 | **New** | Module exports and documentation |
-| **Total** | **5751** | | |
+| `rules.py` | 4174 | Modified from PR #5048 | Core rule classes, extended with AST rule types |
+| `ast_explain.py` | 803 | **New** | Human-readable explanations for AST rules |
+| `ast_format.py` | 642 | **New** | Parse AST JSON into Rule Builder objects |
+| `pathfinding.py` | 429 | **New** | Pathfinding and accessibility analysis tools |
+| `_ast_utils.py` | 178 | **New** | Shared AST parsing utilities |
+| `__init__.py` | 165 | **New** | Module exports and documentation |
+| **Total** | **6391** | | |
 
 ---
 
@@ -113,9 +114,28 @@ The original `rules.py` from PR #5048 has been extended with additional rule cla
 
 ### Enhanced Existing Classes
 
-- `RuleWorldMixin` - Extended for AST rule support
-- `OptionFilter` - Enhanced option filtering
+- `RuleWorldMixin` - Extended for AST rule support, rule simplification, and entrance creation
+- `Rule.Resolved` - Added `get_value()` and `get_count()` default methods, `to_dict()` serialization
+- `OptionFilter` - Enhanced option filtering (generic type parameter)
 - `CustomRuleRegister` - Extended for custom AST rules
+- `NestedRule` - Accepts `filtered_resolution` parameter
+- `Has` - Dynamic count support (`count` can be a `Rule` for expressions like `Has("item", count=CountItem("other"))`)
+
+---
+
+## Pyright Strict Type Checking
+
+The upstream pyright config (`.github/pyright-config.json`) uses `typeCheckingMode: "strict"` with `reportImplicitOverride: "error"`. Since this repo consolidates `cached_world.py` and `options.py` into `rules.py`, the pyright config has been updated to remove references to those non-existent files.
+
+Key type annotation changes in `rules.py`:
+- `@override` decorators on all `RuleWorldMixin` methods that override `World` methods
+- `@override` decorators on all `get_value`/`get_count` subclass methods
+- `cast()` with `# pyright: ignore` for `state.rule_cache` access (matching upstream's pattern for `rule_builder_cache`)
+- `# pyright: ignore[reportIncompatibleMethodOverride]` on `RuleWorldMixin` methods with intentionally narrowed parameter types (accepts `Rule[Self]` instead of `CollectionRule | Rule[Any]`)
+- Explicit `dict[str, Any]` type annotations where pyright infers `dict[str, str]`
+- Parameterized `default_factory` lambdas for `dict` and `list` dataclass fields
+
+The `ast_explain.py` module now imports `JSONMessagePart` from `NetUtils` instead of defining its own `dict[str, Any]` alias, ensuring type compatibility with `rules.py`.
 
 ---
 

@@ -5,11 +5,11 @@ This document tracks the differences between this repository and the upstream Ar
 **Upstream commit:** `1dd91ec85b894c2a1d62ad688af074f2166ee621` (Core, Tests: allow Archipelago items in all worlds #5893)
 **Upstream date:** February 5, 2026 07:56:25 +0000
 **Upstream version:** 0.6.5+80
-**Last updated:** 2026-02-06
+**Last updated:** 2026-02-11
 
 ## Summary
 
-- **Modified upstream files:** 21
+- **Modified upstream files:** 22 (plus 2 temporary compatibility fixes)
 - **New top-level directories:** 16
 - **New files in existing directories:** ~36
 - **Auto-generated world directories:** 76
@@ -102,7 +102,7 @@ Note: The vanilla placement feature for ALTTP is located in `scripts/vanilla-alt
 
 ## Modified Files
 
-The following 21 files have been modified from the upstream version:
+The following 22 files have been modified from the upstream version (plus 2 temporary fixes):
 
 ### Core Files (see core-files.diff)
 ```
@@ -114,11 +114,19 @@ settings.py
 ### Configuration Files (see config-files.diff)
 ```
 .gitattributes
+.github/pyright-config.json
 .github/workflows/codeql-analysis.yml
 .gitignore
 pytest.ini
 requirements.txt
 README.md
+```
+
+### Temporary Upstream Compatibility Fixes
+These files have minor type annotation fixes for pyright strict mode compliance. These are expected to be fixed in upstream and can be dropped on the next merge.
+```
+test/param.py
+worlds/AutoSNIClient.py
 ```
 
 ### World Init Files (see world-init-files.diff)
@@ -162,6 +170,7 @@ Modified world implementations to support generation without ROM files:
 ### Configuration Files
 - **.gitignore** - Added patterns for project-specific files
 - **.gitattributes** - Merge strategy for .gitignore and README.md
+- **.github/pyright-config.json** - Removed references to `cached_world.py`, `options.py`, and `test_rule_builder.py` (consolidated into `rules.py` in this repo)
 - **pytest.ini** - Added warning filters
 - **requirements.txt** - Additional dependencies (astunparse, psutil)
 - **README.md** - Documentation updates
@@ -252,7 +261,7 @@ The following major components were developed specifically for this project:
 
 - The latest merge from upstream was performed on November 29, 2025, capturing the state of Archipelago version 0.6.5-rc1
 
-- Most changes are additions rather than modifications, with only 21 files modified from upstream
+- Most changes are additions rather than modifications, with only 22 files modified from upstream (plus 2 temporary pyright fixes)
 
 - The majority of the ~2,000 new files are contained within:
   - `frontend/` - Web client (~400 files)
@@ -262,6 +271,6 @@ The following major components were developed specifically for this project:
 
 ---
 
-**Last updated:** 2026-02-06
+**Last updated:** 2026-02-11
 **Base commit:** 1dd91ec85b894c2a1d62ad688af074f2166ee621
 **Upstream version:** 0.6.5+80

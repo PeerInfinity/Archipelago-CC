@@ -75,7 +75,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SonicAdventure2BattleWorldGenWeb(WebWorld):
     """Web interface for Sonic Adventure 2 Battle WorldGen."""
     theme = "partyTime"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -126,6 +126,9 @@ class SA2BWorld(RuleWorldMixin, World):
         "Hats": frozenset(["Pumpkin", "Skull", "Apple", "Bucket", "Empty Can", "Cardboard Box", "Flower Pot", "Paper Bag", "Pan", "Stump", "Watermelon", "Red Wool Beanie", "Blue Wool Beanie", "Black Wool Beanie", "Pacifier"]),
         "Event": frozenset(["What Maria Wanted"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -700,6 +703,10 @@ class SA2BWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

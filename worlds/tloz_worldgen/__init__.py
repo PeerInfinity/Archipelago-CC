@@ -81,7 +81,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class TheLegendofZeldaWorldGenWeb(WebWorld):
     """Web interface for The Legend of Zelda WorldGen."""
     theme = "stone"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -133,6 +133,9 @@ class TLoZWorld(RuleWorldMixin, World):
         "swords": frozenset(["Sword", "White Sword", "Magical Sword"]),
         "Event": frozenset(["Boss 1 Defeated", "Boss 2 Defeated", "Boss 3 Defeated", "Boss 4 Defeated", "Boss 5 Defeated", "Boss 6 Defeated", "Boss 7 Defeated", "Boss 8 Defeated", "Triforce of Power", "Rescued Zelda!"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -615,6 +618,10 @@ class TLoZWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

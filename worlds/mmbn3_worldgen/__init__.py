@@ -232,7 +232,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class MegaManBattleNetwork3WorldGenWeb(WebWorld):
     """Web interface for MegaMan Battle Network 3 WorldGen."""
     theme = "ice"
-    game_info_languages: List[str] = []
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -286,6 +286,9 @@ class MMBN3World(RuleWorldMixin, World):
         "Navi Chips": frozenset(["Roll R", "Roll V2 R", "Roll V3 R", "GutsMan G", "GutsMan V2 G", "GutsMan V3 G", "ProtoMan B", "ProtoMan V2 B", "ProtoMan V3 B", "FlashMan F", "FlashMan V2 F", "FlashMan V3 F", "BeastMan B", "BeastMan V2 B", "BeastMan V3 B", "BubblMan B", "BubblMan V2 B", "BubblMan V3 B", "DesertMan D", "DesertMan V2 D", "DesertMan V3 D", "PlantMan P", "PlantMan V2 P", "PlantMan V3 P", "FlamMan F", "FlamMan V2 F", "FlamMan V3 F", "DrillMan D", "DrillMan V2 D", "DrillMan V3 D", "MetalMan M", "MetalMan V2 M", "MetalMan V3 M", "KingMan K", "KingMan V2 K", "KingMan V3 K", "BowlMan B", "BowlMan V2 B", "BowlMan V3 B"]),
         "Event": frozenset(["Victory"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -966,6 +969,10 @@ class MMBN3World(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""

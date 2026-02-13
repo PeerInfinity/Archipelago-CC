@@ -20,8 +20,8 @@ This installer allows vanilla Archipelago users to easily install the JSON Tools
 ### Option 1: Install as APWorld
 
 1. Download `json_tools_installer.apworld` from the [`apworlds/`](../../apworlds/) directory in this repository
-2. Place in your Archipelago `worlds/` directory (or use the APWorld installer)
-3. Restart Archipelago
+2. Place in your Archipelago `custom_worlds/` directory
+3. Restart the Launcher to load the new APWorld
 
 ### Option 2: From Source
 
@@ -94,7 +94,7 @@ The installer can install these components:
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
 | `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
 | `demo_worlds` | Example worlds (bakingadventure, codingadventure, etc.) | Yes |
 | `tracker` | PopTracker integration world for auto-tracking | No |
 | `testing` | Test config files (package.json, playwright, vitest) | No |
@@ -184,8 +184,8 @@ By default, the installer configures `host.yaml` with the `normal` preset. Use `
 
 In the installer GUI, you'll see options under "Configure export settings in host.yaml:":
 - **Configure host.yaml** (checked by default) - Whether to update export settings
-- **Normal** - Standard settings with export disabled
-- **Minimal spoilers** - Enables JSON export and sphere logging
+- **Disable JSON Export** - Standard settings with export disabled
+- **Enable JSON Export - Minimal Spoilers** - Enables JSON export and sphere logging
 
 ## Backup and Restore
 
@@ -237,10 +237,10 @@ The `export_settings` section mirrors the settings written to `host.yaml` and se
 
 | AP Version | Support Level | Method |
 |------------|---------------|--------|
-| 0.6.5 | Full | File patches |
-| 0.6.x | Full | File patches |
-| 0.5.x | Experimental | Monkey patches |
-| < 0.5.0 | Unsupported | N/A |
+| 0.6.7 | Full | File patches |
+| 0.6.3–0.6.6 | Supported | Monkey patches |
+| > 0.6.7 | Experimental | Monkey patches |
+| < 0.6.3 | Unsupported | N/A |
 
 ## Troubleshooting
 
@@ -295,7 +295,8 @@ worlds/json_tools_installer/
 ├── installer/
 │   ├── __init__.py
 │   ├── version_detector.py  # AP version detection
-│   ├── downloader.py        # GitHub download
+│   ├── dependencies.py      # Auto-install missing pip packages
+│   ├── downloader.py        # GitHub download with retry
 │   ├── extractor.py         # Archive extraction
 │   ├── patcher.py           # Main file patching
 │   └── romless_patcher.py   # ROM-less world patching
@@ -314,7 +315,7 @@ worlds/json_tools_installer/
 
 # Patches are downloaded to (not bundled in the module):
 json_tools_patches/
-└── 0.6.5/
+└── 0.6.7/
     ├── main/             # Main patches (Main.py, BaseClasses.py, settings.py)
     └── romless/          # ROM-less world patches
 ```
