@@ -4288,7 +4288,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4300,7 +4299,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 27
       },
@@ -4311,7 +4309,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 18
       },
@@ -4322,7 +4319,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 85
       },
@@ -4333,7 +4329,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 41
       },
@@ -4344,7 +4339,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4355,7 +4349,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -4366,7 +4359,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3
       }
@@ -4440,7 +4432,7 @@
         },
         "autosave": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Autosave"
         },
         "difficulty": {
@@ -4487,7 +4479,7 @@
         },
         "kongsanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "KONGsanity"
         },
         "krematoa_bonus_coin_cost": {
@@ -4499,17 +4491,17 @@
         },
         "level_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Level Shuffle"
         },
         "merry": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "MERRY"
         },
         "music_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Music Shuffle"
         },
         "number_of_banana_birds": {

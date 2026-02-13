@@ -8,7 +8,7 @@ game entry so the frontend can display test status.
 import argparse
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
@@ -339,7 +339,7 @@ def update_preset_files_with_all_test_data(preset_files: Dict[str, Any], all_tes
     games_without_test_data = [game_id for game_id in all_game_ids if game_id not in updated_games]
 
     updated_preset_files['metadata'].update({
-        'test_data_updated': datetime.now().isoformat(),
+        'test_data_updated': datetime.now(timezone.utc).isoformat(),
         'games_with_test_data': len(updated_games),
         'total_games': len(all_game_ids),
         'games_without_test_data': len(games_without_test_data),
@@ -477,7 +477,7 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
     games_without_test_data = [game_id for game_id in all_game_ids if game_id not in updated_games]
     
     updated_preset_files['metadata'].update({
-        'test_data_updated': datetime.now().isoformat(),
+        'test_data_updated': datetime.now(timezone.utc).isoformat(),
         'test_data_source': test_results.get('metadata', {}),
         'games_with_test_data': len(updated_games),
         'total_games': len([k for k in updated_preset_files.keys() if k not in ['metadata', 'multiworld']]),
@@ -505,6 +505,47 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
             print(f"  ... and {len(missing_games) - 10} more")
     
     return updated_preset_files
+
+
+def update_placement_flags(preset_files: Dict[str, Any], presets_dir: str) -> int:
+    """Scan rules.json files for is_vanilla/is_canonical and add to folder entries in preset_files.
+
+    Returns the number of folders updated.
+    """
+    updated_count = 0
+    for game_id, game_data in preset_files.items():
+        if game_id == 'metadata' or not isinstance(game_data, dict):
+            continue
+        folders = game_data.get('folders', {})
+        for folder_name, folder_data in folders.items():
+            if not isinstance(folder_data, dict):
+                continue
+            # Skip if already has both flags checked
+            if 'is_vanilla' in folder_data or 'is_canonical' in folder_data:
+                continue
+            # Find the rules.json file in this folder
+            files = folder_data.get('files', [])
+            rules_file = next((f for f in files if f.endswith('_rules.json')), None)
+            if not rules_file:
+                continue
+            rules_path = os.path.join(presets_dir, game_id, folder_name, rules_file)
+            if not os.path.exists(rules_path):
+                continue
+            try:
+                with open(rules_path, 'r') as f:
+                    rules_data = json.load(f)
+                changed = False
+                if rules_data.get('is_vanilla'):
+                    folder_data['is_vanilla'] = True
+                    changed = True
+                if rules_data.get('is_canonical'):
+                    folder_data['is_canonical'] = True
+                    changed = True
+                if changed:
+                    updated_count += 1
+            except (json.JSONDecodeError, IOError):
+                pass
+    return updated_count
 
 
 def save_preset_files(preset_files: Dict[str, Any], output_path: str):
@@ -622,7 +663,13 @@ def main():
     # Update preset files with test data from all sources
     print(f"\nUpdating preset files with test data...")
     updated_preset_files = update_preset_files_with_all_test_data(preset_files, all_test_results)
-    
+
+    # Scan rules.json files for is_vanilla/is_canonical metadata and backfill into preset_files
+    presets_dir = os.path.join(project_root, os.path.dirname(args.preset_files))
+    placement_count = update_placement_flags(updated_preset_files, presets_dir)
+    if placement_count > 0:
+        print(f"\nUpdated {placement_count} folder(s) with placement flags from rules.json files")
+
     # Save or display results
     if args.dry_run:
         print(f"\nDry run complete. Would update: {output_path}")

@@ -15,6 +15,7 @@ os.environ.setdefault("KIVY_NO_ARGS", "1")
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -53,9 +54,9 @@ class InstallerApp(App):
     comp_scripts = BooleanProperty(True)
     comp_main_patches = BooleanProperty(True)
     comp_romless_patches = BooleanProperty(True)
-    comp_demo_worlds = BooleanProperty(True)
-    comp_tracker = BooleanProperty(False)
-    comp_testing = BooleanProperty(False)
+    comp_demo_worlds = BooleanProperty(False)
+    comp_tracker = BooleanProperty(True)
+    comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
 
     # Patch options (monkey patch and main patches are mutually exclusive)
@@ -73,11 +74,12 @@ class InstallerApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.config: InstallerConfig = load_config()
+        self.installer_config: InstallerConfig = load_config()
         self.title = "JSON Tools Installer"
 
     def build(self):
         """Build the UI."""
+        Window.maximize()
         root = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
         # Header
@@ -108,18 +110,22 @@ class InstallerApp(App):
         version_select_box = BoxLayout(size_hint_y=None, height=40)
         version_select_box.add_widget(Label(text='Version:', size_hint_x=0.3))
 
-        stable_box = BoxLayout()
-        stable_cb = CheckBox(group='version', active=True)
+        stable_box = BoxLayout(size_hint_x=0.3)
+        stable_cb = CheckBox(group='version', active=True, size_hint_x=None, width=40)
         stable_cb.bind(active=self.on_version_stable)
         stable_box.add_widget(stable_cb)
-        stable_box.add_widget(Label(text='Stable'))
+        stable_label = Label(text='Stable', halign='left', valign='middle')
+        stable_label.bind(size=stable_label.setter('text_size'))
+        stable_box.add_widget(stable_label)
         version_select_box.add_widget(stable_box)
 
-        dev_box = BoxLayout()
-        dev_cb = CheckBox(group='version', active=False)
+        dev_box = BoxLayout(size_hint_x=0.3)
+        dev_cb = CheckBox(group='version', active=False, size_hint_x=None, width=40)
         dev_cb.bind(active=self.on_version_dev)
         dev_box.add_widget(dev_cb)
-        dev_box.add_widget(Label(text='Dev'))
+        dev_label = Label(text='Dev', halign='left', valign='middle')
+        dev_label.bind(size=dev_label.setter('text_size'))
+        dev_box.add_widget(dev_label)
         version_select_box.add_widget(dev_box)
 
         root.add_widget(version_select_box)
@@ -199,10 +205,8 @@ class InstallerApp(App):
 
             components_box.add_widget(row)
 
-        # Wrap in ScrollView for when there are many components
+        # Wrap in ScrollView - takes all remaining vertical space
         scroll_view = ScrollView(
-            size_hint_y=None,
-            height=min(200, num_components * row_height),  # Max height of 200, scrollable if more
             do_scroll_x=False,
             bar_width=10,
         )
@@ -231,7 +235,7 @@ class InstallerApp(App):
         self.monkey_patch_cb.bind(active=self.on_monkey_patch_toggle)
         monkey_row.add_widget(self.monkey_patch_cb)
         monkey_label = Label(
-            text='Monkey patch',
+            text='Monkey Patch for JSON Export',
             halign='left',
             valign='middle',
         )
@@ -249,7 +253,7 @@ class InstallerApp(App):
         self.main_patch_cb.bind(active=self.on_main_patch_toggle)
         main_patch_row.add_widget(self.main_patch_cb)
         main_patch_label = Label(
-            text='Main patches',
+            text='3 Main Files Patch for JSON Export',
             halign='left',
             valign='middle',
         )
@@ -267,7 +271,7 @@ class InstallerApp(App):
         self.romless_patch_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches', val))
         romless_row.add_widget(self.romless_patch_cb)
         romless_label = Label(
-            text='ROM-less patches',
+            text='11 ROM-less World File Patches',
             halign='left',
             valign='middle',
         )
@@ -318,7 +322,7 @@ class InstallerApp(App):
         self.preset_normal_cb.bind(active=self.on_preset_normal)
         normal_row.add_widget(self.preset_normal_cb)
         normal_label = Label(
-            text='Normal',
+            text='Disable JSON Export',
             halign='left',
             valign='middle',
         )
@@ -337,7 +341,7 @@ class InstallerApp(App):
         self.preset_minimal_cb.bind(active=self.on_preset_minimal)
         minimal_row.add_widget(self.preset_minimal_cb)
         minimal_label = Label(
-            text='Minimal spoilers',
+            text='Enable JSON Export - Minimal Spoilers',
             halign='left',
             valign='middle',
         )
@@ -557,14 +561,14 @@ class InstallerApp(App):
 PATCH OPTIONS
 The installer offers three ways to enable JSON export functionality:
 
-[b]Monkey Patch[/b] (Recommended)
+[b]Monkey Patch for JSON Export[/b] (Recommended)
 Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
 
-[b]Main Patches[/b]
+[b]3 Main Files Patch for JSON Export[/b]
 Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
 
-[b]ROM-less Patches[/b]
-Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
+[b]11 ROM-less World File Patches[/b]
+Additional patches that allow seed generation for games that normally require ROM files. Useful for testing. Requires main patches to also be installed (monkey patch alone is not sufficient).
 
 Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
 
@@ -574,10 +578,10 @@ Configure how Archipelago exports game data to host.yaml:
 [b]Configure host.yaml[/b]
 When enabled, the installer automatically adds export settings to your host.yaml file. This eliminates the need to manually run setup scripts after installation.
 
-[b]Normal[/b]
+[b]Disable JSON Export[/b]
 Standard settings with JSON export disabled. Use this if you only want the tools installed but don't need automatic JSON export during seed generation.
 
-[b]Minimal spoilers[/b]
+[b]Enable JSON Export - Minimal Spoilers[/b]
 Enables JSON rules export and sphere logging. This is what you need to use the frontend web UI for viewing game logic and playthroughs. Automatically updates frontend presets when generating seeds.
 
 COMPONENTS
@@ -586,7 +590,6 @@ Select which parts of JSON Tools to install:
 - Frontend web UI for viewing game logic
 - Scripts for testing and setup
 - Documentation
-- Demo worlds for learning
 
 VERSION
 - Stable: Release-quality code from JSONExport branch
@@ -644,7 +647,7 @@ For more information, see the README.md file."""
 
             version = self.get_selected_version()
             components = self.get_selected_components()
-            source = self.config.get_source(version)
+            source = self.installer_config.get_source(version)
 
             self.update_status(f"Checking connectivity...")
             self.update_progress(5)
@@ -670,17 +673,30 @@ For more information, see the README.md file."""
                     self.show_message("Installer Update Required", error_msg)
                 return
 
-            self.update_status(f"Downloading from {source.repo}...")
+            self.update_status(f"Connecting to {source.repo}...")
             self.update_progress(10)
 
             with tempfile.TemporaryDirectory() as temp_dir:
                 archive_path = Path(temp_dir) / "archive.zip"
 
+                download_attempt = [0]
+
                 def progress_cb(current, total):
+                    if current == 0 or (current > 0 and current <= 8192):
+                        download_attempt[0] += 1
+                    attempt = download_attempt[0]
+                    retry_label = f" (attempt {attempt})" if attempt > 1 else ""
+                    current_mb = current / (1024 * 1024)
                     if total > 0:
                         pct = 10 + (current * 40 // total)
                         self.update_progress(pct)
+                        total_mb = total / (1024 * 1024)
+                        self.update_status(f"Downloading{retry_label}... {current_mb:.1f} / {total_mb:.1f} MB")
+                    else:
+                        approx_mb = APPROXIMATE_ARCHIVE_SIZE / (1024 * 1024)
+                        self.update_status(f"Downloading{retry_label}... {current_mb:.1f} of about {approx_mb:.0f} MB")
 
+                from ..installer.downloader import APPROXIMATE_ARCHIVE_SIZE
                 result = download_archive(source, archive_path, progress_cb)
 
                 if not result.success:
@@ -701,6 +717,14 @@ For more information, see the README.md file."""
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
+                # Install Python dependencies required by extracted components
+                self.update_status("Installing dependencies...")
+                self.update_progress(82)
+                from ..installer.dependencies import install_missing_dependencies
+                dep_ok, dep_msg = install_missing_dependencies()
+                if not dep_ok:
+                    self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
+
                 # Apply patches based on selected option
                 if self.apply_monkey_patch:
                     # Monkey patching - runtime hooks
@@ -711,7 +735,7 @@ For more information, see the README.md file."""
                     success_count = sum(1 for v in hook_results.values() if v)
                     if success_count < len(hook_results):
                         self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
-                    self.config.patches.method = "monkey"
+                    self.installer_config.patches.method = "monkey"
 
                 elif self.apply_main_patches and "main_patches" in components:
                     # File-based patching - needs confirmation
@@ -740,24 +764,24 @@ For more information, see the README.md file."""
                     if confirm_result and confirm_result[0]:
                         self.update_status("Applying main patches...")
                         self.update_progress(85)
-                        patch_result = apply_bundled_patches(self.config)
+                        patch_result = apply_bundled_patches(self.installer_config)
                         if not patch_result.success:
                             self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
                         else:
-                            self.config.patches.method = "file"
+                            self.installer_config.patches.method = "file"
                     else:
                         self.update_status("File patching cancelled, using no patches...")
-                        self.config.patches.method = "none"
+                        self.installer_config.patches.method = "none"
 
                 else:
                     # No patching selected
-                    self.config.patches.method = "none"
+                    self.installer_config.patches.method = "none"
 
                 # Apply ROM-less patches if checkbox is checked
                 if self.apply_romless_patches and "romless_patches" in components:
                     self.update_status("Applying ROM-less patches...")
                     self.update_progress(90)
-                    romless_result = apply_romless_patches(self.config)
+                    romless_result = apply_romless_patches(self.installer_config)
                     if not romless_result.success:
                         self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
 
@@ -785,11 +809,11 @@ For more information, see the README.md file."""
 
                 # Update config
                 from ..config import update_installation_info
-                update_installation_info(self.config, version, components, commit_hash)
+                update_installation_info(self.installer_config, version, components, commit_hash)
 
                 self.show_message(
                     "Success",
-                    "JSON Tools installed successfully!\n\nRestart Archipelago to use the new tools."
+                    "JSON Tools installed successfully!\n\nComponents are ready to use."
                 )
 
         except Exception as e:
@@ -813,11 +837,11 @@ For more information, see the README.md file."""
         try:
             self.update_status("Reverting main patches...")
             self.update_progress(20)
-            revert_patches(self.config)
+            revert_patches(self.installer_config)
 
             self.update_status("Reverting ROM-less patches...")
             self.update_progress(30)
-            revert_romless_patches(self.config)
+            revert_romless_patches(self.installer_config)
 
             self.update_status("Removing components...")
             self.update_progress(50)
@@ -829,7 +853,7 @@ For more information, see the README.md file."""
                 self.update_progress(50 + (len(installed) * 10))
 
             from ..config import clear_installation
-            clear_installation(self.config)
+            clear_installation(self.installer_config)
 
             self.update_progress(100)
             self.update_status("Uninstall complete!")
@@ -854,12 +878,12 @@ For more information, see the README.md file."""
                 errors = []
 
                 self.update_status("Reverting main patches...")
-                main_result = revert_patches(self.config)
+                main_result = revert_patches(self.installer_config)
                 if main_result.errors:
                     errors.extend(main_result.errors)
 
                 self.update_status("Reverting ROM-less patches...")
-                romless_result = revert_romless_patches(self.config)
+                romless_result = revert_romless_patches(self.installer_config)
                 if romless_result.errors:
                     errors.extend(romless_result.errors)
 

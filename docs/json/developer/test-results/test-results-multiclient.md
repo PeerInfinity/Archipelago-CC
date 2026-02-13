@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-02-07 14:01:39
+**Generated:** 2026-02-13 03:32:22 UTC
 
-**Source Data Created:** 2026-02-07T06:32:39.326007
+**Source Data Created:** 2026-02-13T03:23:07.315393+00:00
 
-**Source Data Last Updated:** 2026-02-07T06:32:39.326013
+**Source Data Last Updated:** 2026-02-13T03:23:07.315402+00:00
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 74 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Passed:** 75 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/74 (55.4% of passed)
-- **Passing with Generic Logic:** 68/74 (91.9% of passed)
-- **Passing with Both Generic:** 41/74 (55.4% of passed)
+- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
+- **Passing with Generic Logic:** 69/75 (92.0% of passed)
+- **Passing with Both Generic:** 41/75 (54.7% of passed)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | EarthBound | ✅ Passed | 0 | ✅ | 265/265 | 251/251 | 14/14 | ✅ | 265/265 | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 13.4KB | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 13.9KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
@@ -83,7 +83,7 @@
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
-| Satisfactory | ❌ Failed | 0 | ❌ | 0/555 | 0/377 | 0/178 | ❌ | 0/555 | 35.2KB | ✅ |
+| Satisfactory | ✅ Passed | 0 | ✅ | 555/555 | 377/377 | 178/178 | ✅ | 555/555 | 41.6KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |

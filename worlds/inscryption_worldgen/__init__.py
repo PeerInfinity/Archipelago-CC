@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -81,6 +81,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class InscryptionWorldGenWeb(WebWorld):
     """Web interface for Inscryption WorldGen."""
     theme = "dirt"
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -133,6 +134,9 @@ class InscryptionWorld(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Stinkbug Card", "Stunted Wolf Card", "Wardrobe Key", "Skink Card", "Ant Cards", "Caged Wolf Card", "Squirrel Totem Head", "Dagger", "Film Roll", "Ring", "Magnificus Eye", "Oil Painting's Clover Plant", "Extra Candle", "Bee Figurine", "Greater Smoke", "Angler Hook", "Camera Replica", "Pile Of Meat", "Epitaph Piece", "Epitaph Pieces", "Monocle", "Bone Lord Femur", "Bone Lord Horn", "Bone Lord Holo Key", "Mycologists Holo Key", "Ancient Obol", "Great Kraken Card", "Drowned Soul Card", "Salmon Card", "Dock's Clover Plant", "Extra Battery", "Nano Armor Generator", "Mrs. Bomb's Remote", "Inspectometer Battery", "Gems Module", "Lonely Wizbot Card", "Fishbot Card", "Ourobot Card", "Holo Pelt", "Quill", "Currency", "Card Pack"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -486,6 +490,10 @@ class InscryptionWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""
@@ -570,7 +578,12 @@ class InscryptionWorld(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

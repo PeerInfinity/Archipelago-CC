@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -257,6 +257,14 @@ def run_generation(
     game_dir = get_world_directory_for_template(template_name, project_root)
     preset_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, seed_id)
 
+    # Also check for suffixed directories (e.g., _c for canonical, _v for vanilla)
+    if not os.path.exists(preset_dir):
+        for suffix in ['_c', '_v', '_vc']:
+            suffixed_dir = os.path.join(project_root, 'frontend', 'presets', game_dir, f'{seed_id}{suffix}')
+            if os.path.exists(suffixed_dir):
+                preset_dir = suffixed_dir
+                break
+
     if os.path.exists(preset_dir):
         result['preset_dir'] = preset_dir
         rules_path = os.path.join(preset_dir, f'{seed_id}_rules.json')
@@ -279,7 +287,7 @@ def run_world_generator(
     output_dir: str,
     game_name: str,
     project_root: str,
-    canonical_seed1: bool = False
+    canonical_seed: Optional[int] = None
 ) -> Dict:
     """Run the world generator to create a _worldgen world."""
     result = {
@@ -297,8 +305,8 @@ def run_world_generator(
         '--force'
     ]
 
-    if canonical_seed1:
-        cmd.append('--canonical-seed1')
+    if canonical_seed is not None:
+        cmd.extend(['--canonical-seed', str(canonical_seed)])
 
     start_time = time.time()
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=120)
@@ -430,7 +438,7 @@ def run_rules_comparison(
         result['differences_count'] = 0
 
         # Check for ignored differences count
-        ignored_match = re.search(r'\((\d+) canonical-seed1 differences ignored\)', full_output)
+        ignored_match = re.search(r'\((\d+) canonical-seed differences ignored\)', full_output)
         if ignored_match:
             result['ignored_count'] = int(ignored_match.group(1))
     elif 'Found' in full_output and 'difference' in full_output:
@@ -441,7 +449,7 @@ def run_rules_comparison(
             result['differences_count'] = int(diff_match.group(1))
 
         # Extract ignored count if present
-        ignored_match = re.search(r'\((\d+) canonical-seed1 differences ignored\)', full_output)
+        ignored_match = re.search(r'\((\d+) canonical-seed differences ignored\)', full_output)
         if ignored_match:
             result['ignored_count'] = int(ignored_match.group(1))
 
@@ -460,7 +468,7 @@ def process_template(
     results: Dict,
     skip_generation: bool = False,
     skip_spoiler_test: bool = False,
-    canonical_seed1: bool = False
+    canonical_seed: Optional[int] = None
 ) -> Dict:
     """
     Test a single template through the full round-trip process.
@@ -477,7 +485,7 @@ def process_template(
     template_result = {
         'template': template_name,
         'game_name': game_name_display,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'original': {
             'generation': {'success': False},
             'spoiler_test': {'success': False, 'pass_fail': 'unknown'}
@@ -549,7 +557,7 @@ def process_template(
 
     world_gen_result = run_world_generator(
         rules_path, test_world_dir, test_game_name, project_root,
-        canonical_seed1=canonical_seed1
+        canonical_seed=canonical_seed
     )
     template_result['test_world']['world_generation'] = world_gen_result
 
@@ -573,7 +581,7 @@ def run_test_world_tests(
     project_root: str,
     seed: int,
     skip_spoiler_test: bool = False,
-    canonical_seed1: bool = False
+    canonical_seed: Optional[int] = None
 ) -> None:
     """
     Run generation and spoiler tests on all _worldgen worlds.
@@ -612,20 +620,23 @@ def run_test_world_tests(
         print(f"\n[5/7] Comparing rules.json files...")
         seed_id = compute_seed_id(seed)
         original_game_dir = get_world_directory_for_game(original_game_name, project_root)
-        test_game_dir = get_world_directory_for_template(test_template_name, project_root)
 
         original_rules_path = os.path.join(
             project_root, 'frontend', 'presets', original_game_dir,
             seed_id, f'{seed_id}_rules.json'
         )
-        worldgen_rules_path = os.path.join(
-            project_root, 'frontend', 'presets', test_game_dir,
-            seed_id, f'{seed_id}_rules.json'
-        )
+        # Use the actual rules path from seed generation (accounts for _c/_v suffixes)
+        worldgen_rules_path = gen_result.get('rules_path', '')
+        if not worldgen_rules_path:
+            test_game_dir = get_world_directory_for_template(test_template_name, project_root)
+            worldgen_rules_path = os.path.join(
+                project_root, 'frontend', 'presets', test_game_dir,
+                seed_id, f'{seed_id}_rules.json'
+            )
 
         comparison_result = run_rules_comparison(
             original_rules_path, worldgen_rules_path, project_root,
-            ignore_canonical=canonical_seed1
+            ignore_canonical=canonical_seed is not None
         )
         result['test_world']['rules_comparison'] = comparison_result
 
@@ -657,16 +668,19 @@ def run_test_world_tests(
             # Get paths
             seed_id = compute_seed_id(seed)
             original_game_dir = get_world_directory_for_game(original_game_name, project_root)
-            test_game_dir = get_world_directory_for_template(test_template_name, project_root)
 
             original_sphere_log = os.path.join(
                 project_root, 'frontend', 'presets', original_game_dir,
                 seed_id, f'{seed_id}_sphere_log.jsonl'
             )
-            test_sphere_log = os.path.join(
-                project_root, 'frontend', 'presets', test_game_dir,
-                seed_id, f'{seed_id}_sphere_log.jsonl'
-            )
+            # Use the actual sphere log path from seed generation (accounts for _c/_v suffixes)
+            test_sphere_log = gen_result.get('sphere_log_path', '')
+            if not test_sphere_log:
+                test_game_dir = get_world_directory_for_template(test_template_name, project_root)
+                test_sphere_log = os.path.join(
+                    project_root, 'frontend', 'presets', test_game_dir,
+                    seed_id, f'{seed_id}_sphere_log.jsonl'
+                )
 
             if os.path.exists(original_sphere_log) and os.path.exists(os.path.dirname(test_sphere_log)):
                 # Backup test sphere log
@@ -816,8 +830,8 @@ def main():
         help='Verbose output'
     )
     parser.add_argument(
-        '--canonical-seed1', action='store_true',
-        help='Enable seed=1 canonical placement (places items in original locations when seed is 1)'
+        '--canonical-seed', type=int, nargs='?', const=1, default=None, metavar='N',
+        help='Enable canonical placement for seed N (default: 1 if flag provided). Places items in original locations when seed matches.'
     )
 
     args = parser.parse_args()
@@ -830,16 +844,16 @@ def main():
     print(f"Seed: {args.seed}")
     print(f"Output file: {args.output_file}")
     print(f"Phase: {args.phase}")
-    if args.canonical_seed1:
-        print(f"Canonical seed 1: enabled")
+    if args.canonical_seed is not None:
+        print(f"Canonical seed: {args.canonical_seed}")
 
     # Initialize results - use dict keyed by game name for compatibility with combine-test-results.py
     results = {
         'metadata': {
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'seed': args.seed,
             'phase': args.phase,
-            'canonical_seed1': args.canonical_seed1,
+            'canonical_seed': args.canonical_seed,
             'total_templates': 0,
             'successful_generations': 0,
             'failed_generations': 0,
@@ -908,7 +922,7 @@ def main():
                 template, project_root, args.seed, results,
                 skip_generation=args.skip_generation,
                 skip_spoiler_test=True,  # We'll do spoiler tests in the test phase
-                canonical_seed1=args.canonical_seed1
+                canonical_seed=args.canonical_seed
             )
             # Use game_name as key for dictionary structure
             game_name = template_result.get('game_name', template.replace('.yaml', ''))
@@ -998,7 +1012,7 @@ def main():
                 template_result = {
                     'template': original_template,
                     'game_name': game_name_display,
-                    'timestamp': datetime.now().isoformat(),
+                    'timestamp': datetime.now(timezone.utc).isoformat(),
                     'original': {
                         'generation': {'success': True, 'note': 'Phase 1'},
                         'spoiler_test': {'success': False, 'pass_fail': 'unknown'}
@@ -1124,7 +1138,7 @@ def main():
             run_test_world_tests(
                 results['results'], project_root, args.seed,
                 skip_spoiler_test=args.skip_spoiler_test,
-                canonical_seed1=args.canonical_seed1
+                canonical_seed=args.canonical_seed
             )
 
         # Update rules comparison and cross-validation counts

@@ -2,7 +2,7 @@
 Spoiler test chart data extraction and markdown generation.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Tuple, Optional
 
 from .utils import format_file_size
@@ -156,7 +156,7 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
                 md_content += f"[View Original Template Results]({link})\n\n"
 
     if metadata:
-        md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        md_content += f"**Generated:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
         md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 

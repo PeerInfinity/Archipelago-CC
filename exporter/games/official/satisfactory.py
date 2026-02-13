@@ -237,7 +237,14 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         """Transform Satisfactory rules from AST format to Rule Builder format."""
         data = super().post_process_data(data)
 
-        for player_id, player_regions in data.get('regions', {}).items():
+        # Only process this player's regions, not all players' regions.
+        # In multiworld, data['regions'] contains all players' region data keyed by player ID.
+        # Processing other players' regions would corrupt their rules.
+        my_player_id = str(self.world.player) if self.world else None
+        player_ids_to_process = [my_player_id] if my_player_id and my_player_id in data.get('regions', {}) else list(data.get('regions', {}).keys())
+
+        for player_id in player_ids_to_process:
+            player_regions = data['regions'][player_id]
             for region_name, region_data in player_regions.items():
                 exits = region_data.get('exits', [])
                 # Transform exit rules
@@ -257,14 +264,16 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
                             access_rule, loc_data, region_name
                         )
 
-        # Remove the helpers section since we've inlined everything
+        # Remove the helpers section only for this player
         if 'helpers' in data:
-            for player_id in data['helpers']:
-                helpers = data['helpers'][player_id]
-                for helper_name in ['can_build', 'can_produce', 'can_produce_all',
-                                    'has_recipe', 'is_recipe_producible',
-                                    'can_handcraft_single_part']:
-                    helpers.pop(helper_name, None)
+            helpers_to_process = [my_player_id] if my_player_id and my_player_id in data.get('helpers', {}) else list(data.get('helpers', {}).keys())
+            for player_id in helpers_to_process:
+                if player_id in data['helpers']:
+                    helpers = data['helpers'][player_id]
+                    for helper_name in ['can_build', 'can_produce', 'can_produce_all',
+                                        'has_recipe', 'is_recipe_producible',
+                                        'can_handcraft_single_part']:
+                        helpers.pop(helper_name, None)
 
         return data
 
@@ -529,9 +538,17 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         element_rule = args.get("element_rule", {})
         iterator_info = args.get("iterator_info", {})
 
-        # Check if this is a handcraft_single_part capability check
+        # Check if this is a handcraft_single_part capability check.
+        # The element_rule can appear in two forms:
+        # 1. Generic expansion: {"type": "capability", "capability": "handcraft_single_part"}
+        # 2. Raw AST export: {"type": "helper", "name": "can_handcraft_single_part", ...}
         capability = element_rule.get("capability", "")
-        if capability == "handcraft_single_part" and self._critical_path:
+        helper_name = element_rule.get("name", "")
+        is_handcraft = (
+            capability == "handcraft_single_part"
+            or (element_rule.get("type") == "helper" and helper_name == "can_handcraft_single_part")
+        )
+        if is_handcraft and self._critical_path:
             # Extract the parts from the iterator
             iterator = iterator_info.get("iterator", {})
             parts_value = iterator.get("value") if isinstance(iterator, dict) else None

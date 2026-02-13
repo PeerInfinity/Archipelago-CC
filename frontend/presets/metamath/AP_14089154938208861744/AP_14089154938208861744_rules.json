@@ -152,11 +152,9 @@
             "name": "From Statement 4 to Statement 9",
             "connected_region": "Prove Statement 9",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Statement 4"
-                ]
+                "item_name": "Statement 4"
               }
             }
           }
@@ -185,11 +183,9 @@
             "name": "From Statement 5 to Statement 7",
             "connected_region": "Prove Statement 7",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Statement 5"
-                ]
+                "item_name": "Statement 5"
               }
             }
           }
@@ -269,11 +265,9 @@
             "name": "Prove Statement 7",
             "id": 234790007,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Statement 5"
-                ]
+                "item_name": "Statement 5"
               }
             },
             "item": {
@@ -349,11 +343,9 @@
             "name": "Prove Statement 9",
             "id": 234790009,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Statement 4"
-                ]
+                "item_name": "Statement 4"
               }
             },
             "item": {
@@ -412,7 +404,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -424,7 +415,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -436,7 +426,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -448,7 +437,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -460,7 +448,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -472,7 +459,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -484,7 +470,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -496,7 +481,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -508,7 +492,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -520,7 +503,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -532,7 +514,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -544,7 +525,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -556,7 +536,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -568,7 +547,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -580,7 +558,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -592,7 +569,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -604,7 +580,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -616,7 +591,6 @@
           "Hints"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -628,7 +602,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -640,7 +613,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -652,7 +624,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -664,7 +635,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -676,7 +646,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -688,7 +657,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -700,7 +668,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -712,7 +679,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -724,7 +690,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -736,7 +701,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -748,7 +712,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -760,7 +723,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -772,7 +734,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -784,7 +745,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -796,7 +756,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -808,7 +767,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -820,7 +778,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -832,7 +789,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -844,7 +800,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -856,7 +811,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -868,7 +822,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -880,7 +833,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -892,7 +844,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -904,7 +855,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -916,7 +866,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -928,7 +877,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -940,7 +888,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -952,7 +899,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -964,7 +910,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -976,7 +921,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -988,7 +932,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1000,7 +943,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1012,7 +954,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1024,7 +965,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1036,7 +976,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1048,7 +987,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1060,7 +998,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1072,7 +1009,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1084,7 +1020,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1096,7 +1031,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1108,7 +1042,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1120,7 +1053,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1132,7 +1064,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1144,7 +1075,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1156,7 +1086,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1168,7 +1097,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1180,7 +1108,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1192,7 +1119,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1204,7 +1130,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1216,7 +1141,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1228,7 +1152,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1240,7 +1163,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1252,7 +1174,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1264,7 +1185,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1276,7 +1196,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1288,7 +1207,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1300,7 +1218,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1312,7 +1229,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1324,7 +1240,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1336,7 +1251,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1348,7 +1262,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1360,7 +1273,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1372,7 +1284,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1384,7 +1295,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1396,7 +1306,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1408,7 +1317,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1420,7 +1328,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1432,7 +1339,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1444,7 +1350,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1456,7 +1361,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1468,7 +1372,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1480,7 +1383,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1492,7 +1394,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1504,7 +1405,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1516,7 +1416,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1528,7 +1427,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1540,7 +1438,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1552,7 +1449,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1564,7 +1460,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1576,7 +1471,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1588,7 +1482,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1600,7 +1493,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1612,7 +1504,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1624,7 +1515,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1636,7 +1526,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1648,7 +1537,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1660,7 +1548,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1672,7 +1559,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1684,7 +1570,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1696,7 +1581,6 @@
           "Statements"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -1768,7 +1652,7 @@
         },
         "auto_download_database": {
           "type": "toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Auto-Download Database"
         },
         "complexity": {
@@ -2029,7 +1913,19 @@
         "randomize_items": false
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Metamath for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Archipelago Team"
+            ]
+          }
+        ]
       },
       "world_directory": "metamath"
     }

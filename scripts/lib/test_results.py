@@ -11,7 +11,7 @@ This module handles loading, saving, merging, and analyzing test results includi
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 
 
@@ -236,8 +236,8 @@ def load_existing_results(results_file: str) -> Dict:
                     print("Converting old-format results file to new format...")
                     return {
                         'metadata': {
-                            'created': data.get('timestamp', datetime.now().isoformat()),
-                            'last_updated': datetime.now().isoformat(),
+                            'created': data.get('timestamp', datetime.now(timezone.utc).isoformat()),
+                            'last_updated': datetime.now(timezone.utc).isoformat(),
                             'script_version': '1.0.0'
                         },
                         'results': {}
@@ -246,8 +246,8 @@ def load_existing_results(results_file: str) -> Dict:
                 # Check if metadata exists, if not add it
                 if 'metadata' not in data:
                     data['metadata'] = {
-                        'created': datetime.now().isoformat(),
-                        'last_updated': datetime.now().isoformat(),
+                        'created': datetime.now(timezone.utc).isoformat(),
+                        'last_updated': datetime.now(timezone.utc).isoformat(),
                         'script_version': '1.0.0'
                     }
 
@@ -257,8 +257,8 @@ def load_existing_results(results_file: str) -> Dict:
 
     return {
         'metadata': {
-            'created': datetime.now().isoformat(),
-            'last_updated': datetime.now().isoformat(),
+            'created': datetime.now(timezone.utc).isoformat(),
+            'last_updated': datetime.now(timezone.utc).isoformat(),
             'script_version': '1.0.0'
         },
         'results': {}
@@ -474,7 +474,7 @@ def merge_results(existing_results: Dict, new_results: Dict, templates_tested: L
 
 def save_results(results: Dict, results_file: str, batch_processing_time: float = None, timestamped_file: str = None):
     """Save results to JSON file and optionally to a timestamped file."""
-    results['metadata']['last_updated'] = datetime.now().isoformat()
+    results['metadata']['last_updated'] = datetime.now(timezone.utc).isoformat()
 
     # Add batch processing time if provided
     if batch_processing_time is not None:

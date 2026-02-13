@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def all_skull_dials_set(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'], player)
+    return (state.has('Set Skull Dial: Burial', player)) and (state.has('Set Skull Dial: Egypt', player)) and (state.has('Set Skull Dial: Gods Room', player)) and (state.has('Set Skull Dial: Prehistoric', player)) and (state.has('Set Skull Dial: Tar River', player)) and (state.has('Set Skull Dial: Werewolf', player))
 
 
 def ash_capturable(state: "CollectionState", player: int) -> bool:
@@ -338,7 +338,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=(Has("Set Skull Dial: Burial")) & (Has("Set Skull Dial: Egypt")) & (Has("Set Skull Dial: Gods Room")) & (Has("Set Skull Dial: Prehistoric")) & (Has("Set Skull Dial: Tar River")) & (Has("Set Skull Dial: Werewolf")))
     )
 
     world.set_rule(
@@ -483,7 +483,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=(Has("Set Skull Dial: Burial")) & (Has("Set Skull Dial: Egypt")) & (Has("Set Skull Dial: Gods Room")) & (Has("Set Skull Dial: Prehistoric")) & (Has("Set Skull Dial: Tar River")) & (Has("Set Skull Dial: Werewolf")))
     )
 
     world.set_rule(

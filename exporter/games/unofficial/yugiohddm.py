@@ -279,7 +279,7 @@ class YuGiOhDDMExportHandler(GenericGameExportHandler):
             return self._expand_get_available_dice()
 
         # Handle AST format helper references
-        if rule.get('_original_ast_type') == 'helper':
+        if rule.get('_original_ast_type', '').endswith('helper'):
             helper_name = rule.get('rule', '')
             if helper_name == 'get_available_duelists':
                 return self._expand_get_available_duelists()
@@ -384,7 +384,7 @@ class YuGiOhDDMExportHandler(GenericGameExportHandler):
             return True
 
         # AST helper format
-        if expr.get('_original_ast_type') == 'helper' and expr.get('rule') == 'get_available_duelists':
+        if expr.get('_original_ast_type', '').endswith('helper') and expr.get('rule') == 'get_available_duelists':
             return True
 
         return False
@@ -537,7 +537,7 @@ class YuGiOhDDMExportHandler(GenericGameExportHandler):
             return True
 
         # AST helper format
-        if expr.get('_original_ast_type') == 'helper' and expr.get('rule') == 'get_available_dice':
+        if expr.get('_original_ast_type', '').endswith('helper') and expr.get('rule') == 'get_available_dice':
             return True
 
         # Check for method_call format: {'type': 'method_call', 'method': 'get_available_dice', ...}

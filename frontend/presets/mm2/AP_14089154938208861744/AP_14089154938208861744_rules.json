@@ -20,8 +20,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Item 2 - Rocket",
-                  "Heat Man Access Codes"
+                  "Heat Man Access Codes",
+                  "Item 2 - Rocket"
                 ]
               }
             }
@@ -30,11 +30,9 @@
             "name": "To Air Man Stage",
             "connected_region": "Air Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Air Man Access Codes"
-                ]
+                "item_name": "Air Man Access Codes"
               }
             }
           },
@@ -42,11 +40,9 @@
             "name": "To Wood Man Stage",
             "connected_region": "Wood Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wood Man Access Codes"
-                ]
+                "item_name": "Wood Man Access Codes"
               }
             }
           },
@@ -54,11 +50,9 @@
             "name": "To Bubble Man Stage",
             "connected_region": "Bubble Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Bubble Man Access Codes"
-                ]
+                "item_name": "Bubble Man Access Codes"
               }
             }
           },
@@ -69,8 +63,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Time Stopper",
-                  "Quick Man Access Codes"
+                  "Quick Man Access Codes",
+                  "Time Stopper"
                 ]
               }
             }
@@ -79,11 +73,9 @@
             "name": "To Flash Man Stage",
             "connected_region": "Flash Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Flash Man Access Codes"
-                ]
+                "item_name": "Flash Man Access Codes"
               }
             }
           },
@@ -91,11 +83,9 @@
             "name": "To Metal Man Stage",
             "connected_region": "Metal Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Metal Man Access Codes"
-                ]
+                "item_name": "Metal Man Access Codes"
               }
             }
           },
@@ -103,11 +93,9 @@
             "name": "To Crash Man Stage",
             "connected_region": "Crash Man Stage",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Crash Man Access Codes"
-                ]
+                "item_name": "Crash Man Access Codes"
               }
             }
           },
@@ -650,11 +638,9 @@
             "name": "To Wily Stage 2",
             "connected_region": "Wily Stage 2",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wily Stage 1 - Completed"
-                ]
+                "item_name": "Wily Stage 1 - Completed"
               }
             }
           }
@@ -712,11 +698,9 @@
             "name": "To Wily Stage 3",
             "connected_region": "Wily Stage 3",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wily Stage 2 - Completed"
-                ]
+                "item_name": "Wily Stage 2 - Completed"
               }
             }
           }
@@ -822,11 +806,9 @@
             "name": "To Wily Stage 4",
             "connected_region": "Wily Stage 4",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wily Stage 3 - Completed"
-                ]
+                "item_name": "Wily Stage 3 - Completed"
               }
             }
           }
@@ -887,11 +869,9 @@
             "name": "To Wily Stage 5",
             "connected_region": "Wily Stage 5",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wily Stage 4 - Completed"
-                ]
+                "item_name": "Wily Stage 4 - Completed"
               }
             }
           }
@@ -995,11 +975,9 @@
             "name": "To Wily Stage 6",
             "connected_region": "Wily Stage 6",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Wily Stage 5 - Completed"
-                ]
+                "item_name": "Wily Stage 5 - Completed"
               }
             }
           }
@@ -1009,14 +987,34 @@
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_enough_rbms",
-                "inferred": true,
-                "description": "Requires ability to defeat enough rbms",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_enough_rbms",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "wily_5_requirement"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": {
+                      "0": [],
+                      "1": [],
+                      "2": [],
+                      "3": [],
+                      "4": [],
+                      "5": [],
+                      "6": [],
+                      "7": [],
+                      "12": []
+                    }
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "E-Tank",
@@ -1030,14 +1028,34 @@
             "name": "Wily Stage 5 - Completed",
             "id": null,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_enough_rbms",
-                "inferred": true,
-                "description": "Requires ability to defeat enough rbms",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_enough_rbms",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "wily_5_requirement"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": {
+                      "0": [],
+                      "1": [],
+                      "2": [],
+                      "3": [],
+                      "4": [],
+                      "5": [],
+                      "6": [],
+                      "7": [],
+                      "12": []
+                    }
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Wily Stage 5 - Completed",
@@ -1096,7 +1114,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1108,7 +1125,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1120,7 +1136,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1132,7 +1147,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1144,7 +1158,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1156,7 +1169,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1168,7 +1180,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1180,7 +1191,6 @@
           "Weapons"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1193,7 +1203,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1206,7 +1215,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1219,7 +1227,6 @@
           "Items"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1231,7 +1238,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -1242,7 +1248,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 14
       },
@@ -1253,7 +1258,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -1265,7 +1269,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -1277,7 +1280,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1289,7 +1291,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1301,7 +1302,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1313,7 +1313,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1325,7 +1324,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1337,7 +1335,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1349,7 +1346,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1361,7 +1357,6 @@
           "Stages"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -1545,22 +1540,22 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "enable_lasers": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Enable Lasers"
         },
         "enemy_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Random Enemy Weaknesses"
         },
         "energy_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "EnergyLink"
         },
         "palette_shuffle": {
@@ -1583,7 +1578,7 @@
         },
         "quickswap": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Quickswap"
         },
         "random_music": {
@@ -1635,7 +1630,7 @@
         },
         "strict_weakness": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Strict Boss Weaknesses"
         },
         "wily_5_requirement": {
@@ -1647,7 +1642,7 @@
         },
         "yoku_jumps": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Yoku Block Jumps"
         }
       },

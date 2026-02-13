@@ -210,8 +210,6 @@ class WorldGenerator:
             "authors": ["World Generator"],
             "minimum_ap_version": self.data.metadata.archipelago_version or "0.6.0",
             "world_version": "1.0.0",
-            "version": 7,
-            "compatible_version": 7
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
@@ -273,15 +271,16 @@ class WorldGenerator:
 
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create docs directory
-        docs_dir = output_dir / 'docs' / 'en'
+        # Create docs directory (flat structure matching Archipelago conventions)
+        docs_dir = output_dir / 'docs'
         docs_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create a basic setup.md
-        setup_md = docs_dir / 'setup.md'
+        # self.data is guaranteed non-None when this method is called from generate()
+        assert self.data is not None
+
+        # Create a basic setup_en.md
+        setup_md = docs_dir / 'setup_en.md'
         if not setup_md.exists() or self.force:
-            # self.data is guaranteed non-None when this method is called from generate()
-            assert self.data is not None
             setup_content = f"""# {self.data.metadata.game_name} Setup Guide
 
 ## Required Software
@@ -301,6 +300,12 @@ class WorldGenerator:
 3. Start playing!
 """
             setup_md.write_text(setup_content)
+
+        # Create game info file (en_GameName.md) for WebHost integration
+        game_info_md = docs_dir / f'en_{self.data.metadata.game_name}.md'
+        if not game_info_md.exists() or self.force:
+            game_info_content = f"# {self.data.metadata.game_name}\n\nGenerated world package.\n"
+            game_info_md.write_text(game_info_content)
 
     def _write_file(self, file_path: Path, content: str) -> None:
         """Write content to a file."""

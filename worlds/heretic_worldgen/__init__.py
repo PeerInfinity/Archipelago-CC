@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -206,6 +206,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class HereticWorldGenWeb(WebWorld):
     """Web interface for Heretic WorldGen."""
     theme = "dirt"
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -255,6 +256,9 @@ class HereticWorld(RuleWorldMixin, World):
         "Levels": frozenset(["The Docks (E1M1)", "The Dungeons (E1M2)", "The Gatehouse (E1M3)", "The Guard Tower (E1M4)", "The Citadel (E1M5)", "The Cathedral (E1M6)", "The Crypts (E1M7)", "Hell's Maw (E1M8)", "The Graveyard (E1M9)", "The Crater (E2M1)", "The Lava Pits (E2M2)", "The River of Fire (E2M3)", "The Ice Grotto (E2M4)", "The Catacombs (E2M5)", "The Labyrinth (E2M6)", "The Great Hall (E2M7)", "The Portals of Chaos (E2M8)", "The Glacier (E2M9)", "The Storehouse (E3M1)", "The Cesspool (E3M2)", "The Confluence (E3M3)", "The Azure Fortress (E3M4)", "The Ophidian Lair (E3M5)", "The Halls of Fear (E3M6)", "The Chasm (E3M7)", "D'Sparil's Keep (E3M8)", "The Aquifer (E3M9)", "Catafalque (E4M1)", "Blockhouse (E4M2)", "Ambulatory (E4M3)", "Sepulcher (E4M4)", "Great Stair (E4M5)", "Halls of the Apostate (E4M6)", "Ramparts of Perdition (E4M7)", "Shattered Bridge (E4M8)", "Mausoleum (E4M9)", "Ochre Cliffs (E5M1)", "Rapids (E5M2)", "Quay (E5M3)", "Courtyard (E5M4)", "Hydratyr (E5M5)", "Colonnade (E5M6)", "Foetid Manse (E5M7)", "Field of Judgement (E5M8)", "Skein of D'Sparil (E5M9)"]),
         "Map Scrolls": frozenset(["The Docks (E1M1) - Map Scroll", "The Dungeons (E1M2) - Map Scroll", "The Gatehouse (E1M3) - Map Scroll", "The Guard Tower (E1M4) - Map Scroll", "The Citadel (E1M5) - Map Scroll", "The Cathedral (E1M6) - Map Scroll", "The Crypts (E1M7) - Map Scroll", "Hell's Maw (E1M8) - Map Scroll", "The Graveyard (E1M9) - Map Scroll", "The Crater (E2M1) - Map Scroll", "The Lava Pits (E2M2) - Map Scroll", "The River of Fire (E2M3) - Map Scroll", "The Ice Grotto (E2M4) - Map Scroll", "The Catacombs (E2M5) - Map Scroll", "The Labyrinth (E2M6) - Map Scroll", "The Great Hall (E2M7) - Map Scroll", "The Portals of Chaos (E2M8) - Map Scroll", "The Glacier (E2M9) - Map Scroll", "The Storehouse (E3M1) - Map Scroll", "The Cesspool (E3M2) - Map Scroll", "The Confluence (E3M3) - Map Scroll", "The Azure Fortress (E3M4) - Map Scroll", "The Ophidian Lair (E3M5) - Map Scroll", "The Halls of Fear (E3M6) - Map Scroll", "The Chasm (E3M7) - Map Scroll", "D'Sparil's Keep (E3M8) - Map Scroll", "The Aquifer (E3M9) - Map Scroll", "Catafalque (E4M1) - Map Scroll", "Blockhouse (E4M2) - Map Scroll", "Ambulatory (E4M3) - Map Scroll", "Sepulcher (E4M4) - Map Scroll", "Great Stair (E4M5) - Map Scroll", "Halls of the Apostate (E4M6) - Map Scroll", "Ramparts of Perdition (E4M7) - Map Scroll", "Shattered Bridge (E4M8) - Map Scroll", "Mausoleum (E4M9) - Map Scroll", "Ochre Cliffs (E5M1) - Map Scroll", "Rapids (E5M2) - Map Scroll", "Quay (E5M3) - Map Scroll", "Courtyard (E5M4) - Map Scroll", "Hydratyr (E5M5) - Map Scroll", "Colonnade (E5M6) - Map Scroll", "Foetid Manse (E5M7) - Map Scroll", "Field of Judgement (E5M8) - Map Scroll", "Skein of D'Sparil (E5M9) - Map Scroll"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -1412,6 +1416,10 @@ class HereticWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""
@@ -1496,7 +1504,12 @@ class HereticWorld(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

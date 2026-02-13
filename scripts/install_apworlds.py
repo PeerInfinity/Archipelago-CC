@@ -70,7 +70,7 @@ def save_download_urls(apworlds):
     This allows other scripts (like test-all-ut-fuzz.py) to look up download
     URLs without needing to refresh repositories again.
     """
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     urls = {}
     for world in apworlds:
@@ -91,7 +91,7 @@ def save_download_urls(apworlds):
 
     output = {
         'metadata': {
-            'created': datetime.now().isoformat(),
+            'created': datetime.now(timezone.utc).isoformat(),
             'total_urls': len(urls),
         },
         'urls': urls

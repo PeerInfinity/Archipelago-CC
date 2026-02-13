@@ -2,6 +2,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
@@ -458,8 +459,7 @@ export class GraphDataManager {
       if (playerState) {
         const path = playerState.getPath();
         if (path && path.length > 0) {
-          // Filter for only regionMove entries
-          this.ui.currentPath = path.filter(entry => entry.type === 'regionMove');
+          this.ui.currentPath = getRegionMovesFromPath(path);
           logger.debug(`Loaded initial path with ${this.ui.currentPath.length} regions`);
         }
       }

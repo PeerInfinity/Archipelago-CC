@@ -13,7 +13,7 @@ import argparse
 import csv
 import io
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -73,7 +73,7 @@ def generate_readme(games_by_status: dict[str, list[dict]]) -> str:
     lines = [
         "# Archipelago Games Sheet",
         f"Extracted from: {SPREADSHEET_URL}",
-        f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Last updated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}",
         "",
         "## Files",
         "- `playable_worlds.csv` - Full list of playable worlds (APWorld Only, Merged, In Review, Stable, Unstable)",

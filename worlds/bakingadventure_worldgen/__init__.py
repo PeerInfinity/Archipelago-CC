@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -55,6 +55,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class BakingAdventureWorldGenWeb(WebWorld):
     """Web interface for Baking Adventure WorldGen."""
     theme = "partyTime"
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -283,6 +284,10 @@ class BakingAdventureWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""
@@ -385,7 +390,12 @@ class BakingAdventureWorld(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

@@ -435,7 +435,7 @@ jobs:
           import json
           import glob
           import os
-          from datetime import datetime
+          from datetime import datetime, timezone
 
           ut_version = os.environ.get('UT_VERSION', 'worldgen')
           world_source = os.environ.get('WORLD_SOURCE', 'bundled')
@@ -451,8 +451,8 @@ jobs:
           # Combine results
           combined = {
               "metadata": {
-                  "created": datetime.now().isoformat(),
-                  "last_updated": datetime.now().isoformat(),
+                  "created": datetime.now(timezone.utc).isoformat(),
+                  "last_updated": datetime.now(timezone.utc).isoformat(),
                   "script_version": "1.0.0",
                   "combined_from": len(files)
               },

@@ -104,7 +104,7 @@ def load_romless_manifest(patches_dir: Path) -> Optional[Dict]:
 
 def check_romless_patch_status(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.5"
+    version: str = "0.6.7"
 ) -> Dict[str, RomlessPatchStatus]:
     """
     Check the current ROM-less patch status of all supported worlds.
@@ -227,7 +227,7 @@ def backup_world_file(world: str, filepath: Path, config: InstallerConfig) -> Op
 
 def apply_romless_patches(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.5",
+    version: str = "0.6.7",
     force: bool = False,
 ) -> RomlessPatchResult:
     """
@@ -378,7 +378,7 @@ def revert_romless_patches(
 
 def get_romless_patch_summary(
     config: Optional[InstallerConfig] = None,
-    version: str = "0.6.5"
+    version: str = "0.6.7"
 ) -> Dict:
     """
     Get a summary of the current ROM-less patch state.

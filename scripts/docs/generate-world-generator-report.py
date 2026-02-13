@@ -16,7 +16,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
@@ -413,11 +413,9 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
     """Generate the summary statistics table."""
     meta = results.get('metadata', {})
 
-    # If metadata has counts, use them; otherwise compute from results
-    if meta.get('total_templates', 0) > 0:
-        stats = meta
-    else:
-        stats = compute_summary_stats(results)
+    # Always compute stats from actual results data
+    # (metadata.total_templates may be stale from combine-test-results splits)
+    stats = compute_summary_stats(results)
 
     # Calculate totals for each step
     orig_gen_total = stats.get('successful_generations', 0) + stats.get('failed_generations', 0)
@@ -659,13 +657,13 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     """Generate report for a single test mode."""
     meta = results.get('metadata', {})
 
-    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    generated_display = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
     created_display, last_updated_display = get_source_data_timestamps(meta)
     seed_display = get_seed_display(meta)
 
-    # Determine canonical_seed1 setting
-    canonical = meta.get('canonical_seed1', False)
-    mode_display = "Canonical (seed1 placement)" if canonical else "Random"
+    # Determine canonical seed setting (with backwards-compat for old test-results files)
+    canonical = meta.get('canonical_seed', meta.get('canonical_seed1'))
+    mode_display = f"Canonical (seed {canonical} placement)" if canonical is not None else "Random"
     if mode_name:
         mode_display = mode_name
 
@@ -737,7 +735,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
     canonical_meta = canonical_results.get('metadata', {})
     random_meta = random_results.get('metadata', {})
 
-    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    generated_display = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
     created_display, last_updated_display = get_source_data_timestamps(canonical_meta)
     seed_display = get_seed_display(canonical_meta)
 
@@ -770,7 +768,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "world is validated to produce equivalent game logic.",
         "",
         "Tests are run in two modes:",
-        "- **Canonical**: Uses `--canonical-seed1` which places items in their original locations when seed is 1",
+        "- **Canonical**: Uses `--canonical-seed` which places items in their original locations when seed matches",
         "- **Random**: Standard randomized item placement",
         "",
         "## Legend",
@@ -798,7 +796,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "# Canonical Mode Results",
         "",
-        "Tests run with `--canonical-seed1` (items placed in original locations).",
+        "Tests run with `--canonical-seed` (items placed in original locations).",
         "",
     ])
 
@@ -882,7 +880,7 @@ def main():
         if legacy_results:
             # Determine mode from metadata
             meta = legacy_results.get('metadata', {})
-            if meta.get('canonical_seed1', False):
+            if meta.get('canonical_seed', meta.get('canonical_seed1')):
                 canonical_results = legacy_results
             else:
                 random_results = legacy_results

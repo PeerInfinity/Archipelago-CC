@@ -350,10 +350,29 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   bash scripts/utils/generate_extra_templates.sh
   ```
 
-- **`utils/generate_all_templates.sh`** - Generate template files for all games
+- **`utils/generate_all_templates.sh`** - Generate seed exports (`_rules.json`, `_sphere_log.jsonl`) for all supported games. This is the primary script for regenerating the `frontend/presets/` data. It runs `Generate.py` for each game, optionally generates WorldGen and WorldGen2 worlds, and produces multiworld presets.
+
   ```bash
+  # Default: generate seed 1 for all games, seeds 1-3 for core games, plus multiworld
   bash scripts/utils/generate_all_templates.sh
+
+  # With WorldGen world generation
+  GENERATE_WORLDGEN=true bash scripts/utils/generate_all_templates.sh
+
+  # Quick run: skip extra seeds and multiworld
+  GENERATE_EXTRA_SEEDS=false GENERATE_MULTIWORLD=false bash scripts/utils/generate_all_templates.sh
   ```
+
+  Environment variables:
+  | Variable | Default | Description |
+  |----------|---------|-------------|
+  | `GENERATE_MULTIWORLD` | `true` | Generate multiworld presets (4 games combined) |
+  | `GENERATE_EXTRA_SEEDS` | `true` | Generate seeds 2 and 3 for core games |
+  | `GENERATE_WORLDGEN` | `false` | Generate WorldGen worlds from exported rules |
+  | `WORLDGEN_CANONICAL_SEED` | `1` | Canonical seed number for WorldGen (empty to disable) |
+  | `GENERATE_WORLDGEN2` | `false` | Generate WorldGen2 worlds from WorldGen worlds |
+
+  Some games are excluded (commented out) because they take too long: Jak and Daxter, Pokemon Emerald, Pokemon Red and Blue, SMZ3, Yu-Gi-Oh! 2006. Their preset data may be stale.
 
 - **`utils/generate_full_multiworld.sh`** - Generate a full multiworld seed
   ```bash

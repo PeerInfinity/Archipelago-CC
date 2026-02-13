@@ -10,6 +10,7 @@ import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
@@ -447,8 +448,7 @@ export class RegionUI {
     this.visitedRegions = [];
     this.nextUID = 1;
     
-    // Filter for only regionMove entries
-    const regionMoves = path.filter(entry => entry.type === 'regionMove');
+    const regionMoves = getRegionMovesFromPath(path);
     
     regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
@@ -840,6 +840,19 @@ export class RegionUI {
    * @param {string} regionName - The name of the region to navigate to.
    */
   navigateToRegion(regionName) {
+    // Verify the panel can actually render before attempting navigation.
+    // During rules reload, snapshot/data may be stale and renderAllRegions would bail.
+    const snapshot = stateManager.getLatestStateSnapshot();
+    const staticData = stateManager.getStaticData();
+    if (!this.isInitialized || !snapshot || !staticData || !staticData.regions || !staticData.items) {
+      log('info', `[RegionUI] navigateToRegion: Panel not ready for navigation to "${regionName}". Skipping.`);
+      return;
+    }
+    if (!staticData.regions.get(regionName)) {
+      log('info', `[RegionUI] navigateToRegion: Region "${regionName}" not found in current game data. Skipping.`);
+      return;
+    }
+
     this.navigationTarget = regionName; // Set navigation target
 
     if (!this.regionsContainer) {
@@ -885,36 +898,39 @@ export class RegionUI {
       this.renderAllRegions();
     }
 
-    // Defer scrolling to allow DOM updates from renderAllRegions to complete.
+    // Defer scrolling to allow DOM updates (including debounced re-renders) to complete.
+    this._scrollToRegionBlock(regionName, 0);
+  }
+
+  /**
+   * Scroll to a region block in the DOM, retrying once if not found immediately
+   * (debounced re-renders during rules reload can clear the DOM between render and scroll)
+   * @param {string} regionName - The region to scroll to
+   * @param {number} attempt - Current attempt (0 or 1)
+   * @private
+   */
+  _scrollToRegionBlock(regionName, attempt) {
     setTimeout(() => {
-      const regionBlock = this.regionsContainer.querySelector(
-        // Query for the data-region attribute which should be stable.
+      const regionBlock = this.regionsContainer?.querySelector(
         `.region-block[data-region="${regionName}"]`
       );
 
       if (regionBlock) {
-        log(
-          'info',
-          `[RegionUI] navigateToRegion: Scrolling to "${regionName}". Block found.`
-        );
-        regionBlock.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        });
-
+        log('info', `[RegionUI] navigateToRegion: Scrolling to "${regionName}". Block found.`);
+        regionBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         regionBlock.classList.add('highlight-region');
         setTimeout(() => {
           regionBlock.classList.remove('highlight-region');
-          this.navigationTarget = null; // Clear navigation target after highlight
+          this.navigationTarget = null;
         }, 1500);
+      } else if (attempt === 0) {
+        // Retry once after debounced renders settle (debounce is 50ms)
+        this._scrollToRegionBlock(regionName, 1);
       } else {
-        log(
-          'warn',
-          `[RegionUI] navigateToRegion: Region block for "${regionName}" NOT FOUND after render and defer. Cannot scroll.`
-        );
-        this.navigationTarget = null; // Clear navigationTarget if block not found
+        log('info', `[RegionUI] navigateToRegion: Region block for "${regionName}" not found after retry. Skipping scroll.`);
+        this.navigationTarget = null;
       }
-    }, 0); // Small delay to allow DOM reflow
+    }, attempt === 0 ? 0 : 100);
   }
 
   /**

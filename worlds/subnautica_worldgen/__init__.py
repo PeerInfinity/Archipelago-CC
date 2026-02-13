@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -113,6 +113,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class SubnauticaWorldGenWeb(WebWorld):
     """Web interface for Subnautica WorldGen."""
     theme = "grass"
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -159,6 +160,9 @@ class SubnauticaWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Compass", "Lightweight High Capacity Tank", "Vehicle Upgrade Console", "Ultra Glide Fins", "Cyclops Sonar Upgrade", "Reinforced Dive Suit", "Cyclops Thermal Reactor Module", "Water Filtration Suit", "Alien Containment", "Creature Decoy", "Cyclops Fire Suppression System", "Swim Charge Fins", "Repulsion Cannon", "Cyclops Decoy Tube Upgrade", "Cyclops Shield Generator", "Cyclops Depth Module MK1", "Cyclops Docking Bay Repair Module", "Battery Charger fragment", "Beacon Fragment", "Bioreactor Fragment", "Cyclops Bridge Fragment", "Cyclops Engine Fragment", "Cyclops Hull Fragment", "Grav Trap Fragment", "Laser Cutter Fragment", "Light Stick Fragment", "Mobile Vehicle Bay Fragment", "Modification Station Fragment", "Moonpool Fragment", "Nuclear Reactor Fragment", "Power Cell Charger Fragment", "Power Transmitter Fragment", "Prawn Suit Fragment", "Prawn Suit Drill Arm Fragment", "Prawn Suit Grappling Arm Fragment", "Prawn Suit Propulsion Cannon Fragment", "Prawn Suit Torpedo Arm Fragment", "Scanner Room Fragment", "Seamoth Fragment", "Stasis Rifle Fragment", "Thermal Plant Fragment", "Seaglide Fragment", "Radiation Suit", "Propulsion Cannon Fragment", "Neptune Launch Platform", "Ion Power Cell", "Exterior Growbed", "Picture Frame", "Bench", "Basic Plant Pot", "Interior Growbed", "Plant Shelf", "Observatory", "Multipurpose Room", "Bulkhead", "Spotlight", "Desk", "Swivel Chair", "Office Chair", "Command Chair", "Counter", "Single Bed", "Basic Double Bed", "Quilted Double Bed", "Coffee Vending Machine", "Trash Can", "Floodlight", "Bar Table", "Vending Machine", "Single Wall Shelf", "Wall Shelves", "Round Plant Pot", "Chic Plant Pot", "Nuclear Waste Disposal", "Wall Planter", "Ion Battery", "Neptune Gantry", "Neptune Boosters", "Neptune Fuel Reserve", "Neptune Cockpit", "Water Filtration Machine", "Ultra High Capacity Tank", "Large Room", "Large Room Glass Dome", "Multipurpose Room Glass Dome", "Partition", "Partition Door", "Furniture", "Farming", "Resources Bundle", "Titanium", "Copper Ore", "Silver Ore", "Gold", "Lead", "Diamond", "Lithium", "Ruby", "Nickel Ore", "Crystalline Sulfur", "Salt Deposit", "Kyanite", "Magnetite", "Reactor Rod"]),
         "Event": frozenset(["Victory", "Disable Quarantine", "Full Infection", "Repair Aurora Drive"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -580,6 +584,10 @@ class SubnauticaWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""
@@ -682,7 +690,12 @@ class SubnauticaWorld(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

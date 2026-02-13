@@ -56,3 +56,10 @@ The exporter now runs after `create_playthrough` (so sphere_log.jsonl is include
 - Upstream (69e83071) never had this issue - `stage_modify_multidata` is called via `call_stage`
 - Fork issue caused by exporter calling `fill_slot_data` after cleanup
 - Fix verified: generation completes without memory leak assertion
+
+---
+
+### Related
+
+- [Reproduction steps](./landstalker-memory-leak-repro.md)
+- [Fix details](./landstalker-memory-leak-fix.md)

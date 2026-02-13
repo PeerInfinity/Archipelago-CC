@@ -60,16 +60,22 @@ class RuleExpansionMixin:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
-        # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
-        if rule.get('_original_ast_type') == 'helper':
+        # Handle helper type: {'rule': 'helper_name', '_original_ast_type': '...helper', 'args': [...]}
+        ast_type = rule.get('_original_ast_type', '')
+        if ast_type.endswith('helper'):
             helper_name = rule.get('rule', '')
             if helper_name:
+                # rb_defined_helper: has a body definition, skip all expansion
+                if ast_type == 'rb_defined_helper':
+                    return rule
+
                 helper_args = rule.get('args', [])
 
-                # Hook: try pattern-based expansion first (for GenericGameExportHandler)
-                pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
-                if pattern_result is not None:
-                    return self.expand_rule(pattern_result, _depth + 1)
+                # Only AST-exported helpers get pattern expansion
+                if ast_type == 'helper':
+                    pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
+                    if pattern_result is not None:
+                        return self.expand_rule(pattern_result, _depth + 1)
 
                 # Standard helper expansion
                 expanded = self.expand_helper(helper_name, helper_args)

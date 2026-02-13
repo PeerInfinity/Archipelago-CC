@@ -5813,7 +5813,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5825,7 +5824,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -5836,7 +5834,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5847,7 +5844,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5858,7 +5854,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5869,7 +5864,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5880,7 +5874,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5891,7 +5884,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5902,7 +5894,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5914,7 +5905,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5925,7 +5915,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -5937,7 +5926,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5948,7 +5936,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5959,7 +5946,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5970,7 +5956,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5981,7 +5966,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5992,7 +5976,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6003,7 +5986,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 11
       },
@@ -6014,7 +5996,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6025,7 +6006,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6036,7 +6016,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6047,7 +6026,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6058,7 +6036,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 13
       },
@@ -6069,7 +6046,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 15
       },
@@ -6080,7 +6056,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 24
       },
@@ -6091,7 +6066,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 20
       },
@@ -6102,7 +6076,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6113,7 +6086,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -6124,7 +6096,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       }
@@ -6235,17 +6206,17 @@
         },
         "autosave": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Autosave"
         },
         "blocksanity": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Blocksanity"
         },
         "bonus_block_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Bonus Block Checks"
         },
         "boss_shuffle": {
@@ -6290,7 +6261,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "display_received_item_popups": {
@@ -6306,17 +6277,17 @@
         },
         "dragon_coin_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Dragon Coin Checks"
         },
         "early_climb": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Early Climb"
         },
         "exclude_special_zone": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Exclude Special Zone"
         },
         "goal": {
@@ -6330,7 +6301,7 @@
         },
         "hidden_1up_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Hidden 1-Up Checks"
         },
         "ice_trap_weight": {
@@ -6363,7 +6334,7 @@
         },
         "level_shuffle": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Level Shuffle"
         },
         "literature_trap_weight": {
@@ -6401,7 +6372,7 @@
         },
         "moon_checks": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "3up Moon Checks"
         },
         "music_shuffle": {
@@ -6462,7 +6433,7 @@
         },
         "ring_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Ring Link"
         },
         "sfx_shuffle": {
@@ -6495,7 +6466,7 @@
         },
         "swap_donut_gh_exits": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Swap Donut GH Exits"
         },
         "thwimp_trap_weight": {
@@ -6529,7 +6500,7 @@
         },
         "trap_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Trap Link"
         }
       },

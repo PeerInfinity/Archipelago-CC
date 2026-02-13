@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-02-07T22:52:34.679215",
-    "last_updated": "2026-02-07T22:52:34.679221",
+    "created": "2026-02-09T04:56:17.368598+00:00",
+    "last_updated": "2026-02-09T04:56:17.368607+00:00",
     "script_version": "1.0.0",
     "combined_from": 10,
     "test_type": "spoiler_fuzz",
@@ -34,7 +34,7 @@
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-02-07T22:21:31.914298"
+      "timestamp": "2026-02-09T04:24:09.088696+00:00"
     },
     "Castlevania 64.yaml": {
       "spoiler_fuzz": {
@@ -56,7 +56,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-02-07T22:23:16.353537"
+      "timestamp": "2026-02-09T04:26:05.467632+00:00"
     },
     "Dark Souls III.yaml": {
       "spoiler_fuzz": {
@@ -78,7 +78,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-02-07T22:27:25.592162"
+      "timestamp": "2026-02-09T04:30:25.243138+00:00"
     },
     "Kingdom Hearts.yaml": {
       "spoiler_fuzz": {
@@ -106,7 +106,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-02-07T22:31:20.005371"
+      "timestamp": "2026-02-09T04:34:39.129579+00:00"
     },
     "Meritous.yaml": {
       "spoiler_fuzz": {
@@ -128,7 +128,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-02-07T22:32:52.097003"
+      "timestamp": "2026-02-09T04:36:18.953118+00:00"
     },
     "Saving Princess.yaml": {
       "spoiler_fuzz": {
@@ -150,7 +150,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-02-07T22:34:26.145756"
+      "timestamp": "2026-02-09T04:38:01.556536+00:00"
     },
     "Super Metroid.yaml": {
       "spoiler_fuzz": {
@@ -158,14 +158,16 @@
         "total": 10,
         "success": 0,
         "generation_failure": 2,
-        "ignored": 5,
-        "test_failure": 3,
+        "ignored": 3,
+        "test_failure": 5,
         "timeout": 0,
         "errors": [
-          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f11995653d0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f33e7528560>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
           "Spoiler test failed",
           "Spoiler test failed",
-          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7fda5a908560>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f085f9e09e0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
           "Spoiler test failed"
         ],
         "failing_seeds": {
@@ -175,7 +177,9 @@
           ],
           "test_failure": [
             3,
+            4,
             5,
+            7,
             10
           ],
           "timeout": []
@@ -185,7 +189,7 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-02-07T22:36:06.996032"
+      "timestamp": "2026-02-09T04:40:33.457606+00:00"
     },
     "Undertale.yaml": {
       "spoiler_fuzz": {
@@ -207,7 +211,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-02-07T22:37:43.318006"
+      "timestamp": "2026-02-09T04:42:18.222157+00:00"
     },
     "Castlevania - Circle of the Moon.yaml": {
       "spoiler_fuzz": {
@@ -229,7 +233,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-02-07T22:19:47.701453"
+      "timestamp": "2026-02-09T04:22:14.863914+00:00"
     },
     "DOOM II.yaml": {
       "spoiler_fuzz": {
@@ -251,7 +255,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-02-07T22:21:34.155964"
+      "timestamp": "2026-02-09T04:24:04.246587+00:00"
     },
     "Kingdom Hearts 2.yaml": {
       "spoiler_fuzz": {
@@ -273,7 +277,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-02-07T22:28:11.930264"
+      "timestamp": "2026-02-09T04:30:47.659231+00:00"
     },
     "MegaMan Battle Network 3.yaml": {
       "spoiler_fuzz": {
@@ -295,43 +299,21 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-02-07T22:29:46.812854"
+      "timestamp": "2026-02-09T04:32:26.904153+00:00"
     },
     "Satisfactory.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
+        "success": 10,
         "generation_failure": 0,
         "ignored": 0,
-        "test_failure": 10,
+        "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed"
-        ],
+        "errors": [],
         "failing_seeds": {
           "generation_failure": [],
-          "test_failure": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
-          ],
+          "test_failure": [],
           "timeout": []
         }
       },
@@ -339,7 +321,7 @@
         "game_name": "Satisfactory",
         "world_directory": "satisfactory"
       },
-      "timestamp": "2026-02-07T22:33:13.706994"
+      "timestamp": "2026-02-09T04:37:02.176660+00:00"
     },
     "Super Mario World.yaml": {
       "spoiler_fuzz": {
@@ -361,7 +343,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-02-07T22:35:45.137233"
+      "timestamp": "2026-02-09T04:39:42.465336+00:00"
     },
     "Timespinner.yaml": {
       "spoiler_fuzz": {
@@ -383,7 +365,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-02-07T22:38:01.187398"
+      "timestamp": "2026-02-09T04:42:05.920683+00:00"
     },
     "A Link to the Past.yaml": {
       "spoiler_fuzz": {
@@ -405,7 +387,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-07T22:21:09.885106"
+      "timestamp": "2026-02-09T04:23:36.001057+00:00"
     },
     "Celeste (Open World).yaml": {
       "spoiler_fuzz": {
@@ -427,7 +409,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-02-07T22:25:54.308979"
+      "timestamp": "2026-02-09T04:28:33.916194+00:00"
     },
     "Donkey Kong Country 3.yaml": {
       "spoiler_fuzz": {
@@ -449,7 +431,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-02-07T22:27:31.993731"
+      "timestamp": "2026-02-09T04:30:13.359042+00:00"
     },
     "Kirby's Dream Land 3.yaml": {
       "spoiler_fuzz": {
@@ -483,7 +465,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-02-07T22:43:16.405413"
+      "timestamp": "2026-02-09T04:46:15.547765+00:00"
     },
     "Metamath.yaml": {
       "spoiler_fuzz": {
@@ -505,7 +487,7 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-02-07T22:45:53.939407"
+      "timestamp": "2026-02-09T04:49:01.770832+00:00"
     },
     "Secret of Evermore.yaml": {
       "spoiler_fuzz": {
@@ -535,7 +517,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-02-07T22:49:09.719224"
+      "timestamp": "2026-02-09T04:52:46.410014+00:00"
     },
     "TOEM original.yaml": {
       "spoiler_fuzz": {
@@ -557,7 +539,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-02-07T22:50:41.308935"
+      "timestamp": "2026-02-09T04:54:20.603084+00:00"
     },
     "VVVVVV.yaml": {
       "spoiler_fuzz": {
@@ -579,7 +561,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-02-07T22:52:13.111296"
+      "timestamp": "2026-02-09T04:55:53.465356+00:00"
     },
     "A Short Hike.yaml": {
       "spoiler_fuzz": {
@@ -601,7 +583,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-02-07T22:19:53.772602"
+      "timestamp": "2026-02-09T04:22:13.134969+00:00"
     },
     "Celeste 64.yaml": {
       "spoiler_fuzz": {
@@ -623,7 +605,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-02-07T22:21:31.846519"
+      "timestamp": "2026-02-09T04:23:49.826036+00:00"
     },
     "EarthBound.yaml": {
       "spoiler_fuzz": {
@@ -645,7 +627,7 @@
         "game_name": "EarthBound",
         "world_directory": "earthbound"
       },
-      "timestamp": "2026-02-07T22:23:26.214619"
+      "timestamp": "2026-02-09T04:25:43.704869+00:00"
     },
     "Landstalker - The Treasures of King Nole.yaml": {
       "spoiler_fuzz": {
@@ -667,7 +649,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-02-07T22:25:01.681500"
+      "timestamp": "2026-02-09T04:27:26.025157+00:00"
     },
     "Muse Dash.yaml": {
       "spoiler_fuzz": {
@@ -689,7 +671,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-02-07T22:28:05.892859"
+      "timestamp": "2026-02-09T04:30:25.987450+00:00"
     },
     "Shivers.yaml": {
       "spoiler_fuzz": {
@@ -711,7 +693,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-02-07T22:33:03.101412"
+      "timestamp": "2026-02-09T04:35:24.909628+00:00"
     },
     "TOEM rule builder.yaml": {
       "spoiler_fuzz": {
@@ -733,7 +715,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-02-07T22:34:34.904610"
+      "timestamp": "2026-02-09T04:37:00.266502+00:00"
     },
     "Wargroove.yaml": {
       "spoiler_fuzz": {
@@ -755,7 +737,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-02-07T22:36:09.417631"
+      "timestamp": "2026-02-09T04:38:37.310644+00:00"
     },
     "APQuest.yaml": {
       "spoiler_fuzz": {
@@ -777,7 +759,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-02-07T22:19:44.459532"
+      "timestamp": "2026-02-09T04:22:02.373039+00:00"
     },
     "ChecksFinder.yaml": {
       "spoiler_fuzz": {
@@ -799,7 +781,7 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-02-07T22:21:15.565625"
+      "timestamp": "2026-02-09T04:23:32.744023+00:00"
     },
     "Factorio.yaml": {
       "spoiler_fuzz": {
@@ -821,7 +803,7 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-02-07T22:23:58.983338"
+      "timestamp": "2026-02-09T04:26:23.670263+00:00"
     },
     "Lingo.yaml": {
       "spoiler_fuzz": {
@@ -847,7 +829,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-02-07T22:25:17.646868"
+      "timestamp": "2026-02-09T04:27:41.364048+00:00"
     },
     "Noita.yaml": {
       "spoiler_fuzz": {
@@ -869,7 +851,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-02-07T22:26:53.306427"
+      "timestamp": "2026-02-09T04:29:15.605235+00:00"
     },
     "Sonic Adventure 2 Battle.yaml": {
       "spoiler_fuzz": {
@@ -891,7 +873,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-02-07T22:33:27.326618"
+      "timestamp": "2026-02-09T04:35:47.313837+00:00"
     },
     "TUNIC.yaml": {
       "spoiler_fuzz": {
@@ -931,7 +913,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-02-07T22:38:07.682655"
+      "timestamp": "2026-02-09T04:40:21.635919+00:00"
     },
     "Yoshi's Island.yaml": {
       "spoiler_fuzz": {
@@ -953,7 +935,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-02-07T22:40:05.712108"
+      "timestamp": "2026-02-09T04:42:18.764404+00:00"
     },
     "Adventure.yaml": {
       "spoiler_fuzz": {
@@ -975,7 +957,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-02-07T22:19:54.315067"
+      "timestamp": "2026-02-09T04:22:02.870448+00:00"
     },
     "Choo-Choo Charles.yaml": {
       "spoiler_fuzz": {
@@ -997,7 +979,7 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-02-07T22:21:49.454523"
+      "timestamp": "2026-02-09T04:23:56.678643+00:00"
     },
     "Faxanadu.yaml": {
       "spoiler_fuzz": {
@@ -1019,7 +1001,7 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-02-07T22:23:24.633965"
+      "timestamp": "2026-02-09T04:25:30.382560+00:00"
     },
     "Links Awakening DX.yaml": {
       "spoiler_fuzz": {
@@ -1041,7 +1023,7 @@
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-02-07T22:26:04.121190"
+      "timestamp": "2026-02-09T04:28:15.839670+00:00"
     },
     "Old School Runescape.yaml": {
       "spoiler_fuzz": {
@@ -1063,7 +1045,7 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-02-07T22:27:51.826655"
+      "timestamp": "2026-02-09T04:30:02.912857+00:00"
     },
     "Starcraft 2.yaml": {
       "spoiler_fuzz": {
@@ -1075,16 +1057,16 @@
         "test_failure": 0,
         "timeout": 0,
         "errors": [
-          "Generation failed:  Flamethrower (Dominion Trooper): -687, Resource Efficiency (Diamondback): -687, Laser Targeting System (Thor): -687, Resource Efficiency (Cyclone): -687, Ghost Visor (Nova Equipment): -687, Advanced Optics (Terran): -687, Internal Tech Module (Cyclone): -687, Progressive Key #88: 610, Campaign Key #153: -883) is not a valid item name from Starcraft 2. Did you mean 'Cell Division (Zerg)' (52% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: ing Vespene: 834, Noxious Strain (Ultralisk): 1873, 3 Kerrigan Levels: 868, 1 Kerrigan Level: 511, 2 Kerrigan Levels: 511, 9 Kerrigan Levels: 197, 10 Kerrigan Levels: 511, 7 Kerrigan Levels: 511, Reduced Upgrade Research Cost: 465, Decreased Maximum Supply: -719, Increased Building Construction Speed: 309) is not a valid item name from Starcraft 2. Did you mean 'Evolutionary Leap (Zerg)' (45% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: 02, Phase Blaster (Warp Prism): -490, Primal Tenacity (Primal Igniter): 186, Generate Creep (Overlord): -270, Virulent Microbes (Viper): 489, Chitinous Plating (Ultralisk): 15, Ensnare (Brood Queen): 678, Adaptive Talons (Impaler): -855, Organic Carapace (Ultralisk): -482, Anabolic Synthesis (Ultralisk): -482) is not a valid item name from Starcraft 2. Did you mean 'Cell Division (Zerg)' (55% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: mpaign Key #134: 498, Gates of Hell (Zerg) Mission Key: 1658, Campaign Key #123: 268, Moebius (Legacy of the Void) Questline Key: -386, Heart of the Swarm Campaign Key: 1647, Progressive Key #140: 1399, Flashpoint Mission Key: 800, Whispers of Doom Mission Key: 130, Campaign Key #3: 785) is not a valid item name from Starcraft 2. Did you mean 'Harbinger of Oblivion (Protoss) Mission Key' (60% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: 546, Generate Creep (Overlord): 166, Hunter Killers: 272, Primal Igniter: 412, Devouring Ones: -70, Infested Siege Breakers: -93, Infested Dusk Wings: -17, Devourer: -483, Infested Medics: -93, Wise Old Torrasque: -70, Hunterling: -93, Caustic Horrors: -93, Excavating Claws (Zerg): -1490) is not a valid item name from Starcraft 2. Did you mean 'Harbinger of Oblivion (Terran) Mission Key' (59% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: Levels: -753, Tyrannozor: 1919, Broodling Spore Saturation (Zerg): 207, Ventral Sacs (Overlord): 281, Unrestricted Mutation (Zerg): 1136, Bio-Mechanical Stockpiling (Zerg): 674, 1 Kerrigan Level: -1446, 8 Kerrigan Levels: 430, 5 Kerrigan Levels: -493, 70 Kerrigan Levels: -493, Self-Sufficient (Zerg): 938) is not a valid item name from Starcraft 2. Did you mean 'Overwatch (Spear of Adun)' (43% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: Key #104: -801, Campaign Key #101: -242, Questline Key #5: -801, Questline Key #157: -801, Progressive Key #179: -801, Evil Awoken Mission Key: -801, Urun Key: -1578, Planetfall (Terran) Mission Key: -801, Progressive Key #147: -801, Questline Key #120: -801, Campaign Key #93: -801, Questline Key #97: -801) is not a valid item name from Starcraft 2. Did you mean 'Terran Generic Upgrades' (39% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: s (Zerg): -215, Beat Rak'Shir (Zerg): -215, Beat Infested (Terran): -215, Beat Evacuation (Protoss): -215, Beat The Great Train Robbery (Zerg): -215, Beat Steps of the Rite (Zerg): -215, Beat Planetfall (Terran): -215, Beat Fire in the Sky (Protoss): -215, Increased Upgrade Research Speed: -517) is not a valid item name from Starcraft 2. Did you mean 'Death From Above (Zerg) Mission Key' (51% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: ctical Jump (Battlecruiser): -296, Moirai Impulse Drive (Battlecruiser): -244, Ballistic Flightsuit (Reaper): -244, Shredding Claws (Zergling): 566, Internal Tech Module (Cyclone): 415, Targeting Optics (Cyclone): 415, Resource Efficiency (Cyclone): 415, Hostile Environment Adaptation (SCV): -187) is not a valid item name from Starcraft 2. Did you mean 'Haven's Fall (Terran) Mission Key' (48% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: acuation (Zerg): -860, Beat Breakout: -860, Beat Echoes of the Future (Protoss): -860, Beat Echoes of the Future (Zerg): -860, Beat Belly of the Beast: -860, Beat Engine of Destruction (Terran): -860, Beat The Great Train Robbery (Zerg): -860, Beat The Great Train Robbery (Terran): -860) is not a valid item name from Starcraft 2. Did you mean 'Welcome to the Jungle (Protoss) Mission Key' (60% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+          "Generation failed: ight Hawk: -3076, Progressive Fast Delivery (Terran): -1561, Liberator: -2597, HERC: -1855, Progressive Orbital Command (Deprecated): -2021, Widow Mine: -2207, Cyclone: -1992, Warhound: -2976, Dominion Trooper: -3030, Hi-Sec Auto Tracking (Terran): -1913, Mechanical Know-how (Terran): -1374) is not a valid item name from Starcraft 2. Did you mean 'Phantoms of the Void (Zerg) Mission Key' (53% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: (Terran): -961, Beat Cutthroat (Zerg): -961, Beat Echoes of the Future (Zerg): -961, Beat Supernova (Zerg): -961, Beat The Dig (Protoss): -961, Beat Safe Haven (Zerg): -961, Beat Haven's Fall (Protoss): -961, Beat Evacuation (Terran): -961, Beat Outbreak (Zerg): -961, Beat Shatter the Sky (Terran): -961) is not a valid item name from Starcraft 2. Did you mean 'Nexus Overcharge (Protoss)' (57% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: : 990, Campaign Key #65: -861, Questline Key #54: 759, Questline Key #156: 208, Campaign Key #126: -288, Questline Key #94: 309, Campaign Key #110: -493, Amon's Fall Mission Key: 391, Progressive Key #22: -900, Questline Key #63: -846, Artanis Key: -698, Zero Hour (Zerg) Mission Key: 279) is not a valid item name from Starcraft 2. Did you mean 'Welcome to the Jungle (Terran) Mission Key' (59% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: 850, Progressive Protoss Air Armor: -38, Progressive Protoss Weapon Upgrade: -244, Progressive Protoss Air Upgrade: -32, Progressive Protoss Armor Upgrade: -28, Progressive Protoss Ground Upgrade: -680, Progressive Protoss Weapon/Armor Upgrade: 819, Progressive Protoss Ground Armor: 956, Nothing: -261) is not a valid item name from Starcraft 2. Did you mean 'Templar's Return Mission Key' (39% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: d (Widow Mine): -1042, Concealment (Widow Mine): -392, Multispectrum Doppler (Sensor Tower): -392, Resource Efficiency (Liberator): -392, Construction Jump Jets (SCV): -392, Resource Efficiency (Widow Mine): -392, Internal Tech Module (Cyclone): -392, Skibi's Angels: 270, Death Heads: -679) is not a valid item name from Starcraft 2. Did you mean 'Temple of Unification (Zerg) Mission Key' (57% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: inger of Oblivion (Protoss): 449, Beat Evil Awoken: 449, Beat Sky Shield (Zerg): 449, Beat Temple of Unification (Terran): 449, Beat Purification (Zerg): 449, Beat Temple of Unification (Protoss): 449, Beat Salvation (Terran): 449, Beat The Spear of Adun (Terran): 449, Beat Rendezvous (Protoss): 449) is not a valid item name from Starcraft 2. Did you mean 'Breath of Creation (Ascendant)' (46% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: ing): 811, Parasitic Bomb (Viper): -620, Resource Efficiency (Nydus Worm/Echidna Worm): -333, Cell Division (Zerg): -800, Prolonged Dispersion (Guardian): -1540, Potent Bile (Ravager): -620, Primordial Fury (Guardian): -997, Evolutionary Leap (Zerg): -800, Additional Starting Minerals: 149) is not a valid item name from Starcraft 2. Did you mean 'Temple of Unification (Zerg) Mission Key' (57% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: Tracking (Terran): 676, Shaped Hull (Valkyrie): -71, Optimized Logistics (Dominion Trooper): -71, Infernal Plating (Hellion): 333, All-Terrain Treads (Siege Tank): 971, Ion Thrusters (Vulture): 644, Tactical Jump (Science Vessel): -71, Progressive Augmented Thrusters (Planetary Fortress): 465) is not a valid item name from Starcraft 2. Did you mean 'Fire in the Sky (Protoss) Mission Key' (54% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: rogressive Key #87: 618, Abathur Key: 618, Questline Key #171: 618, Questline Key #50: 618, Progressive Key #11: 618, Old Soldiers (Zerg) Mission Key: 618, Progressive Key #169: 618, Hand of Darkness (Zerg) Mission Key: 618, Progressive Key #65: 618, Campaign Key #184: 618, Questline Key #9: 618, Progressive Key #143: 618) is not a valid item name from Starcraft 2. Did you mean 'Trireme' (41% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: 449, 7 Kerrigan Levels: -578, Nydus Worm: -1804, Bile Launcher: -1565, Infested Bunker: -859, Pneumatized Carapace (Overlord): -367, Immobilization Wave (Kerrigan Ability): 867, Antennae (Overlord): -624, Broodling Spore Saturation (Zerg): -624, Assimilation Aura (Kerrigan Ability): 184) is not a valid item name from Starcraft 2. Did you mean 'Harbinger of Oblivion (Protoss) Mission Key' (60% sure)\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
         ],
         "failing_seeds": {
           "generation_failure": [
@@ -1107,7 +1089,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-02-07T22:28:27.548433"
+      "timestamp": "2026-02-09T04:30:37.626009+00:00"
     },
     "Terraria.yaml": {
       "spoiler_fuzz": {
@@ -1129,7 +1111,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-02-07T22:32:49.459348"
+      "timestamp": "2026-02-09T04:34:53.768895+00:00"
     },
     "shapez.yaml": {
       "spoiler_fuzz": {
@@ -1151,7 +1133,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-02-07T22:36:39.193609"
+      "timestamp": "2026-02-09T04:38:38.846818+00:00"
     },
     "Aquaria.yaml": {
       "spoiler_fuzz": {
@@ -1173,7 +1155,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-02-07T22:20:05.419065"
+      "timestamp": "2026-02-09T04:22:26.899295+00:00"
     },
     "Civilization VI.yaml": {
       "spoiler_fuzz": {
@@ -1195,32 +1177,21 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-02-07T22:22:30.477560"
+      "timestamp": "2026-02-09T04:24:51.741565+00:00"
     },
     "Final Fantasy Mystic Quest.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 6,
-        "generation_failure": 2,
-        "ignored": 0,
-        "test_failure": 2,
+        "success": 9,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Spoiler test failed",
-          "Generation failed: ^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ffmq/Regions.py\", line 231, in stage_set_rules\n    raise Exception(f\"Not enough filler/trap items for FFMQ players with full and items accessibility. \"\nException: Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: ^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ffmq/Regions.py\", line 231, in stage_set_rules\n    raise Exception(f\"Not enough filler/trap items for FFMQ players with full and items accessibility. \"\nException: Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Spoiler test failed"
-        ],
+        "errors": [],
         "failing_seeds": {
-          "generation_failure": [
-            3,
-            7
-          ],
-          "test_failure": [
-            1,
-            10
-          ],
+          "generation_failure": [],
+          "test_failure": [],
           "timeout": []
         }
       },
@@ -1228,7 +1199,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-02-07T22:24:24.979894"
+      "timestamp": "2026-02-09T04:26:35.856251+00:00"
     },
     "Lufia II Ancient Cave.yaml": {
       "spoiler_fuzz": {
@@ -1250,7 +1221,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-02-07T22:26:01.688437"
+      "timestamp": "2026-02-09T04:28:11.988519+00:00"
     },
     "Overcooked! 2.yaml": {
       "spoiler_fuzz": {
@@ -1272,25 +1243,26 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-02-07T22:27:12.250424"
+      "timestamp": "2026-02-09T04:29:22.183148+00:00"
     },
     "Stardew Valley.yaml": {
       "spoiler_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 3,
+        "success": 2,
         "generation_failure": 0,
         "ignored": 0,
-        "test_failure": 7,
+        "test_failure": 8,
         "timeout": 0,
         "errors": [
           "Spoiler test timed out after 120s",
           "Spoiler test timed out after 120s",
           "Spoiler test failed",
+          "Spoiler test timed out after 120s",
           "Spoiler test failed",
           "Spoiler test timed out after 120s",
           "Spoiler test failed",
-          "Spoiler test timed out after 120s"
+          "Spoiler test failed"
         ],
         "failing_seeds": {
           "generation_failure": [],
@@ -1300,6 +1272,7 @@
             4,
             5,
             6,
+            7,
             8,
             10
           ],
@@ -1310,7 +1283,7 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-02-07T22:42:46.563101"
+      "timestamp": "2026-02-09T04:42:52.296681+00:00"
     },
     "The Legend of Zelda.yaml": {
       "spoiler_fuzz": {
@@ -1332,7 +1305,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-02-07T22:44:26.595193"
+      "timestamp": "2026-02-09T04:44:30.129265+00:00"
     },
     "Baking Adventure.yaml": {
       "spoiler_fuzz": {
@@ -1354,7 +1327,7 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-02-07T22:19:45.912777"
+      "timestamp": "2026-02-09T04:22:08.319308+00:00"
     },
     "Coding Adventure.yaml": {
       "spoiler_fuzz": {
@@ -1376,7 +1349,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-02-07T22:21:16.511911"
+      "timestamp": "2026-02-09T04:23:42.352648+00:00"
     },
     "Heretic.yaml": {
       "spoiler_fuzz": {
@@ -1398,7 +1371,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-02-07T22:23:20.591128"
+      "timestamp": "2026-02-09T04:25:49.828196+00:00"
     },
     "Mario & Luigi Superstar Saga.yaml": {
       "spoiler_fuzz": {
@@ -1420,7 +1393,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-02-07T22:25:35.145825"
+      "timestamp": "2026-02-09T04:28:11.107998+00:00"
     },
     "Paint.yaml": {
       "spoiler_fuzz": {
@@ -1442,7 +1415,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-02-07T22:27:11.509874"
+      "timestamp": "2026-02-09T04:29:54.113525+00:00"
     },
     "Subnautica.yaml": {
       "spoiler_fuzz": {
@@ -1464,7 +1437,7 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-02-07T22:29:15.576124"
+      "timestamp": "2026-02-09T04:32:05.817201+00:00"
     },
     "The Messenger.yaml": {
       "spoiler_fuzz": {
@@ -1486,7 +1459,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-02-07T22:31:43.845780"
+      "timestamp": "2026-02-09T04:34:37.734649+00:00"
     },
     "Bomb Rush Cyberfunk.yaml": {
       "spoiler_fuzz": {
@@ -1514,7 +1487,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-02-07T22:20:46.072044"
+      "timestamp": "2026-02-09T04:23:01.528385+00:00"
     },
     "DLCQuest.yaml": {
       "spoiler_fuzz": {
@@ -1536,7 +1509,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-02-07T22:22:24.019389"
+      "timestamp": "2026-02-09T04:24:36.864137+00:00"
     },
     "Hylics 2.yaml": {
       "spoiler_fuzz": {
@@ -1558,7 +1531,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-02-07T22:24:02.400878"
+      "timestamp": "2026-02-09T04:26:11.840560+00:00"
     },
     "Math Adventure.yaml": {
       "spoiler_fuzz": {
@@ -1580,7 +1553,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-02-07T22:25:36.077744"
+      "timestamp": "2026-02-09T04:27:42.200205+00:00"
     },
     "Raft.yaml": {
       "spoiler_fuzz": {
@@ -1602,7 +1575,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-02-07T22:27:37.227463"
+      "timestamp": "2026-02-09T04:29:40.707086+00:00"
     },
     "Super Mario 64.yaml": {
       "spoiler_fuzz": {
@@ -1624,7 +1597,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-02-07T22:29:17.012429"
+      "timestamp": "2026-02-09T04:31:17.324116+00:00"
     },
     "The Wind Waker.yaml": {
       "spoiler_fuzz": {
@@ -1646,7 +1619,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-02-07T22:30:39.241522"
+      "timestamp": "2026-02-09T04:32:37.623409+00:00"
     },
     "Bumper Stickers.yaml": {
       "spoiler_fuzz": {
@@ -1668,7 +1641,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-02-07T22:20:05.722763"
+      "timestamp": "2026-02-09T04:22:08.878918+00:00"
     },
     "DOOM 1993.yaml": {
       "spoiler_fuzz": {
@@ -1690,7 +1663,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-02-07T22:21:53.637334"
+      "timestamp": "2026-02-09T04:23:54.171898+00:00"
     },
     "Inscryption.yaml": {
       "spoiler_fuzz": {
@@ -1712,7 +1685,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-02-07T22:23:30.052252"
+      "timestamp": "2026-02-09T04:25:28.817303+00:00"
     },
     "Mega Man 2.yaml": {
       "spoiler_fuzz": {
@@ -1734,7 +1707,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-02-07T22:25:06.135542"
+      "timestamp": "2026-02-09T04:27:03.707825+00:00"
     },
     "Risk of Rain 2.yaml": {
       "spoiler_fuzz": {
@@ -1756,25 +1729,21 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-02-07T22:26:53.359876"
+      "timestamp": "2026-02-09T04:28:49.085198+00:00"
     },
     "Super Mario Land 2.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 9,
+        "success": 10,
         "generation_failure": 0,
         "ignored": 0,
-        "test_failure": 1,
+        "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Spoiler test timed out after 120s"
-        ],
+        "errors": [],
         "failing_seeds": {
           "generation_failure": [],
-          "test_failure": [
-            3
-          ],
+          "test_failure": [],
           "timeout": []
         }
       },
@@ -1782,7 +1751,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-02-07T22:31:31.487636"
+      "timestamp": "2026-02-09T04:30:32.186343+00:00"
     },
     "The Witness.yaml": {
       "spoiler_fuzz": {
@@ -1822,7 +1791,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-02-07T22:34:33.875788"
+      "timestamp": "2026-02-09T04:33:28.990513+00:00"
     }
   }
 }

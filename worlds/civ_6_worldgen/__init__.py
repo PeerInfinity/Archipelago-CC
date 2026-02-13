@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -161,6 +161,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class CivilizationVIWorldGenWeb(WebWorld):
     """Web interface for Civilization VI WorldGen."""
     theme = "ocean"
+    game_info_languages: List[str] = ['en']
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -204,6 +205,9 @@ class CivVIWorld(RuleWorldMixin, World):
         "Everything": frozenset(["Pottery", "Animal Husbandry", "Mining", "Sailing", "Astrology", "Irrigation", "Archery", "Writing", "Masonry", "Bronze Working", "The Wheel", "Celestial Navigation", "Currency", "Horseback Riding", "Iron Working", "Shipbuilding", "Mathematics", "Construction", "Engineering", "Military Tactics", "Apprenticeship", "Machinery", "Education", "Stirrups", "Military Engineering", "Castles", "Cartography", "Mass Production", "Banking", "Gunpowder", "Printing", "Square Rigging", "Astronomy", "Metal Casting", "Siege Tactics", "Industrialization", "Scientific Theory", "Ballistics", "Military Science", "Steam Power", "Sanitation", "Economics", "Rifling", "Flight", "Replaceable Parts", "Steel", "Electricity", "Radio", "Chemistry", "Combustion", "Advanced Flight", "Rocketry", "Advanced Ballistics", "Combined Arms", "Plastics", "Computers", "Nuclear Fission", "Synthetic Materials", "Telecommunications", "Satellites", "Guidance Systems", "Lasers", "Composites", "Stealth Technology", "Robotics", "Nanotechnology", "Nuclear Fusion", "Buttress", "Refining", "Seasteads", "Advanced AI", "Advanced Power Cells", "Cybernetics", "Smart Materials", "Predictive Systems", "Offworld Mission", "Future Tech", "Code of Laws", "Craftsmanship", "Foreign Trade", "Military Tradition", "State Workforce", "Early Empire", "Mysticism", "Games Recreation", "Political Philosophy", "Drama and Poetry", "Military Training", "Defensive Tactics", "Recorded History", "Theology", "Naval Tradition", "Feudalism", "Civil Service", "Mercenaries", "Medieval Faires", "Guilds", "Divine Right", "Exploration", "Humanism", "Diplomatic Service", "Reformed Church", "Mercantilism", "The Enlightenment", "Colonialism", "Civil Engineering", "Nationalism", "Opera and Ballet", "Natural History", "Scorched Earth", "Urbanization", "Conservation", "Capitalism", "Nuclear Program", "Mass Media", "Mobilization", "Ideology", "Suffrage", "Totalitarianism", "Class Struggle", "Cold War", "Professional Sports", "Cultural Heritage", "Rapid Deployment", "Space Race", "Globalization", "Social Media", "Future Civic", "Environmentalism", "Corporate Libertarianism", "Digital Democracy", "Synthetic Technocracy", "Near Future Governance", "Global Warming Mitigation", "Smart Power Doctrine", "Information Warfare", "Exodus Imperative", "Cultural Hegemony", "Progressive Campus", "Progressive Theater", "Progressive Holy Site", "Progressive Encampment", "Progressive Commercial Hub", "Progressive Harbor", "Progressive Industrial Zone", "Progressive Preserve", "Progressive Entertainment Complex", "Progressive Neighborhood", "Progressive Aerodrome", "Progressive Diplomatic Quarter", "Progressive Space Port", "Progressive Era", "Gold: Small", "Gold: Medium", "Gold: Large", "Faith: Small", "Faith: Medium", "Faith: Large", "Diplomatic Favor", "Governor Title", "Envoy", "Relic", "Scout", "Additional Population", "Builder", "Trader", "Settler"]),
         "Event": frozenset(["Victory"]),
     }
+
+    # Placements are deterministically reproduced by world generator
+    is_canonical: ClassVar[bool] = True
 
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
@@ -659,6 +663,10 @@ class CivVIWorld(RuleWorldMixin, World):
                     self.player
                 )
                 location.place_locked_item(item)
+                # If the location is an event, mark the item as an event too
+                # (matches original world behavior where item.code = None for events)
+                if getattr(location, 'event', False) or location.address is None:
+                    item.code = None
 
     def _push_starting_items(self) -> None:
         """Push starting items as precollected (for state counters like coins)."""
@@ -761,7 +769,12 @@ class CivVIWorld(RuleWorldMixin, World):
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

@@ -1229,7 +1229,6 @@ class BaseGameExportHandler(
                     'advancement': is_advancement,
                     'useful': is_useful,
                     'trap': is_trap,
-                    'event': False,  # Regular items are not events
                     'type': item_type,
                     'max_count': 1
                 }
@@ -1270,7 +1269,7 @@ class BaseGameExportHandler(
                             # Some items have valid IDs in item_name_to_id but may be placed as events
                             # in certain configurations. We preserve the ID so the worldgen world
                             # knows all possible item IDs, even for items that may sometimes be events.
-                            if not item_data[item_name]['event']:
+                            if not item_data[item_name].get('event', False):
                                 logger.debug(f"Marking {item_name} as event based on runtime placement (item.code=None), preserving original ID")
                                 item_data[item_name]['event'] = True
                                 item_data[item_name]['type'] = 'Event'
@@ -1882,6 +1881,10 @@ class BaseGameExportHandler(
         Preprocess game-specific data before region processing.
         This is called early in the export process to set up any necessary data.
 
+        For worldgen worlds, discovers helper functions from Rules.py and marks
+        them as auto-preserved to prevent incorrect pattern-based expansion
+        during region processing.
+
         Args:
             world: The world object for this player
             export_data: The export data dictionary being built
@@ -1890,8 +1893,59 @@ class BaseGameExportHandler(
         Returns:
             None (modifies export_data in place)
         """
-        # Base implementation does nothing
-        pass
+        # For worldgen worlds, discover helpers early so they are auto-preserved
+        # before expand_rule() processes location rules in process_regions().
+        # Without this, _expand_helper_by_pattern() incorrectly converts
+        # helpers like "has_fire_arrows" to Has("Fire_Arrows") via pattern matching.
+        if self.is_worldgen_world(world):
+            self._discover_worldgen_helpers_for_preservation(world)
+
+    def _discover_worldgen_helpers_for_preservation(self, world) -> None:
+        """Discover helper function names from a worldgen Rules.py and auto-preserve them.
+
+        This must run before process_regions() so that expand_rule() knows not to
+        pattern-expand these helpers during location rule processing.
+        """
+        try:
+            world_module = type(world).__module__
+            rules_module_name = world_module + '.Rules'
+            rules_module = importlib.import_module(rules_module_name)
+        except ImportError:
+            logger.debug("Could not import worldgen Rules module for helper preservation")
+            return
+
+        count = 0
+        for name in dir(rules_module):
+            if name.startswith('__'):
+                continue
+
+            obj = getattr(rules_module, name)
+
+            if getattr(obj, '_internal_function', False):
+                continue
+            if not callable(obj) or not hasattr(obj, '__code__'):
+                continue
+
+            # Check if this looks like a helper function (has state and player params)
+            code = obj.__code__
+            if code.co_argcount < 2:
+                continue
+
+            varnames = code.co_varnames[:code.co_argcount]
+            if len(varnames) < 2 or varnames[0] != 'state' or varnames[1] != 'player':
+                continue
+
+            # Strip worldgen prefix to get the canonical helper name
+            helper_name = name
+            if name.startswith('_') and 'worldgen_' in name:
+                prefix_end = name.find('worldgen_') + len('worldgen_')
+                helper_name = name[prefix_end:]
+
+            self.register_auto_preserved_helper(helper_name)
+            count += 1
+
+        if count:
+            logger.debug(f"Auto-preserved {count} worldgen helpers for pattern expansion prevention")
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -1921,7 +1975,7 @@ class BaseGameExportHandler(
                 return {
                     'name': name, 'id': None, 'groups': [group],
                     'advancement': True, 'useful': False, 'trap': False,
-                    'event': False, 'type': item_type,
+                    'type': item_type,
                     'max_count': max_count if is_target else 1
                 }
 

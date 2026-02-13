@@ -157,7 +157,7 @@ def set_rules(world) -> None:
 usage: python -m world_generator [-h] [-o OUTPUT]
                                                      [--game-name NAME]
                                                      [--force] [--dry-run]
-                                                     [--canonical-seed1] input
+                                                     [--canonical-seed [N]] input
 
 Generate Archipelago world from JSON rules file
 
@@ -171,8 +171,8 @@ optional arguments:
   --game-name NAME      Override the game name (to avoid conflicts)
   --force               Overwrite existing files
   --dry-run             Show what would be generated without writing files
-  --canonical-seed1     Enable seed=1 canonical placement (places items in
-                        original locations when seed is 1)
+  --canonical-seed [N]  Enable canonical placement for seed N (default: 1).
+                        Places items in original locations when seed matches.
 ```
 
 ### Examples
@@ -194,7 +194,7 @@ python -m world_generator game_rules.json --dry-run
 python -m world_generator game_rules.json -o worlds/my_game/ --force
 
 # Enable canonical placement for seed=1 (for testing/validation)
-python -m world_generator game_rules.json --canonical-seed1
+python -m world_generator game_rules.json --canonical-seed 1
 ```
 
 ## Python API
@@ -209,7 +209,7 @@ generator = WorldGenerator(
     json_path="path/to/rules.json",
     output_dir="worlds/my_game/",
     game_name="My Game Test",  # Optional: override game name
-    canonical_seed1=False,     # Optional: enable seed=1 canonical placement
+    canonical_seed=None,       # Optional: enable canonical placement for seed N
 )
 
 # Generate all files
@@ -297,10 +297,10 @@ The generator maps JSON item flags to Archipelago classifications:
 
 ## Seed 1 Behavior (Canonical Placement)
 
-By default, generated worlds always randomize items. However, you can enable "canonical placement" mode using the `--canonical-seed1` flag:
+By default, generated worlds always randomize items. However, you can enable "canonical placement" mode using the `--canonical-seed` flag:
 
 ```bash
-python -m world_generator game_rules.json --canonical-seed1
+python -m world_generator game_rules.json --canonical-seed 1
 ```
 
 When this flag is enabled, the generated world will:
@@ -317,7 +317,7 @@ def generate_early(self) -> None:
         self.options.randomize_items.value = False
 ```
 
-Without the `--canonical-seed1` flag, the generated world simply creates a randomized item pool for all seeds.
+Without the `--canonical-seed` flag, the generated world simply creates a randomized item pool for all seeds.
 
 ## Rule Caching
 
