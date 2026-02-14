@@ -193,12 +193,14 @@ function handleRulesLoaded(data, propagationOptions) {
 
   log('info', `Rules source: ${sourceName}`);
 
-  // Extract game directory and preset ID from sourceName
+  // Extract game directory, folder name, and base ID from sourceName
   // Expected formats:
   //   Single-player: "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
+  //   Vanilla:       "./presets/alttp/AP_14089154938208861744_v/AP_14089154938208861744_rules.json"
   //   Multiworld:    "./presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json"
   // The sphere log is shared and named: AP_14089154938208861744_sphere_log.jsonl (without _P{N})
-  const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2(?:_P\d+)?_rules\.json$/);
+  // Note: folder name may differ from the base ID (e.g., folder has _v suffix for vanilla presets)
+  const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/([^/]+?)(?:_P\d+)?_rules\.json$/);
   if (!match) {
     // If sourceName indicates data loaded from localStorage or editor, this is expected
     const isFromLocalStorage = sourceName === 'moduleSpecificConfigProvidedRules';
@@ -230,11 +232,12 @@ function handleRulesLoaded(data, propagationOptions) {
   }
 
   const gameDir = match[1];
-  const presetId = match[2];
+  const folderName = match[2];
+  const baseId = match[3];
 
-  log('info', `Extracted game: ${gameDir}, preset: ${presetId}`);
+  log('info', `Extracted game: ${gameDir}, folder: ${folderName}, baseId: ${baseId}`);
 
-  const sphereLogPath = `./presets/${gameDir}/${presetId}/${presetId}_sphere_log.jsonl`;
+  const sphereLogPath = `./presets/${gameDir}/${folderName}/${baseId}_sphere_log.jsonl`;
   log('info', `Attempting to auto-load sphere log from: ${sphereLogPath}`);
 
   // Load sphere log (async, but we don't await)
