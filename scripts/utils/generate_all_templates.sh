@@ -199,6 +199,54 @@ YAMLEOF
   fi
 }
 
+# Check if a game has vanilla seeds
+has_vanilla() {
+  [ -n "${VANILLA_PRESET_DIR[$1]+x}" ]
+}
+
+# Check if a game has normal (non-vanilla) WorldGen2
+has_worldgen2() {
+  [ -n "${WORLDGEN2_PRESET_DIR[$1]+x}" ]
+}
+
+# Dispatch vanilla seed generation (ALTTP uses special scripts, others use temp YAML)
+gen_vanilla_seed() {
+  case "$1" in
+    "A Link to the Past")
+      comment "A Link to the Past vanilla (special handling)"
+      run_cmd python scripts/vanilla-alttp/generate_incremental_yamls.py
+      run_cmd python scripts/vanilla-alttp/generate_vanilla_alttp.py --seed 1
+      ;;
+    *)
+      generate_vanilla_seed "$1"
+      ;;
+  esac
+}
+
+# Generate vanilla WorldGen world from vanilla seed preset
+gen_vanilla_worldgen_world() {
+  local preset_dir="${VANILLA_PRESET_DIR[$1]}"
+  run_world_generator \
+    "frontend/presets/${preset_dir}/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
+    "worlds/${preset_dir}_vanilla_worldgen" "${1} Vanilla WorldGen"
+}
+
+# Generate vanilla WorldGen2 world from vanilla WorldGen preset
+gen_vanilla_worldgen2_world() {
+  local preset_dir="${VANILLA_PRESET_DIR[$1]}"
+  run_world_generator \
+    "frontend/presets/${preset_dir}_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
+    "worlds/${preset_dir}_vanilla_worldgen2" "${1} Vanilla WorldGen2"
+}
+
+# Generate normal WorldGen2 world from WorldGen preset
+gen_worldgen2_world() {
+  local preset_dir="${WORLDGEN2_PRESET_DIR[$1]}"
+  run_world_generator \
+    "frontend/presets/${preset_dir}_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
+    "worlds/${preset_dir}_worldgen2" "${1} WorldGen2"
+}
+
 # ============================================================
 # Template lists
 # ============================================================
@@ -300,12 +348,13 @@ MULTIWORLD_TEMPLATES=(
   "A Short Hike"
 )
 
-# Games with vanilla_placement option (generates vanilla seed via temp YAML)
-VANILLA_SEED_GAMES=(
-  "Math Adventure"
-  "Baking Adventure"
-  "Coding Adventure"
-)
+# Games with vanilla seeds (game name -> preset directory name)
+# ALTTP uses special scripts in scripts/vanilla-alttp/; others use generate_vanilla_seed
+declare -A VANILLA_PRESET_DIR
+VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
+VANILLA_PRESET_DIR["Math Adventure"]="mathadventure"
+VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
+VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
 
 # Templates for WorldGen world generation (via test-world-generator.py)
 # Same as seed templates minus additional exclusions due to errors/performance
@@ -393,6 +442,24 @@ WORLDGEN_TEMPLATES=(
   # "Yu-Gi-Oh! 2006"                       # Excluded: Takes too long
 )
 
+# WorldGen2 templates (game name -> preset directory name for source WorldGen presets)
+declare -A WORLDGEN2_PRESET_DIR
+WORLDGEN2_PRESET_DIR["A Hat in Time"]="ahit"
+WORLDGEN2_PRESET_DIR["A Link to the Past"]="alttp"
+WORLDGEN2_PRESET_DIR["A Short Hike"]="shorthike"
+WORLDGEN2_PRESET_DIR["Adventure"]="adventure"
+
+# All WorldGen2 games (union of vanilla and normal WorldGen2)
+WORLDGEN2_TEMPLATES=(
+  "A Hat in Time"
+  "A Link to the Past"
+  "A Short Hike"
+  "Adventure"
+  "Baking Adventure"
+  "Coding Adventure"
+  "Math Adventure"
+)
+
 # ============================================================
 # Main execution
 # ============================================================
@@ -405,24 +472,13 @@ if [ "$CLEAN_EXISTING" = "true" ]; then
   run_cmd find worlds -maxdepth 1 -name '*_worldgen*' -type d -exec rm -rf {} +
 fi
 
-# --- Vanilla Seeds ---
-
-if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-  section "Generating vanilla seeds"
-
-  comment "A Link to the Past vanilla (special handling)"
-  run_cmd python scripts/vanilla-alttp/generate_incremental_yamls.py
-  run_cmd python scripts/vanilla-alttp/generate_vanilla_alttp.py --seed 1
-
-  for game in "${VANILLA_SEED_GAMES[@]}"; do
-    generate_vanilla_seed "$game"
-  done
-fi
-
 # --- Extra-seed templates ---
 
 section "Generating seeds for extra-seed templates (1, 2, 3)"
 for template in "${EXTRA_SEED_TEMPLATES[@]}"; do
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
+    gen_vanilla_seed "$template"
+  fi
   gen_seeds "$template"
 done
 
@@ -456,42 +512,25 @@ done
 # --- WorldGen ---
 
 if [ "$GENERATE_WORLDGEN" = "true" ]; then
-  # Vanilla WorldGen worlds (from vanilla placement presets)
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    section "Generating Vanilla WorldGen worlds"
-    run_world_generator \
-        "frontend/presets/alttp/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
-        worlds/alttp_vanilla_worldgen "A Link to the Past Vanilla WorldGen"
-    run_world_generator \
-        "frontend/presets/bakingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
-        worlds/bakingadventure_vanilla_worldgen "Baking Adventure Vanilla WorldGen"
-    run_world_generator \
-        "frontend/presets/mathadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
-        worlds/mathadventure_vanilla_worldgen "Math Adventure Vanilla WorldGen"
-    run_world_generator \
-        "frontend/presets/codingadventure/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
-        worlds/codingadventure_vanilla_worldgen "Coding Adventure Vanilla WorldGen"
-  fi
-
   section "Generating WorldGen worlds"
   for template in "${WORLDGEN_TEMPLATES[@]}"; do
+    if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
+      gen_vanilla_worldgen_world "$template"
+    fi
     gen_worldgen_world "$template"
   done
 
   section "Regenerating templates (for WorldGen)"
   regen_templates
 
-  # Vanilla WorldGen presets
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    comment "Vanilla WorldGen presets"
-    gen_seed "A Link to the Past Vanilla WorldGen" 1
-    gen_seed "Baking Adventure Vanilla WorldGen" 1
-    gen_seed "Math Adventure Vanilla WorldGen" 1
-    gen_seed "Coding Adventure Vanilla WorldGen" 1
-  fi
-
   section "Generating presets for WorldGen templates"
   for template in "${WORLDGEN_TEMPLATES[@]}"; do
+    if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
+      # TODO: ALTTP vanilla WorldGen preset generation is currently broken
+      if [ "$template" != "A Link to the Past" ]; then
+        gen_seed "${template} Vanilla WorldGen" 1
+      fi
+    fi
     gen_seed "${template} WorldGen" 1
   done
 fi
@@ -499,55 +538,34 @@ fi
 # --- WorldGen2 ---
 
 if [ "$GENERATE_WORLDGEN2" = "true" ]; then
-  # Vanilla WorldGen2 worlds
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    section "Generating Vanilla WorldGen2 worlds"
-    run_world_generator \
-        "frontend/presets/alttp_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
-        worlds/alttp_vanilla_worldgen2 "A Link to the Past Vanilla WorldGen2"
-    run_world_generator \
-        "frontend/presets/bakingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
-        worlds/bakingadventure_vanilla_worldgen2 "Baking Adventure Vanilla WorldGen2"
-    run_world_generator \
-        "frontend/presets/mathadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
-        worlds/mathadventure_vanilla_worldgen2 "Math Adventure Vanilla WorldGen2"
-    run_world_generator \
-        "frontend/presets/codingadventure_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
-        worlds/codingadventure_vanilla_worldgen2 "Coding Adventure Vanilla WorldGen2"
-  fi
-
-  section "Generating WorldGen2 worlds (from WorldGen)"
-
-  run_world_generator \
-      "frontend/presets/ahit_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
-      worlds/ahit_worldgen2 "A Hat in Time WorldGen2"
-  run_world_generator \
-      "frontend/presets/alttp_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
-      worlds/alttp_worldgen2 "A Link to the Past WorldGen2"
-  run_world_generator \
-      "frontend/presets/shorthike_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
-      worlds/shorthike_worldgen2 "A Short Hike WorldGen2"
-  run_world_generator \
-      "frontend/presets/adventure_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
-      worlds/adventure_worldgen2 "Adventure WorldGen2"
+  section "Generating WorldGen2 worlds"
+  for template in "${WORLDGEN2_TEMPLATES[@]}"; do
+    if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
+      # TODO: ALTTP vanilla WorldGen2 world generation is currently broken
+      if [ "$template" != "A Link to the Past" ]; then
+        gen_vanilla_worldgen2_world "$template"
+      fi
+    fi
+    if has_worldgen2 "$template"; then
+      gen_worldgen2_world "$template"
+    fi
+  done
 
   section "Regenerating templates (for WorldGen2)"
   regen_templates
 
   section "Generating presets for WorldGen2 templates"
-  gen_seed "A Hat in Time WorldGen2" 1
-  gen_seed "A Link to the Past WorldGen2" 1
-  gen_seed "A Short Hike WorldGen2" 1
-  gen_seed "Adventure WorldGen2" 1
-
-  # Vanilla WorldGen2 presets
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    comment "Vanilla WorldGen2 presets"
-    gen_seed "A Link to the Past Vanilla WorldGen2" 1
-    gen_seed "Baking Adventure Vanilla WorldGen2" 1
-    gen_seed "Math Adventure Vanilla WorldGen2" 1
-    gen_seed "Coding Adventure Vanilla WorldGen2" 1
-  fi
+  for template in "${WORLDGEN2_TEMPLATES[@]}"; do
+    if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
+      # TODO: ALTTP vanilla WorldGen2 preset generation is currently broken
+      if [ "$template" != "A Link to the Past" ]; then
+        gen_seed "${template} Vanilla WorldGen2" 1
+      fi
+    fi
+    if has_worldgen2 "$template"; then
+      gen_seed "${template} WorldGen2" 1
+    fi
+  done
 fi
 
 # --- Cleanup ---
