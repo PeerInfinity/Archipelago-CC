@@ -960,6 +960,10 @@ class RuleConverterMixin:
             # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
             processed_args = self._infer_keys_from_dict_args(args)
 
+            # Extract compound rule args (And/Or) that can't be represented as simple values.
+            # These get converted to wrapping conditions ANDed with the HelperCall.
+            processed_args, wrapping_conditions = self._extract_compound_args(processed_args)
+
             # Convert arguments to Python code
             arg_strs = []
             for arg in processed_args:
@@ -994,7 +998,15 @@ class RuleConverterMixin:
                 # Tier 1: Include body_rule for full explain support
                 parts.append(f'body_rule={body_rule_code}')
 
-            return f'HelperCall({", ".join(parts)})'
+            helper_call = f'HelperCall({", ".join(parts)})'
+
+            # If compound args were extracted, wrap with And()
+            if wrapping_conditions:
+                self.required_imports.add('And')
+                all_parts = [f'({helper_call})'] + [f'({c})' for c in wrapping_conditions]
+                return ' & '.join(all_parts)
+
+            return helper_call
 
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
@@ -1079,6 +1091,35 @@ class RuleConverterMixin:
             i += 1
 
         return result
+
+    def _extract_compound_args(self, args: List[Any]) -> Tuple[List[Any], List[str]]:
+        """Extract compound rule args (And/Or) from helper argument lists.
+
+        When a helper argument is itself a compound rule (And/Or containing
+        nested helper calls), it cannot be represented as a simple argument value.
+        Instead, we extract it as a wrapping condition that gets ANDed with the
+        HelperCall, and replace the arg with True_.
+
+        Args:
+            args: List of helper arguments (may contain dicts with rule info)
+
+        Returns:
+            Tuple of (modified_args, wrapping_conditions) where:
+            - modified_args has compound rules replaced with {'rule': 'True_'}
+            - wrapping_conditions is a list of converted code strings
+        """
+        modified = list(args)
+        wrapping_conditions = []
+
+        for i, arg in enumerate(modified):
+            if isinstance(arg, dict) and arg.get('rule') in ('And', 'Or'):
+                # Convert the compound rule via the normal rule converter
+                condition_code = self._convert_rule(arg)
+                wrapping_conditions.append(condition_code)
+                # Replace with True_ so _convert_helper_arg emits 'True'
+                modified[i] = {'rule': 'True_'}
+
+        return modified, wrapping_conditions
 
     def _convert_helper_arg(self, arg: Any) -> str:
         """Convert a single helper argument to Python code string.
@@ -1220,6 +1261,12 @@ class RuleConverterMixin:
                 # Unknown nested helper - assume True
                 return 'True'
 
+        # ===== Compound Rules (And/Or) =====
+        # Safety net: if a compound rule reaches here (not pre-extracted),
+        # return True rather than None to avoid breaking the helper call
+        if rule_type in ('And', 'Or'):
+            return 'True'
+
         # ===== Fallback =====
         return 'None'
 
@@ -1350,6 +1397,10 @@ class RuleConverterMixin:
         # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
         args = self._infer_keys_from_dict_args(args)
 
+        # Extract compound rule args (And/Or) that can't be represented as simple values.
+        # These get converted to wrapping conditions ANDed with the HelperCall.
+        args, wrapping_conditions = self._extract_compound_args(args)
+
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
             self.required_imports.add('HelperCall')
@@ -1386,7 +1437,15 @@ class RuleConverterMixin:
                 # Tier 1: Include body_rule for full explain support
                 parts.append(f'body_rule={body_rule_code}')
 
-            return f'HelperCall({", ".join(parts)})'
+            helper_call = f'HelperCall({", ".join(parts)})'
+
+            # If compound args were extracted, wrap with And()
+            if wrapping_conditions:
+                self.required_imports.add('And')
+                all_parts = [f'({helper_call})'] + [f'({c})' for c in wrapping_conditions]
+                return ' & '.join(all_parts)
+
+            return helper_call
 
         # Handle Python built-in functions that can be evaluated at generation time
         if helper_name == 'int':
