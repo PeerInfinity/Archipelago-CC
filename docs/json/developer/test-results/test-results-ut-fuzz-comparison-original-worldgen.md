@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-02-13 04:52:43 UTC
+**Generated:** 2026-02-14 02:28:14 UTC
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Worldgen Universal Tracker (regenerates world from rules.json).
 
@@ -29,11 +29,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ✅ 100.0% | 18.2KB | ✅ | 230.1KB |
 | A Link to the Past | ❌ 0.0% | ✅ 80.0% | 12.6KB | ✅ | 664.1KB |
-| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 409.8KB |
+| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 10.9KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 25.6KB |
 | Aquaria | ✅ 100.0% | ✅ 100.0% | 1.8KB | ✅ | 272.0KB |
-| Baking Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Baking Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 17.8KB |
 | Blasphemous | ✅ 56.0% | ✅ 40.0% | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | ✅ 100.0% | ✅ 100.0% | 1.4KB | 40.3KB | 325.2KB |
 | Bumper Stickers | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 50.1KB |
@@ -44,7 +44,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | ChecksFinder | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 16.1KB |
 | Choo-Choo Charles | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 281.3KB |
 | Civilization VI | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 163.0KB |
-| Coding Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Coding Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 54.1KB |
 | DLCQuest | ❌ 46.0% | ✅ 100.0% | 1.2KB | ✅ | 49.7KB |
 | DOOM 1993 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 275.6KB |
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 322.4KB |
@@ -59,7 +59,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Hollow Knight | ❌ 11.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 100.3KB |
 | Inscryption | ✅ 100.0% | ✅ 100.0% | 8.0KB | ✅ | 83.0KB |
-| Jak and Daxter: The Precursor Legacy | ⚠️ 62.0% | ✅ 100.0% | 21.6KB | 4.6KB | 298.6KB |
+| Jak and Daxter: The Precursor Legacy | ⚠️ 62.0% | ✅ 100.0% | 21.5KB | 4.6KB | N/A |
 | Kingdom Hearts | ❌ 18.0% | ❌ 40.0% | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ 37.0% | ❌ 0.0% | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | ❌ 3.0% | ❌ 0.0% | 10.1KB | ✅ | 528.6KB |
@@ -68,7 +68,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Links Awakening DX | ❌ 23.0% | ✅ 100.0% | 7.4KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 395.4KB |
-| Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
+| Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 12.4KB |
 | Mega Man 2 | ⚠️ 91.0% | ✅ 100.0% | ✅ | ✅ | 51.6KB |
 | MegaMan Battle Network 3 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 204.6KB |
 | Meritous | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 56.7KB |
@@ -79,11 +79,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Old School Runescape | ✅ 91.0% | ✅ 100.0% | 1.0KB | ✅ | 305.1KB |
 | Overcooked! 2 | ❌ 12.0% | ✅ 50.0% | 28.5KB | ✅ | 488.2KB |
 | Paint | ✅ 98.0% | ✅ 100.0% | 2.7KB | ✅ | 123.0KB |
-| Pokemon Emerald | ⚠️ 59.0% | ❌ 20.0% | 5.2KB | 8.7KB | 1390.9KB |
-| Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
+| Pokemon Emerald | ⚠️ 59.0% | ❌ 20.0% | 5.2KB | 8.7KB | N/A |
+| Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.1KB | 13.0KB | N/A |
 | Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 145.0KB |
-| SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
+| SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.4KB | 51.3KB | N/A |
 | Satisfactory | N/A | ✅ 100.0% | 41.6KB | ✅ | 1618.9KB |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ 100.0% | ✅ 100.0% | 5.3KB | 7.5KB | 414.9KB |
@@ -94,7 +94,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Super Mario 64 | ❌ 29.0% | ✅ 90.0% | ✅ | ✅ | 100.9KB |
-| Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | 96.3KB | ✅ | 918.7KB |
+| Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ⚠️ 54.0% | ✅ 90.0% | ✅ | ✅ | 177.6KB |
 | Super Metroid | ❌ 1.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.0KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 99.6KB |
@@ -111,7 +111,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.0KB |
 | Yacht Dice | ❌ 5.0% | ❌ 0.0% | 0.9KB | 285.0KB | 248.4KB |
 | Yoshi's Island | ❌ 22.0% | ✅ 100.0% | 9.2KB | ✅ | 295.2KB |
-| Yu-Gi-Oh! 2006 | ❌ 33.0% | ⚠️ 50.0% | 1.3KB | 21.4KB | 628.0KB |
+| Yu-Gi-Oh! 2006 | ❌ 33.0% | ⚠️ 50.0% | 1.3KB | 21.4KB | N/A |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ 42.0% | ✅ 100.0% | ✅ | ✅ | 153.7KB |
 
@@ -121,10 +121,10 @@ These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Short Hike | ✅ | ✅ | 409.8KB |
+| A Short Hike | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | 10.9KB |
 | Aquaria | 1.8KB | ✅ | 272.0KB |
-| Baking Adventure | ✅ | ✅ | N/A |
+| Baking Adventure | ✅ | ✅ | 17.8KB |
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 325.2KB |
 | Bumper Stickers | ✅ | ✅ | 50.1KB |
@@ -133,7 +133,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | ChecksFinder | ✅ | ✅ | 16.1KB |
 | Choo-Choo Charles | ✅ | ✅ | 281.3KB |
 | Civilization VI | ✅ | ✅ | 163.0KB |
-| Coding Adventure | ✅ | ✅ | N/A |
+| Coding Adventure | ✅ | ✅ | 54.1KB |
 | DOOM 1993 | ✅ | ✅ | 275.6KB |
 | DOOM II | ✅ | ✅ | 322.4KB |
 | Dark Souls III | ✅ | ✅ | 1033.9KB |
@@ -143,7 +143,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Inscryption | 8.0KB | ✅ | 83.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 395.4KB |
-| Math Adventure | ✅ | ✅ | N/A |
+| Math Adventure | ✅ | ✅ | 12.4KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | 204.6KB |
 | Meritous | ✅ | ✅ | 56.7KB |
 | Old School Runescape | 1.0KB | ✅ | 305.1KB |
@@ -177,7 +177,7 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Factorio | 8.8KB | ✅ | 290.0KB |
 | Faxanadu | ✅ | ✅ | 68.0KB |
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
-| Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
+| Jak and Daxter: The Precursor Legacy | 21.5KB | 4.6KB | N/A |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Lingo | 38.0KB | 10.7KB | 939.9KB |
 | Links Awakening DX | 7.4KB | ✅ | 703.0KB |
@@ -192,7 +192,7 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Sonic Adventure 2 Battle | ✅ | ✅ | 262.1KB |
 | Subnautica | 2.2KB | ✅ | 205.4KB |
 | Super Mario 64 | ✅ | ✅ | 100.9KB |
-| Super Mario Land 2 | 96.3KB | ✅ | 918.7KB |
+| Super Mario Land 2 | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ✅ | ✅ | 177.6KB |
 | Terraria | 16.8KB | ✅ | 278.6KB |
 | The Messenger | 15.2KB | ✅ | 210.3KB |
@@ -213,14 +213,14 @@ These games fail in both Universal Tracker versions.
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.6KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
-| Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
-| Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
-| SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
+| Pokemon Emerald | 5.2KB | 8.7KB | N/A |
+| Pokemon Red and Blue | 12.1KB | 13.0KB | N/A |
+| SMZ3 | 61.4KB | 51.3KB | N/A |
 | Starcraft 2 | 28.7KB | 90.1KB | 1086.7KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2407.6KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.0KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
-| Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
+| Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | N/A |
 | Zillion | ✅ | ✅ | N/A |
 
 ## Notes
