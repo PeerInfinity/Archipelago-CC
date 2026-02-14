@@ -5,7 +5,6 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
-  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -41,8 +40,36 @@
             "locked": false
           },
           {
+            "name": "Compendium - Flies",
+            "id": 5,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tato photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Compendium - Home bird",
             "id": 6,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Cow",
+            "id": 4,
             "access_rule": {
               "rule": "True_"
             },
@@ -64,48 +91,6 @@
               "name": "Tato ski photo",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Flies",
-            "id": 5,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tato photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Cow",
-            "id": 4,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Oaklaville stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Camera",
-            "id": 9,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -139,15 +124,15 @@
             "locked": false
           },
           {
-            "name": "Quest - A hidden gift",
-            "id": 2,
+            "name": "Item - Camera",
+            "id": 9,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Snow bird photo",
+              "name": "Logcity stamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -163,6 +148,20 @@
             },
             "item": {
               "name": "Clogs",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - A hidden gift",
+            "id": 2,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Snow bird photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -216,13 +215,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Sero",
-            "id": 33,
+            "name": "Compendium - Butterfly",
+            "id": 31,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Supreme deluxe sandwich",
+              "name": "Seagull photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -230,50 +229,8 @@
             "locked": false
           },
           {
-            "name": "Compendium - Oskar",
-            "id": 32,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Squirrel photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Tom",
-            "id": 36,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Paper hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Nestworm",
-            "id": 37,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Squirrel",
-            "id": 40,
+            "name": "Compendium - Beehive",
+            "id": 30,
             "access_rule": {
               "rule": "True_"
             },
@@ -286,13 +243,27 @@
             "locked": false
           },
           {
-            "name": "Compendium - Pet rock",
-            "id": 38,
+            "name": "Compendium - Tato fly",
+            "id": 43,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Owl photo",
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Ant",
+            "id": 29,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Dragonfly photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -328,13 +299,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Butterfly",
-            "id": 31,
+            "name": "Compendium - Snail",
+            "id": 39,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Seagull photo",
+              "name": "Tato alien photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -342,8 +313,22 @@
             "locked": false
           },
           {
-            "name": "Compendium - Beehive",
-            "id": 30,
+            "name": "Compendium - Sero",
+            "id": 33,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Supreme deluxe sandwich",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Squirrel",
+            "id": 40,
             "access_rule": {
               "rule": "True_"
             },
@@ -356,13 +341,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Ant",
-            "id": 29,
+            "name": "Compendium - Oskar",
+            "id": 32,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Dragonfly photo",
+              "name": "Squirrel photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -370,27 +355,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Stag beetle",
-            "id": 41,
+            "name": "Compendium - Nestworm",
+            "id": 37,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Tato fly",
-            "id": 43,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
+              "name": "Logcity stamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -412,13 +383,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Snail",
-            "id": 39,
+            "name": "Compendium - Pet rock",
+            "id": 38,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Tato alien photo",
+              "name": "Owl photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -426,8 +397,8 @@
             "locked": false
           },
           {
-            "name": "Item - Tripod",
-            "id": 45,
+            "name": "Compendium - Stag beetle",
+            "id": 41,
             "access_rule": {
               "rule": "True_"
             },
@@ -435,6 +406,20 @@
               "name": "Kiiruberg stamp",
               "player": 1,
               "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Tom",
+            "id": 36,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Paper hat",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -454,6 +439,20 @@
             "locked": false
           },
           {
+            "name": "Item - Soaked sock",
+            "id": 50,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mountain goat photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Item - Cowboy hat",
             "id": 46,
             "access_rule": {
@@ -463,6 +462,34 @@
               "name": "Puffer hat",
               "player": 1,
               "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Ghost glasses",
+            "id": 49,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Monster mask",
+            "id": 51,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -482,8 +509,8 @@
             "locked": false
           },
           {
-            "name": "Item - Ghost glasses",
-            "id": 49,
+            "name": "Item - Tripod",
+            "id": 45,
             "access_rule": {
               "rule": "True_"
             },
@@ -510,58 +537,13 @@
             "locked": false
           },
           {
-            "name": "Item - Soaked sock",
-            "id": 50,
+            "name": "Quest - Cup champion",
+            "id": 27,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Mountain goat photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Monster mask",
-            "id": 51,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Stanhamn stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Hotel chef",
-            "id": 24,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Ghost helper!",
-            "id": 26,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Logcity"
-              }
-            },
-            "item": {
-              "name": "Diving helmet",
+              "name": "Monster mask",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -583,13 +565,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Hide-and-seek",
-            "id": 18,
+            "name": "Quest - Log blocking a path",
+            "id": 19,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Oaklaville stamp",
+              "name": "Logcity stamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -597,13 +579,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Cup champion",
-            "id": 27,
+            "name": "Quest - Capture the hotel's beauty",
+            "id": 23,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Monster mask",
+              "name": "Mouse photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -611,13 +593,27 @@
             "locked": false
           },
           {
-            "name": "Quest - Missing socks",
-            "id": 16,
+            "name": "Quest - Suspicious activity - forest",
+            "id": 14,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Rubber boots",
+              "name": "Climbing boots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - A courageous stallion",
+            "id": 25,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Fia photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -639,15 +635,43 @@
             "locked": false
           },
           {
-            "name": "Quest - Suspicious activity - forest",
-            "id": 14,
+            "name": "Quest - Become a scout",
+            "id": 17,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Climbing boots",
+              "name": "Fr\u00e4s photo",
               "player": 1,
               "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Photo challenge #1",
+            "id": 20,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Scarf",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Hotel chef",
+            "id": 24,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -667,13 +691,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Become a scout",
-            "id": 17,
+            "name": "Quest - Missing socks",
+            "id": 16,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Fr\u00e4s photo",
+              "name": "Rubber boots",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -681,27 +705,16 @@
             "locked": false
           },
           {
-            "name": "Quest - Capture the hotel's beauty",
-            "id": 23,
+            "name": "Quest - Ghost helper!",
+            "id": 26,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Logcity"
+              }
             },
             "item": {
-              "name": "Mouse photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Photo challenge #1",
-            "id": 20,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Scarf",
+              "name": "Diving helmet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -726,29 +739,15 @@
             "locked": false
           },
           {
-            "name": "Quest - Log blocking a path",
-            "id": 19,
+            "name": "Quest - Hide-and-seek",
+            "id": 18,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Logcity stamp",
+              "name": "Oaklaville stamp",
               "player": 1,
               "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - A courageous stallion",
-            "id": 25,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Fia photo",
-              "player": 1,
-              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -771,6 +770,118 @@
           }
         ],
         "locations": [
+          {
+            "name": "Compendium - Tato scuba",
+            "id": 89,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Fishing hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Seagull",
+            "id": 86,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Fia",
+            "id": 78,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pirate hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Willemijn",
+            "id": 80,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Honk attachment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Bubble fly",
+            "id": 77,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Nariko photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Sunday swan",
+            "id": 88,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Dragonfly",
+            "id": 82,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Happy carp",
+            "id": 83,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Hedgehog photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
           {
             "name": "Compendium - King fish",
             "id": 85,
@@ -828,13 +939,13 @@
             "locked": false
           },
           {
-            "name": "Compendium - Sunday swan",
-            "id": 88,
+            "name": "Compendium - Seahorse",
+            "id": 87,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Oaklaville stamp",
+              "name": "Stanhamn stamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -856,62 +967,6 @@
             "locked": false
           },
           {
-            "name": "Compendium - Willemijn",
-            "id": 80,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Honk attachment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Seagull",
-            "id": 86,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Seahorse",
-            "id": 87,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Stanhamn stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Fia",
-            "id": 78,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pirate hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Compendium - Tato swim",
             "id": 90,
             "access_rule": {
@@ -921,62 +976,6 @@
               "name": "Happy carp photo",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Bubble fly",
-            "id": 77,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Nariko photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Happy carp",
-            "id": 83,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hedgehog photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Tato scuba",
-            "id": 89,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Fishing hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Dragonfly",
-            "id": 82,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Oaklaville stamp",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -996,6 +995,34 @@
             "locked": false
           },
           {
+            "name": "Item - Frames & filters",
+            "id": 92,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Photo challenger flag",
+            "id": 104,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Item - Diving helmet",
             "id": 98,
             "access_rule": {
@@ -1003,6 +1030,20 @@
             },
             "item": {
               "name": "Hard hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Fishing hat",
+            "id": 93,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Jellyfish photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1024,34 +1065,6 @@
             "locked": false
           },
           {
-            "name": "Item - Old key",
-            "id": 96,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Fishing hat",
-            "id": 93,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Jellyfish photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Item - Umbrella",
             "id": 95,
             "access_rule": {
@@ -1066,27 +1079,13 @@
             "locked": false
           },
           {
-            "name": "Item - Fisherman's whisle",
-            "id": 100,
+            "name": "Item - Pirate hat",
+            "id": 102,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Hotbean hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Supreme deluxe sandwich",
-            "id": 101,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Stanhamn stamp",
+              "name": "Oaklaville stamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1094,8 +1093,8 @@
             "locked": false
           },
           {
-            "name": "Item - Photo challenger flag",
-            "id": 104,
+            "name": "Item - Supreme deluxe sandwich",
+            "id": 101,
             "access_rule": {
               "rule": "True_"
             },
@@ -1122,13 +1121,27 @@
             "locked": false
           },
           {
-            "name": "Item - Frames & filters",
-            "id": 92,
+            "name": "Item - Fisherman's whisle",
+            "id": 100,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Kiiruberg stamp",
+              "name": "Hotbean hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Old key",
+            "id": 96,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1150,85 +1163,15 @@
             "locked": false
           },
           {
-            "name": "Item - Pirate hat",
-            "id": 102,
+            "name": "Quest - A whistling dilemma",
+            "id": 75,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Oaklaville stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - A layered melody",
-            "id": 76,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Supreme deluxe sandwich?!",
-            "id": 73,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Jamal Green - Photo of Home",
+              "name": "Seahorse photo",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - The king of fishes",
-            "id": 61,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Frames & filters!",
-            "id": 67,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Turtle photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Suspicious activity - harbor",
-            "id": 63,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1248,6 +1191,48 @@
             "locked": false
           },
           {
+            "name": "Quest - Suspicious activity - harbor",
+            "id": 63,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Queen of paper hats",
+            "id": 64,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - The king of fishes",
+            "id": 61,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Quest - Photo challenge #4",
             "id": 66,
             "access_rule": {
@@ -1257,6 +1242,48 @@
               "name": "Logcity stamp",
               "player": 1,
               "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Make someone take a bath",
+            "id": 68,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tato bug photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Photo challenge #3",
+            "id": 65,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Camera",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Frames & filters!",
+            "id": 67,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Turtle photo",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1290,13 +1317,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Photo challenge #3",
-            "id": 65,
+            "name": "Quest - A lost dog",
+            "id": 69,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Camera",
+              "name": "Soaked sock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1304,15 +1331,29 @@
             "locked": false
           },
           {
-            "name": "Quest - Ocean garbage",
-            "id": 74,
+            "name": "Quest - Supreme deluxe sandwich?!",
+            "id": 73,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Fisherman's whisle",
+              "name": "Jamal Green - Photo of Home",
               "player": 1,
               "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - A layered melody",
+            "id": 76,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1332,57 +1373,15 @@
             "locked": false
           },
           {
-            "name": "Quest - A whistling dilemma",
-            "id": 75,
+            "name": "Quest - Ocean garbage",
+            "id": 74,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Seahorse photo",
+              "name": "Fisherman's whisle",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - A lost dog",
-            "id": 69,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Soaked sock",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Make someone take a bath",
-            "id": 68,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tato bug photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Queen of paper hats",
-            "id": 64,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Stanhamn stamp",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1420,13 +1419,41 @@
             "locked": false
           },
           {
-            "name": "Compendium - Tato tourist",
-            "id": 137,
+            "name": "Compendium - Mouse",
+            "id": 133,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Tripod",
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Tato skateboard",
+            "id": 136,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Beehive photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Business pigeon",
+            "id": 131,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Forest bird photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1448,48 +1475,6 @@
             "locked": false
           },
           {
-            "name": "Compendium - Punky parrot",
-            "id": 135,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Business pigeon",
-            "id": 131,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Forest bird photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Mouse",
-            "id": 133,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Compendium - Pigeon",
             "id": 134,
             "access_rule": {
@@ -1504,55 +1489,27 @@
             "locked": false
           },
           {
-            "name": "Compendium - Tato skateboard",
-            "id": 136,
+            "name": "Compendium - Punky parrot",
+            "id": 135,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Beehive photo",
+              "name": "Kiiruberg stamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Item - Cinnamon bun",
-            "id": 143,
+            "name": "Compendium - Tato tourist",
+            "id": 137,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Pet rock photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Sneakers",
-            "id": 142,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Reporter hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item - Reporter hat",
-            "id": 140,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Butterfly photo",
+              "name": "Tripod",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1574,13 +1531,13 @@
             "locked": false
           },
           {
-            "name": "Item - Frisbee",
-            "id": 144,
+            "name": "Item - Sneakers",
+            "id": 142,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Tato skateboard photo",
+              "name": "Reporter hat",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1602,13 +1559,69 @@
             "locked": false
           },
           {
-            "name": "Quest - A design problem",
-            "id": 126,
+            "name": "Item - Cinnamon bun",
+            "id": 143,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Space helmet",
+              "name": "Pet rock photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Frisbee",
+            "id": 144,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tato skateboard photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Reporter hat",
+            "id": 140,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Butterfly photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Cleaning away the stress",
+            "id": 127,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - A mouse bakery",
+            "id": 129,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tato fly photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1630,15 +1643,57 @@
             "locked": false
           },
           {
-            "name": "Quest - Always tumbled granny",
-            "id": 128,
+            "name": "Quest - Ratskullz crew",
+            "id": 114,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Logcity stamp",
+              "name": "Flies photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Press-ing news",
+            "id": 118,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Kiiruberg stamp",
               "player": 1,
               "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Suspicious activity - city",
+            "id": 113,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Foam finger",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Spooky scary city",
+            "id": 122,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Umbrella",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1658,27 +1713,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Punk rocker bread crumbs",
-            "id": 115,
+            "name": "Quest - Photo challenge #6",
+            "id": 117,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Teddy photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Super Hotbean Bros.",
-            "id": 120,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Lost sock",
+              "name": "Home bird photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1700,15 +1741,15 @@
             "locked": false
           },
           {
-            "name": "Quest - Art exhibition",
-            "id": 124,
+            "name": "Quest - A design problem",
+            "id": 126,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Logcity stamp",
+              "name": "Space helmet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1742,27 +1783,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Cleaning away the stress",
-            "id": 127,
+            "name": "Quest - Punk rocker bread crumbs",
+            "id": 115,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Stanhamn stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Suspicious activity - city",
-            "id": 113,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Foam finger",
+              "name": "Teddy photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1770,29 +1797,15 @@
             "locked": false
           },
           {
-            "name": "Quest - Press-ing news",
-            "id": 118,
+            "name": "Quest - Always tumbled granny",
+            "id": 128,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Kiiruberg stamp",
+              "name": "Logcity stamp",
               "player": 1,
               "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - A mouse bakery",
-            "id": 129,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tato fly photo",
-              "player": 1,
-              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1812,41 +1825,27 @@
             "locked": false
           },
           {
-            "name": "Quest - Photo challenge #6",
-            "id": 117,
+            "name": "Quest - Art exhibition",
+            "id": 124,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Home bird photo",
+              "name": "Logcity stamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           },
           {
-            "name": "Quest - Spooky scary city",
-            "id": 122,
+            "name": "Quest - Super Hotbean Bros.",
+            "id": 120,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Umbrella",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Ratskullz crew",
-            "id": 114,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Flies photo",
+              "name": "Lost sock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1886,20 +1885,6 @@
             "locked": false
           },
           {
-            "name": "Compendium - Teddy",
-            "id": 167,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Launchable Socks - Squirrel Photography",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Compendium - Tato ski",
             "id": 175,
             "access_rule": {
@@ -1914,62 +1899,6 @@
             "locked": false
           },
           {
-            "name": "Compendium - Meteopal",
-            "id": 170,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Business pigeon photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Hedgehog",
-            "id": 169,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Owl",
-            "id": 172,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cosmo deer photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Compendium - Cosmo deer",
-            "id": 166,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cow photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Compendium - Mik\u00e9e",
             "id": 164,
             "access_rule": {
@@ -1977,6 +1906,20 @@
             },
             "item": {
               "name": "Tato swim photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Snow bird",
+            "id": 173,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sero photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2012,13 +1955,41 @@
             "locked": false
           },
           {
-            "name": "Compendium - Snow bird",
-            "id": 173,
+            "name": "Compendium - Owl",
+            "id": 172,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Sero photo",
+              "name": "Cosmo deer photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Meteopal",
+            "id": 170,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Business pigeon photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Teddy",
+            "id": 167,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Launchable Socks - Squirrel Photography",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2033,6 +2004,48 @@
             },
             "item": {
               "name": "Ghost glasses",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Hedgehog",
+            "id": 169,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Compendium - Cosmo deer",
+            "id": 166,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cow photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item - Puffer hat",
+            "id": 177,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Fluff ball photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2068,20 +2081,6 @@
             "locked": false
           },
           {
-            "name": "Item - Scarf",
-            "id": 178,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Kiiruberg stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Item - Space helmet",
             "id": 180,
             "access_rule": {
@@ -2096,15 +2095,130 @@
             "locked": false
           },
           {
-            "name": "Item - Puffer hat",
-            "id": 177,
+            "name": "Item - Scarf",
+            "id": 178,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Fluff ball photo",
+              "name": "Kiiruberg stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Ice wizard's research",
+            "id": 152,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Locating an asteroid",
+            "id": 157,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mik\u00e9e photo",
               "player": 1,
               "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Listen to the goat choir",
+            "id": 158,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pigeon photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Play astronaut",
+            "id": 154,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Crab photo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Snowball memories",
+            "id": 159,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Oaklaville stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Ancient paintings",
+            "id": 161,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Mountain Top"
+              }
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Photo challenge #7",
+            "id": 155,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Stanhamn stamp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quest - Assemble a snowman",
+            "id": 163,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logcity stamp",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2138,93 +2252,6 @@
             "locked": false
           },
           {
-            "name": "Quest - Yeti cuteness",
-            "id": 151,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ladybug photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Assemble a snowman",
-            "id": 163,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Ice wizard's research",
-            "id": 152,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Oaklaville stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Ancient paintings",
-            "id": 161,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Mountain Top"
-              }
-            },
-            "item": {
-              "name": "Logcity stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Snowball memories",
-            "id": 159,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Oaklaville stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Become a yeti",
-            "id": 162,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Toad photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
             "name": "Quest - Photo challenge #8",
             "id": 156,
             "access_rule": {
@@ -2239,27 +2266,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Photo challenge #7",
-            "id": 155,
+            "name": "Quest - Yeti cuteness",
+            "id": 151,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Stanhamn stamp",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Listen to the goat choir",
-            "id": 158,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pigeon photo",
+              "name": "Ladybug photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2267,27 +2280,13 @@
             "locked": false
           },
           {
-            "name": "Quest - Locating an asteroid",
-            "id": 157,
+            "name": "Quest - Become a yeti",
+            "id": 162,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Mik\u00e9e photo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quest - Play astronaut",
-            "id": 154,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Crab photo",
+              "name": "Toad photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4108,6 +4107,7 @@
   "canonical_placements": {
     "1": {
       "Casette - Jamal Green - Photo of Home": "Fj\u00e4llbj\u00f6rn hat",
+      "Compendium - Flies": "Tato photo",
       "Compendium - Beehive": "Oaklaville stamp",
       "Compendium - Cow": "Oaklaville stamp",
       "Compendium - Dragonfly": "Oaklaville stamp",
@@ -4124,7 +4124,10 @@
       "Quest - Ice wizard's research": "Oaklaville stamp",
       "Quest - Snowball memories": "Oaklaville stamp",
       "Compendium - Tato": "Tato ski photo",
-      "Compendium - Flies": "Tato photo",
+      "Item - Backpack": "Tom photo",
+      "Item - Clogs": "Homelanda stamp",
+      "Quest - A good spot with no sun": "Homelanda stamp",
+      "Quest - Power shortage?!": "Homelanda stamp",
       "Casette - Launchable Socks - Squirrel Photography": "Logcity stamp",
       "Compendium - Crab": "Logcity stamp",
       "Compendium - Hedgehog": "Logcity stamp",
@@ -4143,12 +4146,8 @@
       "Quest - Sewer stumble!": "Logcity stamp",
       "Quest - Suspicious activity - harbor": "Logcity stamp",
       "Quest - The king of fishes": "Logcity stamp",
-      "Item - Backpack": "Tom photo",
-      "Item - Clogs": "Homelanda stamp",
-      "Quest - A good spot with no sun": "Homelanda stamp",
-      "Quest - Power shortage?!": "Homelanda stamp",
-      "Quest - A hidden gift": "Snow bird photo",
       "Quest - Experience TOEM": "Clogs",
+      "Quest - A hidden gift": "Snow bird photo",
       "Compendium - Seahorse": "Stanhamn stamp",
       "Compendium - Tato alien": "Stanhamn stamp",
       "Compendium - Tato ski": "Stanhamn stamp",
@@ -4165,12 +4164,7 @@
       "Quest - Queen of paper hats": "Stanhamn stamp",
       "Quest - Take a photo of Nana!": "Stanhamn stamp",
       "Quest - Young and inspiring!": "Stanhamn stamp",
-      "Compendium - Sero": "Supreme deluxe sandwich",
-      "Compendium - Oskar": "Squirrel photo",
-      "Compendium - Tom": "Paper hat",
-      "Compendium - Pet rock": "Owl photo",
       "Compendium - Butterfly": "Seagull photo",
-      "Compendium - Ant": "Dragonfly photo",
       "Compendium - Mouse": "Kiiruberg stamp",
       "Compendium - Portillo": "Kiiruberg stamp",
       "Compendium - Punky parrot": "Kiiruberg stamp",
@@ -4184,85 +4178,90 @@
       "Quest - Hotel chef": "Kiiruberg stamp",
       "Quest - Photo challenge #2": "Kiiruberg stamp",
       "Quest - Press-ing news": "Kiiruberg stamp",
-      "Compendium - Tato bug": "Nestworm photo",
+      "Compendium - Ant": "Dragonfly photo",
       "Compendium - Snail": "Tato alien photo",
+      "Compendium - Sero": "Supreme deluxe sandwich",
+      "Compendium - Oskar": "Squirrel photo",
+      "Compendium - Tato bug": "Nestworm photo",
+      "Compendium - Pet rock": "Owl photo",
+      "Compendium - Tom": "Paper hat",
+      "Item - Soaked sock": "Mountain goat photo",
       "Item - Cowboy hat": "Puffer hat",
       "Item - Fj\u00e4llbj\u00f6rn hat": "Tato tourist photo",
       "Item - Foam finger": "Oskar photo",
-      "Item - Soaked sock": "Mountain goat photo",
-      "Quest - Ghost helper!": "Diving helmet",
       "Quest - Cup champion": "Monster mask",
-      "Quest - Missing socks": "Rubber boots",
-      "Quest - Suspicious activity - forest": "Climbing boots",
-      "Quest - Become a scout": "Fr\u00e4s photo",
       "Quest - Capture the hotel's beauty": "Mouse photo",
-      "Quest - Photo challenge #1": "Scarf",
-      "Quest - Monster spotting": "Ant photo",
+      "Quest - Suspicious activity - forest": "Climbing boots",
       "Quest - A courageous stallion": "Fia photo",
-      "Compendium - King fish": "Punky parrot photo",
-      "Compendium - Fr\u00e4s": "Snail photo",
-      "Compendium - Willemijn": "Honk attachment",
+      "Quest - Become a scout": "Fr\u00e4s photo",
+      "Quest - Photo challenge #1": "Scarf",
+      "Quest - Missing socks": "Rubber boots",
+      "Quest - Ghost helper!": "Diving helmet",
+      "Quest - Monster spotting": "Ant photo",
+      "Compendium - Tato scuba": "Fishing hat",
       "Compendium - Fia": "Pirate hat",
-      "Compendium - Tato swim": "Happy carp photo",
+      "Compendium - Willemijn": "Honk attachment",
       "Compendium - Bubble fly": "Nariko photo",
       "Compendium - Happy carp": "Hedgehog photo",
-      "Compendium - Tato scuba": "Fishing hat",
+      "Compendium - King fish": "Punky parrot photo",
+      "Compendium - Fr\u00e4s": "Snail photo",
+      "Compendium - Tato swim": "Happy carp photo",
       "Item - Rubber boots": "Frisbee",
       "Item - Diving helmet": "Hard hat",
-      "Item - Hard hat": "King fish photo",
       "Item - Fishing hat": "Jellyfish photo",
+      "Item - Hard hat": "King fish photo",
       "Item - Umbrella": "Muddy camera",
-      "Item - Fisherman's whisle": "Hotbean hat",
       "Item - Paper hat": "Sneakers",
+      "Item - Fisherman's whisle": "Hotbean hat",
       "Item - Honk attachment": "Cowboy hat",
-      "Quest - Supreme deluxe sandwich?!": "Jamal Green - Photo of Home",
+      "Quest - A whistling dilemma": "Seahorse photo",
+      "Quest - Make someone take a bath": "Tato bug photo",
+      "Quest - Photo challenge #3": "Camera",
       "Quest - Frames & filters!": "Turtle photo",
       "Quest - Solve the chaos": "Willemijn photo",
       "Quest - Scorching flame?": "Meteopal photo",
-      "Quest - Photo challenge #3": "Camera",
-      "Quest - Ocean garbage": "Fisherman's whisle",
-      "Quest - A whistling dilemma": "Seahorse photo",
       "Quest - A lost dog": "Soaked sock",
-      "Quest - Make someone take a bath": "Tato bug photo",
-      "Compendium - Tato tourist": "Tripod",
-      "Compendium - Turtle": "Cinnamon bun",
-      "Compendium - Business pigeon": "Forest bird photo",
-      "Compendium - Pigeon": "Tato scuba photo",
+      "Quest - Supreme deluxe sandwich?!": "Jamal Green - Photo of Home",
+      "Quest - Ocean garbage": "Fisherman's whisle",
       "Compendium - Tato skateboard": "Beehive photo",
-      "Item - Cinnamon bun": "Pet rock photo",
+      "Compendium - Business pigeon": "Forest bird photo",
+      "Compendium - Turtle": "Cinnamon bun",
+      "Compendium - Pigeon": "Tato scuba photo",
+      "Compendium - Tato tourist": "Tripod",
       "Item - Sneakers": "Reporter hat",
-      "Item - Reporter hat": "Butterfly photo",
-      "Item - Frisbee": "Tato skateboard photo",
       "Item - Muddy camera": "Bubble fly photo",
-      "Quest - A design problem": "Space helmet",
-      "Quest - Photo challenge #5": "Frames & filters",
-      "Quest - A ghostly date": "Photo challenger flag",
-      "Quest - Punk rocker bread crumbs": "Teddy photo",
-      "Quest - Super Hotbean Bros.": "Lost sock",
-      "Quest - Hang in there, buddy": "Backpack",
-      "Quest - Suspicious activity - city": "Foam finger",
+      "Item - Cinnamon bun": "Pet rock photo",
+      "Item - Frisbee": "Tato skateboard photo",
+      "Item - Reporter hat": "Butterfly photo",
       "Quest - A mouse bakery": "Tato fly photo",
-      "Quest - A thieving crow": "Portillo photo",
-      "Quest - Photo challenge #6": "Home bird photo",
-      "Quest - Spooky scary city": "Umbrella",
+      "Quest - Photo challenge #5": "Frames & filters",
       "Quest - Ratskullz crew": "Flies photo",
+      "Quest - Suspicious activity - city": "Foam finger",
+      "Quest - Spooky scary city": "Umbrella",
+      "Quest - A ghostly date": "Photo challenger flag",
+      "Quest - Photo challenge #6": "Home bird photo",
+      "Quest - A design problem": "Space helmet",
+      "Quest - Hang in there, buddy": "Backpack",
+      "Quest - Punk rocker bread crumbs": "Teddy photo",
+      "Quest - A thieving crow": "Portillo photo",
+      "Quest - Super Hotbean Bros.": "Lost sock",
       "Compendium - Nariko": "Ski goggles",
-      "Compendium - Teddy": "Launchable Socks - Squirrel Photography",
-      "Compendium - Meteopal": "Business pigeon photo",
-      "Compendium - Owl": "Cosmo deer photo",
-      "Compendium - Cosmo deer": "Cow photo",
       "Compendium - Mik\u00e9e": "Tato swim photo",
-      "Compendium - Mountain goat": "Sunday swan photo",
       "Compendium - Snow bird": "Sero photo",
+      "Compendium - Mountain goat": "Sunday swan photo",
+      "Compendium - Owl": "Cosmo deer photo",
+      "Compendium - Meteopal": "Business pigeon photo",
+      "Compendium - Teddy": "Launchable Socks - Squirrel Photography",
       "Compendium - Fluff ball": "Ghost glasses",
+      "Compendium - Cosmo deer": "Cow photo",
       "Item - Puffer hat": "Fluff ball photo",
+      "Quest - Locating an asteroid": "Mik\u00e9e photo",
+      "Quest - Listen to the goat choir": "Pigeon photo",
+      "Quest - Play astronaut": "Crab photo",
       "Quest - Military suspicions": "Old key",
+      "Quest - Photo challenge #8": "Stag beetle photo",
       "Quest - Yeti cuteness": "Ladybug photo",
       "Quest - Become a yeti": "Toad photo",
-      "Quest - Photo challenge #8": "Stag beetle photo",
-      "Quest - Listen to the goat choir": "Pigeon photo",
-      "Quest - Locating an asteroid": "Mik\u00e9e photo",
-      "Quest - Play astronaut": "Crab photo",
       "TOEM Experienced": "TOEM Experienced"
     }
   },
@@ -4382,5 +4381,6 @@
   "game_info": {
     "1": {}
   },
-  "helpers": {}
+  "helpers": {},
+  "is_canonical": true
 }

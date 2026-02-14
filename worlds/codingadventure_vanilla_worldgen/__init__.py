@@ -279,6 +279,7 @@ class CodingAdventureWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'CodingAdventureWorld'
+        self.is_vanilla = True
         self.world_description = 'Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.'
 
     # Canonical seed for deterministic placement

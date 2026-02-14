@@ -1893,67 +1893,79 @@
         "name": "Tree Coin",
         "id": 19,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Space Coin": {
         "name": "Space Coin",
         "id": 20,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Macro Coin": {
         "name": "Macro Coin",
         "id": 21,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Pumpkin Coin": {
         "name": "Pumpkin Coin",
         "id": 22,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Mario Coin": {
         "name": "Mario Coin",
         "id": 23,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Turtle Coin": {
         "name": "Turtle Coin",
         "id": 24,
         "groups": [
+          "Event",
           "Everything",
           "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "event": true
       },
       "Mario Coin Fragment": {
         "name": "Mario Coin Fragment",
@@ -29230,10 +29242,12 @@
       "Wario Defeated": {
         "name": "Wario Defeated",
         "id": null,
-        "groups": [],
+        "groups": [
+          "Event"
+        ],
         "classification": "progression",
         "event": true,
-        "type": null,
+        "type": "Event",
         "max_count": 1
       }
     }

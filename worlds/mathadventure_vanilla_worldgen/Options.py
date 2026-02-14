@@ -27,9 +27,15 @@ class UseCanonicalOptions(Toggle):
     display_name = "Use Canonical Options"
     default = True
 
+class VanillaPlacement(Toggle):
+    """Option for Vanilla Item Placement."""
+    display_name = "Vanilla Item Placement"
+    default = False
+
 
 @dataclass
 class MathAdventureVanillaWorldGenOptions(PerGameCommonOptions):
     """Options for Math Adventure Vanilla WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
+    vanilla_placement: VanillaPlacement
