@@ -153,10 +153,9 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'BakingAdventureWorld'
-        self.is_vanilla = True
         self.base_id = 300000000
         self.world_description = 'Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!'
-        self.slot_data = types.SimpleNamespace(vanilla_placement=1)
+        self.slot_data = types.SimpleNamespace(randomize_items=False)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -413,5 +412,5 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "vanilla_placement": 1,
+            "randomize_items": self.options.randomize_items.value,
         }

@@ -157,13 +157,27 @@ export class TextAdventureLogic {
             // Try to find a suitable starting region
             let targetRegion = null;
             
-            // First, try start_regions if available
-            if (snapshot.start_regions) {
-                const playerId = snapshot.playerId || '1';
-                const startRegions = snapshot.start_regions[playerId];
-                if (startRegions && startRegions.default && startRegions.default.length > 0) {
-                    targetRegion = startRegions.default[0];
-                    log('info', `Found starting region from start_regions: ${targetRegion}`);
+            // First, try startRegions from snapshot (camelCase in snapshot, may be array or object)
+            const snapshotStartRegions = snapshot.startRegions || snapshot.start_regions;
+            if (snapshotStartRegions) {
+                // Handle array format: ["Overworld"]
+                if (Array.isArray(snapshotStartRegions) && snapshotStartRegions.length > 0) {
+                    targetRegion = snapshotStartRegions[0];
+                    log('info', `Found starting region from startRegions array: ${targetRegion}`);
+                }
+                // Handle object format: {"default": ["Overworld"], "available": []}
+                else if (snapshotStartRegions.default && Array.isArray(snapshotStartRegions.default) && snapshotStartRegions.default.length > 0) {
+                    targetRegion = snapshotStartRegions.default[0];
+                    log('info', `Found starting region from startRegions.default: ${targetRegion}`);
+                }
+                // Handle per-player format: {"1": {"default": ["Overworld"]}}
+                else if (typeof snapshotStartRegions === 'object') {
+                    const playerId = snapshot.playerId || '1';
+                    const playerStartRegions = snapshotStartRegions[playerId];
+                    if (playerStartRegions && playerStartRegions.default && playerStartRegions.default.length > 0) {
+                        targetRegion = playerStartRegions.default[0];
+                        log('info', `Found starting region from startRegions[${playerId}].default: ${targetRegion}`);
+                    }
                 }
             }
             
@@ -468,10 +482,12 @@ export class TextAdventureLogic {
 
             // Check if current region is reachable
             const currentRegion = regionInfo.name;
+            const playerState = getPlayerStateSingleton();
+            const isStartRegion = playerState?.isStartRegion(currentRegion);
             const regionIsReachable = snapshot.regionReachability?.[currentRegion] === true ||
                                     snapshot.regionReachability?.[currentRegion] === 'reachable' ||
                                     snapshot.regionReachability?.[currentRegion] === 'checked' ||
-                                    currentRegion === 'Menu'; // Menu is always reachable
+                                    isStartRegion; // Start regions are always reachable
 
             if (!regionIsReachable) {
                 return false;
@@ -523,7 +539,7 @@ export class TextAdventureLogic {
             const connectedRegionReachable = snapshot.regionReachability?.[connectedRegionName] === true ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'reachable' ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'checked' ||
-                                           connectedRegionName === 'Menu'; // Menu is always reachable
+                                           playerState?.isStartRegion(connectedRegionName); // Start regions are always reachable
 
             // Exit is accessible if all conditions are met
             const result = exitAccessible && connectedRegionReachable;

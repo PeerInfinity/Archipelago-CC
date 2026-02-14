@@ -7,8 +7,8 @@
   "plando_items": [],
   "priority_locations": [],
   "progression_balancing": 50,
+  "randomize_items": false,
   "start_hints": [],
   "start_inventory": {},
-  "start_location_hints": [],
-  "vanilla_placement": false
+  "start_location_hints": []
 }

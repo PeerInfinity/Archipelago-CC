@@ -5,7 +5,7 @@
  * playthrough of the sphere log using the real loop game mechanics.
  *
  * The algorithm:
- * 1. Start at Menu with max mana, costs initialized to defaults
+ * 1. Start at start region with max mana, costs initialized to defaults
  * 2. For each sphere log entry (location to check):
  *    a. Find path from start region to target location
  *    b. For each region in path without a cost:
@@ -74,28 +74,28 @@ export class CostGenerator {
       // Save current loop state for restoration
       const savedState = this._saveLoopState();
 
+      // Get start region
+      const resolvedStartRegions = this.stateManager.getStartRegions?.() || [];
+      const startRegion = resolvedStartRegions[0] || this._getFirstRegionFromStaticData();
+
       // Initialize cost data with defaults
       const costs = {
         version: '1.0',
         generatedAt: new Date().toISOString(),
         generatedFrom: sourceFileName,
         regions: {
-          Menu: { moveCost: 0 },
+          [startRegion]: { moveCost: 0 },
         },
         locations: {},
         defaultRegionCost: 10,
         defaultLocationCost: 10,
       };
 
-      // Mark Menu as assigned
-      this.assignedRegions.add('Menu');
+      // Mark start region as assigned
+      this.assignedRegions.add(startRegion);
 
       // Load initial costs into costDataManager
       this.costDataManager.setCostData(costs, 'generation-in-progress');
-
-      // Get start region
-      const startRegions = this.stateManager.getStartRegions?.() || ['Menu'];
-      const startRegion = startRegions[0] || 'Menu';
       logger.info(`Using start region: ${startRegion}`);
 
       // Configure loop state for generation
@@ -467,6 +467,18 @@ export class CostGenerator {
    */
   getCosts() {
     return this.costDataManager.getCostData();
+  }
+
+  /**
+   * Get the first region from static data as a fallback start region
+   * @returns {string|null} First region name or null
+   */
+  _getFirstRegionFromStaticData() {
+    const staticData = this.stateManager.getStaticData();
+    if (staticData?.regions?.size > 0) {
+      return staticData.regions.keys().next().value;
+    }
+    return null;
   }
 }
 

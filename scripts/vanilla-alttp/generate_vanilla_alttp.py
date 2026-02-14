@@ -59,16 +59,16 @@ def main():
 
         # Mark the ALTTP world class as vanilla so the exporter adds the _v
         # suffix to the preset directory (avoids overwriting the randomized seed 1 preset)
-        from worlds.alttp.World import ALttPWorld
-        ALttPWorld.is_vanilla = True
+        from worlds.alttp import ALTTPWorld
+        ALTTPWorld.is_vanilla = True
 
         main_main(erargs, seed=seed)
     finally:
         # Clean up: remove is_vanilla and uninstall patches
         try:
-            from worlds.alttp.World import ALttPWorld
-            if hasattr(ALttPWorld, 'is_vanilla'):
-                del ALttPWorld.is_vanilla
+            from worlds.alttp import ALTTPWorld
+            if hasattr(ALTTPWorld, 'is_vanilla'):
+                del ALTTPWorld.is_vanilla
         except ImportError:
             pass
         vanilla_patches.uninstall()

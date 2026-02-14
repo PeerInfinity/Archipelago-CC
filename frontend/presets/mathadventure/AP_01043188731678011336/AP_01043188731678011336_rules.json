@@ -477,10 +477,10 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "randomize_items": true,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": [],
-        "vanilla_placement": false
+        "start_location_hints": []
       },
       "option_definitions": {
         "accessibility": {
@@ -499,10 +499,10 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
-        "vanilla_placement": {
+        "randomize_items": {
           "type": "toggle",
-          "default": false,
-          "display_name": "Vanilla Item Placement"
+          "default": true,
+          "display_name": "Randomize Items"
         }
       },
       "world_description": "Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof.",

@@ -559,7 +559,7 @@ class OptionFilter(Generic[T]):
 
 
 def _make_hashable(value: Any) -> Any:
-    """Convert a value to a hashable form, recursively handling dicts and lists."""
+    """Convert a value to a hashable form, recursively handling dicts, lists, tuples, and sets."""
     if isinstance(value, dict):
         # Convert dict to a sorted tuple of (key, value) pairs
         d = cast(dict[Any, Any], value)
@@ -567,9 +567,13 @@ def _make_hashable(value: Any) -> Any:
     elif isinstance(value, list):
         items = cast(list[Any], value)
         return tuple(_make_hashable(item) for item in items)
+    elif isinstance(value, tuple):
+        return tuple(_make_hashable(item) for item in value)
     elif isinstance(value, set):
         items = cast(set[Any], value)
         return frozenset(_make_hashable(item) for item in items)
+    elif dataclasses.is_dataclass(value) and not isinstance(value, type):
+        return tuple(_make_hashable(getattr(value, f.name)) for f in dataclasses.fields(value))
     return value
 
 
@@ -2615,6 +2619,11 @@ class CountItem(Rule[TWorld], game="Archipelago"):
             return state.count(self.item_name, self.player)
 
         @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
+
+        @override
         def _evaluate(self, state: CollectionState) -> bool:
             # When used as boolean, true if count > 0
             return self.get_count(state) > 0
@@ -2707,6 +2716,11 @@ class CountFromList(Rule[TWorld], game="Archipelago"):
             return state.count_from_list(self.item_names, self.player)
 
         @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
+
+        @override
         def _evaluate(self, state: CollectionState) -> bool:
             # When used as boolean, true if count > 0
             return self.get_count(state) > 0
@@ -2782,6 +2796,11 @@ class CountGroup(Rule[TWorld], game="Archipelago"):
         def get_count(self, state: CollectionState) -> int:
             """Get the count of items in this group."""
             return state.count_group(self.group_name, self.player)
+
+        @override
+        def get_value(self, state: CollectionState) -> int:
+            """Get the numeric value (count) for use in Compare/Arithmetic contexts."""
+            return self.get_count(state)
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:

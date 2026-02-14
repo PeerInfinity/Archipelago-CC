@@ -287,7 +287,7 @@
     },
     "is_canonical": {
       "type": "boolean",
-      "description": "Whether item placements are deterministically reproduced by the world generator. True for worldgen worlds generated with --canonical-seed1."
+      "description": "Whether item placements are deterministically reproduced by the world generator. True for worldgen worlds generated with --canonical-seed."
     },
     "canonical_placements": {
       "type": "object",

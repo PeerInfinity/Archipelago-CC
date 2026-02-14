@@ -20,8 +20,16 @@ export class NavigationManager {
    * @returns {string} The primary start region name
    */
   getPrimaryStartRegion() {
-    const startRegions = stateManager.getStartRegions?.() || ['Menu'];
-    return startRegions[0] || 'Menu';
+    const startRegions = stateManager.getStartRegions?.();
+    if (Array.isArray(startRegions) && startRegions.length > 0) {
+      return startRegions[0];
+    }
+    // Fallback: use the first region from static data
+    const staticData = stateManager.getStaticData?.();
+    if (staticData && staticData.regions && staticData.regions.size > 0) {
+      return staticData.regions.keys().next().value;
+    }
+    return null;
   }
 
   /**
@@ -30,7 +38,7 @@ export class NavigationManager {
    * @returns {boolean} Whether the region is a start region
    */
   isStartRegion(regionName) {
-    const startRegions = stateManager.getStartRegions?.() || ['Menu'];
+    const startRegions = stateManager.getStartRegions?.() || [];
     return startRegions.includes(regionName);
   }
 
@@ -121,8 +129,10 @@ export class NavigationManager {
     // Find the target region node
     const regionNode = this.ui.cy.getElementById(regionName);
     if (!regionNode || regionNode.length === 0) {
-      // Start regions may not exist in all graphs - log at debug level
-      const logLevel = this.isStartRegion(regionName) ? 'debug' : 'warn';
+      // Region may not exist yet (e.g. placeholder before rules load) or in this graph
+      const staticData = stateManager.getStaticData?.();
+      const existsInStaticData = staticData?.regions?.has(regionName);
+      const logLevel = (!existsInStaticData || this.isStartRegion(regionName)) ? 'debug' : 'warn';
       logger[logLevel](`Region node not found: ${regionName}`);
       return;
     }

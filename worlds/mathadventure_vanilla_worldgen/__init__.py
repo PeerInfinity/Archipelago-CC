@@ -139,7 +139,6 @@ class MathAdventureWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'MathAdventureWorld'
-        self.is_vanilla = True
         self.world_description = 'Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof.'
 
     # Canonical seed for deterministic placement

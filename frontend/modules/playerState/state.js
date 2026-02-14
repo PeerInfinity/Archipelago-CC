@@ -5,12 +5,19 @@
 export class PlayerState {
     constructor(eventBus) {
         this.eventBus = eventBus;
-        this.currentRegion = 'Menu';
 
-        // Start regions - regions where the player begins (default to ['Menu'])
+        // Placeholder region used before setStartRegions is called.
+        // Will be overwritten when game data loads.
+        this._placeholderRegion = '__initial__';
+        this.currentRegion = this._placeholderRegion;
+
+        // Start regions - regions where the player begins
         // These are treated specially: they are fully explored from the start
         // and custom actions like 'explore' are not needed for them
-        this.startRegions = ['Menu'];
+        this.startRegions = [];
+
+        // Flag to track whether setStartRegions has initialized the path
+        this._startRegionsInitialized = false;
 
         // Path data - array of player actions/movements
         // Entry types:
@@ -18,12 +25,12 @@ export class PlayerState {
         // - locationCheck: { type: 'locationCheck', locationName: string, region: string, instanceNumber: number }
         // - customAction: { type: 'customAction', actionName: string, params: object, region: string, instanceNumber: number }
         this.path = [
-            { type: 'regionMove', region: 'Menu', exitUsed: null, instanceNumber: 1 }
+            { type: 'regionMove', region: this._placeholderRegion, exitUsed: null, instanceNumber: 1 }
         ];
 
         // Track instance counts for each region
         this.regionInstanceCounts = new Map();
-        this.regionInstanceCounts.set('Menu', 1);
+        this.regionInstanceCounts.set(this._placeholderRegion, 1);
 
         // Navigation behavior configuration
         // true: create loops when revisiting regions (default)
@@ -36,15 +43,20 @@ export class PlayerState {
      * @param {string[]} regions - Array of starting region names
      */
     setStartRegions(regions) {
+        // Handle object format: {"default": ["Overworld"], "available": []}
+        if (regions && !Array.isArray(regions) && typeof regions === 'object' && Array.isArray(regions.default)) {
+            regions = regions.default;
+        }
         if (Array.isArray(regions) && regions.length > 0) {
             this.startRegions = regions;
             // Update the initial path to use the first start region
             const firstStartRegion = regions[0];
-            if (this.path.length === 1 && this.path[0].type === 'regionMove' && this.path[0].region === 'Menu') {
+            if (!this._startRegionsInitialized && this.path.length === 1 && this.path[0].type === 'regionMove') {
                 this.path[0].region = firstStartRegion;
                 this.currentRegion = firstStartRegion;
                 this.regionInstanceCounts.clear();
                 this.regionInstanceCounts.set(firstStartRegion, 1);
+                this._startRegionsInitialized = true;
             }
         }
     }
@@ -504,7 +516,7 @@ export class PlayerState {
      */
     trimPath(regionName = null, instanceNumber = 1) {
         // Default to first start region if not specified
-        const targetRegion = regionName || this.startRegions[0] || 'Menu';
+        const targetRegion = regionName || this.startRegions[0];
         // Find the nth instance of the specified region (only counting regionMove entries)
         let foundCount = 0;
         let trimIndex = -1;
@@ -609,7 +621,7 @@ export class PlayerState {
      * Reset state to defaults
      */
     reset() {
-        const firstStartRegion = this.startRegions[0] || 'Menu';
+        const firstStartRegion = this.startRegions[0];
         this.currentRegion = firstStartRegion;
         this.path = [
             { type: 'regionMove', region: firstStartRegion, exitUsed: null, instanceNumber: 1 }

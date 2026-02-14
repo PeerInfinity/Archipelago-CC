@@ -203,13 +203,29 @@ function handleRulesLoaded(data, propagationOptions) {
     // If sourceName indicates data loaded from localStorage or editor, this is expected
     const isFromLocalStorage = sourceName === 'moduleSpecificConfigProvidedRules';
     const isFromEditor = sourceName === 'editorApply';
-    const isExpectedNonFilePath = isFromLocalStorage || isFromEditor;
+    const isFromHardcodedFallback = sourceName.startsWith('hardcodedFallback:');
+    const isExpectedNonFilePath = isFromLocalStorage || isFromEditor || isFromHardcodedFallback;
     log(
       isExpectedNonFilePath ? 'info' : 'warn',
       `Could not parse sourceName format: ${sourceName}` +
       (isFromLocalStorage ? ' (Rules loaded from localStorage without file path)' : '') +
-      (isFromEditor ? ' (Rules applied from editor)' : '')
+      (isFromEditor ? ' (Rules applied from editor)' : '') +
+      (isFromHardcodedFallback ? ' (Using hardcoded fallback sphere log)' : '')
     );
+
+    // For hardcoded fallback, load the embedded sphere log
+    if (isFromHardcodedFallback) {
+      import('../../data/fallbackRules.js').then(({ FALLBACK_SPHERE_LOG }) => {
+        sphereState.loadSphereLog('hardcodedFallback:apquest_sphere_log', FALLBACK_SPHERE_LOG).then(success => {
+          if (success) {
+            log('info', 'Hardcoded fallback sphere log loaded successfully');
+          } else {
+            log('warn', 'Failed to load hardcoded fallback sphere log');
+          }
+        });
+      });
+    }
+
     return;
   }
 

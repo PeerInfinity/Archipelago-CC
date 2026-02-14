@@ -156,7 +156,7 @@ gen.generate_from_rules('frontend/presets/{world_dir}/AP_14089154938208861744/AP
 "
 
 # Or run through the test script
-python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed
 ```
 
 ## Goal
@@ -308,7 +308,7 @@ Then, please read {debug_doc} - specifically **Stage 2: Seed Generation Failures
 source .venv/bin/activate
 
 # Regenerate the worldgen world (if needed)
-python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed
 
 # Regenerate templates
 python scripts/test/test-world-generator.py --include-list "{template_file}" --phase regenerate-templates
@@ -542,7 +542,7 @@ Fix the world generator so that cross-validation passes - the worldgen rules mus
 
 ```bash
 source .venv/bin/activate
-python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed
 ```
 """
 
@@ -660,10 +660,10 @@ If the difference is expected, update `is_canonical_difference()` in `compare_ru
 source .venv/bin/activate
 
 # Full test including rules comparison
-python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed1 --skip-cleanup
+python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed --skip-cleanup
 
 # Just regenerate and compare rules
-python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed
 python scripts/test/test-world-generator.py --phase regenerate-templates
 python Generate.py --weights_file_path "Templates/{game_name} WorldGen.yaml" --multi 1 --seed {seed}
 

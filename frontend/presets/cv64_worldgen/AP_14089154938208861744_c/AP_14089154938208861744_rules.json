@@ -5,6 +5,7 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
+  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -5058,6 +5059,5 @@
       }
     }
   },
-  "helpers": {},
-  "is_canonical": true
+  "helpers": {}
 }

@@ -661,9 +661,9 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     created_display, last_updated_display = get_source_data_timestamps(meta)
     seed_display = get_seed_display(meta)
 
-    # Determine canonical_seed1 setting
-    canonical = meta.get('canonical_seed1', False)
-    mode_display = "Canonical (seed1 placement)" if canonical else "Random"
+    # Determine canonical seed setting (with backwards-compat for old test-results files)
+    canonical = meta.get('canonical_seed', meta.get('canonical_seed1'))
+    mode_display = f"Canonical (seed {canonical} placement)" if canonical is not None else "Random"
     if mode_name:
         mode_display = mode_name
 
@@ -768,7 +768,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "world is validated to produce equivalent game logic.",
         "",
         "Tests are run in two modes:",
-        "- **Canonical**: Uses `--canonical-seed1` which places items in their original locations when seed is 1",
+        "- **Canonical**: Uses `--canonical-seed` which places items in their original locations when seed matches",
         "- **Random**: Standard randomized item placement",
         "",
         "## Legend",
@@ -796,7 +796,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "",
         "# Canonical Mode Results",
         "",
-        "Tests run with `--canonical-seed1` (items placed in original locations).",
+        "Tests run with `--canonical-seed` (items placed in original locations).",
         "",
     ])
 
@@ -880,7 +880,7 @@ def main():
         if legacy_results:
             # Determine mode from metadata
             meta = legacy_results.get('metadata', {})
-            if meta.get('canonical_seed1', False):
+            if meta.get('canonical_seed', meta.get('canonical_seed1')):
                 canonical_results = legacy_results
             else:
                 random_results = legacy_results
