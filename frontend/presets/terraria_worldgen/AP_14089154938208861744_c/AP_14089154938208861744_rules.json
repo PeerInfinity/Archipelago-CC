@@ -5,7 +5,6 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
-  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -9890,8 +9889,8 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Twins": "The Twins",
         "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
@@ -10077,5 +10076,6 @@
         }
       }
     }
-  }
+  },
+  "is_canonical": true
 }
