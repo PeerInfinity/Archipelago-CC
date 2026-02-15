@@ -436,6 +436,7 @@ export class StateManagerProxy {
           }
 
           this.staticDataCache = newCache;
+          this.staticDataIsSet = true; // Mark so loadRules() can reset isReadyPublished on next reload
           // Clear bidirectional detection cache when new rules are loaded
           this._bidirectionalDetectionCache = null;
         } else {

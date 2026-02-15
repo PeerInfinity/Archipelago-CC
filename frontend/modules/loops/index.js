@@ -87,15 +87,15 @@ function handleRulesLoaded(eventData) {
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
   }
 
-  // Reset loop state now that new rules are loaded
+  // Full reset of loop state for new rules (clears XP, mana, explore states, etc.)
   if (
     loopStateSingleton &&
-    typeof loopStateSingleton._resetLoop === 'function'
+    typeof loopStateSingleton.resetForNewRules === 'function'
   ) {
-    loopStateSingleton._resetLoop();
+    loopStateSingleton.resetForNewRules();
   } else {
     log('warn',
-      '[Loops Module] LoopState singleton or _resetLoop method not available when handling stateManager:rulesLoaded.'
+      '[Loops Module] LoopState singleton or resetForNewRules method not available when handling stateManager:rulesLoaded.'
     );
   }
   // Potentially trigger UI update if loopInstance exists
