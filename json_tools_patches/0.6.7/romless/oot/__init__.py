@@ -1095,6 +1095,9 @@ class OOTWorld(World):
             logger.warning("OOT ROM file not found but skip_required_files is set. Skipping ROM generation for player %s.", self.player)
             # Set a placeholder to indicate ROM wasn't generated
             self.rom_name = "OOT_ROM_NOT_GENERATED"
+            # Set placeholder values for attributes normally set during ROM patching
+            self.collectible_override_flags = 0
+            self.collectible_flag_offsets = {}
             # Make sure hint data and collectible flags are set so the process can continue
             self.hint_data_available.set()
             self.collectible_flags_available.set()
