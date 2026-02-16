@@ -263,83 +263,6 @@ EXTRA_SEED_TEMPLATES=(
   "Metamath"
 )
 
-# Templates that only generate seed 1 (alphabetical)
-SINGLE_SEED_TEMPLATES=(
-  "APQuest"
-  "Aquaria"
-  "Bomb Rush Cyberfunk"
-  "Bumper Stickers"
-  "Castlevania 64"
-  "Castlevania - Circle of the Moon"
-  "Celeste (Open World)"
-  "Celeste 64"
-  "ChecksFinder"
-  "Choo-Choo Charles"
-  "Civilization VI"
-  "Dark Souls III"
-  "DLCQuest"
-  "Donkey Kong Country 3"
-  "DOOM 1993"
-  "DOOM II"
-  "EarthBound"
-  "Factorio"
-  "Faxanadu"
-  "Final Fantasy Mystic Quest"
-  "Heretic"
-  "Hylics 2"
-  "Inscryption"
-  # "Jak and Daxter The Precursor Legacy"  # Excluded: Takes too long
-  "Kingdom Hearts"
-  "Kingdom Hearts 2"
-  "Kirby's Dream Land 3"
-  "Landstalker - The Treasures of King Nole"
-  "Lingo"
-  "Links Awakening DX"
-  "Lufia II Ancient Cave"
-  "Mario & Luigi Superstar Saga"
-  "Mega Man 2"
-  "MegaMan Battle Network 3"
-  "Meritous"
-  "Muse Dash"
-  "Noita"
-  "Old School Runescape"
-  "Overcooked! 2"
-  "Paint"
-  # "Pokemon Emerald"        # Excluded: Takes too long
-  # "Pokemon Red and Blue"   # Excluded: Takes too long
-  "Raft"
-  "Risk of Rain 2"
-  "Satisfactory"
-  "Saving Princess"
-  "Secret of Evermore"
-  "shapez"
-  "Shivers"
-  # "SMZ3"                   # Excluded: Takes too long
-  "Sonic Adventure 2 Battle"
-  "Starcraft 2"
-  "Stardew Valley"
-  "Subnautica"
-  "Super Mario 64"
-  "Super Mario Land 2"
-  "Super Mario World"
-  "Super Metroid"
-  "Terraria"
-  "The Legend of Zelda"
-  "The Messenger"
-  "The Wind Waker"
-  "The Witness"
-  "Timespinner"
-  "TOEM original"
-  "TOEM rule builder"
-  "TUNIC"
-  "Undertale"
-  "VVVVVV"
-  "Wargroove"
-  "Yacht Dice"
-  "Yoshi's Island"
-  # "Yu-Gi-Oh! 2006"         # Excluded: Takes too long
-)
-
 # Templates included in the multiworld preset
 MULTIWORLD_TEMPLATES=(
   "A Hat in Time"
@@ -355,92 +278,6 @@ VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
 VANILLA_PRESET_DIR["Math Adventure"]="mathadventure"
 VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
 VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
-
-# Templates for WorldGen world generation (via test-world-generator.py)
-# Same as seed templates minus additional exclusions due to errors/performance
-WORLDGEN_TEMPLATES=(
-  "A Hat in Time"
-  "A Link to the Past"
-  "A Short Hike"
-  "Adventure"
-  "APQuest"
-  "Aquaria"
-  "Baking Adventure"
-  "Bomb Rush Cyberfunk"
-  "Bumper Stickers"
-  "Castlevania - Circle of the Moon"
-  "Castlevania 64"
-  "Celeste (Open World)"
-  "Celeste 64"
-  "ChecksFinder"
-  "Choo-Choo Charles"
-  "Civilization VI"
-  "Coding Adventure"
-  "Dark Souls III"
-  "DLCQuest"
-  "Donkey Kong Country 3"
-  "DOOM 1993"
-  "DOOM II"
-  "EarthBound"
-  "Factorio"
-  "Faxanadu"
-  "Final Fantasy Mystic Quest"
-  "Heretic"
-  "Hylics 2"
-  "Inscryption"
-  # "Jak and Daxter The Precursor Legacy"  # Excluded: Takes too long
-  "Kingdom Hearts"
-  "Kingdom Hearts 2"
-  # "Kirby's Dream Land 3"                 # Excluded from worldgen
-  "Landstalker - The Treasures of King Nole"
-  "Lingo"
-  "Links Awakening DX"
-  "Lufia II Ancient Cave"
-  "Mario & Luigi Superstar Saga"
-  "Math Adventure"
-  "Mega Man 2"
-  "MegaMan Battle Network 3"
-  "Meritous"
-  "Metamath"
-  "Muse Dash"
-  "Noita"
-  "Old School Runescape"
-  "Overcooked! 2"
-  "Paint"
-  # "Pokemon Emerald"                      # Excluded: Takes too long
-  # "Pokemon Red and Blue"                 # Excluded: Takes too long
-  "Raft"
-  "Risk of Rain 2"
-  "Satisfactory"
-  "Saving Princess"
-  "Secret of Evermore"
-  "shapez"
-  "Shivers"
-  # "SMZ3"                                 # Excluded: Takes too long
-  "Sonic Adventure 2 Battle"
-  # "Starcraft 2"                          # Excluded: TypeError unhashable True_ in rule builder
-  "Stardew Valley"
-  "Subnautica"
-  "Super Mario 64"
-  "Super Mario Land 2"
-  "Super Mario World"
-  # "Super Metroid"                        # Excluded: AttributeError 'bool' object has no attribute 'bool'
-  "Terraria"
-  "The Legend of Zelda"
-  "The Messenger"
-  "The Wind Waker"
-  "The Witness"
-  "Timespinner"
-  "TOEM original"
-  "TOEM rule builder"
-  # "TUNIC"                                # Excluded
-  "Undertale"
-  "VVVVVV"
-  "Wargroove"
-  # "Yacht Dice"                           # Excluded: FillError inaccessible locations
-  "Yoshi's Island"
-  # "Yu-Gi-Oh! 2006"                       # Excluded: Takes too long
-)
 
 # WorldGen2 templates (game name -> preset directory name for source WorldGen presets)
 declare -A WORLDGEN2_PRESET_DIR
@@ -458,6 +295,34 @@ WORLDGEN2_TEMPLATES=(
   "Baking Adventure"
   "Coding Adventure"
   "Math Adventure"
+)
+
+# ============================================================
+# Dynamic template lists (from world-mapping.json + exclude lists)
+# ============================================================
+
+# All base game templates (permanent exclude_list already applied)
+mapfile -t ALL_BASE_TEMPLATES < <(
+  python scripts/utils/list-template-files.py | sed 's/\.yaml$//'
+)
+
+# Single-seed templates = all base templates minus extra-seed templates
+declare -A _EXTRA_SEED_SET
+for t in "${EXTRA_SEED_TEMPLATES[@]}"; do _EXTRA_SEED_SET["$t"]=1; done
+SINGLE_SEED_TEMPLATES=()
+for t in "${ALL_BASE_TEMPLATES[@]}"; do
+  if [[ -z "${_EXTRA_SEED_SET[$t]+x}" ]]; then
+    SINGLE_SEED_TEMPLATES+=("$t")
+  fi
+done
+unset _EXTRA_SEED_SET
+
+# WorldGen-eligible templates (also excludes main_test + worldgen_test lists)
+mapfile -t WORLDGEN_TEMPLATES < <(
+  python scripts/utils/list-template-files.py \
+    --exclude main_test_exclude_list \
+    --exclude worldgen_test_exclude_list \
+  | sed 's/\.yaml$//'
 )
 
 # ============================================================

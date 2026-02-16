@@ -13,6 +13,8 @@ import zipfile
 from pathlib import Path
 from typing import Dict, Optional
 
+import yaml
+
 
 def extract_game_name_from_world(world_init_path: str) -> Optional[str]:
     """
@@ -660,6 +662,33 @@ def find_exporter_path(world_name: str) -> tuple[Path | None, str | None]:
     return None, None
 
 
+def build_template_file_mapping(templates_dir: str) -> Dict[str, str]:
+    """
+    Scan the templates directory and build a mapping from game name to template filename.
+    Reads each YAML file to extract the 'game' field.
+    Returns dict mapping game_name -> template_filename
+    (e.g. "Jak and Daxter: The Precursor Legacy" -> "Jak and Daxter The Precursor Legacy.yaml")
+    """
+    mapping = {}
+    templates_path = Path(templates_dir)
+    if not templates_path.exists():
+        print(f"Note: Templates directory not found: {templates_dir}")
+        return mapping
+
+    for template_file in sorted(templates_path.glob('*.yaml')):
+        try:
+            with open(template_file, 'r', encoding='utf-8-sig') as f:
+                data = yaml.safe_load(f)
+            if data and isinstance(data, dict) and 'game' in data:
+                game_name = data['game']
+                if isinstance(game_name, str):
+                    mapping[game_name] = template_file.name
+        except Exception:
+            continue
+
+    return mapping
+
+
 def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
     """
     Build a mapping from game names to world information.
@@ -796,6 +825,8 @@ def main():
     else:
         output_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
 
+    templates_dir = os.path.join(project_root, 'Players', 'Templates')
+
     mapping = {}
     apworld_count = 0
 
@@ -820,6 +851,17 @@ def main():
     if not mapping:
         print("No world mappings found!")
         return 1
+
+    # Scan template files and augment entries with game_name and template_file
+    print(f"\nScanning templates directory: {templates_dir}")
+    template_file_mapping = build_template_file_mapping(templates_dir)
+    matched = 0
+    for game_name, entry in mapping.items():
+        entry['game_name'] = game_name
+        entry['template_file'] = template_file_mapping.get(game_name)
+        if entry['template_file']:
+            matched += 1
+    print(f"Matched {matched}/{len(mapping)} games to template files")
 
     # Ensure output directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
