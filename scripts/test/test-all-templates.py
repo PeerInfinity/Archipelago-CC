@@ -83,8 +83,10 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiclien
 
 def main():
     # Load default exclude lists
+    # - 'permanent' for only permanent exclusions (non-game templates)
     # - 'main' for regular template tests (excludes slow main test games)
     # - 'all' for WorldGen template tests (excludes slow main + worldgen games)
+    default_exclude_list_permanent = load_template_exclude_list(test_type='permanent')
     default_exclude_list_main = load_template_exclude_list(test_type='main')
     default_exclude_list_all = load_template_exclude_list(test_type='all')
 
@@ -106,6 +108,11 @@ def main():
         nargs='*',
         default=None,  # Will be set after parsing based on --include-pattern
         help='List of template files to skip (default: uses exclude list based on test type)'
+    )
+    parser.add_argument(
+        '--ignore-exclude-list',
+        action='store_true',
+        help='Ignore test-specific exclude lists (main_test, worldgen_test); only apply permanent exclusions'
     )
     parser.add_argument(
         '--include-list',
@@ -424,10 +431,14 @@ def main():
         sys.exit(1)
 
     # Set default skip list based on test type if not explicitly provided
+    # Use 'permanent' exclude list when --ignore-exclude-list is set (only non-game exclusions)
     # Use 'all' exclude list for WorldGen tests (includes main + worldgen exclusions)
     # Use 'main' exclude list for regular tests
     if args.skip_list is None:
-        if args.include_pattern and 'WorldGen' in args.include_pattern:
+        if args.ignore_exclude_list:
+            args.skip_list = default_exclude_list_permanent
+            print(f"Ignoring test-specific exclude lists: using permanent exclude list only ({len(default_exclude_list_permanent)} templates)")
+        elif args.include_pattern and 'WorldGen' in args.include_pattern:
             args.skip_list = default_exclude_list_all
             print(f"WorldGen mode detected: using extended exclude list ({len(default_exclude_list_all)} templates)")
         else:

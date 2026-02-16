@@ -66,6 +66,11 @@ on:
           - 'parallel-10-jobs'
         default: 'parallel-10-jobs'
 
+      ignore_exclude_list:
+        description: 'Ignore test-specific exclude lists (test all games except permanent exclusions)'
+        type: boolean
+        default: false
+
       template_type:
         description: 'Template type to test'
         type: choice
@@ -366,6 +371,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -374,6 +380,7 @@ jobs:
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -383,6 +390,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -396,6 +404,7 @@ jobs:
               --seed ${{ inputs.start_seed }} \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
+              ${EXCLUDE_FLAG} \
               --no-backup \
               -p
           done
@@ -406,6 +415,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -414,6 +424,7 @@ jobs:
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -424,12 +435,14 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -439,6 +452,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -452,6 +466,7 @@ jobs:
               --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
+              ${EXCLUDE_FLAG} \
               --no-backup \
               -p
           done
@@ -462,12 +477,14 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -690,6 +707,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -698,6 +716,7 @@ jobs:
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -707,6 +726,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -720,6 +740,7 @@ jobs:
               --seed ${{ inputs.start_seed }} \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
+              ${EXCLUDE_FLAG} \
               --no-backup \
               -p
           done
@@ -730,12 +751,14 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -745,6 +768,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -758,6 +782,7 @@ jobs:
               --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
+              ${EXCLUDE_FLAG} \
               --no-backup \
               -p
           done
@@ -979,6 +1004,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -987,6 +1013,7 @@ jobs:
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -996,6 +1023,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -1008,6 +1036,7 @@ jobs:
               --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
+              ${EXCLUDE_FLAG} \
               --no-backup \
               -p
           done
@@ -1221,6 +1250,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -1231,6 +1261,7 @@ jobs:
             --multiworld-bisect-failures \
             --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
@@ -1440,6 +1471,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
+          EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -1452,6 +1484,7 @@ jobs:
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
+            ${EXCLUDE_FLAG} \
             --no-backup \
             -p
 
