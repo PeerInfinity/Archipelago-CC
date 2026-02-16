@@ -67,6 +67,45 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 268,
+        "total_locations": 268
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "adventure": {
@@ -123,6 +162,45 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 25,
+        "total_locations": 25
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "shorthike": {
@@ -176,6 +254,45 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 131,
+        "total_locations": 131
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "ahit": {
@@ -228,6 +345,45 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 232,
+        "total_locations": 232
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -299,6 +455,45 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 11,
+        "total_locations": 11
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "bakingadventure": {
@@ -368,6 +563,45 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 16,
+        "total_locations": 16
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -439,6 +673,45 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 62,
+        "total_locations": 62
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "metamath": {
@@ -491,6 +764,45 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 9,
+        "total_locations": 9
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -626,6 +938,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 8,
+        "total_locations": 8
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "aquaria": {
@@ -646,6 +997,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 237,
+        "total_locations": 237
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -668,6 +1058,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 252,
+        "total_locations": 252
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 8,
+        "runs_failed": 2,
+        "failure_types": "2 test"
+      }
     }
   },
   "bumpstik": {
@@ -688,6 +1117,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 100,
+        "total_locations": 100
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -711,6 +1179,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 215,
+        "total_locations": 215
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "cvcotm": {
@@ -733,6 +1240,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 125,
+        "total_locations": 125
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "celeste_open_world": {
@@ -753,6 +1299,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 237,
+        "total_locations": 237
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -775,6 +1360,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 40,
+        "total_locations": 40
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "checksfinder": {
@@ -796,6 +1420,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 25,
+        "total_locations": 25
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "cccharles": {
@@ -816,6 +1479,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 692,
+        "total_locations": 692
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -839,6 +1541,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 149,
+        "total_locations": 149
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "dark_souls_3": {
@@ -859,6 +1600,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 1194,
+        "total_locations": 1194
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -881,6 +1661,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 42,
+        "total_locations": 42
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "dkc3": {
@@ -901,6 +1720,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 180,
+        "total_locations": 180
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -923,6 +1781,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 348,
+        "total_locations": 348
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "doom_ii": {
@@ -943,6 +1840,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 453,
+        "total_locations": 453
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -966,6 +1902,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 265,
+        "total_locations": 265
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "factorio": {
@@ -988,6 +1963,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 186,
+        "total_locations": 186
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "faxanadu": {
@@ -1008,6 +2022,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 114,
+        "total_locations": 114
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1031,6 +2084,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 299,
+        "total_locations": 299
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "heretic": {
@@ -1051,6 +2143,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 502,
+        "total_locations": 502
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1073,6 +2204,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 134,
+        "total_locations": 134
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "inscryption": {
@@ -1093,6 +2263,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 100,
+        "total_locations": 100
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1116,6 +2325,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 512,
+        "total_locations": 512
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 8,
+        "runs_failed": 2,
+        "failure_types": "2 test"
+      }
     }
   },
   "kh2": {
@@ -1137,6 +2385,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 705,
+        "total_locations": 705
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 7,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1160,6 +2447,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 567,
+        "total_locations": 567
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 5,
+        "failure_types": "5 test"
+      }
     }
   },
   "landstalker": {
@@ -1181,6 +2507,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 298,
+        "total_locations": 298
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "lingo": {
@@ -1201,6 +2566,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 156,
+        "total_locations": 156
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 1,
+        "failure_types": "1 test"
       }
     }
   },
@@ -1224,6 +2628,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 226,
+        "total_locations": 226
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 0,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "lufia2ac": {
@@ -1244,6 +2687,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 40,
+        "total_locations": 40
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1267,6 +2749,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 557,
+        "total_locations": 557
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "mm2": {
@@ -1289,6 +2810,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 50,
+        "total_locations": 50
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "mmbn3": {
@@ -1309,6 +2869,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 264,
+        "total_locations": 264
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1331,6 +2930,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 109,
+        "total_locations": 109
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "musedash": {
@@ -1351,6 +2989,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 90,
+        "total_locations": 90
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1373,6 +3050,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 117,
+        "total_locations": 117
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "osrs": {
@@ -1393,6 +3109,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 76,
+        "total_locations": 76
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1415,6 +3170,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 215,
+        "total_locations": 215
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "paint": {
@@ -1435,6 +3229,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 130,
+        "total_locations": 130
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1457,6 +3290,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 155,
+        "total_locations": 155
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "ror2": {
@@ -1477,6 +3349,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 223,
+        "total_locations": 223
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1499,6 +3410,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 555,
+        "total_locations": 555
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "saving_princess": {
@@ -1519,6 +3469,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 37,
+        "total_locations": 37
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1541,6 +3530,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 340,
+        "total_locations": 340
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 7,
+        "runs_failed": 3,
+        "failure_types": "3 test"
+      }
     }
   },
   "shapez": {
@@ -1561,6 +3589,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 140,
+        "total_locations": 140
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1583,6 +3650,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 114,
+        "total_locations": 114
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "sa2b": {
@@ -1603,6 +3709,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 207,
+        "total_locations": 207
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1625,6 +3770,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 257,
+        "total_locations": 257
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 0,
+        "runs_failed": 10,
+        "failure_types": "10 gen"
+      }
     }
   },
   "stardew_valley": {
@@ -1646,6 +3830,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 500,
+        "total_locations": 500
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
+      }
     }
   },
   "subnautica": {
@@ -1666,6 +3889,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 135,
+        "total_locations": 135
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1689,6 +3951,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 149,
+        "total_locations": 149
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "marioland2": {
@@ -1711,6 +4012,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 60,
+        "total_locations": 60
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "smw": {
@@ -1731,6 +4071,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 108,
+        "total_locations": 108
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1754,6 +4133,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 109,
+        "total_locations": 109
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 0,
+        "runs_failed": 7,
+        "failure_types": "2 gen, 5 test"
+      }
     }
   },
   "terraria": {
@@ -1774,6 +4192,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 244,
+        "total_locations": 244
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1796,6 +4253,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 165,
+        "total_locations": 165
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "messenger": {
@@ -1816,6 +4312,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 113,
+        "total_locations": 113
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1839,6 +4374,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 109,
+        "total_locations": 109
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "witness": {
@@ -1859,6 +4433,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 147,
+        "total_locations": 147
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
       }
     }
   },
@@ -1881,6 +4494,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 185,
+        "total_locations": 185
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "toem_original": {
@@ -1901,6 +4553,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1923,6 +4614,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "tunic": {
@@ -1944,6 +4674,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 317,
+        "total_locations": 317
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
+      }
     }
   },
   "undertale": {
@@ -1964,6 +4733,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 51,
+        "total_locations": 51
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1987,6 +4795,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 20,
+        "total_locations": 20
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "wargroove": {
@@ -2007,6 +4854,45 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 39,
+        "total_locations": 39
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2050,6 +4936,45 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 207,
+        "total_locations": 207
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
+      }
     }
   },
   "ahit_worldgen": {
@@ -2071,6 +4996,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 232,
+        "total_locations": 232
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2094,6 +5051,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 268,
+        "total_locations": 268
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "shorthike_worldgen": {
@@ -2115,6 +5104,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 131,
+        "total_locations": 131
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2138,6 +5159,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 25,
+        "total_locations": 25
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "apquest_worldgen": {
@@ -2160,6 +5213,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 8,
+        "total_locations": 8
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "aquaria_worldgen": {
@@ -2181,6 +5266,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 237,
+        "total_locations": 237
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2227,6 +5344,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 16,
+        "total_locations": 16
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "bumpstik_worldgen": {
@@ -2248,6 +5397,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 100,
+        "total_locations": 100
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 1
       }
     }
   },
@@ -2271,6 +5452,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 125,
+        "total_locations": 125
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "cv64_worldgen": {
@@ -2292,6 +5505,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 215,
+        "total_locations": 215
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2315,6 +5560,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 40,
+        "total_locations": 40
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "checksfinder_worldgen": {
@@ -2336,6 +5613,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 25,
+        "total_locations": 25
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2359,6 +5668,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 692,
+        "total_locations": 692
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "civ_6_worldgen": {
@@ -2380,6 +5721,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 149,
+        "total_locations": 149
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2426,6 +5799,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 62,
+        "total_locations": 62
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "dark_souls_3_worldgen": {
@@ -2447,6 +5852,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 1194,
+        "total_locations": 1194
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2470,6 +5907,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 42,
+        "total_locations": 42
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "dkc3_worldgen": {
@@ -2491,6 +5960,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 180,
+        "total_locations": 180
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2514,6 +6015,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 348,
+        "total_locations": 348
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "doom_ii_worldgen": {
@@ -2535,6 +6068,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 453,
+        "total_locations": 453
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2580,6 +6145,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 186,
+        "total_locations": 186
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "faxanadu_worldgen": {
@@ -2601,6 +6198,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 114,
+        "total_locations": 114
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2624,6 +6253,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 299,
+        "total_locations": 299
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "heretic_worldgen": {
@@ -2645,6 +6306,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 502,
+        "total_locations": 502
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2668,6 +6361,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 134,
+        "total_locations": 134
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "inscryption_worldgen": {
@@ -2689,6 +6414,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 100,
+        "total_locations": 100
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2712,6 +6469,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 298,
+        "total_locations": 298
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "ladx_worldgen": {
@@ -2733,6 +6522,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 226,
+        "total_locations": 226
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2756,6 +6577,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 40,
+        "total_locations": 40
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "mlss_worldgen": {
@@ -2777,6 +6630,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 557,
+        "total_locations": 557
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2823,6 +6708,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 11,
+        "total_locations": 11
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "mm2_worldgen": {
@@ -2844,6 +6761,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 50,
+        "total_locations": 50
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2867,6 +6816,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 264,
+        "total_locations": 264
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "meritous_worldgen": {
@@ -2888,6 +6869,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 109,
+        "total_locations": 109
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2911,6 +6924,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 9,
+        "total_locations": 9
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "musedash_worldgen": {
@@ -2932,6 +6977,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 90,
+        "total_locations": 90
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -2955,6 +7032,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 117,
+        "total_locations": 117
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "osrs_worldgen": {
@@ -2976,6 +7085,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 76,
+        "total_locations": 76
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 3
       }
     }
   },
@@ -2999,6 +7140,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 215,
+        "total_locations": 215
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "paint_worldgen": {
@@ -3021,6 +7194,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 130,
+        "total_locations": 130
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "ror2_worldgen": {
@@ -3042,6 +7247,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 223,
+        "total_locations": 223
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3087,6 +7324,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 37,
+        "total_locations": 37
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "shapez_worldgen": {
@@ -3108,6 +7377,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 140,
+        "total_locations": 140
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3131,6 +7432,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 114,
+        "total_locations": 114
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "sa2b_worldgen": {
@@ -3152,6 +7485,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 207,
+        "total_locations": 207
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3175,6 +7540,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 135,
+        "total_locations": 135
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "sm64ex_worldgen": {
@@ -3196,6 +7593,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 149,
+        "total_locations": 149
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3219,6 +7648,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 60,
+        "total_locations": 60
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "smw_worldgen": {
@@ -3240,6 +7701,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 108,
+        "total_locations": 108
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 3
       }
     }
   },
@@ -3263,6 +7756,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 244,
+        "total_locations": 244
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "tloz_worldgen": {
@@ -3284,6 +7809,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 165,
+        "total_locations": 165
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3307,6 +7864,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 113,
+        "total_locations": 113
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "tww_worldgen": {
@@ -3328,6 +7917,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 109,
+        "total_locations": 109
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3351,6 +7972,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 185,
+        "total_locations": 185
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "toem_original_worldgen": {
@@ -3372,6 +8025,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3395,6 +8080,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 157,
+        "total_locations": 157
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "undertale_worldgen": {
@@ -3416,6 +8133,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 51,
+        "total_locations": 51
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3439,6 +8188,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 20,
+        "total_locations": 20
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "wargroove_worldgen": {
@@ -3460,6 +8241,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 39,
+        "total_locations": 39
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 3
       }
     }
   },
@@ -3483,6 +8296,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 207,
+        "total_locations": 207
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "ahit_worldgen2": {
@@ -3504,6 +8349,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "total_seeds": 1,
+        "first_failure_seed": 1,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": false,
+        "client1_passed": false,
+        "client2_passed": false,
+        "locations_checked": 195,
+        "total_locations": 232
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 1
       }
     }
   },
@@ -3527,6 +8404,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 268,
+        "total_locations": 268
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "shorthike_worldgen2": {
@@ -3549,6 +8458,38 @@
         ],
         "is_canonical": true
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 131,
+        "total_locations": 131
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "adventure_worldgen2": {
@@ -3570,6 +8511,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 25,
+        "total_locations": 25
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
       }
     }
   },
@@ -3641,5 +8614,18 @@
         "is_canonical": true
       }
     }
+  },
+  "metadata": {
+    "test_data_updated": "2026-02-14T02:39:26.158113+00:00",
+    "games_with_test_data": 139,
+    "total_games": 148,
+    "games_without_test_data": 9,
+    "test_types_loaded": [
+      "minimal_spoiler",
+      "full_spoiler",
+      "multiclient",
+      "multiworld",
+      "spoiler_fuzz"
+    ]
   }
 }

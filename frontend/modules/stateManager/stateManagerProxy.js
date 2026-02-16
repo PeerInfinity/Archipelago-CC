@@ -436,6 +436,7 @@ export class StateManagerProxy {
           }
 
           this.staticDataCache = newCache;
+          this.staticDataIsSet = true; // Mark so loadRules() can reset isReadyPublished on next reload
           // Clear bidirectional detection cache when new rules are loaded
           this._bidirectionalDetectionCache = null;
         } else {
@@ -460,6 +461,9 @@ export class StateManagerProxy {
 
         // Store game_name from the confirmation message
         this.gameNameFromWorker = message.gameName;
+
+        // New rules are confirmed — stale snapshot window is over
+        this.isPotentialStaleSnapshot = false;
 
         // Resolve the initial load promise ONLY IF IT'S THE VERY FIRST LOAD
         if (this.initialLoadResolver) {
@@ -496,11 +500,14 @@ export class StateManagerProxy {
       case 'stateSnapshot':
         if (message.snapshot) {
           this.uiCache = message.snapshot;
-          this.isPotentialStaleSnapshot = false; // <<< ADDED: Reset flag on snapshot arrival
-          // Publish a generic event indicating the cache is updated
-          this.eventBus.publish('stateManager:snapshotUpdated', {
-            snapshot: this.uiCache,
-          }, 'stateManager');
+          // Only publish snapshot updates when not in a stale window (between loadRules and rulesLoadedConfirmation)
+          if (!this.isPotentialStaleSnapshot) {
+            this.eventBus.publish('stateManager:snapshotUpdated', {
+              snapshot: this.uiCache,
+            }, 'stateManager');
+          } else {
+            log('info', '[stateManagerProxy] Suppressing stale snapshot publish during rules reload.');
+          }
         } else {
           log(
             'error',
@@ -1341,6 +1348,8 @@ export class StateManagerProxy {
       this._setupInitialLoadPromise(); // Reset the promise for this new load sequence
       this.staticDataIsSet = false; // Mark static data as not set until new confirmation
       this.isReadyPublished = false; // Allow ready event to be published again
+      this.uiCache = null; // Clear stale cache to prevent stale display during reload
+      this.isPotentialStaleSnapshot = true; // Suppress stale snapshots until new rules confirmed
     }
 
     log('info', '[StateManagerProxy] Sending loadRules command to worker...');
@@ -1367,7 +1376,7 @@ export class StateManagerProxy {
    */
   async ensureReady(timeoutMs = 15000) {
     // Check if already ready to avoid re-subscribing or re-promising
-    if (this._isReadyPublished) {
+    if (this.isReadyPublished) {
       this._logDebug('[StateManagerProxy ensureReady] Already ready.');
       return true;
     }
@@ -1414,13 +1423,13 @@ export class StateManagerProxy {
       this.staticDataCache &&
       Object.keys(this.staticDataCache).length > 0
     ) {
-      if (!this._isReadyPublished) {
+      if (!this.isReadyPublished) {
         this._logDebug(
           '[StateManagerProxy ensureReady] Conditions met, but _isReadyPublished is false. Calling _checkAndPublishReady.'
         );
         this._checkAndPublishReady(); // Attempt to publish if conditions are met
       }
-      return this._isReadyPublished; // Return the current status
+      return this.isReadyPublished; // Return the current status
     }
 
     // If still not ready, it means something is off or it's a genuine timeout from a previous state.
@@ -1428,7 +1437,7 @@ export class StateManagerProxy {
       'error',
       '[StateManagerProxy ensureReady] Fell through all checks, returning current (likely false) ready state.'
     );
-    return false; // Or this._isReadyPublished which would be false
+    return false; // Or this.isReadyPublished which would be false
   }
 
   /**
@@ -1743,7 +1752,7 @@ export class StateManagerProxy {
       uiCacheNotNull: !!this.uiCache,
       staticDataIsSet:
         !!this.staticDataCache && Object.keys(this.staticDataCache).length > 0,
-      isReadyPublished: this.isReadyPublished, // Renamed from this._isReadyPublished for consistency
+      isReadyPublished: this.isReadyPublished,
     };
     // Use logger for this critical path
     if (!isWorkerContext && window.logger) {
