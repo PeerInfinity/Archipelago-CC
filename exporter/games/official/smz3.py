@@ -7,19 +7,9 @@ This exporter handles the conversion of SMZ3-specific patterns to JavaScript-com
 
 from typing import Dict, Any, Optional
 from ..base import GenericGameExportHandler
-import logging
-import inspect
-
-logger = logging.getLogger(__name__)
 
 
 class SMZ3GameExportHandler(GenericGameExportHandler):
-
-    def __init__(self):
-        super().__init__()
-        logger.info("SMZ3 exporter initialized")
-        with open('/tmp/smz3_debug.log', 'a') as f:
-            f.write("SMZ3 exporter __init__ called\n")
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """
@@ -78,7 +68,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         # Note: Progressive Bow (Alt) not needed for SMZ3
 
-        logger.info(f"Exported {len(mapping_data)} progressive item types for SMZ3")
         return mapping_data
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
@@ -106,7 +95,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         for card_name in card_items:
             if card_name in item_data:
                 item_data[card_name]['advancement'] = True
-                logger.info(f"Marked {card_name} as advancement item")
 
         # Mark progressive items as advancement - these can be marked as non-advancement
         # by the ItemPool when there are duplicates, but they're still progression items
@@ -119,13 +107,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         for prog_item in progressive_items:
             if prog_item in item_data:
                 item_data[prog_item]['advancement'] = True
-                logger.info(f"Marked {prog_item} as advancement item")
 
         # Mark Bottle as advancement - it gates access to locations like "Sick Kid"
         # and may be placed as non-advancement (filler) by the item pool
         if 'Bottle' in item_data:
             item_data['Bottle']['advancement'] = True
-            logger.info("Marked Bottle as advancement item")
 
         return item_data
 
@@ -150,7 +136,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             item_name = location_data['item'].get('name')
             if item_name in always_advancement_items:
                 if not location_data['item'].get('advancement'):
-                    logger.info(f"Marking {item_name} at '{location_name}' as advancement")
                     location_data['item']['advancement'] = True
 
         return location_data
@@ -187,21 +172,15 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # we need to count all items (not just advancement) in spoiler test mode.
         world_data['count_non_advancement_items'] = True
 
-        logger.info(f"Getting world data for SMZ3 world")
-        logger.info(f"World type: {type(world)}")
-        logger.info(f"World attributes: {dir(world)[:10]}")  # First 10 attributes
-
         try:
             # Import RewardType to check for IReward regions
             from worlds.smz3.TotalSMZ3.Region import IReward
 
             # Get the TotalSMZ3 world (not the Archipelago wrapper)
             if not hasattr(world, 'smz3World'):
-                logger.warning(f"SMZ3 world does not have smz3World attribute, cannot export rewards. Available attrs: {[a for a in dir(world) if not a.startswith('_')][:20]}")
                 return world_data
 
             smz3_world = world.smz3World
-            logger.info(f"Found smz3World: {type(smz3_world)}")
 
             # Get all regions that have rewards
             reward_regions = {}
@@ -218,15 +197,12 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                             'reward_type': reward_value,
                             'reward_name': reward.name if hasattr(reward, 'name') else str(reward)
                         }
-                        logger.info(f"Region '{region_name}' has reward: {reward.name} (value={reward_value})")
 
             if reward_regions:
-                logger.info(f"Exported {len(reward_regions)} reward regions for SMZ3")
                 world_data['reward_regions'] = reward_regions
 
-        except Exception as e:
-            logger.error(f"Error exporting SMZ3 reward data: {e}")
-            logger.exception(e)
+        except Exception:
+            pass
 
         return world_data
 
@@ -257,7 +233,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             medallion_value = int(medallion) if isinstance(medallion, int) else 0
 
         medallion_item = medallion_names[medallion_value]
-        logger.info(f"Medallion requirement for '{entrance_name}': {medallion_item} (value={medallion_value})")
 
         # Build the medallion check
         medallion_rule = {
@@ -300,19 +275,15 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 {'type': 'region_check', 'region': 'Light World Death Mountain East'}
             ]
         else:
-            logger.warning(f"Unknown medallion dungeon: {region_name}")
             return None
 
         # Combine all requirements with AND
         all_requirements = common_requirements + specific_requirements
 
-        result = {
+        return {
             'type': 'and',
             'conditions': all_requirements
         }
-
-        logger.info(f"Built medallion entrance rule for '{entrance_name}'")
-        return result
 
     def _handle_entrance_rule(self, rule_func, entrance_name: str) -> Optional[Dict[str, Any]]:
         """
@@ -328,15 +299,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         Returns:
             Analyzed rule dict, or None to fall back to standard analysis
         """
-        logger.info(f"Processing entrance: {entrance_name}")
-
         # Try to extract the 'region' object from default arguments
         region_object = None
         if hasattr(rule_func, '__code__') and hasattr(rule_func, '__defaults__'):
             arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
             defaults = rule_func.__defaults__ or ()
-
-            logger.info(f"Entrance args for {entrance_name}: {arg_names}, defaults: {len(defaults)}")
 
             # SMZ3 entrance rules have signature: lambda state, region=region: ...
             if len(arg_names) >= 2 and 'region' in arg_names:
@@ -344,27 +311,20 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 defaults_offset = len(arg_names) - len(defaults)
                 if region_index >= defaults_offset:
                     region_object = defaults[region_index - defaults_offset]
-                    logger.info(f"Found 'region' object from defaults: {type(region_object)}")
 
         if not region_object:
-            logger.info(f"No 'region' object found in defaults for {entrance_name}")
             return None
 
         # Check if this looks like a TotalSMZ3 Region object
         has_can_enter = hasattr(region_object, 'CanEnter')
-        logger.info(f"region_object attributes - CanEnter: {has_can_enter}, type: {type(region_object)}")
 
         if not has_can_enter:
-            logger.info(f"Not a TotalSMZ3 Region object for {entrance_name}")
             return None
-
-        logger.info(f"Found TotalSMZ3 Region object for '{entrance_name}', extracting CanEnter logic")
 
         # Check if this region requires a medallion (Misery Mire or Turtle Rock)
         has_medallion = hasattr(region_object, 'Medallion') and region_object.Medallion is not None
 
         if has_medallion:
-            logger.info(f"Region '{entrance_name}' has medallion requirement: {region_object.Medallion}")
             # Handle medallion-based entrance specially
             return self._handle_medallion_entrance(region_object, entrance_name)
 
@@ -381,14 +341,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             analyzed_rule = analyze_rule(can_enter_func)
 
             if analyzed_rule:
-                logger.info(f"Successfully extracted entrance logic for '{entrance_name}'")
                 return analyzed_rule
             else:
-                logger.warning(f"Failed to analyze CanEnter for '{entrance_name}', falling back to default")
                 return None
 
-        except Exception as e:
-            logger.error(f"Error analyzing TotalSMZ3 entrance logic for '{entrance_name}': {e}")
+        except Exception:
             return None
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -413,8 +370,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         if "->" in str(rule_target_name):
             return self._handle_entrance_rule(rule_func, rule_target_name)
 
-        logger.info(f"Processing location: {rule_target_name}")
-
         # Try to extract the 'loc' object from default arguments (SMZ3 uses lambda state, loc=loc: ...)
         loc_object = None
         if hasattr(rule_func, '__code__') and hasattr(rule_func, '__defaults__'):
@@ -436,15 +391,10 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             return None
 
         # Check if this looks like a TotalSMZ3 Location object
-        has_can_access = hasattr(loc_object, 'canAccess')
         has_available = hasattr(loc_object, 'Available')
-        logger.info(f"loc_object attributes - canAccess: {has_can_access}, Available: {has_available}, type: {type(loc_object)}")
 
         if not has_available:
-            logger.info(f"Not a TotalSMZ3 Location object for {rule_target_name}")
             return None
-
-        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting Available logic")
 
         # Now we have the TotalSMZ3 Location object!
         # The Available method is: return self.Region.CanEnter(items) and self.canAccess(items)
@@ -458,8 +408,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             # This contains the location-specific access requirements
             can_access_func = loc_object.canAccess
 
-            logger.info(f"Analyzing canAccess function for '{rule_target_name}'")
-
             # Store the region name and location object so postprocess_rule can use them
             # to inline region-specific methods like CanBeatBoss and resolve GetLocation().ItemIs()
             self._current_location_region = loc_object.Region.Name if hasattr(loc_object, 'Region') else None
@@ -472,21 +420,14 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             analyzed_rule = analyze_rule(can_access_func)
 
             if analyzed_rule:
-                # Log the analyzed rule to see what we got
-                logger.info(f"Analyzed rule for '{rule_target_name}' in region '{self._current_location_region}': {analyzed_rule}")
                 # Post-process the rule while _current_location_region is still set
                 # This allows us to inline region-specific logic like CanBeatBoss
                 analyzed_rule = self.postprocess_rule(analyzed_rule)
-                logger.info(f"Post-processed rule for '{rule_target_name}': {analyzed_rule}")
-                logger.info(f"Successfully extracted and post-processed location logic for '{rule_target_name}'")
                 return analyzed_rule
             else:
-                logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
                 return None
 
-        except Exception as e:
-            logger.error(f"Error analyzing TotalSMZ3 location logic for '{rule_target_name}': {e}")
-            logger.exception(e)  # Log full traceback
+        except Exception:
             return None
         finally:
             self._current_location_region = None
@@ -535,7 +476,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                 if attr in progression_count_flags:
                     item_name, min_count = progression_count_flags[attr]
-                    logger.debug(f"Converting items.{attr} to {item_name} >= {min_count}")
                     return {
                         'type': 'compare',
                         'left': {'type': 'item_check', 'item': item_name},
@@ -553,10 +493,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 }
 
                 actual_item_name = item_name_mappings.get(attr, attr)
-                if actual_item_name != attr:
-                    logger.debug(f"Mapping items.{attr} to {actual_item_name}")
 
-                logger.debug(f"Converting items.{attr} to item_check for {actual_item_name}")
                 return {
                     'type': 'item_check',
                     'item': actual_item_name
@@ -567,15 +504,13 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # For SMZ3-specific config attributes, convert to constant values
                 # Assume Normal logic (0) as default since that's most common
                 if attr == 'Logic':
-                    logger.debug(f"Converting self.Logic to constant value 0 (Normal)")
                     return {
                         'type': 'constant',
                         'value': 0
                     }
-                # For other self attributes, log a warning and return constant True
+                # For other self attributes, return constant True
                 # Note: self.world is also converted to constant True, and the
                 # GetLocation().Available() pattern is detected later at the function_call level
-                logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
                     'type': 'constant',
                     'value': True
@@ -585,19 +520,16 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'SMLogic':
                 # Convert SMLogic enum values to their integer equivalents
                 if attr == 'Normal':
-                    logger.debug(f"Converting SMLogic.Normal to constant value 0")
                     return {
                         'type': 'constant',
                         'value': 0
                     }
                 elif attr == 'Hard':
-                    logger.debug(f"Converting SMLogic.Hard to constant value 1")
                     return {
                         'type': 'constant',
                         'value': 1
                     }
                 # Unknown SMLogic value
-                logger.warning(f"Unknown SMLogic attribute: {attr}, defaulting to 0")
                 return {
                     'type': 'constant',
                     'value': 0
@@ -623,13 +555,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 }
 
                 if attr in reward_type_values:
-                    logger.debug(f"Converting RewardType.{attr} to constant value {reward_type_values[attr]}")
                     return {
                         'type': 'constant',
                         'value': reward_type_values[attr]
                     }
                 else:
-                    logger.warning(f"Unknown RewardType attribute: {attr}, defaulting to 0")
                     return {
                         'type': 'constant',
                         'value': 0
@@ -638,7 +568,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             # Handle ItemType.AttributeName - convert to constant with the attribute name as value
             # This is used in GetLocation().ItemIs(ItemType.X) patterns
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'ItemType':
-                logger.debug(f"Converting ItemType.{attr} to constant value '{attr}'")
                 return {
                     'type': 'constant',
                     'value': attr
@@ -661,8 +590,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 func['object'].get('type') == 'name' and
                 func['object'].get('name') == 'region'):
 
-                logger.debug("Found region.CanEnter pattern - converting to helper call")
-
                 # Convert to a helper function call
                 # The helper will need access to the region name and the state
                 # For now, we'll create a helper that always returns true
@@ -679,8 +606,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 isinstance(func.get('object'), dict) and
                 func['object'].get('type') == 'name' and
                 func['object'].get('name') == 'loc'):
-
-                logger.debug("Found loc.Available pattern - this should have been handled by override_rule_analysis")
 
                 # This should have been handled by override_rule_analysis
                 # If we get here, something went wrong, so fall back to constant true
@@ -729,13 +654,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                                 location_name = location_name_arg
 
                         if location_name:
-                            logger.info(f"Converting world.GetLocation('{location_name}').Available() to location_check")
                             return {
                                 'type': 'location_check',
                                 'location': location_name
                             }
                         else:
-                            logger.warning("GetLocation().Available() pattern without location name, returning true")
                             return {'type': 'constant', 'value': True}
 
                 # Handle GetLocation().ItemIs() pattern - evaluate at export time
@@ -745,8 +668,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 if (isinstance(obj, dict) and obj.get('type') == 'helper' and
                     (obj.get('name') == 'GetLocation' or obj.get('name') == 'smz3_GetLocation') and
                     method_name == 'ItemIs'):
-
-                    logger.debug("Evaluating GetLocation().ItemIs() at export time")
 
                     # Extract the location name
                     get_location_args = obj.get('args', [])
@@ -793,16 +714,14 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                                         if world:
                                             # Evaluate ItemIs at export time!
                                             result = target_location.ItemIs(item_type_enum, world)
-                                            logger.info(f"Evaluated GetLocation('{location_name}').ItemIs({item_type_name}) = {result}")
                                             return {
                                                 'type': 'constant',
                                                 'value': result
                                             }
-                            except Exception as e:
-                                logger.warning(f"Could not evaluate ItemIs at export time: {e}")
+                            except Exception:
+                                pass
 
                     # Fall back to runtime helper if we couldn't evaluate at export time
-                    logger.info(f"Falling back to runtime helper for GetLocation('{location_name}').ItemIs('{item_type_name}')")
                     location_name_rule = {'type': 'constant', 'value': location_name} if location_name else None
                     item_type_rule = {'type': 'constant', 'value': item_type_name} if item_type_name else None
 
@@ -821,7 +740,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                             'args': [item_type_rule]
                         }
 
-                    logger.warning("Could not fully process GetLocation().ItemIs() pattern")
                     return {
                         'type': 'constant',
                         'value': False
@@ -829,7 +747,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                 # Handle items.MethodName() - convert to helper call
                 if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
-                    logger.debug(f"Converting items.{method_name}() to helper call")
                     return {
                         'type': 'helper',
                         'name': f'smz3_{method_name}',
@@ -841,7 +758,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 if (isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self' and
                     method_name == 'CanBeatBoss'):
                     region_name = getattr(self, '_current_location_region', None)
-                    logger.debug(f"Inlining self.CanBeatBoss() for region: {region_name}")
 
                     # Tower of Hera: Sword OR Hammer
                     if region_name == "Tower of Hera":
@@ -886,7 +802,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                 # Handle other self.MethodName() calls
                 if (isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self'):
-                    logger.debug(f"Found self.{method_name}() call - converting to helper")
                     # Convert to helper call with smz3_ prefix
                     return {
                         'type': 'helper',
@@ -904,7 +819,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                     if filtered_args and len(filtered_args) > 0:
                         reward_type_arg = self.postprocess_rule(filtered_args[0])
-                        logger.debug(f"Converting self.world.CanAcquire() to helper")
                         return {
                             'type': 'helper',
                             'name': 'smz3_CanAcquire',
@@ -924,7 +838,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                     if filtered_args and len(filtered_args) > 0:
                         reward_type_arg = self.postprocess_rule(filtered_args[0])
-                        logger.debug(f"Converting world.CanAcquireAll() to helper")
                         return {
                             'type': 'helper',
                             'name': 'smz3_CanAcquireAll',
@@ -941,7 +854,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                     if filtered_args and len(filtered_args) > 0:
                         region_name_arg = self.postprocess_rule(filtered_args[0])
-                        logger.debug(f"Converting self.world.CanEnter() to region_check")
                         return {
                             'type': 'region_check',
                             'region': region_name_arg.get('value') if isinstance(region_name_arg, dict) and region_name_arg.get('type') == 'constant' else region_name_arg
@@ -963,7 +875,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             # Special handling for CanBeatBoss - inline region-specific logic
             if helper_name == 'CanBeatBoss':
                 region_name = getattr(self, '_current_location_region', None)
-                logger.debug(f"Inlining CanBeatBoss helper for region: {region_name}")
 
                 # Tower of Hera: Sword OR Hammer
                 if region_name == "Tower of Hera":
@@ -998,10 +909,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     }
 
                 # For other regions or if region is unknown, use generic helper
-                logger.debug(f"Using generic smz3_CanBeatBoss for region: {region_name}")
 
             if helper_name and not helper_name.startswith('smz3_'):
-                logger.debug(f"Adding smz3_ prefix to helper: {helper_name}")
                 rule = rule.copy()
                 rule['name'] = f'smz3_{helper_name}'
             # Filter out 'items' arguments (JavaScript helpers get items from snapshot)
@@ -1098,7 +1007,6 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         # If player has 5 keys and no Bow+Hammer, location is accessible.
                         # Later gaining Bow+Hammer shouldn't un-access the location.
                         # Solution: Always use minimum requirement (5 keys).
-                        logger.info(f"Simplified regressive conditional: using minimum value {false_val} instead of ({true_val} if test else {false_val})")
                         return {'type': 'constant', 'value': false_val}
                     # If true_val <= false_val, this is normal behavior (having items helps)
                     # Keep the conditional as-is
@@ -1123,15 +1031,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             element_rule = rule.get('element_rule')
             iterator_info = rule.get('iterator_info')
 
-            logger.info(f"Processing any_of: element_rule={element_rule}, has_iterator_info={iterator_info is not None}")
-            if iterator_info:
-                logger.info(f"  iterator_info: {iterator_info}")
-                logger.info(f"  iterator type: {iterator_info.get('iterator', {}).get('type')}")
-
             # Check if this is a GetLocation().ItemIs() pattern that we can evaluate at export time
             # Pattern: any(loc.ItemIs(type, world) for type in [ItemType.X, ItemType.Y])
             has_location = hasattr(self, '_current_location_object') and self._current_location_object is not None
-            logger.info(f"  has_location: {has_location}, location_name: {getattr(self, '_current_location_name', None)}")
 
             if (iterator_info and
                 iterator_info.get('iterator', {}).get('type') == 'list' and
@@ -1163,20 +1065,17 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                                     world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None
                                     if world:
                                         result = loc_obj.ItemIs(item_type_enum, world)
-                                        logger.info(f"Evaluated any_of ItemIs({item_type_name}) = {result}")
                                         if result:
                                             any_match = True
                                             break
 
-                        logger.info(f"any_of ItemIs evaluation complete: any_match = {any_match}")
                         return {'type': 'constant', 'value': any_match}
-                    except Exception as e:
-                        logger.warning(f"Could not evaluate any_of ItemIs at export time: {e}")
+                    except Exception:
+                        pass
 
             # If element_rule is constant false, the any_of is false
             if isinstance(element_rule, dict) and element_rule.get('type') == 'constant':
                 if element_rule.get('value') == False:
-                    logger.info("Simplifying any_of with constant false element_rule to false")
                     return {'type': 'constant', 'value': False}
                 elif element_rule.get('value') == True:
                     # any(True for x in [non-empty]) is True
