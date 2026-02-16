@@ -71,6 +71,16 @@ on:
         type: boolean
         default: false
 
+      enable_vanilla_tests:
+        description: 'Include Vanilla WorldGen templates (worldgen mode only)'
+        type: boolean
+        default: false
+
+      enable_worldgen2_tests:
+        description: 'Include WorldGen2 templates (worldgen mode only)'
+        type: boolean
+        default: false
+
       template_type:
         description: 'Template type to test'
         type: choice
@@ -372,6 +382,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -381,6 +393,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -391,6 +405,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -405,6 +421,8 @@ jobs:
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               ${EXCLUDE_FLAG} \
+              ${VANILLA_FLAG} \
+              ${WORLDGEN2_FLAG} \
               --no-backup \
               -p
           done
@@ -416,6 +434,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -425,6 +445,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -436,6 +458,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -443,6 +467,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -453,6 +479,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -467,6 +495,8 @@ jobs:
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               ${EXCLUDE_FLAG} \
+              ${VANILLA_FLAG} \
+              ${WORLDGEN2_FLAG} \
               --no-backup \
               -p
           done
@@ -478,6 +508,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || inputs.template_type == 'apworld' && 'spoiler-minimal-apworld' || 'spoiler-minimal' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -485,6 +517,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -708,6 +742,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -717,6 +753,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -727,6 +765,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -741,6 +781,8 @@ jobs:
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               ${EXCLUDE_FLAG} \
+              ${VANILLA_FLAG} \
+              ${WORLDGEN2_FLAG} \
               --no-backup \
               -p
           done
@@ -752,6 +794,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -759,6 +803,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -769,6 +815,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || inputs.template_type == 'apworld' && 'spoiler-full-apworld' || 'spoiler-full' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -783,6 +831,8 @@ jobs:
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               ${EXCLUDE_FLAG} \
+              ${VANILLA_FLAG} \
+              ${WORLDGEN2_FLAG} \
               --no-backup \
               -p
           done
@@ -1005,6 +1055,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1014,6 +1066,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -1024,6 +1078,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || inputs.template_type == 'apworld' && 'multiclient-apworld' || 'multiclient' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -1037,6 +1093,8 @@ jobs:
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               ${EXCLUDE_FLAG} \
+              ${VANILLA_FLAG} \
+              ${WORLDGEN2_FLAG} \
               --no-backup \
               -p
           done
@@ -1251,6 +1309,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -1262,6 +1322,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 
@@ -1472,6 +1534,8 @@ jobs:
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || inputs.template_type == 'apworld' && 'multiworld-apworld' || 'multiworld' }}
           PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || inputs.template_type == 'apworld' && '--custom-worlds-only' || '--exclude-pattern WorldGen' }}
           EXCLUDE_FLAG: ${{ inputs.ignore_exclude_list && '--ignore-exclude-list' || '' }}
+          VANILLA_FLAG: ${{ inputs.enable_vanilla_tests && '--include-vanilla' || '' }}
+          WORLDGEN2_FLAG: ${{ inputs.enable_worldgen2_tests && '--include-worldgen2' || '' }}
           RETRY_COUNT: ${{ inputs.retest_failures == 'disabled' && '0' || inputs.retest_failures == '1-time' && '1' || inputs.retest_failures == '2-times' && '2' || '3' }}
         run: |
           source .venv/bin/activate
@@ -1485,6 +1549,8 @@ jobs:
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             ${EXCLUDE_FLAG} \
+            ${VANILLA_FLAG} \
+            ${WORLDGEN2_FLAG} \
             --no-backup \
             -p
 

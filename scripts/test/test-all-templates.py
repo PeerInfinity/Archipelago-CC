@@ -131,6 +131,16 @@ def main():
         help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)'
     )
     parser.add_argument(
+        '--include-vanilla',
+        action='store_true',
+        help='Include Vanilla WorldGen templates (by default excluded in WorldGen mode)'
+    )
+    parser.add_argument(
+        '--include-worldgen2',
+        action='store_true',
+        help='Include WorldGen2 templates (by default excluded in WorldGen mode)'
+    )
+    parser.add_argument(
         '--export-only',
         action='store_true',
         help='Only run the generation (export) step, skip spoiler tests'
@@ -832,6 +842,25 @@ def main():
         if not yaml_files:
             print(f"Error: No testable YAML files found after pattern filtering (all files match '{args.exclude_pattern}')")
             sys.exit(1)
+
+    # In WorldGen mode, exclude Vanilla and WorldGen2 templates unless explicitly included
+    if args.include_pattern and 'WorldGen' in args.include_pattern:
+        # First exclude WorldGen2 templates (unless --include-worldgen2)
+        if not args.include_worldgen2:
+            before_filter = len(yaml_files)
+            yaml_files = [f for f in yaml_files if 'WorldGen2' not in f]
+            excluded = before_filter - len(yaml_files)
+            if excluded > 0:
+                print(f"WorldGen2 filter: excluded {excluded} WorldGen2 templates (use --include-worldgen2 to include)")
+
+        # Then exclude Vanilla templates from the remainder (unless --include-vanilla)
+        # Since WorldGen2 was already filtered above, "Vanilla" here only matches first-gen Vanilla WorldGen
+        if not args.include_vanilla:
+            before_filter = len(yaml_files)
+            yaml_files = [f for f in yaml_files if 'Vanilla' not in f]
+            excluded = before_filter - len(yaml_files)
+            if excluded > 0:
+                print(f"Vanilla filter: excluded {excluded} Vanilla WorldGen templates (use --include-vanilla to include)")
 
     # Initialize intermittent failures if not already done (non-retest mode)
     if not args.retest:
