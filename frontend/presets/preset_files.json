@@ -67,45 +67,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 9,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "adventure": {
@@ -162,45 +123,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "shorthike": {
@@ -254,45 +176,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 131,
-        "total_locations": 131
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "ahit": {
@@ -345,45 +228,6 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 232,
-        "total_locations": 232
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -455,45 +299,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 11,
-        "total_locations": 11
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "bakingadventure": {
@@ -563,45 +368,6 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 16,
-        "total_locations": 16
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -673,45 +439,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 62,
-        "total_locations": 62
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "metamath": {
@@ -764,45 +491,6 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 9,
-        "total_locations": 9
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -938,45 +626,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 8,
-        "total_locations": 8
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "aquaria": {
@@ -998,44 +647,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 237,
-        "total_locations": 237
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "blasphemous": {
+    "name": "Blasphemous",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Blasphemous"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -1058,45 +689,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 252,
-        "total_locations": 252
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 8,
-        "runs_failed": 2,
-        "failure_types": "2 test"
-      }
     }
   },
   "bumpstik": {
@@ -1117,106 +709,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 100,
-        "total_locations": 100
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "cv64": {
-    "name": "Castlevania 64",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Castlevania 64"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apcv64",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 215,
-        "total_locations": 215
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -1240,44 +732,27 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 125,
-        "total_locations": 125
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "cv64": {
+    "name": "Castlevania 64",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Castlevania 64"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apcv64",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -1300,45 +775,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 237,
-        "total_locations": 237
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "celeste64": {
@@ -1359,45 +795,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 40,
-        "total_locations": 40
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -1420,45 +817,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "cccharles": {
@@ -1479,45 +837,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 692,
-        "total_locations": 692
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -1541,105 +860,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 149,
-        "total_locations": 149
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "dark_souls_3": {
-    "name": "Dark Souls III",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Dark Souls III"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1194,
-        "total_locations": 1194
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "dlcquest": {
@@ -1660,105 +880,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 42,
-        "total_locations": 42
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "dkc3": {
-    "name": "Donkey Kong Country 3",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 180,
-        "total_locations": 180
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -1781,45 +902,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 348,
-        "total_locations": 348
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "doom_ii": {
@@ -1841,44 +923,47 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 453,
-        "total_locations": 453
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "dark_souls_3": {
+    "name": "Dark Souls III",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Dark Souls III"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "dkc3": {
+    "name": "Donkey Kong Country 3",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -1902,45 +987,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 265,
-        "total_locations": 265
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "factorio": {
@@ -1963,45 +1009,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 186,
-        "total_locations": 186
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "faxanadu": {
@@ -2023,44 +1030,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 114,
-        "total_locations": 114
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "ff1": {
+    "name": "Final Fantasy",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Final Fantasy"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -2084,45 +1073,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 299,
-        "total_locations": 299
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 9,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "heretic": {
@@ -2144,44 +1094,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 502,
-        "total_locations": 502
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "hk": {
+    "name": "Hollow Knight",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Hollow Knight"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -2204,45 +1136,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 134,
-        "total_locations": 134
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "inscryption": {
@@ -2264,44 +1157,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 100,
-        "total_locations": 100
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "jakanddaxter": {
+    "name": "Jak and Daxter: The Precursor Legacy",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Jak and Daxter: The Precursor Legacy"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -2325,45 +1200,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 512,
-        "total_locations": 512
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 8,
-        "runs_failed": 2,
-        "failure_types": "2 test"
-      }
     }
   },
   "kh2": {
@@ -2379,51 +1215,12 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-14Feb2026-012627_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-16Feb2026-230532_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 705,
-        "total_locations": 705
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 7,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -2447,45 +1244,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 567,
-        "total_locations": 567
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 5,
-        "runs_failed": 5,
-        "failure_types": "5 test"
-      }
     }
   },
   "landstalker": {
@@ -2507,45 +1265,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 298,
-        "total_locations": 298
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "lingo": {
@@ -2566,45 +1285,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 156,
-        "total_locations": 156
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 2,
-        "runs_failed": 1,
-        "failure_types": "1 test"
       }
     }
   },
@@ -2628,45 +1308,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 226,
-        "total_locations": 226
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 0,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "lufia2ac": {
@@ -2687,45 +1328,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 40,
-        "total_locations": 40
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -2749,45 +1351,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 557,
-        "total_locations": 557
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "mm2": {
@@ -2810,45 +1373,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 50,
-        "total_locations": 50
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "mmbn3": {
@@ -2869,45 +1393,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 264,
-        "total_locations": 264
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -2930,45 +1415,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 109,
-        "total_locations": 109
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "musedash": {
@@ -2989,45 +1435,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 90,
-        "total_locations": 90
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -3050,44 +1457,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 117,
-        "total_locations": 117
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "oot": {
+    "name": "Ocarina of Time",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Ocarina of Time"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -3110,45 +1499,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 76,
-        "total_locations": 76
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "overcooked2": {
@@ -3169,45 +1519,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 215,
-        "total_locations": 215
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 5,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -3230,44 +1541,49 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 130,
-        "total_locations": 130
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "pokemon_emerald": {
+    "name": "Pokemon Emerald",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Pokemon Emerald"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apemerald",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "pokemon_rb": {
+    "name": "Pokemon Red and Blue",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Pokemon Red and Blue"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apblue",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -3290,45 +1606,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 155,
-        "total_locations": 155
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "ror2": {
@@ -3350,44 +1627,27 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 223,
-        "total_locations": 223
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "smz3": {
+    "name": "SMZ3",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "SMZ3"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apsmz3",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -3410,45 +1670,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 555,
-        "total_locations": 555
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "saving_princess": {
@@ -3469,45 +1690,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 37,
-        "total_locations": 37
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -3530,105 +1712,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 340,
-        "total_locations": 340
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 7,
-        "runs_failed": 3,
-        "failure_types": "3 test"
-      }
-    }
-  },
-  "shapez": {
-    "name": "shapez",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "shapez"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 140,
-        "total_locations": 140
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "shivers": {
@@ -3649,45 +1732,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 114,
-        "total_locations": 114
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -3710,45 +1754,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 207,
-        "total_locations": 207
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "sc2": {
@@ -3769,45 +1774,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 257,
-        "total_locations": 257
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 0,
-        "runs_failed": 10,
-        "failure_types": "10 gen"
       }
     }
   },
@@ -3830,45 +1796,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 500,
-        "total_locations": 500
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 2,
-        "runs_failed": 8,
-        "failure_types": "8 test"
-      }
     }
   },
   "subnautica": {
@@ -3890,44 +1817,26 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 135,
-        "total_locations": 135
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "apsudoku": {
+    "name": "Sudoku",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Sudoku"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -3951,45 +1860,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 149,
-        "total_locations": 149
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "marioland2": {
@@ -4012,45 +1882,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 60,
-        "total_locations": 60
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "smw": {
@@ -4071,45 +1902,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 108,
-        "total_locations": 108
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -4133,44 +1925,68 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 109,
-        "total_locations": 109
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 0,
-        "runs_failed": 7,
-        "failure_types": "2 gen, 5 test"
+    }
+  },
+  "toem_original": {
+    "name": "TOEM original",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM original"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "toem_rule_builder": {
+    "name": "TOEM rule builder",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM rule builder"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "tunic": {
+    "name": "TUNIC",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TUNIC"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -4193,45 +2009,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 244,
-        "total_locations": 244
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 9,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "tloz": {
@@ -4253,45 +2030,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 165,
-        "total_locations": 165
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "messenger": {
@@ -4312,45 +2050,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 113,
-        "total_locations": 113
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -4374,45 +2073,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 109,
-        "total_locations": 109
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 5,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "witness": {
@@ -4433,45 +2093,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 147,
-        "total_locations": 147
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 2,
-        "runs_failed": 8,
-        "failure_types": "8 test"
       }
     }
   },
@@ -4494,225 +2115,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 185,
-        "total_locations": 185
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "toem_original": {
-    "name": "TOEM original",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TOEM original"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 157,
-        "total_locations": 157
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "toem_rule_builder": {
-    "name": "TOEM rule builder",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TOEM rule builder"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 157,
-        "total_locations": 157
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
-    }
-  },
-  "tunic": {
-    "name": "TUNIC",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "TUNIC"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 317,
-        "total_locations": 317
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": false,
-        "total_runs": 10,
-        "runs_passed": 2,
-        "runs_failed": 8,
-        "failure_types": "8 test"
-      }
     }
   },
   "undertale": {
@@ -4733,45 +2135,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 51,
-        "total_locations": 51
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -4795,45 +2158,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 20,
-        "total_locations": 20
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "wargroove": {
@@ -4854,45 +2178,6 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 39,
-        "total_locations": 39
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
       }
     }
   },
@@ -4936,44 +2221,70 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 207,
-        "total_locations": 207
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
+    }
+  },
+  "yugioh06": {
+    "name": "Yu-Gi-Oh! 2006",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Yu-Gi-Oh! 2006"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apygo06",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "zillion": {
+    "name": "Zillion",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Zillion"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apzl",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "shapez": {
+    "name": "shapez",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "shapez"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -4997,38 +2308,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 232,
-        "total_locations": 232
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "alttp_worldgen": {
@@ -5050,38 +2329,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5105,37 +2352,27 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 131,
-        "total_locations": 131
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
+    }
+  },
+  "apquest_worldgen": {
+    "name": "APQuest WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "APQuest WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
       }
     }
   },
@@ -5159,92 +2396,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "apquest_worldgen": {
-    "name": "APQuest WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "APQuest WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 8,
-        "total_locations": 8
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "aquaria_worldgen": {
@@ -5266,38 +2417,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 237,
-        "total_locations": 237
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5344,38 +2463,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 16,
-        "total_locations": 16
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "bumpstik_worldgen": {
@@ -5397,38 +2484,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 100,
-        "total_locations": 100
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 1
       }
     }
   },
@@ -5452,38 +2507,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 125,
-        "total_locations": 125
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "cv64_worldgen": {
@@ -5505,38 +2528,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 215,
-        "total_locations": 215
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5560,38 +2551,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 40,
-        "total_locations": 40
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "checksfinder_worldgen": {
@@ -5613,38 +2572,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5668,38 +2595,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 692,
-        "total_locations": 692
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "civ_6_worldgen": {
@@ -5721,38 +2616,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 149,
-        "total_locations": 149
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5799,92 +2662,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 62,
-        "total_locations": 62
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "dark_souls_3_worldgen": {
-    "name": "Dark Souls III WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Dark Souls III WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1194,
-        "total_locations": 1194
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "dlcquest_worldgen": {
@@ -5906,92 +2683,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 42,
-        "total_locations": 42
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "dkc3_worldgen": {
-    "name": "Donkey Kong Country 3 WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Donkey Kong Country 3 WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 180,
-        "total_locations": 180
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6015,38 +2706,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 348,
-        "total_locations": 348
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "doom_ii_worldgen": {
@@ -6069,37 +2728,49 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 453,
-        "total_locations": 453
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
+    }
+  },
+  "dark_souls_3_worldgen": {
+    "name": "Dark Souls III WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Dark Souls III WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
+  "dkc3_worldgen": {
+    "name": "Donkey Kong Country 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
       }
     }
   },
@@ -6145,38 +2816,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 186,
-        "total_locations": 186
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "faxanadu_worldgen": {
@@ -6198,38 +2837,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 114,
-        "total_locations": 114
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6253,38 +2860,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 299,
-        "total_locations": 299
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "heretic_worldgen": {
@@ -6306,38 +2881,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 502,
-        "total_locations": 502
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6361,38 +2904,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 134,
-        "total_locations": 134
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "inscryption_worldgen": {
@@ -6414,38 +2925,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 100,
-        "total_locations": 100
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6469,38 +2948,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 298,
-        "total_locations": 298
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "ladx_worldgen": {
@@ -6522,38 +2969,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 226,
-        "total_locations": 226
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6577,38 +2992,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 40,
-        "total_locations": 40
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "mlss_worldgen": {
@@ -6630,38 +3013,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 557,
-        "total_locations": 557
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6708,38 +3059,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 11,
-        "total_locations": 11
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "mm2_worldgen": {
@@ -6761,38 +3080,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 50,
-        "total_locations": 50
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6816,38 +3103,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 264,
-        "total_locations": 264
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "meritous_worldgen": {
@@ -6869,38 +3124,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 109,
-        "total_locations": 109
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -6924,38 +3147,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 9,
-        "total_locations": 9
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "musedash_worldgen": {
@@ -6977,38 +3168,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 90,
-        "total_locations": 90
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7032,38 +3191,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 117,
-        "total_locations": 117
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "osrs_worldgen": {
@@ -7085,38 +3212,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 76,
-        "total_locations": 76
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
       }
     }
   },
@@ -7140,38 +3235,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 215,
-        "total_locations": 215
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "paint_worldgen": {
@@ -7194,38 +3257,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 130,
-        "total_locations": 130
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "ror2_worldgen": {
@@ -7247,38 +3278,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 223,
-        "total_locations": 223
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7324,92 +3323,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 37,
-        "total_locations": 37
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "shapez_worldgen": {
-    "name": "shapez WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "shapez WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 140,
-        "total_locations": 140
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "shivers_worldgen": {
@@ -7431,38 +3344,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 114,
-        "total_locations": 114
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7486,38 +3367,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 207,
-        "total_locations": 207
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "subnautica_worldgen": {
@@ -7539,38 +3388,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 135,
-        "total_locations": 135
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7594,38 +3411,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 149,
-        "total_locations": 149
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "marioland2_worldgen": {
@@ -7647,38 +3432,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 60,
-        "total_locations": 60
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -7702,308 +3455,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 108,
-        "total_locations": 108
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
-      }
-    }
-  },
-  "terraria_worldgen": {
-    "name": "Terraria WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Terraria WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 244,
-        "total_locations": 244
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "tloz_worldgen": {
-    "name": "The Legend of Zelda WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "The Legend of Zelda WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 165,
-        "total_locations": 165
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "messenger_worldgen": {
-    "name": "The Messenger WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "The Messenger WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 113,
-        "total_locations": 113
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "tww_worldgen": {
-    "name": "The Wind Waker WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "The Wind Waker WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 109,
-        "total_locations": 109
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "timespinner_worldgen": {
-    "name": "Timespinner WorldGen",
-    "folders": {
-      "AP_14089154938208861744_c": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Timespinner WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 185,
-        "total_locations": 185
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "toem_original_worldgen": {
@@ -8025,38 +3476,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 157,
-        "total_locations": 157
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -8080,37 +3499,115 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 157,
-        "total_locations": 157
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
+    }
+  },
+  "terraria_worldgen": {
+    "name": "Terraria WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Terraria WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
+  "tloz_worldgen": {
+    "name": "The Legend of Zelda WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Legend of Zelda WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
+  "messenger_worldgen": {
+    "name": "The Messenger WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Messenger WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
+  "tww_worldgen": {
+    "name": "The Wind Waker WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Wind Waker WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
+  "timespinner_worldgen": {
+    "name": "Timespinner WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Timespinner WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
       }
     }
   },
@@ -8134,38 +3631,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 51,
-        "total_locations": 51
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "v6_worldgen": {
@@ -8187,38 +3652,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 20,
-        "total_locations": 20
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -8242,38 +3675,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 39,
-        "total_locations": 39
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
-      }
     }
   },
   "yoshisisland_worldgen": {
@@ -8296,37 +3697,27 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 207,
-        "total_locations": 207
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
+    }
+  },
+  "shapez_worldgen": {
+    "name": "shapez WorldGen",
+    "folders": {
+      "AP_14089154938208861744_c": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "shapez WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
       }
     }
   },
@@ -8350,38 +3741,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "total_seeds": 1,
-        "first_failure_seed": 1,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 195,
-        "total_locations": 232
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 1
-      }
     }
   },
   "alttp_worldgen2": {
@@ -8403,38 +3762,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -8458,38 +3785,6 @@
         ],
         "is_canonical": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 131,
-        "total_locations": 131
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
     }
   },
   "adventure_worldgen2": {
@@ -8511,38 +3806,6 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 25,
-        "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -8614,18 +3877,5 @@
         "is_canonical": true
       }
     }
-  },
-  "metadata": {
-    "test_data_updated": "2026-02-14T02:39:26.158113+00:00",
-    "games_with_test_data": 139,
-    "total_games": 148,
-    "games_without_test_data": 9,
-    "test_types_loaded": [
-      "minimal_spoiler",
-      "full_spoiler",
-      "multiclient",
-      "multiworld",
-      "spoiler_fuzz"
-    ]
   }
 }
