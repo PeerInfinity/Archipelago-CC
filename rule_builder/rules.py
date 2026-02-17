@@ -572,6 +572,8 @@ def _make_hashable(value: Any) -> Any:
     elif isinstance(value, set):
         items = cast(set[Any], value)
         return frozenset(_make_hashable(item) for item in items)
+    elif dataclasses.is_dataclass(value) and not isinstance(value, type):
+        return tuple(_make_hashable(getattr(value, f.name)) for f in dataclasses.fields(value))
     return value
 
 

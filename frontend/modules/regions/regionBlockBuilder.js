@@ -1052,9 +1052,14 @@ export class RegionBlockBuilder {
                 );
                 
                 // Update status if queued (need to update after initial render)
-                if (isQueued && statusIndicator && !locChecked && locAccessible) {
-                  statusIndicator.textContent = 'Queued';
-                  statusIndicator.className = 'location-status status-queued';
+                if (isQueued && statusIndicator) {
+                  if (locChecked) {
+                    statusIndicator.textContent = 'Checked, Queued';
+                    statusIndicator.className = 'location-status status-checked status-queued';
+                  } else if (locAccessible) {
+                    statusIndicator.textContent = 'Queued';
+                    statusIndicator.className = 'location-status status-queued';
+                  }
                 }
               } catch (error) {
                 // Ignore error

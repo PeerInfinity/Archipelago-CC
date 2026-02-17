@@ -57,7 +57,8 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
     Tracking mode priority (configurable):
     1. Pickle mode - fastest, preserves exact lambdas
     2. Worldgen mode - generates world from JSON rules
-    3. YAML mode - original UT behavior
+    3. Original seeded mode - original UT behavior with resolved seed number
+    4. YAML mode - original UT behavior (random seed)
     """
 
     def __init__(self, logger: logging.Logger, print_list: bool, print_count: bool) -> None:
@@ -162,6 +163,78 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
 
         return False
 
+    def _resolve_seed_number(self) -> Optional[int]:
+        """
+        Resolve the seed name to a seed number.
+
+        Tries sources in order:
+        1. Reverse lookup table from seed_utils (seeds 1-100)
+        2. The generation_seed field from loaded rules JSON
+
+        Returns:
+            The seed number, or None if it cannot be resolved
+        """
+        seed_name = self.seed_name
+        if not seed_name:
+            return None
+
+        # Normalize to AP_ prefix format for lookup
+        seed_id = seed_name if seed_name.startswith('AP_') else f"AP_{seed_name}"
+
+        # 1. Try reverse lookup table
+        try:
+            from scripts.lib.seed_utils import get_seed_number
+            result = get_seed_number(seed_id)
+            if result is not None:
+                self.logger.info(f"Resolved seed name {seed_id} to seed number {result} via reverse lookup")
+                return result
+        except ImportError:
+            self.logger.debug("seed_utils not available for reverse lookup")
+
+        # 2. Try generation_seed from loaded rules JSON
+        if self.rules_json_data:
+            gen_seed = self.rules_json_data.get('generation_seed')
+            if gen_seed is not None:
+                self.logger.info(f"Resolved seed number {gen_seed} from rules JSON generation_seed field")
+                return int(gen_seed)
+
+        self.logger.debug(f"Could not resolve seed number for {seed_id}")
+        return None
+
+    def _try_original_seeded_tracking(self, connected_cls, raw_slot_data) -> bool:
+        """
+        Attempt original UT tracking with a specific seed number.
+
+        This mode uses the original YAML-based UT behavior, but injects the
+        resolved seed number so that multiworld generation is deterministic
+        and matches the actual game's randomization.
+
+        Returns True if seed was resolved and tracking initialized, False otherwise.
+        """
+        seed_number = self._resolve_seed_number()
+        if seed_number is None:
+            self.logger.debug("Cannot use original_seeded mode: seed number not resolved")
+            return False
+
+        self.logger.info(f"Using original_seeded mode with seed number {seed_number}")
+        self._log_debug("original_seeded_tracking", {"seed_number": seed_number})
+
+        # Set seed_override so run_generator injects it into args.seed
+        self.seed_override = seed_number
+
+        # Run the base class original tracking flow
+        super().initalize_tracker_core(connected_cls, raw_slot_data)
+
+        # Check if it succeeded
+        if self.multiworld is not None and self.player_id is not None:
+            self.logger.info(f"Original_seeded tracking initialized with seed {seed_number}")
+            return True
+
+        self.logger.warning("Original_seeded tracking failed to initialize")
+        # Clear seed_override so it doesn't interfere with fallback modes
+        self.seed_override = None
+        return False
+
     def _try_worldgen_tracking(self) -> bool:
         """Attempt to initialize worldgen-based tracking.
 
@@ -204,7 +277,8 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         When config is not available (legacy behavior):
         1. Pickle mode - fastest, preserves exact lambdas
         2. Worldgen mode - generates world from JSON rules
-        3. YAML mode - original UT behavior
+        3. Original seeded mode - original with resolved seed number
+        4. YAML mode - original UT behavior (random seed)
 
         Falls back to the next mode if the current one fails.
         """
@@ -243,13 +317,16 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
                 elif mode == 'worldgen' and self.rules_json_path:
                     if self._try_worldgen_tracking():
                         return
+                elif mode == 'original_seeded':
+                    if self._try_original_seeded_tracking(connected_cls, raw_slot_data):
+                        return
                 elif mode == 'original':
                     # Fall through to base class YAML-based tracking
                     self.logger.info(f"Using original YAML-based tracking for {self.game}")
                     break
 
         else:
-            # Legacy behavior: pickle -> worldgen -> yaml
+            # Legacy behavior: pickle -> worldgen -> original_seeded -> yaml
             # Try pickle-based tracking first (fastest mode).
             if self.pickle_path:
                 if self._try_pickle_tracking():
@@ -260,7 +337,11 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             if self.rules_json_path:
                 if self._try_worldgen_tracking():
                     return
-                self.logger.warning("Failed to generate worldgen world, falling back to standard tracking")
+                self.logger.warning("Failed to generate worldgen world, falling back to original_seeded tracking")
+
+            # Try original tracking with resolved seed number
+            if self._try_original_seeded_tracking(connected_cls, raw_slot_data):
+                return
 
         # Fall back to base class YAML-based tracking
         super().initalize_tracker_core(connected_cls, raw_slot_data)

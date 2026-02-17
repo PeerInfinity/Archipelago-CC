@@ -2,6 +2,8 @@
 
 The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
 
+**Ready to get started?** See the **[Quick Start Guide](./quick-start.md)** for step-by-step instructions.
+
 **Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
 
 ## What Does It Do?
@@ -32,9 +34,25 @@ This lets you explore the interface and see how the logic tracking works without
 
 ## Using the Tracker with Your Own Games
 
-To use the tracker with your own multiworld games, you'll need to run a local setup that generates the required `rules.json` files.
+To use the tracker with your own multiworld games, you need the JSON export tools installed so that seed generation produces `rules.json` files. There are two ways to set this up.
 
-### Setup
+### Option 1: JSON Tools Installer (Recommended)
+
+If you already have [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) installed, the JSON Tools Installer is the easiest way to get started. It's a `.apworld` package that adds JSON export capabilities to your existing Archipelago installation — no need to clone a separate repository.
+
+1. Download the [`json_tools_installer.apworld`](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) file
+2. Place it in your Archipelago `custom_worlds/` directory
+3. Launch Archipelago — three new entries appear in the Launcher:
+   - **JSON Tools Installer** — Install or update the JSON Tools components
+   - **JSON Tools Status** — Check what's installed and your current configuration
+   - **JSON Tools Scripts** — Run utility scripts for setup and testing
+4. Open **JSON Tools Installer** and click Install
+
+The installer downloads the exporter, frontend, and other components directly from GitHub. It supports both a stable and a development version, and lets you choose which components to install. Once installed, JSON export runs automatically during seed generation via runtime hooks — no modifications to your Archipelago source files are required.
+
+### Option 2: Clone the Repository
+
+For full access to the source code, or if you want to contribute to development, you can clone the repository directly.
 
 **Which repository should I use?** Clone `PeerInfinity/Archipelago` (shown below) for a clean setup. The `-CC` variant is for active development with Claude Code. See [Tips & Tricks](./tips-and-tricks.md#which-repository-should-i-use) for details.
 

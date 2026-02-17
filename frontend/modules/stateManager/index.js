@@ -89,6 +89,7 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
+import { FALLBACK_RULES } from '../../data/fallbackRules.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -265,36 +266,46 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         moduleInfo.name,
         '[StateManager Module] rulesConfig not in moduleSpecificConfig, resolving from preset_files.json...'
       );
-      const presetResponse = await fetch('./presets/preset_files.json');
-      if (!presetResponse.ok) {
-        throw new Error(
-          `HTTP error fetching preset_files.json! status: ${presetResponse.status}`
+      try {
+        const presetResponse = await fetch('./presets/preset_files.json');
+        if (!presetResponse.ok) {
+          throw new Error(
+            `HTTP error fetching preset_files.json! status: ${presetResponse.status}`
+          );
+        }
+        const presetFilesData = await presetResponse.json();
+        const resolvedPreset = resolveFirstPresetPath(presetFilesData);
+        if (!resolvedPreset) {
+          throw new Error('No valid preset found in preset_files.json');
+        }
+        const rulesPath = resolvedPreset.path;
+        logger.info(
+          moduleInfo.name,
+          `[StateManager Module] Resolved first available preset: ${rulesPath} (game: ${resolvedPreset.gameName})`
         );
-      }
-      const presetFilesData = await presetResponse.json();
-      const resolvedPreset = resolveFirstPresetPath(presetFilesData);
-      if (!resolvedPreset) {
-        throw new Error('No valid preset found in preset_files.json');
-      }
-      const rulesPath = resolvedPreset.path;
-      logger.info(
-        moduleInfo.name,
-        `[StateManager Module] Resolved first available preset: ${rulesPath} (game: ${resolvedPreset.gameName})`
-      );
-      const response = await fetch(rulesPath);
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error fetching ${rulesPath}! status: ${response.status}`
+        const response = await fetch(rulesPath);
+        if (!response.ok) {
+          throw new Error(
+            `HTTP error fetching ${rulesPath}! status: ${response.status}`
+          );
+        }
+        jsonData = await response.json();
+        rulesConfigToUse = jsonData;
+        sourceNameForTheseRules = rulesPath;
+        gameName = resolvedPreset.gameName;
+        logger.info(
+          moduleInfo.name,
+          `[StateManager Module] Successfully fetched and parsed ${rulesPath}`
         );
+      } catch (presetError) {
+        logger.warn(
+          moduleInfo.name,
+          `[StateManager Module] Could not load presets (${presetError.message}). Using hardcoded APQuest fallback rules.`
+        );
+        rulesConfigToUse = FALLBACK_RULES;
+        sourceNameForTheseRules = 'hardcodedFallback:apquest';
+        gameName = 'APQuest';
       }
-      jsonData = await response.json();
-      rulesConfigToUse = jsonData;
-      sourceNameForTheseRules = rulesPath;
-      gameName = resolvedPreset.gameName;
-      logger.info(
-        moduleInfo.name,
-        `[StateManager Module] Successfully fetched and parsed ${rulesPath}`
-      );
     } else {
       // rulesConfigToUse was provided directly by moduleSpecificConfig
       if (!sourceNameForTheseRules) {

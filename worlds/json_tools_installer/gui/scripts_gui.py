@@ -105,6 +105,18 @@ SCRIPT_CATEGORIES = {
             script_path="scripts/setup/update_host_settings.py",
             command=[sys.executable, "scripts/setup/update_host_settings.py", "full-spoilers"]
         ),
+        ScriptAction(
+            "Pickle Mode",
+            "Export tracker pickle instead of JSON (save_tracker_pickle=True, save_rules_json=False)",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "pickle-mode"]
+        ),
+        ScriptAction(
+            "UT Fuzz",
+            "Enable event auto-collection and filtering to match Universal Tracker behavior",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-fuzz"]
+        ),
     ],
     "Patches": [
         ScriptAction(

@@ -5,7 +5,6 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
-  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -3706,7 +3705,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3717,7 +3715,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3728,7 +3725,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3739,7 +3735,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3750,7 +3745,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3761,7 +3755,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3772,7 +3765,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3783,7 +3775,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3794,7 +3785,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3805,7 +3795,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3816,7 +3805,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3827,7 +3815,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3838,7 +3825,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3849,7 +3835,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3860,7 +3845,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3871,7 +3855,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3882,7 +3865,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3893,7 +3875,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -3904,7 +3885,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -3915,7 +3895,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -3926,7 +3905,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -3937,7 +3915,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -3948,7 +3925,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 5
       },
@@ -3959,7 +3935,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -3970,7 +3945,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -3981,7 +3955,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -3992,7 +3965,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -4003,7 +3975,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -4014,7 +3985,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -4025,7 +3995,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -4036,7 +4005,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4047,7 +4015,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4058,7 +4025,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 7
       },
@@ -4069,7 +4035,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4080,7 +4045,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4091,7 +4055,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4102,7 +4065,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4113,7 +4075,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 3
       },
@@ -4124,7 +4085,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 6
       },
@@ -4135,7 +4095,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4146,7 +4105,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4157,7 +4115,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 4
       },
@@ -4168,7 +4125,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4179,7 +4135,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4190,7 +4145,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4201,7 +4155,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4212,7 +4165,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4223,7 +4175,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4234,7 +4185,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4245,7 +4195,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4256,7 +4205,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4267,7 +4215,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4278,7 +4225,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4289,7 +4235,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4300,7 +4245,6 @@
           "Everything"
         ],
         "classification": "useful",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4311,7 +4255,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4322,7 +4265,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4333,7 +4275,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4344,7 +4285,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4355,7 +4295,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4366,7 +4305,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4377,7 +4315,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4388,7 +4325,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4399,7 +4335,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4410,7 +4345,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4421,7 +4355,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4432,7 +4365,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4443,7 +4375,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4454,7 +4385,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4465,7 +4395,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4476,7 +4405,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4487,7 +4415,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4498,7 +4425,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4509,7 +4435,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4520,7 +4445,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4531,7 +4455,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4542,7 +4465,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4553,7 +4475,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4564,7 +4485,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4575,7 +4495,6 @@
           "Everything"
         ],
         "classification": "progression_skip_balancing",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4586,7 +4505,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4597,7 +4515,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4608,7 +4525,6 @@
           "Everything"
         ],
         "classification": "progression",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4619,7 +4535,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4630,7 +4545,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4641,7 +4555,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4652,7 +4565,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4663,7 +4575,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4674,7 +4585,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4685,7 +4595,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4696,7 +4605,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4707,7 +4615,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4718,7 +4625,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4729,7 +4635,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4740,7 +4645,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4751,7 +4655,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4762,7 +4665,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4773,7 +4675,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4784,7 +4685,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4795,7 +4695,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 2
       },
@@ -4806,7 +4705,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4817,7 +4715,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4828,7 +4725,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -4839,7 +4735,6 @@
           "Everything"
         ],
         "classification": "filler",
-        "event": false,
         "type": null,
         "max_count": 1
       },
@@ -5183,12 +5078,12 @@
         },
         "early_seaglide": {
           "type": "default_on_toggle",
-          "default": 1,
+          "default": true,
           "display_name": "Early Seaglide"
         },
         "empty_tanks": {
           "type": "default_on_toggle",
-          "default": 1
+          "default": true
         },
         "free_samples": {
           "type": "toggle",
@@ -6370,5 +6265,6 @@
         }
       }
     }
-  }
+  },
+  "is_canonical": true
 }

@@ -107,6 +107,16 @@ Formal specifications for data formats and protocols:
 2. [Format Converter](./guides/format-converter.md) - Rule format conversion
 3. [Rule Types](./reference/rule-types-reference.md) - Supported rule formats
 
+### Generating API Documentation
+
+The frontend code includes JSDoc annotations. To generate browsable API documentation locally:
+
+```bash
+npm run docs
+```
+
+This creates HTML documentation in `docs/json/api/` from the source files in `frontend/modules/`. Open `docs/json/api/index.html` in a browser to explore it. The generated output is not checked into the repository.
+
 ## Related Documentation
 
 - **[Main Documentation Portal](../README.md)** - Documentation index

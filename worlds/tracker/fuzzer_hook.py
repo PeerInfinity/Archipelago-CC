@@ -86,6 +86,8 @@ class Hook(BaseHook):
     run_id: int = 0  # Track run ID for explain stats files
     explain_stats_collected: bool = False  # Track if we've collected explain stats for this game
     use_fractional_spheres: bool = False  # Toggle for fractional sphere logic
+    ut_version: Optional[str] = None  # UT version being tested (original, original_seeded, worldgen, etc.)
+    use_original_seeded: bool = False  # Toggle for original_seeded tracking mode
 
     def before_generate(self, args):
         self.status = None
@@ -100,6 +102,8 @@ class Hook(BaseHook):
         self.ut_core.run_generator(None,None,args.player_files_path) #initial UT gen
         self.run_id = getattr(args, 'run_id', self.run_id)
         self.use_fractional_spheres = getattr(args, 'fractional_spheres', False)
+        self.use_original_seeded = getattr(args, 'original_seeded', False)
+        self.ut_version = getattr(args, 'ut_version', None)
 
     def after_generate(self, mw:MultiWorld, output_path):
         if mw is None:
@@ -137,10 +141,17 @@ class Hook(BaseHook):
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
         # Set seed_name to enable auto-discovery of pickle/rules.json for tracking
         self.ut_core.seed_name = mw.seed_name
-        # Try pickle first (fastest), then fall back to rules.json
-        self.ut_core.auto_discover_pickle()
-        self.ut_core.auto_discover_rules_json()
-        # initalize_tracker_core will use pickle/worldgen-based tracking if paths are set
+
+        # Only auto-discover resources for modes that need them.
+        # Original and original_seeded modes should use YAML-based tracking only,
+        # without picking up leftover rules.json or pickle files from prior runs.
+        if self.ut_version in (None, 'worldgen', 'hybrid'):
+            self.ut_core.auto_discover_rules_json()
+        if self.ut_version in (None, 'pickle', 'hybrid'):
+            self.ut_core.auto_discover_pickle()
+
+        # initalize_tracker_core will use pickle/worldgen-based tracking if paths are set,
+        # or try original_seeded (resolving seed from seed name/rules JSON), then original
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 

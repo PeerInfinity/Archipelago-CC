@@ -160,6 +160,9 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     if ut_version == 'original':
         ut_version_display = "Original (FarisTheAncient)"
         title_suffix = " (Original UT)"
+    elif ut_version == 'original_seeded':
+        ut_version_display = "Original Seeded (original with generation seed number)"
+        title_suffix = " (Original Seeded)"
     elif ut_version == 'hybrid':
         ut_version_display = "Hybrid (worldgen with native UT preference)"
         title_suffix = " (Hybrid)"
@@ -182,12 +185,14 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     # Add link to comparison docs
     if world_source == "apworlds":
+        md_content += "[View Comparison (Original vs Orig Seeded)](./test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md) | "
         md_content += "[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | "
         md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | "
         md_content += "[View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | "
         md_content += "[View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md)\n\n"
     else:
+        md_content += "[View Comparison (Original vs Orig Seeded)](./test-results-ut-fuzz-comparison-original-original_seeded.md) | "
         md_content += "[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-comparison-original-worldgen.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | "
         md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | "
@@ -317,7 +322,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
 
         # Add Generic Exporter/Logic Statistics section (skip for original UT)
-        if ut_version != 'original':
+        if ut_version not in ('original', 'original_seeded'):
             passed_with_generic_exporter = 0
             passed_with_generic_logic = 0
             passed_with_both_generic = 0
@@ -369,7 +374,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "## Test Results\n\n"
 
     # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
-    if ut_version != 'original':
+    if ut_version not in ('original', 'original_seeded'):
         md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
         md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
     else:
@@ -402,7 +407,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             rate_display = f"❌ {success_rate:.1f}%"
 
         # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
-        if ut_version != 'original':
+        if ut_version not in ('original', 'original_seeded'):
             # Get exporter and game logic sizes from world mapping
             exporter_indicator = "N/A"
             logic_indicator = "N/A"
@@ -424,7 +429,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
 
     if not chart_data:
-        if ut_version != 'original':
+        if ut_version not in ('original', 'original_seeded'):
             md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
         else:
             md_content += "| No data available | - | - | - | - | - | - | - |\n"
@@ -524,7 +529,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
     md_content += "- **Success Rate:** Percentage of successful runs\n"
-    if ut_version != 'original':
+    if ut_version not in ('original', 'original_seeded'):
         md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
         md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
         md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
@@ -598,6 +603,10 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
         'original': {
             'display': 'Original',
             'description': 'Original Universal Tracker (FarisTheAncient)'
+        },
+        'original_seeded': {
+            'display': 'Orig Seeded',
+            'description': 'Original Universal Tracker with generation seed number'
         },
         'worldgen': {
             'display': 'Worldgen',
@@ -997,12 +1006,13 @@ def main():
     # Generate comparison files if we have both versions for a world source
     for world_source in ['bundled', 'apworlds']:
         original_key = f"{world_source}-original"
+        original_seeded_key = f"{world_source}-original_seeded"
         worldgen_key = f"{world_source}-worldgen"
         hybrid_key = f"{world_source}-hybrid"
         pickle_key = f"{world_source}-pickle"
 
-        # Generate comparisons: original vs worldgen, original vs hybrid, original vs pickle
-        for version2 in ['worldgen', 'hybrid', 'pickle']:
+        # Generate comparisons: original vs others, original_seeded vs others
+        for version2 in ['original_seeded', 'worldgen', 'hybrid', 'pickle']:
             version2_key = f"{world_source}-{version2}"
 
             if original_key in chart_data_by_type and version2_key in chart_data_by_type:

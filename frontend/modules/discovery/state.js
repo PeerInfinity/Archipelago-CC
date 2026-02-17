@@ -32,7 +32,8 @@ export class DiscoveryState {
   }
 
   /**
-   * Get the start regions from stateManager, or default to ['Menu']
+   * Get the start regions from stateManager, falling back to the first
+   * region in static data if start regions aren't available yet.
    * @returns {string[]} Array of starting region names
    */
   getStartRegions() {
@@ -42,7 +43,14 @@ export class DiscoveryState {
         return startRegions;
       }
     }
-    return ['Menu'];
+    // Fallback: use the first region from static data
+    if (this.stateManager) {
+      const staticData = this.stateManager.getStaticData?.();
+      if (staticData && staticData.regions && staticData.regions.size > 0) {
+        return [staticData.regions.keys().next().value];
+      }
+    }
+    return [];
   }
 
   /**

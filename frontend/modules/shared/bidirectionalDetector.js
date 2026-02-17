@@ -16,7 +16,7 @@
  * @param {Map|Object} regions - Map or object of region name -> region data
  *   Each region should have: { name, exits: [{ name, connected_region, access_rule }], locations: [] }
  * @param {Object} options - Detection options
- * @param {string} [options.menuRegionName='Menu'] - Name of the menu region (expected to have no entrance)
+ * @param {string} [options.menuRegionName] - Name of the start/menu region (expected to have no entrance). Auto-detected if not provided.
  * @param {number} [options.bidirectionalThreshold=0.5] - Ratio of bidirectional pairs to total edges needed to consider explicit
  * @returns {Object} Detection result
  *   - mode: 'explicit_bidirectional' | 'assume_all_bidirectional' | 'mixed_with_trapped'
@@ -27,7 +27,7 @@
  */
 export function detectBidirectionalMode(regions, options = {}) {
   const {
-    menuRegionName = 'Menu',
+    menuRegionName = null,
     bidirectionalThreshold = 0.5
   } = options;
 
@@ -96,9 +96,10 @@ export function detectBidirectionalMode(regions, options = {}) {
     const hasWayOut = regionsWithOutgoingEdges.has(regionName);
     const hasLocations = (regionData.locations || []).length > 0;
 
-    // Check if this is the menu region or a menu-like region
-    const isMenuLike = regionName === menuRegionName ||
-      (regionName.toLowerCase().includes('menu') && !hasWayIn && !hasLocations);
+    // Check if this is the start/menu region or a start-like region
+    // A start-like region has outgoing edges but no incoming edges and no locations
+    const isMenuLike = (menuRegionName && regionName === menuRegionName) ||
+      (!hasWayIn && hasWayOut && !hasLocations);
 
     if (hasWayIn && !hasWayOut) {
       // Has entrance but no exit - trapped region

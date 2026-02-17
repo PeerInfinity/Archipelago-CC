@@ -5,7 +5,6 @@
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
-  "is_canonical": true,
   "player_names": {
     "1": "Player1"
   },
@@ -30075,19 +30074,19 @@
             "FreeSampleRadioactive": false,
             "EnergyLink": true,
             "StartingRecipies": [
-              1338259,
-              1338262,
-              1338616,
               1338218,
-              1338203,
-              1338601,
+              1338244,
+              1338617,
+              1338616,
               1338224,
               1338347,
-              1338617,
-              1338220,
-              1338244,
+              1338259,
+              1338262,
               1338600,
-              1338215
+              1338203,
+              1338215,
+              1338601,
+              1338220
             ]
           },
           "SlotDataVersion": 1,
@@ -30121,5 +30120,6 @@
   "game_info": {
     "1": {}
   },
-  "helpers": {}
+  "helpers": {},
+  "is_canonical": true
 }

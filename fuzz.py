@@ -478,12 +478,6 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
         # See, I was already afraid with item_links but now it's plain terror. Let's not ever touch this ever.
         return option.default
 
-    if name == "gfxmod":
-        # XXX: LADX has this and it should be a choice but is freetext for some reason...
-        # Putting invalid values here means the gen fails even though it doesn't affect any logic
-        # Just return Link for now.
-        return "Link"
-
     if issubclass(option, OptionCounter):
         # ItemDict subclasses like StartInventory might not have valid_keys and
         # instead rely on verify_item_name for runtime validation against world.item_names
@@ -561,7 +555,7 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
     return option.default
 
 
-def call_generate(yaml_path, args, output_path):
+def call_generate(yaml_path, args, output_path, generation_seed=None):
     from settings import get_settings
 
     settings = get_settings()
@@ -571,7 +565,7 @@ def call_generate(yaml_path, args, output_path):
             "weights_file_path": settings.generator.weights_file_path,
             "sameoptions": False,
             "player_files_path": yaml_path,
-            "seed": random.randint(0, 1000000000),
+            "seed": generation_seed if generation_seed is not None else random.randint(0, 1000000000),
             "multi": 1,
             "spoiler": 1,
             "outputpath": output_path,
@@ -585,6 +579,9 @@ def call_generate(yaml_path, args, output_path):
             "csv_output": False,
             "log_time": False,
             "spoiler_only": False,
+            "fractional_spheres": getattr(args, 'fractional_spheres', False),
+            "original_seeded": getattr(args, 'original_seeded', False),
+            "ut_version": getattr(args, 'ut_version', None),
         }
     )
     for hook in MP_HOOKS:
@@ -597,10 +594,14 @@ def call_generate(yaml_path, args, output_path):
 def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
     global MP_HOOKS
 
-    # Seed random for reproducibility if seed is provided
-    # Use seed + iteration to ensure each worker gets a unique but deterministic seed
-    if args.seed is not None:
-        random.seed(args.seed + i)
+    # Compute generation seed: when starting_seed is set, use it directly
+    # (starting_seed + i), otherwise use a random number.
+    # Also seed Python's random for reproducible YAML option generation.
+    if args.starting_seed is not None:
+        generation_seed = args.starting_seed + i
+        random.seed(generation_seed)
+    else:
+        generation_seed = None
 
     out_buf = StringIO()
 
@@ -629,7 +630,7 @@ def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
                 if timer:
                     timer.start()
 
-                mw = call_generate(yaml_path, args, output_path)
+                mw = call_generate(yaml_path, args, output_path, generation_seed=generation_seed)
             except Exception as e:
                 raised = e
             finally:
@@ -721,11 +722,11 @@ class GenOutcome:
 def get_run_id(i, args):
     """Get the run identifier for output files and error reporting.
 
-    When --number-by-seed is set, returns the actual seed (base_seed + iteration).
+    When --number-by-seed is set, returns the actual seed (starting_seed + iteration).
     Otherwise returns the iteration index (default behavior).
     """
-    if getattr(args, 'number_by_seed', False) and args.seed is not None:
-        return args.seed + i
+    if getattr(args, 'number_by_seed', False) and args.starting_seed is not None:
+        return args.starting_seed + i
     return i
 
 
@@ -1015,10 +1016,10 @@ if __name__ == "__main__":
         timeout_handler.start()
 
         while i < args.runs and not STOP_REQUESTED:
-            # Seed random for this iteration if seed is provided
+            # Seed random for this iteration if starting_seed is provided
             # This ensures YAML generation in main process is deterministic
-            if args.seed is not None:
-                random.seed(args.seed + i)
+            if args.starting_seed is not None:
+                random.seed(args.starting_seed + i)
 
             if apworld_name is None:
                 actual_apworld = random.choice(valid_worlds)
@@ -1086,7 +1087,9 @@ if __name__ == "__main__":
     parser.add_argument("--with-static-worlds", default=None)
     parser.add_argument("--hook", action="append", default=[])
     parser.add_argument("--skip-output", default=False, action="store_true")
-    parser.add_argument("--seed", default=None, type=int, help="Random seed for reproducible fuzzing")
+    parser.add_argument("--starting-seed", default=None, type=int,
+                        help="Starting seed number for generation. Each run uses starting_seed + iteration "
+                             "as the actual Archipelago generation seed. If not set, seeds are random.")
     parser.add_argument("--default-options", default=None, type=str,
                         help="Comma-separated list of option names to leave at their defaults instead of randomizing. "
                              "Example: --default-options mode,entrance_shuffle,glitches_required")
@@ -1099,15 +1102,22 @@ if __name__ == "__main__":
                              "where collecting items from one location enables access to other locations in the same sphere.")
     parser.add_argument("--number-by-seed", default=False, action="store_true",
                         help="Number output files and errors by actual seed (base_seed + iteration) instead of iteration index. "
-                             "Requires --seed to be set. Makes it easier to reproduce specific failures.")
+                             "Requires --starting-seed to be set. Makes it easier to reproduce specific failures.")
     parser.add_argument("--stop-on-first-failure", default=False, action="store_true",
                         help="Stop fuzzing after the first failure or timeout. Useful for debugging.")
+    parser.add_argument("--original-seeded", default=False, action="store_true",
+                        help="Use original UT tracking with the actual generation seed number. "
+                             "This makes the tracker's internal generation deterministic and matching "
+                             "the real game's randomization.")
+    parser.add_argument("--ut-version", default=None, type=str,
+                        help="UT version being tested (original, original_seeded, worldgen, pickle, hybrid). "
+                             "Passed to hooks so they can control auto-discovery behavior.")
 
     args = parser.parse_args()
 
-    # Validate --number-by-seed requires --seed
-    if args.number_by_seed and args.seed is None:
-        parser.error("--number-by-seed requires --seed to be set")
+    # Validate --number-by-seed requires --starting-seed
+    if args.number_by_seed and args.starting_seed is None:
+        parser.error("--number-by-seed requires --starting-seed to be set")
 
     # This is just to make sure that the host.yaml file exists by the time we fork
     # so that a first run on a new installation doesn't throw out failures until

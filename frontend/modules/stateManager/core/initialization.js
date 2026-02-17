@@ -207,9 +207,7 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   if (!sm.prog_items) {
     sm.prog_items = {};
   }
-  if (!sm.prog_items[selectedPlayerId]) {
-    sm.prog_items[selectedPlayerId] = {};
-  }
+  sm.prog_items[selectedPlayerId] = {}; // Always reset for new rules to prevent stale data
 
   // Initialize accumulators from game_info metadata (generic for all games)
   const gameInfo = jsonData.game_info?.[selectedPlayerId];
@@ -271,6 +269,7 @@ function loadLocations(sm, selectedPlayerId) {
   sm.locations.clear(); // Clear the Map initialized in constructor
   sm.locationNameToId = {};
   sm.eventLocations.clear();
+  sm.localItemLocations.clear();
 
   for (const regionName of sm.originalRegionOrder) {
     const region = sm.regions.get(regionName); // Use Map.get() instead of bracket notation

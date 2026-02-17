@@ -312,8 +312,17 @@ class MainContentUI {
     log('info', '[MainContentUI] Initializing console');
 
     this.appendConsoleMessage(
-      'Console initialized. Type "help" for local commands, or "!help" for server commands.',
-      'system'
+      'Console initialized. Type "help" for local commands, or "!help" for server commands.'
+    );
+    const isStable = window.location.pathname.startsWith('/Archipelago/');
+    const overviewUrl = isStable
+      ? 'https://github.com/PeerInfinity/Archipelago/blob/JSONExport/docs/json/user/overview.md'
+      : 'https://github.com/PeerInfinity/Archipelago-CC/blob/main/docs/json/user/overview.md';
+    this.appendConsoleLink(
+      'New here? See the ',
+      'Overview',
+      overviewUrl,
+      ' for an introduction to this project.'
     );
   }
 
@@ -359,6 +368,38 @@ class MainContentUI {
     });
 
     // Scroll to bottom
+    this.consoleElement.scrollTop = this.consoleElement.scrollHeight;
+  }
+
+  /**
+   * Appends a system message containing a clickable link to the console
+   * @param {string} before - Text before the link
+   * @param {string} linkText - The clickable link text
+   * @param {string} url - The URL to link to
+   * @param {string} [after=''] - Text after the link
+   */
+  appendConsoleLink(before, linkText, url, after = '') {
+    if (!this.consoleHistoryElement) return;
+
+    const messageElement = document.createElement('div');
+    messageElement.className = 'console-message console-message-info';
+    messageElement.style.color = '#ced4da';
+
+    messageElement.appendChild(document.createTextNode(before));
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = linkText;
+    link.style.color = '#4dabf7';
+    link.style.textDecoration = 'underline';
+    link.style.cursor = 'pointer';
+    messageElement.appendChild(link);
+
+    messageElement.appendChild(document.createTextNode(after));
+
+    this.consoleHistoryElement.appendChild(messageElement);
     this.consoleElement.scrollTop = this.consoleElement.scrollHeight;
   }
 

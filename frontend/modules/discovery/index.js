@@ -272,15 +272,17 @@ function handleRulesLoaded(eventData) {
     return;
   }
 
-  // Initialize or re-initialize based on the loaded rules
+  // Clear existing discovery state and re-initialize for the new rules.
+  // Using clearDiscovery() instead of initialize() ensures previously discovered
+  // regions/locations/exits don't persist when loading a different preset.
   log('info',
-    '[Discovery Module] Initializing discoverables from stateManager:rulesLoaded handler...'
+    '[Discovery Module] Clearing and re-initializing discoverables from stateManager:rulesLoaded handler...'
   );
   try {
-    discoveryStateSingleton.initialize(); // <<< Use singleton
+    discoveryStateSingleton.clearDiscovery();
   } catch (error) {
     log('error',
-      '[Discovery Module] Error initializing DiscoveryState from rulesLoaded:',
+      '[Discovery Module] Error clearing/initializing DiscoveryState from rulesLoaded:',
       error
     );
   }

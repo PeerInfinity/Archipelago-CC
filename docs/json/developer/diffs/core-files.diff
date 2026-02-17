@@ -1,7 +1,7 @@
---- /home/robert/CC/Archipelago-vanilla/BaseClasses.py	2026-02-10 10:43:41.532737536 -0800
-+++ json_tools_patches/0.6.7/main/BaseClasses.py	2026-02-10 13:17:46.844661817 -0800
+--- a/BaseClasses.py
++++ b/BaseClasses.py
 @@ -1697,6 +1697,17 @@
- 
+
      def create_playthrough(self, create_paths: bool = True) -> None:
          """Destructive to the multiworld while it is run, damage gets repaired afterwards."""
 +
@@ -18,20 +18,20 @@
          from itertools import chain
          # get locations containing progress items
          multiworld = self.multiworld
---- /home/robert/CC/Archipelago-vanilla/Main.py	2026-02-10 10:43:41.536737534 -0800
-+++ json_tools_patches/0.6.7/main/Main.py	2026-02-10 13:17:40.072649890 -0800
+--- a/Main.py
++++ b/Main.py
 @@ -19,6 +19,7 @@
  from settings import get_settings
  from worlds import AutoWorld
  from worlds.generic.Rules import exclusion_rules, locality_rules
 +from exporter import export_game_rules, export_multiworld_pickle
- 
+
  __all__ = ["main"]
- 
+
 @@ -35,6 +36,9 @@
      # initialize the multiworld
      multiworld = MultiWorld(args.multi)
- 
+
 +    # Set output directory for sphere logging
 +    multiworld.temp_dir_for_sphere_log = args.outputpath
 +
@@ -39,19 +39,19 @@
      multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
      multiworld.plando_options = args.plando
 @@ -273,6 +277,9 @@
- 
+
                  for slot in multiworld.player_ids:
                      slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
 +                    # Cache slot_data on the world for the exporter to use
 +                    # This avoids calling fill_slot_data twice
 +                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
- 
+
                  def precollect_hint(location: Location, auto_status: HintStatus):
                      entrance = er_hint_data.get(location.player, {}).get(location.address, "")
 @@ -369,6 +376,10 @@
                      logger.info(f'Generating output files ({i}/{len(output_file_futures)}).')
                  future.result()
- 
+
 +        # Make temp_dir available for sphere_log.jsonl in Spoiler.create_playthrough
 +        if hasattr(multiworld, 'spoiler'): # Ensure spoiler object exists
 +            multiworld.temp_dir_for_sphere_log = temp_dir
@@ -62,7 +62,7 @@
 @@ -376,6 +387,36 @@
          if args.spoiler:
              multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
- 
+
 +        # Export rules data after create_playthrough so sphere_log.jsonl is included.
 +        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
 +        # so it won't repopulate caches that were cleared by stage_modify_multidata.
@@ -96,11 +96,11 @@
          zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
          logger.info(f"Creating final archive at {zipfilename}")
          with zipfile.ZipFile(zipfilename, mode="w", compression=zipfile.ZIP_DEFLATED,
---- /home/robert/CC/Archipelago-vanilla/settings.py	2026-02-10 10:43:41.636737472 -0800
-+++ json_tools_patches/0.6.7/main/settings.py	2026-02-10 13:18:15.140667424 -0800
+--- a/settings.py
++++ b/settings.py
 @@ -23,6 +23,7 @@
  ]
- 
+
  no_gui = False
 +skip_required_files = False
  skip_autosave = False
@@ -121,7 +121,7 @@
                      if new is None:
 @@ -518,6 +525,23 @@
          # created on demand, so marked as optional
- 
+
      output_path: OutputPath = OutputPath("output")
 +    skip_required_files: bool = False
 +    save_rules_json: bool = False
@@ -140,8 +140,8 @@
 +    clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones
 +    resolve_options_to_constants: bool = True  # Resolve world.options.X.value to constants at export time (default: True)
 +    use_tracking_mode_config: bool = False  # Use tracking-mode-config.json for per-game export decisions
- 
- 
+
+
  class ServerOptions(Group):
 @@ -900,4 +924,9 @@
                  res = Settings(None)

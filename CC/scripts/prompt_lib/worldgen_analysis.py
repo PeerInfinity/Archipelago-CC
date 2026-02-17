@@ -401,7 +401,7 @@ def get_ut_fuzz_single_failure(project_root, ut_version='worldgen', seed=None):
         - game_name: Display name of the game
         - template: Template filename
         - world_directory: World directory name
-        - base_seed: The --seed value used for the fuzz test
+        - base_seed: The --starting-seed value used for the fuzz test
         - failing_seed: The actual seed that failed (lowest if multiple)
         - reproduction_seed: The seed to use for reproduction (same as failing_seed with --number-by-seed)
         - error_type: The error type (e.g., 'None' for logic mismatch)
@@ -420,7 +420,7 @@ def get_ut_fuzz_all_single_failures(project_root, ut_version='worldgen', seed=No
         - game_name: Display name of the game
         - template: Template filename
         - world_directory: World directory name
-        - base_seed: The --seed value used for the fuzz test
+        - base_seed: The --starting-seed value used for the fuzz test
         - failing_seed: The actual seed that failed
         - reproduction_seed: The seed to use for reproduction
         - error_type: The error type (e.g., 'None' for logic mismatch)
@@ -436,7 +436,8 @@ def get_ut_fuzz_all_single_failures(project_root, ut_version='worldgen', seed=No
         return []
 
     metadata = data.get('metadata', {})
-    base_seed = metadata.get('seed')
+    # Support both old ('seed') and new ('starting_seed') metadata key names
+    base_seed = metadata.get('starting_seed', metadata.get('seed'))
     total_runs = metadata.get('total_runs', 0)
 
     # If base_seed is None or "random", we can't reproduce deterministically
@@ -753,10 +754,11 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='worldgen', seed_
     spoiler_results = spoiler_fuzz_data.get('results', {})
 
     # Get base_seed from spoiler fuzz metadata for reproduction
-    # Backwards compatibility: older results have 'seed' but not 'base_seed'
+    # Support both old ('seed'/'base_seed') and new ('starting_seed') metadata key names
     spoiler_metadata = spoiler_fuzz_data.get('metadata', {})
-    base_seed = spoiler_metadata.get('base_seed')
-    if base_seed is None:
+    base_seed = spoiler_metadata.get('starting_seed', spoiler_metadata.get('base_seed'))
+    if base_seed is None or base_seed == "random":
+        base_seed = None
         # Fall back to 'seed' field if seed_mode is 'fixed' and seed is an integer
         seed_mode = spoiler_metadata.get('seed_mode')
         seed_value = spoiler_metadata.get('seed')

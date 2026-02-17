@@ -155,8 +155,8 @@ export class QueueAnalyzer {
     if (loopState?.playerState?.isStartRegion) {
       return loopState.playerState.isStartRegion(action.region || action.regionName);
     }
-    // Fallback to checking for 'Menu'
-    return (action.region || action.regionName) === 'Menu';
+    // If playerState not available, can't determine start region
+    return false;
   }
 
   /**
