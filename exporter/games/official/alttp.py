@@ -313,7 +313,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # Get count from second argument (defaults to 1)
             count = args[1] if len(args) >= 2 else {'type': 'constant', 'value': 1}
 
-            # Check for vanilla key bypass
+            # Check for vanilla key bypass or cap
             patches = self._get_export_rule_patches()
             if patches:
                 bypass_keys = patches.get('bypass_key_checks', set())
@@ -322,6 +322,21 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         "_lttp_has_key for %s bypassed (vanilla export patch)", item_value
                     )
                     return {'type': 'constant', 'value': True}
+
+                cap_counts = patches.get('cap_key_counts', {})
+                if item_value in cap_counts:
+                    cap = cap_counts[item_value]
+                    # Extract the original count value
+                    orig_count = count
+                    if isinstance(count, dict) and count.get('type') == 'constant':
+                        orig_count = count.get('value', 1)
+                    # Cap the count if it exceeds the limit
+                    if isinstance(orig_count, int) and orig_count > cap:
+                        logger.debug(
+                            "_lttp_has_key for %s capped from %d to %d",
+                            item_value, orig_count, cap
+                        )
+                        count = {'type': 'constant', 'value': cap}
 
             # Check for universal key mode
             small_key_shuffle = None

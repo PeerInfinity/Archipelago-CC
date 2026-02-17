@@ -418,13 +418,15 @@ Playthrough:
   Library: Book of Mudora
 }
 12: {
-  Desert Palace - Big Key Chest: Big Key (Desert Palace)
   Desert Palace - Torch: Small Key (Desert Palace)
 }
 13: {
-  Desert Palace - Big Chest: Power Glove
+  Desert Palace - Big Key Chest: Big Key (Desert Palace)
 }
 14: {
+  Desert Palace - Big Chest: Power Glove
+}
+15: {
   Desert Palace - Beamos Hall Pot Key: Small Key (Desert Palace)
   Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
   Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
@@ -432,23 +434,23 @@ Playthrough:
   King Zora: Flippers
   Old Man: Magic Mirror
 }
-15: {
+16: {
   Capacity Upgrade Shop: Capacity Upgrade Shop
   Hobo: Bottle
   Tower of Hera - Basement Cage: Small Key (Tower of Hera)
   Waterfall Fairy - Left: Red Boomerang
 }
-16: {
+17: {
   Tower of Hera - Big Key Chest: Big Key (Tower of Hera)
 }
-17: {
+18: {
   Tower of Hera - Big Chest: Moon Pearl
   Tower of Hera - Prize: Blue Pendant
 }
-18: {
+19: {
   Master Sword Pedestal: Master Sword
 }
-19: {
+20: {
   Agahnim 1: Beat Agahnim 1
   Castle Tower - Circle of Pots Key Drop: Small Key (Agahnims Tower)
   Castle Tower - Dark Archer Key Drop: Small Key (Agahnims Tower)
@@ -456,20 +458,26 @@ Playthrough:
   Castle Tower - Room 03: Small Key (Hyrule Castle)
   Ether Tablet: Ether
 }
-20: {
+21: {
   Catfish: Quake
-  Palace of Darkness - Big Key Chest: Big Key (Palace of Darkness)
-  Palace of Darkness - Dark Basement - Right: Small Key (Palace of Darkness)
-  Palace of Darkness - Dark Maze - Bottom: Small Key (Palace of Darkness)
   Palace of Darkness - Shooter Room: Small Key (Palace of Darkness)
-  Palace of Darkness - Stalfos Basement: Small Key (Palace of Darkness)
-  Palace of Darkness - The Arena - Bridge: Small Key (Palace of Darkness)
   Palace of Darkness - The Arena - Ledge: Small Key (Palace of Darkness)
 }
-21: {
+22: {
+  Palace of Darkness - Stalfos Basement: Small Key (Palace of Darkness)
+  Palace of Darkness - The Arena - Bridge: Small Key (Palace of Darkness)
+}
+23: {
+  Palace of Darkness - Dark Basement - Right: Small Key (Palace of Darkness)
+}
+24: {
+  Palace of Darkness - Big Key Chest: Big Key (Palace of Darkness)
+  Palace of Darkness - Dark Maze - Bottom: Small Key (Palace of Darkness)
+}
+25: {
   Palace of Darkness - Big Chest: Hammer
 }
-22: {
+26: {
   Bombos Tablet: Bombos
   King's Tomb: Cape
   Magic Bat: Magic Upgrade (1/2)
@@ -480,48 +488,45 @@ Playthrough:
   Skull Woods - Pot Prison: Small Key (Skull Woods)
   Skull Woods - West Lobby Pot Key: Small Key (Skull Woods)
   Stumpy: Shovel
-  Swamp Palace - Big Key Chest: Big Key (Swamp Palace)
   Swamp Palace - Entrance: Small Key (Swamp Palace)
-  Swamp Palace - Pot Row Pot Key: Small Key (Swamp Palace)
-  Swamp Palace - Trench 1 Pot Key: Small Key (Swamp Palace)
-  Swamp Palace - Trench 2 Pot Key: Small Key (Swamp Palace)
   Thieves' Town - Big Key Chest: Big Key (Thieves Town)
 }
-23: {
+27: {
   Flute Spot: Flute
   Skull Woods - Big Chest: Fire Rod
   Spike Cave: Cane of Byrna
-  Swamp Palace - Big Chest: Hookshot
+  Swamp Palace - Pot Row Pot Key: Small Key (Swamp Palace)
   Thieves' Town - Hallway Pot Key: Small Key (Thieves Town)
 }
-24: {
+28: {
   Flute Activation Spot: Activated Flute
   Skull Woods - Bridge Room: Small Key (Skull Woods)
-  Swamp Palace - Hookshot Pot Key: Small Key (Swamp Palace)
-  Swamp Palace - Prize: Crystal 2
-  Swamp Palace - Waterway Pot Key: Small Key (Swamp Palace)
+  Swamp Palace - Trench 1 Pot Key: Small Key (Swamp Palace)
   Thieves' Town - Blind's Cell: Small Key (Thieves Town)
   Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
 }
-25: {
+29: {
   Skull Woods - Spike Corner Key Drop: Small Key (Skull Woods)
+  Swamp Palace - Trench 2 Pot Key: Small Key (Swamp Palace)
   Thieves' Town - Big Chest: Titans Mitts
   Thieves' Town - Prize: Crystal 4
 }
-26: {
+30: {
   Frog: Get Frog
   Ice Palace - Jelly Key Drop: Small Key (Ice Palace)
   Misery Mire - Bridge Chest: Small Key (Misery Mire)
   Misery Mire - Spike Chest: Small Key (Misery Mire)
   Misery Mire - Spikes Pot Key: Small Key (Misery Mire)
   Skull Woods - Prize: Crystal 3
+  Swamp Palace - Big Key Chest: Big Key (Swamp Palace)
 }
-27: {
+31: {
   Ice Palace - Conveyor Key Drop: Small Key (Ice Palace)
   Misery Mire - Main Lobby: Small Key (Misery Mire)
   Missing Smith: Return Smith
+  Swamp Palace - Big Chest: Hookshot
 }
-28: {
+32: {
   Blacksmith: Tempered Sword
   Dark Blacksmith Ruins: Pick Up Purple Chest
   Ice Palace - Big Key Chest: Big Key (Ice Palace)
@@ -531,57 +536,62 @@ Playthrough:
   Ice Palace - Spike Room: Small Key (Ice Palace)
   Misery Mire - Conveyor Crystal Key Drop: Small Key (Misery Mire)
   Misery Mire - Fishbone Pot Key: Small Key (Misery Mire)
+  Swamp Palace - Hookshot Pot Key: Small Key (Swamp Palace)
+  Swamp Palace - Prize: Crystal 2
+  Swamp Palace - Waterway Pot Key: Small Key (Swamp Palace)
 }
-29: {
+33: {
   Ice Palace - Prize: Crystal 5
   Misery Mire - Big Key Chest: Big Key (Misery Mire)
   Purple Chest: Bottle
 }
-30: {
+34: {
   Misery Mire - Big Chest: Cane of Somaria
 }
-31: {
+35: {
   Misery Mire - Prize: Crystal 6
   Turtle Rock - Roller Room - Right: Small Key (Turtle Rock)
 }
-32: {
+36: {
   Pyramid Fairy - Left: Silver Bow
   Pyramid Fairy - Right: Golden Sword
   Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
 }
-33: {
+37: {
   Turtle Rock - Chain Chomps: Small Key (Turtle Rock)
 }
-34: {
+38: {
   Turtle Rock - Pokey 2 Key Drop: Small Key (Turtle Rock)
 }
-35: {
+39: {
   Turtle Rock - Big Key Chest: Big Key (Turtle Rock)
 }
-36: {
+40: {
   Turtle Rock - Big Chest: Mirror Shield
   Turtle Rock - Crystaroller Room: Small Key (Turtle Rock)
 }
-37: {
+41: {
   Turtle Rock - Eye Bridge - Bottom Left: Small Key (Turtle Rock)
 }
-38: {
+42: {
   Turtle Rock - Prize: Crystal 7
 }
-39: {
-  Ganons Tower - Big Key Chest: Big Key (Ganons Tower)
+43: {
   Ganons Tower - Bob's Torch: Small Key (Ganons Tower)
   Ganons Tower - Conveyor Cross Pot Key: Small Key (Ganons Tower)
-  Ganons Tower - Conveyor Star Pits Pot Key: Small Key (Ganons Tower)
   Ganons Tower - Double Switch Pot Key: Small Key (Ganons Tower)
-  Ganons Tower - Firesnake Room: Small Key (Ganons Tower)
   Ganons Tower - Tile Room: Small Key (Ganons Tower)
 }
-40: {
+44: {
+  Ganons Tower - Big Key Chest: Big Key (Ganons Tower)
+  Ganons Tower - Conveyor Star Pits Pot Key: Small Key (Ganons Tower)
+  Ganons Tower - Firesnake Room: Small Key (Ganons Tower)
+}
+45: {
   Agahnim 2: Beat Agahnim 2
   Ganons Tower - Mini Helmasaur Key Drop: Small Key (Ganons Tower)
   Ganons Tower - Pre-Moldorm Chest: Small Key (Ganons Tower)
 }
-41: {
+46: {
   Ganon: Triforce
 }

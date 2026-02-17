@@ -69,16 +69,18 @@ def main():
         # here, the ALttP export handler can apply the same relaxations to the
         # exported rules.json so the generated worldgen world works without patches.
         ALTTPWorld.export_rule_patches = {
-            # These 5 dungeons have pessimistic key logic that creates circular
-            # dependencies with vanilla placements. Key checks are replaced with
-            # True in the export so the worldgen world doesn't inherit them.
-            'bypass_key_checks': frozenset({
-                'Small Key (Desert Palace)',
-                'Small Key (Agahnims Tower)',
-                'Small Key (Palace of Darkness)',
-                'Small Key (Swamp Palace)',
-                'Small Key (Ganons Tower)',
-            }),
+            # These dungeons have pessimistic key logic that creates circular
+            # dependencies with vanilla placements. Full bypasses replace key
+            # checks with True; capped keys reduce the required count.
+            'bypass_key_checks': frozenset(),
+            # Cap key requirements to this count (instead of full bypass)
+            'cap_key_counts': {
+                'Small Key (Desert Palace)': 1,
+                'Small Key (Agahnims Tower)': 0,
+                'Small Key (Palace of Darkness)': 5,
+                'Small Key (Swamp Palace)': 4,
+                'Small Key (Ganons Tower)': 4,
+            },
         }
 
         main_main(erargs, seed=seed)

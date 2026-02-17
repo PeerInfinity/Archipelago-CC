@@ -2912,7 +2912,11 @@
             "name": "Desert Palace East Wing",
             "connected_region": "Desert Palace East",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Small Key (Desert Palace)",
+                "count": 1
+              }
             }
           }
         ],
@@ -3096,16 +3100,27 @@
             "name": "Desert Palace - Beamos Hall Pot Key",
             "id": null,
             "access_rule": {
-              "rule": "can_kill_most_things",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "can_kill_most_things",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 4
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
                   "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Desert Palace)"
+                  }
                 }
               ]
             },
@@ -3125,16 +3140,27 @@
             "name": "Desert Palace - Desert Tiles 2 Pot Key",
             "id": null,
             "access_rule": {
-              "rule": "can_kill_most_things",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
+              "rule": "And",
+              "children": [
                 {
-                  "rule": "Constant",
+                  "rule": "can_kill_most_things",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 4
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
                   "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Desert Palace)"
+                  }
                 }
               ]
             },
@@ -3206,9 +3232,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)"
+                    "items": [
+                      "Small Key (Desert Palace)",
+                      "Big Key (Desert Palace)"
+                    ]
                   }
                 }
               ]
@@ -3295,9 +3324,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)"
+                    "items": [
+                      "Small Key (Desert Palace)",
+                      "Big Key (Desert Palace)"
+                    ]
                   }
                 }
               ]
@@ -4359,6 +4391,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 0
+                  }
+                },
+                {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -4416,6 +4455,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 0
+                  }
+                },
+                {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4454,6 +4500,13 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 0
+                  }
+                },
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
@@ -4494,6 +4547,13 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 0
+                  }
+                },
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
@@ -8838,7 +8898,11 @@
             "name": "Swamp Palace Small Key Door",
             "connected_region": "Swamp Palace (Starting Area)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Small Key (Swamp Palace)",
+                "count": 1
+              }
             }
           }
         ],
@@ -8877,10 +8941,22 @@
             "name": "Swamp Palace (Center)",
             "connected_region": "Swamp Palace (Center)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hammer"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hammer"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -8940,10 +9016,22 @@
             "name": "Swamp Palace - Trench 1 Pot Key",
             "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Moon Pearl"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Small Key (Swamp Palace)",
@@ -8971,17 +9059,33 @@
             "name": "Swamp Palace (North)",
             "connected_region": "Swamp Palace (North)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hookshot"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Swamp Palace (West)",
             "connected_region": "Swamp Palace (West)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Small Key (Swamp Palace)",
+                "count": 4
+              }
             }
           }
         ],
@@ -9257,6 +9361,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "AST_function_call",
                   "args": {
                     "function": {
@@ -9308,6 +9419,13 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 4
+                  }
+                },
                 {
                   "rule": "AST_function_call",
                   "args": {
@@ -12853,7 +12971,11 @@
             "name": "Palace of Darkness Bridge Room",
             "connected_region": "Palace of Darkness (Center)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Small Key (Palace of Darkness)",
+                "count": 1
+              }
             }
           },
           {
@@ -12918,16 +13040,71 @@
             "name": "Palace of Darkness Big Key Chest Staircase",
             "connected_region": "Palace of Darkness (Big Key Chest)",
             "access_rule": {
-              "rule": "can_use_bombs",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "AST_placement_lookup",
+                              "args": {
+                                "location": "Palace of Darkness - Big Key Chest",
+                                "_original_ast_type": "placement_lookup"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "in",
+                            "right": [
+                              [
+                                "Small Key (Palace of Darkness)",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Palace of Darkness)",
+                            "count": 3
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Palace of Darkness)",
+                        "count": 5
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Palace of Darkness (North)",
             "connected_region": "Palace of Darkness (North)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Small Key (Palace of Darkness)",
+                "count": 4
+              }
             }
           },
           {
@@ -12936,6 +13113,13 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 5
+                  }
+                },
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
@@ -13113,17 +13297,72 @@
             "name": "Palace of Darkness Spike Statue Room Door",
             "connected_region": "Palace of Darkness (Harmless Hellway)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Palace of Darkness - Harmless Hellway",
+                            "_original_ast_type": "placement_lookup"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "in",
+                        "right": [
+                          [
+                            "Small Key (Palace of Darkness)",
+                            1
+                          ]
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Palace of Darkness)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 5
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Palace of Darkness Maze Door",
             "connected_region": "Palace of Darkness (Maze)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Lamp"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -13595,10 +13834,70 @@
             "name": "Ganons Tower (Tile Room) Key Door",
             "connected_region": "Ganons Tower (Compass Room)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Fire Rod"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire Rod"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -13637,7 +13936,59 @@
             "name": "Ganons Tower (Bottom) (East)",
             "connected_region": "Ganons Tower (Bottom)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    },
+                    {
+                      "rule": "AST_placement_search",
+                      "args": {
+                        "item": "Big Key (Ganons Tower)",
+                        "player": 1,
+                        "locations": [
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
+                          ]
+                        ],
+                        "_original_ast_type": "placement_search"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                }
+              ]
             }
           }
         ],
@@ -13648,6 +13999,61 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
                 {
                   "rule": "Or",
                   "children": [
@@ -13696,6 +14102,61 @@
                   "rule": "Or",
                   "children": [
                     {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
@@ -13736,6 +14197,61 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
                 {
                   "rule": "Or",
                   "children": [
@@ -13784,6 +14300,61 @@
                   "rule": "Or",
                   "children": [
                     {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
@@ -13824,6 +14395,61 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
                 {
                   "rule": "Or",
                   "children": [
@@ -13877,17 +14503,72 @@
             "name": "Ganons Tower (Map Room)",
             "connected_region": "Ganons Tower (Map Room)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Ganons Tower - Map Chest",
+                            "_original_ast_type": "placement_lookup"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "in",
+                        "right": [
+                          [
+                            "Big Key (Ganons Tower)",
+                            1
+                          ]
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Ganons Tower (Double Switch Room)",
             "connected_region": "Ganons Tower (Firesnake Room)",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hookshot"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -14071,7 +14752,75 @@
             "name": "Ganons Tower (Firesnake Room)",
             "connected_region": "Ganons Tower (Teleport Room)",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    },
+                    {
+                      "rule": "AST_placement_search",
+                      "args": {
+                        "item": "Big Key (Ganons Tower)",
+                        "player": 1,
+                        "locations": [
+                          [
+                            "Ganons Tower - Randomizer Room - Top Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Top Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
+                          ]
+                        ],
+                        "_original_ast_type": "placement_search"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                }
+              ]
             }
           }
         ],
@@ -14080,10 +14829,86 @@
             "name": "Ganons Tower - Firesnake Room",
             "id": 60112,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Moon Pearl"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "AST_placement_search",
+                              "args": {
+                                "item": "Big Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
+                                  ]
+                                ],
+                                "_original_ast_type": "placement_search"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "AST_placement_search",
+                              "args": {
+                                "item": "Small Key (Ganons Tower)",
+                                "player": 1,
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Firesnake Room",
+                                    1
+                                  ]
+                                ],
+                                "_original_ast_type": "placement_search"
+                              },
+                              "_converted_from_ast": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Small Key (Ganons Tower)",
@@ -14127,6 +14952,57 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Randomizer Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Right",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Moon Pearl"
@@ -14155,6 +15031,57 @@
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Randomizer Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Right",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -14187,6 +15114,57 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Randomizer Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Right",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Moon Pearl"
@@ -14215,6 +15193,57 @@
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ganons Tower)",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "AST_placement_search",
+                          "args": {
+                            "item": "Big Key (Ganons Tower)",
+                            "player": 1,
+                            "locations": [
+                              [
+                                "Ganons Tower - Randomizer Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Randomizer Room - Bottom Right",
+                                1
+                              ]
+                            ],
+                            "_original_ast_type": "placement_search"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ganons Tower)",
+                        "count": 4
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -14636,9 +15665,21 @@
             "name": "Ganons Tower Moldorm Door",
             "connected_region": "Ganons Tower (Moldorm)",
             "access_rule": {
-              "rule": "can_use_bombs",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -14689,6 +15730,13 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 4
+                  }
+                },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",

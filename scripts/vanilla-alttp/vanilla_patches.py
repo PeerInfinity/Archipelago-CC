@@ -298,13 +298,16 @@ def _make_patched_fill_dungeons(original_fill_dungeons):
 # with vanilla item placements. Each is essential — removing any one
 # from this set causes the accessibility check to fail.
 # Identified by progressive bypass analysis (analyze_key_checks.py).
-_VANILLA_KEY_BYPASS_DUNGEONS = frozenset({
-    'Small Key (Desert Palace)',     # East Wing needs 4 keys; 3 are behind Power Glove door
-    'Small Key (Agahnims Tower)',    # Need 4 keys to reach Agahnim 1 (Dark World access)
-    'Small Key (Palace of Darkness)',  # Need 6 keys; dungeon is deep in Dark World
-    'Small Key (Swamp Palace)',      # Need 6 keys; progression through Dark World
-    'Small Key (Ganons Tower)',      # Need 8 keys; final dungeon
-})
+_VANILLA_KEY_BYPASS_DUNGEONS = frozenset()
+
+# Dungeons where key counts are capped instead of fully bypassed
+_VANILLA_KEY_CAP_COUNTS = {
+    'Small Key (Desert Palace)': 1,
+    'Small Key (Agahnims Tower)': 0,
+    'Small Key (Palace of Darkness)': 5,
+    'Small Key (Swamp Palace)': 4,
+    'Small Key (Ganons Tower)': 4,
+}
 
 
 def _with_relaxed_logic(func):
@@ -324,10 +327,12 @@ def _with_relaxed_logic(func):
         # Save originals
         orig_has_key = CollectionState._lttp_has_key
 
-        # Patch _lttp_has_key: bypass only the 5 problematic dungeons
+        # Patch _lttp_has_key: bypass or cap key counts for problematic dungeons
         def targeted_has_key(self, item, player, count=1):
             if item in _VANILLA_KEY_BYPASS_DUNGEONS:
                 return True
+            if item in _VANILLA_KEY_CAP_COUNTS:
+                count = min(count, _VANILLA_KEY_CAP_COUNTS[item])
             return orig_has_key(self, item, player, count)
 
         CollectionState._lttp_has_key = targeted_has_key

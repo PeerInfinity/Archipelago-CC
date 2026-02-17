@@ -473,6 +473,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Desert Palace East Wing", player),
+        Has('Small Key (Desert Palace)', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Agahnims Tower", player),
         Or(HelperCall(helper_func=has_beam_sword, helper_name="has_beam_sword", body_rule=(Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), HasAny('Beat Agahnim 1', 'Cape'))
     )
@@ -507,7 +512,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agahnim 1", player),
-        And(HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Lamp'))
     )
 
     world.set_rule(
@@ -917,13 +922,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Swamp Palace Small Key Door", player),
+        Has('Small Key (Swamp Palace)', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Swamp Palace (Center)", player),
-        Has('Hammer', 1)
+        And(Has('Small Key (Swamp Palace)', 3), Has('Hammer'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace (North)", player),
-        Has('Hookshot', 1)
+        And(Has('Small Key (Swamp Palace)', 4), Has('Hookshot'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Swamp Palace (West)", player),
+        Has('Small Key (Swamp Palace)', 4)
     )
 
     world.set_rule(
@@ -1124,18 +1139,26 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Palace of Darkness Bridge Room", player),
+        Has('Small Key (Palace of Darkness)', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bonk Wall", player),
         And(HelperCall(helper_func=can_bomb_or_bonk, helper_name="can_bomb_or_bonk"), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"))
     )
 
+    multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player).access_rule = \
+        lambda state: ((can_use_bombs(state, player)) and ((((((location_item_name(state, 'Palace of Darkness - Big Key Chest', player) in (('Small Key (Palace of Darkness)', 1),))) and (state.has('Small Key (Palace of Darkness)', player, 3)))) or (state.has('Small Key (Palace of Darkness)', player, 5)))))
+
     world.set_rule(
-        multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player),
-        HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs")
+        multiworld.get_entrance("Palace of Darkness (North)", player),
+        Has('Small Key (Palace of Darkness)', 4)
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAll('Big Key (Palace of Darkness)', 'Hammer', 'Lamp'))
+        And(Has('Small Key (Palace of Darkness)', 5), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAll('Big Key (Palace of Darkness)', 'Hammer', 'Lamp'))
     )
 
     world.set_rule(
@@ -1143,9 +1166,12 @@ def set_rules(world: "World") -> None:
         Has('Hammer', 1)
     )
 
+    multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player).access_rule = \
+        lambda state: (((((location_item_name(state, 'Palace of Darkness - Harmless Hellway', player) in (('Small Key (Palace of Darkness)', 1),))) and (state.has('Small Key (Palace of Darkness)', player, 4)))) or (state.has('Small Key (Palace of Darkness)', player, 5)))
+
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Maze Door", player),
-        Has('Lamp', 1)
+        And(Has('Small Key (Palace of Darkness)', 5), Has('Lamp'))
     )
 
     world.set_rule(
@@ -1163,22 +1189,29 @@ def set_rules(world: "World") -> None:
         And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Ganons Tower)'))
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player),
-        Has('Fire Rod', 1)
-    )
+    multiworld.get_entrance("Ganons Tower (Tile Room) Key Door", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Fire Rod', player)))
+
+    multiworld.get_entrance("Ganons Tower (Bottom) (East)", player).access_rule = \
+        lambda state: ((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [("Ganons Tower - Bob's Chest", 1), ('Ganons Tower - Big Chest', 1), ('Ganons Tower - Big Key Room - Left', 1), ('Ganons Tower - Big Key Room - Right', 1), ('Ganons Tower - Big Key Chest', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))
+
+    multiworld.get_entrance("Ganons Tower (Map Room)", player).access_rule = \
+        lambda state: (((((location_item_name(state, 'Ganons Tower - Map Chest', player) in (('Big Key (Ganons Tower)', 1),))) and (state.has('Small Key (Ganons Tower)', player, 4)))) or (state.has('Small Key (Ganons Tower)', player, 4)))
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Double Switch Room)", player),
-        Has('Hookshot', 1)
+        And(Has('Small Key (Ganons Tower)', 4), Has('Hookshot'))
     )
+
+    multiworld.get_entrance("Ganons Tower (Firesnake Room)", player).access_rule = \
+        lambda state: ((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1), ("Ganons Tower - Bob's Chest", 1), ('Ganons Tower - Big Chest', 1), ('Ganons Tower - Big Key Room - Left', 1), ('Ganons Tower - Big Key Room - Right', 1), ('Ganons Tower - Big Key Chest', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))
 
     multiworld.get_entrance("Ganons Tower Torch Rooms", player).access_rule = \
         lambda state: ((state.multiworld.get_entrance('Ganons Tower Torch Rooms', player).parent_region.dungeon.bosses['middle'].can_defeat(state)) and (can_kill_most_things(state, player, 8)) and (has_fire_source(state, player)))
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower Moldorm Door", player),
-        HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs")
+        And(Has('Small Key (Ganons Tower)', 4), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"))
     )
 
     multiworld.get_entrance("Ganons Tower Moldorm Gap", player).access_rule = \
@@ -1360,19 +1393,19 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Beamos Hall Pot Key", player),
-        HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Small Key (Desert Palace)'))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Desert Tiles 2 Pot Key", player),
-        HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,))
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Small Key (Desert Palace)'))
     )
 
     multiworld.get_location("Desert Palace - Boss", player).access_rule = \
-        lambda state: ((state.multiworld.get_location('Desert Palace - Boss', player).parent_region.dungeon.boss.can_defeat(state)) and (has_fire_source(state, player)) and (state.has('Big Key (Desert Palace)', player)))
+        lambda state: ((state.multiworld.get_location('Desert Palace - Boss', player).parent_region.dungeon.boss.can_defeat(state)) and (has_fire_source(state, player)) and (state.has_all(['Small Key (Desert Palace)', 'Big Key (Desert Palace)'], player)))
 
     multiworld.get_location("Desert Palace - Prize", player).access_rule = \
-        lambda state: ((state.multiworld.get_location('Desert Palace - Prize', player).parent_region.dungeon.boss.can_defeat(state)) and (state.multiworld.get_region('Desert Palace Main (Outer)', player).can_reach(state)) and (has_fire_source(state, player)) and (state.has('Big Key (Desert Palace)', player)))
+        lambda state: ((state.multiworld.get_location('Desert Palace - Prize', player).parent_region.dungeon.boss.can_defeat(state)) and (state.multiworld.get_region('Desert Palace Main (Outer)', player).can_reach(state)) and (has_fire_source(state, player)) and (state.has_all(['Small Key (Desert Palace)', 'Big Key (Desert Palace)'], player)))
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Chest", player),
@@ -1438,17 +1471,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Archer Key Drop", player),
-        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Circle of Pots Key Drop", player),
-        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
     )
 
     multiworld.get_location("Agahnim 1", player).access_rule = \
@@ -1665,7 +1698,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 1 Pot Key", player),
-        Has('Moon Pearl', 1)
+        And(Has('Small Key (Swamp Palace)', 2), Has('Moon Pearl'))
     )
 
     multiworld.get_location("Swamp Palace - Big Chest", player).access_rule = \
@@ -1717,10 +1750,10 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Swamp Palace - Boss", player).access_rule = \
-        lambda state: ((state.multiworld.get_location("Swamp Palace - Boss", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
+        lambda state: ((state.has('Small Key (Swamp Palace)', player, 4)) and (state.multiworld.get_location("Swamp Palace - Boss", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
 
     multiworld.get_location("Swamp Palace - Prize", player).access_rule = \
-        lambda state: ((state.multiworld.get_location("Swamp Palace - Prize", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
+        lambda state: ((state.has('Small Key (Swamp Palace)', player, 4)) and (state.multiworld.get_location("Swamp Palace - Prize", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Key Chest", player),
@@ -2102,30 +2135,20 @@ def set_rules(world: "World") -> None:
         Has('Moon Pearl', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Top Left", player),
-        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), HasAll('Fire Rod', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Top Left", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Top Right", player),
-        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), HasAll('Fire Rod', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Top Right", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player),
-        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), HasAll('Fire Rod', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player),
-        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), HasAll('Fire Rod', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player),
-        And(Or(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Cane of Somaria')), HasAll('Fire Rod', 'Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Compass Room - Top Left', 1), ('Ganons Tower - Compass Room - Top Right', 1), ('Ganons Tower - Compass Room - Bottom Left', 1), ('Ganons Tower - Compass Room - Bottom Right', 1), ('Ganons Tower - Conveyor Star Pits Pot Key', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Left", player),
@@ -2157,30 +2180,20 @@ def set_rules(world: "World") -> None:
         Has('Moon Pearl', 1)
     )
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Firesnake Room", player),
-        Has('Moon Pearl', 1)
-    )
+    multiworld.get_location("Ganons Tower - Firesnake Room", player).access_rule = \
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 4)) and (((item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])) or (item_name_in_location_names(state, 'Small Key (Ganons Tower)', player, [('Ganons Tower - Firesnake Room', 1)])))))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player),
-        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player).access_rule = \
+        lambda state: ((can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player),
-        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Top Right", player).access_rule = \
+        lambda state: ((can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player),
-        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Left", player).access_rule = \
+        lambda state: ((can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Moon Pearl', player)))
 
-    world.set_rule(
-        multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player),
-        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
-    )
+    multiworld.get_location("Ganons Tower - Randomizer Room - Bottom Right", player).access_rule = \
+        lambda state: ((can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 4)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 4)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Chest", player),
@@ -2213,7 +2226,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Pre-Moldorm Chest", player),
-        And(HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
+        And(Has('Small Key (Ganons Tower)', 4), HelperCall(helper_func=can_use_bombs, helper_name="can_use_bombs"), Has('Moon Pearl'))
     )
 
     world.set_rule(
