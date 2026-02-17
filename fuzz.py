@@ -1096,6 +1096,10 @@ if __name__ == "__main__":
                              "Requires --seed to be set. Makes it easier to reproduce specific failures.")
     parser.add_argument("--stop-on-first-failure", default=False, action="store_true",
                         help="Stop fuzzing after the first failure or timeout. Useful for debugging.")
+    parser.add_argument("--original-seeded", default=False, action="store_true",
+                        help="Use original UT tracking with the actual generation seed number. "
+                             "This makes the tracker's internal generation deterministic and matching "
+                             "the real game's randomization.")
 
     args = parser.parse_args()
 

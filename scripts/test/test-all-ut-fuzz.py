@@ -288,6 +288,7 @@ def run_fuzzer_test(
     fractional_spheres: bool = False,
     stop_on_first_failure: bool = False,
     number_by_seed: bool = False,
+    original_seeded: bool = False,
     process_timeout: Optional[int] = None
 ) -> Dict:
     """
@@ -304,6 +305,7 @@ def run_fuzzer_test(
         fractional_spheres: Enable fractional sphere logic for UT comparison
         stop_on_first_failure: Stop fuzzing after the first failure
         number_by_seed: Number output files by actual seed instead of iteration index
+        original_seeded: Use original UT tracking with the actual generation seed
         process_timeout: Total timeout for the entire fuzz.py subprocess in seconds.
                         If None, calculated as (runs * timeout) + 300.
 
@@ -371,6 +373,9 @@ def run_fuzzer_test(
 
     if number_by_seed:
         cmd.append("--number-by-seed")
+
+    if original_seeded:
+        cmd.append("--original-seeded")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
     print(f"  Process timeout: {process_timeout}s")
@@ -552,10 +557,11 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['worldgen', 'original', 'pickle'],
+        choices=['worldgen', 'original', 'original_seeded', 'pickle'],
         default='worldgen',
         help='Which version of Universal Tracker to test: worldgen (rules.json-based), '
-             'original (YAML-based), or pickle (pickle-based, fastest) (default: worldgen)'
+             'original (YAML-based, random seed), original_seeded (YAML-based, '
+             'actual seed), or pickle (pickle-based, fastest) (default: worldgen)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -634,7 +640,7 @@ def main():
 
     use_pickle_mode = args.ut_version == "pickle"
 
-    if args.use_tracking_config and args.ut_version not in ("original", "pickle"):
+    if args.use_tracking_config and args.ut_version not in ("original", "original_seeded", "pickle"):
         # Hybrid mode: use tracking-mode-config.json for per-game export decisions
         print(f"  use_tracking_mode_config: True")
         print(f"  (Config determines export format per-game based on test results)")
@@ -644,14 +650,16 @@ def main():
             'save_tracker_pickle': False,  # Config decides
         })
     else:
-        # Flag-based system (worldgen, original, pickle modes)
-        use_worldgen_mode = args.ut_version == "worldgen"
+        # Flag-based system (worldgen, original, original_seeded, pickle modes)
+        # original_seeded needs rules.json exported so the generation_seed field
+        # is available for seed resolution, but uses original UT tracking (not worldgen)
+        use_rules_json = args.ut_version in ("worldgen", "original_seeded")
         print(f"  use_tracking_mode_config: False")
-        print(f"  save_rules_json: {use_worldgen_mode}")
+        print(f"  save_rules_json: {use_rules_json}")
         print(f"  save_tracker_pickle: {use_pickle_mode}")
         update_host_yaml({
             'use_tracking_mode_config': False,
-            'save_rules_json': use_worldgen_mode,
+            'save_rules_json': use_rules_json,
             'save_tracker_pickle': use_pickle_mode,
         })
 
@@ -669,6 +677,8 @@ def main():
     # - "pickle" = UT using pickle-based tracking (fastest, preserves exact lambdas)
     if args.ut_version == "original":
         ut_version = "original"
+    elif args.ut_version == "original_seeded":
+        ut_version = "original_seeded"
     elif args.ut_version == "pickle":
         ut_version = "pickle"
     elif args.use_tracking_config:
@@ -854,6 +864,7 @@ def main():
             fractional_spheres=args.fractional_spheres,
             stop_on_first_failure=args.stop_on_first_failure,
             number_by_seed=args.number_by_seed,
+            original_seeded=(args.ut_version == "original_seeded"),
             process_timeout=args.process_timeout
         )
 

@@ -519,7 +519,7 @@ def run_fuzzer_test(target_dir: Path, dry_run: bool = False) -> Optional[dict]:
 def load_expected_failures_from_config(config_path: Path, ut_mode: str = "worldgen") -> set:
     """Load expected failures from tracking-mode-config.json.
 
-    For regular modes (worldgen, pickle, original):
+    For regular modes (worldgen, pickle, original, original_seeded):
         A game is expected to fail if that mode is NOT in its list of passing modes.
 
     For hybrid mode:
@@ -527,7 +527,7 @@ def load_expected_failures_from_config(config_path: Path, ut_mode: str = "worldg
 
     Args:
         config_path: Path to tracking-mode-config.json
-        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'hybrid')
+        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'original_seeded', 'hybrid')
 
     Returns:
         Set of template filenames expected to fail the given mode.
