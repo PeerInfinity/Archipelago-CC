@@ -17,6 +17,7 @@ Unlike the regular spoiler tests (which use default template settings), fuzz tes
 | Test | What It Tests | Test Results |
 |------|---------------|--------------|
 | **UT Fuzz (Original)** | Universal Tracker logic against Python sphere calculations | [View](../test-results/test-results-ut-fuzz-original.md) |
+| **UT Fuzz (Original Seeded)** | Original UT with the actual generation seed number | [View](../test-results/test-results-ut-fuzz-original_seeded.md) |
 | **UT Fuzz (Worldgen)** | Worldgen UT (regenerates world from rules.json) | [View](../test-results/test-results-ut-fuzz-worldgen.md) |
 | **UT Fuzz (Hybrid)** | Worldgen UT preferring native support | [View](../test-results/test-results-ut-fuzz-hybrid.md) |
 | **UT Fuzz (Pickle)** | Pickle-based UT (loads serialized multiworld) | [View](../test-results/test-results-ut-fuzz-pickle.md) |
@@ -44,24 +45,27 @@ UT has a fundamental limitation: if a game has **randomness in logic** that isn'
 
 ### UT Versions
 
-There are four versions of Universal Tracker tested:
+There are five versions of Universal Tracker tested:
 
 | Version | Description |
 |---------|-------------|
-| **Original** | The original UT from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago). Uses each game's native integration (if available) to determine what's in logic. |
+| **Original** | The original UT from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago). Uses each game's native integration (if available) to determine what's in logic. UT's internal generation uses a random seed. |
+| **Original Seeded** | Same as Original, but injects the actual generation seed number into UT's internal generation. This makes UT's randomization match the real game, eliminating false failures from seed-dependent logic (e.g., random starting locations, entrance randomizer). |
 | **Worldgen** | Uses worldgen-based tracking for all worlds. Generates a temporary worldgen world from the rules.json and uses it for logic calculations. |
 | **Hybrid** | Prefers native game support when available, falling back to worldgen-based tracking otherwise. Best of both worlds. |
 | **Pickle** | Loads the multiworld directly from a pickle file. Fastest mode - preserves exact lambdas without regeneration or AST conversion. Requires `dill` library. |
 
 ### Why Test Multiple Versions?
 
-- **Original** tests games' native UT integration
+- **Original** tests games' native UT integration (with random internal seed)
+- **Original Seeded** tests native UT integration with deterministic seed matching
 - **Worldgen** tests the worldgen/JSON export path
 - **Hybrid** tests the production configuration
 - **Pickle** tests direct multiworld serialization (fastest, preserves exact rules)
 
 Comparing results between versions helps identify:
 - Games that work better with native vs worldgen tracking
+- Games where seed-dependent randomness causes UT mismatches (Original fails but Original Seeded passes)
 - Issues specific to the worldgen export process
 - Games that need custom handling
 - Differences between pickle (exact lambdas) vs worldgen (AST-converted rules)
@@ -138,6 +142,9 @@ python scripts/test/test-all-ut-fuzz.py --runs 10 --include-list Adventure.yaml
 
 # Test with original UT
 python scripts/test/test-all-ut-fuzz.py --runs 10 --ut-version original
+
+# Test with original seeded UT (deterministic seed matching)
+python scripts/test/test-all-ut-fuzz.py --runs 10 --ut-version original_seeded --starting-seed 1
 
 # Test with hybrid UT (prefer native support)
 python scripts/test/test-all-ut-fuzz.py --runs 10 --prefer-native-ut

@@ -2,11 +2,11 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-comparison-original-worldgen.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | [View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-comparison-worldgen-pickle.md)
+[View Comparison (Original vs Orig Seeded)](./test-results-ut-fuzz-comparison-original-original_seeded.md) | [View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-comparison-original-worldgen.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | [View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-comparison-worldgen-pickle.md)
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-14 02:28:14 UTC
+**Generated:** 2026-02-17 18:26:48 UTC
 
 **Source Data Created:** 2026-02-04T19:19:22.075180
 
@@ -61,22 +61,22 @@ Of the 79 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 577.2KB
+- **Total Exporter Code:** 571.0KB
 - **Total Game Logic Code:** 655.3KB
-- **Combined Total:** 1232.4KB
+- **Combined Total:** 1226.3KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 12.6KB | ✅ | 664.1KB |
+| A Link to the Past | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 25.6KB |
 | Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 272.0KB |
 | Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 17.8KB |
-| Blasphemous | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
+| Blasphemous | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | 2760.7KB |
 | Bomb Rush Cyberfunk | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.4KB | 40.3KB | 325.2KB |
 | Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.1KB |
 | Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 93.7KB |
@@ -94,13 +94,13 @@ Of the 79 games with 100% pass rate:
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.3KB |
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 290.0KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.0KB |
-| Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.2KB |
 | Final Fantasy Mystic Quest | ❌ | 10 | 0 | 7 | 2 | 1 | ❌ 0.0% | 13.9KB | ✅ | 548.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 361.3KB |
-| Hollow Knight | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Hollow Knight | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 3500.0KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 100.3KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 83.0KB |
-| Jak and Daxter: The Precursor Legacy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.5KB | 4.6KB | N/A |
+| Jak and Daxter: The Precursor Legacy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.5KB | 4.6KB | 257.6KB |
 | Kingdom Hearts | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.1KB | ✅ | 528.6KB |
@@ -116,15 +116,15 @@ Of the 79 games with 100% pass rate:
 | Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 45.8KB |
 | Muse Dash | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 217.4KB |
 | Noita | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 73.8KB |
-| Ocarina of Time | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Ocarina of Time | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | 1274.3KB |
 | Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 305.1KB |
 | Overcooked! 2 | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 28.5KB | ✅ | 488.2KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.0KB |
-| Pokemon Emerald | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | 5.2KB | 8.7KB | N/A |
-| Pokemon Red and Blue | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 12.1KB | 13.0KB | N/A |
+| Pokemon Emerald | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% | 5.2KB | 8.7KB | 1350.0KB |
+| Pokemon Red and Blue | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 12.1KB | 13.0KB | 1270.1KB |
 | Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 145.0KB |
-| SMZ3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 61.4KB | 51.3KB | N/A |
+| SMZ3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 53.9KB | 51.3KB | 1659.3KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.3KB | 7.5KB | 414.9KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 149.8KB |
@@ -132,7 +132,7 @@ Of the 79 games with 100% pass rate:
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 90.1KB | 1086.7KB |
 | Stardew Valley | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 18.8KB | 8.0KB | 2407.6KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 205.4KB |
-| Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 100.9KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 177.6KB |
@@ -151,8 +151,8 @@ Of the 79 games with 100% pass rate:
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.0KB |
 | Yacht Dice | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 0.9KB | 285.0KB | 248.4KB |
 | Yoshi's Island | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.2KB | ✅ | 295.2KB |
-| Yu-Gi-Oh! 2006 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.3KB | 21.4KB | N/A |
-| Zillion | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
+| Yu-Gi-Oh! 2006 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.3KB | 21.4KB | 643.9KB |
+| Zillion | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | 321.1KB |
 | shapez | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 153.7KB |
 
 ## Results Breakdown

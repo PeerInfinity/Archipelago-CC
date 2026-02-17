@@ -120,6 +120,12 @@ def extract_js_rule_types(filepath: Path) -> dict[str, RuleTypeInfo]:
     lines = content.split('\n')
     case_pattern = re.compile(r"^\s*case\s+['\"](\w+)['\"]:\s*(?:\{)?")
 
+    # Match handler object keys: 'type': (rule, context, ... => {
+    # This pattern is used in modular handler files (astLogic.js, astChecks.js, etc.)
+    handler_key_pattern = re.compile(
+        r"^\s+['\"](\w+)['\"]\s*:\s*\(rule\s*,"
+    )
+
     skip_types = {'items', 'keys', 'values', 'get', 'index', 'count',
                   'capitalize', 'upper', 'lower', 'strip', 'lstrip',
                   'rstrip', 'startswith', 'endswith', 'replace',
@@ -130,7 +136,7 @@ def extract_js_rule_types(filepath: Path) -> dict[str, RuleTypeInfo]:
                   'append', 'extend', 'pop', 'clear'}
 
     for i, line in enumerate(lines, 1):
-        match = case_pattern.match(line)
+        match = case_pattern.match(line) or handler_key_pattern.match(line)
         if match:
             rule_type = match.group(1)
             if rule_type in skip_types:
@@ -430,8 +436,20 @@ def main():
     # Extract implemented types
     print("Extracting implemented rule types...")
 
-    js_types = extract_js_rule_types(root / "frontend/modules/shared/ruleEngine.js")
-    print(f"  ruleEngine.js: {len(js_types)} types")
+    # Scan ruleEngine/ directory (modular) + facade file
+    js_types: dict[str, RuleTypeInfo] = {}
+    rule_engine_dir = root / "frontend/modules/shared/ruleEngine"
+    if rule_engine_dir.is_dir():
+        for js_file in sorted(rule_engine_dir.glob("*.js")):
+            file_types = extract_js_rule_types(js_file)
+            for name, info in file_types.items():
+                if name not in js_types:
+                    js_types[name] = info
+                else:
+                    js_types[name].impl_sources.extend(info.impl_sources)
+    else:
+        js_types = extract_js_rule_types(root / "frontend/modules/shared/ruleEngine.js")
+    print(f"  ruleEngine modules: {len(js_types)} types")
 
     py_classes = extract_python_rule_classes(root / "rule_builder/rules.py")
     print(f"  rules.py: {len(py_classes)} classes")

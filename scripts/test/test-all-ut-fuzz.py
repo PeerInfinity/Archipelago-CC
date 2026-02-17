@@ -282,12 +282,14 @@ def run_fuzzer_test(
     runs: int,
     jobs: int,
     timeout: int,
-    seed: Optional[int],
+    starting_seed: Optional[int],
     default_options: Optional[str] = None,
     disallow_options: Optional[str] = None,
     fractional_spheres: bool = False,
     stop_on_first_failure: bool = False,
     number_by_seed: bool = False,
+    original_seeded: bool = False,
+    ut_version: Optional[str] = None,
     process_timeout: Optional[int] = None
 ) -> Dict:
     """
@@ -298,12 +300,14 @@ def run_fuzzer_test(
         runs: Number of fuzz runs
         jobs: Number of parallel jobs
         timeout: Timeout per generation in seconds
-        seed: Random seed for reproducibility (None = random)
+        starting_seed: Starting seed number for generation (None = random)
         default_options: Comma-separated options to leave at defaults
         disallow_options: Options to disallow (format: option=value1,value2;option2=value)
         fractional_spheres: Enable fractional sphere logic for UT comparison
         stop_on_first_failure: Stop fuzzing after the first failure
         number_by_seed: Number output files by actual seed instead of iteration index
+        original_seeded: Use original UT tracking with the actual generation seed
+        ut_version: UT version string (original, original_seeded, worldgen, pickle, hybrid)
         process_timeout: Total timeout for the entire fuzz.py subprocess in seconds.
                         If None, calculated as (runs * timeout) + 300.
 
@@ -354,8 +358,8 @@ def run_fuzzer_test(
         "--hook", "worlds.tracker.fuzzer_hook:Hook"
     ]
 
-    if seed is not None:
-        cmd.extend(["--seed", str(seed)])
+    if starting_seed is not None:
+        cmd.extend(["--starting-seed", str(starting_seed)])
 
     if default_options:
         cmd.extend(["--default-options", default_options])
@@ -371,6 +375,12 @@ def run_fuzzer_test(
 
     if number_by_seed:
         cmd.append("--number-by-seed")
+
+    if original_seeded:
+        cmd.append("--original-seeded")
+
+    if ut_version:
+        cmd.extend(["--ut-version", ut_version])
 
     print(f"  Running: {' '.join(cmd[:10])}...")
     print(f"  Process timeout: {process_timeout}s")
@@ -532,10 +542,11 @@ def main():
              'If not specified, calculated as (runs * timeout) + 300'
     )
     parser.add_argument(
-        '--seed',
+        '--starting-seed',
         type=int,
         default=None,
-        help='Random seed for reproducibility (default: None = random)'
+        help='Starting seed number for generation. Each run uses starting_seed + iteration '
+             'as the actual Archipelago generation seed. If not set, seeds are random.'
     )
     parser.add_argument(
         '--every-nth',
@@ -552,10 +563,11 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['worldgen', 'original', 'pickle'],
+        choices=['worldgen', 'original', 'original_seeded', 'pickle'],
         default='worldgen',
         help='Which version of Universal Tracker to test: worldgen (rules.json-based), '
-             'original (YAML-based), or pickle (pickle-based, fastest) (default: worldgen)'
+             'original (YAML-based, random seed), original_seeded (YAML-based, '
+             'actual seed), or pickle (pickle-based, fastest) (default: worldgen)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -619,7 +631,7 @@ def main():
         action='store_true',
         default=False,
         help='Number output files and errors by actual seed instead of iteration index. '
-             'Requires --seed to be set.'
+             'Requires --starting-seed to be set.'
     )
 
     args = parser.parse_args()
@@ -634,7 +646,7 @@ def main():
 
     use_pickle_mode = args.ut_version == "pickle"
 
-    if args.use_tracking_config and args.ut_version not in ("original", "pickle"):
+    if args.use_tracking_config and args.ut_version not in ("original", "original_seeded", "pickle"):
         # Hybrid mode: use tracking-mode-config.json for per-game export decisions
         print(f"  use_tracking_mode_config: True")
         print(f"  (Config determines export format per-game based on test results)")
@@ -644,14 +656,14 @@ def main():
             'save_tracker_pickle': False,  # Config decides
         })
     else:
-        # Flag-based system (worldgen, original, pickle modes)
-        use_worldgen_mode = args.ut_version == "worldgen"
+        # Flag-based system (worldgen, original, original_seeded, pickle modes)
+        use_rules_json = args.ut_version == "worldgen"
         print(f"  use_tracking_mode_config: False")
-        print(f"  save_rules_json: {use_worldgen_mode}")
+        print(f"  save_rules_json: {use_rules_json}")
         print(f"  save_tracker_pickle: {use_pickle_mode}")
         update_host_yaml({
             'use_tracking_mode_config': False,
-            'save_rules_json': use_worldgen_mode,
+            'save_rules_json': use_rules_json,
             'save_tracker_pickle': use_pickle_mode,
         })
 
@@ -659,7 +671,7 @@ def main():
     cleanup_empty_worldgen_dirs()
 
     # Determine seed mode and UT version
-    is_random_seed_mode = args.seed is None
+    is_random_seed_mode = args.starting_seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
 
     # Determine UT version label for output files
@@ -669,6 +681,8 @@ def main():
     # - "pickle" = UT using pickle-based tracking (fastest, preserves exact lambdas)
     if args.ut_version == "original":
         ut_version = "original"
+    elif args.ut_version == "original_seeded":
+        ut_version = "original_seeded"
     elif args.ut_version == "pickle":
         ut_version = "pickle"
     elif args.use_tracking_config:
@@ -773,7 +787,7 @@ def main():
     print(f"Found {len(template_files)} templates to test")
     print(f"Skip list: {skip_list}")
     print(f"Runs per game: {args.runs}, Jobs: {args.jobs}, Timeout: {args.timeout}s")
-    print(f"Seed: {args.seed if args.seed is not None else 'random'}")
+    print(f"Starting seed: {args.starting_seed if args.starting_seed is not None else 'random'}")
     print()
 
     # Create output directory
@@ -790,7 +804,7 @@ def main():
             "use_tracking_config": args.use_tracking_config if args.ut_version != "original" else None,
             "world_source": world_source,
             "seed_mode": seed_type,
-            "seed": args.seed if not is_random_seed_mode else "random",
+            "starting_seed": args.starting_seed if not is_random_seed_mode else "random",
             "runs_per_game": args.runs,
             "jobs": args.jobs,
             "timeout": args.timeout,
@@ -848,12 +862,14 @@ def main():
             runs=args.runs,
             jobs=args.jobs,
             timeout=args.timeout,
-            seed=args.seed,
+            starting_seed=args.starting_seed,
             default_options=effective_default_options,
             disallow_options=effective_disallow_options,
             fractional_spheres=args.fractional_spheres,
             stop_on_first_failure=args.stop_on_first_failure,
             number_by_seed=args.number_by_seed,
+            original_seeded=(args.ut_version == "original_seeded"),
+            ut_version=args.ut_version,
             process_timeout=args.process_timeout
         )
 

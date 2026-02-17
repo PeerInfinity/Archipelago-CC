@@ -75,12 +75,20 @@ jobs:
           if git ls-remote --exit-code --heads origin generated-presets; then
             git checkout generated-presets
             git pull origin generated-presets
-            git rm -rf .
-            git checkout origin/main -- .
-            if ! git diff --staged --quiet; then
-              git commit -m "Sync generated-presets with main"
-              git push origin generated-presets
+            # Merge main into generated-presets to advance the merge base.
+            # This ensures file deletions on generated-presets correctly propagate
+            # when the branch is later merged back into main.
+            # Use -X theirs to resolve content conflicts in favor of main.
+            if ! git merge origin/main -X theirs --no-edit --allow-unrelated-histories; then
+              # Handle remaining conflicts (e.g. delete/modify) in favor of main
+              mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+              for file in "${conflict_files[@]}"; do
+                git checkout --theirs "$file" 2>/dev/null || git rm -f "$file" 2>/dev/null || true
+              done
+              git add -A
+              git commit --no-edit
             fi
+            git push origin generated-presets
           else
             git checkout -b generated-presets origin/main
           fi
