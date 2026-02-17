@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-02-14T01:34:36.732115+00:00",
+    "timestamp": "2026-02-16T23:18:20.451889+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -15,19 +15,19 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "Yoshi's Island": {
-      "template": "Yoshi's Island.yaml",
-      "game_name": "Yoshi's Island",
-      "timestamp": "2026-02-14T01:34:37.566720+00:00",
+    "shapez": {
+      "template": "shapez.yaml",
+      "game_name": "shapez",
+      "timestamp": "2026-02-16T23:18:24.237286+00:00",
       "original": {
         "generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/yoshisisland/AP_14089154938208861744",
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 4.77
+          "processing_time_seconds": 4.79
         },
         "spoiler_test": {
           "success": false,
@@ -38,7 +38,7 @@
       "test_world": {
         "world_generation": {
           "success": true,
-          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yoshisisland_worldgen",
+          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
           "error": null,
           "processing_time_seconds": 0.57
         },
@@ -57,9 +57,9 @@
           "success": false,
           "pass_fail": "unknown"
         },
-        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/yoshisisland_worldgen",
-        "test_game_name": "Yoshi's Island WorldGen",
-        "test_template_name": "Yoshi's Island WorldGen.yaml"
+        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
+        "test_game_name": "shapez WorldGen",
+        "test_template_name": "shapez WorldGen.yaml"
       },
       "errors": {
         "generation": [],
