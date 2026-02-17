@@ -306,39 +306,6 @@ _VANILLA_KEY_CAP_COUNTS = {
 }
 
 
-def _with_relaxed_logic(func):
-    """Decorator that temporarily relaxes key logic and Silver Bow handling.
-
-    Used to wrap fulfills_accessibility and create_playthrough so that
-    vanilla placements pass the logic checks without affecting the fill phase.
-
-    Only bypasses key checks for the 5 dungeons that have circular
-    dependencies with vanilla placements. The other 8 dungeons use
-    the original key logic.
-    """
-    from BaseClasses import CollectionState
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        # Save originals
-        orig_has_key = CollectionState._lttp_has_key
-
-        # Patch _lttp_has_key: cap key counts for problematic dungeons
-        def targeted_has_key(self, item, player, count=1):
-            if item in _VANILLA_KEY_CAP_COUNTS:
-                count = min(count, _VANILLA_KEY_CAP_COUNTS[item])
-            return orig_has_key(self, item, player, count)
-
-        CollectionState._lttp_has_key = targeted_has_key
-
-        try:
-            return func(*args, **kwargs)
-        finally:
-            CollectionState._lttp_has_key = orig_has_key
-
-    return wrapper
-
-
 def install():
     """Install vanilla plando patches.
 
@@ -352,7 +319,6 @@ def install():
     """
     import worlds.alttp.ItemPool as ItemPoolModule
     import worlds.alttp.Dungeons as DungeonsModule
-    from BaseClasses import MultiWorld, Spoiler
 
     if _originals:
         logger.warning("Vanilla patches already installed")
@@ -370,22 +336,20 @@ def install():
         DungeonsModule.fill_dungeons_restrictive
     )
 
-    # Patch fulfills_accessibility to use relaxed key logic.
-    # This is applied only during the accessibility check, not during the fill,
-    # because the fill phase (especially pre_fill dungeon prize placement) needs
-    # the original key logic to function correctly.
-    _originals['fulfills_accessibility'] = MultiWorld.fulfills_accessibility
-    MultiWorld.fulfills_accessibility = _with_relaxed_logic(
-        MultiWorld.fulfills_accessibility
-    )
+    # Patch _lttp_has_key to cap key counts for problematic dungeons.
+    # Since vanilla plando places all items, the fill phase has 0 items to fill,
+    # so it's safe to apply this for the entire process rather than only during
+    # accessibility/playthrough checks.
+    from BaseClasses import CollectionState
+    orig_has_key = CollectionState._lttp_has_key
 
-    # Patch create_playthrough to use relaxed key logic.
-    # The playthrough calculation does its own sphere sweep that also needs
-    # the relaxed logic to progress through all spheres.
-    _originals['create_playthrough'] = Spoiler.create_playthrough
-    Spoiler.create_playthrough = _with_relaxed_logic(
-        Spoiler.create_playthrough
-    )
+    def capped_has_key(self, item, player, count=1):
+        if item in _VANILLA_KEY_CAP_COUNTS:
+            count = min(count, _VANILLA_KEY_CAP_COUNTS[item])
+        return orig_has_key(self, item, player, count)
+
+    _originals['_lttp_has_key'] = orig_has_key
+    CollectionState._lttp_has_key = capped_has_key
 
     logger.info("Installed ALTTP vanilla plando patches")
 
@@ -394,7 +358,6 @@ def uninstall():
     """Uninstall vanilla plando patches, restoring original functions."""
     import worlds.alttp.ItemPool as ItemPoolModule
     import worlds.alttp.Dungeons as DungeonsModule
-    from BaseClasses import MultiWorld, Spoiler
 
     if not _originals:
         logger.warning("No vanilla patches to uninstall")
@@ -406,11 +369,9 @@ def uninstall():
     if 'fill_dungeons_restrictive' in _originals:
         DungeonsModule.fill_dungeons_restrictive = _originals.pop('fill_dungeons_restrictive')
 
-    if 'fulfills_accessibility' in _originals:
-        MultiWorld.fulfills_accessibility = _originals.pop('fulfills_accessibility')
-
-    if 'create_playthrough' in _originals:
-        Spoiler.create_playthrough = _originals.pop('create_playthrough')
+    if '_lttp_has_key' in _originals:
+        from BaseClasses import CollectionState
+        CollectionState._lttp_has_key = _originals.pop('_lttp_has_key')
 
     logger.info("Uninstalled ALTTP vanilla plando patches")
 

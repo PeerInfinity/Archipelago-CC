@@ -62,16 +62,12 @@ def main():
         from worlds.alttp import ALTTPWorld
         ALTTPWorld.is_vanilla = True
 
-        # Tell the exporter to relax rules that create circular dependencies
-        # with vanilla item placements. The vanilla patches fix these at runtime
-        # (via monkey-patching _lttp_has_key and CollectionState.collect), but
-        # the exporter reads the original unpatched rules. By writing patch data
-        # here, the ALttP export handler can apply the same relaxations to the
-        # exported rules.json so the generated worldgen world works without patches.
+        # Tell the exporter to cap key counts in the exported rules.json.
+        # The runtime patch (in vanilla_patches.py) caps key counts when
+        # _lttp_has_key is called, but the exporter reads the AST of rule
+        # lambdas where the original counts are hardcoded, so it needs its
+        # own patch data.
         ALTTPWorld.export_rule_patches = {
-            # These dungeons have pessimistic key logic that creates circular
-            # dependencies with vanilla placements. Key requirements are capped
-            # to the maximum value that avoids circular dependencies.
             'cap_key_counts': {
                 'Small Key (Desert Palace)': 1,
                 'Small Key (Agahnims Tower)': 0,
