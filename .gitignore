@@ -273,10 +273,12 @@ scripts/output/ut-fuzz/test-results-*
 scripts/output/ut-fuzz/test-results_*
 # Track specific UT fuzz result files
 !scripts/output/ut-fuzz/test-results-original-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-original_seeded-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-apworlds-original_seeded-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json
 !scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json

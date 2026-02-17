@@ -27,8 +27,8 @@ on:
         type: number
         default: 120
 
-      seed:
-        description: 'Random seed for reproducibility (leave empty for random)'
+      starting_seed:
+        description: 'Starting seed number for generation (leave empty for random)'
         required: false
         type: number
         default: 1
@@ -170,15 +170,15 @@ jobs:
           echo "Runs: ${{ inputs.runs }}"
           echo "Generation Timeout: ${{ inputs.generation_timeout }}s"
           echo "Test Timeout: ${{ inputs.test_timeout }}s"
-          echo "Seed: ${{ inputs.seed || 'random' }}"
+          echo "Seed: ${{ inputs.starting_seed || 'random' }}"
           echo "Spoiler Mode: ${{ inputs.spoiler_mode }}"
           echo "Default Options: ${{ inputs.default_options || '(none)' }}"
           echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
           echo "========================================"
 
           # Determine output filename based on seed
-          if [ -n "${{ inputs.seed }}" ]; then
-            OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed }}.json"
+          if [ -n "${{ inputs.starting_seed }}" ]; then
+            OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed }}.json"
           else
             OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-random-seed.json"
           fi
@@ -190,7 +190,7 @@ jobs:
           CMD="$CMD --runs ${{ inputs.runs }}"
           CMD="$CMD --generation-timeout ${{ inputs.generation_timeout }}"
           CMD="$CMD --test-timeout ${{ inputs.test_timeout }}"
-          CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
+          CMD="$CMD ${{ inputs.starting_seed && format('--starting-seed {0}', inputs.starting_seed) || '' }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
 
@@ -232,7 +232,7 @@ jobs:
           Workflow run: ${{ github.run_id }}
           Game: ${{ inputs.game }}
           Spoiler Mode: ${{ inputs.spoiler_mode }}
-          Seed: ${{ inputs.seed || 'random' }}
+          Seed: ${{ inputs.starting_seed || 'random' }}
           Runs: ${{ inputs.runs }}
           Generation Timeout: ${{ inputs.generation_timeout }}s
           Test Timeout: ${{ inputs.test_timeout }}s
@@ -269,7 +269,7 @@ jobs:
           echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
           echo "**Spoiler Mode:** ${{ inputs.spoiler_mode }}" >> $GITHUB_STEP_SUMMARY
           echo "**Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Seed:** ${{ inputs.seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Seed:** ${{ inputs.starting_seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ inputs.default_options }}" ]; then
             echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
           fi
@@ -286,14 +286,14 @@ jobs:
         if: ${{ !cancelled() && inputs.update_main_results }}
         run: |
           # Determine seed mode for the output filename
-          if [ -n "${{ inputs.seed }}" ]; then
+          if [ -n "${{ inputs.starting_seed }}" ]; then
             SEED_MODE="fixed"
           else
             SEED_MODE="random"
           fi
 
           MAIN_RESULTS_FILE="scripts/output/spoiler-fuzz/test-results-${SEED_MODE}-seed.json"
-          SINGLE_GAME_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 'random' }}.json"
+          SINGLE_GAME_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 'random' }}.json"
 
           echo "Main results file: ${MAIN_RESULTS_FILE}"
           echo "Single game file: ${SINGLE_GAME_FILE}"
@@ -397,7 +397,7 @@ jobs:
           Game: ${{ inputs.game }}
           Spoiler Mode: ${{ inputs.spoiler_mode }}
           Runs: ${{ inputs.runs }}
-          Seed: ${{ inputs.seed || 'random' }}
+          Seed: ${{ inputs.starting_seed || 'random' }}
           "
             git push origin HEAD:spoiler-fuzz-test
             echo "Successfully updated main results on spoiler-fuzz-test branch"
@@ -409,9 +409,9 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/spoiler-fuzz/test-results-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
-          SINGLE_GAME_FILE: scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 'random' }}.json
+          SEED_MODE: ${{ inputs.starting_seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/spoiler-fuzz/test-results-${{ inputs.starting_seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 'random' }}.json
           RUNS: ${{ inputs.runs }}
 
   # Split runner jobs - used when parallel_runners is 10
@@ -511,7 +511,7 @@ jobs:
         run: |
           TOTAL_RUNS=${{ inputs.runs }}
           SPLIT_NUM=${{ matrix.split_num }}
-          BASE_SEED=${{ inputs.seed || 1 }}
+          BASE_SEED=${{ inputs.starting_seed || 1 }}
 
           # Calculate runs per split and this split's starting offset
           RUNS_PER_SPLIT=$((TOTAL_RUNS / 10))
@@ -552,7 +552,7 @@ jobs:
           echo "========================================"
 
           # Output file includes split number
-          OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}-split-${{ matrix.split_num }}.json"
+          OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 1 }}-split-${{ matrix.split_num }}.json"
 
           # Build command
           CMD="python scripts/test/test-all-spoiler-fuzz.py"
@@ -561,7 +561,7 @@ jobs:
           CMD="$CMD --runs ${{ steps.seed-range.outputs.runs_this_split }}"
           CMD="$CMD --generation-timeout ${{ inputs.generation_timeout }}"
           CMD="$CMD --test-timeout ${{ inputs.test_timeout }}"
-          CMD="$CMD --seed ${{ steps.seed-range.outputs.start_seed }}"
+          CMD="$CMD --starting-seed ${{ steps.seed-range.outputs.start_seed }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
 
@@ -659,7 +659,7 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["test_type", "world_source", "seed_mode", "seed", "base_seed",
+                  for key in ["test_type", "world_source", "seed_mode", "starting_seed",
                               "runs_per_game", "generation_timeout", "test_timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
@@ -733,7 +733,7 @@ jobs:
           combined["metadata"]["total_templates"] = len(combined["results"])
 
           # Write combined results
-          output_file = f"scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}.json"
+          output_file = f"scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 1 }}.json"
           with open(output_file, "w") as fp:
               json.dump(combined, fp, indent=2)
 
@@ -780,7 +780,7 @@ jobs:
           Workflow run: ${{ github.run_id }}
           Game: ${{ inputs.game }}
           Spoiler Mode: ${{ inputs.spoiler_mode }}
-          Seed: ${{ inputs.seed || 1 }}
+          Seed: ${{ inputs.starting_seed || 1 }}
           Runs: ${{ inputs.runs }}
           Parallel runners: 10
           Generation Timeout: ${{ inputs.generation_timeout }}s
@@ -815,7 +815,7 @@ jobs:
           echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
           echo "**Spoiler Mode:** ${{ inputs.spoiler_mode }}" >> $GITHUB_STEP_SUMMARY
           echo "**Total Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Starting Seed:** ${{ inputs.seed || 1 }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Starting Seed:** ${{ inputs.starting_seed || 1 }}" >> $GITHUB_STEP_SUMMARY
           echo "**Parallel Runners:** 10" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ inputs.default_options }}" ]; then
             echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
@@ -833,14 +833,14 @@ jobs:
         if: inputs.update_main_results
         run: |
           # Determine seed mode for the output filename
-          if [ -n "${{ inputs.seed }}" ]; then
+          if [ -n "${{ inputs.starting_seed }}" ]; then
             SEED_MODE="fixed"
           else
             SEED_MODE="random"
           fi
 
           MAIN_RESULTS_FILE="scripts/output/spoiler-fuzz/test-results-${SEED_MODE}-seed.json"
-          SINGLE_GAME_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}.json"
+          SINGLE_GAME_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 1 }}.json"
 
           echo "Main results file: ${MAIN_RESULTS_FILE}"
           echo "Single game file: ${SINGLE_GAME_FILE}"
@@ -942,7 +942,7 @@ jobs:
           Game: ${{ inputs.game }}
           Spoiler Mode: ${{ inputs.spoiler_mode }}
           Runs: ${{ inputs.runs }}
-          Seed: ${{ inputs.seed || 1 }}
+          Seed: ${{ inputs.starting_seed || 1 }}
           Parallel Runners: 10
           "
             git push origin HEAD:spoiler-fuzz-test
@@ -955,7 +955,7 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/spoiler-fuzz/test-results-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
-          SINGLE_GAME_FILE: scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}.json
+          SEED_MODE: ${{ inputs.starting_seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/spoiler-fuzz/test-results-${{ inputs.starting_seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.starting_seed || 1 }}.json
           RUNS: ${{ inputs.runs }}

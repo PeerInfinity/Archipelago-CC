@@ -6,6 +6,7 @@ This script reads fuzz test results from multiple sources and generates
 a unified summary markdown showing pass/fail status across:
 - Javascript (frontend spoiler playthrough)
 - UT Fuzz Original
+- UT Fuzz Original Seeded
 - UT Fuzz Worldgen
 - UT Fuzz Pickle
 - UT Fuzz Hybrid
@@ -161,6 +162,7 @@ def format_result_cell(result: Optional[Dict[str, Any]]) -> str:
 
 def generate_fuzz_summary_markdown(
     ut_original: Dict[str, Dict[str, Any]],
+    ut_original_seeded: Dict[str, Dict[str, Any]],
     ut_worldgen: Dict[str, Dict[str, Any]],
     ut_pickle: Dict[str, Dict[str, Any]],
     ut_hybrid: Dict[str, Dict[str, Any]],
@@ -175,6 +177,7 @@ def generate_fuzz_summary_markdown(
     # Get all unique game names across all test types
     all_games = sorted(set(
         list(ut_original.keys()) +
+        list(ut_original_seeded.keys()) +
         list(ut_worldgen.keys()) +
         list(ut_pickle.keys()) +
         list(ut_hybrid.keys()) +
@@ -212,12 +215,14 @@ def generate_fuzz_summary_markdown(
     if world_source == "apworlds":
         md_content += "- **Javascript:** Frontend spoiler playthrough fuzz tests - [View Details](./test-results-spoiler-fuzz-apworlds.md)\n"
         md_content += "- **UT Fuzz Original:** Universal Tracker (original) fuzz tests - [View Details](./test-results-ut-fuzz-apworlds-original.md)\n"
+        md_content += "- **UT Fuzz Orig Seeded:** Universal Tracker (original with seed) fuzz tests - [View Details](./test-results-ut-fuzz-apworlds-original_seeded.md)\n"
         md_content += "- **UT Fuzz Worldgen:** Universal Tracker (worldgen-based) fuzz tests - [View Details](./test-results-ut-fuzz-apworlds-worldgen.md)\n"
         md_content += "- **UT Fuzz Pickle:** Universal Tracker (pickle) fuzz tests - [View Details](./test-results-ut-fuzz-apworlds-pickle.md)\n"
         md_content += "- **UT Fuzz Hybrid:** Universal Tracker (hybrid) fuzz tests - [View Details](./test-results-ut-fuzz-apworlds-hybrid.md)\n\n"
     else:
         md_content += "- **Javascript:** Frontend spoiler playthrough fuzz tests - [View Details](./test-results-spoiler-fuzz.md)\n"
         md_content += "- **UT Fuzz Original:** Universal Tracker (original) fuzz tests - [View Details](./test-results-ut-fuzz-original.md)\n"
+        md_content += "- **UT Fuzz Orig Seeded:** Universal Tracker (original with seed) fuzz tests - [View Details](./test-results-ut-fuzz-original_seeded.md)\n"
         md_content += "- **UT Fuzz Worldgen:** Universal Tracker (worldgen-based) fuzz tests - [View Details](./test-results-ut-fuzz-worldgen.md)\n"
         md_content += "- **UT Fuzz Pickle:** Universal Tracker (pickle) fuzz tests - [View Details](./test-results-ut-fuzz-pickle.md)\n"
         md_content += "- **UT Fuzz Hybrid:** Universal Tracker (hybrid) fuzz tests - [View Details](./test-results-ut-fuzz-hybrid.md)\n\n"
@@ -228,12 +233,14 @@ def generate_fuzz_summary_markdown(
     # Count passes for each test type
     spoiler_passed = sum(1 for g in spoiler_fuzz.values() if g['passed'])
     ut_original_passed = sum(1 for g in ut_original.values() if g['passed'])
+    ut_original_seeded_passed = sum(1 for g in ut_original_seeded.values() if g['passed'])
     ut_worldgen_passed = sum(1 for g in ut_worldgen.values() if g['passed'])
     ut_pickle_passed = sum(1 for g in ut_pickle.values() if g['passed'])
     ut_hybrid_passed = sum(1 for g in ut_hybrid.values() if g['passed'])
 
     spoiler_total = len(spoiler_fuzz)
     ut_original_total = len(ut_original)
+    ut_original_seeded_total = len(ut_original_seeded)
     ut_worldgen_total = len(ut_worldgen)
     ut_pickle_total = len(ut_pickle)
     ut_hybrid_total = len(ut_hybrid)
@@ -248,6 +255,11 @@ def generate_fuzz_summary_markdown(
         md_content += f"- **UT Fuzz Original:** {ut_original_passed}/{ut_original_total} passed ({ut_original_passed/ut_original_total*100:.1f}%)\n"
     else:
         md_content += "- **UT Fuzz Original:** No results available\n"
+
+    if ut_original_seeded_total > 0:
+        md_content += f"- **UT Fuzz Orig Seeded:** {ut_original_seeded_passed}/{ut_original_seeded_total} passed ({ut_original_seeded_passed/ut_original_seeded_total*100:.1f}%)\n"
+    else:
+        md_content += "- **UT Fuzz Orig Seeded:** No results available\n"
 
     if ut_worldgen_total > 0:
         md_content += f"- **UT Fuzz Worldgen:** {ut_worldgen_passed}/{ut_worldgen_total} passed ({ut_worldgen_passed/ut_worldgen_total*100:.1f}%)\n"
@@ -266,16 +278,18 @@ def generate_fuzz_summary_markdown(
 
     md_content += "\n"
 
-    # Combined results - all 5 tests
-    md_content += "### Combined Results (All 5 Tests)\n\n"
+    # Combined results - all 6 tests
+    md_content += "### Combined Results (All 6 Tests)\n\n"
 
-    # Count games passing different numbers of tests (all 5)
-    passing_counts_all = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0, 0: 0}
+    # Count games passing different numbers of tests (all 6)
+    passing_counts_all = {6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0, 0: 0}
     for game in all_games:
         passes = 0
         if game in spoiler_fuzz and spoiler_fuzz[game]['passed']:
             passes += 1
         if game in ut_original and ut_original[game]['passed']:
+            passes += 1
+        if game in ut_original_seeded and ut_original_seeded[game]['passed']:
             passes += 1
         if game in ut_worldgen and ut_worldgen[game]['passed']:
             passes += 1
@@ -287,7 +301,8 @@ def generate_fuzz_summary_markdown(
 
     total_games = len(all_games)
     if total_games > 0:
-        md_content += f"- **Games passing all 5 fuzz tests:** {passing_counts_all[5]}/{total_games} ({passing_counts_all[5]/total_games*100:.1f}%)\n"
+        md_content += f"- **Games passing all 6 fuzz tests:** {passing_counts_all[6]}/{total_games} ({passing_counts_all[6]/total_games*100:.1f}%)\n"
+        md_content += f"- **Games passing 5 fuzz tests:** {passing_counts_all[5]}/{total_games} ({passing_counts_all[5]/total_games*100:.1f}%)\n"
         md_content += f"- **Games passing 4 fuzz tests:** {passing_counts_all[4]}/{total_games} ({passing_counts_all[4]/total_games*100:.1f}%)\n"
         md_content += f"- **Games passing 3 fuzz tests:** {passing_counts_all[3]}/{total_games} ({passing_counts_all[3]/total_games*100:.1f}%)\n"
         md_content += f"- **Games passing 2 fuzz tests:** {passing_counts_all[2]}/{total_games} ({passing_counts_all[2]/total_games*100:.1f}%)\n"
@@ -296,11 +311,11 @@ def generate_fuzz_summary_markdown(
 
     md_content += "\n"
 
-    # Combined results - excluding UT Original (4 tests)
-    md_content += "### Combined Results (Excluding UT Original)\n\n"
-    md_content += "This view excludes UT Original, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.\n\n"
+    # Combined results - excluding UT Original and UT Orig Seeded (4 tests)
+    md_content += "### Combined Results (Excluding UT Original/Orig Seeded)\n\n"
+    md_content += "This view excludes UT Original and UT Orig Seeded, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.\n\n"
 
-    # Count games passing different numbers of tests (excluding UT Original)
+    # Count games passing different numbers of tests (excluding UT Original and Orig Seeded)
     passing_counts_no_orig = {4: 0, 3: 0, 2: 0, 1: 0, 0: 0}
     for game in all_games:
         passes = 0
@@ -326,23 +341,25 @@ def generate_fuzz_summary_markdown(
     # Main results table
     md_content += "## Test Results\n\n"
 
-    # Build header with links - order: Javascript, UT Original, UT Worldgen, UT Pickle, UT Hybrid, Rules Size
+    # Build header with links - order: Javascript, UT Original, UT Orig Seeded, UT Worldgen, UT Pickle, UT Hybrid, Rules Size
     if world_source == "apworlds":
-        md_content += "| Game Name | [Javascript](./test-results-spoiler-fuzz-apworlds.md) | [UT Original](./test-results-ut-fuzz-apworlds-original.md) | [UT Worldgen](./test-results-ut-fuzz-apworlds-worldgen.md) | [UT Pickle](./test-results-ut-fuzz-apworlds-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-apworlds-hybrid.md) | Rules Size |\n"
+        md_content += "| Game Name | [Javascript](./test-results-spoiler-fuzz-apworlds.md) | [UT Original](./test-results-ut-fuzz-apworlds-original.md) | [UT Orig Seeded](./test-results-ut-fuzz-apworlds-original_seeded.md) | [UT Worldgen](./test-results-ut-fuzz-apworlds-worldgen.md) | [UT Pickle](./test-results-ut-fuzz-apworlds-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-apworlds-hybrid.md) | Rules Size |\n"
     else:
-        md_content += "| Game Name | [Javascript](./test-results-spoiler-fuzz.md) | [UT Original](./test-results-ut-fuzz-original.md) | [UT Worldgen](./test-results-ut-fuzz-worldgen.md) | [UT Pickle](./test-results-ut-fuzz-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | Rules Size |\n"
+        md_content += "| Game Name | [Javascript](./test-results-spoiler-fuzz.md) | [UT Original](./test-results-ut-fuzz-original.md) | [UT Orig Seeded](./test-results-ut-fuzz-original_seeded.md) | [UT Worldgen](./test-results-ut-fuzz-worldgen.md) | [UT Pickle](./test-results-ut-fuzz-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | Rules Size |\n"
 
-    md_content += "|-----------|:----------:|:------------:|:------------:|:----------:|:----------:|:----------:|\n"
+    md_content += "|-----------|:----------:|:------------:|:--------------:|:------------:|:----------:|:----------:|:----------:|\n"
 
     for game in all_games:
         spoiler_result = spoiler_fuzz.get(game)
         ut_orig_result = ut_original.get(game)
+        ut_orig_seeded_result = ut_original_seeded.get(game)
         ut_mod_result = ut_worldgen.get(game)
         ut_pickle_result = ut_pickle.get(game)
         ut_hyb_result = ut_hybrid.get(game)
 
         spoiler_cell = format_result_cell(spoiler_result)
         ut_orig_cell = format_result_cell(ut_orig_result)
+        ut_orig_seeded_cell = format_result_cell(ut_orig_seeded_result)
         ut_mod_cell = format_result_cell(ut_mod_result)
         ut_pickle_cell = format_result_cell(ut_pickle_result)
         ut_hyb_cell = format_result_cell(ut_hyb_result)
@@ -356,10 +373,10 @@ def generate_fuzz_summary_markdown(
                 if rules_size > 0:
                     rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-        md_content += f"| {game} | {spoiler_cell} | {ut_orig_cell} | {ut_mod_cell} | {ut_pickle_cell} | {ut_hyb_cell} | {rules_size_indicator} |\n"
+        md_content += f"| {game} | {spoiler_cell} | {ut_orig_cell} | {ut_orig_seeded_cell} | {ut_mod_cell} | {ut_pickle_cell} | {ut_hyb_cell} | {rules_size_indicator} |\n"
 
     if not all_games:
-        md_content += "| No data available | — | — | — | — | — | — |\n"
+        md_content += "| No data available | — | — | — | — | — | — | — |\n"
 
     # Notes section
     md_content += "\n## Notes\n\n"
@@ -375,7 +392,8 @@ def generate_fuzz_summary_markdown(
     md_content += "and running various tests:\n\n"
     md_content += "- **Javascript:** Tests frontend spoiler playthrough with randomized configurations\n"
     md_content += "- **UT Fuzz:** Tests Universal Tracker's accessibility calculations against Python's sphere log\n"
-    md_content += "  - **Original:** Uses native game integration\n"
+    md_content += "  - **Original:** Uses native game integration (random internal seed)\n"
+    md_content += "  - **Orig Seeded:** Uses native game integration with the actual generation seed number\n"
     md_content += "  - **Worldgen:** Uses worldgen-based tracking (regenerates from JSON rules)\n"
     md_content += "  - **Pickle:** Uses pickle-based tracking (loads serialized multiworld)\n"
     md_content += "  - **Hybrid:** Prefers native integration, falls back to worldgen\n"
@@ -411,6 +429,7 @@ def main():
 
         if world_source == 'apworlds':
             ut_original_file = os.path.join(ut_fuzz_dir, 'test-results-apworlds-original-fixed-seed.json')
+            ut_original_seeded_file = os.path.join(ut_fuzz_dir, 'test-results-apworlds-original_seeded-fixed-seed.json')
             ut_worldgen_file = os.path.join(ut_fuzz_dir, 'test-results-apworlds-worldgen-fixed-seed.json')
             ut_pickle_file = os.path.join(ut_fuzz_dir, 'test-results-apworlds-pickle-fixed-seed.json')
             ut_hybrid_file = os.path.join(ut_fuzz_dir, 'test-results-apworlds-hybrid-fixed-seed.json')
@@ -418,6 +437,7 @@ def main():
             output_filename = 'test-results-fuzz-summary-apworlds.md'
         else:
             ut_original_file = os.path.join(ut_fuzz_dir, 'test-results-original-fixed-seed.json')
+            ut_original_seeded_file = os.path.join(ut_fuzz_dir, 'test-results-original_seeded-fixed-seed.json')
             ut_worldgen_file = os.path.join(ut_fuzz_dir, 'test-results-worldgen-fixed-seed.json')
             ut_pickle_file = os.path.join(ut_fuzz_dir, 'test-results-pickle-fixed-seed.json')
             ut_hybrid_file = os.path.join(ut_fuzz_dir, 'test-results-hybrid-fixed-seed.json')
@@ -426,6 +446,7 @@ def main():
 
         # Load results
         ut_original_data = load_test_results(ut_original_file)
+        ut_original_seeded_data = load_test_results(ut_original_seeded_file)
         ut_worldgen_data = load_test_results(ut_worldgen_file)
         ut_pickle_data = load_test_results(ut_pickle_file)
         ut_hybrid_data = load_test_results(ut_hybrid_file)
@@ -433,20 +454,21 @@ def main():
 
         # Extract game-level results
         ut_original = extract_ut_fuzz_results(ut_original_data)
+        ut_original_seeded = extract_ut_fuzz_results(ut_original_seeded_data)
         ut_worldgen = extract_ut_fuzz_results(ut_worldgen_data)
         ut_pickle = extract_ut_fuzz_results(ut_pickle_data)
         ut_hybrid = extract_ut_fuzz_results(ut_hybrid_data)
         spoiler_fuzz = extract_spoiler_fuzz_results(spoiler_fuzz_data)
 
         # Check if we have any data
-        if not any([ut_original, ut_worldgen, ut_pickle, ut_hybrid, spoiler_fuzz]):
+        if not any([ut_original, ut_original_seeded, ut_worldgen, ut_pickle, ut_hybrid, spoiler_fuzz]):
             print(f"No fuzz test results found for {world_source}")
             continue
 
         # Generate markdown (use ut_worldgen metadata as primary source)
         metadata = ut_worldgen_data.get('metadata', {})
         md_content = generate_fuzz_summary_markdown(
-            ut_original, ut_worldgen, ut_pickle, ut_hybrid, spoiler_fuzz,
+            ut_original, ut_original_seeded, ut_worldgen, ut_pickle, ut_hybrid, spoiler_fuzz,
             world_mapping, project_root, world_source, metadata
         )
 
