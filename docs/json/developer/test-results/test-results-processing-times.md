@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-02-17 20:11:53 UTC
+**Generated:** 2026-02-17 22:08:47 UTC
 
 **Source Data Created:** 2026-02-17T19:18:07.485623+00:00
 
@@ -128,8 +128,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Timespinner | 30.3s | 8 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Links Awakening DX.yaml, Ocarina of Time.yaml (+3 more) |
+| 2 | Super Mario World | 27.9s | 7 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Links Awakening DX.yaml, Ocarina of Time.yaml (+2 more) |
+| 3 | Zillion | 27.4s | 9 | Aquaria.yaml, Choo-Choo Charles.yaml, Faxanadu.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+4 more) |
+| 4 | Saving Princess | 25.4s | 6 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Links Awakening DX.yaml, Ocarina of Time.yaml (+1 more) |
+| 5 | Yu-Gi-Oh! 2006 | 24.8s | 9 | Adventure.yaml, ChecksFinder.yaml, Factorio.yaml, Kingdom Hearts.yaml, Meritous.yaml (+4 more) |
+| 6 | Ocarina of Time | 23.9s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Links Awakening DX.yaml, Ocarina of Time.yaml |
+| 7 | Pokemon Red and Blue | 23.3s | 6 | APQuest.yaml, Celeste 64.yaml, EarthBound.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 8 | Hollow Knight | 21.7s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Hollow Knight.yaml |
+| 9 | Yoshi's Island | 21.5s | 8 | APQuest.yaml, Celeste 64.yaml, EarthBound.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 10 | The Witness | 21.2s | 8 | Blasphemous.yaml, Coding Adventure.yaml, Final Fantasy.yaml, Lingo.yaml, Noita.yaml (+3 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Pokemon Emerald | 2700.7s | 5 | A Short Hike.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Mega Man 2.yaml, Pokemon Emerald.yaml |
+| 2 | Yu-Gi-Oh! 2006 | 1201.2s | 9 | Adventure.yaml, ChecksFinder.yaml, Factorio.yaml, Kingdom Hearts.yaml, Meritous.yaml (+4 more) |
+| 3 | Pokemon Red and Blue | 1054.4s | 6 | APQuest.yaml, Celeste 64.yaml, EarthBound.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 4 | Stardew Valley | 50.2s | 6 | APQuest.yaml, Celeste 64.yaml, EarthBound.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 5 | SMZ3 | 45.9s | 6 | Baking Adventure.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+1 more) |
+| 6 | Zillion | 44.5s | 9 | Aquaria.yaml, Choo-Choo Charles.yaml, Faxanadu.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+4 more) |
+| 7 | Jak and Daxter: The Precursor Legacy | 44.1s | 4 | A Short Hike.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Jak and Daxter The Precursor Legacy.yaml |
+| 8 | Yacht Dice | 43.1s | 7 | A Short Hike.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Mega Man 2.yaml, Starcraft 2.yaml (+2 more) |
+| 9 | Kirby's Dream Land 3 | 39.0s | 4 | Aquaria.yaml, Choo-Choo Charles.yaml, Faxanadu.yaml, Kirby's Dream Land 3.yaml |
+| 10 | Hollow Knight | 38.1s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Hollow Knight.yaml |
