@@ -141,17 +141,20 @@ class Hook(BaseHook):
         self.ut_core.seed_name = mw.seed_name
 
         if self.use_original_seeded:
-            # Original_seeded mode: re-run the initial generator with the actual
-            # generation seed so launch_multiworld matches the real game's randomization.
-            self.ut_core.seed_override = mw.seed
-            self.ut_core.run_generator(None, None, self.player_files_path)
+            # Original_seeded mode: let the tracker resolve the seed number on its
+            # own from the information it would normally have access to (seed name
+            # for reverse lookup, or generation_seed from rules JSON if available).
+            # Discover rules.json so rules_json_data is populated (for generation_seed),
+            # but clear rules_json_path so worldgen tracking isn't attempted.
+            self.ut_core.auto_discover_rules_json()
+            self.ut_core.rules_json_path = None
         else:
             # Try pickle first (fastest), then fall back to rules.json
             self.ut_core.auto_discover_pickle()
             self.ut_core.auto_discover_rules_json()
 
         # initalize_tracker_core will use pickle/worldgen-based tracking if paths are set,
-        # or original_seeded/original tracking otherwise
+        # or try original_seeded (resolving seed from seed name/rules JSON), then original
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 

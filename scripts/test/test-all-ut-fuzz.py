@@ -651,13 +651,15 @@ def main():
         })
     else:
         # Flag-based system (worldgen, original, original_seeded, pickle modes)
-        use_worldgen_mode = args.ut_version == "worldgen"
+        # original_seeded needs rules.json exported so the generation_seed field
+        # is available for seed resolution, but uses original UT tracking (not worldgen)
+        use_rules_json = args.ut_version in ("worldgen", "original_seeded")
         print(f"  use_tracking_mode_config: False")
-        print(f"  save_rules_json: {use_worldgen_mode}")
+        print(f"  save_rules_json: {use_rules_json}")
         print(f"  save_tracker_pickle: {use_pickle_mode}")
         update_host_yaml({
             'use_tracking_mode_config': False,
-            'save_rules_json': use_worldgen_mode,
+            'save_rules_json': use_rules_json,
             'save_tracker_pickle': use_pickle_mode,
         })
 
