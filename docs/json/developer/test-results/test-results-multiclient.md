@@ -10,37 +10,38 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-02-14 02:28:13 UTC
+**Generated:** 2026-02-17 22:08:47 UTC
 
-**Source Data Created:** 2026-02-13T03:23:07.315393+00:00
+**Source Data Created:** 2026-02-17T20:11:52.320903+00:00
 
-**Source Data Last Updated:** 2026-02-13T03:23:07.315402+00:00
+**Source Data Last Updated:** 2026-02-17T20:11:52.320912+00:00
 
 ## Summary
 
-- **Total Games:** 75
-- **Passed:** 75 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Total Games:** 87
+- **Passed:** 77 (88.5%)
+- **Failed:** 10 (11.5%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
-- **Passing with Generic Logic:** 69/75 (92.0% of passed)
-- **Passing with Both Generic:** 41/75 (54.7% of passed)
+- **Passing with Generic Exporter:** 41/77 (53.2% of passed)
+- **Passing with Generic Logic:** 69/77 (89.6% of passed)
+- **Passing with Both Generic:** 41/77 (53.2% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 18.2KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 12.6KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 14.0KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | 1.8KB | ✅ |
 | Baking Adventure | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
+| Blasphemous | ❌ Failed | 0 | ❌ | 131/305 | 131/304 | 0/1 | ❌ | 130/305 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 4.0KB | ✅ |
@@ -59,10 +60,13 @@
 | EarthBound | ✅ Passed | 0 | ✅ | 265/265 | 251/251 | 14/14 | ✅ | 265/265 | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
+| Final Fantasy | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/1 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 13.9KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
+| Hollow Knight | ❌ Failed | 0 | ❌ | 136/1389 | 16/203 | 120/1186 | ❌ | 135/1389 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 148/239 | 148/239 | 0/0 | ❌ | 145/239 | 21.5KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | ✅ |
@@ -78,11 +82,15 @@
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
+| Ocarina of Time | ❌ Failed | 2524 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/25 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
+| Pokemon Emerald | ❌ Failed | 0 | ❌ | 1034/1061 | 167/194 | 867/867 | ❌ | 1060/1061 | 5.2KB | 8.7KB |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 941/1010 | 134/161 | 803/845 | ❌ | 960/1010 | 12.1KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
+| SMZ3 | ❌ Failed | 0 | ❌ | 93/316 | 93/316 | 0/0 | ❌ | 90/316 | 53.9KB | 51.3KB |
 | Satisfactory | ✅ Passed | 0 | ✅ | 555/555 | 377/377 | 178/178 | ✅ | 555/555 | 41.6KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 7.5KB |
@@ -91,6 +99,7 @@
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
+| Sudoku | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ✅ | 0/0 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
@@ -107,7 +116,10 @@
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
+| Yacht Dice | ✅ Passed | 0 | ✅ | 90/90 | 89/89 | 1/1 | ✅ | 90/90 | 0.9KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 9.2KB | ✅ |
+| Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.3KB | 21.4KB |
+| Zillion | ❌ Failed | 0 | ❌ | 0/147 | 0/147 | 0/0 | ❌ | 0/147 | ✅ | ✅ |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
