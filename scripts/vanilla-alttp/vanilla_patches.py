@@ -295,12 +295,8 @@ def _make_patched_fill_dungeons(original_fill_dungeons):
 
 
 # Dungeons whose pessimistic key logic creates circular dependencies
-# with vanilla item placements. Each is essential — removing any one
-# from this set causes the accessibility check to fail.
-# Identified by progressive bypass analysis (analyze_key_checks.py).
-_VANILLA_KEY_BYPASS_DUNGEONS = frozenset()
-
-# Dungeons where key counts are capped instead of fully bypassed
+# with vanilla item placements. Key requirements are capped to the
+# maximum value that avoids circular dependencies.
 _VANILLA_KEY_CAP_COUNTS = {
     'Small Key (Desert Palace)': 1,
     'Small Key (Agahnims Tower)': 0,
@@ -327,10 +323,8 @@ def _with_relaxed_logic(func):
         # Save originals
         orig_has_key = CollectionState._lttp_has_key
 
-        # Patch _lttp_has_key: bypass or cap key counts for problematic dungeons
+        # Patch _lttp_has_key: cap key counts for problematic dungeons
         def targeted_has_key(self, item, player, count=1):
-            if item in _VANILLA_KEY_BYPASS_DUNGEONS:
-                return True
             if item in _VANILLA_KEY_CAP_COUNTS:
                 count = min(count, _VANILLA_KEY_CAP_COUNTS[item])
             return orig_has_key(self, item, player, count)

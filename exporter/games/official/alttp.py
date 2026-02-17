@@ -290,7 +290,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         Handles:
         - _lttp_has_key: Converts to can_buy_unlimited for universal key mode,
-          or returns True for bypassed dungeons in vanilla mode
+          or caps key counts for dungeons with vanilla key patches
 
         Args:
             method_name: The name of the state method
@@ -313,16 +313,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # Get count from second argument (defaults to 1)
             count = args[1] if len(args) >= 2 else {'type': 'constant', 'value': 1}
 
-            # Check for vanilla key bypass or cap
+            # Check for vanilla key cap
             patches = self._get_export_rule_patches()
             if patches:
-                bypass_keys = patches.get('bypass_key_checks', set())
-                if item_value in bypass_keys:
-                    logger.debug(
-                        "_lttp_has_key for %s bypassed (vanilla export patch)", item_value
-                    )
-                    return {'type': 'constant', 'value': True}
-
                 cap_counts = patches.get('cap_key_counts', {})
                 if item_value in cap_counts:
                     cap = cap_counts[item_value]

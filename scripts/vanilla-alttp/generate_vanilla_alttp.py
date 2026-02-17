@@ -70,10 +70,8 @@ def main():
         # exported rules.json so the generated worldgen world works without patches.
         ALTTPWorld.export_rule_patches = {
             # These dungeons have pessimistic key logic that creates circular
-            # dependencies with vanilla placements. Full bypasses replace key
-            # checks with True; capped keys reduce the required count.
-            'bypass_key_checks': frozenset(),
-            # Cap key requirements to this count (instead of full bypass)
+            # dependencies with vanilla placements. Key requirements are capped
+            # to the maximum value that avoids circular dependencies.
             'cap_key_counts': {
                 'Small Key (Desert Palace)': 1,
                 'Small Key (Agahnims Tower)': 0,
