@@ -271,6 +271,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         qualname = getattr(func, '__qualname__', '')
         return 'set_bunny_rules' in qualname
 
+    def _get_export_rule_patches(self) -> Optional[Dict[str, Any]]:
+        """Get export rule patches from the world, if any.
+
+        Patches are written by generate_vanilla_alttp.py to relax rules that
+        create circular dependencies with vanilla item placements. The patch
+        data is stored on the world class/instance as export_rule_patches.
+        """
+        return getattr(self.world, 'export_rule_patches', None)
+
     def handle_game_specific_state_method(
         self,
         method_name: str,
@@ -280,7 +289,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Handle ALttP-specific state methods.
 
         Handles:
-        - _lttp_has_key: Converts to can_buy_unlimited for universal key mode
+        - _lttp_has_key: Converts to can_buy_unlimited for universal key mode,
+          or caps key counts for dungeons with vanilla key patches
 
         Args:
             method_name: The name of the state method
@@ -302,6 +312,24 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
             # Get count from second argument (defaults to 1)
             count = args[1] if len(args) >= 2 else {'type': 'constant', 'value': 1}
+
+            # Check for vanilla key cap
+            patches = self._get_export_rule_patches()
+            if patches:
+                cap_counts = patches.get('cap_key_counts', {})
+                if item_value in cap_counts:
+                    cap = cap_counts[item_value]
+                    # Extract the original count value
+                    orig_count = count
+                    if isinstance(count, dict) and count.get('type') == 'constant':
+                        orig_count = count.get('value', 1)
+                    # Cap the count if it exceeds the limit
+                    if isinstance(orig_count, int) and orig_count > cap:
+                        logger.debug(
+                            "_lttp_has_key for %s capped from %d to %d",
+                            item_value, orig_count, cap
+                        )
+                        count = {'type': 'constant', 'value': cap}
 
             # Check for universal key mode
             small_key_shuffle = None

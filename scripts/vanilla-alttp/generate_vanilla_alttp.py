@@ -62,13 +62,30 @@ def main():
         from worlds.alttp import ALTTPWorld
         ALTTPWorld.is_vanilla = True
 
+        # Tell the exporter to cap key counts in the exported rules.json.
+        # The runtime patch (in vanilla_patches.py) caps key counts when
+        # _lttp_has_key is called, but the exporter reads the AST of rule
+        # lambdas where the original counts are hardcoded, so it needs its
+        # own patch data.
+        ALTTPWorld.export_rule_patches = {
+            'cap_key_counts': {
+                'Small Key (Desert Palace)': 1,
+                'Small Key (Agahnims Tower)': 0,
+                'Small Key (Palace of Darkness)': 5,
+                'Small Key (Swamp Palace)': 4,
+                'Small Key (Ganons Tower)': 4,
+            },
+        }
+
         main_main(erargs, seed=seed)
     finally:
-        # Clean up: remove is_vanilla and uninstall patches
+        # Clean up: remove is_vanilla, export patches, and uninstall patches
         try:
             from worlds.alttp import ALTTPWorld
             if hasattr(ALTTPWorld, 'is_vanilla'):
                 del ALTTPWorld.is_vanilla
+            if hasattr(ALTTPWorld, 'export_rule_patches'):
+                del ALTTPWorld.export_rule_patches
         except ImportError:
             pass
         vanilla_patches.uninstall()

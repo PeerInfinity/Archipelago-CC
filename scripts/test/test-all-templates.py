@@ -83,8 +83,10 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiclien
 
 def main():
     # Load default exclude lists
+    # - 'permanent' for only permanent exclusions (non-game templates)
     # - 'main' for regular template tests (excludes slow main test games)
     # - 'all' for WorldGen template tests (excludes slow main + worldgen games)
+    default_exclude_list_permanent = load_template_exclude_list(test_type='permanent')
     default_exclude_list_main = load_template_exclude_list(test_type='main')
     default_exclude_list_all = load_template_exclude_list(test_type='all')
 
@@ -108,6 +110,11 @@ def main():
         help='List of template files to skip (default: uses exclude list based on test type)'
     )
     parser.add_argument(
+        '--ignore-exclude-list',
+        action='store_true',
+        help='Ignore test-specific exclude lists (main_test, worldgen_test); only apply permanent exclusions'
+    )
+    parser.add_argument(
         '--include-list',
         type=str,
         nargs='*',
@@ -122,6 +129,16 @@ def main():
         '--exclude-pattern',
         type=str,
         help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)'
+    )
+    parser.add_argument(
+        '--include-vanilla',
+        action='store_true',
+        help='Include Vanilla WorldGen templates (by default excluded in WorldGen mode)'
+    )
+    parser.add_argument(
+        '--include-worldgen2',
+        action='store_true',
+        help='Include WorldGen2 templates (by default excluded in WorldGen mode)'
     )
     parser.add_argument(
         '--export-only',
@@ -424,10 +441,14 @@ def main():
         sys.exit(1)
 
     # Set default skip list based on test type if not explicitly provided
+    # Use 'permanent' exclude list when --ignore-exclude-list is set (only non-game exclusions)
     # Use 'all' exclude list for WorldGen tests (includes main + worldgen exclusions)
     # Use 'main' exclude list for regular tests
     if args.skip_list is None:
-        if args.include_pattern and 'WorldGen' in args.include_pattern:
+        if args.ignore_exclude_list:
+            args.skip_list = default_exclude_list_permanent
+            print(f"Ignoring test-specific exclude lists: using permanent exclude list only ({len(default_exclude_list_permanent)} templates)")
+        elif args.include_pattern and 'WorldGen' in args.include_pattern:
             args.skip_list = default_exclude_list_all
             print(f"WorldGen mode detected: using extended exclude list ({len(default_exclude_list_all)} templates)")
         else:
@@ -821,6 +842,25 @@ def main():
         if not yaml_files:
             print(f"Error: No testable YAML files found after pattern filtering (all files match '{args.exclude_pattern}')")
             sys.exit(1)
+
+    # In WorldGen mode, exclude Vanilla and WorldGen2 templates unless explicitly included
+    if args.include_pattern and 'WorldGen' in args.include_pattern:
+        # First exclude WorldGen2 templates (unless --include-worldgen2)
+        if not args.include_worldgen2:
+            before_filter = len(yaml_files)
+            yaml_files = [f for f in yaml_files if 'WorldGen2' not in f]
+            excluded = before_filter - len(yaml_files)
+            if excluded > 0:
+                print(f"WorldGen2 filter: excluded {excluded} WorldGen2 templates (use --include-worldgen2 to include)")
+
+        # Then exclude Vanilla templates from the remainder (unless --include-vanilla)
+        # Since WorldGen2 was already filtered above, "Vanilla" here only matches first-gen Vanilla WorldGen
+        if not args.include_vanilla:
+            before_filter = len(yaml_files)
+            yaml_files = [f for f in yaml_files if 'Vanilla' not in f]
+            excluded = before_filter - len(yaml_files)
+            if excluded > 0:
+                print(f"Vanilla filter: excluded {excluded} Vanilla WorldGen templates (use --include-vanilla to include)")
 
     # Initialize intermittent failures if not already done (non-retest mode)
     if not args.retest:

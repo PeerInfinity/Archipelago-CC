@@ -2915,7 +2915,7 @@
               "rule": "Has",
               "args": {
                 "item_name": "Small Key (Desert Palace)",
-                "count": 4
+                "count": 1
               }
             }
           }
@@ -3103,13 +3103,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Desert Palace)",
-                    "count": 2
-                  }
-                },
-                {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3122,6 +3115,12 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Desert Palace)"
+                  }
                 }
               ]
             },
@@ -3144,13 +3143,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Desert Palace)",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3163,6 +3155,12 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Desert Palace)"
+                  }
                 }
               ]
             },
@@ -3184,13 +3182,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Desert Palace)",
-                    "count": 4
-                  }
-                },
                 {
                   "rule": "AST_function_call",
                   "args": {
@@ -3241,9 +3232,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)"
+                    "items": [
+                      "Small Key (Desert Palace)",
+                      "Big Key (Desert Palace)"
+                    ]
                   }
                 }
               ]
@@ -3265,13 +3259,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Desert Palace)",
-                    "count": 4
-                  }
-                },
                 {
                   "rule": "AST_function_call",
                   "args": {
@@ -3337,9 +3324,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)"
+                    "items": [
+                      "Small Key (Desert Palace)",
+                      "Big Key (Desert Palace)"
+                    ]
                   }
                 }
               ]
@@ -4404,7 +4394,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 4
+                    "count": 0
                   }
                 },
                 {
@@ -4465,6 +4455,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 0
+                  }
+                },
+                {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4479,12 +4476,9 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Small Key (Agahnims Tower)",
-                      "Lamp"
-                    ]
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -4510,7 +4504,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 2
+                    "count": 0
                   }
                 },
                 {
@@ -4557,7 +4551,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 3
+                    "count": 0
                   }
                 },
                 {
@@ -7529,7 +7523,7 @@
               }
             },
             "item": {
-              "name": "Silver Arrows",
+              "name": "Silver Bow",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9071,7 +9065,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Swamp Palace)",
-                    "count": 5
+                    "count": 4
                   }
                 },
                 {
@@ -9090,7 +9084,7 @@
               "rule": "Has",
               "args": {
                 "item_name": "Small Key (Swamp Palace)",
-                "count": 6
+                "count": 4
               }
             }
           }
@@ -9370,7 +9364,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Swamp Palace)",
-                    "count": 6
+                    "count": 4
                   }
                 },
                 {
@@ -9429,7 +9423,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Swamp Palace)",
-                    "count": 6
+                    "count": 4
                   }
                 },
                 {
@@ -13094,7 +13088,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Palace of Darkness)",
-                        "count": 6
+                        "count": 5
                       }
                     }
                   ]
@@ -13123,7 +13117,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Palace of Darkness)",
-                    "count": 6
+                    "count": 5
                   }
                 },
                 {
@@ -13343,7 +13337,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Palace of Darkness)",
-                    "count": 6
+                    "count": 5
                   }
                 }
               ]
@@ -13359,7 +13353,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Palace of Darkness)",
-                    "count": 6
+                    "count": 5
                   }
                 },
                 {
@@ -13852,7 +13846,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -13892,7 +13886,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -13951,7 +13945,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 5
+                        "count": 4
                       }
                     },
                     {
@@ -13991,7 +13985,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
+                    "count": 4
                   }
                 }
               ]
@@ -14015,7 +14009,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14055,7 +14049,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14114,7 +14108,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14154,7 +14148,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14213,7 +14207,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14253,7 +14247,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14312,7 +14306,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14352,7 +14346,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14411,7 +14405,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14451,7 +14445,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14540,7 +14534,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 6
+                        "count": 4
                       }
                     }
                   ]
@@ -14549,7 +14543,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 8
+                    "count": 4
                   }
                 }
               ]
@@ -14565,7 +14559,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 6
+                    "count": 4
                   }
                 },
                 {
@@ -14767,7 +14761,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 5
+                        "count": 4
                       }
                     },
                     {
@@ -14823,7 +14817,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
+                    "count": 4
                   }
                 }
               ]
@@ -14847,7 +14841,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 5
+                            "count": 4
                           }
                         },
                         {
@@ -14903,7 +14897,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 7
+                        "count": 4
                       }
                     }
                   ]
@@ -14967,7 +14961,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 6
+                            "count": 4
                           }
                         },
                         {
@@ -15003,7 +14997,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 8
+                        "count": 4
                       }
                     }
                   ]
@@ -15048,7 +15042,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 6
+                            "count": 4
                           }
                         },
                         {
@@ -15084,7 +15078,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 8
+                        "count": 4
                       }
                     }
                   ]
@@ -15129,7 +15123,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 6
+                            "count": 4
                           }
                         },
                         {
@@ -15165,7 +15159,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 8
+                        "count": 4
                       }
                     }
                   ]
@@ -15210,7 +15204,7 @@
                           "rule": "Has",
                           "args": {
                             "item_name": "Small Key (Ganons Tower)",
-                            "count": 6
+                            "count": 4
                           }
                         },
                         {
@@ -15246,7 +15240,7 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Small Key (Ganons Tower)",
-                        "count": 8
+                        "count": 4
                       }
                     }
                   ]
@@ -15677,7 +15671,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 8
+                    "count": 4
                   }
                 },
                 {
@@ -15740,7 +15734,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ganons Tower)",
-                    "count": 7
+                    "count": 4
                   }
                 },
                 {
@@ -17816,7 +17810,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Bow"
@@ -18125,7 +18119,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Arrows"
@@ -19464,7 +19458,7 @@
       "Rupees (50)": 7,
       "Sanctuary Heart Container": 1,
       "Shovel": 1,
-      "Silver Arrows": 1,
+      "Silver Bow": 1,
       "Single Arrow": 1,
       "Small Key (Agahnims Tower)": 2,
       "Small Key (Desert Palace)": 4,
@@ -19780,7 +19774,7 @@
           "items=['Magic Powder'], locations=['Potion Shop'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Bottle'], locations=['Purple Chest'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Piece of Heart'], locations=['Pyramid'], world=False, from_pool=True, force='silent', count=1, percentage=100",
-          "items=['Silver Arrows'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
+          "items=['Silver Bow'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Golden Sword'], locations=['Pyramid Fairy - Right'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Pegasus Boots'], locations=['Sahasrahla'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Rupees (50",

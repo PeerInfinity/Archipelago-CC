@@ -391,10 +391,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   section "Generating presets for WorldGen templates"
   for template in "${WORLDGEN_TEMPLATES[@]}"; do
     if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
-      # TODO: ALTTP vanilla WorldGen preset generation is currently broken
-      if [ "$template" != "A Link to the Past" ]; then
-        gen_seed "${template} Vanilla WorldGen" 1
-      fi
+      gen_seed "${template} Vanilla WorldGen" 1
     fi
     gen_seed "${template} WorldGen" 1
   done
@@ -406,10 +403,7 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   section "Generating WorldGen2 worlds"
   for template in "${WORLDGEN2_TEMPLATES[@]}"; do
     if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
-      # TODO: ALTTP vanilla WorldGen2 world generation is currently broken
-      if [ "$template" != "A Link to the Past" ]; then
-        gen_vanilla_worldgen2_world "$template"
-      fi
+      gen_vanilla_worldgen2_world "$template"
     fi
     if has_worldgen2 "$template"; then
       gen_worldgen2_world "$template"
@@ -422,10 +416,7 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   section "Generating presets for WorldGen2 templates"
   for template in "${WORLDGEN2_TEMPLATES[@]}"; do
     if [ "$GENERATE_VANILLA_SEEDS" = "true" ] && has_vanilla "$template"; then
-      # TODO: ALTTP vanilla WorldGen2 preset generation is currently broken
-      if [ "$template" != "A Link to the Past" ]; then
-        gen_seed "${template} Vanilla WorldGen2" 1
-      fi
+      gen_seed "${template} Vanilla WorldGen2" 1
     fi
     if has_worldgen2 "$template"; then
       gen_seed "${template} WorldGen2" 1
