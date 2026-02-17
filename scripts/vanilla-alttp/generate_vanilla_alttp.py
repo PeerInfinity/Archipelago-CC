@@ -62,13 +62,40 @@ def main():
         from worlds.alttp import ALTTPWorld
         ALTTPWorld.is_vanilla = True
 
+        # Tell the exporter to relax rules that create circular dependencies
+        # with vanilla item placements. The vanilla patches fix these at runtime
+        # (via monkey-patching _lttp_has_key and CollectionState.collect), but
+        # the exporter reads the original unpatched rules. By writing patch data
+        # here, the ALttP export handler can apply the same relaxations to the
+        # exported rules.json so the generated worldgen world works without patches.
+        ALTTPWorld.export_rule_patches = {
+            # These 5 dungeons have pessimistic key logic that creates circular
+            # dependencies with vanilla placements. Key checks are replaced with
+            # True in the export so the worldgen world doesn't inherit them.
+            'bypass_key_checks': frozenset({
+                'Small Key (Desert Palace)',
+                'Small Key (Agahnims Tower)',
+                'Small Key (Palace of Darkness)',
+                'Small Key (Swamp Palace)',
+                'Small Key (Ganons Tower)',
+            }),
+            # Vanilla places "Silver Arrows" but rules check for "Silver Bow"
+            # (part of the progressive bow chain). This alias makes Silver Bow
+            # checks also accept Silver Arrows in the export.
+            'item_aliases': {
+                'Silver Bow': ['Silver Arrows'],
+            },
+        }
+
         main_main(erargs, seed=seed)
     finally:
-        # Clean up: remove is_vanilla and uninstall patches
+        # Clean up: remove is_vanilla, export patches, and uninstall patches
         try:
             from worlds.alttp import ALTTPWorld
             if hasattr(ALTTPWorld, 'is_vanilla'):
                 del ALTTPWorld.is_vanilla
+            if hasattr(ALTTPWorld, 'export_rule_patches'):
+                del ALTTPWorld.export_rule_patches
         except ImportError:
             pass
         vanilla_patches.uninstall()
