@@ -96,7 +96,7 @@ vitest.config.js     - Vitest unit test configuration
 test/hosting/webhost.py (modified for testing)
 ```
 
-Note: The vanilla placement feature for ALTTP is located in `scripts/vanilla-alttp/`. See [scripts/vanilla-alttp/README.md](../../../../scripts/vanilla-alttp/README.md) for details. This is an incomplete side project that requires manual setup to use.
+Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placing ALTTP items in their vanilla (original game) locations using monkey patches and YAML plando. See [scripts/vanilla-alttp/README.md](../../../../scripts/vanilla-alttp/README.md) for details.
 
 ---
 

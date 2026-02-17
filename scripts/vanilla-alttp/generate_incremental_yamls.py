@@ -53,7 +53,7 @@ OVERCOUNT_ITEMS = {
     'Blue Boomerang', # vanilla=2, pool=1
     'Rupees (20)',    # vanilla=30, pool=28
     'Bombs (3)',      # vanilla=17, pool=16
-    'Silver Arrows',  # vanilla=1, pool=0 (pool has Silver Bow)
+    'Silver Bow',     # vanilla has Silver Arrows but we use Silver Bow (what rules check for)
 }
 
 # Items that could be randomly placed at Link's Uncle by generate_itempool.
@@ -99,7 +99,7 @@ MEDALLION_ITEMS = {'Bombos', 'Ether', 'Quake'}
 
 SWORD_ITEMS = {
     'Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword',
-    'Silver Arrows', 'Golden Sword',
+    'Silver Bow', 'Golden Sword',
 }
 
 

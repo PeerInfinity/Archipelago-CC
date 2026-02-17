@@ -26,7 +26,7 @@
       "original_sha256": "e27ef266019dc8a3a93ebdcc95e1d763f6cc4cf503b7a5380507b7726aef0693"
     },
     "worlds/oot/__init__.py": {
-      "patched_sha256": "21452927b2d111908c9f1280948686ce93a94baa113abd31f8eba1a283229314",
+      "patched_sha256": "49b54469c83b4a8c8648f563d96bb44abdebad9dc755853a00870995c363d76a",
       "original_sha256": "6433748e95bc3ddb5565dab71d98355ce8c547ba098d7ee251bbcca997f04cc7"
     },
     "worlds/smw/__init__.py": {

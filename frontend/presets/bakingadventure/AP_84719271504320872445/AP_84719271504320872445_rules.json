@@ -676,10 +676,10 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": true,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "vanilla_placement": false
       },
       "option_definitions": {
         "accessibility": {
@@ -698,16 +698,16 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
-        "randomize_items": {
+        "vanilla_placement": {
           "type": "toggle",
-          "default": true,
-          "display_name": "Randomize Items"
+          "default": false,
+          "display_name": "Vanilla Item Placement"
         }
       },
       "base_id": 300000000,
       "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
       "slot_data": {
-        "randomize_items": 1
+        "vanilla_placement": 0
       },
       "web": {
         "theme": "partyTime",

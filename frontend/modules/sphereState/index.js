@@ -193,32 +193,53 @@ function handleRulesLoaded(data, propagationOptions) {
 
   log('info', `Rules source: ${sourceName}`);
 
-  // Extract game directory and preset ID from sourceName
+  // Extract game directory, preset directory, and seed ID from sourceName
   // Expected formats:
   //   Single-player: "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
   //   Multiworld:    "./presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json"
-  // The sphere log is shared and named: AP_14089154938208861744_sphere_log.jsonl (without _P{N})
-  const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2(?:_P\d+)?_rules\.json$/);
+  //   Vanilla:       "./presets/alttp/AP_14089154938208861744_v/AP_14089154938208861744_rules.json"
+  //   Canonical:     "./presets/adventure_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json"
+  //   Both:          "./presets/game_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json"
+  // The preset directory may have a placement suffix (_v, _c, _vc) but the sphere log filename does not.
+  // The sphere log is shared and named: AP_14089154938208861744_sphere_log.jsonl (without _P{N} or placement suffix)
+  const match = sourceName.match(/presets\/([^/]+)\/((AP_\d+)(?:_[a-z]+)?)\/\3(?:_P\d+)?_rules\.json$/);
   if (!match) {
     // If sourceName indicates data loaded from localStorage or editor, this is expected
     const isFromLocalStorage = sourceName === 'moduleSpecificConfigProvidedRules';
     const isFromEditor = sourceName === 'editorApply';
-    const isExpectedNonFilePath = isFromLocalStorage || isFromEditor;
+    const isFromHardcodedFallback = sourceName.startsWith('hardcodedFallback:');
+    const isExpectedNonFilePath = isFromLocalStorage || isFromEditor || isFromHardcodedFallback;
     log(
       isExpectedNonFilePath ? 'info' : 'warn',
       `Could not parse sourceName format: ${sourceName}` +
       (isFromLocalStorage ? ' (Rules loaded from localStorage without file path)' : '') +
-      (isFromEditor ? ' (Rules applied from editor)' : '')
+      (isFromEditor ? ' (Rules applied from editor)' : '') +
+      (isFromHardcodedFallback ? ' (Using hardcoded fallback sphere log)' : '')
     );
+
+    // For hardcoded fallback, load the embedded sphere log
+    if (isFromHardcodedFallback) {
+      import('../../data/fallbackRules.js').then(({ FALLBACK_SPHERE_LOG }) => {
+        sphereState.loadSphereLog('hardcodedFallback:apquest_sphere_log', FALLBACK_SPHERE_LOG).then(success => {
+          if (success) {
+            log('info', 'Hardcoded fallback sphere log loaded successfully');
+          } else {
+            log('warn', 'Failed to load hardcoded fallback sphere log');
+          }
+        });
+      });
+    }
+
     return;
   }
 
   const gameDir = match[1];
-  const presetId = match[2];
+  const presetDir = match[2];
+  const seedId = match[3];
 
-  log('info', `Extracted game: ${gameDir}, preset: ${presetId}`);
+  log('info', `Extracted game: ${gameDir}, preset dir: ${presetDir}, seed: ${seedId}`);
 
-  const sphereLogPath = `./presets/${gameDir}/${presetId}/${presetId}_sphere_log.jsonl`;
+  const sphereLogPath = `./presets/${gameDir}/${presetDir}/${seedId}_sphere_log.jsonl`;
   log('info', `Attempting to auto-load sphere log from: ${sphereLogPath}`);
 
   // Load sphere log (async, but we don't await)

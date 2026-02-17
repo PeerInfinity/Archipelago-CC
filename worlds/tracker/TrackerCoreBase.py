@@ -210,6 +210,10 @@ class TrackerCoreBase():
                 from logging import ERROR
                 args.log_level = ERROR
 
+            # Allow subclasses to inject a seed number for deterministic generation
+            if getattr(self, 'seed_override', None) is not None:
+                args.seed = self.seed_override
+
             g_args, seed = GMain(args)
             if slot_data or override_yaml_path:
                 if slot_data and slot_data in self.cached_slot_data:

@@ -1,10 +1,10 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-13 04:46:27 UTC
+**Generated:** 2026-02-14 02:28:14 UTC
 
-**Source Data Created:** 2026-02-13T04:01:45.915440+00:00
+**Source Data Created:** 2026-02-13T04:52:43.340649+00:00
 
-**Source Data Last Updated:** 2026-02-13T04:01:45.915453+00:00
+**Source Data Last Updated:** 2026-02-13T04:52:43.340661+00:00
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -26,16 +26,16 @@ This summary combines results from fuzz tests that validate game configurations 
 
 - **Javascript:** 65/75 passed (86.7%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
-- **UT Fuzz Worldgen:** 70/87 passed (80.5%)
+- **UT Fuzz Worldgen:** 73/87 passed (83.9%)
 - **UT Fuzz Pickle:** 75/87 passed (86.2%)
 - **UT Fuzz Hybrid:** 79/85 passed (92.9%)
 
 ### Combined Results (All 5 Tests)
 
 - **Games passing all 5 fuzz tests:** 31/87 (35.6%)
-- **Games passing 4 fuzz tests:** 32/87 (36.8%)
-- **Games passing 3 fuzz tests:** 6/87 (6.9%)
-- **Games passing 2 fuzz tests:** 12/87 (13.8%)
+- **Games passing 4 fuzz tests:** 33/87 (37.9%)
+- **Games passing 3 fuzz tests:** 7/87 (8.0%)
+- **Games passing 2 fuzz tests:** 10/87 (11.5%)
 - **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
@@ -43,9 +43,9 @@ This summary combines results from fuzz tests that validate game configurations 
 
 This view excludes UT Original, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.
 
-- **Games passing all 4 fuzz tests:** 57/87 (65.5%)
-- **Games passing 3 fuzz tests:** 11/87 (12.6%)
-- **Games passing 2 fuzz tests:** 13/87 (14.9%)
+- **Games passing all 4 fuzz tests:** 58/87 (66.7%)
+- **Games passing 3 fuzz tests:** 12/87 (13.8%)
+- **Games passing 2 fuzz tests:** 11/87 (12.6%)
 - **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
@@ -55,11 +55,11 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 |-----------|:----------:|:------------:|:------------:|:----------:|:----------:|:----------:|
 | A Hat in Time | ✅ | ❌ 17% | ✅ | ✅ | ✅ | 230.1KB |
 | A Link to the Past | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 664.1KB |
-| A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | 409.8KB |
+| A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ⚠️ 94% | ✅ | ✅ | ✅ | 25.6KB |
 | Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | 272.0KB |
-| Baking Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | N/A |
+| Baking Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 17.8KB |
 | Blasphemous | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 🔶 80% | ✅ | ✅ | ✅ | ✅ | 325.2KB |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | 50.1KB |
@@ -70,7 +70,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | 16.1KB |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | 281.3KB |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | 163.0KB |
-| Coding Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | N/A |
+| Coding Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 54.1KB |
 | DLCQuest | ✅ | ❌ 46% | ✅ | ✅ | ✅ | 49.7KB |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | 275.6KB |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | 322.4KB |
@@ -85,16 +85,16 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 100.3KB |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | 83.0KB |
-| Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ✅ | ✅ | ✅ | 298.6KB |
+| Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 40% | ⚠️ 98% | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ✅ | ❌ 37% | ❌ 0% | ❌ 44% | ❌ 10% | 1634.7KB |
 | Kirby's Dream Land 3 | 🔶 50% | ❌ 3% | ❌ 0% | ✅ | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | 🔶 60% | ✅ | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 209.1KB |
 | Lingo | ❌ 20% | ❌ 21% | ✅ | ✅ | ✅ | 939.9KB |
-| Links Awakening DX | ✅ | ❌ 23% | ❌ 0% | ❌ 23% | ✅ | 703.0KB |
+| Links Awakening DX | ✅ | ❌ 23% | ✅ | ❌ 23% | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | 395.4KB |
-| Math Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | N/A |
+| Math Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 12.4KB |
 | Mega Man 2 | ✅ | ⚠️ 91% | ✅ | ✅ | ✅ | 51.6KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | 204.6KB |
 | Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | 56.7KB |
@@ -105,11 +105,11 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | ✅ | 305.1KB |
 | Overcooked! 2 | ✅ | ❌ 12% | ✅ | ✅ | ✅ | 488.2KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | ✅ | 123.0KB |
-| Pokemon Emerald | — | 🔶 59% | ❌ 20% | ✅ | ✅ | 1390.9KB |
-| Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ✅ | 1029.2KB |
+| Pokemon Emerald | — | 🔶 59% | ❌ 20% | ✅ | ✅ | N/A |
+| Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ✅ | N/A |
 | Raft | ✅ | ✅ | ✅ | ✅ | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 145.0KB |
-| SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
+| SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | N/A |
 | Satisfactory | ✅ | — | ✅ | ❌ 0% | — | 1618.9KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | 🔶 70% | ✅ | ✅ | ❌ 0% | ✅ | 414.9KB |
@@ -120,7 +120,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 205.4KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 100.9KB |
-| Super Mario Land 2 | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 918.7KB |
+| Super Mario Land 2 | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 919.0KB |
 | Super Mario World | ✅ | 🔶 54% | ✅ | ✅ | ✅ | 177.6KB |
 | Super Metroid | ❌ 0% | ❌ 1% | ❌ 0% | ❌ 49% | ❌ 0% | 625.0KB |
 | TOEM original | ✅ | ✅ | ✅ | ✅ | ✅ | 99.6KB |
@@ -128,7 +128,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | TUNIC | ❌ 20% | ✅ | ✅ | ✅ | ✅ | 649.1KB |
 | Terraria | ✅ | ⚠️ 98% | ✅ | ✅ | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | 554.5KB |
-| The Messenger | ✅ | ❌ 2% | 🔶 50% | ❌ 2% | ✅ | 210.3KB |
+| The Messenger | ✅ | ❌ 2% | ✅ | ❌ 2% | ✅ | 210.3KB |
 | The Wind Waker | ✅ | ❌ 3% | ✅ | ✅ | ✅ | 250.1KB |
 | The Witness | ❌ 20% | ✅ | ✅ | ✅ | ✅ | 392.1KB |
 | Timespinner | ✅ | ❌ 5% | ✅ | ✅ | ✅ | 262.7KB |
@@ -137,7 +137,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | 44.0KB |
 | Yacht Dice | — | ❌ 5% | ❌ 0% | ✅ | ✅ | 248.4KB |
 | Yoshi's Island | ✅ | ❌ 22% | ✅ | ✅ | ✅ | 295.2KB |
-| Yu-Gi-Oh! 2006 | — | ❌ 33% | 🔶 50% | ✅ | ✅ | 628.0KB |
+| Yu-Gi-Oh! 2006 | — | ❌ 33% | 🔶 50% | ✅ | ✅ | N/A |
 | Zillion | — | ❌ 0% | ❌ 0% | 🔶 78% | ❌ 0% | N/A |
 | shapez | ✅ | ❌ 42% | ✅ | ✅ | ✅ | 153.7KB |
 

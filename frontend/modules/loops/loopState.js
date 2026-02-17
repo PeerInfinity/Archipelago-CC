@@ -119,8 +119,8 @@ export class LoopState {
     if (this.playerState?.isStartRegion) {
       return this.playerState.isStartRegion(entry.region);
     }
-    // Fallback to checking for 'Menu' if playerState not available
-    return entry.region === 'Menu';
+    // If playerState not available, can't determine start region
+    return false;
   }
 
   /**
@@ -1090,6 +1090,42 @@ export class LoopState {
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
+  }
+
+  /**
+   * Full reset for when new rules/preset are loaded.
+   * Unlike _resetLoop() which just resets mana and action progress for a loop iteration,
+   * this clears all accumulated state (XP, explore states, etc.) that is preset-specific.
+   */
+  resetForNewRules() {
+    // Stop any active processing
+    this.stopProcessing();
+
+    // Reset mana to base values
+    this.maxMana = 100;
+    this.currentMana = this.maxMana;
+    this.manaDebt = 0;
+
+    // Clear accumulated state
+    this.regionXP.clear();
+    this.repeatExploreStates.clear();
+
+    // Reset action progress
+    this._resetActionsProgress();
+
+    // Pause
+    this.isPaused = true;
+
+    // Notify about the reset
+    if (this.eventBus) {
+      this.eventBus.publish('loopState:loopReset', {
+        mana: {
+          current: this.currentMana,
+          max: this.maxMana,
+        },
+        paused: true,
+      }, 'loops');
+    }
   }
 
   /**

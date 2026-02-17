@@ -299,7 +299,7 @@ With all lossless simplification fixes:
 
 ```bash
 # Reproduce a specific failure
-python fuzz.py -r 1 -j 1 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed 1
+python fuzz.py -r 1 -j 1 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed 1
 
 # Check failure logs
 cat fuzz_output/error/alttp/0/*.log

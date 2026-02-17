@@ -783,12 +783,12 @@ source .venv/bin/activate
 
 # Run the fuzzer with a specific seed to reproduce a failure
 # The run number becomes the seed for the random option generator
-python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed <RUN_NUMBER>
 ```
 
 For example, to reproduce run 2:
 ```bash
-python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed 2
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed 2
 ```
 
 ### 2. Check the failure log
@@ -870,7 +870,7 @@ grep -n "progressive" frontend/presets/{world_dir}/AP_*/AP_*_rules.json | head -
 source .venv/bin/activate
 
 # Single fuzzer run (specific seed to reproduce)
-python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed <RUN_NUMBER>
 
 # Multiple runs to check success rate
 python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
@@ -1099,7 +1099,7 @@ Pick a specific failing run number from the error list above and reproduce it:
 source .venv/bin/activate
 
 # Run the fuzzer with a specific seed to reproduce a failure
-python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed <RUN_NUMBER>
 ```
 
 ### 5. Check the failure log
@@ -1157,7 +1157,7 @@ with zipfile.ZipFile(apworld, 'r') as z:
 source .venv/bin/activate
 
 # Single fuzzer run (specific seed to reproduce)
-python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --starting-seed <RUN_NUMBER>
 
 # Multiple runs to check success rate
 python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
@@ -1270,7 +1270,7 @@ To reproduce a specific failing seed (e.g., seed {first_failing}):
 source .venv/bin/activate
 
 # Reproduce the exact failure
-python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --seed {first_failing} --runs 1
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --starting-seed {first_failing} --runs 1
 ```
 
 This will:
@@ -1305,7 +1305,7 @@ No specific failing seeds were recorded. Run the test again to identify failures
 
 ```bash
 source .venv/bin/activate
-python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --starting-seed 1
 ```
 """.format(template_file=template_file)
     else:
@@ -1317,7 +1317,7 @@ Run the test again with a fixed seed to get reproducible failures:
 
 ```bash
 source .venv/bin/activate
-python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --starting-seed 1
 ```
 
 Once you have failing seeds with a fixed base seed, you can reproduce specific failures.
@@ -1543,7 +1543,7 @@ def generate_ut_fuzz_single_failure_prompt(failure_info):
     seeds_are_actual = reproduction_seed is not None and failing_seed == reproduction_seed
 
     if reproduction_seed is not None:
-        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --seed {reproduction_seed}{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --starting-seed {reproduction_seed}{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
         if seeds_are_actual:
             # New behavior: --number-by-seed was used, failing_seed IS the actual seed
             repro_explanation = f"""
@@ -1704,7 +1704,7 @@ Fix the logic mismatch so that this specific seed passes. After fixing:
 1. Re-run the reproduction command to verify the fix
 2. Run a broader test to ensure no regressions:
    ```bash
-   python scripts/test/test-all-ut-fuzz.py --include-list "{template}" --runs 100 --seed {base_seed if base_seed else 1}
+   python scripts/test/test-all-ut-fuzz.py --include-list "{template}" --runs 100 --starting-seed {base_seed if base_seed else 1}
    ```
 
 ## Reference Files

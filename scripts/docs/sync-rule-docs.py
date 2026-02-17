@@ -124,19 +124,27 @@ def extract_js_rule_types(filepath: Path) -> dict[str, RuleTypeInfo]:
     # Match case statements: case 'type': or case "type":
     case_pattern = re.compile(r"^\s*case\s+['\"](\w+)['\"]:\s*(?:\{)?")
 
+    # Match handler object keys: 'type': (rule, context, ... => {
+    # This pattern is used in modular handler files (astLogic.js, astChecks.js, etc.)
+    handler_key_pattern = re.compile(
+        r"^\s+['\"](\w+)['\"]\s*:\s*\(rule\s*,"
+    )
+
+    skip_types = {'items', 'keys', 'values', 'get', 'index', 'count',
+                  'capitalize', 'upper', 'lower', 'strip', 'lstrip',
+                  'rstrip', 'startswith', 'endswith', 'replace',
+                  'split', 'join', '__contains__', 'sqrt', 'pow',
+                  'floor', 'ceil', 'abs', 'eq', 'ne', 'lt', 'le',
+                  'gt', 'ge', 'in', 'AND', 'OR',
+                  'has', 'has_group',
+                  'append', 'extend', 'pop', 'clear'}
+
     for i, line in enumerate(lines, 1):
-        match = case_pattern.match(line)
+        match = case_pattern.match(line) or handler_key_pattern.match(line)
         if match:
             rule_type = match.group(1)
             # Skip internal helper cases like method names
-            if rule_type in {'items', 'keys', 'values', 'get', 'index', 'count',
-                            'capitalize', 'upper', 'lower', 'strip', 'lstrip',
-                            'rstrip', 'startswith', 'endswith', 'replace',
-                            'split', 'join', '__contains__', 'sqrt', 'pow',
-                            'floor', 'ceil', 'abs', 'eq', 'ne', 'lt', 'le',
-                            'gt', 'ge', 'in', 'AND', 'OR',
-                            'has', 'has_group',
-                            'append', 'extend', 'pop', 'clear'}:
+            if rule_type in skip_types:
                 continue
 
             if rule_type not in rule_types:
@@ -407,10 +415,22 @@ def main():
     # Extract from all sources
     print("Extracting rule types from source code...")
 
-    js_types = extract_js_rule_types(
-        root / "frontend/modules/shared/ruleEngine.js"
-    )
-    print(f"  ruleEngine.js: {len(js_types)} types")
+    # Scan ruleEngine/ directory (modular) + facade file
+    js_types: dict[str, RuleTypeInfo] = {}
+    rule_engine_dir = root / "frontend/modules/shared/ruleEngine"
+    if rule_engine_dir.is_dir():
+        for js_file in sorted(rule_engine_dir.glob("*.js")):
+            file_types = extract_js_rule_types(js_file)
+            for name, info in file_types.items():
+                if name not in js_types:
+                    js_types[name] = info
+                else:
+                    js_types[name].sources.extend(info.sources)
+    else:
+        js_types = extract_js_rule_types(
+            root / "frontend/modules/shared/ruleEngine.js"
+        )
+    print(f"  ruleEngine modules: {len(js_types)} types")
 
     py_classes = extract_python_rule_classes(
         root / "rule_builder/rules.py"

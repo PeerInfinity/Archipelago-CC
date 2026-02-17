@@ -419,7 +419,8 @@ export class LoopUI {
 
       // Clear UI specific states
       this.expansionState.clear();
-      this.expansionState.setRegionExpanded('Menu', true); // Keep menu expanded
+      const startRegion = this.getPrimaryStartRegion();
+      if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
       this.regionsInQueue.clear();
       // REMOVED: this.repeatExploreStates.clear(); - Now handled by LoopState
       // Render the panel
@@ -820,6 +821,26 @@ export class LoopUI {
   setPlayerStateAPI(api) {
     this.playerStateAPI = api;
     log('info', 'LoopUI: PlayerState API set');
+  }
+
+  /**
+   * Gets the primary start region name from stateManager static data.
+   * @returns {string|null} The start region name, or null if unavailable
+   */
+  getPrimaryStartRegion() {
+    const staticData = stateManager.getStaticData();
+    let startRegions = staticData?.startRegions;
+    if (startRegions && !Array.isArray(startRegions) && typeof startRegions === 'object' && Array.isArray(startRegions.default)) {
+      startRegions = startRegions.default;
+    }
+    if (Array.isArray(startRegions) && startRegions.length > 0) {
+      return startRegions[0];
+    }
+    // Fallback: first region in static data
+    if (staticData?.regions?.size > 0) {
+      return staticData.regions.keys().next().value;
+    }
+    return null;
   }
 
   /**
@@ -1740,9 +1761,10 @@ export class LoopUI {
       }
     }
     
-    // If entering loop mode, expand the Menu region by default
+    // If entering loop mode, expand the start region by default
     if (this.isLoopModeActive) {
-      this.expansionState.setRegionExpanded('Menu', true);
+      const startRegion = this.getPrimaryStartRegion();
+      if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
     }
 
     // --- Update THIS panel's UI elements ---
@@ -1785,8 +1807,9 @@ export class LoopUI {
     // Reset current action display
     this._updateCurrentActionDisplay(null); // Pass null to show 'No action'
 
-    // Add Menu back to expanded regions
-    this.expansionState.setRegionExpanded('Menu', true);
+    // Add start region back to expanded regions
+    const startRegion = this.getPrimaryStartRegion();
+    if (startRegion) this.expansionState.setRegionExpanded(startRegion, true);
 
     // Re-render the panel in its cleared state
     this.renderLoopPanel();

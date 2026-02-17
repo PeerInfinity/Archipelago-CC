@@ -4,6 +4,7 @@
 import { LOCAL_STORAGE_MODE_PREFIX, LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY } from './modeManager.js';
 import { loadAndMergeJsonFiles, getConfigPaths } from '../../utils/settingsMerger.js';
 import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
+import { FALLBACK_RULES } from '../../data/fallbackRules.js';
 
 /**
  * Reads the autoLoadMode setting to determine if localStorage data should be loaded.
@@ -250,7 +251,8 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
     try {
       const presetFiles = await fetchJson(
         './presets/preset_files.json',
-        'Error loading preset_files.json for game/seed lookup'
+        'Error loading preset_files.json for game/seed lookup',
+        { logLevel: 'warn' }
       );
 
       if (presetFiles) {
@@ -518,10 +520,13 @@ async function loadConfigKey(params) {
         `${configKey} for "${currentActiveMode}" is missing or invalid in baseCombinedData. Attempting to load from files.`
       );
 
-      let fetchedData = await loadConfigFiles(pathsToLoad, configKey, fetchJson, logger);
+      // For rulesConfig without URL override, use 'warn' level since fallback chain handles failures
+      const hasRulesFallback = configKey === 'rulesConfig' && !rulesOverride;
+      let fetchedData = await loadConfigFiles(pathsToLoad, configKey, fetchJson, logger,
+        hasRulesFallback ? { logLevel: 'warn' } : {});
 
       // For rulesConfig, try alphabetical preset fallback if primary load fails
-      if (!fetchedData && configKey === 'rulesConfig' && !rulesOverride) {
+      if (!fetchedData && hasRulesFallback) {
         logger.info(
           'init',
           `Primary rulesConfig load failed for "${pathsToLoad.join(', ')}". Attempting alphabetical preset fallback.`
@@ -543,6 +548,21 @@ async function loadConfigKey(params) {
             );
             return; // Successfully loaded, skip further fallback attempts
           }
+        }
+
+        // Final hardcoded fallback: use embedded APQuest rules
+        if (!fetchedData) {
+          logger.warn(
+            'init',
+            'All preset loading failed for rulesConfig. Using hardcoded APQuest fallback rules.'
+          );
+          baseCombinedData[configKey] = FALLBACK_RULES;
+          dataSources[configKey] = {
+            source: 'hardcodedFallback',
+            timestamp: new Date().toISOString(),
+            details: 'Loaded from hardcoded APQuest fallback (no presets available)',
+          };
+          return;
         }
       }
 
@@ -583,7 +603,7 @@ async function loadConfigKey(params) {
 /**
  * Loads config files (single or multiple with merging)
  */
-async function loadConfigFiles(pathsToLoad, configKey, fetchJson, logger) {
+async function loadConfigFiles(pathsToLoad, configKey, fetchJson, logger, { logLevel = 'error' } = {}) {
   if (pathsToLoad.length > 1) {
     return await loadAndMergeJsonFiles(
       pathsToLoad,
@@ -593,7 +613,8 @@ async function loadConfigFiles(pathsToLoad, configKey, fetchJson, logger) {
   } else if (pathsToLoad.length === 1) {
     return await fetchJson(
       pathsToLoad[0],
-      `Error loading ${configKey} from file`
+      `Error loading ${configKey} from file`,
+      { logLevel }
     );
   }
   return null;
@@ -632,7 +653,7 @@ async function attemptFallbackLoad(params) {
   } = params;
 
   if (!usingFallback && defaultModeFileConfigs && defaultModeFileConfigs[configKey]) {
-    logger.error(
+    logger.warn(
       'init',
       `Failed to load ${configKey} from ${pathsToLoad.join(', ')}. Attempting fallback to "default" mode.`
     );
@@ -768,6 +789,8 @@ function prepareStateManagerConfig(baseCombinedData, dataSources, log) {
       if (match) {
         sourcePath = match[1];
       }
+    } else if (dataSources.rulesConfig.source === 'hardcodedFallback') {
+      sourcePath = 'hardcodedFallback:apquest';
     }
 
     // Set up StateManager config if we have a valid source path
@@ -831,7 +854,8 @@ async function findFirstAlphabeticalPreset(fetchJson, logger) {
   try {
     const presetFiles = await fetchJson(
       './presets/preset_files.json',
-      'Loading preset_files.json for alphabetical fallback'
+      'Loading preset_files.json for alphabetical fallback',
+      { logLevel: 'warn' }
     );
 
     if (!presetFiles) {

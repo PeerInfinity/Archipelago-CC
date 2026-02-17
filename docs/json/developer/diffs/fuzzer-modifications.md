@@ -32,16 +32,16 @@ The following features were backported from upstream v0.5.1:
 
 ## New Command-Line Arguments
 
-### `--seed`
+### `--starting-seed`
 
 ```bash
-python fuzz.py -g alttp -r 100 --seed 12345
+python fuzz.py -g alttp -r 100 --starting-seed 12345
 ```
 
-Allows reproducible fuzzing runs by seeding the random number generator. When provided:
-- The main process seeds `random` before each iteration using `seed + iteration`
-- Worker processes also seed `random` using the same formula
-- This ensures YAML generation and randomization are deterministic across runs
+Sets the starting seed number for generation. Each run uses `starting_seed + iteration` as the actual Archipelago generation seed. When provided:
+- Run 0 uses seed 12345, run 1 uses seed 12346, etc.
+- Python's `random` is also seeded with the same value for deterministic YAML option generation
+- If not set, each run uses a random generation seed
 
 ### `--default-options`
 
@@ -77,10 +77,10 @@ Enable fractional sphere logic for UT comparison hooks. This iterates within eac
 ### `--number-by-seed`
 
 ```bash
-python fuzz.py -g alttp -r 100 --seed 1000 --number-by-seed
+python fuzz.py -g alttp -r 100 --starting-seed 1000 --number-by-seed
 ```
 
-Number output files and errors by actual seed (`base_seed + iteration`) instead of iteration index. Requires `--seed` to be set. Makes it easier to reproduce specific failures by using the seed number directly.
+Number output files and errors by actual seed (`starting_seed + iteration`) instead of iteration index. Requires `--starting-seed` to be set. Makes it easier to reproduce specific failures by using the seed number directly.
 
 ### `--stop-on-first-failure`
 
@@ -256,7 +256,7 @@ parser.add_argument("--stop-on-first-failure", default=False, action="store_true
 
 ### Basic reproducible fuzzing
 ```bash
-python fuzz.py -g tunic -r 100 --seed 42
+python fuzz.py -g tunic -r 100 --starting-seed 42
 ```
 
 ### Exclude specific options from randomization
@@ -271,12 +271,12 @@ python fuzz.py -g alttp -r 50 --disallow-options glitches_required=minor_glitche
 
 ### Combined usage with seed-based numbering
 ```bash
-python fuzz.py -g alttp -r 200 --seed 12345 --default-options shuffle_doors --number-by-seed
+python fuzz.py -g alttp -r 200 --starting-seed 12345 --default-options shuffle_doors --number-by-seed
 ```
 
 ### Debugging with early termination
 ```bash
-python fuzz.py -g alttp -r 1000 --seed 1 --stop-on-first-failure
+python fuzz.py -g alttp -r 1000 --starting-seed 1 --stop-on-first-failure
 ```
 
 ### UT fuzz testing with fractional spheres

@@ -27,8 +27,8 @@ on:
         type: number
         default: 120
 
-      seed:
-        description: 'Random seed for reproducibility (leave empty for random)'
+      starting_seed:
+        description: 'Starting seed number for generation (leave empty for random)'
         required: false
         type: number
         default: 1
@@ -41,6 +41,7 @@ on:
           - worldgen
           - hybrid
           - original
+          - original_seeded
           - pickle
         default: worldgen
 
@@ -162,7 +163,7 @@ jobs:
           echo "Runs: ${{ inputs.runs }}"
           echo "Jobs: ${{ inputs.jobs }}"
           echo "Timeout: ${{ inputs.timeout }}s"
-          echo "Seed: ${{ inputs.seed || 'random' }}"
+          echo "Seed: ${{ inputs.starting_seed || 'random' }}"
           echo "UT Version: ${{ inputs.ut_version }}"
           echo "Default Options: ${{ inputs.default_options || '(none)' }}"
           echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
@@ -182,8 +183,8 @@ jobs:
           fi
 
           # Determine output filename based on seed
-          if [ -n "${{ inputs.seed }}" ]; then
-            OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed }}.json"
+          if [ -n "${{ inputs.starting_seed }}" ]; then
+            OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed }}.json"
           else
             OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-random-seed.json"
           fi
@@ -195,12 +196,12 @@ jobs:
           CMD="$CMD --runs ${{ inputs.runs }}"
           CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
           CMD="$CMD --timeout ${{ inputs.timeout }}"
-          CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
+          CMD="$CMD ${{ inputs.starting_seed && format('--starting-seed {0}', inputs.starting_seed) || '' }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
           CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
           CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
-          CMD="$CMD ${{ inputs.seed && '--number-by-seed' || '' }}"
+          CMD="$CMD ${{ inputs.starting_seed && '--number-by-seed' || '' }}"
           CMD="$CMD $UT_FLAGS"
 
           echo "Running: $CMD"
@@ -241,7 +242,7 @@ jobs:
           Workflow run: ${{ github.run_id }}
           Game: ${{ inputs.game }}
           UT Version: ${{ inputs.ut_version }}
-          Seed: ${{ inputs.seed || 'random' }}
+          Seed: ${{ inputs.starting_seed || 'random' }}
           Runs: ${{ inputs.runs }}
           Jobs: ${{ inputs.jobs }}
           Timeout: ${{ inputs.timeout }}s
@@ -280,7 +281,7 @@ jobs:
           echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
           echo "**UT Version:** ${{ inputs.ut_version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Seed:** ${{ inputs.seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Seed:** ${{ inputs.starting_seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ inputs.default_options }}" ]; then
             echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
           fi
@@ -314,14 +315,14 @@ jobs:
           fi
 
           # Determine seed mode for the output filename
-          if [ -n "${{ inputs.seed }}" ]; then
+          if [ -n "${{ inputs.starting_seed }}" ]; then
             SEED_MODE="fixed"
           else
             SEED_MODE="random"
           fi
 
           MAIN_RESULTS_FILE="scripts/output/ut-fuzz/test-results-${UT_LABEL}-${SEED_MODE}-seed.json"
-          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json"
+          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 'random' }}.json"
 
           echo "Main results file: ${MAIN_RESULTS_FILE}"
           echo "Single game file: ${SINGLE_GAME_FILE}"
@@ -424,7 +425,7 @@ jobs:
           Game: ${{ inputs.game }}
           UT Version: ${{ inputs.ut_version }}
           Runs: ${{ inputs.runs }}
-          Seed: ${{ inputs.seed || 'random' }}
+          Seed: ${{ inputs.starting_seed || 'random' }}
           "
             git push origin HEAD:ut-fuzz-test
             echo "Successfully updated main results on ut-fuzz-test branch"
@@ -436,10 +437,10 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}
-          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
-          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json
+          UT_LABEL: ${{ inputs.ut_version }}
+          SEED_MODE: ${{ inputs.starting_seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version }}-${{ inputs.starting_seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 'random' }}.json
           RUNS: ${{ inputs.runs }}
 
   # Split runner jobs - used when parallel_runners is 10
@@ -519,7 +520,7 @@ jobs:
         run: |
           TOTAL_RUNS=${{ inputs.runs }}
           SPLIT_NUM=${{ matrix.split_num }}
-          BASE_SEED=${{ inputs.seed || 1 }}
+          BASE_SEED=${{ inputs.starting_seed || 1 }}
 
           # Calculate runs per split and this split's starting offset
           RUNS_PER_SPLIT=$((TOTAL_RUNS / 10))
@@ -571,7 +572,7 @@ jobs:
           fi
 
           # Output file includes split number
-          OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}-split-${{ matrix.split_num }}.json"
+          OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 1 }}-split-${{ matrix.split_num }}.json"
 
           # Build command
           CMD="python scripts/test/test-all-ut-fuzz.py"
@@ -580,7 +581,7 @@ jobs:
           CMD="$CMD --runs ${{ steps.seed-range.outputs.runs_this_split }}"
           CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
           CMD="$CMD --timeout ${{ inputs.timeout }}"
-          CMD="$CMD --seed ${{ steps.seed-range.outputs.start_seed }}"
+          CMD="$CMD --starting-seed ${{ steps.seed-range.outputs.start_seed }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
           CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
@@ -683,7 +684,7 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "seed",
+                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "starting_seed",
                               "runs_per_game", "jobs", "timeout", "default_options", "disallow_options"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
@@ -742,7 +743,7 @@ jobs:
                   errors[error_type] = sorted(errors[error_type])
 
           # Write combined results
-          output_file = f"scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json"
+          output_file = f"scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 1 }}.json"
           with open(output_file, "w") as fp:
               json.dump(combined, fp, indent=2)
 
@@ -789,7 +790,7 @@ jobs:
           Workflow run: ${{ github.run_id }}
           Game: ${{ inputs.game }}
           UT Version: ${{ inputs.ut_version }}
-          Seed: ${{ inputs.seed || 1 }}
+          Seed: ${{ inputs.starting_seed || 1 }}
           Runs: ${{ inputs.runs }}
           Jobs per runner: ${{ inputs.jobs }}
           Parallel runners: 10
@@ -826,7 +827,7 @@ jobs:
           echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
           echo "**UT Version:** ${{ inputs.ut_version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Total Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Starting Seed:** ${{ inputs.seed || 1 }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Starting Seed:** ${{ inputs.starting_seed || 1 }}" >> $GITHUB_STEP_SUMMARY
           echo "**Parallel Runners:** 10" >> $GITHUB_STEP_SUMMARY
           if [ -n "${{ inputs.default_options }}" ]; then
             echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
@@ -861,14 +862,14 @@ jobs:
           fi
 
           # Determine seed mode for the output filename
-          if [ -n "${{ inputs.seed }}" ]; then
+          if [ -n "${{ inputs.starting_seed }}" ]; then
             SEED_MODE="fixed"
           else
             SEED_MODE="random"
           fi
 
           MAIN_RESULTS_FILE="scripts/output/ut-fuzz/test-results-${UT_LABEL}-${SEED_MODE}-seed.json"
-          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json"
+          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 1 }}.json"
 
           echo "Main results file: ${MAIN_RESULTS_FILE}"
           echo "Single game file: ${SINGLE_GAME_FILE}"
@@ -969,7 +970,7 @@ jobs:
           Game: ${{ inputs.game }}
           UT Version: ${{ inputs.ut_version }}
           Runs: ${{ inputs.runs }}
-          Seed: ${{ inputs.seed || 1 }}
+          Seed: ${{ inputs.starting_seed || 1 }}
           Parallel Runners: 10
           "
             git push origin HEAD:ut-fuzz-test
@@ -982,8 +983,8 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}
-          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
-          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json
+          UT_LABEL: ${{ inputs.ut_version }}
+          SEED_MODE: ${{ inputs.starting_seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version }}-${{ inputs.starting_seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.starting_seed || 1 }}.json
           RUNS: ${{ inputs.runs }}

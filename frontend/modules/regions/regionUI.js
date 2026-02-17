@@ -357,7 +357,8 @@ export class RegionUI {
 
           // If no navigation regions remain, show the start region
           if (this.visitedRegions.length === 0) {
-            this.showStartRegion('Menu');
+            const startRegion = this.getPrimaryStartRegion();
+            if (startRegion) this.showStartRegion(startRegion);
           }
         }
 
@@ -482,6 +483,24 @@ export class RegionUI {
     // Renamed from renderAllRegions to update, to be consistent with other panels
     log('info', '[RegionUI] update() called, calling renderAllRegions().');
     this.renderAllRegions();
+  }
+
+  /**
+   * Get the primary start region name from stateManager, falling back to
+   * the first region in static data if stateManager doesn't have start regions yet.
+   * @returns {string|null} The start region name, or null if no regions available
+   */
+  getPrimaryStartRegion() {
+    const startRegions = this.stateManager.getStartRegions?.();
+    if (Array.isArray(startRegions) && startRegions.length > 0) {
+      return startRegions[0];
+    }
+    // Fallback: use the first region from static data
+    const staticData = this.stateManager.getStaticData();
+    if (staticData && staticData.regions && staticData.regions.size > 0) {
+      return staticData.regions.keys().next().value;
+    }
+    return null;
   }
 
   async showStartRegion(startRegionName) {
@@ -775,9 +794,10 @@ export class RegionUI {
       };
     });
 
-    // Handle empty case - show Menu if needed
+    // Handle empty case - show start region if needed
     if (regionsToRender.length === 0) {
-      const success = this.showStartRegion('Menu'); // showStartRegion adds to this.visitedRegions
+      const startRegion = this.getPrimaryStartRegion();
+      const success = startRegion ? this.showStartRegion(startRegion) : false;
       if (success) {
         // Re-compute regionsToRender from the now updated this.visitedRegions
         regionsToRender = this.navigationManager.computeRegionsToRender(
@@ -798,7 +818,7 @@ export class RegionUI {
       } else {
         log(
           'warn',
-          "[RegionUI] Failed to set start region 'Menu'. Panel might remain empty."
+          '[RegionUI] Failed to set start region. Panel might remain empty.'
         );
       }
     }
@@ -806,6 +826,11 @@ export class RegionUI {
     // Get section order for rendering
     const sectionOrderSelect = this.rootElement.querySelector('#section-order-select');
     const sectionOrder = sectionOrderSelect ? sectionOrderSelect.value : 'entrances-exits-locations';
+
+    // Filter out regions that don't exist in static data (e.g. placeholder region before rules load)
+    regionsToRender = regionsToRender.filter(region =>
+      region.isSkipIndicator || staticData.regions.has(region.name)
+    );
 
     // Delegate rendering to RegionRenderer
     this.regionRenderer.renderRegions(

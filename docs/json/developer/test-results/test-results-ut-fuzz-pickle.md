@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-13 07:20:53 UTC
+**Generated:** 2026-02-14 02:28:14 UTC
 
 **Source Data Created:** 2026-02-07T05:13:22.623022
 
@@ -53,7 +53,7 @@ Of the 75 games with 100% pass rate:
 
 - **Total Exporter Code:** 618.8KB
 - **Total Game Logic Code:** 655.3KB
-- **Combined Total:** 1274.1KB
+- **Combined Total:** 1274.0KB
 
 ## Test Results
 
@@ -61,11 +61,11 @@ Of the 75 games with 100% pass rate:
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | 18.2KB | ✅ | 230.1KB |
 | A Link to the Past | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 12.6KB | ✅ | 664.1KB |
-| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 409.8KB |
+| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 25.6KB |
 | Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 272.0KB |
-| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 17.8KB |
 | Blasphemous | ✅ | 100 | 56 | 0 | 0 | 44 | ⚠️ 56.0% | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.4KB | 40.3KB | 325.2KB |
 | Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.1KB |
@@ -76,7 +76,7 @@ Of the 75 games with 100% pass rate:
 | ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.1KB |
 | Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 281.3KB |
 | Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 163.0KB |
-| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.1KB |
 | DLCQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.2KB | ✅ | 49.7KB |
 | DOOM 1993 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 275.6KB |
 | DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 322.4KB |
@@ -91,7 +91,7 @@ Of the 75 games with 100% pass rate:
 | Hollow Knight | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 100.3KB |
 | Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 83.0KB |
-| Jak and Daxter: The Precursor Legacy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 21.6KB | 4.6KB | 298.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 21.5KB | 4.6KB | N/A |
 | Kingdom Hearts | ❌ | 100 | 98 | 0 | 2 | 0 | 98.0% | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ | 100 | 44 | 51 | 0 | 5 | ❌ 44.0% | 19.5KB | ✅ | 1634.7KB |
 | Kirby's Dream Land 3 | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 10.1KB | ✅ | 528.6KB |
@@ -100,7 +100,7 @@ Of the 75 games with 100% pass rate:
 | Links Awakening DX | ❌ | 100 | 23 | 77 | 0 | 0 | ❌ 23.0% | 7.4KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.7KB |
 | Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 395.4KB |
-| Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
+| Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.4KB |
 | Mega Man 2 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 51.6KB |
 | MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 204.6KB |
 | Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 56.7KB |
@@ -111,11 +111,11 @@ Of the 75 games with 100% pass rate:
 | Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 305.1KB |
 | Overcooked! 2 | ✅ | 100 | 67 | 0 | 0 | 33 | ⚠️ 67.0% | 28.5KB | ✅ | 488.2KB |
 | Paint | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 2.7KB | ✅ | 123.0KB |
-| Pokemon Emerald | ✅ | 100 | 78 | 0 | 0 | 22 | ⚠️ 78.0% | 5.2KB | 8.7KB | 1390.9KB |
-| Pokemon Red and Blue | ✅ | 100 | 93 | 0 | 0 | 7 | 93.0% | 12.2KB | 13.0KB | 1029.2KB |
+| Pokemon Emerald | ✅ | 100 | 78 | 0 | 0 | 22 | ⚠️ 78.0% | 5.2KB | 8.7KB | N/A |
+| Pokemon Red and Blue | ✅ | 100 | 93 | 0 | 0 | 7 | 93.0% | 12.1KB | 13.0KB | N/A |
 | Raft | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 145.0KB |
-| SMZ3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 61.4KB | 51.3KB | 1044.7KB |
+| SMZ3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 61.4KB | 51.3KB | N/A |
 | Satisfactory | ❌ | 100 | 0 | 99 | 0 | 1 | ❌ 0.0% | 41.6KB | ✅ | 1618.9KB |
 | Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.3KB | 7.5KB | 414.9KB |
@@ -126,7 +126,7 @@ Of the 75 games with 100% pass rate:
 | Subnautica | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | ✅ | ✅ | 100.9KB |
-| Super Mario Land 2 | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 96.3KB | ✅ | 918.7KB |
+| Super Mario Land 2 | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | ✅ | ✅ | 177.6KB |
 | Super Metroid | ❌ | 100 | 49 | 8 | 0 | 43 | ❌ 49.0% | 60.9KB | 114.5KB | 625.0KB |
 | TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 99.6KB |
@@ -143,7 +143,7 @@ Of the 75 games with 100% pass rate:
 | Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.0KB |
 | Yacht Dice | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 0.9KB | 285.0KB | 248.4KB |
 | Yoshi's Island | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 9.2KB | ✅ | 295.2KB |
-| Yu-Gi-Oh! 2006 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.3KB | 21.4KB | 628.0KB |
+| Yu-Gi-Oh! 2006 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.3KB | 21.4KB | N/A |
 | Zillion | ❌ | 100 | 78 | 1 | 13 | 8 | ⚠️ 78.0% | ✅ | ✅ | N/A |
 | shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 153.7KB |
 

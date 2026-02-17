@@ -86,7 +86,7 @@ function log(level, message, ...data) {
 /**
  * Fetches JSON from a URL and tracks file loading
  */
-async function fetchJson(url, errorMessage) {
+async function fetchJson(url, errorMessage, { logLevel = 'error' } = {}) {
   const fileName = url.split('/').pop() || url;
 
   try {
@@ -101,7 +101,8 @@ async function fetchJson(url, errorMessage) {
     incrementFileCounter(fileName, logger);
     return result;
   } catch (error) {
-    logger.error('init', `${errorMessage}: ${url}`, error);
+    const logFn = logger[logLevel] || logger.error;
+    logFn.call(logger, 'init', `${errorMessage}: ${url}`, error);
     addFileError(fileName, logger);
     return null;
   }

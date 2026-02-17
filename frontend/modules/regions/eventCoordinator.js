@@ -166,10 +166,15 @@ export class EventCoordinator {
       }
     }
 
-    // Initialize visitedRegions with Menu if showAll is false
+    // Initialize visitedRegions with the actual start region if showAll is false
     if (!this.regionUI.showAll && this.regionUI.visitedRegions.length === 0) {
-      logger.info("Show All is off and visitedRegions is empty, setting start region to 'Menu'");
-      this.regionUI.showStartRegion('Menu');
+      const startRegion = this.regionUI.getPrimaryStartRegion();
+      if (startRegion) {
+        logger.info(`Show All is off and visitedRegions is empty, setting start region to '${startRegion}'`);
+        this.regionUI.showStartRegion(startRegion);
+      } else {
+        logger.warn('Show All is off and visitedRegions is empty, but no start region available');
+      }
     } else if (this.regionUI.showAll) {
       logger.info('Show All is on, visitedRegions will be based on all regions');
     }
@@ -213,8 +218,13 @@ export class EventCoordinator {
 
     // Re-initialize with start region
     if (!this.regionUI.showAll) {
-      logger.info("Show All is off, resetting to start region 'Menu'");
-      this.regionUI.showStartRegion('Menu');
+      const startRegion = this.regionUI.getPrimaryStartRegion();
+      if (startRegion) {
+        logger.info(`Show All is off, resetting to start region '${startRegion}'`);
+        this.regionUI.showStartRegion(startRegion);
+      } else {
+        logger.warn('Show All is off but no start region available');
+      }
     } else {
       logger.info('Triggering full display update after state reset');
       this.regionUI.update();

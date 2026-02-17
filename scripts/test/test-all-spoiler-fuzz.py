@@ -266,7 +266,7 @@ def run_fuzz_test(
     project_root: Path,
     generation_timeout: int,
     test_timeout: int,
-    seed: Optional[int],
+    starting_seed: Optional[int],
     headed: bool = False,
     default_options: Optional[set] = None,
     disallow_options: Optional[Dict] = None,
@@ -305,10 +305,10 @@ def run_fuzz_test(
             "error": None
         }
 
-        # Seed random for reproducibility if seed is provided
-        if seed is not None:
-            random.seed(seed + i)
-            run_seed = seed + i
+        # Seed random for reproducibility if starting_seed is provided
+        if starting_seed is not None:
+            random.seed(starting_seed + i)
+            run_seed = starting_seed + i
         else:
             run_seed = random.randint(1, 1000000)
 
@@ -503,10 +503,11 @@ def main():
         help='Timeout for spoiler test in seconds (default: 120)'
     )
     parser.add_argument(
-        '--seed',
+        '--starting-seed',
         type=int,
         default=None,
-        help='Random seed for reproducibility (default: None = random)'
+        help='Starting seed number for generation. Each run uses starting_seed + iteration '
+             'as the actual Archipelago generation seed. If not set, seeds are random.'
     )
     parser.add_argument(
         '--every-nth',
@@ -546,7 +547,7 @@ def main():
     args = parser.parse_args()
 
     # Determine seed mode and world source
-    is_random_seed_mode = args.seed is None
+    is_random_seed_mode = args.starting_seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
     world_source = "apworlds" if args.custom_worlds_only else "bundled"
 
@@ -655,7 +656,7 @@ def main():
     print(f"Skip list: {skip_list}")
     print(f"Runs per game: {args.runs}")
     print(f"Generation timeout: {args.generation_timeout}s, Test timeout: {args.test_timeout}s")
-    print(f"Seed: {args.seed if args.seed is not None else 'random'}")
+    print(f"Starting seed: {args.starting_seed if args.starting_seed is not None else 'random'}")
     print()
 
     # Ensure HTTP server is running
@@ -678,8 +679,7 @@ def main():
             "script_version": "1.1.0",
             "test_type": "spoiler_fuzz",
             "seed_mode": seed_type,
-            "seed": args.seed if not is_random_seed_mode else "random",
-            "base_seed": args.seed,  # Store the actual seed value (None if random)
+            "starting_seed": args.starting_seed if not is_random_seed_mode else "random",
             "runs_per_game": args.runs,
             "generation_timeout": args.generation_timeout,
             "test_timeout": args.test_timeout,
@@ -743,7 +743,7 @@ def main():
                 project_root=PROJECT_ROOT,
                 generation_timeout=args.generation_timeout,
                 test_timeout=args.test_timeout,
-                seed=args.seed,
+                starting_seed=args.starting_seed,
                 headed=args.headed,
                 default_options=effective_default_options,
                 disallow_options=effective_disallow_options,

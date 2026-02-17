@@ -533,8 +533,8 @@ export function runBFSPass(sm) {
 /**
  * Get the starting regions for BFS traversal
  *
- * Start regions are where the player begins. Usually "Menu" by default.
- * Can be configured per-game or per-seed.
+ * Start regions are where the player begins.
+ * Can be configured per-game or per-seed. Falls back to first region in static data.
  *
  * @param {Object} sm - StateManager instance
  * @returns {string[]} Array of starting region names
@@ -558,7 +558,13 @@ export function getStartRegions(sm) {
     sm._logDebug(`[ReachabilityEngine] Unexpected startRegions value: ${typeof sm.startRegions}`, sm.startRegions);
   }
 
-  return ['Menu'];
+  // Fall back to first region from static data
+  const staticData = sm.staticDataCache;
+  if (staticData?.regions?.size > 0) {
+    return [staticData.regions.keys().next().value];
+  }
+
+  return [];
 }
 
 /**
