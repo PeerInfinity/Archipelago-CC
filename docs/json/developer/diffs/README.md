@@ -111,7 +111,7 @@ The JSON Tools Installer is a packaged APWorld that automatically:
 
 ### Quick Start
 
-1. Download [`json_tools_installer.apworld`](https://github.com/PeerInfinity/Archipelago-CC/blob/main/apworlds/json_tools_installer.apworld)
+1. Download [`json_tools_installer.apworld`](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld)
 2. Place it in your Archipelago `worlds/` directory
 3. Restart Archipelago
 4. Use the new "JSON Tools Installer" component in the Launcher
