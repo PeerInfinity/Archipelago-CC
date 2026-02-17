@@ -568,7 +568,8 @@ def _make_hashable(value: Any) -> Any:
         items = cast(list[Any], value)
         return tuple(_make_hashable(item) for item in items)
     elif isinstance(value, tuple):
-        return tuple(_make_hashable(item) for item in value)
+        items = cast(tuple[Any, ...], value)
+        return tuple(_make_hashable(item) for item in items)
     elif isinstance(value, set):
         items = cast(set[Any], value)
         return frozenset(_make_hashable(item) for item in items)
