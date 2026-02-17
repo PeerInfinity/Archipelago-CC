@@ -79,12 +79,6 @@ def main():
                 'Small Key (Swamp Palace)',
                 'Small Key (Ganons Tower)',
             }),
-            # Vanilla places "Silver Arrows" but rules check for "Silver Bow"
-            # (part of the progressive bow chain). This alias makes Silver Bow
-            # checks also accept Silver Arrows in the export.
-            'item_aliases': {
-                'Silver Bow': ['Silver Arrows'],
-            },
         }
 
         main_main(erargs, seed=seed)

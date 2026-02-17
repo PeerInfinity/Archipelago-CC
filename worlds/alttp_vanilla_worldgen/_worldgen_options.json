@@ -200,7 +200,7 @@
     "items=['Magic Powder'], locations=['Potion Shop'], world=False, from_pool=True, force='silent', count=1, percentage=100",
     "items=['Bottle'], locations=['Purple Chest'], world=False, from_pool=True, force='silent', count=1, percentage=100",
     "items=['Piece of Heart'], locations=['Pyramid'], world=False, from_pool=True, force='silent', count=1, percentage=100",
-    "items=['Silver Arrows'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
+    "items=['Silver Bow'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
     "items=['Golden Sword'], locations=['Pyramid Fairy - Right'], world=False, from_pool=True, force='silent', count=1, percentage=100",
     "items=['Pegasus Boots'], locations=['Sahasrahla'], world=False, from_pool=True, force='silent', count=1, percentage=100",
     "items=['Rupees (50",

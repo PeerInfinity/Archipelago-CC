@@ -323,7 +323,6 @@ def _with_relaxed_logic(func):
     def wrapper(*args, **kwargs):
         # Save originals
         orig_has_key = CollectionState._lttp_has_key
-        orig_collect = CollectionState.collect
 
         # Patch _lttp_has_key: bypass only the 5 problematic dungeons
         def targeted_has_key(self, item, player, count=1):
@@ -333,21 +332,10 @@ def _with_relaxed_logic(func):
 
         CollectionState._lttp_has_key = targeted_has_key
 
-        # Patch collect to credit Silver Bow when Silver Arrows collected
-        @functools.wraps(orig_collect)
-        def patched_collect(self, item, event=False, location=None):
-            orig_collect(self, item, event, location)
-            if getattr(item, 'name', None) == 'Silver Arrows' and \
-               getattr(item, 'game', None) == 'A Link to the Past':
-                self.prog_items[item.player]['Silver Bow'] += 1
-
-        CollectionState.collect = patched_collect
-
         try:
             return func(*args, **kwargs)
         finally:
             CollectionState._lttp_has_key = orig_has_key
-            CollectionState.collect = orig_collect
 
     return wrapper
 

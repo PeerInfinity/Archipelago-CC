@@ -280,59 +280,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """
         return getattr(self.world, 'export_rule_patches', None)
 
-    def _apply_item_aliases(self, rule: Any) -> Any:
-        """Recursively walk a rule tree and replace aliased item checks.
-
-        Handles both AST format (from helper definitions) and Rule Builder
-        format (from location/exit rules).
-        """
-        patches = self._get_export_rule_patches()
-        if not patches:
-            return rule
-        aliases = patches.get('item_aliases', {})
-        if not aliases:
-            return rule
-        return self._apply_item_aliases_recursive(rule, aliases)
-
-    def _apply_item_aliases_recursive(self, rule: Any, aliases: Dict[str, List[str]]) -> Any:
-        """Recursively replace item checks for aliased items."""
-        if isinstance(rule, list):
-            return [self._apply_item_aliases_recursive(item, aliases) for item in rule]
-        if not isinstance(rule, dict):
-            return rule
-
-        # AST format: {"type": "item_check", "item": "Silver Bow"}
-        item = rule.get('item')
-        if rule.get('type') == 'item_check' and isinstance(item, str) and item in aliases:
-            alias_items = aliases[item]
-            return {
-                'type': 'or',
-                'conditions': [rule] + [
-                    {'type': 'item_check', 'item': alias} for alias in alias_items
-                ]
-            }
-
-        # Rule Builder format: {"rule": "Has", "args": {"item_name": "Silver Bow"}}
-        if rule.get('rule') == 'Has' and isinstance(rule.get('args'), dict):
-            item_name = rule['args'].get('item_name')
-            if isinstance(item_name, str) and item_name in aliases:
-                alias_items = aliases[item_name]
-                return {
-                    'rule': 'HasAny',
-                    'args': {'items': [item_name] + alias_items}
-                }
-
-        # Recurse into all dict values
-        return {k: self._apply_item_aliases_recursive(v, aliases) for k, v in rule.items()}
-
-    def postprocess_rule(self, rule: Any) -> Any:
-        """Apply item aliases to location/exit rules (Rule Builder format)."""
-        return self._apply_item_aliases(rule)
-
-    def postprocess_helper(self, helper_name: str, helper_def: Any) -> Any:
-        """Apply item aliases to helper definitions (AST format)."""
-        return self._apply_item_aliases(helper_def)
-
     def handle_game_specific_state_method(
         self,
         method_name: str,

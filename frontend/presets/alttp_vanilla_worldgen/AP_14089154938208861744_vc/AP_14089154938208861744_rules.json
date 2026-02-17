@@ -5520,12 +5520,9 @@
                           "_original_ast_type": "rb_defined_helper"
                         },
                         {
-                          "rule": "HasAny",
+                          "rule": "Has",
                           "args": {
-                            "items": [
-                              "Silver Arrows",
-                              "Silver Bow"
-                            ]
+                            "item_name": "Silver Bow"
                           }
                         }
                       ]
@@ -7098,7 +7095,7 @@
               }
             },
             "item": {
-              "name": "Silver Arrows",
+              "name": "Silver Bow",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16368,7 +16365,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Bow"
@@ -16677,7 +16674,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Arrows"
@@ -17967,7 +17964,7 @@
       "Rupees (50)": 7,
       "Sanctuary Heart Container": 1,
       "Shovel": 1,
-      "Silver Arrows": 1,
+      "Silver Bow": 1,
       "Single Arrow": 1,
       "Small Key (Agahnims Tower)": 2,
       "Small Key (Desert Palace)": 4,
@@ -18165,7 +18162,7 @@
       "Bombos Tablet": "Bombos",
       "Frog": "Get Frog",
       "Dark Blacksmith Ruins": "Pick Up Purple Chest",
-      "Pyramid Fairy - Left": "Silver Arrows",
+      "Pyramid Fairy - Left": "Silver Bow",
       "Pyramid Fairy - Right": "Golden Sword",
       "Spike Cave": "Cane of Byrna",
       "Swamp Palace - Entrance": "Small Key (Swamp Palace)",
@@ -20046,17 +20043,8 @@
                       "name": "has_fire_source"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Silver Bow"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Silver Arrows"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Silver Bow"
                     },
                     {
                       "type": "helper",
@@ -20131,17 +20119,8 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Silver Bow"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Silver Arrows"
-                                }
-                              ]
+                              "type": "item_check",
+                              "item": "Silver Bow"
                             },
                             {
                               "type": "helper",
@@ -20180,17 +20159,8 @@
                       "name": "common"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Silver Bow"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Silver Arrows"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Silver Bow"
                     },
                     {
                       "type": "helper",
@@ -21416,17 +21386,8 @@
                     "item": "Bow"
                   },
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Silver Bow"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Silver Arrows"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Silver Bow"
                   }
                 ]
               },
@@ -21453,17 +21414,8 @@
                     "item": "Bow"
                   },
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Silver Bow"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Silver Arrows"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Silver Bow"
                   }
                 ]
               },

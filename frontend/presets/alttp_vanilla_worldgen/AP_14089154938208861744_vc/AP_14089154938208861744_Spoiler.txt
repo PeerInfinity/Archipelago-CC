@@ -221,7 +221,7 @@ Hype Cave - Generous Guy: Rupees (300)
 Frog: Get Frog
 Dark Blacksmith Ruins: Pick Up Purple Chest
 Peg Cave: Piece of Heart
-Pyramid Fairy - Left: Silver Arrows
+Pyramid Fairy - Left: Silver Bow
 Pyramid Fairy - Right: Golden Sword
 Brewery: Rupees (300)
 C-Shaped House: Rupees (300)
@@ -545,7 +545,7 @@ Playthrough:
   Turtle Rock - Roller Room - Right: Small Key (Turtle Rock)
 }
 32: {
-  Pyramid Fairy - Left: Silver Arrows
+  Pyramid Fairy - Left: Silver Bow
   Pyramid Fairy - Right: Golden Sword
   Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
 }

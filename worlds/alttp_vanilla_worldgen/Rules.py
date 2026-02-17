@@ -19,13 +19,13 @@ if TYPE_CHECKING:
 # Helper functions
 def GanonDefeatRule(state: "CollectionState", player: int) -> bool:
     if state.multiworld.worlds[player].options.swordless:
-        return (state.has('Hammer', player)) and (has_fire_source(state, player)) and ((state.has('Silver Bow', player)) or (state.has('Silver Arrows', player))) and (can_shoot_arrows(state, player))
+        return (state.has('Hammer', player)) and (has_fire_source(state, player)) and (state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))
     can_hurt = has_beam_sword(state, player)
     common = (can_hurt) and (has_fire_source(state, player))
     if (state.multiworld.worlds[player].options.glitches_required != 0):
-        return (common) and ((state.has('Tempered Sword', player)) or (state.has('Golden Sword', player)) or (((state.has('Silver Bow', player)) or (state.has('Silver Arrows', player))) and (can_shoot_arrows(state, player))) or (state.has('Lamp', player)) or (can_extend_magic(state, player, 12)))
+        return (common) and ((state.has('Tempered Sword', player)) or (state.has('Golden Sword', player)) or ((state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))) or (state.has('Lamp', player)) or (can_extend_magic(state, player, 12)))
     else:
-        return (common) and ((state.has('Silver Bow', player)) or (state.has('Silver Arrows', player))) and (can_shoot_arrows(state, player))
+        return (common) and (state.has('Silver Bow', player)) and (can_shoot_arrows(state, player))
 
 
 def bottle_count(state: "CollectionState", player: int) -> bool:
@@ -117,7 +117,7 @@ def can_retrieve_tablet(state: "CollectionState", player: int) -> bool:
 
 
 def can_shoot_arrows(state: "CollectionState", player: int, count = 0) -> bool:
-    return (((state.has('Bow', player)) or ((state.has('Silver Bow', player)) or (state.has('Silver Arrows', player)))) and (can_buy(state, player, 'Single Arrow')) if state.multiworld.worlds[player].options.retro_bow else ((state.has('Bow', player)) or ((state.has('Silver Bow', player)) or (state.has('Silver Arrows', player)))) and (can_hold_arrows(state, player, count)))
+    return (((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (can_buy(state, player, 'Single Arrow')) if state.multiworld.worlds[player].options.retro_bow else ((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (can_hold_arrows(state, player, count)))
 
 
 def can_use_bombs(state: "CollectionState", player: int, quantity = 1) -> bool:
@@ -595,7 +595,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
-        And(HelperCall(helper_func=can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Or(And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAny('Silver Arrows', 'Silver Bow')), HelperCall(helper_func=has_melee_weapon, helper_name="has_melee_weapon"), HasAny('Cane of Byrna', 'Cane of Somaria')), Has('Big Key (Tower of Hera)'))
+        And(HelperCall(helper_func=can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Or(And(HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Silver Bow')), HelperCall(helper_func=has_melee_weapon, helper_name="has_melee_weapon"), HasAny('Cane of Byrna', 'Cane of Somaria')), Has('Big Key (Tower of Hera)'))
     )
 
     world.set_rule(

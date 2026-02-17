@@ -5783,12 +5783,9 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "HasAny",
+                          "rule": "Has",
                           "args": {
-                            "items": [
-                              "Silver Arrows",
-                              "Silver Bow"
-                            ]
+                            "item_name": "Silver Bow"
                           }
                         }
                       ]
@@ -7466,7 +7463,7 @@
               }
             },
             "item": {
-              "name": "Silver Arrows",
+              "name": "Silver Bow",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -16765,7 +16762,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Bow"
@@ -17074,7 +17071,7 @@
           "Everything",
           "Progression Items"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1,
         "hint_text": "the Silver Arrows"
@@ -18413,7 +18410,7 @@
       "Rupees (50)": 7,
       "Sanctuary Heart Container": 1,
       "Shovel": 1,
-      "Silver Arrows": 1,
+      "Silver Bow": 1,
       "Single Arrow": 1,
       "Small Key (Agahnims Tower)": 2,
       "Small Key (Desert Palace)": 4,
@@ -18729,7 +18726,7 @@
           "items=['Magic Powder'], locations=['Potion Shop'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Bottle'], locations=['Purple Chest'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Piece of Heart'], locations=['Pyramid'], world=False, from_pool=True, force='silent', count=1, percentage=100",
-          "items=['Silver Arrows'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
+          "items=['Silver Bow'], locations=['Pyramid Fairy - Left'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Golden Sword'], locations=['Pyramid Fairy - Right'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Pegasus Boots'], locations=['Sahasrahla'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Rupees (50",
@@ -20550,17 +20547,8 @@
                       "name": "has_fire_source"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Silver Bow"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Silver Arrows"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Silver Bow"
                     },
                     {
                       "type": "helper",
@@ -20635,17 +20623,8 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Silver Bow"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Silver Arrows"
-                                }
-                              ]
+                              "type": "item_check",
+                              "item": "Silver Bow"
                             },
                             {
                               "type": "helper",
@@ -20684,17 +20663,8 @@
                       "name": "common"
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Silver Bow"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Silver Arrows"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Silver Bow"
                     },
                     {
                       "type": "helper",
@@ -21920,17 +21890,8 @@
                     "item": "Bow"
                   },
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Silver Bow"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Silver Arrows"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Silver Bow"
                   }
                 ]
               },
@@ -21957,17 +21918,8 @@
                     "item": "Bow"
                   },
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Silver Bow"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Silver Arrows"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Silver Bow"
                   }
                 ]
               },
