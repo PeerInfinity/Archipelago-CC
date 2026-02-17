@@ -141,13 +141,10 @@ class Hook(BaseHook):
         self.ut_core.seed_name = mw.seed_name
 
         if self.use_original_seeded:
-            # Original_seeded mode: let the tracker resolve the seed number on its
-            # own from the information it would normally have access to (seed name
-            # for reverse lookup, or generation_seed from rules JSON if available).
-            # Discover rules.json so rules_json_data is populated (for generation_seed),
-            # but clear rules_json_path so worldgen tracking isn't attempted.
-            self.ut_core.auto_discover_rules_json()
-            self.ut_core.rules_json_path = None
+            # Original_seeded mode: the tracker only has the seed_name and must
+            # resolve the seed number purely via reverse lookup. No rules.json
+            # or pickle — just what it would have in a normal connected session.
+            pass
         else:
             # Try pickle first (fastest), then fall back to rules.json
             self.ut_core.auto_discover_pickle()
