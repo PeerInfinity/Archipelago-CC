@@ -8886,5 +8886,28 @@
         "is_canonical": true
       }
     }
+  },
+  "alttp_vanilla_worldgen2": {
+    "name": "A Link to the Past Vanilla WorldGen2",
+    "folders": {
+      "AP_14089154938208861744_vc": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past Vanilla WorldGen2"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
+      }
+    }
   }
 }
