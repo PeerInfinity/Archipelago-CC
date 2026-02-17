@@ -2463,7 +2463,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-16Feb2026-230532_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-17Feb2026-023737_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -5264,6 +5264,29 @@
         "players_failed": 0,
         "total_players": 1,
         "first_failure_player": null
+      }
+    }
+  },
+  "alttp_vanilla_worldgen": {
+    "name": "A Link to the Past Vanilla WorldGen",
+    "folders": {
+      "AP_14089154938208861744_vc": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past Vanilla WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
       }
     }
   },
@@ -8620,6 +8643,29 @@
       }
     }
   },
+  "alttp_vanilla_worldgen2": {
+    "name": "A Link to the Past Vanilla WorldGen2",
+    "folders": {
+      "AP_14089154938208861744_vc": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past Vanilla WorldGen2"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
+      }
+    }
+  },
   "alttp_worldgen2": {
     "name": "A Link to the Past WorldGen2",
     "folders": {
@@ -8852,10 +8898,10 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-02-17T00:13:03.063605+00:00",
+    "test_data_updated": "2026-02-17T02:54:22.438057+00:00",
     "games_with_test_data": 139,
-    "total_games": 159,
-    "games_without_test_data": 20,
+    "total_games": 161,
+    "games_without_test_data": 22,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",
@@ -8863,51 +8909,5 @@
       "multiworld",
       "spoiler_fuzz"
     ]
-  },
-  "alttp_vanilla_worldgen": {
-    "name": "A Link to the Past Vanilla WorldGen",
-    "folders": {
-      "AP_14089154938208861744_vc": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Link to the Past Vanilla WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "is_canonical": true
-      }
-    }
-  },
-  "alttp_vanilla_worldgen2": {
-    "name": "A Link to the Past Vanilla WorldGen2",
-    "folders": {
-      "AP_14089154938208861744_vc": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "A Link to the Past Vanilla WorldGen2"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "is_canonical": true
-      }
-    }
   }
 }
