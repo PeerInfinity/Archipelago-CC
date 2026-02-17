@@ -38,6 +38,11 @@ on:
         type: boolean
         default: false
 
+      update_preset_files:
+        description: 'Run update-preset-files.py to refresh preset_files.json before committing'
+        type: boolean
+        default: false
+
       filter_presets:
         description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
         type: boolean
@@ -130,6 +135,12 @@ jobs:
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
           scripts/utils/generate_all_templates.sh
+
+      - name: Update preset files index
+        if: inputs.update_preset_files
+        run: |
+          source .venv/bin/activate
+          python scripts/docs/update-preset-files.py
 
       - name: Commit and push generated presets
         env:
