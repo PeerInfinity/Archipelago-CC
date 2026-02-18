@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (APWorld)
 
-**Generated:** 2026-02-18 21:54:12 UTC
+**Generated:** 2026-02-18 23:40:26 UTC
 
 **Source Data Created:** 2026-01-24T05:56:04.771277
 
@@ -171,7 +171,7 @@ Of the 0 templates passing all 4 tests:
 | The Legend of Zelda - Oracle of Seasons | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 | The Sims 4 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
+| *ToeJam and Earl* | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tyrian | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -305,6 +305,7 @@ These templates are excluded from testing:
 
 ## Notes
 
+- *Italic game names* are in the exclude list for this test type
 - **[Minimal Test](./test-results-spoilers-minimal.md):** Tests the game using only advancement items
 - **[Full Test](./test-results-spoilers-full.md):** Tests the game using all locations
 - **[Multiclient Test](./test-results-multiclient.md):** Tests the game in multiclient mode (send/receive)
