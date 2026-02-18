@@ -392,9 +392,9 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Gun",
                       "Hero's Laurels",
-                      "Magic Orb",
-                      "Gun"
+                      "Magic Orb"
                     ]
                   }
                 }
@@ -888,8 +888,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -1801,8 +1801,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             }
@@ -1914,8 +1914,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             }
@@ -2060,9 +2060,9 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Gun",
                       "Hero's Laurels",
-                      "Magic Orb",
-                      "Gun"
+                      "Magic Orb"
                     ]
                   }
                 }
@@ -2629,8 +2629,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -3994,9 +3994,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Red Questagon",
                   "Blue Questagon",
-                  "Green Questagon"
+                  "Green Questagon",
+                  "Red Questagon"
                 ]
               }
             },
@@ -4687,8 +4687,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Magic Orb",
                       "Magic Dagger",
+                      "Magic Orb",
                       "Magic Wand"
                     ]
                   }
@@ -4738,8 +4738,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -6925,10 +6925,10 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Atoll Northwest Fuse",
                               "Atoll Northeast Fuse",
-                              "Atoll Southwest Fuse",
-                              "Atoll Southeast Fuse"
+                              "Atoll Northwest Fuse",
+                              "Atoll Southeast Fuse",
+                              "Atoll Southwest Fuse"
                             ]
                           }
                         }
@@ -7735,8 +7735,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -7769,8 +7769,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -7918,8 +7918,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Magic Orb",
-                  "Hero's Laurels"
+                  "Hero's Laurels",
+                  "Magic Orb"
                 ]
               }
             },
@@ -7998,8 +7998,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Magic Orb",
-                      "Hero's Laurels"
+                      "Hero's Laurels",
+                      "Magic Orb"
                     ]
                   }
                 }
@@ -8475,8 +8475,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Magic Wand",
-                      "Gun"
+                      "Gun",
+                      "Magic Wand"
                     ]
                   }
                 }
@@ -8505,8 +8505,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Magic Wand",
-                      "Gun"
+                      "Gun",
+                      "Magic Wand"
                     ]
                   }
                 }
@@ -8535,8 +8535,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Magic Wand",
-                      "Gun"
+                      "Gun",
+                      "Magic Wand"
                     ]
                   }
                 }
@@ -8631,8 +8631,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Magic Orb",
-                      "Hero's Laurels"
+                      "Hero's Laurels",
+                      "Magic Orb"
                     ]
                   }
                 }
@@ -9341,9 +9341,9 @@
                       "args": {
                         "items": [
                           "Gun",
+                          "Hero's Laurels",
                           "Magic Orb",
-                          "Magic Wand",
-                          "Hero's Laurels"
+                          "Magic Wand"
                         ]
                       }
                     }
@@ -9434,10 +9434,10 @@
                       "rule": "HasAny",
                       "args": {
                         "items": [
+                          "Gun",
                           "Hero's Laurels",
-                          "Magic Wand",
                           "Magic Dagger",
-                          "Gun"
+                          "Magic Wand"
                         ]
                       }
                     }
@@ -9750,8 +9750,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Activate Upper and Central Fortress Exterior Fuses",
-                  "Activate South and West Fortress Exterior Fuses"
+                  "Activate South and West Fortress Exterior Fuses",
+                  "Activate Upper and Central Fortress Exterior Fuses"
                 ]
               }
             },
@@ -12528,8 +12528,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Ladders in Overworld Town",
                                       "Ladder to Swamp",
+                                      "Ladders in Overworld Town",
                                       "Ladders near Weathervane"
                                     ]
                                   }

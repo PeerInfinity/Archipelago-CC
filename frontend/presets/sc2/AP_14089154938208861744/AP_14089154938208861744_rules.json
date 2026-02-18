@@ -1481,9 +1481,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -1493,8 +1493,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -1502,8 +1502,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -1542,8 +1542,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -1551,13 +1551,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -1728,9 +1728,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -1740,8 +1740,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -1749,8 +1749,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -1789,8 +1789,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -1798,13 +1798,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -1929,9 +1929,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -1941,8 +1941,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -1950,8 +1950,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -1990,8 +1990,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -1999,13 +1999,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -2130,9 +2130,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -2142,8 +2142,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -2151,8 +2151,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -2191,8 +2191,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -2200,13 +2200,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -2347,9 +2347,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -2359,8 +2359,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -2368,8 +2368,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -2408,8 +2408,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -2417,13 +2417,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -2548,9 +2548,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -2560,8 +2560,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -2569,8 +2569,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -2609,8 +2609,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -2618,13 +2618,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -2749,9 +2749,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -2761,8 +2761,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -2770,8 +2770,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -2810,8 +2810,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -2819,13 +2819,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -2950,9 +2950,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -2962,8 +2962,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -2971,8 +2971,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -3011,8 +3011,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -3020,13 +3020,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -3151,9 +3151,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -3163,8 +3163,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -3172,8 +3172,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -3212,8 +3212,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -3221,13 +3221,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -3352,9 +3352,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -3364,8 +3364,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -3373,8 +3373,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -3413,8 +3413,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -3422,13 +3422,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -3553,9 +3553,9 @@
                               "rule": "HasAny",
                               "args": {
                                 "items": [
-                                  "Wraith",
+                                  "Battlecruiser",
                                   "Valkyrie",
-                                  "Battlecruiser"
+                                  "Wraith"
                                 ]
                               }
                             }
@@ -3565,8 +3565,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Thor",
-                              "Progressive High Impact Payload (Thor)"
+                              "Progressive High Impact Payload (Thor)",
+                              "Thor"
                             ]
                           }
                         },
@@ -3574,8 +3574,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Goliath",
                               "Cyclone",
+                              "Goliath",
                               "Viking"
                             ]
                           }
@@ -3614,8 +3614,8 @@
                           "rule": "HasAll",
                           "args": {
                             "items": [
-                              "Valkyrie",
-                              "Flechette Missiles (Valkyrie)"
+                              "Flechette Missiles (Valkyrie)",
+                              "Valkyrie"
                             ]
                           }
                         },
@@ -3623,13 +3623,13 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
+                              "Banshee",
+                              "Battlecruiser",
                               "Goliath",
                               "Thor",
-                              "Warhound",
                               "Viking",
-                              "Banshee",
-                              "Wraith",
-                              "Battlecruiser"
+                              "Warhound",
+                              "Wraith"
                             ]
                           }
                         }
@@ -4368,8 +4368,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Medivac",
                   "Hercules",
+                  "Medivac",
                   "Raven",
                   "Viking"
                 ]
@@ -4390,8 +4390,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Medivac",
                   "Hercules",
+                  "Medivac",
                   "Raven",
                   "Viking"
                 ]
@@ -4412,8 +4412,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Medivac",
                   "Hercules",
+                  "Medivac",
                   "Raven",
                   "Viking"
                 ]
@@ -4434,8 +4434,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Medivac",
                   "Hercules",
+                  "Medivac",
                   "Raven",
                   "Viking"
                 ]
@@ -4456,8 +4456,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Medivac",
                   "Hercules",
+                  "Medivac",
                   "Raven",
                   "Viking"
                 ]

@@ -798,8 +798,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Jump Dive",
-                      "Double Jump"
+                      "Double Jump",
+                      "Jump Dive"
                     ]
                   }
                 }
@@ -1653,8 +1653,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Jump Dive",
-                      "Blue Eco Switch"
+                      "Blue Eco Switch",
+                      "Jump Dive"
                     ]
                   }
                 }
@@ -1907,8 +1907,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Jump Dive",
-                      "Blue Eco Switch"
+                      "Blue Eco Switch",
+                      "Jump Dive"
                     ]
                   }
                 }

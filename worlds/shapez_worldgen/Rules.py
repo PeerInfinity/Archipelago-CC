@@ -99,7 +99,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Extracting shapes from patches", player),
-        HasAny('Extractor', 'Chaining Extractor')
+        HasAny('Chaining Extractor', 'Extractor')
     )
 
     world.set_rule(
@@ -109,7 +109,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Placing any building", player),
-        HasAny('Belt', 'Balancer', 'Compact Merger', 'Compact Splitter', 'Tunnel', 'Tunnel Tier II', 'Extractor', 'Chaining Extractor', 'Cutter', 'Quad Cutter', 'Rotator', 'Rotator (CCW)', 'Rotator (180°)', 'Stacker', 'Painter', 'Double Painter', 'Quad Painter', 'Color Mixer', 'Trash', 'Belt Reader', 'Storage', 'Switch', 'Item Filter', 'Display', 'Wires')
+        HasAny('Balancer', 'Belt', 'Belt Reader', 'Chaining Extractor', 'Color Mixer', 'Compact Merger', 'Compact Splitter', 'Cutter', 'Display', 'Double Painter', 'Extractor', 'Item Filter', 'Painter', 'Quad Cutter', 'Quad Painter', 'Rotator', 'Rotator (180°)', 'Rotator (CCW)', 'Stacker', 'Storage', 'Switch', 'Trash', 'Tunnel', 'Tunnel Tier II', 'Wires')
     )
 
     world.set_rule(
@@ -144,7 +144,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Painting with (double) painter", player),
-        HasAny('Painter', 'Double Painter')
+        HasAny('Double Painter', 'Painter')
     )
 
     world.set_rule(

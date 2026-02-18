@@ -142,17 +142,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-4", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 24), HasAll('5-3 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 24), HasAll('5-1 Level Complete', '5-3 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-5", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 38), HasAll('5-4 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 38), HasAll('5-1 Level Complete', '5-4 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 5-6", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 56), HasAll('5-5 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 56), HasAll('5-1 Level Complete', '5-5 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
@@ -162,12 +162,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-2", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 6), HasAll('6-1 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 6), HasAll('5-1 Level Complete', '6-1 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-3", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 15), HasAll('6-2 Level Complete', '5-1 Level Complete', 'Purple Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 15), HasAll('5-1 Level Complete', '6-2 Level Complete', 'Purple Ramp'))
     )
 
     world.set_rule(
@@ -177,17 +177,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-5", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 41), HasAll('6-4 Level Complete', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 41), HasAll('5-1 Level Complete', '6-1 Level Complete', '6-4 Level Complete', 'Purple Ramp', 'Red Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> 6-6", player),
-        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 60), HasAll('6-5 Level Complete', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp'))
+        And(Compare(Arithmetic(CountItem("Star"), "+", CountItem("Bonus Star")), ">=", 60), HasAll('5-1 Level Complete', '6-1 Level Complete', '6-5 Level Complete', 'Purple Ramp', 'Red Ramp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-1", player),
-        HasAll('Kevin-1', 'Dark Green Ramp')
+        HasAll('Dark Green Ramp', 'Kevin-1')
     )
 
     world.set_rule(
@@ -217,12 +217,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-7", player),
-        HasAll('Kevin-7', '5-1 Level Complete', 'Purple Ramp')
+        HasAll('5-1 Level Complete', 'Kevin-7', 'Purple Ramp')
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Kevin-8", player),
-        HasAll('Kevin-8', '5-1 Level Complete', 'Purple Ramp', '6-1 Level Complete', 'Red Ramp')
+        HasAll('5-1 Level Complete', '6-1 Level Complete', 'Kevin-8', 'Purple Ramp', 'Red Ramp')
     )
     # Location rules
     world.set_rule(

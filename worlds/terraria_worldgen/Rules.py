@@ -228,7 +228,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hellstone", player),
-        HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Evil Pickaxe', 'Gelpick', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Molten Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Skyfringe Pickaxe', 'Spectre Pickaxe', 'Hardmode', 'Hellstone Bar')
+        HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Evil Pickaxe', 'Gelpick', 'Genesis Pickaxe', 'Hardmode', 'Hellstone Bar', 'Laser Drill', 'Luminite Pickaxe', 'Molten Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Skyfringe Pickaxe', 'Spectre Pickaxe')
     )
 
     world.set_rule(
