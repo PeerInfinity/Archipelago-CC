@@ -2611,7 +2611,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-18Feb2026-051325_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-18Feb2026-171710_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -9302,7 +9302,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-02-18T05:30:19.392437+00:00",
+    "test_data_updated": "2026-02-18T17:34:01.441807+00:00",
     "games_with_test_data": 151,
     "total_games": 165,
     "games_without_test_data": 14,
