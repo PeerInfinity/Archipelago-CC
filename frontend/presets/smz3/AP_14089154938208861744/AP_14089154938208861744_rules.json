@@ -159,32 +159,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hammer",
-                          "Hookshot"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mirror"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "AST_region_check",
                   "args": {
-                    "region": "Light World Death Mountain West",
+                    "region": "Dark World North East",
                     "_original_ast_type": "region_check"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "MoonPearl"
+                  }
                 }
               ]
             }
@@ -579,7 +565,37 @@
             "name": "Menu->Light World North West",
             "connected_region": "Light World North West",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Hammer",
+                          "Mirror"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hookshot"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "AST_region_check",
+                  "args": {
+                    "region": "Light World Death Mountain West",
+                    "_original_ast_type": "region_check"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
@@ -593,89 +609,7 @@
             "name": "Menu->Light World South",
             "connected_region": "Light World South",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "attr": "CanAcquireAtLeast"
-                    },
-                    "_original_ast_type": "function_call",
-                    "args": [
-                      {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "op": "*",
-                          "right": {
-                            "type": "constant",
-                            "value": 7
-                          }
-                        },
-                        "op": "/",
-                        "right": {
-                          "type": "constant",
-                          "value": 7
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": 480
-                      }
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "attr": "CanAcquireAtLeast"
-                    },
-                    "_original_ast_type": "function_call",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 7
-                      },
-                      {
-                        "type": "constant",
-                        "value": 24
-                      }
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Dark World Death Mountain East",
-                    "_original_ast_type": "region_check"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "MoonPearl"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
@@ -1799,145 +1733,41 @@
             "name": "Menu->Brinstar Kraid",
             "connected_region": "Brinstar Kraid",
             "access_rule": {
-              "rule": "Conditional",
-              "args": {
-                "test": {
-                  "rule": "Compare",
-                  "args": {
-                    "left": 0,
-                    "op": "==",
-                    "right": 0,
-                    "_original_ast_type": "compare"
-                  },
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "smz3_CanPassBombPassages",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
-                "if_true": {
+                {
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "smz3_CanAccessNorfairUpperPortal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "HiJump",
-                              "Ice",
-                              "SpaceJump"
-                            ]
-                          }
-                        }
-                      ]
+                      "rule": "smz3_CanAccessNorfairUpperPortal",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "smz3_CanDestroyBombWalls",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "SpeedBooster"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Morph",
-                              "Super"
-                            ]
-                          }
-                        }
-                      ]
+                      "rule": "smz3_CanDestroyBombWalls",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "SpeedBooster"
+                      }
                     }
                   ]
                 },
-                "if_false": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "smz3_CanAccessNorfairUpperPortal",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "smz3_CanFly",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "smz3_CanSpringBallJump",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "HasAny",
-                              "args": {
-                                "items": [
-                                  "HiJump",
-                                  "Ice"
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "smz3_CanDestroyBombWalls",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "SpeedBooster"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Morph",
-                              "Super"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Super"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2665,248 +2495,44 @@
             "name": "Menu->Norfair Upper West",
             "connected_region": "Norfair Upper West",
             "access_rule": {
-              "rule": "Conditional",
-              "args": {
-                "test": {
-                  "rule": "Compare",
-                  "args": {
-                    "left": 0,
-                    "op": "==",
-                    "right": 0,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
+              "rule": "Or",
+              "children": [
+                {
                   "rule": "And",
                   "children": [
                     {
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "smz3_CanAccessMaridiaPortal",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Or",
-                              "children": [
-                                {
-                                  "rule": "smz3_CanPassBombPassages",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "ScrewAttack"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "HasAll",
-                              "args": {
-                                "items": [
-                                  "CardMaridiaL1",
-                                  "CardMaridiaL2"
-                                ]
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "smz3_CanUsePowerBombs",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "AST_region_check",
-                              "args": {
-                                "region": "Norfair Upper West",
-                                "_original_ast_type": "region_check"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gravity"
-                      }
-                    }
-                  ]
-                },
-                "if_false": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "smz3_CanAccessMaridiaPortal",
+                          "rule": "smz3_CanDestroyBombWalls",
                           "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "True_"
-                            }
-                          ]
+                          "_converted_from_ast": true
                         },
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "HasAll",
-                              "args": {
-                                "items": [
-                                  "Gravity",
-                                  "ScrewAttack"
-                                ]
-                              }
-                            },
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Or",
-                                          "children": [
-                                            {
-                                              "rule": "smz3_CanSpringBallJump",
-                                              "_original_ast_type": "helper",
-                                              "_converted_from_ast": true
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
-                                                "item_name": "Ice"
-                                              }
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "HiJump"
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Gravity"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Super"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "smz3_CanPassBombPassages",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "HasAll",
+                          "rule": "Has",
                           "args": {
-                            "items": [
-                              "CardMaridiaL1",
-                              "CardMaridiaL2"
-                            ]
+                            "item_name": "SpeedBooster"
                           }
                         }
                       ]
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "smz3_CanUsePowerBombs",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "smz3_CanSpringBallJump",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Ice"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "HiJump"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Gravity"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "AST_region_check",
-                          "args": {
-                            "region": "Norfair Upper West",
-                            "_original_ast_type": "region_check"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Morph",
+                          "Super"
+                        ]
+                      }
                     }
                   ]
                 },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                {
+                  "rule": "smz3_CanAccessNorfairUpperPortal",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
