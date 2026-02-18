@@ -322,7 +322,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Overall Explain Coverage:** {overall_explain_coverage:.1f}%\n\n"
 
         # Add Generic Exporter/Logic Statistics section (skip for original UT)
-        if ut_version not in ('original', 'original_seeded'):
+        if ut_version not in ('original', 'original_seeded', 'pickle'):
             passed_with_generic_exporter = 0
             passed_with_generic_logic = 0
             passed_with_both_generic = 0
@@ -374,7 +374,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "## Test Results\n\n"
 
     # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
-    if ut_version not in ('original', 'original_seeded'):
+    if ut_version not in ('original', 'original_seeded', 'pickle'):
         md_content += "| Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |\n"
         md_content += "|-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|\n"
     else:
@@ -383,6 +383,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     for data in chart_data:
         game_name = data['game_name']
+        template_file = data.get('template_file', '')
+        game_display = f"*{game_name}*" if excluded_games and template_file in excluded_games else game_name
         world_dir = data.get('world_directory')
 
         passed = data['passed']
@@ -407,7 +409,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             rate_display = f"❌ {success_rate:.1f}%"
 
         # Include Exporter/GameLogic/Rules Size columns for non-original UT versions
-        if ut_version not in ('original', 'original_seeded'):
+        if ut_version not in ('original', 'original_seeded', 'pickle'):
             # Get exporter and game logic sizes from world mapping
             exporter_indicator = "N/A"
             logic_indicator = "N/A"
@@ -424,12 +426,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
                 if rules_size > 0:
                     rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+            md_content += f"| {game_display} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
         else:
-            md_content += f"| {game_name} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
+            md_content += f"| {game_display} | {result_display} | {total} | {success} | {failure} | {timeout} | {ignored} | {rate_display} |\n"
 
     if not chart_data:
-        if ut_version not in ('original', 'original_seeded'):
+        if ut_version not in ('original', 'original_seeded', 'pickle'):
             md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
         else:
             md_content += "| No data available | - | - | - | - | - | - | - |\n"
@@ -522,6 +524,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"| {game_name} | {total_locs} | {with_explain} | {without_explain} | {default_rule} | {coverage_display} |\n"
 
     md_content += "\n## Notes\n\n"
+    if excluded_games:
+        md_content += "- *Italic game names* are in the exclude list for this test type\n"
     md_content += "- **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise\n"
     md_content += "- **Total:** Number of fuzz runs attempted for this game\n"
     md_content += "- **Success:** Number of runs where UT matched Python sphere log\n"
@@ -529,7 +533,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Timeout:** Number of runs that exceeded the time limit\n"
     md_content += "- **Ignored:** Number of runs skipped due to option errors\n"
     md_content += "- **Success Rate:** Percentage of successful runs\n"
-    if ut_version not in ('original', 'original_seeded'):
+    if ut_version not in ('original', 'original_seeded', 'pickle'):
         md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
         md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
         md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
@@ -629,6 +633,11 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
 
     # Get all unique game names
     all_games = sorted(set(data1_by_game.keys()) | set(data2_by_game.keys()))
+
+    # Determine whether to show Exporter/GameLogic/Rules Size columns.
+    # Skip these for versions that don't use the worldgen pipeline.
+    non_worldgen_versions = {'original', 'original_seeded', 'pickle'}
+    show_code_size_cols = not (version1 in non_worldgen_versions and version2 in non_worldgen_versions)
 
     # Categorize games
     passing_both = []
@@ -757,97 +766,128 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
     md_content += f"- **Passing {version1_display} Only:** {len(passing_version1_only)} ({len(passing_version1_only)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing {version2_display} Only:** {len(passing_version2_only)} ({len(passing_version2_only)/len(all_games)*100:.1f}%)\n"
     # Show generic exporter stats for apworlds original comparisons
-    if world_source == "apworlds" and version1 == "original":
+    if show_code_size_cols and world_source == "apworlds" and version1 == "original":
         md_content += f"- **Passing {version2_display} Only with Generic Exporter:** {len(passing_version2_only_generic_exporter)} ({len(passing_version2_only_generic_exporter)/len(all_games)*100:.1f}%)\n"
     md_content += f"- **Passing Neither:** {len(passing_neither)} ({len(passing_neither)/len(all_games)*100:.1f}%)\n"
-    # Only show custom code stats for bundled worlds (not apworlds)
-    if world_source != "apworlds":
+    # Only show custom code stats for bundled worlds (not apworlds) and only for worldgen versions
+    if show_code_size_cols and world_source != "apworlds":
         md_content += f"- **Passing {version2_display} with no custom code:** {len(passing_version2_no_custom)} ({len(passing_version2_no_custom)/len(all_games)*100:.1f}%)\n"
         md_content += f"- **Passing {version2_display} Only with no custom code:** {len(passing_version2_only_no_custom)} ({len(passing_version2_only_no_custom)/len(all_games)*100:.1f}%)\n"
     md_content += "\n"
 
+    # Helper to format a result for a single version.
+    # Rate = success / (success + failure), ignoring timeouts and ignored runs.
+    # 100% -> ✅, 0% -> ❌, in between -> fraction with indicator.
+    def format_result(data: Dict[str, Any]) -> str:
+        success = data['success']
+        failure = data['failure']
+        counted = success + failure
+        if counted == 0:
+            return "✅" if data['passed'] else "❌"
+        rate = success / counted * 100
+        if rate == 100.0:
+            return "✅"
+        elif rate == 0.0:
+            return "❌"
+        elif rate >= 50:
+            return f"⚠️ {success}/{counted}"
+        else:
+            return f"❌ {success}/{counted}"
+
     # Main comparison table
     md_content += "## Full Comparison\n\n"
-    md_content += f"| Game Name | {version1_display} Success Rate | {version2_display} Success Rate | Exporter | GameLogic | Rules Size |\n"
-    md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
+    if show_code_size_cols:
+        md_content += f"| Game Name | {version1_display} Result | {version2_display} Result | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|\n"
+    else:
+        md_content += f"| Game Name | {version1_display} Result | {version2_display} Result |\n"
+        md_content += "|-----------|:---------------------:|:---------------------:|\n"
 
     for game in all_games:
         d1 = data1_by_game.get(game)
         d2 = data2_by_game.get(game)
 
-        # Format success rates
-        if d1:
-            d1_rate = d1['success_rate']
-            if d1['passed']:
-                d1_display = f"✅ {d1_rate:.1f}%"
-            elif d1_rate >= 50:
-                d1_display = f"⚠️ {d1_rate:.1f}%"
-            else:
-                d1_display = f"❌ {d1_rate:.1f}%"
-        else:
-            d1_display = "N/A"
+        d1_display = format_result(d1) if d1 else "N/A"
+        d2_display = format_result(d2) if d2 else "N/A"
 
-        if d2:
-            d2_rate = d2['success_rate']
-            if d2['passed']:
-                d2_display = f"✅ {d2_rate:.1f}%"
-            elif d2_rate >= 50:
-                d2_display = f"⚠️ {d2_rate:.1f}%"
-            else:
-                d2_display = f"❌ {d2_rate:.1f}%"
+        if show_code_size_cols:
+            exporter, logic, rules_size = get_game_info(game)
+            md_content += f"| {game} | {d1_display} | {d2_display} | {exporter} | {logic} | {rules_size} |\n"
         else:
-            d2_display = "N/A"
-
-        exporter, logic, rules_size = get_game_info(game)
-        md_content += f"| {game} | {d1_display} | {d2_display} | {exporter} | {logic} | {rules_size} |\n"
+            md_content += f"| {game} | {d1_display} | {d2_display} |\n"
 
     # Games passing both
     if passing_both:
         md_content += f"\n## Games Passing Both ({len(passing_both)})\n\n"
         md_content += "These games have 100% success rate in both Universal Tracker versions.\n\n"
-        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_both:
-            exporter, logic, rules_size = get_game_info(game)
-            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        if show_code_size_cols:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+            for game in passing_both:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        else:
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+            for game in passing_both:
+                md_content += f"| {game} |\n"
 
     # Games passing version1 only
     if passing_version1_only:
         md_content += f"\n## Games Passing {version1_display} Only ({len(passing_version1_only)})\n\n"
         md_content += f"These games pass in the {version1_display} UT but fail in the {version2_display} UT.\n\n"
-        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_version1_only:
-            exporter, logic, rules_size = get_game_info(game)
-            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        if show_code_size_cols:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+            for game in passing_version1_only:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        else:
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+            for game in passing_version1_only:
+                md_content += f"| {game} |\n"
 
     # Games passing version2 only
     if passing_version2_only:
         md_content += f"\n## Games Passing {version2_display} Only ({len(passing_version2_only)})\n\n"
         md_content += f"These games pass in the {version2_display} UT but fail in the {version1_display} UT.\n\n"
-        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_version2_only:
-            exporter, logic, rules_size = get_game_info(game)
-            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        if show_code_size_cols:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+            for game in passing_version2_only:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        else:
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+            for game in passing_version2_only:
+                md_content += f"| {game} |\n"
 
     # Games passing neither
     if passing_neither:
         md_content += f"\n## Games Passing Neither ({len(passing_neither)})\n\n"
         md_content += "These games fail in both Universal Tracker versions.\n\n"
-        md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
-        md_content += "|-----------|:--------:|:---------:|:----------:|\n"
-        for game in passing_neither:
-            exporter, logic, rules_size = get_game_info(game)
-            md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        if show_code_size_cols:
+            md_content += "| Game Name | Exporter | GameLogic | Rules Size |\n"
+            md_content += "|-----------|:--------:|:---------:|:----------:|\n"
+            for game in passing_neither:
+                exporter, logic, rules_size = get_game_info(game)
+                md_content += f"| {game} | {exporter} | {logic} | {rules_size} |\n"
+        else:
+            md_content += "| Game Name |\n"
+            md_content += "|-----------|\n"
+            for game in passing_neither:
+                md_content += f"| {game} |\n"
 
     # Notes section
     md_content += "\n## Notes\n\n"
-    md_content += f"- **{version1_display} Success Rate:** Percentage of fuzz runs that passed in the {version1_display} Universal Tracker\n"
-    md_content += f"- **{version2_display} Success Rate:** Percentage of fuzz runs that passed in the {version2_display} Universal Tracker\n"
-    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
-    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
-    md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
+    md_content += f"- **{version1_display} Result:** ✅ if all runs passed, ❌ if none passed, or passes/total as a fraction (success/failure only, excludes timeouts and ignored)\n"
+    md_content += f"- **{version2_display} Result:** ✅ if all runs passed, ❌ if none passed, or passes/total as a fraction (success/failure only, excludes timeouts and ignored)\n"
+    if show_code_size_cols:
+        md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+        md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+        md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
     md_content += "- A game is considered \"passing\" if it has a 100% success rate (0 failures, 0 timeouts)\n"
 
     return md_content

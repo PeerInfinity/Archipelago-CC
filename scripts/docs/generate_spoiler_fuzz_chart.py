@@ -198,6 +198,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     for data in chart_data:
         game_name = data['game_name']
+        template_file = data.get('template_file', '')
+        game_display = f"*{game_name}*" if excluded_games and template_file in excluded_games else game_name
         world_dir = data.get('world_directory')
 
         passed = data['passed']
@@ -228,7 +230,7 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
             if rules_size > 0:
                 rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-        md_content += f"| {game_name} | {result_display} | {total} | {success} | {gen_failure} | {test_failure} | {timeout} | {rate_display} | {rules_size_indicator} |\n"
+        md_content += f"| {game_display} | {result_display} | {total} | {success} | {gen_failure} | {test_failure} | {timeout} | {rate_display} | {rules_size_indicator} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
@@ -243,6 +245,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"| {game} | {reason} |\n"
 
     md_content += "\n## Notes\n\n"
+    if excluded_games:
+        md_content += "- *Italic game names* are in the exclude list for this test type\n"
     md_content += "- **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise\n"
     md_content += "- **Total:** Number of fuzz runs attempted for this game\n"
     md_content += "- **Success:** Number of runs where spoiler test completed successfully\n"
