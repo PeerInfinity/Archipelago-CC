@@ -1223,8 +1223,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
                       "5-3 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1273,8 +1273,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
                       "5-4 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1323,8 +1323,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
                       "5-5 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1419,8 +1419,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
                       "6-1 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1469,8 +1469,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
                       "6-2 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1585,10 +1585,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
-                      "6-1 Level Complete",
                       "6-4 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp",
+                      "6-1 Level Complete",
                       "Red Ramp"
                     ]
                   }
@@ -1637,10 +1637,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-1 Level Complete",
-                      "6-1 Level Complete",
                       "6-5 Level Complete",
+                      "5-1 Level Complete",
                       "Purple Ramp",
+                      "6-1 Level Complete",
                       "Red Ramp"
                     ]
                   }
@@ -1655,8 +1655,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Dark Green Ramp",
-                  "Kevin-1"
+                  "Kevin-1",
+                  "Dark Green Ramp"
                 ]
               }
             }
@@ -1718,8 +1718,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "5-1 Level Complete",
                   "Kevin-7",
+                  "5-1 Level Complete",
                   "Purple Ramp"
                 ]
               }
@@ -1732,10 +1732,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "5-1 Level Complete",
-                  "6-1 Level Complete",
                   "Kevin-8",
+                  "5-1 Level Complete",
                   "Purple Ramp",
+                  "6-1 Level Complete",
                   "Red Ramp"
                 ]
               }
