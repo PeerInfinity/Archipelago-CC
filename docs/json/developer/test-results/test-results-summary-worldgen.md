@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-02-18 00:23:13 UTC
+**Generated:** 2026-02-18 00:34:49 UTC
 
 **Source Data Created:** 2026-02-18T00:13:12.689905+00:00
 
@@ -8,10 +8,11 @@
 
 [View Original Template Results](./test-results-summary.md)
 
-This summary combines results from 3 types of tests:
+This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal-worldgen.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full-worldgen.md)
 - **Multiclient Test:** Tests in multiclient mode - [View Details](./test-results-multiclient-worldgen.md)
+- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld-worldgen.md)
 
 Additional test results:
 - **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)
@@ -28,23 +29,26 @@ Additional information:
 - **Minimal Test:** 0/74 passed (0.0%)
 - **Full Test:** 0/74 passed (0.0%)
 - **Multiclient Test:** 0/74 passed (0.0%)
+- **Multiworld Test:** 40/74 passed (54.1%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
+- **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/74 (0.0%)
+- **Templates passing all 4 tests:** 0/74 (0.0%)
+- **Templates passing 3 tests:** 0/74 (0.0%)
 - **Templates passing 2 tests:** 0/74 (0.0%)
-- **Templates passing 1 test:** 0/74 (0.0%)
-- **Templates passing 0 tests:** 74/74 (100.0%)
+- **Templates passing 1 test:** 40/74 (54.1%)
+- **Templates passing 0 tests:** 34/74 (45.9%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 0 templates passing all 3 tests:
+Of the 0 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 0/0
 - **Passing with Generic Logic:** 0/0
@@ -58,82 +62,82 @@ Of the 0 templates passing all 3 tests:
 
 ## Test Results
 
-| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
-|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 18.2KB | ✅ | N/A |
-| A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Link to the Past Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Link to the Past Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Link to the Past WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 14.0KB | ✅ | N/A |
-| A Link to the Past WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Short Hike WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Short Hike WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| APQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Adventure WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Aquaria WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 1.8KB | ✅ | N/A |
-| Baking Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Baking Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Baking Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Bumper Stickers WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Castlevania - Circle of the Moon WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 4.0KB | ✅ | N/A |
-| Castlevania 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Celeste 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 4.1KB | ✅ | N/A |
-| ChecksFinder WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Choo-Choo Charles WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Civilization VI WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Coding Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Coding Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Coding Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| DLCQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 1.2KB | ✅ | N/A |
-| DOOM 1993 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| DOOM II WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Dark Souls III WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Donkey Kong Country 3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| EarthBound WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Factorio WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 8.8KB | ✅ | N/A |
-| Faxanadu WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 13.9KB | ✅ | N/A |
-| Heretic WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Hylics 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Inscryption WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 8.0KB | ✅ | N/A |
-| Landstalker - The Treasures of King Nole WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 3.6KB | ✅ | N/A |
-| Links Awakening DX WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.4KB | ✅ | N/A |
-| Lufia II Ancient Cave WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Mario & Luigi Superstar Saga WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Math Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Math Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Math Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Mega Man 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| MegaMan Battle Network 3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Meritous WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Metamath WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Muse Dash WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Noita WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Old School Runescape WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 1.0KB | ✅ | N/A |
-| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 28.5KB | ✅ | N/A |
-| Paint WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.7KB | ✅ | N/A |
-| Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Satisfactory WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 41.6KB | ✅ | N/A |
-| Saving Princess WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Shivers WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Sonic Adventure 2 Battle WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | N/A |
-| Super Mario 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Super Mario Land 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 96.3KB | ✅ | N/A |
-| Super Mario World WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| TOEM original WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| TOEM rule builder WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Terraria WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 16.8KB | ✅ | N/A |
-| The Legend of Zelda WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| The Messenger WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 15.2KB | ✅ | N/A |
-| The Wind Waker WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.0KB | ✅ | N/A |
-| Timespinner WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | N/A |
-| Undertale WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| VVVVVV WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 3.8KB | ✅ | N/A |
-| Wargroove WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| Yoshi's Island WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 9.2KB | ✅ | N/A |
-| shapez WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
+|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
+| A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 18.2KB | ✅ | N/A |
+| A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| A Link to the Past Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| A Link to the Past Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| A Link to the Past WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 14.0KB | ✅ | N/A |
+| A Link to the Past WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| A Short Hike WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| A Short Hike WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| APQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Adventure WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Aquaria WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 1.8KB | ✅ | N/A |
+| Baking Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Baking Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Baking Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Bumper Stickers WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Castlevania - Circle of the Moon WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 4.0KB | ✅ | N/A |
+| Castlevania 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Celeste 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 4.1KB | ✅ | N/A |
+| ChecksFinder WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Choo-Choo Charles WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Civilization VI WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Coding Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Coding Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Coding Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| DLCQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 1.2KB | ✅ | N/A |
+| DOOM 1993 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| DOOM II WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Dark Souls III WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Donkey Kong Country 3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| EarthBound WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Factorio WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 8.8KB | ✅ | N/A |
+| Faxanadu WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Final Fantasy Mystic Quest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 13.9KB | ✅ | N/A |
+| Heretic WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Hylics 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Inscryption WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 8.0KB | ✅ | N/A |
+| Landstalker - The Treasures of King Nole WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 3.6KB | ✅ | N/A |
+| Links Awakening DX WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | 7.4KB | ✅ | N/A |
+| Lufia II Ancient Cave WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Mario & Luigi Superstar Saga WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Math Adventure Vanilla WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Math Adventure Vanilla WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Math Adventure WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Mega Man 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| MegaMan Battle Network 3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Meritous WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Metamath WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Muse Dash WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Noita WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Old School Runescape WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 1.0KB | ✅ | N/A |
+| Overcooked! 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 28.5KB | ✅ | N/A |
+| Paint WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.7KB | ✅ | N/A |
+| Risk of Rain 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Satisfactory WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 41.6KB | ✅ | N/A |
+| Saving Princess WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Shivers WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Sonic Adventure 2 Battle WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | N/A |
+| Super Mario 64 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Super Mario Land 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 96.3KB | ✅ | N/A |
+| Super Mario World WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| TOEM original WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| TOEM rule builder WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Terraria WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 16.8KB | ✅ | N/A |
+| The Legend of Zelda WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| The Messenger WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 15.2KB | ✅ | N/A |
+| The Wind Waker WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.0KB | ✅ | N/A |
+| Timespinner WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | N/A |
+| Undertale WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| VVVVVV WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 3.8KB | ✅ | N/A |
+| Wargroove WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
+| Yoshi's Island WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 9.2KB | ✅ | N/A |
+| shapez WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
 
 ### Exporter Files by Size
 

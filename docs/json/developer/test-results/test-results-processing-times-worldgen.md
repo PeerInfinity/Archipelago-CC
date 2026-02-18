@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-02-18 00:23:13 UTC
+**Generated:** 2026-02-18 00:34:49 UTC
 
 **Source Data Created:** 2026-02-18T00:13:12.689905+00:00
 
@@ -113,8 +113,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Satisfactory WorldGen | 10.9s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Heretic WorldGen.yaml, Satisfactory WorldGen.yaml |
+| 2 | Yoshi's Island WorldGen | 10.0s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Faxanadu WorldGen.yaml, Yoshi's Island WorldGen.yaml |
+| 3 | Terraria WorldGen | 9.7s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Heretic WorldGen.yaml, Terraria WorldGen.yaml |
+| 4 | Risk of Rain 2 WorldGen | 9.7s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Risk of Rain 2 WorldGen.yaml |
+| 5 | shapez WorldGen | 9.6s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Final Fantasy Mystic Quest WorldGen.yaml, shapez WorldGen.yaml |
+| 6 | Mega Man 2 WorldGen | 9.5s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Heretic WorldGen.yaml, Mega Man 2 WorldGen.yaml |
+| 7 | Mario & Luigi Superstar Saga WorldGen | 9.4s | 5 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml, EarthBound WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml |
+| 8 | The Wind Waker WorldGen | 9.2s | 5 | A Short Hike WorldGen2.yaml, Castlevania 64 WorldGen.yaml, DOOM II WorldGen.yaml, Landstalker - The Treasures of King Nole WorldGen.yaml, The Wind Waker WorldGen.yaml |
+| 9 | Paint WorldGen | 9.1s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Faxanadu WorldGen.yaml, Paint WorldGen.yaml |
+| 10 | TOEM original WorldGen | 9.0s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Faxanadu WorldGen.yaml, TOEM original WorldGen.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | TOEM original WorldGen | 44.7s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Faxanadu WorldGen.yaml, TOEM original WorldGen.yaml |
+| 2 | Mega Man 2 WorldGen | 44.6s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Heretic WorldGen.yaml, Mega Man 2 WorldGen.yaml |
+| 3 | Math Adventure Vanilla WorldGen2 | 44.5s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Faxanadu WorldGen.yaml, Math Adventure Vanilla WorldGen2.yaml |
+| 4 | Noita WorldGen | 44.5s | 5 | Adventure WorldGen.yaml, ChecksFinder WorldGen.yaml, Donkey Kong Country 3 WorldGen.yaml, Lufia II Ancient Cave WorldGen.yaml, Noita WorldGen.yaml |
+| 5 | Math Adventure Vanilla WorldGen | 44.3s | 5 | A Hat in Time WorldGen2.yaml, Aquaria WorldGen.yaml, Civilization VI WorldGen.yaml, Factorio WorldGen.yaml, Math Adventure Vanilla WorldGen.yaml |
+| 6 | Mario & Luigi Superstar Saga WorldGen | 44.2s | 5 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml, EarthBound WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml |
+| 7 | Undertale WorldGen | 44.1s | 5 | Adventure WorldGen.yaml, ChecksFinder WorldGen.yaml, Donkey Kong Country 3 WorldGen.yaml, Lufia II Ancient Cave WorldGen.yaml, Undertale WorldGen.yaml |
+| 8 | Math Adventure WorldGen | 44.1s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Final Fantasy Mystic Quest WorldGen.yaml, Math Adventure WorldGen.yaml |
+| 9 | Satisfactory WorldGen | 44.1s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Heretic WorldGen.yaml, Satisfactory WorldGen.yaml |
+| 10 | Old School Runescape WorldGen | 44.0s | 5 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml, EarthBound WorldGen.yaml, Old School Runescape WorldGen.yaml |
