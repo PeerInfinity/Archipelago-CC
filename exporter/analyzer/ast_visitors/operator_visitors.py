@@ -10,9 +10,10 @@ import logging
 from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
+from .base import BaseVisitorMixin
 
 
-class OperatorVisitorMixin:
+class OperatorVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing visitor methods for operator nodes.
 

@@ -16,11 +16,12 @@ from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
 from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
+from .base import BaseVisitorMixin
 
 logger = logging.getLogger(__name__)
 
 
-class CallVisitorMixin:
+class CallVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing the visit_Call method for handling function calls.
 
@@ -2186,7 +2187,7 @@ class CallVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
-    def _extract_set_elements(self, arg: Dict[str, Any]) -> list:
+    def _extract_set_elements(self, arg: Dict[str, Any]) -> Optional[list]:
         """Extract a list of elements from a set/tuple/list/constant structure.
 
         This handles various representations of collections in the AST:
@@ -2239,7 +2240,7 @@ class CallVisitorMixin:
         logging.debug(f"_extract_set_elements: Cannot extract from type '{arg_type}'")
         return None
 
-    def _extract_elements_to_values(self, elements: list) -> list:
+    def _extract_elements_to_values(self, elements: list) -> Optional[list]:
         """Extract values from a list of element structures.
 
         Args:
@@ -2275,6 +2276,8 @@ class CallVisitorMixin:
                 if name == 'player':
                     # player is typically 1 for single-player exports
                     result.append(1)
+                elif name is None:
+                    return None
                 else:
                     resolved = self.expression_resolver.resolve_variable(name)
                     if resolved is not None:
@@ -2288,7 +2291,7 @@ class CallVisitorMixin:
 
         return result
 
-    def _try_resolve_comprehension(self, comp_node: dict) -> list:
+    def _try_resolve_comprehension(self, comp_node: dict) -> Optional[list]:
         """Try to resolve a set/generator comprehension to a concrete list of values.
 
         For patterns like:

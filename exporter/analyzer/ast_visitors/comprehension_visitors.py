@@ -9,9 +9,10 @@ import ast
 import copy
 import logging
 from typing import Any, Dict, Optional
+from .base import BaseVisitorMixin
 
 
-class ComprehensionVisitorMixin:
+class ComprehensionVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing visitor methods for comprehension and generator nodes.
 
@@ -293,7 +294,7 @@ class ComprehensionVisitorMixin:
             'element_rule': element_rule,
             'iterator_info': comprehension
         }
-        logging.debug(f"_convert_generator_exp_to_all_of: Created all_of with iterator target={comprehension.get('target')}")
+        logging.debug(f"_convert_generator_exp_to_all_of: Created all_of with iterator target={comprehension.get('target') if comprehension is not None else None}")
         return result
 
     def _convert_generator_exp_to_any_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
@@ -329,7 +330,7 @@ class ComprehensionVisitorMixin:
             'element_rule': element_rule,
             'iterator_info': comprehension
         }
-        logging.debug(f"_convert_generator_exp_to_any_of: Created any_of with iterator target={comprehension.get('target')}")
+        logging.debug(f"_convert_generator_exp_to_any_of: Created any_of with iterator target={comprehension.get('target') if comprehension is not None else None}")
         return result
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:

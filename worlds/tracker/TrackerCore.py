@@ -23,7 +23,7 @@ import json
 import logging
 import os
 from collections import Counter
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import Any, Dict, List, Optional
 
 from BaseClasses import CollectionState, LocationProgressType, ItemClassification
 from . import CurrentTrackerState, UT_VERSION, DeferredEntranceMode
@@ -32,9 +32,6 @@ from .worldgen_mixin import WorldgenMixin
 from .pickle_mixin import PickleMixin
 from .tracker_extensions import TrackerTestingMixin
 from Utils import __version__
-
-if TYPE_CHECKING:
-    from BaseClasses import MultiWorld
 
 
 # Cache for tracking-mode-config to avoid repeated file reads
@@ -192,11 +189,9 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             self.logger.debug("seed_utils not available for reverse lookup")
 
         # 2. Try generation_seed from loaded rules JSON
-        if self.rules_json_data:
-            gen_seed = self.rules_json_data.get('generation_seed')
-            if gen_seed is not None:
-                self.logger.info(f"Resolved seed number {gen_seed} from rules JSON generation_seed field")
-                return int(gen_seed)
+        if self.generation_seed is not None:
+            self.logger.info(f"Resolved seed number {self.generation_seed} from rules JSON generation_seed field")
+            return self.generation_seed
 
         self.logger.debug(f"Could not resolve seed number for {seed_id}")
         return None
@@ -297,7 +292,7 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         if config:
             # Config-based fallback order
             fallback_order = config.get('fallback_order', ['worldgen', 'pickle', 'original'])
-            passing_modes = self._get_passing_modes_for_game(self.game, config)
+            passing_modes = self._get_passing_modes_for_game(self.game or "", config)
 
             self._log_debug("config_based_tracking", {
                 "fallback_order": fallback_order,
