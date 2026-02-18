@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-02-18 21:44:27 UTC
+**Generated:** 2026-02-18 21:54:12 UTC
 
 **Source Data Created:** 2026-02-18T20:50:43.869101+00:00
 
@@ -128,8 +128,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Undertale | 28.1s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
+| 2 | Super Metroid | 27.5s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 3 | VVVVVV | 24.4s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 4 | Secret of Evermore | 24.3s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 5 | TOEM original | 24.1s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 6 | Metamath | 22.3s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml |
+| 7 | The Legend of Zelda | 21.3s | 7 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+2 more) |
+| 8 | Stardew Valley | 19.9s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 9 | Timespinner | 18.6s | 7 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Satisfactory.yaml (+2 more) |
+| 10 | shapez | 17.7s | 8 | Adventure.yaml, Choo-Choo Charles.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Kirby's Dream Land 3 | 54.9s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml |
+| 2 | Stardew Valley | 47.1s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 3 | Secret of Evermore | 40.9s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 4 | Kingdom Hearts 2 | 35.0s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 5 | Dark Souls III | 32.1s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 6 | Satisfactory | 32.1s | 5 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Satisfactory.yaml |
+| 7 | Super Metroid | 31.0s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 8 | Kingdom Hearts | 25.0s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml |
+| 9 | The Messenger | 18.6s | 7 | Baking Adventure.yaml, Coding Adventure.yaml, Heretic.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+2 more) |
+| 10 | Raft | 17.9s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Hylics 2.yaml, Math Adventure.yaml, Raft.yaml |
