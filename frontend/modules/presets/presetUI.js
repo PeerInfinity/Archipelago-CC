@@ -158,23 +158,53 @@ export class PresetUI {
         </div>
     `;
 
-    // Process each game
+    // Group preset directories by display name so that variants sharing the same
+    // game name (e.g. "alttp" and "alttp_vanilla", both named "A Link to the Past")
+    // appear as a single row. Seeds from vanilla directories get a V badge.
+    // Each group tracks: primaryGameData (for test results), seeds[], hasMultiworld.
+    const nameGroups = new Map();
+
     Object.entries(this.presets).forEach(([gameDirectory, gameData]) => {
-      // Skip metadata entry
       if (gameDirectory === 'metadata') return;
-      
-      // Create a section for each game
-      html += `
-        <div class="game-row">
-          <h4 class="game-name">${this.escapeHtml(gameData.name)}</h4>
-      `;
+
+      const name = gameData.name;
+      if (!nameGroups.has(name)) {
+        nameGroups.set(name, { primaryGameData: gameData, seeds: [], hasMultiworld: false });
+      }
+      const group = nameGroups.get(name);
 
       if (gameDirectory === 'multiworld') {
+        group.hasMultiworld = true;
+        group.primaryGameData = gameData;
+      } else {
+        // Prefer the directory whose seeds aren't all vanilla as the primary
+        // so the test results badge reflects the main (non-vanilla) game.
+        const allVanilla = Object.values(gameData.folders || {}).every(f => f.is_vanilla);
+        if (!allVanilla) {
+          group.primaryGameData = gameData;
+        }
+      }
+
+      Object.entries(gameData.folders || {}).forEach(([seedName, folderData]) => {
+        group.seeds.push({ gameDirectory, seedName, folderData });
+      });
+    });
+
+    // Render each name group as one game-row
+    nameGroups.forEach((group, name) => {
+      const { primaryGameData, seeds, hasMultiworld } = group;
+
+      html += `
+        <div class="game-row">
+          <h4 class="game-name">${this.escapeHtml(name)}</h4>
+      `;
+
+      if (hasMultiworld) {
         // Special layout for multiworld - block format
         html += `</div>`; // Close the inline game-row
         html += `<div class="multiworld-container">`;
         html += `<div class="multiworld-seeds">`;
-        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
+        seeds.forEach(({ gameDirectory, seedName, folderData }) => {
           html += `<div class="multiworld-seed-block">`;
           html += `<span class="seed-number">Seed: ${this.escapeHtml(
             folderData.seed
@@ -206,28 +236,28 @@ export class PresetUI {
       } else {
         // Standard layout for single-player games
         html += `<div class="game-presets">`;
-        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
+        seeds.forEach(({ gameDirectory, seedName, folderData }) => {
+          const isVanilla = !!folderData.is_vanilla;
+          const vanillaBadge = isVanilla
+            ? `<span class="placement-badge placement-vanilla" title="Vanilla placement">V</span>`
+            : '';
           html += `
             <button class="preset-button"
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.description || `Seed ${folderData.seed}`
+                      folderData.description || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.seed)}
+              ${this.escapeHtml(folderData.seed)}${vanillaBadge}
             </button>
           `;
         });
         html += `</div>`; // Close game-presets
-        // Add test badge for single-player games
-        html += this.renderTestResultBadge(gameData);
+        html += this.renderTestResultBadge(primaryGameData);
       }
 
-      // Close the game section (only for non-multiworld)
-      if (gameDirectory !== 'multiworld') {
-        html += `
-          </div>
-        `;
+      if (!hasMultiworld) {
+        html += `</div>`; // Close game-row
       }
     });
 
@@ -443,6 +473,21 @@ export class PresetUI {
           border-radius: 8px;
           padding: 16px;
           margin-bottom: 16px;
+        }
+        .placement-badge {
+          display: inline-block;
+          font-size: 0.65em;
+          font-weight: 700;
+          padding: 1px 4px;
+          border-radius: 3px;
+          margin-left: 6px;
+          vertical-align: middle;
+          line-height: 1;
+        }
+        .placement-vanilla {
+          background-color: rgba(156, 39, 176, 0.3);
+          border: 1px solid rgba(156, 39, 176, 0.6);
+          color: #ce93d8;
         }
       </style>
     `;
