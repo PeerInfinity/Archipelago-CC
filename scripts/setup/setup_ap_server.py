@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Add scripts directory to path so we can import from lib
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from lib.seed_utils import get_seed_id, find_seed_subdir
+from lib.seed_utils import get_seed_id
 
 
 def stop_server(port):
@@ -40,8 +40,7 @@ def cleanup_save_file(game, seed_id, project_root):
     """
     Delete .apsave file to ensure clean state.
     """
-    seed_subdir = find_seed_subdir(str(project_root), game, seed_id)
-    game_dir = Path(project_root) / "frontend" / "presets" / game / seed_subdir
+    game_dir = Path(project_root) / "frontend" / "presets" / game / seed_id
     apsave_path = game_dir / f"{seed_id}.apsave"
 
     if apsave_path.exists():
@@ -57,8 +56,7 @@ def start_server(game, seed, port, project_root, log_file='server_log.txt'):
     Returns the subprocess object for the server process.
     """
     seed_id = get_seed_id(seed)
-    seed_subdir = find_seed_subdir(str(project_root), game, seed_id)
-    game_dir = Path(project_root) / "frontend" / "presets" / game / seed_subdir
+    game_dir = Path(project_root) / "frontend" / "presets" / game / seed_id
     archipelago_file = game_dir / f"{seed_id}.archipelago"
 
     # Check if file exists

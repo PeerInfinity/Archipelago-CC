@@ -46,7 +46,7 @@ from lib.test_runner import (
     test_template_multiworld_bisect,
     test_generation_consistency
 )
-from lib.seed_utils import get_seed_id as compute_seed_id, find_seed_subdir
+from lib.seed_utils import get_seed_id as compute_seed_id
 
 
 def run_post_processing_scripts(project_root: str, results_file: str, multiclient: bool = False, multiworld: bool = False):
@@ -1157,8 +1157,7 @@ def main():
                 # Also clear the output preset directory for this seed to avoid stale files
                 # from previous multiworld runs with different player counts
                 seed_id = compute_seed_id(seed_list[0])
-                mw_seed_subdir = find_seed_subdir(project_root, 'multiworld', seed_id)
-                preset_output_dir = os.path.join(project_root, 'frontend', 'presets', 'multiworld', mw_seed_subdir)
+                preset_output_dir = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id)
                 if os.path.exists(preset_output_dir):
                     print(f"  Clearing existing preset output directory: {preset_output_dir}")
                     try:

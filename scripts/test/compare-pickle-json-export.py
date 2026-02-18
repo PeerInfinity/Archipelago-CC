@@ -275,19 +275,20 @@ def main():
         sys.exit(1)
 
     # Calculate seed name
-    from scripts.lib.seed_utils import get_seed_id, find_seed_subdir
-    seed_id = get_seed_id(args.seed)
+    from scripts.lib.seed_utils import get_seed_id
+    seed_name = get_seed_id(args.seed)
+    if seed_name.startswith("AP_"):
+        seed_name = seed_name[3:]
 
     print(f"Game: {args.game}")
     print(f"Game directory: {game_dir}")
-    print(f"Seed: {seed_id}")
+    print(f"Seed: AP_{seed_name}")
     print()
 
-    # Find files (directory may have canonical/vanilla suffix, e.g. _c or _vc)
-    seed_subdir = find_seed_subdir(str(PROJECT_ROOT), game_dir, seed_id)
-    presets_dir = PROJECT_ROOT / "frontend" / "presets" / game_dir / seed_subdir
-    pickle_file = presets_dir / f"{seed_id}.pkl.gz"
-    json_file = presets_dir / f"{seed_id}_rules.json"
+    # Find files
+    presets_dir = PROJECT_ROOT / "frontend" / "presets" / game_dir / f"AP_{seed_name}"
+    pickle_file = presets_dir / f"AP_{seed_name}.pkl.gz"
+    json_file = presets_dir / f"AP_{seed_name}_rules.json"
 
     if not pickle_file.exists():
         print(f"ERROR: Pickle file not found: {pickle_file}")

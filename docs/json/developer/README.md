@@ -39,7 +39,6 @@ Technical references and specifications:
 | [URL Parameters](./reference/url-parameters.md) | Application URL parameters |
 | [ALttP Specific Data](./reference/alttp-specific-data.md) | A Link to the Past helpers |
 | [Host Settings](./reference/host-settings.md) | Settings added to host.yaml by this fork |
-| [Preset Directory Naming](./reference/preset-directory-naming.md) | How `_c`/`_vc` suffixes work and how to resolve preset directories |
 
 ### [Diffs](./diffs/)
 
