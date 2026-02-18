@@ -61,13 +61,17 @@ def run_multiclient_integration_test(game, seed, player_file, output_dir="test_r
         print("STEP 2: Cleaning server state files")
         print(f"{'='*60}")
 
-        preset_dir = f"frontend/presets/{game}/AP_{seed}"
+        seed_id = f"AP_{seed}"
+        preset_dir = f"frontend/presets/{game}/{seed_id}"
         if not os.path.exists(preset_dir):
-            print(f"Warning: Preset directory not found at {preset_dir}")
-            print("Trying alternative location...")
-            preset_dir = f"frontend/presets/{game}/{seed}"
-            if not os.path.exists(preset_dir):
-                raise FileNotFoundError(f"Could not find preset directory for {game}/{seed}")
+            # Check for canonical/vanilla suffix variants (_c, _vc, _v)
+            for suffix in ('_c', '_vc', '_v'):
+                candidate = f"frontend/presets/{game}/{seed_id}{suffix}"
+                if os.path.exists(candidate):
+                    preset_dir = candidate
+                    break
+            else:
+                raise FileNotFoundError(f"Could not find preset directory for {game}/{seed_id}")
 
         cleanup_cmd = f"rm -f {preset_dir}/*.apsave"
         subprocess.run(cleanup_cmd, shell=True)

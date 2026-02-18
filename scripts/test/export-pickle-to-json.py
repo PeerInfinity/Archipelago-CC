@@ -102,21 +102,20 @@ def main():
         sys.exit(1)
 
     # Calculate seed name
-    from scripts.lib.seed_utils import get_seed_id
-    seed_name = get_seed_id(args.seed)
-    if seed_name.startswith("AP_"):
-        seed_name = seed_name[3:]
+    from scripts.lib.seed_utils import get_seed_id, find_seed_subdir
+    seed_id = get_seed_id(args.seed)
 
     print(f"Game: {args.game}")
     print(f"Game directory: {game_dir}")
-    print(f"Seed: AP_{seed_name}")
+    print(f"Seed: {seed_id}")
     print(f"Format: {args.format}")
     print()
 
-    # Find pickle file
-    presets_dir = PROJECT_ROOT / "frontend" / "presets" / game_dir / f"AP_{seed_name}"
-    pickle_file = presets_dir / f"AP_{seed_name}.pkl.gz"
-    original_json = presets_dir / f"AP_{seed_name}_rules.json"
+    # Find pickle file (directory may have canonical/vanilla suffix, e.g. _c or _vc)
+    seed_subdir = find_seed_subdir(str(PROJECT_ROOT), game_dir, seed_id)
+    presets_dir = PROJECT_ROOT / "frontend" / "presets" / game_dir / seed_subdir
+    pickle_file = presets_dir / f"{seed_id}.pkl.gz"
+    original_json = presets_dir / f"{seed_id}_rules.json"
 
     if not pickle_file.exists():
         print(f"ERROR: Pickle file not found: {pickle_file}")
@@ -133,7 +132,7 @@ def main():
 
     # Export to new file
     # Note: export_game_rules adds "_rules.json" suffix to filename_base
-    filename_base = f"AP_{seed_name}{args.output_suffix}"
+    filename_base = f"{seed_id}{args.output_suffix}"
     output_json = presets_dir / f"{filename_base}_rules.json"
     print(f"Output JSON: {output_json}")
 

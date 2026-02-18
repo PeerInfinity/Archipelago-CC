@@ -34,7 +34,24 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     return seedIds[seed] || `AP_${seed.padStart(seeddigits, '0')}`;
   }
 
+  // Resolve the actual seed subdirectory name, accounting for canonical/vanilla suffixes
+  // added by the exporter (e.g. _c for canonical, _vc for vanilla+canonical).
+  function findSeedSubdir(game, seedId) {
+    const baseDir = `./frontend/presets/${game}`;
+    if (fs.existsSync(`${baseDir}/${seedId}`)) {
+      return seedId;
+    }
+    for (const suffix of ['_c', '_vc', '_v']) {
+      const candidate = `${seedId}${suffix}`;
+      if (fs.existsSync(`${baseDir}/${candidate}`)) {
+        return candidate;
+      }
+    }
+    return seedId;
+  }
+
   const seedId = getSeedId(testSeed);
+  const seedSubdir = findSeedSubdir(testGame, seedId);
 
   // Helper function to stop any running Archipelago server
   async function stopServer() {
@@ -64,7 +81,8 @@ test.describe('Multiplayer Client Interaction Tests', () => {
   async function startServer(game, seed) {
     // Construct the path to the .archipelago file
     const computedSeedId = getSeedId(seed);
-    const gameDir = `./frontend/presets/${game}/${computedSeedId}`;
+    const computedSeedSubdir = findSeedSubdir(game, computedSeedId);
+    const gameDir = `./frontend/presets/${game}/${computedSeedSubdir}`;
     const archipelagoFile = `${computedSeedId}.archipelago`;
     const fullPath = `${gameDir}/${archipelagoFile}`;
 
@@ -175,7 +193,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       await stopServer();
 
       // Delete .apsave file to ensure clean state
-      const gameDir = `./frontend/presets/${testGame}/${seedId}`;
+      const gameDir = `./frontend/presets/${testGame}/${seedSubdir}`;
       const apsavePath = `${gameDir}/${seedId}.apsave`;
       if (fs.existsSync(apsavePath)) {
         fs.unlinkSync(apsavePath);
@@ -291,7 +309,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       await stopServer();
 
       // Delete .apsave file to ensure clean state
-      const gameDir = `./frontend/presets/${testGame}/${seedId}`;
+      const gameDir = `./frontend/presets/${testGame}/${seedSubdir}`;
       const apsavePath = `${gameDir}/${seedId}.apsave`;
       if (fs.existsSync(apsavePath)) {
         fs.unlinkSync(apsavePath);

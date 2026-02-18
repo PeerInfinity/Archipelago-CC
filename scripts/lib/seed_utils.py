@@ -6,6 +6,7 @@ This module provides functions to compute seed IDs directly from seed numbers
 without needing to run Generate.py.
 """
 
+import os
 import random
 from typing import Optional
 
@@ -114,6 +115,33 @@ SEED_ID_TO_NUMBER = {
     "AP_25470390492155550569": 99,
     "AP_63817042129706456211": 100,
 }
+
+
+def find_seed_subdir(project_root: str, preset_dir: str, seed_id: str) -> str:
+    """Find the actual seed subdirectory name under frontend/presets/{preset_dir}/.
+
+    The exporter appends a suffix to the directory based on world placement flags:
+      - no suffix  → standard preset
+      - _c         → canonical placement (worldgen worlds built with --canonical-seed)
+      - _vc        → vanilla + canonical placement
+      - _v         → vanilla placement only
+
+    Returns the matching subdirectory name, or seed_id unchanged if not found
+    (so the caller's subsequent file-not-found error surfaces naturally).
+
+    Callers that may have a None seed_id should guard: ``find_seed_subdir(...) if seed_id else seed_id``
+    """
+    presets_path = os.path.join(project_root, 'frontend', 'presets', preset_dir)
+    # Exact match first (standard presets, no suffix)
+    if os.path.isdir(os.path.join(presets_path, seed_id)):
+        return seed_id
+    # Known suffix variants in priority order
+    for suffix in ('_c', '_vc', '_v'):
+        candidate = seed_id + suffix
+        if os.path.isdir(os.path.join(presets_path, candidate)):
+            return candidate
+    # Fall back to bare seed_id so the caller's error message is informative
+    return seed_id
 
 
 def get_seed_number(seed_id: str) -> Optional[int]:

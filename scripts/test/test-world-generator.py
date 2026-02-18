@@ -37,7 +37,7 @@ from lib.test_utils import (
     extract_game_name_from_template,
     load_template_exclude_list,
 )
-from lib.seed_utils import get_seed_id as compute_seed_id
+from lib.seed_utils import get_seed_id as compute_seed_id, find_seed_subdir
 
 # Global world mapping cache - built once and reused
 _world_mapping: Dict[str, Dict] = {}
@@ -347,7 +347,8 @@ def run_spoiler_test(
         seed_id = compute_seed_id(seed)
 
     game_dir = get_world_directory_for_template(template_name, project_root)
-    preset_dir = f"presets/{game_dir}/{seed_id}"
+    seed_subdir = find_seed_subdir(project_root, game_dir, seed_id)
+    preset_dir = f"presets/{game_dir}/{seed_subdir}"
 
     # Run the spoiler test using npm test
     cmd = [
@@ -623,7 +624,7 @@ def run_test_world_tests(
 
         original_rules_path = os.path.join(
             project_root, 'frontend', 'presets', original_game_dir,
-            seed_id, f'{seed_id}_rules.json'
+            find_seed_subdir(project_root, original_game_dir, seed_id), f'{seed_id}_rules.json'
         )
         # Use the actual rules path from seed generation (accounts for _c/_v suffixes)
         worldgen_rules_path = gen_result.get('rules_path', '')
@@ -631,7 +632,7 @@ def run_test_world_tests(
             test_game_dir = get_world_directory_for_template(test_template_name, project_root)
             worldgen_rules_path = os.path.join(
                 project_root, 'frontend', 'presets', test_game_dir,
-                seed_id, f'{seed_id}_rules.json'
+                find_seed_subdir(project_root, test_game_dir, seed_id), f'{seed_id}_rules.json'
             )
 
         comparison_result = run_rules_comparison(
@@ -671,7 +672,7 @@ def run_test_world_tests(
 
             original_sphere_log = os.path.join(
                 project_root, 'frontend', 'presets', original_game_dir,
-                seed_id, f'{seed_id}_sphere_log.jsonl'
+                find_seed_subdir(project_root, original_game_dir, seed_id), f'{seed_id}_sphere_log.jsonl'
             )
             # Use the actual sphere log path from seed generation (accounts for _c/_v suffixes)
             test_sphere_log = gen_result.get('sphere_log_path', '')
@@ -679,7 +680,7 @@ def run_test_world_tests(
                 test_game_dir = get_world_directory_for_template(test_template_name, project_root)
                 test_sphere_log = os.path.join(
                     project_root, 'frontend', 'presets', test_game_dir,
-                    seed_id, f'{seed_id}_sphere_log.jsonl'
+                    find_seed_subdir(project_root, test_game_dir, seed_id), f'{seed_id}_sphere_log.jsonl'
                 )
 
             if os.path.exists(original_sphere_log) and os.path.exists(os.path.dirname(test_sphere_log)):
@@ -1081,11 +1082,11 @@ def main():
 
                         original_sphere_log = os.path.join(
                             project_root, 'frontend', 'presets', original_game_dir,
-                            seed_id, f'{seed_id}_sphere_log.jsonl'
+                            find_seed_subdir(project_root, original_game_dir, seed_id), f'{seed_id}_sphere_log.jsonl'
                         )
                         test_sphere_log = os.path.join(
                             project_root, 'frontend', 'presets', test_game_dir,
-                            seed_id, f'{seed_id}_sphere_log.jsonl'
+                            find_seed_subdir(project_root, test_game_dir, seed_id), f'{seed_id}_sphere_log.jsonl'
                         )
 
                         if os.path.exists(original_sphere_log) and os.path.exists(os.path.dirname(test_sphere_log)):

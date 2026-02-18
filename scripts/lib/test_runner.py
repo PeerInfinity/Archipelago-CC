@@ -18,7 +18,7 @@ import shutil
 import time
 from datetime import datetime, timezone
 from typing import Dict, List
-from .seed_utils import get_seed_id as compute_seed_id
+from .seed_utils import get_seed_id as compute_seed_id, find_seed_subdir
 
 # Import from the utility modules
 from .test_utils import (
@@ -31,6 +31,7 @@ from .test_utils import (
     parse_multiclient_test_results,
     parse_playwright_analysis
 )
+
 
 
 def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiclient: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
@@ -209,7 +210,9 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     # Use world_directory from world_info if available,
     # otherwise fall back to game_name_from_filename
     preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
-    rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
+    # Resolve the actual subdirectory name (may have _c or _vc suffix for canonical/vanilla worlds)
+    seed_subdir = find_seed_subdir(project_root, preset_dir, seed_id)
+    rules_path = f"./presets/{preset_dir}/{seed_subdir}/{seed_id}_rules.json"
     full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
 
     # If player parameter is specified and generation just completed, remap player IDs in the rules file
@@ -330,7 +333,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         # If test failed, print diagnostic info
         if test_return_code != 0:
             # Check if .archipelago file exists at expected path
-            expected_arch_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}.archipelago')
+            expected_arch_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_subdir, f'{seed_id}.archipelago')
             if os.path.exists(expected_arch_path):
                 print(f"DEBUG: .archipelago file exists at: {expected_arch_path}")
                 print(f"DEBUG: .archipelago file size: {os.path.getsize(expected_arch_path)} bytes")
@@ -340,7 +343,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
                 preset_path = os.path.join(project_root, 'frontend', 'presets', preset_dir)
                 if os.path.exists(preset_path):
                     print(f"DEBUG: Preset directory contents: {os.listdir(preset_path)}")
-                    seed_path = os.path.join(preset_path, seed_id)
+                    seed_path = os.path.join(preset_path, seed_subdir)
                     if os.path.exists(seed_path):
                         print(f"DEBUG: Seed directory contents: {os.listdir(seed_path)}")
                 else:
@@ -460,7 +463,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         # Read total spheres from sphere_log.jsonl file
         # Use preset_dir (world_directory) instead of game_name for correct path
-        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}_sphere_log.jsonl')
+        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_subdir, f'{seed_id}_sphere_log.jsonl')
         total_spheres = count_total_spheres(sphere_log_path)
         result['spoiler_test']['total_spheres'] = total_spheres
 
@@ -470,26 +473,26 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
     # Get rules file size
     # Use preset_dir (world_directory) instead of game_name for correct path
-    rules_file_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}_rules.json')
+    rules_file_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_subdir, f'{seed_id}_rules.json')
     try:
         if os.path.exists(rules_file_path):
             file_size_bytes = os.path.getsize(rules_file_path)
             file_size_mb = round(file_size_bytes / (1024 * 1024), 2)
             result['rules_file'] = {
-                'path': f'frontend/presets/{preset_dir}/{seed_id}/{seed_id}_rules.json',
+                'path': f'frontend/presets/{preset_dir}/{seed_subdir}/{seed_id}_rules.json',
                 'size_bytes': file_size_bytes,
                 'size_mb': file_size_mb
             }
         else:
             result['rules_file'] = {
-                'path': f'frontend/presets/{preset_dir}/{seed_id}/{seed_id}_rules.json',
+                'path': f'frontend/presets/{preset_dir}/{seed_subdir}/{seed_id}_rules.json',
                 'size_bytes': 0,
                 'size_mb': 0.0,
                 'note': 'File not found'
             }
     except OSError:
         result['rules_file'] = {
-            'path': f'frontend/presets/{preset_dir}/{seed_id}/{seed_id}_rules.json',
+            'path': f'frontend/presets/{preset_dir}/{seed_subdir}/{seed_id}_rules.json',
             'size_bytes': 0,
             'size_mb': 0.0,
             'note': 'Error reading file size'
@@ -1127,7 +1130,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
 
         # Read total spheres from sphere_log.jsonl file
         # For multiworld, there's a single sphere_log file with data for all players
-        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
+        mw_seed_subdir = find_seed_subdir(project_root, 'multiworld', seed_id) if seed_id else seed_id
+        sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', mw_seed_subdir,
                                        f'{seed_id}_sphere_log.jsonl')
         total_spheres = count_total_spheres(sphere_log_path, player_num=player_num)
 
@@ -1437,7 +1441,8 @@ def test_template_multiworld_bisect(template_file: str, templates_dir: str, proj
 
             # Read total spheres from sphere_log.jsonl file
             if seed_id:
-                sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
+                mw_seed_subdir = find_seed_subdir(project_root, 'multiworld', seed_id)
+                sphere_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', mw_seed_subdir,
                                                f'{seed_id}_sphere_log.jsonl')
                 total_spheres = count_total_spheres(sphere_log_path, player_num=player_num)
 
@@ -1521,10 +1526,11 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
     # Get world info
     world_info = get_world_info(template_file, templates_dir, world_mapping)
     preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
+    seed_subdir = find_seed_subdir(project_root, preset_dir, seed_id)
 
     # Paths to the generated files
-    rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
-    sphere_log_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_sphere_log.jsonl"
+    rules_path = f"./presets/{preset_dir}/{seed_subdir}/{seed_id}_rules.json"
+    sphere_log_path = f"./presets/{preset_dir}/{seed_subdir}/{seed_id}_sphere_log.jsonl"
     full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
     full_sphere_log_path = os.path.join(project_root, 'frontend', sphere_log_path.lstrip('./'))
 

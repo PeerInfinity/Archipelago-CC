@@ -3,6 +3,12 @@ Utility functions for chart generation.
 """
 
 import os
+import sys
+from pathlib import Path
+
+# Add scripts directory to path so we can import from lib
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from lib.seed_utils import find_seed_subdir
 
 
 def format_file_size(size_bytes: int) -> str:
@@ -25,11 +31,12 @@ def get_rules_json_size(project_root: str, world_directory: str) -> int:
         File size in bytes, or 0 if file doesn't exist
     """
     # Seed 1 always produces this seed ID
-    seed_id = "14089154938208861744"
+    seed_id = "AP_14089154938208861744"
+    seed_subdir = find_seed_subdir(project_root, world_directory, seed_id)
     rules_path = os.path.join(
         project_root,
         'frontend', 'presets', world_directory,
-        f'AP_{seed_id}', f'AP_{seed_id}_rules.json'
+        seed_subdir, f'{seed_id}_rules.json'
     )
     try:
         return os.path.getsize(rules_path)
