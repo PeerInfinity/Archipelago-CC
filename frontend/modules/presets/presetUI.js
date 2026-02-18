@@ -177,10 +177,8 @@ export class PresetUI {
         group.hasMultiworld = true;
         group.primaryGameData = gameData;
       } else {
-        // Prefer the directory whose seeds aren't all vanilla as the primary
-        // so the test results badge reflects the main (non-vanilla) game.
-        const allVanilla = Object.values(gameData.folders || {}).every(f => f.is_vanilla);
-        if (!allVanilla) {
+        // Prefer the directory that has test_results for the test badge.
+        if (gameData.test_results) {
           group.primaryGameData = gameData;
         }
       }
