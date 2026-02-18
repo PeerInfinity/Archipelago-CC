@@ -20,7 +20,6 @@ from .call_visitor import CallVisitorMixin
 
 
 class ASTVisitorMixin(
-    BaseVisitorMixin,
     PatternDetectionMixin,
     ExpressionVisitorMixin,
     OperatorVisitorMixin,

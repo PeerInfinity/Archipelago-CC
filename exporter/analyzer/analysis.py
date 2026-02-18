@@ -10,6 +10,7 @@ import inspect
 import json
 import logging
 import traceback
+import types
 from typing import Optional, Callable, Dict, Any, Tuple
 
 from .rule_analyzer import RuleAnalyzer
@@ -81,7 +82,7 @@ def reset_analyze_rule_counter():
     _analyze_rule_call_count = 0
 
 
-def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
+def analyze_rule(rule_func: Optional[Callable[..., Any]] = None,
                  closure_vars: Optional[Dict[str, Any]] = None,
                  seen_funcs: Optional[Dict[int, int]] = None,
                  ast_node: Optional[ast.AST] = None,
@@ -121,7 +122,7 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         )
 
 
-def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
+def _analyze_rule_impl(rule_func: Optional[Callable[..., Any]] = None,
                        closure_vars: Optional[Dict[str, Any]] = None,
                        seen_funcs: Optional[Dict[int, int]] = None,
                        ast_node: Optional[ast.AST] = None,
@@ -154,7 +155,7 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
             # Bound methods (e.g. region.CanEnter) are ephemeral: each attribute access
             # creates a new object whose id is reused after GC. Use (instance_id, func_id)
             # instead so the cache key stays stable as long as the instance is alive.
-            if inspect.ismethod(rule_func):
+            if isinstance(rule_func, types.MethodType):
                 identity_cache_key = (id(rule_func.__self__), id(rule_func.__func__))
             else:
                 identity_cache_key = id(rule_func)
@@ -235,8 +236,8 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
             except Exception as clo_err:
                 logging.warning(f"Error extracting closure variables: {clo_err}")
 
-            # Add 'self' to the local copy if needed
-            if hasattr(rule_func, '__self__') and 'self' not in local_closure_vars:
+            # Add 'self' to the local copy if needed (bound methods only)
+            if isinstance(rule_func, types.MethodType) and 'self' not in local_closure_vars:
                 local_closure_vars['self'] = rule_func.__self__
                 logging.debug("Added 'self' to local closure vars from method binding.")
 

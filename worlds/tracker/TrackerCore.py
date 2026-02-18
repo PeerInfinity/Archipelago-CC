@@ -23,7 +23,7 @@ import json
 import logging
 import os
 from collections import Counter
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import Any, Dict, List, Optional
 
 from BaseClasses import CollectionState, LocationProgressType, ItemClassification
 from . import CurrentTrackerState, UT_VERSION, DeferredEntranceMode
@@ -32,9 +32,6 @@ from .worldgen_mixin import WorldgenMixin
 from .pickle_mixin import PickleMixin
 from .tracker_extensions import TrackerTestingMixin
 from Utils import __version__
-
-if TYPE_CHECKING:
-    from BaseClasses import MultiWorld
 
 
 # Cache for tracking-mode-config to avoid repeated file reads
@@ -295,7 +292,7 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         if config:
             # Config-based fallback order
             fallback_order = config.get('fallback_order', ['worldgen', 'pickle', 'original'])
-            passing_modes = self._get_passing_modes_for_game(self.game, config)
+            passing_modes = self._get_passing_modes_for_game(self.game or "", config)
 
             self._log_debug("config_based_tracking", {
                 "fallback_order": fallback_order,

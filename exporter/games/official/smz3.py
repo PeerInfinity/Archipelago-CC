@@ -115,9 +115,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         return item_data
 
-    def post_process_location_data(
-        self, location_data: Dict[str, Any], location_name: str,
-        region_name: str = None, world: Any = None
+    def post_process_location_data(  # type: ignore[override]
+        self, location_data: Dict[str, Any], location_name: Optional[str] = None,
+        region_name: Optional[str] = None, world: Any = None
     ) -> Dict[str, Any]:
         """
         Post-process location data to fix advancement flags on placed items.

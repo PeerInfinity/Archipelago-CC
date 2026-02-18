@@ -8,9 +8,10 @@ like modules, functions, conditionals, loops, and statements.
 import ast
 import logging
 from typing import Any, Dict, Optional
+from .base import BaseVisitorMixin
 
 
-class ControlFlowVisitorMixin:
+class ControlFlowVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing visitor methods for control flow nodes.
 
@@ -224,6 +225,8 @@ class ControlFlowVisitorMixin:
                 logging.debug(f"BoolOp values count: {len(node.value.values)}")
 
             # Visit the return value and return its result
+            if node.value is None:
+                return None
             return self.visit(node.value)
         except Exception as e:
             logging.error(f"Error in visit_Return: {e}")
@@ -811,6 +814,8 @@ class ControlFlowVisitorMixin:
             if body_var == expected_var:
                 # Direct assignment in body
                 body_value_ast = get_assign_value_ast(if_node.body)
+                if body_value_ast is None:
+                    return None, False
                 if_true_result = self.visit(body_value_ast)
                 if if_true_result is None:
                     return None, False
@@ -840,6 +845,8 @@ class ControlFlowVisitorMixin:
                     if else_var != expected_var:
                         return None, False
                     else_value_ast = get_assign_value_ast(if_node.orelse)
+                    if else_value_ast is None:
+                        return None, False
                     if_false_result = self.visit(else_value_ast)
                     if if_false_result is None:
                         return None, False

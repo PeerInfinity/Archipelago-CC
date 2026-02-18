@@ -2,7 +2,7 @@
 
 import re
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from ..base import GenericGameExportHandler
 
 logger = logging.getLogger(__name__)
@@ -498,7 +498,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return settings
 
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str, connected_region: str = None) -> Dict[str, Any]:
+    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str = None, connected_region: str = None) -> Dict[str, Any]:  # type: ignore[override]
         """
         Postprocess entrance access rules to resolve variable references.
 

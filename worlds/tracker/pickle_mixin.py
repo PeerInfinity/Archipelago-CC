@@ -278,9 +278,9 @@ class PickleMixin:
         self.logger.debug("No valid pickle file found")
         return False
 
-    def _log_debug(self, event: str, data: dict = None):
+    def _log_debug(self, event_type: str, data: dict = None):
         """Helper to log debug events. Override in subclass if needed."""
         if hasattr(super(), '_log_debug'):
-            super()._log_debug(event, data)
+            super()._log_debug(event_type, data)
         else:
-            self.logger.debug(f"{event}: {data}")
+            self.logger.debug(f"{event_type}: {data}")
