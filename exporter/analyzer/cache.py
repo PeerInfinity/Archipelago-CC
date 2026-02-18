@@ -6,7 +6,7 @@ and AST parsing during rule analysis.
 """
 
 import ast
-from typing import Dict, Tuple, Optional, Any
+from typing import Any, Dict, Optional, Tuple
 
 # Module-level caches
 file_content_cache: Dict[str, str] = {}  # Raw file content as strings
@@ -26,12 +26,14 @@ unparsed_lambda_cache: Dict[Tuple[str, int], Optional[str]] = {}
 parameterless_func_cache: Dict[Tuple[str, int], Dict[str, Any]] = {}
 
 # Cache for closure function analysis results by function identity
-# Key: id(func) for the exact function object
+# Key: id(func) for regular functions, or (id(instance), id(func.__func__)) for bound methods.
+# Bound methods are ephemeral objects whose id can be reused after GC, so we use the
+# stable (instance_id, method_id) pair instead.
 # This caches results for functions with closures, where the same object
 # will always have the same closure values (unlike parameterless_func_cache
 # which caches by source location). This is especially important for
 # entrance shuffle which creates deeply nested add_rule chains.
-closure_func_identity_cache: Dict[int, Dict[str, Any]] = {}
+closure_func_identity_cache: Dict[Any, Dict[str, Any]] = {}
 
 
 def clear_caches():

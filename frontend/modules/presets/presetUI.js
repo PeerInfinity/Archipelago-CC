@@ -158,23 +158,51 @@ export class PresetUI {
         </div>
     `;
 
-    // Process each game
+    // Group preset directories by display name so that variants sharing the same
+    // game name (e.g. "alttp" and "alttp_vanilla", both named "A Link to the Past")
+    // appear as a single row. Seeds from vanilla directories get a V badge.
+    // Each group tracks: primaryGameData (for test results), seeds[], hasMultiworld.
+    const nameGroups = new Map();
+
     Object.entries(this.presets).forEach(([gameDirectory, gameData]) => {
-      // Skip metadata entry
       if (gameDirectory === 'metadata') return;
-      
-      // Create a section for each game
-      html += `
-        <div class="game-row">
-          <h4 class="game-name">${this.escapeHtml(gameData.name)}</h4>
-      `;
+
+      const name = gameData.name;
+      if (!nameGroups.has(name)) {
+        nameGroups.set(name, { primaryGameData: gameData, seeds: [], hasMultiworld: false });
+      }
+      const group = nameGroups.get(name);
 
       if (gameDirectory === 'multiworld') {
+        group.hasMultiworld = true;
+        group.primaryGameData = gameData;
+      } else {
+        // Prefer the directory that has test_results for the test badge.
+        if (gameData.test_results) {
+          group.primaryGameData = gameData;
+        }
+      }
+
+      Object.entries(gameData.folders || {}).forEach(([seedName, folderData]) => {
+        group.seeds.push({ gameDirectory, seedName, folderData });
+      });
+    });
+
+    // Render each name group as one game-row
+    nameGroups.forEach((group, name) => {
+      const { primaryGameData, seeds, hasMultiworld } = group;
+
+      html += `
+        <div class="game-row">
+          <h4 class="game-name">${this.escapeHtml(name)}</h4>
+      `;
+
+      if (hasMultiworld) {
         // Special layout for multiworld - block format
         html += `</div>`; // Close the inline game-row
         html += `<div class="multiworld-container">`;
         html += `<div class="multiworld-seeds">`;
-        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
+        seeds.forEach(({ gameDirectory, seedName, folderData }) => {
           html += `<div class="multiworld-seed-block">`;
           html += `<span class="seed-number">Seed: ${this.escapeHtml(
             folderData.seed
@@ -206,36 +234,28 @@ export class PresetUI {
       } else {
         // Standard layout for single-player games
         html += `<div class="game-presets">`;
-        Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
-          const placementBadges = this.renderPlacementBadges(folderData);
-          const hasPlacement = folderData.is_vanilla || folderData.is_canonical;
-          const placementParts = [];
-          if (folderData.is_vanilla) placementParts.push('vanilla');
-          if (folderData.is_canonical) placementParts.push('canonical');
-          const placementTitle = hasPlacement
-            ? `Seed ${folderData.seed} (${placementParts.join(' + ')} placement)`
-            : `Seed ${folderData.seed}`;
+        seeds.forEach(({ gameDirectory, seedName, folderData }) => {
+          const isVanilla = !!folderData.is_vanilla;
+          const vanillaBadge = isVanilla
+            ? `<span class="placement-badge placement-vanilla" title="Vanilla placement">V</span>`
+            : '';
           html += `
-            <button class="preset-button${hasPlacement ? ' has-placement-type' : ''}"
+            <button class="preset-button"
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.description || placementTitle
+                      folderData.description || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.seed)}${placementBadges}
+              ${this.escapeHtml(folderData.seed)}${vanillaBadge}
             </button>
           `;
         });
         html += `</div>`; // Close game-presets
-        // Add test badge for single-player games
-        html += this.renderTestResultBadge(gameData);
+        html += this.renderTestResultBadge(primaryGameData);
       }
 
-      // Close the game section (only for non-multiworld)
-      if (gameDirectory !== 'multiworld') {
-        html += `
-          </div>
-        `;
+      if (!hasMultiworld) {
+        html += `</div>`; // Close game-row
       }
     });
 
@@ -466,14 +486,6 @@ export class PresetUI {
           background-color: rgba(156, 39, 176, 0.3);
           border: 1px solid rgba(156, 39, 176, 0.6);
           color: #ce93d8;
-        }
-        .placement-canonical {
-          background-color: rgba(33, 150, 243, 0.3);
-          border: 1px solid rgba(33, 150, 243, 0.6);
-          color: #90caf9;
-        }
-        .preset-button.has-placement-type {
-          border-color: rgba(255, 255, 255, 0.2);
         }
       </style>
     `;
@@ -1060,17 +1072,6 @@ export class PresetUI {
         `;
       }
     }
-  }
-
-  renderPlacementBadges(folderData) {
-    let badges = '';
-    if (folderData.is_vanilla) {
-      badges += `<span class="placement-badge placement-vanilla" title="Vanilla: original game item placement">V</span>`;
-    }
-    if (folderData.is_canonical) {
-      badges += `<span class="placement-badge placement-canonical" title="Canonical: deterministic item placement">C</span>`;
-    }
-    return badges;
   }
 
   renderTestResultBadge(gameData) {

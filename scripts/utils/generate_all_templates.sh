@@ -227,7 +227,7 @@ gen_vanilla_seed() {
 gen_vanilla_worldgen_world() {
   local preset_dir="${VANILLA_PRESET_DIR[$1]}"
   run_world_generator \
-    "frontend/presets/${preset_dir}/AP_14089154938208861744_v/AP_14089154938208861744_rules.json" \
+    "frontend/presets/${preset_dir}_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
     "worlds/${preset_dir}_vanilla_worldgen" "${1} Vanilla WorldGen"
 }
 
@@ -235,7 +235,7 @@ gen_vanilla_worldgen_world() {
 gen_vanilla_worldgen2_world() {
   local preset_dir="${VANILLA_PRESET_DIR[$1]}"
   run_world_generator \
-    "frontend/presets/${preset_dir}_vanilla_worldgen/AP_14089154938208861744_vc/AP_14089154938208861744_rules.json" \
+    "frontend/presets/${preset_dir}_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
     "worlds/${preset_dir}_vanilla_worldgen2" "${1} Vanilla WorldGen2"
 }
 
@@ -243,7 +243,7 @@ gen_vanilla_worldgen2_world() {
 gen_worldgen2_world() {
   local preset_dir="${WORLDGEN2_PRESET_DIR[$1]}"
   run_world_generator \
-    "frontend/presets/${preset_dir}_worldgen/AP_14089154938208861744_c/AP_14089154938208861744_rules.json" \
+    "frontend/presets/${preset_dir}_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
     "worlds/${preset_dir}_worldgen2" "${1} WorldGen2"
 }
 

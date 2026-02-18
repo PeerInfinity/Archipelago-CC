@@ -31,7 +31,12 @@ Bug fixes for ALttP's `set_bunny_rules()` function:
 
 These bugs caused superbunny access rules to always evaluate to `True` in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `world-init-files.diff` (472 lines)
+### 4. `world-minor-fixes.diff` (24 lines)
+Minor fixes to upstream world files that improve output consistency without changing game behavior:
+- **worlds/lufia2ac/Options.py** - Changed `Boss.extra_options` from `set(random_groups)` to `list(random_groups)` so that `enumerate()` in `AssembleCustomizableChoices.__new__` assigns stable integer keys to the random group names. Without this, set iteration order is non-deterministic, causing the `boss` option's `name_lookup` to map different integers to different group names on each run, producing inconsistent JSON export output.
+- **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
+
+### 5. `world-init-files.diff` (472 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -64,6 +69,7 @@ To apply these changes to a fresh upstream checkout:
 # From repository root
 git apply docs/json/developer/diffs/core-files.diff
 git apply docs/json/developer/diffs/config-files.diff
+git apply docs/json/developer/diffs/world-minor-fixes.diff
 git apply docs/json/developer/diffs/world-init-files.diff
 ```
 
@@ -86,7 +92,7 @@ These are not included in the diff files since they are temporary.
 ## Notes
 
 - These diffs are designed for Archipelago **0.6.7**, originally generated against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
-- Total lines changed across all diffs: 829 lines (155 + 175 + 27 + 472)
+- Total lines changed across all diffs: 853 lines (155 + 175 + 27 + 24 + 472)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)

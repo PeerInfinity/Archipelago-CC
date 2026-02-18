@@ -68,8 +68,9 @@ class RainWorldGameExportHandler(GenericGameExportHandler):
                     logger.debug(f"Extracted Compound condition config from '{name}': {config}")
 
         # Also check the rule_func's __self__ attribute if it's a bound method
+        import types as _types
         if rule_func is not None:
-            if hasattr(rule_func, '__self__'):
+            if isinstance(rule_func, _types.MethodType):
                 bound_self = rule_func.__self__
                 if self._is_simple_condition(bound_self):
                     config = self._extract_simple_config(bound_self)

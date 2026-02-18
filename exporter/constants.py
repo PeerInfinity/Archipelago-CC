@@ -67,6 +67,7 @@ SAFE_TO_SORT_KEYS = {
     'exclude_locations',
     'goal',
     'move_rando_actions',
+    'StartingRecipies',  # Satisfactory: set iteration order is non-deterministic
 }
 
 # Keys where sorting dict keys is safe (key order is not semantically meaningful).
@@ -74,6 +75,11 @@ SAFE_TO_SORT_KEYS = {
 # (e.g., set iteration in original world code) but the order has no semantic meaning.
 SAFE_TO_SORT_DICT_KEYS = {
     'item_classification_overrides',
+    'ter_goals',  # Terraria: built from set iteration order
+    'added_hint_types',       # OOT: keys inserted via set iteration over hint_dist_keys
+    'item_added_hint_types',  # OOT: keys inserted via set iteration over hint_dist_keys
+    'hint_type_overrides',    # OOT: keys inserted via set iteration over hint_dist_keys
+    'item_hint_type_overrides',  # OOT: keys inserted via set iteration over hint_dist_keys
     'PARENT_ITEM_COUNT_PER_BASE_ITEM',  # The Witness
     'PROGRESSIVE_LISTS',  # The Witness
 }

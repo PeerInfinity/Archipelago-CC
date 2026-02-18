@@ -8,9 +8,10 @@ like world.options access, multiworld subscripts, etc.
 import ast
 import logging
 from typing import Any, Dict, Optional, Set, Tuple
+from .base import BaseVisitorMixin
 
 
-class PatternDetectionMixin:
+class PatternDetectionMixin(BaseVisitorMixin):
     """
     Mixin containing pattern detection helper methods.
 
@@ -309,11 +310,10 @@ class PatternDetectionMixin:
             return None
 
         # Get the key from the outer subscript slice
-        key = None
-        if isinstance(node.slice, ast.Constant):
+        if isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, str):
+            key: str = node.slice.value
+        elif isinstance(node.slice, ast.Str) and isinstance(node.slice.value, str):  # Python 3.7 compatibility
             key = node.slice.value
-        elif isinstance(node.slice, ast.Str):  # Python 3.7 compatibility
-            key = node.slice.s
         else:
             return None
 
@@ -381,10 +381,10 @@ class PatternDetectionMixin:
             return None
 
         first_arg = node.args[0]
-        if isinstance(first_arg, ast.Constant):
+        if isinstance(first_arg, ast.Constant) and isinstance(first_arg.value, str):
             return first_arg.value
-        elif isinstance(first_arg, ast.Str):  # Python 3.7 compatibility
-            return first_arg.s
+        elif isinstance(first_arg, ast.Str) and isinstance(first_arg.value, str):  # Python 3.7 compatibility
+            return first_arg.value
 
         return None
 

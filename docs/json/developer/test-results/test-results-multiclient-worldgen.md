@@ -8,104 +8,94 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2026-02-18 00:34:49 UTC
+**Generated:** 2026-02-17 22:08:47 UTC
 
-**Source Data Created:** 2026-02-18T00:23:11.961940+00:00
+**Source Data Created:** 2026-01-08T06:08:52.393092
 
-**Source Data Last Updated:** 2026-02-18T00:23:11.961951+00:00
+**Source Data Last Updated:** 2026-01-08T06:08:52.393099
 
 ## Summary
 
-- **Total Games:** 74
-- **Passed:** 0 (0.0%)
-- **Failed:** 74 (100.0%)
+- **Total Games:** 64
+- **Passed:** 56 (87.5%)
+- **Failed:** 8 (12.5%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 0/0
-- **Passing with Generic Logic:** 0/0
-- **Passing with Both Generic:** 0/0
+- **Passing with Generic Exporter:** 56/56 (100.0% of passed)
+- **Passing with Generic Logic:** 56/56 (100.0% of passed)
+- **Passing with Both Generic:** 56/56 (100.0% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Hat in Time WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Link to the Past Vanilla WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Link to the Past WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Link to the Past WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Short Hike WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| A Short Hike WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| APQuest WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Adventure WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Adventure WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Aquaria WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Baking Adventure Vanilla WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Baking Adventure WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Bumper Stickers WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Castlevania - Circle of the Moon WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Castlevania 64 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Celeste 64 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| ChecksFinder WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Choo-Choo Charles WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Civilization VI WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Coding Adventure Vanilla WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Coding Adventure WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| DLCQuest WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| DOOM 1993 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| DOOM II WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Dark Souls III WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Donkey Kong Country 3 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| EarthBound WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Factorio WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Faxanadu WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Final Fantasy Mystic Quest WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Heretic WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Hylics 2 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Inscryption WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Links Awakening DX WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Lufia II Ancient Cave WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Mario & Luigi Superstar Saga WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Math Adventure Vanilla WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Math Adventure Vanilla WorldGen2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Math Adventure WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Mega Man 2 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| MegaMan Battle Network 3 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Meritous WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Metamath WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Muse Dash WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Noita WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Old School Runescape WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Overcooked! 2 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Paint WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Risk of Rain 2 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Satisfactory WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Saving Princess WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Shivers WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Sonic Adventure 2 Battle WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Subnautica WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Super Mario 64 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Super Mario Land 2 WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Super Mario World WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| TOEM original WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| TOEM rule builder WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Terraria WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| The Legend of Zelda WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| The Messenger WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| The Wind Waker WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Timespinner WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Undertale WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| VVVVVV WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Wargroove WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Yoshi's Island WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| shapez WorldGen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
+| A Hat in Time WorldGen | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | ✅ | ✅ |
+| A Hat in Time WorldGen2 | ❌ Failed | 0 | ❌ | 197/232 | 189/223 | 8/9 | ❌ | 195/232 | ✅ | ✅ |
+| A Link to the Past WorldGen | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 17/17 | ✅ | 268/268 | ✅ | ✅ |
+| A Link to the Past WorldGen2 | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 17/17 | ✅ | 268/268 | ✅ | ✅ |
+| A Short Hike WorldGen | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
+| A Short Hike WorldGen2 | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
+| APQuest WorldGen | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
+| Adventure WorldGen | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
+| Adventure WorldGen2 | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
+| Aquaria WorldGen | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | ✅ | ✅ |
+| Baking Adventure WorldGen | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
+| Bumper Stickers WorldGen | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | ✅ | ✅ |
+| Castlevania 64 WorldGen | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | ✅ | ✅ |
+| Celeste 64 WorldGen | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | ✅ | ✅ |
+| ChecksFinder WorldGen | ✅ Passed | 0 | ✅ | 25/25 | 25/25 | 0/0 | ✅ | 25/25 | ✅ | ✅ |
+| Choo-Choo Charles WorldGen | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
+| Civilization VI WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | ✅ | ✅ |
+| Coding Adventure WorldGen | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
+| DLCQuest WorldGen | ❌ Failed | 1 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | ✅ | ✅ |
+| DOOM 1993 WorldGen | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
+| DOOM II WorldGen | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
+| Dark Souls III WorldGen | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | ✅ | ✅ |
+| Donkey Kong Country 3 WorldGen | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
+| Factorio WorldGen | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | ✅ | ✅ |
+| Faxanadu WorldGen | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | ✅ | ✅ |
+| Heretic WorldGen | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
+| Hylics 2 WorldGen | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
+| Inscryption WorldGen | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | ✅ | ✅ |
+| Links Awakening DX WorldGen | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | ✅ | ✅ |
+| Lufia II Ancient Cave WorldGen | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
+| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | ✅ | ✅ |
+| Math Adventure WorldGen | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
+| Mega Man 2 WorldGen | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | ✅ | ✅ |
+| MegaMan Battle Network 3 WorldGen | ❌ Failed | 1 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | ✅ | ✅ |
+| Meritous WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
+| Metamath WorldGen | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
+| Muse Dash WorldGen | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
+| Noita WorldGen | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
+| Old School Runescape WorldGen | ❌ Failed | 1 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | ✅ | ✅ |
+| Overcooked! 2 WorldGen | ❌ Failed | 1 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | ✅ | ✅ |
+| Paint WorldGen | ❌ Failed | 1 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | ✅ | ✅ |
+| Risk of Rain 2 WorldGen | ❌ Failed | 1 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
+| Saving Princess WorldGen | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
+| Shivers WorldGen | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
+| Sonic Adventure 2 Battle WorldGen | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
+| Subnautica WorldGen | ❌ Failed | 1 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | ✅ | ✅ |
+| Super Mario 64 WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
+| Super Mario Land 2 WorldGen | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
+| Super Mario World WorldGen | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
+| TOEM original WorldGen | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
+| TOEM rule builder WorldGen | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
+| Terraria WorldGen | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | ✅ | ✅ |
+| The Legend of Zelda WorldGen | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
+| The Messenger WorldGen | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | ✅ | ✅ |
+| The Wind Waker WorldGen | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | ✅ | ✅ |
+| Timespinner WorldGen | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | ✅ | ✅ |
+| Undertale WorldGen | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
+| VVVVVV WorldGen | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | ✅ | ✅ |
+| Wargroove WorldGen | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
+| Yoshi's Island WorldGen | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | ✅ | ✅ |
+| shapez WorldGen | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
 

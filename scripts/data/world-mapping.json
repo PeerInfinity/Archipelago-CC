@@ -738,7 +738,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/official/kh2.py",
-    "exporter_size": 20000,
+    "exporter_size": 20774,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Kingdom Hearts 2",
@@ -1397,12 +1397,12 @@
     "world_directory": "sm"
   },
   "TOEM original": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/toem_original.py",
+    "exporter_size": 624,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "TOEM original",
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "template_file": "TOEM original.yaml",
     "world_directory": "toem_original"
@@ -1419,12 +1419,12 @@
     "world_directory": "toem_original_worldgen"
   },
   "TOEM rule builder": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/toem_rule_builder.py",
+    "exporter_size": 552,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "TOEM rule builder",
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "template_file": "TOEM rule builder.yaml",
     "world_directory": "toem_rule_builder"

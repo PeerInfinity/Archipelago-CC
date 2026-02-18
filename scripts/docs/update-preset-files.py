@@ -379,8 +379,13 @@ def update_preset_files_with_all_test_data(preset_files: Dict[str, Any], all_tes
 
 
 def find_game_in_preset_files(expected_game_name: str, preset_files: Dict[str, Any]) -> str:
-    """Find a game in preset_files by name, with fuzzy matching fallback."""
-    # First try exact match on name field
+    """Find a game in preset_files by name, with fuzzy matching fallback.
+
+    When multiple directories share the same name (e.g. alttp and alttp_vanilla),
+    prefers the non-vanilla directory so test results are attached to the main entry.
+    """
+    # Collect all exact matches, then prefer non-vanilla directories
+    exact_matches = []
     for game_id, game_data in preset_files.items():
         if game_id == 'metadata':
             continue
@@ -389,9 +394,15 @@ def find_game_in_preset_files(expected_game_name: str, preset_files: Dict[str, A
 
         preset_game_name = game_data.get('name', '')
         if preset_game_name == expected_game_name:
-            return game_id
+            exact_matches.append(game_id)
 
-    # Try case-insensitive fuzzy matching as fallback
+    if exact_matches:
+        # Prefer directories whose game_id does not contain '_vanilla'
+        non_vanilla = [gid for gid in exact_matches if '_vanilla' not in gid]
+        return non_vanilla[0] if non_vanilla else exact_matches[0]
+
+    # Try case-insensitive fuzzy matching as fallback, same preference
+    fuzzy_matches = []
     for game_id, game_data in preset_files.items():
         if game_id == 'metadata':
             continue
@@ -402,7 +413,11 @@ def find_game_in_preset_files(expected_game_name: str, preset_files: Dict[str, A
         if (preset_game_name.lower() == expected_game_name.lower() or
             preset_game_name.lower().replace(':', '').replace(' ', '') ==
             expected_game_name.lower().replace(':', '').replace(' ', '')):
-            return game_id
+            fuzzy_matches.append(game_id)
+
+    if fuzzy_matches:
+        non_vanilla = [gid for gid in fuzzy_matches if '_vanilla' not in gid]
+        return non_vanilla[0] if non_vanilla else fuzzy_matches[0]
 
     return None
 

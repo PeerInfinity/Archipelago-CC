@@ -7,23 +7,68 @@ used by all AST visitor mixins.
 
 import ast
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..expression_resolver import ExpressionResolver
+    from ..binary_ops import BinaryOpProcessor
 
 
-class BaseVisitorMixin:
+class BaseVisitorMixin(ast.NodeVisitor):
     """
     Base mixin containing core infrastructure for AST visitors.
 
     This class provides helper registration methods used across
-    all visitor methods.
+    all visitor methods.  It also inherits from ast.NodeVisitor so that
+    Pyright knows the full set of methods available when individual mixins
+    reference self.visit / self.generic_visit.
 
-    Required attributes from parent class:
-        - closure_vars: Dict of closure variables
-        - game_handler: Game-specific handler
+    Attributes declared below (TYPE_CHECKING only) are provided at runtime
+    by RuleAnalyzer, which is the concrete class that composes all mixins.
     """
 
+    # -------------------------------------------------------------------------
+    # Shared state – provided by RuleAnalyzer, declared here for type checkers.
+    # -------------------------------------------------------------------------
+    if TYPE_CHECKING:
+        closure_vars: Dict[str, Any]
+        seen_funcs: Dict[int, int]
+        game_handler: Optional[Any]
+        rule_func: Optional[Callable]
+        player_context: Optional[int]
+        preserve_parameter_names: bool
+        rule_target_name: Optional[str]
+        target_type: Optional[str]
+        expression_resolver: 'ExpressionResolver'
+        binary_op_processor: 'BinaryOpProcessor'
+        evaluate_dict_methods: bool
+        walrus_assignments: Dict[str, Any]
+
+        # Cross-mixin method stubs: defined in other mixin classes but used
+        # throughout the composition.  Declared here so type checkers see them.
+        def _detect_param_mappings_from_call_site(
+            self, helper_name: str, func: Any, args_with_nodes: List[Any]
+        ) -> Optional[Dict[str, Any]]: ...
+
+        def _is_world_options_pattern(self, node: ast.Attribute) -> Optional[str]: ...
+        def _is_region_parameter_attribute(
+            self, node: ast.Attribute,
+            region_param_names: Optional[Set[str]] = None
+        ) -> Tuple[Optional[str], Optional[str]]: ...
+        def _is_world_player_subscript(self, node: ast.AST) -> bool: ...
+        def _is_world_attribute_subscript_pattern(self, node: ast.AST) -> Tuple[Optional[str], Any]: ...
+        def _is_prog_items_pattern(self, node: ast.AST) -> Optional[str]: ...
+        def _is_world_attribute_chain(self, obj_result: Any) -> bool: ...
+        def _substitute_variable_in_rule(
+            self, rule: Dict[str, Any], var_name: str, value: Any
+        ) -> Optional[Dict[str, Any]]: ...
+
+    # -------------------------------------------------------------------------
+    # Methods
+    # -------------------------------------------------------------------------
+
     def _register_helper_usage(self, helper_name: str, helper_func: Any = None,
-                                args_with_nodes: List[Any] = None) -> None:
+                                args_with_nodes: Optional[List[Any]] = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 

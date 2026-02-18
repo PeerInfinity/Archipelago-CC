@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-02-18 00:34:49 UTC
+**Generated:** 2026-02-17 22:08:47 UTC
 
 **Source Data Created:** 2026-02-17T19:18:07.485623+00:00
 
@@ -123,7 +123,7 @@ Of the 67 templates passing all 4 tests:
 | Pokemon Red and Blue | ❌ Failed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 12.1KB | 13.0KB | 1270.1KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 145.0KB |
-| SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 53.9KB | 51.3KB | 1668.9KB |
+| SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 53.9KB | 51.3KB | 1659.3KB |
 | Satisfactory | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 41.6KB | ✅ | 1618.9KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 7.5KB | 414.9KB |
@@ -162,7 +162,7 @@ Of the 67 templates passing all 4 tests:
 | 1 | Hollow Knight | 3500.0KB |
 | 2 | Blasphemous | 2760.7KB |
 | 3 | Stardew Valley | 2407.6KB |
-| 4 | SMZ3 | 1668.9KB |
+| 4 | SMZ3 | 1659.3KB |
 | 5 | Kingdom Hearts 2 | 1634.7KB |
 | 6 | Satisfactory | 1618.9KB |
 | 7 | Pokemon Emerald | 1350.0KB |

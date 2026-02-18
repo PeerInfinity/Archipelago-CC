@@ -8,9 +8,10 @@ like tuples, lists, sets, and dictionaries.
 import ast
 import logging
 from typing import Any, Dict
+from .base import BaseVisitorMixin
 
 
-class DataStructureVisitorMixin:
+class DataStructureVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing visitor methods for data structure nodes.
 

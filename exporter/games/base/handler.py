@@ -109,6 +109,12 @@ class BaseGameExportHandler(
     # When True, closure variables are recursively analyzed and inlined for complex rule logic
     RECURSIVELY_ANALYZE_CLOSURES: bool = True
 
+    # Whether to sort region locations by name for deterministic output.
+    # When False (default), locations appear in the order they were added to region.locations.
+    # When True, locations within each region are sorted by name before export.
+    # Use this for games where locations are added via set iteration (non-deterministic order).
+    SORT_REGION_LOCATIONS_BY_NAME: bool = False
+
     # Whether to export Choice options as numeric values or string keys
     # When True (default), Choice options are exported as integers (e.g., 0, 1, 2)
     #   - Enables proper ordered comparisons (< > <= >=) in JavaScript
@@ -676,6 +682,70 @@ class BaseGameExportHandler(
                 logger.warning(f"Could not import module {module_path} for closure injection: {e}")
 
         return enhanced_closure
+
+    # ==========================================================================
+    # Optional hook methods (overridden by game-specific handlers)
+    # Default implementations are no-ops or pass-throughs.
+    # ==========================================================================
+
+    def postprocess_helper(self, helper_name: str, helper_def: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process a helper definition. Override to modify helpers before export."""
+        return helper_def
+
+    def postprocess_regions(self, multiworld: Any, player: int) -> None:
+        """Called before region extraction. Override to modify regions."""
+
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
+        """Handle complex entrance rules. Return None to fall back to normal analysis."""
+        return None
+
+    def postprocess_entrance_rule(
+        self, rule: Dict[str, Any],
+        entrance_name: str = None, connected_region: str = None  # type: ignore[assignment]
+    ) -> Dict[str, Any]:
+        """Post-process an entrance rule. Override to modify rules after analysis."""
+        return rule
+
+    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process a rule. Override to modify rules after analysis."""
+        return rule
+
+    def set_context(self, location_name: Optional[str]) -> None:
+        """Set the current location context. Override to track location state."""
+
+    def set_exit_context(self, exit_name: Optional[str]) -> None:
+        """Set the current exit context. Override to track exit state."""
+
+    def set_exit_info(self, exit_name: str, connected_region: str) -> None:
+        """Set exit connection info. Override to track exit/region relationships."""
+
+    def get_unwrapped_exit_lambda(self, exit_name: Optional[str], original_lambda: Any) -> Optional[Any]:
+        """Get unwrapped exit lambda. Return None to use the original."""
+        return None
+
+    def set_location_context(self, location_name: Optional[str]) -> None:
+        """Set the current location context. Override to track location state."""
+
+    def get_custom_location_access_rule(self, location: Any, world: Any) -> Optional[Dict[str, Any]]:
+        """Get custom access rule for a location. Return None to use normal analysis."""
+        return None
+
+    def post_process_location_data(
+        self, location_data: Dict[str, Any], location_name: Optional[str] = None,
+        region_name: Optional[str] = None, world: Any = None
+    ) -> Dict[str, Any]:
+        """Post-process location data before adding to region. Override to modify data."""
+        return location_data
+
+    def get_extra_locations_for_region(
+        self, region_name: str, existing_locations: List[str]
+    ) -> List[Dict[str, Any]]:
+        """Get extra locations for a region not generated in this seed."""
+        return []
+
+    def get_item_type_for_name(self, item_name: str, world: Any) -> Optional[str]:
+        """Get the item type for an item name. Return None for default handling."""
+        return None
 
     # ==========================================================================
     # Static utility methods (delegated to utilities module)

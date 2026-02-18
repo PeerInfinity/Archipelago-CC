@@ -465,7 +465,7 @@ class WorldgenMixin:
             self.rules_json_path = json_path
 
             # Extract generation seed if present
-            self.generation_seed = self.rules_json_data.get('seed')
+            self.generation_seed = self.rules_json_data.get('generation_seed')
 
             self.logger.info(f"Loaded rules JSON from: {json_path}")
             self._log_debug("load_rules_json", {

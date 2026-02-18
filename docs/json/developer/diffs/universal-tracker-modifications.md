@@ -57,10 +57,15 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
 
 ### Tracking Mode Priority
 
-TrackerCore tries tracking modes in order:
-1. **Pickle mode** - Fastest, loads serialized multiworld with exact lambdas
-2. **Worldgen mode** - Generates world from JSON rules
-3. **YAML mode** - Original UT behavior (native game integration)
+TrackerCore supports four tracking modes, tried in order. See the [UT Tracking Modes Reference](../reference/ut-tracking-modes.md) for full details on each mode and its limitations.
+
+**Legacy order (no config file):**
+1. **Pickle** - Fastest, loads serialized multiworld with exact lambdas
+2. **Worldgen** - Generates world from JSON rules
+3. **Original Seeded** - Original UT YAML-based regeneration with the resolved seed number injected for determinism (reverse lookup covers seeds 1–100 only)
+4. **Original (YAML)** - Original upstream UT behavior with a random internal seed
+
+When `exporter/tracking-mode-config.json` is present, the order is driven by its `fallback_order` key and per-game `game_results`.
 
 ### Benefits
 

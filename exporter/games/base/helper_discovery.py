@@ -302,7 +302,7 @@ class HelperDiscoveryMixin:
                         method = getattr(self.world, helper_name)
                         if callable(method):
                             # Get the underlying function from the bound method
-                            helper_func = method.__func__ if hasattr(method, '__func__') else method
+                            helper_func = getattr(method, '__func__', method)
                             logger.debug(f"Found helper '{helper_name}' as method on World class")
 
                 # Check if we have a cached definition (from auto-preservation due to size)

@@ -514,7 +514,6 @@ def get_world_directory_name(game_name: str) -> str:
         if os.path.exists(mapping_file):
             try:
                 with open(mapping_file, 'r', encoding='utf-8') as f:
-                    import json
                     mapping = json.load(f)
                     if game_name in mapping:
                         world_dir = mapping[game_name].get('world_directory')
@@ -531,7 +530,6 @@ def get_world_directory_name(game_name: str) -> str:
         if os.path.exists(unofficial_mapping_file):
             try:
                 with open(unofficial_mapping_file, 'r', encoding='utf-8') as f:
-                    import json
                     mapping = json.load(f)
                     if game_name in mapping:
                         world_dir = mapping[game_name].get('world_directory')
@@ -1517,7 +1515,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         
         # If it has a value attribute (like an enum might), use that
         if hasattr(type_obj, 'value'):
-            return type_obj.value
+            return getattr(type_obj, 'value')
         
         # Try to extract value if it's in the format "Type(1)"
         str_rep = str(type_obj)
@@ -1673,7 +1671,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     # Try special handling first for complex entrance rules
                                     # (e.g., LADX which uses custom entrance classes with condition attributes)
                                     if game_handler and hasattr(game_handler, 'handle_complex_entrance_rule'):
-                                        special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)
+                                        special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)  # type: ignore[arg-type]
                                         if special_rule:
                                             expanded_rule = game_handler.expand_rule(special_rule)
                                             # Resolve any attribute nodes in item_check rules
@@ -1699,10 +1697,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                         if 'connected_region' in params:
                                             # Use new signature with connected_region
                                             connected_region_name = getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None
-                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name, connected_region_name)
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name, connected_region_name)  # type: ignore[arg-type]
                                         else:
                                             # Use old signature
-                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)  # type: ignore[arg-type]
                                     # Also call general postprocess_rule if available
                                     # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
                                     elif (expanded_rule and game_handler and
@@ -1740,7 +1738,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Set full exit info for handlers that need connected_region (e.g., Lingo worldgen)
                                 connected_region = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
-                                if game_handler and hasattr(game_handler, 'set_exit_info'):
+                                if game_handler and exit_name is not None and connected_region is not None:
                                     game_handler.set_exit_info(exit_name, connected_region)
 
                                 if hasattr(exit, 'access_rule') and exit.access_rule is not None:
@@ -1755,7 +1753,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                     # Try special handling first for complex exit rules
                                     if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
-                                        special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)
+                                        special_rule = game_handler.handle_complex_exit_rule(exit_name, rule_to_analyze)  # type: ignore[arg-type]
                                         if special_rule:
                                             expanded_rule = game_handler.expand_rule(special_rule)
                                             # Resolve any attribute nodes in item_check rules
@@ -1781,10 +1779,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             if 'connected_region' in params:
                                                 # Pass connected_region for games that need it (e.g., Lingo)
                                                 connected_region_name = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
-                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name, connected_region_name)
+                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name, connected_region_name)  # type: ignore[arg-type]
                                             else:
                                                 # Use old signature for games that don't need connected_region
-                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
+                                                expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)  # type: ignore[arg-type]
                                         # Also call general postprocess_rule if available
                                         # Skip postprocessing for Rule Builder format (has 'rule' key instead of 'type')
                                         elif (expanded_rule and game_handler and
@@ -1958,6 +1956,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             region_data['locations'].extend(extra_locations)
                     except Exception as e:
                         logger.error(f"Error getting extra locations for region '{region.name}': {str(e)}")
+
+                # Sort locations by name if requested by the game handler
+                # Used for games where locations are added via set iteration (non-deterministic order)
+                if game_handler and getattr(game_handler, 'SORT_REGION_LOCATIONS_BY_NAME', False):
+                    region_data['locations'].sort(key=lambda loc: loc.get('name', ''))
 
                 # Auto-mark regions with no locations and no exits as dynamically_added
                 # These are structural regions that exist for navigation but have no content
@@ -2846,6 +2849,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Create game-specific directory
         game_dir = os.path.join(presets_dir, clean_game_name)
 
+        # If this world has vanilla placements and the game directory doesn't already
+        # include "_vanilla" (e.g. alttp_vanilla_worldgen already has it), route it to
+        # a dedicated {game}_vanilla directory instead of the standard game directory.
+        if cleaned_data.get('is_vanilla') and '_vanilla' not in clean_game_name:
+            clean_game_name = f"{clean_game_name}_vanilla"
+            game_dir = os.path.join(presets_dir, clean_game_name)
+
         # Clear current game's presets if requested (and not already cleared by clear_all_presets)
         if clear_game_presets and not clear_all_presets and os.path.exists(game_dir):
             for item in os.listdir(game_dir):
@@ -2879,16 +2889,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
         os.makedirs(game_dir, exist_ok=True)
 
-        # Compute placement suffix for preset directory name
-        placement_suffix = ''
-        if cleaned_data.get('is_vanilla'):
-            placement_suffix += 'v'
-        if cleaned_data.get('is_canonical'):
-            placement_suffix += 'c'
-        preset_folder_name = f"{filename_base}_{placement_suffix}" if placement_suffix else filename_base
-
         # Create a folder for this specific preset
-        preset_dir = os.path.join(game_dir, preset_folder_name)
+        preset_dir = os.path.join(game_dir, filename_base)
 
         # --- Check if preset update is needed ---
         needs_update = True 
@@ -3011,7 +3013,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             if cleaned_data.get('is_canonical'):
                 folder_entry["is_canonical"] = True
 
-            preset_index[clean_game_name]["folders"][preset_folder_name] = folder_entry
+            preset_index[clean_game_name]["folders"][filename_base] = folder_entry
             
             # Write updated index
             try:
