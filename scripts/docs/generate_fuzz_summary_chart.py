@@ -144,20 +144,34 @@ def extract_spoiler_fuzz_results(results: Dict[str, Any]) -> Dict[str, Dict[str,
 
 
 def format_result_cell(result: Optional[Dict[str, Any]]) -> str:
-    """Format a result as a table cell."""
+    """Format a result as a table cell.
+
+    Rate = success / (success + failure), ignoring timeouts.
+    100% -> ✅, 0% -> ❌, in between -> fraction with indicator.
+    Spoiler fuzz uses generation_failure + test_failure as the failure count.
+    """
     if result is None:
         return "—"
 
     if result['passed']:
         return "✅"
+
+    success = result.get('success', 0)
+    failure = result.get('failure', result.get('generation_failure', 0) + result.get('test_failure', 0))
+    counted = success + failure
+
+    if counted == 0:
+        return "❌"
+
+    rate = success / counted * 100
+    if rate == 0.0:
+        return "❌"
+    elif rate >= 90:
+        return f"⚠️ {success}/{counted}"
+    elif rate >= 50:
+        return f"🔶 {success}/{counted}"
     else:
-        rate = result['success_rate']
-        if rate >= 90:
-            return f"⚠️ {rate:.0f}%"
-        elif rate >= 50:
-            return f"🔶 {rate:.0f}%"
-        else:
-            return f"❌ {rate:.0f}%"
+        return f"❌ {success}/{counted}"
 
 
 def generate_fuzz_summary_markdown(
@@ -380,10 +394,11 @@ def generate_fuzz_summary_markdown(
 
     # Notes section
     md_content += "\n## Notes\n\n"
-    md_content += "- **✅:** All fuzz runs passed (100% success rate)\n"
-    md_content += "- **⚠️ X%:** Most runs passed (90-99% success rate)\n"
-    md_content += "- **🔶 X%:** Some runs passed (50-89% success rate)\n"
-    md_content += "- **❌ X%:** Most runs failed (<50% success rate)\n"
+    md_content += "- **✅:** All fuzz runs passed\n"
+    md_content += "- **⚠️ X/Y:** Most runs passed (90-99%, shown as passes/total)\n"
+    md_content += "- **🔶 X/Y:** Some runs passed (50-89%, shown as passes/total)\n"
+    md_content += "- **❌ X/Y:** Most runs failed (<50%, shown as passes/total)\n"
+    md_content += "- **❌:** No runs passed\n"
     md_content += "- **—:** No test results available for this game\n"
     md_content += "- **Rules Size:** File size of rules.json for seed 1\n\n"
 

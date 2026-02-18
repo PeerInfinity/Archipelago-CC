@@ -284,6 +284,10 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |\n"
         md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|\n"
 
+    # Build mapping from game display name -> template filename for exclude check
+    game_to_template = {k: v.get('template_file', '') for k, v in (world_mapping or {}).items()}
+    excluded_template_files = set(excluded_games.keys()) if excluded_games else set()
+
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
         full_result = games_full.get(game, "N/A")
@@ -343,10 +347,13 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             else:
                 return "❌ Failed"
 
+        template_file = game_to_template.get(game, game + '.yaml')
+        game_display = f"*{game}*" if template_file in excluded_template_files else game
+
         if multiworld_data is not None:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+            md_content += f"| {game_display} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
         else:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+            md_content += f"| {game_display} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
 
     # Add Largest Rules Files section
     if project_root and world_mapping:
@@ -436,6 +443,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             md_content += f"| {game} | {reason} |\n"
 
     md_content += "\n## Notes\n\n"
+    if excluded_games:
+        md_content += "- *Italic game names* are in the exclude list for this test type\n"
     md_content += "- **[Minimal Test](./test-results-spoilers-minimal.md):** Tests the game using only advancement items\n"
     md_content += "- **[Full Test](./test-results-spoilers-full.md):** Tests the game using all locations\n"
     md_content += "- **[Multiclient Test](./test-results-multiclient.md):** Tests the game in multiclient mode (send/receive)\n"

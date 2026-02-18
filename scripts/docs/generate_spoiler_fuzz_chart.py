@@ -16,7 +16,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, cast
 
 # Add parent directory to path to import from chart_generators and lib
 sys.path.insert(0, str(Path(__file__).parent))
@@ -128,9 +128,9 @@ def extract_spoiler_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, A
 def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                     metadata: Dict[str, Any],
                                     world_mapping: Dict[str, Dict[str, Any]],
-                                    project_root: str = None,
+                                    project_root: Optional[str] = None,
                                     world_source: str = "bundled",
-                                    excluded_games: Dict[str, str] = None) -> str:
+                                    excluded_games: Optional[Dict[str, str]] = None) -> str:
     """
     Generate a markdown table for spoiler fuzz test data.
 
@@ -198,6 +198,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     for data in chart_data:
         game_name = data['game_name']
+        template_file = data.get('template_file', '')
+        game_display = f"*{game_name}*" if excluded_games and template_file in excluded_games else game_name
         world_dir = data.get('world_directory')
 
         passed = data['passed']
@@ -228,7 +230,7 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
             if rules_size > 0:
                 rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
-        md_content += f"| {game_name} | {result_display} | {total} | {success} | {gen_failure} | {test_failure} | {timeout} | {rate_display} | {rules_size_indicator} |\n"
+        md_content += f"| {game_display} | {result_display} | {total} | {success} | {gen_failure} | {test_failure} | {timeout} | {rate_display} | {rules_size_indicator} |\n"
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
@@ -243,6 +245,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"| {game} | {reason} |\n"
 
     md_content += "\n## Notes\n\n"
+    if excluded_games:
+        md_content += "- *Italic game names* are in the exclude list for this test type\n"
     md_content += "- **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise\n"
     md_content += "- **Total:** Number of fuzz runs attempted for this game\n"
     md_content += "- **Success:** Number of runs where spoiler test completed successfully\n"
@@ -325,10 +329,10 @@ def main():
     # Load exclude lists
     # For bundled games: use 'main' (same as test-all-templates.py)
     # For apworlds: use 'ut_fuzz_apworld'
-    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
+    excluded_list_bundled = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True))
     excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
 
-    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
+    excluded_list_apworld = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld'))
     excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
 
     # Output directory
