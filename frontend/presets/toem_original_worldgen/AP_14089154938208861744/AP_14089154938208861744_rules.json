@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "TOEM original",
-  "game_directory": "toem_original",
+  "game_name": "TOEM original WorldGen",
+  "game_directory": "toem_original_worldgen",
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
@@ -3950,7 +3950,6 @@
       },
       "Jamal Green - Photo of Home": {
         "name": "Jamal Green - Photo of Home",
-        "hint_text": "Jamal Green   Photo of Home",
         "id": 136,
         "groups": [
           "CASETTE",
@@ -3959,11 +3958,11 @@
         ],
         "classification": "filler",
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Jamal Green   Photo of Home"
       },
       "Launchable Socks - Squirrel Photography": {
         "name": "Launchable Socks - Squirrel Photography",
-        "hint_text": "Launchable Socks   Squirrel Photography",
         "id": 137,
         "groups": [
           "CASETTE",
@@ -3972,7 +3971,8 @@
         ],
         "classification": "filler",
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "Launchable Socks   Squirrel Photography"
       },
       "TOEM Experienced": {
         "name": "TOEM Experienced",
@@ -3991,6 +3991,7 @@
     "1": [
       "Basto",
       "CASETTE",
+      "Event",
       "Everything",
       "Homelanda",
       "Item",
@@ -4104,7 +4105,165 @@
     }
   },
   "canonical_placements": {
-    "1": {}
+    "1": {
+      "Casette - Jamal Green - Photo of Home": "Fj\u00e4llbj\u00f6rn hat",
+      "Compendium - Beehive": "Oaklaville stamp",
+      "Compendium - Cow": "Oaklaville stamp",
+      "Compendium - Dragonfly": "Oaklaville stamp",
+      "Compendium - Forest bird": "Oaklaville stamp",
+      "Compendium - Home bird": "Oaklaville stamp",
+      "Compendium - Jellyfish": "Oaklaville stamp",
+      "Compendium - Ladybug": "Oaklaville stamp",
+      "Compendium - Squirrel": "Oaklaville stamp",
+      "Compendium - Sunday swan": "Oaklaville stamp",
+      "Item - Climbing boots": "Oaklaville stamp",
+      "Item - Lost sock": "Oaklaville stamp",
+      "Item - Pirate hat": "Oaklaville stamp",
+      "Quest - Hide-and-seek": "Oaklaville stamp",
+      "Quest - Ice wizard's research": "Oaklaville stamp",
+      "Quest - Snowball memories": "Oaklaville stamp",
+      "Compendium - Flies": "Tato photo",
+      "Compendium - Tato": "Tato ski photo",
+      "Item - Clogs": "Homelanda stamp",
+      "Quest - A good spot with no sun": "Homelanda stamp",
+      "Quest - Power shortage?!": "Homelanda stamp",
+      "Casette - Launchable Socks - Squirrel Photography": "Logcity stamp",
+      "Compendium - Crab": "Logcity stamp",
+      "Compendium - Hedgehog": "Logcity stamp",
+      "Compendium - Nestworm": "Logcity stamp",
+      "Item - Camera": "Logcity stamp",
+      "Item - Old key": "Logcity stamp",
+      "Item - Ski goggles": "Logcity stamp",
+      "Quest - A layered melody": "Logcity stamp",
+      "Quest - Always tumbled granny": "Logcity stamp",
+      "Quest - Ancient paintings": "Logcity stamp",
+      "Quest - Art exhibition": "Logcity stamp",
+      "Quest - Assemble a snowman": "Logcity stamp",
+      "Quest - Become a paparazzi": "Logcity stamp",
+      "Quest - Log blocking a path": "Logcity stamp",
+      "Quest - Photo challenge #4": "Logcity stamp",
+      "Quest - Sewer stumble!": "Logcity stamp",
+      "Quest - Suspicious activity - harbor": "Logcity stamp",
+      "Quest - The king of fishes": "Logcity stamp",
+      "Item - Backpack": "Tom photo",
+      "Quest - Experience TOEM": "Clogs",
+      "Quest - A hidden gift": "Snow bird photo",
+      "Compendium - Seahorse": "Stanhamn stamp",
+      "Compendium - Tato alien": "Stanhamn stamp",
+      "Compendium - Tato ski": "Stanhamn stamp",
+      "Compendium - Toad": "Stanhamn stamp",
+      "Item - Hotbean hat": "Stanhamn stamp",
+      "Item - Monster mask": "Stanhamn stamp",
+      "Item - Photo challenger flag": "Stanhamn stamp",
+      "Item - Space helmet": "Stanhamn stamp",
+      "Item - Supreme deluxe sandwich": "Stanhamn stamp",
+      "Quest - Become a flower": "Stanhamn stamp",
+      "Quest - Birthday in distress": "Stanhamn stamp",
+      "Quest - Cleaning away the stress": "Stanhamn stamp",
+      "Quest - Photo challenge #7": "Stanhamn stamp",
+      "Quest - Queen of paper hats": "Stanhamn stamp",
+      "Quest - Take a photo of Nana!": "Stanhamn stamp",
+      "Quest - Young and inspiring!": "Stanhamn stamp",
+      "Compendium - Butterfly": "Seagull photo",
+      "Compendium - Pet rock": "Owl photo",
+      "Compendium - Mouse": "Kiiruberg stamp",
+      "Compendium - Portillo": "Kiiruberg stamp",
+      "Compendium - Punky parrot": "Kiiruberg stamp",
+      "Compendium - Seagull": "Kiiruberg stamp",
+      "Compendium - Stag beetle": "Kiiruberg stamp",
+      "Compendium - Tato fly": "Kiiruberg stamp",
+      "Item - Frames & filters": "Kiiruberg stamp",
+      "Item - Ghost glasses": "Kiiruberg stamp",
+      "Item - Scarf": "Kiiruberg stamp",
+      "Item - Tripod": "Kiiruberg stamp",
+      "Quest - Hotel chef": "Kiiruberg stamp",
+      "Quest - Photo challenge #2": "Kiiruberg stamp",
+      "Quest - Press-ing news": "Kiiruberg stamp",
+      "Compendium - Sero": "Supreme deluxe sandwich",
+      "Compendium - Tato bug": "Nestworm photo",
+      "Compendium - Tom": "Paper hat",
+      "Compendium - Ant": "Dragonfly photo",
+      "Compendium - Oskar": "Squirrel photo",
+      "Compendium - Snail": "Tato alien photo",
+      "Item - Soaked sock": "Mountain goat photo",
+      "Item - Fj\u00e4llbj\u00f6rn hat": "Tato tourist photo",
+      "Item - Foam finger": "Oskar photo",
+      "Item - Cowboy hat": "Puffer hat",
+      "Quest - Photo challenge #1": "Scarf",
+      "Quest - Become a scout": "Fr\u00e4s photo",
+      "Quest - Ghost helper!": "Diving helmet",
+      "Quest - Monster spotting": "Ant photo",
+      "Quest - A courageous stallion": "Fia photo",
+      "Quest - Cup champion": "Monster mask",
+      "Quest - Suspicious activity - forest": "Climbing boots",
+      "Quest - Capture the hotel's beauty": "Mouse photo",
+      "Quest - Missing socks": "Rubber boots",
+      "Compendium - Fia": "Pirate hat",
+      "Compendium - Happy carp": "Hedgehog photo",
+      "Compendium - King fish": "Punky parrot photo",
+      "Compendium - Bubble fly": "Nariko photo",
+      "Compendium - Fr\u00e4s": "Snail photo",
+      "Compendium - Willemijn": "Honk attachment",
+      "Compendium - Tato swim": "Happy carp photo",
+      "Compendium - Tato scuba": "Fishing hat",
+      "Item - Hard hat": "King fish photo",
+      "Item - Rubber boots": "Frisbee",
+      "Item - Paper hat": "Sneakers",
+      "Item - Fishing hat": "Jellyfish photo",
+      "Item - Diving helmet": "Hard hat",
+      "Item - Honk attachment": "Cowboy hat",
+      "Item - Umbrella": "Muddy camera",
+      "Item - Fisherman's whisle": "Hotbean hat",
+      "Quest - A lost dog": "Soaked sock",
+      "Quest - Solve the chaos": "Willemijn photo",
+      "Quest - Scorching flame?": "Meteopal photo",
+      "Quest - A whistling dilemma": "Seahorse photo",
+      "Quest - Supreme deluxe sandwich?!": "Jamal Green - Photo of Home",
+      "Quest - Frames & filters!": "Turtle photo",
+      "Quest - Photo challenge #3": "Camera",
+      "Quest - Ocean garbage": "Fisherman's whisle",
+      "Quest - Make someone take a bath": "Tato bug photo",
+      "Compendium - Pigeon": "Tato scuba photo",
+      "Compendium - Tato tourist": "Tripod",
+      "Compendium - Business pigeon": "Forest bird photo",
+      "Compendium - Turtle": "Cinnamon bun",
+      "Compendium - Tato skateboard": "Beehive photo",
+      "Item - Sneakers": "Reporter hat",
+      "Item - Cinnamon bun": "Pet rock photo",
+      "Item - Reporter hat": "Butterfly photo",
+      "Item - Muddy camera": "Bubble fly photo",
+      "Item - Frisbee": "Tato skateboard photo",
+      "Quest - A mouse bakery": "Tato fly photo",
+      "Quest - Hang in there, buddy": "Backpack",
+      "Quest - Spooky scary city": "Umbrella",
+      "Quest - Photo challenge #6": "Home bird photo",
+      "Quest - Ratskullz crew": "Flies photo",
+      "Quest - Super Hotbean Bros.": "Lost sock",
+      "Quest - Photo challenge #5": "Frames & filters",
+      "Quest - A design problem": "Space helmet",
+      "Quest - Punk rocker bread crumbs": "Teddy photo",
+      "Quest - A ghostly date": "Photo challenger flag",
+      "Quest - Suspicious activity - city": "Foam finger",
+      "Quest - A thieving crow": "Portillo photo",
+      "Compendium - Meteopal": "Business pigeon photo",
+      "Compendium - Mik\u00e9e": "Tato swim photo",
+      "Compendium - Owl": "Cosmo deer photo",
+      "Compendium - Nariko": "Ski goggles",
+      "Compendium - Teddy": "Launchable Socks - Squirrel Photography",
+      "Compendium - Fluff ball": "Ghost glasses",
+      "Compendium - Snow bird": "Sero photo",
+      "Compendium - Cosmo deer": "Cow photo",
+      "Compendium - Mountain goat": "Sunday swan photo",
+      "Item - Puffer hat": "Fluff ball photo",
+      "Quest - Locating an asteroid": "Mik\u00e9e photo",
+      "Quest - Yeti cuteness": "Ladybug photo",
+      "Quest - Play astronaut": "Crab photo",
+      "Quest - Listen to the goat choir": "Pigeon photo",
+      "Quest - Military suspicions": "Old key",
+      "Quest - Become a yeti": "Toad photo",
+      "Quest - Photo challenge #8": "Stag beetle photo",
+      "TOEM Experienced": "TOEM Experienced"
+    }
   },
   "progression_mapping": {
     "1": {}
@@ -4114,8 +4273,9 @@
   },
   "world": {
     "1": {
-      "game": "TOEM original",
+      "game": "TOEM original WorldGen",
       "world_class_name": "ToemWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -4129,10 +4289,12 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -4171,12 +4333,23 @@
           "default": 50,
           "display_name": "Progression Balancing"
         },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
         "start_inventory_from_pool": {
           "type": "start_inventory_pool",
           "default": {},
           "display_name": "Start Inventory from Pool"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
+      "world_description": "TOEM original WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "slot_data": {
         "version": "0.1.0",
         "options": {
@@ -4201,12 +4374,13 @@
           }
         ]
       },
-      "world_directory": "toem_original"
+      "world_directory": "toem_original_worldgen"
     }
   },
   "exporter": {},
   "game_info": {
     "1": {}
   },
-  "helpers": {}
+  "helpers": {},
+  "is_canonical": true
 }
