@@ -207,22 +207,14 @@ export class PresetUI {
         // Standard layout for single-player games
         html += `<div class="game-presets">`;
         Object.entries(gameData.folders).forEach(([seedName, folderData]) => {
-          const placementBadges = this.renderPlacementBadges(folderData);
-          const hasPlacement = folderData.is_vanilla || folderData.is_canonical;
-          const placementParts = [];
-          if (folderData.is_vanilla) placementParts.push('vanilla');
-          if (folderData.is_canonical) placementParts.push('canonical');
-          const placementTitle = hasPlacement
-            ? `Seed ${folderData.seed} (${placementParts.join(' + ')} placement)`
-            : `Seed ${folderData.seed}`;
           html += `
-            <button class="preset-button${hasPlacement ? ' has-placement-type' : ''}"
+            <button class="preset-button"
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.description || placementTitle
+                      folderData.description || `Seed ${folderData.seed}`
                     )}">
-              ${this.escapeHtml(folderData.seed)}${placementBadges}
+              ${this.escapeHtml(folderData.seed)}
             </button>
           `;
         });
@@ -451,29 +443,6 @@ export class PresetUI {
           border-radius: 8px;
           padding: 16px;
           margin-bottom: 16px;
-        }
-        .placement-badge {
-          display: inline-block;
-          font-size: 0.65em;
-          font-weight: 700;
-          padding: 1px 4px;
-          border-radius: 3px;
-          margin-left: 6px;
-          vertical-align: middle;
-          line-height: 1;
-        }
-        .placement-vanilla {
-          background-color: rgba(156, 39, 176, 0.3);
-          border: 1px solid rgba(156, 39, 176, 0.6);
-          color: #ce93d8;
-        }
-        .placement-canonical {
-          background-color: rgba(33, 150, 243, 0.3);
-          border: 1px solid rgba(33, 150, 243, 0.6);
-          color: #90caf9;
-        }
-        .preset-button.has-placement-type {
-          border-color: rgba(255, 255, 255, 0.2);
         }
       </style>
     `;
@@ -1060,17 +1029,6 @@ export class PresetUI {
         `;
       }
     }
-  }
-
-  renderPlacementBadges(folderData) {
-    let badges = '';
-    if (folderData.is_vanilla) {
-      badges += `<span class="placement-badge placement-vanilla" title="Vanilla: original game item placement">V</span>`;
-    }
-    if (folderData.is_canonical) {
-      badges += `<span class="placement-badge placement-canonical" title="Canonical: deterministic item placement">C</span>`;
-    }
-    return badges;
   }
 
   renderTestResultBadge(gameData) {

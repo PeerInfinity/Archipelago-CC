@@ -2846,6 +2846,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Create game-specific directory
         game_dir = os.path.join(presets_dir, clean_game_name)
 
+        # If this world has vanilla placements and the game directory doesn't already
+        # include "_vanilla" (e.g. alttp_vanilla_worldgen already has it), route it to
+        # a dedicated {game}_vanilla directory instead of the standard game directory.
+        if cleaned_data.get('is_vanilla') and '_vanilla' not in clean_game_name:
+            clean_game_name = f"{clean_game_name}_vanilla"
+            game_dir = os.path.join(presets_dir, clean_game_name)
+
         # Clear current game's presets if requested (and not already cleared by clear_all_presets)
         if clear_game_presets and not clear_all_presets and os.path.exists(game_dir):
             for item in os.listdir(game_dir):
@@ -2879,16 +2886,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
         os.makedirs(game_dir, exist_ok=True)
 
-        # Compute placement suffix for preset directory name
-        placement_suffix = ''
-        if cleaned_data.get('is_vanilla'):
-            placement_suffix += 'v'
-        if cleaned_data.get('is_canonical'):
-            placement_suffix += 'c'
-        preset_folder_name = f"{filename_base}_{placement_suffix}" if placement_suffix else filename_base
-
         # Create a folder for this specific preset
-        preset_dir = os.path.join(game_dir, preset_folder_name)
+        preset_dir = os.path.join(game_dir, filename_base)
 
         # --- Check if preset update is needed ---
         needs_update = True 
@@ -3011,7 +3010,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             if cleaned_data.get('is_canonical'):
                 folder_entry["is_canonical"] = True
 
-            preset_index[clean_game_name]["folders"][preset_folder_name] = folder_entry
+            preset_index[clean_game_name]["folders"][filename_base] = folder_entry
             
             # Write updated index
             try:

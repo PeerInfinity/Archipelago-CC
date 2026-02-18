@@ -1,0 +1,67 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-01-17T22:39:05.139Z",
+  "generatedFrom": "presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+  "regions": {
+    "Menu": {
+      "moveCost": 0
+    },
+    "Overworld": {
+      "moveCost": 50
+    },
+    "BlackCastle": {
+      "moveCost": 60
+    },
+    "BlackCastleVault": {
+      "moveCost": 70
+    },
+    "WhiteCastle": {
+      "moveCost": 37
+    },
+    "WhiteCastleVault": {
+      "moveCost": 75
+    },
+    "YellowCastle": {
+      "moveCost": 80
+    },
+    "CreditsRoom": {
+      "moveCost": 42
+    },
+    "CreditsRoomFarSide": {
+      "moveCost": 85
+    },
+    "WhiteCastlePreVaultPeek": {
+      "moveCost": 37
+    }
+  },
+  "locations": {
+    "Black Castle Gate": 50,
+    "Catacombs": 55,
+    "Black Castle Foyer": 60,
+    "Dungeon1": 65,
+    "Dungeon Vault": 70,
+    "Slay Grundle": 75,
+    "Inside Yellow Castle": 80,
+    "Credits Right Side": 85,
+    "Chalice Home": 95,
+    "Blue Labyrinth 0": 95,
+    "Blue Labyrinth 1": 95,
+    "Adjacent to Catacombs": 95,
+    "Southwest of Catacombs": 95,
+    "White Castle Gate": 95,
+    "Yellow Castle Gate": 95,
+    "Northeast of Catacombs": 95,
+    "Southeast of Catacombs": 95,
+    "Slay Yorgle": 95,
+    "RedMaze0": 95,
+    "RedMaze1": 95,
+    "Red Maze Vault Entrance": 95,
+    "Red Maze Vault": 95,
+    "Dungeon0": 95,
+    "Slay Rhindle": 95,
+    "Credits Left Side": 95
+  },
+  "defaultRegionCost": 10,
+  "defaultLocationCost": 10,
+  "_rulesPath": "presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
+}

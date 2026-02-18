@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-02-14 02:28:13 UTC
+**Generated:** 2026-02-17 22:08:47 UTC
 
 **Source Data Created:** 2026-01-27T22:55:56.684110
 
@@ -56,9 +56,9 @@ Of the 43 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 268.3KB
+- **Total Exporter Code:** 269.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 268.3KB
+- **Combined Total:** 269.6KB
 
 ## Test Results
 
@@ -66,7 +66,7 @@ Of the 43 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | N/A |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | N/A |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.6KB | ✅ | N/A |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | N/A |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -138,8 +138,8 @@ Of the 43 templates passing all 4 tests:
 | 3 | A Hat in Time WorldGen | 18.2KB |
 | 4 | Terraria WorldGen | 16.8KB |
 | 5 | The Messenger WorldGen | 15.2KB |
-| 6 | Final Fantasy Mystic Quest WorldGen | 13.9KB |
-| 7 | A Link to the Past WorldGen | 12.6KB |
+| 6 | A Link to the Past WorldGen | 14.0KB |
+| 7 | Final Fantasy Mystic Quest WorldGen | 13.9KB |
 | 8 | Yoshi's Island WorldGen | 9.2KB |
 | 9 | Factorio WorldGen | 8.8KB |
 | 10 | Inscryption WorldGen | 8.0KB |
