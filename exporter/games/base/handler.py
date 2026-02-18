@@ -109,6 +109,12 @@ class BaseGameExportHandler(
     # When True, closure variables are recursively analyzed and inlined for complex rule logic
     RECURSIVELY_ANALYZE_CLOSURES: bool = True
 
+    # Whether to sort region locations by name for deterministic output.
+    # When False (default), locations appear in the order they were added to region.locations.
+    # When True, locations within each region are sorted by name before export.
+    # Use this for games where locations are added via set iteration (non-deterministic order).
+    SORT_REGION_LOCATIONS_BY_NAME: bool = False
+
     # Whether to export Choice options as numeric values or string keys
     # When True (default), Choice options are exported as integers (e.g., 0, 1, 2)
     #   - Enables proper ordered comparisons (< > <= >=) in JavaScript
