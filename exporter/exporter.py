@@ -1959,6 +1959,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     except Exception as e:
                         logger.error(f"Error getting extra locations for region '{region.name}': {str(e)}")
 
+                # Sort locations by name if requested by the game handler
+                # Used for games where locations are added via set iteration (non-deterministic order)
+                if game_handler and getattr(game_handler, 'SORT_REGION_LOCATIONS_BY_NAME', False):
+                    region_data['locations'].sort(key=lambda loc: loc.get('name', ''))
+
                 # Auto-mark regions with no locations and no exits as dynamically_added
                 # These are structural regions that exist for navigation but have no content
                 if (not region_data.get('dynamically_added') and

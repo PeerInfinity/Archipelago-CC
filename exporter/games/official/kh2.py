@@ -1,5 +1,6 @@
 """Kingdom Hearts 2 specific helper expander."""
 
+import re
 from typing import Dict, Any
 from ..base import GenericGameExportHandler
 import logging
@@ -403,4 +404,18 @@ class KH2GameExportHandler(GenericGameExportHandler):
 
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
+
+    def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
+        """Strip the run-specific timestamp from mod_yml.description for deterministic output.
+
+        KH2's generate_output() embeds the current datetime in mod_yml["description"]
+        (e.g., "... at 18Feb2026-051325 UTC. Have fun!"). Removing it keeps the
+        exported JSON consistent across runs with the same seed.
+        """
+        attrs = super().get_world_attributes(world, multiworld, player)
+        if 'mod_yml' in attrs and isinstance(attrs['mod_yml'], dict):
+            desc = attrs['mod_yml'].get('description', '')
+            if isinstance(desc, str):
+                attrs['mod_yml']['description'] = re.sub(r' at \S+ UTC', '', desc)
+        return attrs
         
