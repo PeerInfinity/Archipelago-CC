@@ -782,7 +782,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/official/lingo.py",
-    "exporter_size": 38929,
+    "exporter_size": 38972,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "game_name": "Lingo",
@@ -1156,7 +1156,7 @@
   },
   "SMZ3": {
     "exporter_path": "exporter/games/official/smz3.py",
-    "exporter_size": 55167,
+    "exporter_size": 55220,
     "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
     "game_logic_size": 52544,
     "game_name": "SMZ3",
