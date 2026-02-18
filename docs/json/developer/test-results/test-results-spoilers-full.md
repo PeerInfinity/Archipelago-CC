@@ -10,11 +10,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-02-17 22:08:47 UTC
+**Generated:** 2026-02-18 21:54:12 UTC
 
-**Source Data Created:** 2026-02-17T19:28:25.224876+00:00
+**Source Data Created:** 2026-02-18T21:01:19.494613+00:00
 
-**Source Data Last Updated:** 2026-02-17T19:28:25.224886+00:00
+**Source Data Last Updated:** 2026-02-18T21:01:19.494621+00:00
 
 ## Summary
 
@@ -26,9 +26,9 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 42/80 (52.5% of passed)
+- **Passing with Generic Exporter:** 40/80 (50.0% of passed)
 - **Passing with Generic Logic:** 70/80 (87.5% of passed)
-- **Passing with Both Generic:** 42/80 (52.5% of passed)
+- **Passing with Both Generic:** 40/80 (50.0% of passed)
 
 ## Test Results
 
@@ -68,10 +68,10 @@
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | 0 | 14.1 | 🔴 0.0% | 21.5KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 19.5KB | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 20.3KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.0KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.1KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
@@ -104,8 +104,8 @@
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 60.9KB | 114.5KB |
-| TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
-| TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
+| TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | 0.6KB | ✅ |
+| TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | 0 | 5.12 | 5.12 | 🟢 Complete | 3.1KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
