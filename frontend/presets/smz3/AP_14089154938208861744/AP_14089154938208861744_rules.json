@@ -159,32 +159,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hammer",
-                          "Hookshot"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mirror"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "AST_region_check",
                   "args": {
-                    "region": "Light World Death Mountain West",
+                    "region": "Dark World North East",
                     "_original_ast_type": "region_check"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "MoonPearl"
+                  }
                 }
               ]
             }
@@ -269,17 +255,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Dark World North West",
-                    "_original_ast_type": "region_check"
-                  },
+                  "rule": "smz3_CanLiftHeavy",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "smz3_CanMeltFreezors",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "MoonPearl"
+                    "items": [
+                      "Flippers",
+                      "MoonPearl"
+                    ]
                   }
                 }
               ]
@@ -448,86 +439,33 @@
             "name": "Menu->Light World Death Mountain West",
             "connected_region": "Light World Death Mountain West",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "attr": "CanAcquireAtLeast"
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "smz3_CanLiftLight",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
-                    "_original_ast_type": "function_call",
-                    "args": [
-                      {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "op": "*",
-                          "right": {
-                            "type": "constant",
-                            "value": 7
-                          }
-                        },
-                        "op": "/",
-                        "right": {
-                          "type": "constant",
-                          "value": 7
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": 480
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lamp"
                       }
-                    ]
-                  },
-                  "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": true
-                      },
-                      "attr": "CanAcquireAtLeast"
-                    },
-                    "_original_ast_type": "function_call",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": 7
-                      },
-                      {
-                        "type": "constant",
-                        "value": 24
-                      }
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Dark World Death Mountain East",
-                    "_original_ast_type": "region_check"
-                  },
+                  "rule": "smz3_CanAccessDeathMountainPortal",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "MoonPearl"
+                    "item_name": "Flute"
                   }
                 }
               ]
@@ -574,37 +512,7 @@
             "name": "Menu->Light World North West",
             "connected_region": "Light World North West",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hammer",
-                          "Mirror"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Light World Death Mountain West",
-                    "_original_ast_type": "region_check"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "True_"
             }
           },
           {

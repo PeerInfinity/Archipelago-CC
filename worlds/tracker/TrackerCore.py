@@ -192,11 +192,9 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             self.logger.debug("seed_utils not available for reverse lookup")
 
         # 2. Try generation_seed from loaded rules JSON
-        if self.rules_json_data:
-            gen_seed = self.rules_json_data.get('generation_seed')
-            if gen_seed is not None:
-                self.logger.info(f"Resolved seed number {gen_seed} from rules JSON generation_seed field")
-                return int(gen_seed)
+        if self.generation_seed is not None:
+            self.logger.info(f"Resolved seed number {self.generation_seed} from rules JSON generation_seed field")
+            return self.generation_seed
 
         self.logger.debug(f"Could not resolve seed number for {seed_id}")
         return None

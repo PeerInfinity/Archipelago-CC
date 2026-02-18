@@ -151,7 +151,13 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
         # This caches by function object identity, important for entrance shuffle
         # which creates deeply nested add_rule chains with the same function objects
         if cache_key is None:
-            identity_cache_key = id(rule_func)
+            # Bound methods (e.g. region.CanEnter) are ephemeral: each attribute access
+            # creates a new object whose id is reused after GC. Use (instance_id, func_id)
+            # instead so the cache key stays stable as long as the instance is alive.
+            if inspect.ismethod(rule_func):
+                identity_cache_key = (id(rule_func.__self__), id(rule_func.__func__))
+            else:
+                identity_cache_key = id(rule_func)
             if identity_cache_key in closure_func_identity_cache:
                 logging.debug(f"analyze_rule: Cache hit for closure function id={identity_cache_key}")
                 return closure_func_identity_cache[identity_cache_key]
