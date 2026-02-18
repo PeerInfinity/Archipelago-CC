@@ -1444,7 +1444,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAll('Small Key (Agahnims Tower)', 'Lamp'))
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAll('Lamp', 'Small Key (Agahnims Tower)'))
     )
 
     world.set_rule(
@@ -1763,12 +1763,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Spike Switch Pot Key", player),
-        HasAll('Small Key (Thieves Town)', 'Moon Pearl')
+        HasAll('Moon Pearl', 'Small Key (Thieves Town)')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Blind's Cell", player),
-        HasAll('Small Key (Thieves Town)', 'Moon Pearl')
+        HasAll('Moon Pearl', 'Small Key (Thieves Town)')
     )
 
     multiworld.get_location("Thieves' Town - Boss", player).access_rule = \
@@ -1833,7 +1833,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HasAll('Small Key (Ice Palace)', 'Moon Pearl'))
+        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HasAll('Moon Pearl', 'Small Key (Ice Palace)'))
     )
 
     world.set_rule(

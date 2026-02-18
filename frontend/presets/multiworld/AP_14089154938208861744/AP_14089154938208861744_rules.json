@@ -10833,8 +10833,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Small Key (Agahnims Tower)",
-                      "Lamp"
+                      "Lamp",
+                      "Small Key (Agahnims Tower)"
                     ]
                   }
                 }
@@ -16095,8 +16095,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -16118,8 +16118,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -16934,8 +16934,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Small Key (Ice Palace)",
-                      "Moon Pearl"
+                      "Moon Pearl",
+                      "Small Key (Ice Palace)"
                     ]
                   }
                 }

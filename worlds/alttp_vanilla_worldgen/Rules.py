@@ -1402,10 +1402,10 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Desert Palace - Boss", player).access_rule = \
-        lambda state: ((state.multiworld.get_location('Desert Palace - Boss', player).parent_region.dungeon.boss.can_defeat(state)) and (has_fire_source(state, player)) and (state.has_all(['Small Key (Desert Palace)', 'Big Key (Desert Palace)'], player)))
+        lambda state: ((state.multiworld.get_location('Desert Palace - Boss', player).parent_region.dungeon.boss.can_defeat(state)) and (has_fire_source(state, player)) and (state.has_all(['Big Key (Desert Palace)', 'Small Key (Desert Palace)'], player)))
 
     multiworld.get_location("Desert Palace - Prize", player).access_rule = \
-        lambda state: ((state.multiworld.get_location('Desert Palace - Prize', player).parent_region.dungeon.boss.can_defeat(state)) and (state.multiworld.get_region('Desert Palace Main (Outer)', player).can_reach(state)) and (has_fire_source(state, player)) and (state.has_all(['Small Key (Desert Palace)', 'Big Key (Desert Palace)'], player)))
+        lambda state: ((state.multiworld.get_location('Desert Palace - Prize', player).parent_region.dungeon.boss.can_defeat(state)) and (state.multiworld.get_region('Desert Palace Main (Outer)', player).can_reach(state)) and (has_fire_source(state, player)) and (state.has_all(['Big Key (Desert Palace)', 'Small Key (Desert Palace)'], player)))
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Chest", player),
@@ -1790,12 +1790,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Spike Switch Pot Key", player),
-        HasAll('Small Key (Thieves Town)', 'Moon Pearl')
+        HasAll('Moon Pearl', 'Small Key (Thieves Town)')
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Blind's Cell", player),
-        HasAll('Small Key (Thieves Town)', 'Moon Pearl')
+        HasAll('Moon Pearl', 'Small Key (Thieves Town)')
     )
 
     multiworld.get_location("Thieves' Town - Boss", player).access_rule = \
@@ -1860,7 +1860,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HasAll('Small Key (Ice Palace)', 'Moon Pearl'))
+        And(HelperCall(helper_func=can_melt_things, helper_name="can_melt_things"), HasAll('Moon Pearl', 'Small Key (Ice Palace)'))
     )
 
     world.set_rule(
