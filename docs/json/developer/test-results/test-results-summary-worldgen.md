@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-02-18 23:46:59 UTC
+**Generated:** 2026-02-18 23:53:54 UTC
 
 **Source Data Created:** 2026-02-18T23:40:25.407810+00:00
 
@@ -27,7 +27,7 @@ Additional information:
 
 - **Minimal Test:** 74/74 passed (100.0%)
 - **Full Test:** 67/74 passed (90.5%)
-- **Multiclient Test:** 0/0 passed (0.0%)
+- **Multiclient Test:** 74/74 passed (100.0%)
 
 ### Intermittent Failures
 
@@ -37,18 +37,18 @@ Additional information:
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/74 (0.0%)
-- **Templates passing 2 tests:** 67/74 (90.5%)
-- **Templates passing 1 test:** 7/74 (9.5%)
+- **Templates passing all 3 tests:** 67/74 (90.5%)
+- **Templates passing 2 tests:** 7/74 (9.5%)
+- **Templates passing 1 test:** 0/74 (0.0%)
 - **Templates passing 0 tests:** 0/74 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 0 templates passing all 3 tests:
+Of the 67 templates passing all 3 tests:
 
-- **Passing with Generic Exporter:** 0/0
-- **Passing with Generic Logic:** 0/0
-- **Passing with Both Generic:** 0/0
+- **Passing with Generic Exporter:** 45/67 (67.2%)
+- **Passing with Generic Logic:** 67/67 (100.0%)
+- **Passing with Both Generic:** 45/67 (67.2%)
 
 **Combined Custom Code Size:**
 
@@ -60,80 +60,80 @@ Of the 0 templates passing all 3 tests:
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 18.2KB | ✅ | 235.5KB |
-| A Hat in Time WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 232.4KB |
-| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 669.4KB |
-| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 668.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 14.0KB | ✅ | 671.7KB |
-| A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 670.0KB |
-| A Short Hike WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 78.5KB |
-| A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 78.5KB |
-| APQuest WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 11.7KB |
-| Adventure WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 27.1KB |
-| Adventure WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 27.1KB |
-| Aquaria WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 1.8KB | ✅ | 276.0KB |
-| Baking Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 18.4KB |
-| Baking Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 18.4KB |
-| Baking Adventure WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 18.3KB |
-| Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 55.2KB |
-| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 4.0KB | ✅ | 98.5KB |
-| Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 139.5KB |
-| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 4.1KB | ✅ | 55.9KB |
-| ChecksFinder WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 17.3KB |
-| Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 310.4KB |
-| Civilization VI WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 174.6KB |
-| Coding Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 54.6KB |
-| Coding Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 54.6KB |
-| Coding Adventure WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 54.5KB |
-| DLCQuest WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 1.2KB | ✅ | 48.9KB |
-| DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 298.3KB |
-| DOOM II WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 352.4KB |
-| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1064.2KB |
-| Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 131.1KB |
-| EarthBound WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 352.8KB |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 8.8KB | ✅ | 231.4KB |
-| Faxanadu WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 73.3KB |
-| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 13.9KB | ✅ | 556.6KB |
-| Heretic WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 395.6KB |
-| Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 103.8KB |
-| Inscryption WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 8.0KB | ✅ | 87.6KB |
-| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 3.6KB | ✅ | 229.9KB |
-| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 7.3KB | ✅ | 703.0KB |
-| Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 124.6KB |
-| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 403.8KB |
-| Math Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 12.9KB |
-| Math Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 12.9KB |
-| Math Adventure WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 12.8KB |
-| Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 53.8KB |
-| MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 212.7KB |
-| Meritous WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 60.9KB |
-| Metamath WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 46.4KB |
-| Muse Dash WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 221.9KB |
-| Noita WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 80.4KB |
-| Old School Runescape WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 1.0KB | ✅ | 307.2KB |
-| Overcooked! 2 WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | 28.5KB | ✅ | 485.8KB |
-| Paint WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 2.7KB | ✅ | 114.4KB |
-| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 155.3KB |
-| Satisfactory WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | 41.8KB | ✅ | 853.2KB |
-| Saving Princess WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 34.0KB |
-| Shivers WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 150.8KB |
-| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 271.5KB |
-| Subnautica WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 182.3KB |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 103.3KB |
-| Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 96.3KB | ✅ | 920.5KB |
-| Super Mario World WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 183.4KB |
-| TOEM original WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 0.6KB | ✅ | 107.9KB |
-| TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 0.5KB | ✅ | 107.9KB |
-| Terraria WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 16.9KB | ✅ | 251.4KB |
-| The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 390.7KB |
-| The Messenger WorldGen | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | 15.2KB | ✅ | 216.5KB |
-| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 7.0KB | ✅ | 251.8KB |
-| Timespinner WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 2.2KB | ✅ | 257.8KB |
-| Undertale WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 58.3KB |
-| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 3.8KB | ✅ | 23.7KB |
-| Wargroove WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 46.4KB |
-| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 9.2KB | ✅ | 220.8KB |
-| shapez WorldGen | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 156.3KB |
+| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | 235.5KB |
+| A Hat in Time WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 232.4KB |
+| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 669.4KB |
+| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 668.8KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 671.7KB |
+| A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 670.0KB |
+| A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 78.5KB |
+| A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 78.5KB |
+| APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.7KB |
+| Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 27.1KB |
+| Adventure WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 27.1KB |
+| Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 276.0KB |
+| Baking Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.4KB |
+| Baking Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.4KB |
+| Baking Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.3KB |
+| Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 55.2KB |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 98.5KB |
+| Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 139.5KB |
+| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 55.9KB |
+| ChecksFinder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 17.3KB |
+| Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 310.4KB |
+| Civilization VI WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 174.6KB |
+| Coding Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.6KB |
+| Coding Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.6KB |
+| Coding Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.5KB |
+| DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 48.9KB |
+| DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 298.3KB |
+| DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 352.4KB |
+| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1064.2KB |
+| Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 131.1KB |
+| EarthBound WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 352.8KB |
+| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.8KB | ✅ | 231.4KB |
+| Faxanadu WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 73.3KB |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.9KB | ✅ | 556.6KB |
+| Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 395.6KB |
+| Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.8KB |
+| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 87.6KB |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 229.9KB |
+| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.3KB | ✅ | 703.0KB |
+| Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 124.6KB |
+| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 403.8KB |
+| Math Adventure Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.9KB |
+| Math Adventure Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.9KB |
+| Math Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.8KB |
+| Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 53.8KB |
+| MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 212.7KB |
+| Meritous WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 60.9KB |
+| Metamath WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 46.4KB |
+| Muse Dash WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 221.9KB |
+| Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 80.4KB |
+| Old School Runescape WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 307.2KB |
+| Overcooked! 2 WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 28.5KB | ✅ | 485.8KB |
+| Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 114.4KB |
+| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 155.3KB |
+| Satisfactory WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 41.8KB | ✅ | 853.2KB |
+| Saving Princess WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 34.0KB |
+| Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 150.8KB |
+| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 271.5KB |
+| Subnautica WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 182.3KB |
+| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.3KB |
+| Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 96.3KB | ✅ | 920.5KB |
+| Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 183.4KB |
+| TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ | 107.9KB |
+| TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.5KB | ✅ | 107.9KB |
+| Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.9KB | ✅ | 251.4KB |
+| The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 390.7KB |
+| The Messenger WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 15.2KB | ✅ | 216.5KB |
+| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 251.8KB |
+| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 257.8KB |
+| Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 58.3KB |
+| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 23.7KB |
+| Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 46.4KB |
+| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.2KB | ✅ | 220.8KB |
+| shapez WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 156.3KB |
 
 ### Largest Rules Files
 
