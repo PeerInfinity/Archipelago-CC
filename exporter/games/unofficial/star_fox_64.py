@@ -57,9 +57,9 @@ class StarFox64GameExportHandler(GenericGameExportHandler):
             return  # Already loaded
 
         try:
-            from worlds.star_fox_64 import data as sf64_data
-            from worlds.star_fox_64 import items as sf64_items
-            from worlds.star_fox_64.options import StarFox64Options
+            from worlds.star_fox_64 import data as sf64_data  # type: ignore[import-untyped]
+            from worlds.star_fox_64 import items as sf64_items  # type: ignore[import-untyped]
+            from worlds.star_fox_64.options import StarFox64Options  # type: ignore[import-untyped]
             import typing
 
             # Store the regions data

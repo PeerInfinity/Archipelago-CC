@@ -510,7 +510,7 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
-    def _is_getDmgReduction_reference(self, rule: Dict[str, Any]) -> bool:
+    def _is_getDmgReduction_reference(self, rule: Optional[Dict[str, Any]]) -> bool:
         """Check if a rule is a reference to sm.getDmgReduction()[0].
 
         The VARIA logic uses sm.getDmgReduction()[0] to get the damage reduction factor.
@@ -626,7 +626,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         self._current_location_context = location_name
 
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], exit_name: str, connected_region: str = None) -> Dict[str, Any]:
+    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: Optional[str] = None, connected_region: Optional[str] = None) -> Dict[str, Any]:
         """Post-process an exit rule to expand and transform it.
 
         This is called by the main exporter after initial rule analysis.
@@ -642,7 +642,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         """
         # Set exit context for expand_rule to use
         saved_exit_context = self._current_exit_context
-        self._current_exit_context = exit_name
+        self._current_exit_context = entrance_name
 
         try:
             expanded = self.expand_rule(rule)
@@ -682,7 +682,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             for region_name, region_lambda in regions_dict.items():
                 try:
                     # Analyze the lambda
-                    parsed = analyze_rule(region_lambda, {}, game_handler=self, player_context={'player': self.world.player if self.world else 1})
+                    parsed = analyze_rule(region_lambda, {}, game_handler=self, player_context=self.world.player if self.world else 1)
                     if parsed:
                         # Expand using our expand_rule logic
                         expanded = self.expand_rule(parsed)
@@ -741,7 +741,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             logger.error(f"SM: Failed to extract AccessFrom requirements for '{location_name}': {e}", exc_info=True)
             return None
 
-    def get_unwrapped_exit_lambda(self, exit_name: str, original_lambda: Any) -> Optional[Any]:
+    def get_unwrapped_exit_lambda(self, exit_name: Optional[str], original_lambda: Any) -> Optional[Any]:
         """Get the unwrapped transition/traverse lambda for an exit, if it's wrapped in Cache.ldeco.
 
         This method is called BEFORE the analyzer processes the exit rule, allowing us to

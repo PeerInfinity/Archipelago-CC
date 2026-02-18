@@ -1,7 +1,7 @@
 import json
 import os
 import logging
-from typing import Set, List, Dict, Optional, Union, TYPE_CHECKING
+from typing import Any, Set, List, Dict, Optional, Union, TYPE_CHECKING
 from itertools import chain
 
 if TYPE_CHECKING:
@@ -219,7 +219,7 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
         logging.error(f"Error during spoiler sphere logging for sphere {sphere_index}: {e}")
 
 
-def _collect_event_metadata(multiworld: "MultiWorld") -> Dict[str, List[str]]:
+def _collect_event_metadata(multiworld: "MultiWorld") -> Dict[str, Any]:
     """Collect event items and locations from the multiworld for all players.
 
     Events are detected by:
@@ -302,9 +302,12 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         logging.error(f"Failed to open spoiler log file {log_file_path}: {e}")
         spoiler_log_file_handler = None
     
+    multiworld = spoiler.multiworld
+    restore_later: Dict["Location", Optional["Item"]] = {}
+    removed_precollected: List["Item"] = []
+
     try:
         # Main implementation with logging
-        multiworld = spoiler.multiworld
 
         # Call postprocess_regions for games that need to add missing regions
         # This ensures regions like Aquaria's "Home Waters, behind rock" are available
@@ -334,16 +337,12 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         if extend_sphere_log_to_all_locations:
             prog_locations = set(multiworld.get_filled_locations())
         else:
-            prog_locations = {location for location in multiworld.get_filled_locations() if location.item.advancement}
+            prog_locations = {location for location in multiworld.get_filled_locations() if location.item and location.item.advancement}
         state_cache: List[Optional[CollectionState]] = [None]
         # collection_spheres will be redefined later for the final pass
         initial_collection_spheres: List[Set["Location"]] = []
         state = CollectionState(multiworld)
         sphere_candidates = set(prog_locations)
-
-        # Initialize variables that are used in the finally block to avoid UnboundLocalError
-        restore_later: Dict["Location", "Item"] = {}
-        removed_precollected: List["Item"] = []
 
         logging.debug('Building up initial collection spheres for pruning.')
         while sphere_candidates:
@@ -361,13 +360,13 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                 if extend_sphere_log_to_all_locations:
                     unreachable_advancement = [loc for loc in sphere_candidates if loc.item and loc.item.advancement]
                     if unreachable_advancement:
-                        if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in unreachable_advancement]):
+                        if any([location.item and multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in unreachable_advancement]):
                             raise RuntimeError(f'Not all progression items reachable ({unreachable_advancement}). Something went wrong.')
                     # Non-advancement items are OK to be unreachable in full spoilers mode
                     spoiler.unreachables = sphere_candidates
                     break
                 else:
-                    if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in sphere_candidates]):
+                    if any([location.item and multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in sphere_candidates]):
                         raise RuntimeError(f'Not all progression items reachable ({sphere_candidates}). Something went wrong.')
                     else:
                         spoiler.unreachables = sphere_candidates
@@ -418,8 +417,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         current_playthrough_state = CollectionState(multiworld)
         for p_id in current_playthrough_state.prog_items:
             current_playthrough_state.prog_items[p_id].clear()
-        current_playthrough_state.advancements.clear()
-        current_playthrough_state.locations_checked.clear()
+        current_playthrough_state.advancements.clear()  # type: ignore[union-attr]
+        current_playthrough_state.locations_checked.clear()  # type: ignore[union-attr]
 
         if spoiler_log_file_handler:
             # Collect ALL precollected items into the state (not just advancement items)
@@ -466,7 +465,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
 
             item_sub_index = 0
             for location in sorted_locations_in_sphere:
-                # Collect one item
+                # Collect one item (location.item is always set for filled locations)
+                assert location.item is not None
                 current_playthrough_state.collect(location.item, True, location)
 
                 # Auto-collect any events that become accessible after this item
@@ -514,7 +514,7 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                 str(location): str(location.item) for location in sorted(list(sphere_content))}
 
         if create_paths:
-            spoiler.create_paths(current_playthrough_state, final_collection_spheres)
+            spoiler.create_paths(current_playthrough_state, final_collection_spheres)  # type: ignore[arg-type]
 
     finally:
         if spoiler_log_file_handler:

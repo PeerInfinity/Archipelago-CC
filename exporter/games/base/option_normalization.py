@@ -5,7 +5,7 @@ for Choice options in rules and helper definitions.
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class OptionNormalizationMixin:
         if not option_reverse_lookups:
             return helper_definitions
 
-        def convert_node(node: Any, context_option: str = None) -> Any:
+        def convert_node(node: Any, context_option: Optional[str] = None) -> Any:
             """Recursively process nodes, converting string constants when appropriate."""
             if not isinstance(node, dict):
                 if isinstance(node, list):
@@ -217,7 +217,7 @@ class OptionNormalizationMixin:
         if not option_reverse_lookups:
             return regions_data
 
-        def convert_node(node: Any, context_option: str = None) -> Any:
+        def convert_node(node: Any, context_option: Optional[str] = None) -> Any:
             """Recursively process nodes, converting string constants when appropriate."""
             if not isinstance(node, dict):
                 if isinstance(node, list):
@@ -453,7 +453,7 @@ class OptionNormalizationMixin:
         if not option_lookups:
             return data
 
-        def convert_node(node: Any, context_option: str = None) -> Any:
+        def convert_node(node: Any, context_option: Optional[str] = None) -> Any:
             """Recursively process nodes, converting numeric constants to strings."""
             if not isinstance(node, dict):
                 if isinstance(node, list):

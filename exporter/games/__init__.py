@@ -16,7 +16,7 @@ from .base import BaseGameExportHandler, GenericGameExportHandler
 logger = logging.getLogger(__name__)
 
 # Module-level cache for handler instances
-_handler_cache: Dict[Tuple[str, Optional[int]], BaseGameExportHandler] = {}
+_handler_cache: Dict[Tuple[Optional[str], Optional[int]], BaseGameExportHandler] = {}
 
 # Handlers registered by module name (matches world directory)
 # e.g., 'alttp' -> ALttPGameExportHandler
@@ -158,7 +158,7 @@ def _discover_handlers() -> Dict[str, Type[BaseGameExportHandler]]:
 GAME_HANDLERS = _discover_handlers()
 
 
-def get_game_export_handler(game_name: str = None, world=None, world_directory: str = None) -> BaseGameExportHandler:
+def get_game_export_handler(game_name: Optional[str] = None, world=None, world_directory: Optional[str] = None) -> BaseGameExportHandler:
     """
     Get the appropriate export handler for the game.
 
@@ -209,7 +209,7 @@ def get_game_export_handler(game_name: str = None, world=None, world_directory: 
         # Call initialization methods if they exist (e.g., build_rule_string_map for OOT)
         if hasattr(handler, 'build_rule_string_map') and world is not None:
             try:
-                handler.build_rule_string_map(world)
+                handler.build_rule_string_map(world)  # type: ignore[attr-defined]
             except Exception as e:
                 logger.warning(f"Failed to build rule string map for {world_dir}: {e}")
 

@@ -218,7 +218,7 @@ class PythonToJSON:
 
         # Handle different slice types
         if isinstance(slice_node, ast.Index):  # Python 3.8
-            index = self._visit(slice_node.value)
+            index = self._visit(slice_node.value)  # type: ignore[attr-defined]
         else:
             index = self._visit(slice_node)
 
@@ -330,7 +330,7 @@ class PythonToJSON:
                 return self._handle_any_call(node)
             elif func_name == 'min':
                 args = [self._visit(arg) for arg in node.args]
-                result = {'type': 'min'}
+                result: Dict[str, Any] = {'type': 'min'}
                 if args:
                     result['args'] = args
                 return result
@@ -362,6 +362,7 @@ class PythonToJSON:
 
     def _handle_method_call(self, node: ast.Call) -> Dict[str, Any]:
         """Handle method call patterns."""
+        assert isinstance(node.func, ast.Attribute)
         attr_node = node.func
         obj = self._visit(attr_node.value)
         method = attr_node.attr
@@ -385,10 +386,10 @@ class PythonToJSON:
                 return self._make_can_reach(args)
 
             # Generic state method
-            result = {'type': 'state_method', 'method': method}
+            result2: Dict[str, Any] = {'type': 'state_method', 'method': method}
             if args:
-                result['args'] = args
-            return result
+                result2['args'] = args
+            return result2
 
         # Generic method call
         result = {
@@ -634,7 +635,7 @@ class PythonToJSON:
         if self._needs_block_mode(body):
             statements = [self._visit_statement(stmt) for stmt in body]
             if len(statements) == 1:
-                return statements[0]
+                return statements[0] or {'type': 'constant', 'value': None}
             return {'type': 'block', 'statements': statements}
 
         # Simple function - just visit the return
@@ -681,7 +682,7 @@ class PythonToJSON:
     # Statement Visitors
     # -------------------------------------------------------------------------
 
-    def _visit_statement(self, node: ast.stmt) -> Dict[str, Any]:
+    def _visit_statement(self, node: ast.stmt) -> Optional[Dict[str, Any]]:
         """Visit a statement node."""
         if isinstance(node, ast.Return):
             value = self._visit(node.value) if node.value else {'type': 'constant', 'value': None}

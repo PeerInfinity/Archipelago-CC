@@ -72,7 +72,7 @@ class SystemShock2GameExportHandler(GenericGameExportHandler):
 
     GAME_NAME = 'System Shock 2'
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand SS2-specific helpers.
 
         Handles:

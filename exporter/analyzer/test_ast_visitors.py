@@ -29,6 +29,8 @@ try:
 except ImportError as e:
     IMPORTS_AVAILABLE = False
     IMPORT_ERROR = str(e)
+    analyze_rule = None  # type: ignore[assignment]
+    RuleAnalyzer = None  # type: ignore[assignment]
 
 
 def skip_if_no_imports(test_class):
@@ -53,7 +55,7 @@ class TestHelperMixin:
             The rule structure dict
         """
         tree = ast.parse(code, mode='eval')
-        return analyze_rule(ast_node=tree.body, closure_vars=closure_vars or {})
+        return analyze_rule(ast_node=tree.body, closure_vars=closure_vars or {})  # type: ignore[operator]
 
     def analyze_lambda(self, lambda_func, closure_vars=None):
         """
@@ -66,7 +68,7 @@ class TestHelperMixin:
         Returns:
             The rule structure dict
         """
-        return analyze_rule(rule_func=lambda_func, closure_vars=closure_vars or {})
+        return analyze_rule(rule_func=lambda_func, closure_vars=closure_vars or {})  # type: ignore[operator]
 
 
 @skip_if_no_imports

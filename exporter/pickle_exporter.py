@@ -167,13 +167,13 @@ def _prepare_multiworld_for_pickle(multiworld: "MultiWorld") -> None:
         # Get the underlying random.Random object
         underlying_random = multiworld.random.obj
         # Replace the proxy with the plain random object
-        multiworld.random = underlying_random
+        multiworld.random = underlying_random  # type: ignore[attr-defined]
         logger.debug("Replaced ThreadBarrierProxy with underlying random.Random for pickling")
 
     # Clear the spoiler object which contains references that may not pickle well
     # The spoiler is only needed for output generation, not for tracking
     if hasattr(multiworld, 'spoiler'):
-        multiworld.spoiler = None
+        multiworld.spoiler = None  # type: ignore[attr-defined]
         logger.debug("Cleared spoiler object for pickling")
 
 

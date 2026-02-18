@@ -213,7 +213,7 @@ class YuGiOhDDMExportHandler(GenericGameExportHandler):
                 # Convert enum-style names to display names
                 for enum_name in world.starting_unlocked_duelists_str:
                     display_name = self.ENUM_TO_DISPLAY_NAME.get(enum_name, enum_name)
-                    self._starting_unlocked_duelists.add(display_name)
+                    self._starting_unlocked_duelists.add(display_name)  # type: ignore[arg-type]
                 logger.debug(f"DDM starting unlocked duelists ({len(self._starting_unlocked_duelists)}): {list(self._starting_unlocked_duelists)[:5]}...")
             elif hasattr(world, 'starting_unlocked_duelists'):
                 # Fallback: convert Duelist enums to display names using str()

@@ -5,7 +5,7 @@ handler instance state.
 """
 
 import re
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 from world_generator._sanitization import sanitize_for_helper_name
 
@@ -37,7 +37,7 @@ def extract_closure_vars(rule_func: Callable) -> Dict[str, Any]:
     return closure_vars
 
 
-def count_rule_nodes(rule: Dict[str, Any]) -> int:
+def count_rule_nodes(rule: Optional[Dict[str, Any]]) -> int:
     """
     Count the number of nodes in a rule tree.
 

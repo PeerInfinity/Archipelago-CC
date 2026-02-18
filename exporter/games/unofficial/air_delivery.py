@@ -108,7 +108,7 @@ class AirDeliveryGameExportHandler(GenericGameExportHandler):
                 'conditions': or_conditions
             }
 
-    def get_location_rule(self, location_name: str, region_name: str = None) -> Optional[Dict[str, Any]]:
+    def get_location_rule(self, location_name: str, region_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Get the rule for a location from json_world.
 
         This is called during rule export to get the correct rule structure
@@ -162,7 +162,7 @@ class AirDeliveryGameExportHandler(GenericGameExportHandler):
         # Fall back to standard analysis
         return None
 
-    def handle_complex_entrance_rule(self, entrance_name: str, rule_func: Callable) -> Optional[Dict[str, Any]]:
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
         """Override entrance rule analysis to use json_world data.
 
         This is called by the exporter before standard AST analysis.

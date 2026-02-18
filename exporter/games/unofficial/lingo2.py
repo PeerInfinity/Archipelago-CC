@@ -347,13 +347,13 @@ class Lingo2GameExportHandler(GenericGameExportHandler):
 
         return attributes
 
-    def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:
         """Handle Lingo 2 entrance rules by extracting AccessRequirements.
 
         Entrance rules in Lingo 2 are also lambdas with closure-captured AccessRequirements.
         """
         # Try to extract AccessRequirements from the closure
-        access_data = self._extract_access_requirements_from_closure(rule_func)
+        access_data = self._extract_access_requirements_from_closure(exit_rule)
         if access_data:
             # Store for potential use
             self._access_requirements_cache[f"entrance:{exit_name}"] = access_data
@@ -378,12 +378,12 @@ class Lingo2GameExportHandler(GenericGameExportHandler):
 
         return settings
 
-    def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand analyzed rule with Lingo 2-specific transformations.
 
         - Converts world.player_logic references to settings references
         """
-        rule = super().expand_rule(analyzed_rule, _depth)
+        rule = super().expand_rule(rule, _depth)
 
         # Replace world.player_logic references with settings
         rule = self._replace_world_references(rule)

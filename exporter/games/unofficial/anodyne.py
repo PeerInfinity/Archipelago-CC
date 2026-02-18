@@ -255,24 +255,24 @@ class AnodyneHandler(GenericGameExportHandler):
         # Fall back to standard analysis
         return None
 
-    def handle_complex_entrance_rule(self, entrance_name: str, rule_func: Callable) -> Optional[Dict[str, Any]]:
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
         """Extract Anodyne entrance rules from AccessRule objects."""
-        if self._is_access_rule_object(rule_func):
-            rule = self._convert_access_rule_to_dict(rule_func, self._world)
-            if rule:
-                logger.debug(f"Anodyne: Converted entrance rule for '{entrance_name}': {rule}")
-                return rule
+        if self._is_access_rule_object(rule):
+            converted = self._convert_access_rule_to_dict(rule, self._world)
+            if converted:
+                logger.debug(f"Anodyne: Converted entrance rule for '{entrance_name}': {converted}")
+                return converted
 
         # Fall back to standard analysis
         return None
 
-    def handle_complex_exit_rule(self, exit_name: str, rule_func: Callable) -> Optional[Dict[str, Any]]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule: Any) -> Optional[Dict[str, Any]]:
         """Extract Anodyne exit rules from AccessRule objects."""
-        if self._is_access_rule_object(rule_func):
-            rule = self._convert_access_rule_to_dict(rule_func, self._world)
-            if rule:
-                logger.debug(f"Anodyne: Converted exit rule for '{exit_name}': {rule}")
-                return rule
+        if self._is_access_rule_object(exit_rule):
+            converted = self._convert_access_rule_to_dict(exit_rule, self._world)
+            if converted:
+                logger.debug(f"Anodyne: Converted exit rule for '{exit_name}': {converted}")
+                return converted
 
         # Fall back to standard analysis
         return None

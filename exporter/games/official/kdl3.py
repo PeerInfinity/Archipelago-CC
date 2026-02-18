@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Optional
 from ..base import GenericGameExportHandler
 
 
-def _compute_level_names_inverse(world, multiworld, player) -> Dict[str, Any]:
+def _compute_level_names_inverse(world, multiworld, player) -> Dict[Any, Any]:
     """Compute level_names_inverse for f-string resolution in can_reach_boss."""
     from worlds.kdl3.names import location_name
     return location_name.level_names_inverse

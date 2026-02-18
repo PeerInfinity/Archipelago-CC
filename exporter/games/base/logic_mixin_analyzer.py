@@ -432,7 +432,7 @@ def _detect_negated_check(node: ast.expr, expected_var: str) -> Optional[Tuple[s
     return None
 
 
-def _is_constant_false(node: ast.expr) -> bool:
+def _is_constant_false(node: Optional[ast.expr]) -> bool:
     """Check if node is the constant False."""
     if isinstance(node, ast.Constant) and node.value is False:
         return True
@@ -442,7 +442,7 @@ def _is_constant_false(node: ast.expr) -> bool:
     return False
 
 
-def _is_constant_true(node: ast.expr) -> bool:
+def _is_constant_true(node: Optional[ast.expr]) -> bool:
     """Check if node is the constant True."""
     if isinstance(node, ast.Constant) and node.value is True:
         return True

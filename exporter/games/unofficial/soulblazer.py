@@ -49,7 +49,7 @@ class SoulBlazerExportHandler(GenericGameExportHandler):
     ]
     SOUL_OF_MAGICIAN = 'Soul of Magician'
 
-    def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
         """Extract Soul Blazer entrance rules from closure variables.
 
         Soul Blazer rules capture an ExitData object in the closure which contains:
@@ -59,13 +59,13 @@ class SoulBlazerExportHandler(GenericGameExportHandler):
 
         We extract these values and build the proper rule structure.
         """
-        if not callable(access_rule_method):
+        if not callable(rule):
             return None
 
         # Get the closure variables
         try:
-            freevars = access_rule_method.__code__.co_freevars
-            closure = access_rule_method.__closure__
+            freevars = rule.__code__.co_freevars
+            closure = rule.__closure__
         except AttributeError:
             return None
 
@@ -215,9 +215,9 @@ class SoulBlazerExportHandler(GenericGameExportHandler):
         logger.warning(f"Soul Blazer unknown RuleFlag: {flag_name}")
         return None
 
-    def handle_complex_exit_rule(self, exit_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule: Any) -> Optional[Dict[str, Any]]:
         """Handle exit rules the same as entrance rules."""
-        return self.handle_complex_entrance_rule(exit_name, access_rule_method)
+        return self.handle_complex_entrance_rule(exit_name, exit_rule)
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """Extract Soul Blazer location rules from the location data or closure.

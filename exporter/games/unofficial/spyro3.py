@@ -239,7 +239,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
         logger.debug(f"Unknown Spyro 3 helper: {helper_name}, returning True")
         return {'type': 'constant', 'value': True}
 
-    def _expand_is_boss_defeated(self, args: list = None) -> Dict[str, Any]:
+    def _expand_is_boss_defeated(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand is_boss_defeated helper."""
         boss_name = self._extract_string_arg(args, 0) if args else "Sorceress"
 
@@ -249,7 +249,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
 
         return {'type': 'item_check', 'item': f'{boss_name} Defeated'}
 
-    def _expand_is_level_completed(self, args: list = None) -> Dict[str, Any]:
+    def _expand_is_level_completed(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand is_level_completed helper."""
         level_name = self._extract_string_arg(args, 0) if args else ""
 
@@ -303,7 +303,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _expand_is_companion_unlocked(self, args: list = None) -> Dict[str, Any]:
+    def _expand_is_companion_unlocked(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand is_companion_unlocked helper."""
         companion = self._extract_string_arg(args, 0) if args else ""
 
@@ -315,7 +315,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _expand_has_optional_moneybags_unlock(self, args: list = None) -> Dict[str, Any]:
+    def _expand_has_optional_moneybags_unlock(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand has_optional_moneybags_unlock helper."""
         if self._moneybags_settings != self.MoneybagsOptions.MONEYBAGSSANITY:
             return {'type': 'constant', 'value': True}
@@ -329,7 +329,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _expand_can_enter_portal(self, args: list = None) -> Dict[str, Any]:
+    def _expand_can_enter_portal(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand can_enter_non_companion_portal helper."""
         level = self._extract_string_arg(args, 0) if args else ""
 
@@ -340,7 +340,7 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
         else:
             return self._expand_has_entrance_eggs([level])
 
-    def _expand_has_entrance_eggs(self, args: list = None) -> Dict[str, Any]:
+    def _expand_has_entrance_eggs(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand has_entrance_eggs helper.
 
         Simplified - actual logic uses level_egg_requirements dictionary.
@@ -349,19 +349,19 @@ class Spyro3GameExportHandler(GenericGameExportHandler):
         # Just check for any eggs - actual counts vary by level
         return {'type': 'item_check', 'item': 'Egg'}
 
-    def _expand_has_entrance_gems(self, args: list = None) -> Dict[str, Any]:
+    def _expand_has_entrance_gems(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand has_entrance_gems helper.
 
         Simplified to True - actual logic uses has_total_accessible_gems.
         """
         return {'type': 'constant', 'value': True}
 
-    def _expand_has_world_keys(self, args: list = None) -> Dict[str, Any]:
+    def _expand_has_world_keys(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand has_world_keys helper."""
         count = self._extract_int_arg(args, 0) if args else 1
         return {'type': 'item_check', 'item': 'World Key', 'count': count}
 
-    def _expand_has_sparx_health(self, args: list = None) -> Dict[str, Any]:
+    def _expand_has_sparx_health(self, args: Optional[list] = None) -> Dict[str, Any]:
         """Expand has_sparx_health helper.
 
         Simplified to always True - actual logic depends on options.

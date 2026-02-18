@@ -93,7 +93,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
             'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
         }
 
-    def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand analyzed rule with Lingo-specific transformations.
 
         - Resolves the 'door' variable in lingo_can_use_entrance calls
@@ -101,7 +101,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         - Converts PROGRESSIVE_ITEMS/PROGRESSIVE_DOORS_BY_ROOM to settings references
         - Converts RoomAndDoor namedtuples to arrays
         """
-        rule = super().expand_rule(analyzed_rule, _depth)
+        rule = super().expand_rule(rule, _depth)
 
         # Replace world.player_logic references with settings
         # This is essential for helper definitions to work in the frontend
@@ -227,7 +227,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         # Check for level 2 location (worldgen world)
         if self.is_worldgen_world(world):
-            worldgen_data = self._get_worldgen_settings(world)
+            worldgen_data = self._get_worldgen_settings(world)  # type: ignore[attr-defined]
             # Check options section (new format), then top-level (legacy)
             options = worldgen_data.get('options', worldgen_data)
             level_2_req = options.get('level_2_requirement', 1)
@@ -258,7 +258,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         self._current_exit_name = exit_name
         self._current_connected_region = connected_region
 
-    def _parse_exit_name(self, exit_name: str) -> tuple:
+    def _parse_exit_name(self, exit_name: str) -> Optional[tuple]:
         """
         Parse a Lingo exit name to extract the target room and door path.
 
@@ -276,7 +276,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Dict[str, Any]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:  # noqa: ARG002
         """
         Generate proper exit rules for worldgen Lingo worlds.
 
@@ -286,7 +286,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         Args:
             exit_name: The name of the exit (e.g., "Starting Room to Hidden Room (through ...)")
-            rule_func: The original rule function (usually True_() for worldgen)
+            exit_rule: The original rule function (usually True_() for worldgen)
 
         Returns:
             A rule dict with lingo_can_use_entrance helper call, or None to use default handling.
@@ -575,7 +575,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         rule = self._replace_world_references(rule)
 
         # Simplify the rule based on door information
-        return self._simplify_entrance_rule(rule, door_room, door_name, entrance_name)
+        return self._simplify_entrance_rule(rule, door_room, door_name, entrance_name) or rule
 
     def _replace_world_references(self, obj: Any) -> Any:
         """
@@ -635,7 +635,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return result
 
-    def _simplify_entrance_rule(self, rule: Dict[str, Any], door_room: str, door_name: str, entrance_name: str) -> Dict[str, Any]:
+    def _simplify_entrance_rule(self, rule: Optional[Dict[str, Any]], door_room: Optional[str], door_name: Optional[str], entrance_name: str) -> Optional[Dict[str, Any]]:
         """
         Recursively simplify entrance rules by resolving door and room variables.
 
@@ -737,7 +737,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return False
 
-    def _replace_door_variable(self, rule: Dict[str, Any], door_room: str, door_name: str) -> Dict[str, Any]:
+    def _replace_door_variable(self, rule: Optional[Dict[str, Any]], door_room: Optional[str], door_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """
         Replace door and room variable references with actual constant values.
 

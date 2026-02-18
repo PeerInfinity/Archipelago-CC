@@ -11,7 +11,7 @@ Note: This exporter cannot be simplified using standard base class tools because
    unique game mechanics (NPCs, pickaxes, hammers, mech bosses, minions).
 """
 
-from typing import Dict, Any, Callable, List, Union
+from typing import Dict, Any, Callable, List, Optional, Union
 from ..base import GenericGameExportHandler
 import logging
 
@@ -67,7 +67,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         self.hammers = hammers
         self.mech_bosses = mech_bosses
 
-    def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Dict[str, Any]:
+    def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Terraria locations.
 
         Terraria uses a custom rule system with Condition objects. Instead of
@@ -99,7 +99,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             logger.error(f"Error in override_rule_analysis for {rule_target_name}: {e}", exc_info=True)
             return None
 
-    def _convert_rule(self, operator: Union[bool, None], conditions: List) -> Dict[str, Any]:
+    def _convert_rule(self, operator: Union[bool, None], conditions: List) -> Optional[Dict[str, Any]]:
         """Convert Terraria operator + conditions to JSON rule format.
 
         Args:
@@ -239,7 +239,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         if condition_name in self.rule_indices:
             rule = self.rules[self.rule_indices[condition_name]]
             if "Item" in rule.flags:
-                return rule.flags.get("Item") or f"Post-{condition_name}"
+                return str(rule.flags.get("Item")) or f"Post-{condition_name}"
         return condition_name
 
     def _create_list_unique_check(self, item_list: List[str], required_count: int) -> Dict[str, Any]:

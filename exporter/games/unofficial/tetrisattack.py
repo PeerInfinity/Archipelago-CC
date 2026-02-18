@@ -81,7 +81,8 @@ class TetrisAttackGameExportHandler(GenericGameExportHandler):
         for i, name in enumerate(self.VERSUS_FREE_NAMES):
             self._versus_location_to_stage[name] = i + 1
 
-    def _extract_closure_vars(self, func: Callable) -> Dict[str, Any]:
+    @staticmethod
+    def _extract_closure_vars(func: Callable) -> Dict[str, Any]:  # type: ignore[override]
         """Extract closure variables from a function."""
         closure_vars = {}
         if hasattr(func, '__closure__') and func.__closure__:
@@ -506,13 +507,13 @@ class TetrisAttackGameExportHandler(GenericGameExportHandler):
         # Fall back to standard analysis
         return None
 
-    def handle_complex_entrance_rule(self, entrance_name: str, rule_func: Callable) -> Optional[Dict[str, Any]]:
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
         """Override entrance rule analysis for Mt Wickedness entrance."""
         if entrance_name == "Enter Mt Wickedness":
             return {'type': 'item_check', 'item': "Mt. Wickedness Gate"}
         return None
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand Tetris Attack helper functions."""
         if helper_name == 'versus_stage_completable':
             if args and len(args) >= 3:
