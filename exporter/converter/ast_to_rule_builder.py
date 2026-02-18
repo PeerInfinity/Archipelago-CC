@@ -218,25 +218,29 @@ class ASTToRuleBuilder:
 
         return result
 
-    def _make_rule(self, rule_name: str, args: Dict[str, Any], options: List[Dict] = None) -> Dict[str, Any]:
+    def _make_rule(self, rule_name: str, args: Dict[str, Any], options: Optional[List[Dict]] = None) -> Dict[str, Any]:
         """Create a Rule Builder format rule.
 
         Empty 'options' and 'args' fields are omitted to reduce JSON size.
+        HasAll/HasAny items are sorted for canonical, deterministic output.
         """
-        result = {'rule': rule_name}
+        result: Dict[str, Any] = {'rule': rule_name}
         if options:
             result['options'] = options
         # Include args if non-empty (handles both dict and list)
         if args:
+            # Sort items in HasAll/HasAny for canonical, deterministic output
+            if rule_name in ('HasAll', 'HasAny') and isinstance(args.get('items'), list):
+                args = dict(args, items=sorted(args['items']))
             result['args'] = args
         return result
 
-    def _make_composite_rule(self, rule_name: str, children: List[Dict], options: List[Dict] = None) -> Dict[str, Any]:
+    def _make_composite_rule(self, rule_name: str, children: List[Dict], options: Optional[List[Dict]] = None) -> Dict[str, Any]:
         """Create a composite Rule Builder format rule (And/Or).
 
         Empty 'options' field is omitted to reduce JSON size.
         """
-        result = {
+        result: Dict[str, Any] = {
             'rule': rule_name,
             'children': children
         }
@@ -384,7 +388,7 @@ class ASTToRuleBuilder:
 
         # If item resolved to a simple value, use standard Has rule
         if isinstance(item_value, str):
-            args = {'item_name': item_value}
+            args: Dict[str, Any] = {'item_name': item_value}
             if isinstance(count_value, (int, float)) and count_value != 1:
                 args['count'] = count_value
             elif isinstance(count, dict) and not count_was_constant:

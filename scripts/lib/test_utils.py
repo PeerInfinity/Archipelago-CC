@@ -35,7 +35,7 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
-def load_template_exclude_list(project_root: str = None, include_reasons: bool = False, test_type: str = 'all', skip_worldgen_variants: bool = False):
+def load_template_exclude_list(project_root: Optional[str] = None, include_reasons: bool = False, test_type: str = 'all', skip_worldgen_variants: bool = False):
     """
     Load the template exclude list from scripts/data/template-exclude-list.json.
 
@@ -197,11 +197,10 @@ def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
 def extract_game_name_from_template(template_path: str) -> Optional[str]:
     """Extract the game name from a template YAML file."""
     try:
-        import yaml
         with open(template_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
             return data.get('game')
-    except (ImportError, yaml.YAMLError, FileNotFoundError, UnicodeDecodeError):
+    except (yaml.YAMLError, FileNotFoundError, UnicodeDecodeError):
         # Fall back to normalized template name if YAML parsing fails
         return None
 
@@ -374,7 +373,7 @@ def classify_generation_error(output: str) -> Optional[str]:
     return None
 
 
-def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict = None) -> Tuple[int, str, str]:
+def run_command(cmd: List[str], cwd: Optional[str] = None, timeout: int = 300, env: Optional[Dict] = None) -> Tuple[int, str, str]:
     """
     Run a command and return (return_code, stdout, stderr).
     Closes stdin to prevent the subprocess from waiting for user input.
@@ -405,7 +404,7 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
             )
 
         try:
@@ -443,7 +442,7 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
         return -1, "", str(e)
 
 
-def count_total_spheres(sphere_log_path: str, player_num: int = None) -> float:
+def count_total_spheres(sphere_log_path: str, player_num: Optional[int] = None) -> float:
     """
     Get the highest sphere_index from sphere_log.jsonl file.
     Returns the sphere_index value from the last line in the file.
@@ -745,7 +744,7 @@ def parse_playwright_analysis(analysis_text: str) -> Dict:
     return result
 
 
-def load_tracking_mode_config(project_root: str = None) -> Dict:
+def load_tracking_mode_config(project_root: Optional[str] = None) -> Dict:
     """
     Load the tracking mode configuration from exporter/tracking-mode-config.json.
 
@@ -772,7 +771,7 @@ def load_tracking_mode_config(project_root: str = None) -> Dict:
 def get_expected_failures_for_mode(
     ut_mode: str,
     category: str = 'bundled',
-    project_root: str = None,
+    project_root: Optional[str] = None,
     include_reasons: bool = False
 ) -> List:
     """
@@ -834,7 +833,7 @@ def get_expected_failures_for_mode(
 def get_games_passing_mode(
     ut_mode: str,
     category: str = 'bundled',
-    project_root: str = None
+    project_root: Optional[str] = None
 ) -> List[str]:
     """
     Get the list of games that pass a given UT mode.

@@ -16,7 +16,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, cast
 
 # Add parent directory to path to import from chart_generators and lib
 sys.path.insert(0, str(Path(__file__).parent))
@@ -137,9 +137,9 @@ def extract_ut_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
 def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                metadata: Dict[str, Any],
                                world_mapping: Dict[str, Dict[str, Any]],
-                               project_root: str = None,
+                               project_root: Optional[str] = None,
                                world_source: str = "bundled",
-                               excluded_games: Dict[str, str] = None) -> str:
+                               excluded_games: Optional[Dict[str, str]] = None) -> str:
     """
     Generate a markdown table for UT fuzz test data.
 
@@ -232,6 +232,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         category=world_source,
         project_root=project_root
     ))
+
+    expected_pass_data: List[Dict[str, Any]] = []
+    unexpected_pass_data: List[Dict[str, Any]] = []
+    expected_fail_data: List[Dict[str, Any]] = []
+    unexpected_fail_logic_data: List[Dict[str, Any]] = []
+    unexpected_fail_timeout_data: List[Dict[str, Any]] = []
 
     if chart_data:
         total_games = len(chart_data)
@@ -578,12 +584,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 def generate_comparison_markdown(data1: List[Dict[str, Any]],
                                   data2: List[Dict[str, Any]],
                                   world_mapping: Dict[str, Dict[str, Any]],
-                                  project_root: str = None,
+                                  project_root: Optional[str] = None,
                                   world_source: str = "bundled",
                                   version1: str = "original",
                                   version2: str = "worldgen",
-                                  metadata1: Dict[str, Any] = None,
-                                  metadata2: Dict[str, Any] = None) -> str:
+                                  metadata1: Optional[Dict[str, Any]] = None,
+                                  metadata2: Optional[Dict[str, Any]] = None) -> str:
     """
     Generate a markdown comparison between two UT fuzz test results.
 
@@ -981,10 +987,10 @@ def main():
 
     # Load exclude lists for Excluded Templates section
     # For bundled: use worldgen test exclusions (skip WorldGen variants to avoid duplicates)
-    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='worldgen', skip_worldgen_variants=True)
+    excluded_list_bundled = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='worldgen', skip_worldgen_variants=True))
     excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
     # For apworlds: use UT fuzz apworld exclusions (no WorldGen variants needed)
-    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld', skip_worldgen_variants=True)
+    excluded_list_apworld = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld', skip_worldgen_variants=True))
     excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
 
     # Track chart data and metadata for comparisons

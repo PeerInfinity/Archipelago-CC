@@ -16,7 +16,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional, cast
 
 # Add parent directory to path to import from chart_generators and lib
 sys.path.insert(0, str(Path(__file__).parent))
@@ -128,9 +128,9 @@ def extract_spoiler_fuzz_chart_data(results: Dict[str, Any]) -> List[Dict[str, A
 def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
                                     metadata: Dict[str, Any],
                                     world_mapping: Dict[str, Dict[str, Any]],
-                                    project_root: str = None,
+                                    project_root: Optional[str] = None,
                                     world_source: str = "bundled",
-                                    excluded_games: Dict[str, str] = None) -> str:
+                                    excluded_games: Optional[Dict[str, str]] = None) -> str:
     """
     Generate a markdown table for spoiler fuzz test data.
 
@@ -329,10 +329,10 @@ def main():
     # Load exclude lists
     # For bundled games: use 'main' (same as test-all-templates.py)
     # For apworlds: use 'ut_fuzz_apworld'
-    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
+    excluded_list_bundled = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True))
     excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
 
-    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
+    excluded_list_apworld = cast(List[Dict[str, str]], load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld'))
     excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
 
     # Output directory
