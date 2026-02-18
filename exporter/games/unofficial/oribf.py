@@ -311,12 +311,12 @@ class OribfExportHandler(GenericGameExportHandler):
                 if isinstance(item_arg, dict):
                     if item_arg.get('type') == 'constant':
                         item = item_arg.get('value')
-                        return self._expand_oribf_has_item(item)
+                        return self._expand_oribf_has_item(item)  # type: ignore[return-value]
                     elif item_arg.get('type') == 'name':
                         # Variable reference - can't expand statically
                         pass
                 elif isinstance(item_arg, str):
-                    return self._expand_oribf_has_item(item_arg)
+                    return self._expand_oribf_has_item(item_arg)  # type: ignore[return-value]
 
         # Handle function_call type with oribf_has
         if rule_type in ('AST_function_call', 'function_call'):

@@ -632,7 +632,7 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
 
     def _build_part_location_rule(self, part_name: str, building_name: str) -> Dict[str, Any]:
         """Build a complete rule for a Part location using game logic."""
-        recipes = self._game_logic.recipes.get(part_name, ())
+        recipes = self._game_logic.recipes.get(part_name, ())  # type: ignore[union-attr]
         final_phase = self._options.final_elevator_phase.value if self._options else 5
 
         # Filter recipes for this building and phase
@@ -752,7 +752,7 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
 
     def _build_event_building_rule(self, building_name: str) -> Dict[str, Any]:
         """Build rule for EventBuilding location 'Can Build: <Building>'."""
-        building = self._game_logic.buildings.get(building_name)
+        building = self._game_logic.buildings.get(building_name)  # type: ignore[union-attr]
         if not building:
             logger.warning(f"Building '{building_name}' not found in game logic")
             return _make_true()
@@ -786,8 +786,8 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
 
         # Need to produce all parts for this phase
         phase_index = phase_num - 1
-        if phase_index < len(self._game_logic.space_elevator_phases):
-            parts = list(self._game_logic.space_elevator_phases[phase_index].keys())
+        if phase_index < len(self._game_logic.space_elevator_phases):  # type: ignore[union-attr]
+            parts = list(self._game_logic.space_elevator_phases[phase_index].keys())  # type: ignore[union-attr]
             if parts:
                 conditions.append(_resolve_can_produce_all(parts))
 
@@ -817,7 +817,7 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
             conditions.append(_make_has(BUILDING_EVENT_PREFIX + level.to_name()))
 
         # Buildings at this power level
-        recipes = self._game_logic.requirement_per_powerlevel.get(target_level, [])
+        recipes = self._game_logic.requirement_per_powerlevel.get(target_level, [])  # type: ignore[union-attr]
         for recipe in recipes:
             if recipe.building:
                 conditions.append(_make_has(BUILDING_EVENT_PREFIX + recipe.building))
@@ -837,7 +837,7 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         """
         if not hasattr(self, '_sorted_drop_pods'):
             self._sorted_drop_pods = sorted(
-                self._game_logic.drop_pods,
+                self._game_logic.drop_pods,  # type: ignore[union-attr]
                 key=lambda dp: ("!" if dp.item is None else dp.item) + str(dp.x - dp.z)
             )
 

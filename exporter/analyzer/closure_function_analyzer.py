@@ -103,7 +103,7 @@ class ClosureFunctionAnalyzer:
         'moon_pearl_check': {'player'},
     }
 
-    def __init__(self, parent_analyzer: 'RuleAnalyzer', max_depth: int = None):
+    def __init__(self, parent_analyzer: 'RuleAnalyzer', max_depth: Optional[int] = None):
         """Initialize the ClosureFunctionAnalyzer.
 
         Args:
@@ -338,7 +338,7 @@ class ClosureFunctionAnalyzer:
         logger.debug(f"ClosureFunctionAnalyzer: Unrecognized closure pattern with vars: {closure_var_names}")
         return None
 
-    def _analyze_options_pattern(self, options: List, depth: int) -> Optional[Dict[str, Any]]:
+    def _analyze_options_pattern(self, options, depth: int) -> Optional[Dict[str, Any]]:
         """Analyze any(rule(state) for rule in options) pattern.
 
         This pattern is used by ALttP's options_to_access_rule() which returns

@@ -40,7 +40,7 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
             'args': [{'type': 'constant', 'value': items}]
         }
 
-    def _item_check(self, item: str, count: int = None) -> Dict[str, Any]:
+    def _item_check(self, item: str, count: Optional[int] = None) -> Dict[str, Any]:
         """Create an item_check rule."""
         rule: Dict[str, Any] = {'type': 'item_check', 'item': item}
         if count is not None:
@@ -109,7 +109,7 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
     # Helper expansion
     # ==========================================================================
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand Inscryption helper methods to their actual rule structures.
 
         InscryptionRules class methods can't be auto-discovered, so we define

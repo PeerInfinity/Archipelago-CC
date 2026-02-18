@@ -8,7 +8,7 @@ import enum
 import importlib
 import inspect
 import logging
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any, Callable, Dict, List, Optional, Set, TYPE_CHECKING
 
 from exporter.constants import MAX_HELPER_DISCOVERY_ITERATIONS
 
@@ -27,6 +27,10 @@ class HelperDiscoveryMixin:
     AUTO_EXPORT_DISCOVERED_HELPERS: bool
     HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]]
     ITEM_NAME_MODULES: List[str]
+
+    if TYPE_CHECKING:
+        DICT_SUM_HELPERS: Dict[str, str]
+        def get_discovered_param_mappings(self, helper_name: Optional[str] = None) -> Dict[str, Any]: ...
 
     def _analyze_worldgen_helpers(self, rules_module, world) -> Dict[str, Any]:
         """
@@ -409,7 +413,7 @@ class HelperDiscoveryMixin:
                     rule = self._clean_helper_rule(rule, world)
 
                     # Expand helper calls in the rule (game-specific expansions)
-                    if hasattr(self, 'expand_rule') and callable(self.expand_rule):
+                    if rule is not None and hasattr(self, 'expand_rule') and callable(self.expand_rule):
                         rule = self.expand_rule(rule)
 
                     if rule and rule.get('type') != 'error':
@@ -521,7 +525,7 @@ class HelperDiscoveryMixin:
             }
         }
 
-    def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
+    def _clean_helper_rule(self, rule: Optional[Dict[str, Any]], world) -> Optional[Dict[str, Any]]:
         """
         Clean up a helper rule by resolving attribute nodes and simplifying structure.
 

@@ -5,6 +5,7 @@ region/location information for export.
 """
 
 import collections
+import collections.abc
 import enum
 import json
 import logging
@@ -338,10 +339,10 @@ class WorldDataMixin:
 
         # Process ITEM_VALUE_MAPPINGS - compute item->value dicts from world attributes
         # Skip for worldgen worlds since the mapping is already in _worldgen_settings.json
-        if hasattr(self, 'ITEM_VALUE_MAPPINGS') and self.ITEM_VALUE_MAPPINGS:
+        if hasattr(self, 'ITEM_VALUE_MAPPINGS') and self.ITEM_VALUE_MAPPINGS:  # type: ignore[attr-defined]
             is_worldgen = self.is_worldgen_world(world) if hasattr(self, 'is_worldgen_world') else False
             if not is_worldgen:
-                for mapping_name, config in self.ITEM_VALUE_MAPPINGS.items():
+                for mapping_name, config in self.ITEM_VALUE_MAPPINGS.items():  # type: ignore[attr-defined]
                     source_attr = config.get('source')
                     value_extractor = config.get('value_extractor')
 

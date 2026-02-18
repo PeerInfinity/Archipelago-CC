@@ -125,7 +125,7 @@ class MMRecompExportHandler(GenericGameExportHandler):
         """Load prices from the world if available."""
         if self.world and hasattr(self.world, 'prices_ints'):
             self._prices = self.world.prices_ints
-            logger.info(f"[MMRecomp] Loaded {len(self._prices)} shop prices from world")
+            logger.info(f"[MMRecomp] Loaded {len(self._prices)} shop prices from world")  # type: ignore[arg-type]
         else:
             # Fall back to default prices
             self._prices = DEFAULT_SHOP_PRICES

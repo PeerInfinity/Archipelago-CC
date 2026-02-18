@@ -34,7 +34,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         'Keep Laser Activated': 'Keep Tower',  # Has two panels, both in Keep Tower
     }
 
-    def set_context(self, location_name: str):
+    def set_context(self, location_name: Optional[str]):
         """Store the current location name for context-aware processing."""
         self._current_location_name = location_name
 
@@ -170,7 +170,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
     # Region reachability pattern handling
     # =========================================================================
 
-    def _is_region_reachability_pattern(self, rule: Dict[str, Any]) -> bool:
+    def _is_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> bool:
         """Check if rule matches the standard region.can_reach AST pattern."""
         if not rule or rule.get('type') != 'conditional':
             return False
@@ -207,7 +207,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
 
         return True
 
-    def _simplify_region_reachability(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def _simplify_region_reachability(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """Recursively simplify region reachability patterns."""
         if not rule or not isinstance(rule, dict):
             return rule
@@ -241,14 +241,14 @@ class WitnessGameExportHandler(GenericGameExportHandler):
             if rule_type == 'and':
                 # Filter out True values
                 simplified = [c for c in simplified
-                              if c.get('type') != 'constant' or c.get('value') is not True]
+                              if c and (c.get('type') != 'constant' or c.get('value') is not True)]
                 if not simplified:
                     return {'type': 'constant', 'value': True}
             else:  # or
                 # Filter out False values
                 simplified = [c for c in simplified
-                              if c.get('type') != 'constant' or c.get('value') is not False]
-                if any(c.get('type') == 'constant' and c.get('value') is True for c in simplified):
+                              if c and (c.get('type') != 'constant' or c.get('value') is not False)]
+                if any(c and c.get('type') == 'constant' and c.get('value') is True for c in simplified):
                     return {'type': 'constant', 'value': True}
                 if not simplified:
                     return {'type': 'constant', 'value': False}
@@ -322,15 +322,15 @@ class WitnessGameExportHandler(GenericGameExportHandler):
 
         return region_names
 
-    def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:  # noqa: ARG002
         """Handle complex exit rules with bound method patterns."""
         from exporter.analyzer import analyze_rule
 
         # Extract region names before analysis
-        self._exit_region_names = self._extract_region_names_from_closure(rule_func)
+        self._exit_region_names = self._extract_region_names_from_closure(exit_rule)
 
         # Analyze and post-process
-        result = analyze_rule(rule_func=rule_func, game_handler=self)
+        result = analyze_rule(rule_func=exit_rule, game_handler=self)
         if result and result.get('type') != 'error':
             result = self._simplify_region_reachability(result)
 

@@ -37,7 +37,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
     # Default RUPEES accumulator init (may be overridden by world attribute for worldgen)
     PROG_ITEMS_INIT = {'RUPEES': 0}
 
-    def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method):
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any):
         """
         Extract the actual condition from LADX entrance objects (for entrances).
 
@@ -46,9 +46,9 @@ class LADXGameExportHandler(GenericGameExportHandler):
         Both need the same special handling to avoid analyzing the access_rule method
         which uses GameStateAdapater - a class that can't be analyzed as a function.
         """
-        return self.handle_complex_exit_rule(entrance_name, access_rule_method)
+        return self.handle_complex_exit_rule(entrance_name, rule)
 
-    def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule):
         """
         Extract the actual condition from LADX entrance objects.
 
@@ -56,9 +56,9 @@ class LADXGameExportHandler(GenericGameExportHandler):
         not in the access_rule method. We extract it directly here to avoid
         the isinstance pattern that the analyzer can't handle.
         """
-        # access_rule_method is a bound method, so we can get the instance
-        if hasattr(access_rule_method, '__self__'):
-            entrance = access_rule_method.__self__
+        # exit_rule is a bound method, so we can get the instance
+        if hasattr(exit_rule, '__self__'):
+            entrance = exit_rule.__self__
 
             # Check if this is a LinksAwakeningEntrance with a condition attribute
             if hasattr(entrance, 'condition'):

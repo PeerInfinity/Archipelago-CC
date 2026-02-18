@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Optional, Tuple, Dict, Any, List
 
 
-def detect_snippet_format(rule: Dict[str, Any]) -> str:
+def detect_snippet_format(rule: Any) -> str:
     """
     Detect the format of a single rule snippet.
 
@@ -97,7 +97,7 @@ def convert_file(
     input_path: str,
     output_path: Optional[str] = None,
     target_format: Optional[str] = None,
-    indent: int = 2,
+    indent: Optional[int] = None,
     verbose: bool = False
 ) -> int:
     """
@@ -114,8 +114,8 @@ def convert_file(
         Exit code (0 for success, 1 for error)
     """
     # Import converters (avoid import issues at module level)
-    from .rule_builder_to_cc import convert_rules_file_to_cc
-    from .cc_to_rule_builder import convert_rules_file_to_rule_builder
+    from .rule_builder_to_cc import convert_rules_file_to_cc  # type: ignore[import-not-found]
+    from .cc_to_rule_builder import convert_rules_file_to_rule_builder  # type: ignore[import-not-found]
 
     try:
         # Read input file

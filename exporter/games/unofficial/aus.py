@@ -5,7 +5,7 @@ so they cannot be automatically exported. This handler provides
 manual helper definitions that the world generator can use.
 """
 
-from typing import Any, Dict, Set
+from typing import Any, Dict, Optional, Set
 from ..base import GenericGameExportHandler
 
 
@@ -72,7 +72,7 @@ class AUSGameExportHandler(GenericGameExportHandler):
     # Rule construction helpers
     # ==========================================================================
 
-    def _item_check(self, item: str, count: int = None) -> Dict[str, Any]:
+    def _item_check(self, item: str, count: Optional[int] = None) -> Dict[str, Any]:
         """Create an item_check rule."""
         rule: Dict[str, Any] = {'type': 'item_check', 'item': item}
         if count is not None:

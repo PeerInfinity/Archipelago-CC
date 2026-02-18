@@ -37,7 +37,7 @@ class AquariaGameExportHandler(GenericGameExportHandler):
             if attr_name == 'sunken_city_l_crates' and region.name == "Sunken City left area":
                 region.name = "Sunken City left area crates"
 
-            region.dynamically_added = True
+            region.dynamically_added = True  # type: ignore[attr-defined]
             multiworld.regions.append(region)
             regions_added.append(region.name)
 

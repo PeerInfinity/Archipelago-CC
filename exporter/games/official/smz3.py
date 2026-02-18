@@ -192,7 +192,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     reward_value = reward.value if hasattr(reward, 'value') else 0
 
                     if reward_value != 0:  # Skip Null rewards
-                        region_name = region.Name if hasattr(region, 'Name') else str(region)
+                        region_name = region.Name if hasattr(region, 'Name') else str(region)  # type: ignore[union-attr]
                         reward_regions[region_name] = {
                             'reward_type': reward_value,
                             'reward_name': reward.name if hasattr(reward, 'name') else str(reward)
@@ -492,7 +492,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     'Glove': 'ProgressiveGlove',
                 }
 
-                actual_item_name = item_name_mappings.get(attr, attr)
+                actual_item_name = item_name_mappings.get(attr, attr) if attr else attr  # type: ignore[arg-type]
 
                 return {
                     'type': 'item_check',
@@ -574,7 +574,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 }
 
             # Recursively process the object part of attribute access
-            rule['object'] = self.postprocess_rule(obj)
+            rule['object'] = self.postprocess_rule(obj)  # type: ignore[arg-type]
 
         # Handle region.CanEnter() and loc.Available() patterns
         # These appear as: {type: "function_call", function: {type: "attribute", object: {type: "name", name: "region"/"loc"}, attr: "CanEnter"/"Available"}, args: [...]}
@@ -644,7 +644,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         (inner_obj.get('type') == 'constant' and inner_obj.get('value') == True))):
 
                         # Extract the location name from GetLocation args
-                        get_location_args = obj.get('args', [])
+                        get_location_args = obj.get('args', [])  # type: ignore[union-attr]
                         location_name = None
                         if get_location_args and len(get_location_args) > 0:
                             location_name_arg = get_location_args[0]
@@ -697,9 +697,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         loc_obj = self._current_location_object
 
                         # Get the region's GetLocation method to find the target location
-                        if hasattr(loc_obj, 'Region') and hasattr(loc_obj.Region, 'GetLocation'):
+                        if hasattr(loc_obj, 'Region') and hasattr(loc_obj.Region, 'GetLocation'):  # type: ignore[union-attr]
                             try:
-                                target_location = loc_obj.Region.GetLocation(location_name)
+                                target_location = loc_obj.Region.GetLocation(location_name)  # type: ignore[union-attr]
                                 if target_location:
                                     # Import ItemType enum to check against
                                     from worlds.smz3.TotalSMZ3.Item import ItemType
@@ -709,7 +709,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                                     if item_type_enum is not None and hasattr(target_location, 'ItemIs'):
                                         # Get the world object
-                                        world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None
+                                        world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None  # type: ignore[union-attr]
 
                                         if world:
                                             # Evaluate ItemIs at export time!
@@ -1062,9 +1062,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                             if isinstance(item_type_name, str):
                                 item_type_enum = getattr(ItemType, item_type_name, None)
                                 if item_type_enum is not None and hasattr(loc_obj, 'ItemIs'):
-                                    world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None
+                                    world = loc_obj.Region.world if hasattr(loc_obj.Region, 'world') else None  # type: ignore[union-attr]
                                     if world:
-                                        result = loc_obj.ItemIs(item_type_enum, world)
+                                        result = loc_obj.ItemIs(item_type_enum, world)  # type: ignore[union-attr]
                                         if result:
                                             any_match = True
                                             break

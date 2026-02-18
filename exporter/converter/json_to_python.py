@@ -233,7 +233,7 @@ class JSONToPython:
         lines = code.split('\n')
         return '\n'.join(indent + line if line.strip() else line for line in lines)
 
-    def _needs_parens(self, rule: Dict, parent_op: str = None) -> bool:
+    def _needs_parens(self, rule: Dict, parent_op: Optional[str] = None) -> bool:
         """Check if a rule needs parentheses based on precedence."""
         rule_type = rule.get('type', '')
         # And has higher precedence than Or, so Or inside And needs parens

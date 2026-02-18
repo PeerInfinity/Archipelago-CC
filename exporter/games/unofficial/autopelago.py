@@ -47,7 +47,7 @@ class AutopelagoGameExportHandler(GenericGameExportHandler):
             return
 
         try:
-            from worlds.autopelago.AutopelagoDefinitions import (
+            from worlds.autopelago.AutopelagoDefinitions import (  # type: ignore[import-not-found]
                 item_key_to_name,
                 item_name_to_rat_count
             )

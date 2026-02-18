@@ -56,7 +56,7 @@ def make_json_serializable(value: Any) -> Any:
             # Also include the type name so constructor calls can be mapped
             return {
                 '_namedtuple_type': type(value).__name__,
-                '_namedtuple_fields': list(value._fields),
+                '_namedtuple_fields': list(value._fields),  # type: ignore[attr-defined]
                 '_namedtuple_values': [make_json_serializable(item) for item in value]
             }
         return [make_json_serializable(item) for item in value]
@@ -106,7 +106,7 @@ class LambdaFinder(ast.NodeVisitor):
             method_name = call_node.func.attr
             if method_name in ['get_location', 'get_entrance', 'get_region']:
                 if len(call_node.args) > 0 and isinstance(call_node.args[0], ast.Constant):
-                    return call_node.args[0].value
+                    return call_node.args[0].value  # type: ignore[return-value]
                 else:
                     logging.warning(f"LambdaFinder: No constant arg found for {method_name} call.")
         return None

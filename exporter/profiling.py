@@ -111,7 +111,7 @@ class ExporterProfiler:
             self._record(full_name, elapsed)
             self.stack.pop()
 
-    def profile(self, name: str = None) -> Callable:
+    def profile(self, name: Optional[str] = None) -> Callable:
         """
         Decorator to profile a function.
 
