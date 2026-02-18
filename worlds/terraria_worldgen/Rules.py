@@ -163,12 +163,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sandstorm", player),
-        Or(Not(False_()), Has('Post-Desert Scourge'))
+        Or(Not(False_()), Has('None'))
     )
 
     world.set_rule(
         multiworld.get_location("Dryad", player),
-        HasAny('Post-Evil Boss', 'Post-Eye of Cthulhu', 'Post-Skeletron')
+        False_()
     )
 
     world.set_rule(
@@ -203,7 +203,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tavernkeep", player),
-        Has('Post-Evil Boss', 1)
+        False_()
     )
 
     world.set_rule(
@@ -263,7 +263,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goblin Tinkerer", player),
-        Has('Post-Goblin Army', 1)
+        False_()
     )
 
     world.set_rule(
@@ -338,7 +338,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Witch Doctor", player),
-        Has('Post-Queen Bee', 1)
+        False_()
     )
 
     world.set_rule(
@@ -348,12 +348,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Clothier", player),
-        Has('Post-Skeletron', 1)
+        False_()
     )
 
     world.set_rule(
         multiworld.get_location("Dungeon", player),
-        Has('Post-Skeletron', 1)
+        False_()
     )
 
     world.set_rule(
@@ -383,7 +383,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cell Phone", player),
-        Or(And(Or(HasAll('Ancient Manipulator', 'Polterplasm'), Has('Post-Moon Lord')), False_(), False_(), Has('Dungeon')), HasAll('Magic Mirror', 'PDA', "Tinkerer's Workshop"))
+        Or(And(Or(HasAll('Ancient Manipulator', 'Polterplasm'), Has('None')), False_(), False_(), Has('Dungeon')), HasAll('Magic Mirror', 'PDA', "Tinkerer's Workshop"))
     )
 
     world.set_rule(
@@ -428,7 +428,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Elder Slime", player),
-        HasAll('Dungeon', 'Post-Skeletron')
+        HasAll('Dungeon', 'None')
     )
 
     world.set_rule(
@@ -663,7 +663,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Head in the Clouds", player),
-        Or(HasAll('Ancient Manipulator', 'Fragment', 'Luminite Bar'), HasAll('Hardmode', 'Post-Golem', 'Tavernkeep'), HasAll('Hardmode', 'Post-Plantera', 'Witch Doctor'), HasAll('Post-Plantera', 'Solar Eclipse'), And(Or(HasAll('Autohammer', 'Shroomite Bar'), And(Or(HasAll('Hardmode', 'Lihzahrd Temple', 'Post-Plantera'), And(False_(), HasAll('Essence of Sunlight', 'Hardmode Anvil', 'Lihzahrd Temple')), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1), HasAny('Hardmode', 'Pixie Dust', 'Post-Plantera', 'Solar Eclipse', 'Soul of Light', 'Soul of Night', 'Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon')), Has('Soul of Flight')), And(False_(), False_(), HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka")), And(Or(False_(), Has('Post-Plantera')), HasAll('Hallow', 'Hardmode')), HasAll('Bug Net', 'Hardmode'), And(False_(), False_(), Has('Titan Heart')), False_(), HasAny('Frost Moon', 'Steampunker'))
+        Or(HasAll('Ancient Manipulator', 'Fragment', 'Luminite Bar'), HasAll('Hardmode', 'None', 'Tavernkeep'), HasAll('Hardmode', 'None', 'Witch Doctor'), HasAll('None', 'Solar Eclipse'), And(Or(HasAll('Autohammer', 'Shroomite Bar'), And(Or(HasAll('Hardmode', 'Lihzahrd Temple', 'None'), And(False_(), HasAll('Essence of Sunlight', 'Hardmode Anvil', 'Lihzahrd Temple')), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1), HasAny('Hardmode', 'None', 'Pixie Dust', 'Solar Eclipse', 'Soul of Light', 'Soul of Night', 'Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon')), Has('Soul of Flight')), And(False_(), False_(), HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka")), And(Or(False_(), Has('None')), HasAll('Hallow', 'Hardmode')), HasAll('Bug Net', 'Hardmode'), And(False_(), False_(), Has('Titan Heart')), False_(), HasAny('Frost Moon', 'Steampunker'))
     )
 
     world.set_rule(
@@ -698,7 +698,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pirate", player),
-        Has('Post-Pirate Invasion', 1)
+        False_()
     )
 
     world.set_rule(

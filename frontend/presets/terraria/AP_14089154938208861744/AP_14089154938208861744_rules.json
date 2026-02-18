@@ -1681,7 +1681,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Post-Desert Scourge"
+                    "item_name": "None"
                   }
                 }
               ]
@@ -1749,13 +1749,9 @@
             "name": "Dryad",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Post-Evil Boss",
-                  "Post-Eye of Cthulhu",
-                  "Post-Skeletron"
-                ]
+                "item_name": "None"
               }
             },
             "item": {
@@ -1941,7 +1937,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Evil Boss"
+                "item_name": "None"
               }
             },
             "item": {
@@ -2274,7 +2270,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Goblin Army"
+                "item_name": "None"
               }
             },
             "item": {
@@ -2660,7 +2656,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Queen Bee"
+                "item_name": "None"
               }
             },
             "item": {
@@ -2730,7 +2726,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Skeletron"
+                "item_name": "None"
               }
             },
             "item": {
@@ -2748,7 +2744,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Skeletron"
+                "item_name": "None"
               }
             },
             "item": {
@@ -2895,7 +2891,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Post-Moon Lord"
+                            "item_name": "None"
                           }
                         }
                       ]
@@ -3161,7 +3157,7 @@
               "args": {
                 "items": [
                   "Dungeon",
-                  "Post-Skeletron"
+                  "None"
                 ]
               }
             },
@@ -4763,7 +4759,7 @@
                   "args": {
                     "items": [
                       "Hardmode",
-                      "Post-Golem",
+                      "None",
                       "Tavernkeep"
                     ]
                   }
@@ -4773,7 +4769,7 @@
                   "args": {
                     "items": [
                       "Hardmode",
-                      "Post-Plantera",
+                      "None",
                       "Witch Doctor"
                     ]
                   }
@@ -4782,7 +4778,7 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Post-Plantera",
+                      "None",
                       "Solar Eclipse"
                     ]
                   }
@@ -4814,7 +4810,7 @@
                                     "items": [
                                       "Hardmode",
                                       "Lihzahrd Temple",
-                                      "Post-Plantera"
+                                      "None"
                                     ]
                                   }
                                 },
@@ -4855,8 +4851,8 @@
                                   "args": {
                                     "items": [
                                       "Hardmode",
+                                      "None",
                                       "Pixie Dust",
-                                      "Post-Plantera",
                                       "Solar Eclipse",
                                       "Soul of Light",
                                       "Soul of Night",
@@ -4934,7 +4930,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Post-Plantera"
+                            "item_name": "None"
                           }
                         }
                       ]
@@ -5124,7 +5120,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Pirate Invasion"
+                "item_name": "None"
               }
             },
             "item": {
