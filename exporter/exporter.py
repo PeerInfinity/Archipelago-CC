@@ -67,7 +67,7 @@ def classification_to_string(classification: ItemClassification) -> str:
 
     # For other combinations, use the enum's name if available
     try:
-        return classification.name
+        return classification.name or str(classification)
     except (AttributeError, ValueError):
         # Fallback: return string representation
         return str(classification)
@@ -304,9 +304,9 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
                 if obj_name == 'world':
                     # Start with world object
                     obj = world
-                elif hasattr(world, obj_name):
+                elif obj_name and hasattr(world, obj_name):
                     obj = getattr(world, obj_name)
-                elif hasattr(world, '__class__') and hasattr(world.__class__, '__module__'):
+                elif obj_name and hasattr(world, '__class__') and hasattr(world.__class__, '__module__'):
                     # Import the world's module and look for the object there
                     import sys
                     world_module = sys.modules.get(world.__class__.__module__)
@@ -464,23 +464,23 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
         rule['conditions'] = [resolve_attribute_nodes_in_rule(cond, world) for cond in rule.get('conditions', [])]
 
     if rule.get('type') == 'not':
-        rule['condition'] = resolve_attribute_nodes_in_rule(rule.get('condition'), world)
+        rule['condition'] = resolve_attribute_nodes_in_rule(rule.get('condition'), world)  # type: ignore[arg-type]
 
     if rule.get('type') == 'conditional':
-        rule['test'] = resolve_attribute_nodes_in_rule(rule.get('test'), world)
+        rule['test'] = resolve_attribute_nodes_in_rule(rule.get('test'), world)  # type: ignore[arg-type]
         if rule.get('if_true') is not None:
-            rule['if_true'] = resolve_attribute_nodes_in_rule(rule.get('if_true'), world)
+            rule['if_true'] = resolve_attribute_nodes_in_rule(rule.get('if_true'), world)  # type: ignore[arg-type]
         if rule.get('if_false') is not None:
-            rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)
+            rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)  # type: ignore[arg-type]
 
         # Eliminate constant conditionals after resolving attributes
         test = rule.get('test')
         if test and test.get('type') == 'constant':
             test_value = test.get('value')
             if test_value:  # Truthy - return if_true branch
-                return rule.get('if_true')
+                return rule.get('if_true')  # type: ignore[return-value]
             else:  # Falsy - return if_false branch
-                return rule.get('if_false')
+                return rule.get('if_false')  # type: ignore[return-value]
 
     # Process compare rules
     if rule.get('type') == 'compare':
@@ -1004,7 +1004,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             all_dungeons[player_str] = dungeons_data
         
         # Pre-calculate itempool counts to use them when processing item data
-        itempool_counts = {}
+        itempool_counts: Dict[str, Any] = {}
         try:
             itempool_counts = game_handler.get_itempool_counts(world, multiworld, player)
         except Exception as e:
@@ -1325,7 +1325,7 @@ def _make_rule_dict_serializable(obj: Any) -> Any:
         return obj
 
 
-def process_regions(multiworld, player: int, game_handler=None, location_name_to_id: Dict[str, int] = None) -> tuple:
+def process_regions(multiworld, player: int, game_handler=None, location_name_to_id: Optional[Dict[str, int]] = None) -> tuple:
     """
     Process complete region data including all available backend data.
     Returns (regions_data, dungeons_data) tuple with separate structures.
@@ -2415,7 +2415,7 @@ def cleanup_export_data(data):
             if not isinstance(world_data, dict) or 'error' in world_data: # Skip if not dict or already an error
                 continue
             # Get world_directory from world data (added during export) for handler lookup
-            world_dir = world_data.get('world_directory')
+            world_dir = world_data.get('world_directory') or ''
             game_handler = get_game_export_handler(world_directory=world_dir)  # World not available during cleanup
             try:
                 # Delegate cleanup to the specific handler

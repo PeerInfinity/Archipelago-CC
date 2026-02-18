@@ -252,7 +252,7 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return game_info
 
-    def postprocess_entrance_rule(self, rule: Optional[Dict[str, Any]], entrance_name: str, connected_region: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: Optional[str] = None, connected_region: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Post-process entrance/exit rules to handle AHIT-specific pseudo-items.
 
         Converts Has("Stamps", count=N) to weighted_sum format because:

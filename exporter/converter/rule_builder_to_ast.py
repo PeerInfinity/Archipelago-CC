@@ -93,7 +93,7 @@ class RuleBuilderToAST:
             'Compare': self._convert_compare,
         }
 
-    def convert(self, rule: Dict[str, Any]) -> ConversionResult:
+    def convert(self, rule: Any) -> ConversionResult:
         """
         Convert a Rule Builder format rule to AST format.
 
@@ -158,7 +158,7 @@ class RuleBuilderToAST:
         rule_name = rule.get('rule')
 
         # Look up converter
-        converter = self.RULE_CONVERTERS.get(rule_name)
+        converter = self.RULE_CONVERTERS.get(rule_name)  # type: ignore[arg-type]
         if converter:
             return converter(rule)
 

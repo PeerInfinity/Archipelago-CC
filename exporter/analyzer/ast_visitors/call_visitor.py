@@ -47,7 +47,7 @@ class CallVisitorMixin(BaseVisitorMixin):
         - _substitute_variable_in_rule(): Substitutes variables in rules
     """
 
-    def visit_Call(self, node):
+    def visit_Call(self, node):  # type: ignore[reportGeneralTypeIssues]
         """
         Visit a function call node.
 

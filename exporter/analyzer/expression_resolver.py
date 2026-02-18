@@ -31,7 +31,7 @@ class ExpressionResolver:
         self.rule_func = rule_func
         self.player_context = player_context
 
-    def resolve_variable(self, var_name: str) -> Any:
+    def resolve_variable(self, var_name: Optional[str]) -> Any:
         """
         Resolve variable name using function defaults, closure variables, or module globals.
 
@@ -71,7 +71,7 @@ class ExpressionResolver:
         logging.debug(f"Could not resolve variable '{var_name}'")
         return None
 
-    def resolve_expression(self, expr_result: Dict) -> Any:
+    def resolve_expression(self, expr_result: Optional[Dict]) -> Any:
         """
         Resolve a complex expression to its value.
         Handles subscripts, attributes, and simple names.

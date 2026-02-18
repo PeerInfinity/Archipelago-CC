@@ -173,12 +173,12 @@ class RuleExpansionMixin:
                 rule = self._simplify_and_or(rule)
 
         elif rule_type == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)  # type: ignore[arg-type]
 
         elif rule_type == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
-            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
-            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)  # type: ignore[arg-type]
+            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)  # type: ignore[arg-type]
+            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)  # type: ignore[arg-type]
 
         # Handle compare operations (expand left/right recursively)
         elif rule_type == 'compare':
@@ -291,10 +291,11 @@ class RuleExpansionMixin:
             # This handles computed properties on option classes
             obj_name = obj.get('name') if obj.get('type') == 'name' else None
             attr_name = rule.get('attr')
-            if obj_name and attr_name and hasattr(self, 'OPTION_PROPERTY_EXPANSIONS'):
+            option_property_expansions = getattr(self, 'OPTION_PROPERTY_EXPANSIONS', None)
+            if obj_name and attr_name and option_property_expansions:
                 expansion_key = (obj_name, attr_name)
-                if expansion_key in self.OPTION_PROPERTY_EXPANSIONS:
-                    expansion = copy.deepcopy(self.OPTION_PROPERTY_EXPANSIONS[expansion_key])
+                if expansion_key in option_property_expansions:
+                    expansion = copy.deepcopy(option_property_expansions[expansion_key])
                     logger.debug(f"Expanding {obj_name}.{attr_name} via OPTION_PROPERTY_EXPANSIONS")
                     return self.expand_rule(expansion, _depth + 1)
 
@@ -458,7 +459,7 @@ class RuleExpansionMixin:
         if rule.get('type') != 'attribute':
             return None
 
-        option_name = rule.get('attr')
+        option_name: Optional[str] = rule.get('attr')
         obj = rule.get('object', {})
 
         # Pattern 1: self.options.X or world.options.X
@@ -468,7 +469,7 @@ class RuleExpansionMixin:
             obj.get('object', {}).get('name') in ['self', 'world']):
 
             world = self.world
-            if world and hasattr(world, 'options'):
+            if option_name and world and hasattr(world, 'options'):
                 option_value = getattr(world.options, option_name, None)
                 if option_value is not None:
                     value = getattr(option_value, 'value', option_value)
@@ -481,7 +482,7 @@ class RuleExpansionMixin:
             obj.get('object', {}).get('type') == 'subscript'):
 
             world = self.world
-            if world and hasattr(world, 'options'):
+            if option_name and world and hasattr(world, 'options'):
                 option_value = getattr(world.options, option_name, None)
                 if option_value is not None:
                     value = getattr(option_value, 'value', option_value)
@@ -808,7 +809,7 @@ class RuleExpansionMixin:
         else:
             return {'type': rule_type, 'conditions': simplified}
 
-    def simplify_rule_tree(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def simplify_rule_tree(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """Recursively simplify a rule tree.
 
         This applies _simplify_and_or to all AND/OR nodes in the tree,
@@ -861,7 +862,7 @@ class RuleExpansionMixin:
         return rule
 
     # These methods are expected to be provided by the main handler class
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand a helper function into basic rule conditions.
 
         This is a stub that should be overridden by the main handler class.

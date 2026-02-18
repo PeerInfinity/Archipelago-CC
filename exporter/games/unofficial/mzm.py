@@ -103,7 +103,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
-    def _convert_item_requirement(self, func: Callable, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_item_requirement(self, func: Callable, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert Requirement.item lambda to item_check rule."""
         closure_vars = self._get_closure_vars(func)
         item = closure_vars.get('item')
@@ -117,7 +117,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
                 return {'rule': 'item_check', 'item': item, 'count': count}
         return None
 
-    def _convert_location_requirement(self, func: Callable, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_location_requirement(self, func: Callable, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert Requirement.location lambda to location_access rule."""
         closure_vars = self._get_closure_vars(func)
         location = closure_vars.get('location')
@@ -127,7 +127,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
             return {'rule': 'location_access', 'location': location}
         return None
 
-    def _convert_entrance_requirement(self, func: Callable, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_entrance_requirement(self, func: Callable, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert Requirement.entrance lambda to entrance_access rule."""
         closure_vars = self._get_closure_vars(func)
         entrance = closure_vars.get('entrance')
@@ -137,7 +137,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
             return {'rule': 'entrance_access', 'entrance': entrance}
         return None
 
-    def _convert_setting_requirement(self, func: Callable, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_setting_requirement(self, func: Callable, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert Requirement.setting_* lambda to setting check rule."""
         closure_vars = self._get_closure_vars(func)
         setting = closure_vars.get('setting')
@@ -155,7 +155,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
                 return {'rule': 'setting_contains', 'setting': setting, 'value': value}
         return None
 
-    def _convert_requirement_to_rule(self, req: Any, world: Any, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_requirement_to_rule(self, req: Any, world: Any, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Recursively convert a Requirement object to a rule dict."""
         # Check if this is a Requirement namedtuple with a rule attribute
         if hasattr(req, 'rule') and callable(req.rule):
@@ -175,7 +175,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def _convert_all_requirement(self, func: Callable, world: Any, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_all_requirement(self, func: Callable, world: Any, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert all(*Requirements) to And rule."""
         closure_vars = self._get_closure_vars(func)
         args = closure_vars.get('args')
@@ -199,7 +199,7 @@ class MZMGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def _convert_any_requirement(self, func: Callable, world: Any, target_name: str) -> Optional[Dict[str, Any]]:
+    def _convert_any_requirement(self, func: Callable, world: Any, target_name: Optional[str]) -> Optional[Dict[str, Any]]:
         """Convert any(*Requirements) to Or rule."""
         closure_vars = self._get_closure_vars(func)
         args = closure_vars.get('args')

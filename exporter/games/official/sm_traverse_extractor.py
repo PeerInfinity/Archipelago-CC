@@ -65,7 +65,7 @@ def unwrap_cache_ldeco(func: Callable) -> Optional[Callable]:
 
     try:
         # The original function is in the first closure cell
-        original_func = func.__closure__[0].cell_contents
+        original_func = func.__closure__[0].cell_contents  # type: ignore[index]
         logger.debug(f"SM: Successfully unwrapped Cache.ldeco wrapper")
         return original_func
     except (AttributeError, ValueError, IndexError) as e:

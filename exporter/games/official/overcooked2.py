@@ -36,7 +36,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
         return game_info
 
-    def override_rule_analysis(self, rule_func, rule_target_name: str = None):
+    def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None):
         """Override rule analysis to properly handle Overcooked! 2 helper functions."""
         if not hasattr(rule_func, '__code__'):
             return None
@@ -139,7 +139,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             return rule
         return self.expand_rule(rule)
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand Overcooked! 2-specific helpers.
 
         The base class expand_rule calls expand_helper for helper nodes and recursively
@@ -642,7 +642,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _resolve_constant(self, rule: Dict[str, Any]) -> Any:
+    def _resolve_constant(self, rule: Optional[Dict[str, Any]]) -> Any:
         """Resolve a rule to a constant value if possible."""
         if not rule:
             return None

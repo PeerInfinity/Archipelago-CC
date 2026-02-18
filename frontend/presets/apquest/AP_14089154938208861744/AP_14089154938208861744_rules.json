@@ -186,8 +186,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Sword",
-                  "Shield"
+                  "Shield",
+                  "Sword"
                 ]
               }
             },

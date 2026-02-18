@@ -30,8 +30,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Extractor",
-                  "Chaining Extractor"
+                  "Chaining Extractor",
+                  "Extractor"
                 ]
               }
             }
@@ -53,30 +53,30 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Belt",
                   "Balancer",
+                  "Belt",
+                  "Belt Reader",
+                  "Chaining Extractor",
+                  "Color Mixer",
                   "Compact Merger",
                   "Compact Splitter",
-                  "Tunnel",
-                  "Tunnel Tier II",
-                  "Extractor",
-                  "Chaining Extractor",
                   "Cutter",
-                  "Quad Cutter",
-                  "Rotator",
-                  "Rotator (CCW)",
-                  "Rotator (180\u00b0)",
-                  "Stacker",
-                  "Painter",
+                  "Display",
                   "Double Painter",
+                  "Extractor",
+                  "Item Filter",
+                  "Painter",
+                  "Quad Cutter",
                   "Quad Painter",
-                  "Color Mixer",
-                  "Trash",
-                  "Belt Reader",
+                  "Rotator",
+                  "Rotator (180\u00b0)",
+                  "Rotator (CCW)",
+                  "Stacker",
                   "Storage",
                   "Switch",
-                  "Item Filter",
-                  "Display",
+                  "Trash",
+                  "Tunnel",
+                  "Tunnel Tier II",
                   "Wires"
                 ]
               }
@@ -226,8 +226,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Painter",
-                  "Double Painter"
+                  "Double Painter",
+                  "Painter"
                 ]
               }
             }

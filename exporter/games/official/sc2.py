@@ -18,6 +18,11 @@ try:
     SC2_RATING_DICTS_AVAILABLE = True
 except ImportError:
     SC2_RATING_DICTS_AVAILABLE = False
+    tvx_defense_ratings = tvz_defense_ratings = tvx_air_defense_ratings = {}
+    zvx_defense_ratings = zvx_air_defense_ratings = {}
+    pvx_defense_ratings = pvz_defense_ratings = {}
+    terran_passive_ratings = zerg_passive_ratings = protoss_passive_ratings = {}
+    soa_energy_ratings = soa_passive_ratings = soa_ultimate_ratings = {}
     logger.debug("Could not import SC2 rating dictionaries - static data export disabled")
 
 # Import SC2 item groups for kerrigan helpers
@@ -30,11 +35,14 @@ try:
     SC2_KERRIGAN_GROUPS_AVAILABLE = True
 except ImportError:
     SC2_KERRIGAN_GROUPS_AVAILABLE = False
+    kerrigan_non_ulimates = kerrigan_logic_active_abilities = kerrigan_abilities = set()
+    kerrigan_passives = kerrigan_active_abilities = protoss_generic_upgrades = set()
     logger.debug("Could not import SC2 kerrigan item groups - kerrigan helper export disabled")
 
 # Import SC2 upgrade bundle lookup for weapon_armor_upgrade_count helper
+upgrade_bundle_inverted_lookup: Dict[str, Any] = {}
 try:
-    from worlds.sc2.item.item_tables import upgrade_bundle_inverted_lookup
+    from worlds.sc2.item.item_tables import upgrade_bundle_inverted_lookup  # type: ignore[assignment]
     SC2_UPGRADE_BUNDLES_AVAILABLE = True
 except ImportError:
     SC2_UPGRADE_BUNDLES_AVAILABLE = False
@@ -326,7 +334,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Let the base class handle standard recursion
         return self._recursively_expand_rule_children(rule, _depth)
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """
         Expand helper functions, resolving SC2Logic properties to constants.
 

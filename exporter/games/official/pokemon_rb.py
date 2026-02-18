@@ -87,11 +87,11 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
 
         # Recursively process nested conditions
         if rule_type == 'not':
-             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
+             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)  # type: ignore[arg-type]
         if rule_type == 'conditional':
-             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
-             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
-             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)  # type: ignore[arg-type]
+             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)  # type: ignore[arg-type]
+             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)  # type: ignore[arg-type]
 
         return rule
 

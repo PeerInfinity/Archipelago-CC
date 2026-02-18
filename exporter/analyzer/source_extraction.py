@@ -318,6 +318,7 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
 
         lambda_node = finder.found_node
 
+        result = None
         if lambda_node:
             # "Un-parse" the found AST node back into a source string
             # Wrap in try/except for RecursionError on very complex lambdas

@@ -189,7 +189,7 @@ class FactorioGameExportHandler(GenericGameExportHandler):
 
         return False
 
-    def _simplify_technology_name_access(self, rule: Dict[str, Any], iterator_var: str) -> Dict[str, Any]:
+    def _simplify_technology_name_access(self, rule: Dict[str, Any], iterator_var: str) -> Optional[Dict[str, Any]]:
         """Simplify technology.name attribute access to just technology.
 
         In Python, 'technology' is a Technology object, so .name is needed.

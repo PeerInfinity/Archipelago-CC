@@ -50,13 +50,13 @@ class SoEGameExportHandler(GenericGameExportHandler):
             return {}
         result = {}
         for loc in itertools.chain(
-            self.pyevermizer.get_locations(),
-            self.pyevermizer.get_sniff_locations()
+            self.pyevermizer.get_locations(),  # type: ignore[attr-defined]
+            self.pyevermizer.get_sniff_locations()  # type: ignore[attr-defined]
         ):
             # Use the AP location name format
-            if loc.type == self.pyevermizer.CHECK_GOURD:
+            if loc.type == self.pyevermizer.CHECK_GOURD:  # type: ignore[attr-defined]
                 loc_name = f"{loc.name} #{loc.index}"
-            elif loc.type == self.pyevermizer.CHECK_SNIFF:
+            elif loc.type == self.pyevermizer.CHECK_SNIFF:  # type: ignore[attr-defined]
                 loc_name = f"{loc.name} Sniff #{loc.index}"
             else:
                 loc_name = loc.name
@@ -95,9 +95,9 @@ class SoEGameExportHandler(GenericGameExportHandler):
 
         # Extend with pyevermizer provides information
         for item in itertools.chain(
-            self.pyevermizer.get_items(),
-            self.pyevermizer.get_extra_items(),
-            self.pyevermizer.get_sniff_items()
+            self.pyevermizer.get_items(),  # type: ignore[attr-defined]
+            self.pyevermizer.get_extra_items(),  # type: ignore[attr-defined]
+            self.pyevermizer.get_sniff_items()  # type: ignore[attr-defined]
         ):
             if item.name in item_data and item.provides:
                 item_data[item.name]['provides'] = [
@@ -115,7 +115,7 @@ class SoEGameExportHandler(GenericGameExportHandler):
                 'requires': [{'count': c, 'progress_id': p} for c, p in rule.requires],
                 'provides': [{'count': c, 'progress_id': p} for c, p in rule.provides]
             }
-            for rule in self.pyevermizer.get_logic()
+            for rule in self.pyevermizer.get_logic()  # type: ignore[attr-defined]
             if rule.provides
         ]
         if logic_rules:
@@ -132,7 +132,7 @@ class SoEGameExportHandler(GenericGameExportHandler):
         # "Done" event location needs P_FINAL_BOSS
         if location_name == 'Done':
             if self.pyevermizer:
-                return {'access_rule': self._create_has_helper(self.pyevermizer.P_FINAL_BOSS)}
+                return {'access_rule': self._create_has_helper(self.pyevermizer.P_FINAL_BOSS)}  # type: ignore[attr-defined]
             return {}
 
         # Get rules from pyevermizer for regular locations

@@ -545,7 +545,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', 'Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star', 'Tulip'))
     )
 
     world.set_rule(
@@ -660,17 +660,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key')
+        HasAll('Arrow Wheel', 'Egg Capacity Upgrade', 'Key')
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key', 'Train Morph')
+        HasAll('Arrow Wheel', 'Egg Capacity Upgrade', 'Key', 'Train Morph')
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Egg Capacity Upgrade', 'Arrow Wheel', 'Key'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Arrow Wheel', 'Egg Capacity Upgrade', 'Key'))
     )
 
     world.set_rule(

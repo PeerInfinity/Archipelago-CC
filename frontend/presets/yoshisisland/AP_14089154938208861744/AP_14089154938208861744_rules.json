@@ -1503,11 +1503,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Tulip",
                       "Beanstalk",
                       "Egg Launcher",
                       "Large Spring Ball",
-                      "Super Star"
+                      "Super Star",
+                      "Tulip"
                     ]
                   }
                 }
@@ -2127,8 +2127,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Egg Capacity Upgrade",
                   "Arrow Wheel",
+                  "Egg Capacity Upgrade",
                   "Key"
                 ]
               }
@@ -2149,8 +2149,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Egg Capacity Upgrade",
                   "Arrow Wheel",
+                  "Egg Capacity Upgrade",
                   "Key",
                   "Train Morph"
                 ]
@@ -2180,8 +2180,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Egg Capacity Upgrade",
                       "Arrow Wheel",
+                      "Egg Capacity Upgrade",
                       "Key"
                     ]
                   }

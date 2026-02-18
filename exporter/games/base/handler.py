@@ -410,7 +410,7 @@ class BaseGameExportHandler(
                 self._discovered_helper_modules[helper_name] = module_name
                 logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
 
-    def register_helpers_from_rule(self, rule: Dict[str, Any]) -> None:
+    def register_helpers_from_rule(self, rule: Optional[Dict[str, Any]]) -> None:
         """
         Recursively register all helpers referenced in a rule structure.
 
@@ -491,7 +491,7 @@ class BaseGameExportHandler(
                 self._discovered_param_mappings[helper_name][param_name] = slot_data_key
                 logger.debug(f"Discovered param_mapping: {helper_name}.{param_name} -> '{slot_data_key}'")
 
-    def get_discovered_param_mappings(self, helper_name: str = None) -> Dict[str, Dict[str, str]]:
+    def get_discovered_param_mappings(self, helper_name: Optional[str] = None) -> Dict[str, Any]:
         """
         Return auto-discovered param_mappings.
 
@@ -647,7 +647,7 @@ class BaseGameExportHandler(
     # Closure variable methods
     # ==========================================================================
 
-    def prepare_closure_vars(self, rule_func: Callable, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+    def prepare_closure_vars(self, rule_func: Optional[Callable], closure_vars: Dict[str, Any]) -> Dict[str, Any]:
         """Inject module-level variables into closure_vars for helper analysis.
 
         This default implementation uses CLOSURE_VAR_IMPORTS to automatically
@@ -701,12 +701,12 @@ class BaseGameExportHandler(
 
     def postprocess_entrance_rule(
         self, rule: Dict[str, Any],
-        entrance_name: str = None, connected_region: str = None  # type: ignore[assignment]
-    ) -> Dict[str, Any]:
+        entrance_name: Optional[str] = None, connected_region: Optional[str] = None
+    ) -> Optional[Dict[str, Any]]:
         """Post-process an entrance rule. Override to modify rules after analysis."""
         return rule
 
-    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def postprocess_rule(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Post-process a rule. Override to modify rules after analysis."""
         return rule
 
@@ -770,7 +770,7 @@ class BaseGameExportHandler(
     # Hook methods (override in subclasses)
     # ==========================================================================
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
         """Expand a helper function into basic rule conditions.
 
         Override this method in game-specific handlers to provide
@@ -1161,7 +1161,7 @@ class BaseGameExportHandler(
         """
         return None  # Base implementation: no special handling
 
-    def get_effective_item_type(self, item_name: str, original_type: str) -> str:
+    def get_effective_item_type(self, item_name: str, original_type: Any) -> Any:
         """
         Get the effective type for an item, considering game-specific event item rules.
 
@@ -2070,7 +2070,7 @@ class BaseGameExportHandler(
                                 continue
                             # Check if item matches any accumulator pattern
                             for pattern in patterns:
-                                if re.match(pattern, item_name):
+                                if pattern and re.match(pattern, item_name):
                                     if item_name not in accumulator_items.get(player_id, {}):
                                         accumulator_items.setdefault(player_id, {})[item_name] = (
                                             make_accumulator_item(item_name)

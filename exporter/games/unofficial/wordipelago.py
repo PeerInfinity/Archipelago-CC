@@ -253,7 +253,7 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
+    def handle_complex_entrance_rule(self, entrance_name: str, rule: Any) -> Optional[Dict[str, Any]]:
         """
         Intercept entrance rules that use starred rule_logic unpacking or chunk transitions.
 
@@ -266,21 +266,21 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
             lambda state: state.has(str((world.options.word_checks // 5 + ...) * N) + ' Words', player)
         """
         # Check if this is a lambda with the starred rule_logic pattern
-        if not callable(access_rule_method):
+        if not callable(rule):
             return None
 
         # First, check for chunk transition rules (Words/Streaks Chunk X -> Y)
-        chunk_result = self.handle_chunk_transition_rule(entrance_name, access_rule_method)
+        chunk_result = self.handle_chunk_transition_rule(entrance_name, rule)
         if chunk_result is not None:
             return chunk_result
 
         # Then check for starred rule_logic pattern
-        if not self._has_starred_rule_logic_pattern(access_rule_method):
+        if not self._has_starred_rule_logic_pattern(rule):
             return None
 
         # Try to extract world from lambda closure if we don't have option values yet
         if self._logic_difficulty is None or self._point_shop_logic_level is None:
-            world = self._extract_world_from_lambda(access_rule_method)
+            world = self._extract_world_from_lambda(rule)
             if world:
                 self._get_option_values_from_world(world)
 
@@ -290,7 +290,7 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
             return None
 
         try:
-            source = inspect.getsource(access_rule_method)
+            source = inspect.getsource(rule)
             logger.info(f"Detected starred rule_logic pattern in '{entrance_name}': {source.strip()}")
 
             # Extract the category from the source
@@ -320,9 +320,9 @@ class WordipelagoGameExportHandler(GenericGameExportHandler):
             logger.warning(f"Error handling complex entrance rule for '{entrance_name}': {e}")
             return None
 
-    def handle_complex_exit_rule(self, exit_name: str, access_rule_method) -> Optional[Dict[str, Any]]:
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule: Any) -> Optional[Dict[str, Any]]:
         """Handle complex exit rules the same way as entrance rules."""
-        return self.handle_complex_entrance_rule(exit_name, access_rule_method)
+        return self.handle_complex_entrance_rule(exit_name, exit_rule)
 
     def _is_chunk_transition_rule(self, entrance_name: str, access_rule: Callable) -> Optional[tuple]:
         """

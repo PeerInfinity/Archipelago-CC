@@ -38,8 +38,8 @@ class Sims4ExportHandler(GenericGameExportHandler):
     def _load_all_locations(self) -> None:
         """Load all possible locations from the Sims 4 module tables."""
         try:
-            from worlds.sims4.Locations import skill_locations_table, location_table
-            from worlds.sims4.Regions import sims4_careers
+            from worlds.sims4.Locations import skill_locations_table, location_table  # type: ignore[import-not-found]
+            from worlds.sims4.Regions import sims4_careers  # type: ignore[import-not-found]
 
             # Collect all skill location names
             self._all_location_names = set()

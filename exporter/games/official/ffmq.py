@@ -303,7 +303,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                         for j in range(start_idx, i):
                             prev_instr = instructions[j]
                             if prev_instr.opname == 'LOAD_CONST':
-                                const_val = code.co_consts[prev_instr.arg]
+                                const_val = code.co_consts[prev_instr.arg]  # type: ignore[index]
                                 if isinstance(const_val, str):
                                     potential_items.append(const_val)
                                 else:

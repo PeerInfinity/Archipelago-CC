@@ -88,7 +88,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         except AttributeError:
             return False
 
-    def expand_helper(self, helper_name: str, args=None) -> Dict[str, Any]:
+    def expand_helper(self, helper_name: str, args=None) -> Optional[Dict[str, Any]]:
         """Expand Messenger-specific helper patterns to rule structures.
 
         Helper definitions vary based on logic level:

@@ -1,7 +1,7 @@
 """Jak and Daxter: The Precursor Legacy game-specific export handler."""
 
 from ..base import GenericGameExportHandler
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -135,7 +135,7 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             return value.get('value')
         return value
 
-    def _extract_item_collection(self, arg: Any) -> list:
+    def _extract_item_collection(self, arg: Any) -> Optional[list]:
         """Extract a list of items from various collection representations.
 
         Handles:
@@ -460,12 +460,12 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             ]
 
         if rule.get('type') == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)  # type: ignore[arg-type]
 
         if rule.get('type') == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
-            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
-            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)  # type: ignore[arg-type]
+            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)  # type: ignore[arg-type]
+            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)  # type: ignore[arg-type]
 
         return rule
 

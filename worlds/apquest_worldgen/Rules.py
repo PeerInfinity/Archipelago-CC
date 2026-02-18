@@ -42,5 +42,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Final Boss Defeated", player),
-        HasAll('Sword', 'Shield')
+        HasAll('Shield', 'Sword')
     )

@@ -3235,8 +3235,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Small Key (Desert Palace)",
-                      "Big Key (Desert Palace)"
+                      "Big Key (Desert Palace)",
+                      "Small Key (Desert Palace)"
                     ]
                   }
                 }
@@ -3327,8 +3327,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Small Key (Desert Palace)",
-                      "Big Key (Desert Palace)"
+                      "Big Key (Desert Palace)",
+                      "Small Key (Desert Palace)"
                     ]
                   }
                 }
@@ -9746,8 +9746,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -9770,8 +9770,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -10589,8 +10589,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Small Key (Ice Palace)",
-                      "Moon Pearl"
+                      "Moon Pearl",
+                      "Small Key (Ice Palace)"
                     ]
                   }
                 }

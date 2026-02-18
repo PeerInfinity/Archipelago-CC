@@ -47,6 +47,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
         # When called, expand_helper generates equivalent declarative rules
         'form_list_unlock',           # Expanded to conditional has_any + get_form_level_requirement
         'get_form_level_requirement', # Expanded to form count comparison with FinalFormLogic
+        'final_form_region_access',   # Expanded to sorted or(location_check, ...) via expand_helper
 
         # Static methods that return True - handled via CONSTANT_HELPER_EXPANSIONS
         'limit_form_region_access', 'multi_form_region_access',
