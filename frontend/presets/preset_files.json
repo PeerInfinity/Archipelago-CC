@@ -19,45 +19,6 @@
         ],
         "is_vanilla": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 268,
-        "total_locations": 268
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 9,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "alttp": {
@@ -110,6 +71,45 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 268,
+        "total_locations": 268
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -412,45 +412,6 @@
         ],
         "is_vanilla": true
       }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 11,
-        "total_locations": 11
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      },
-      "spoiler_fuzz": {
-        "passed": true,
-        "total_runs": 10,
-        "runs_passed": 10,
-        "runs_failed": 0,
-        "failure_types": null
-      }
     }
   },
   "mathadventure": {
@@ -504,28 +465,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    }
-  },
-  "bakingadventure_vanilla": {
-    "name": "Baking Adventure",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Baking Adventure"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
-      }
     },
     "test_results": {
       "minimal_spoiler": {
@@ -548,8 +487,8 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 16,
-        "total_locations": 16
+        "locations_checked": 11,
+        "total_locations": 11
       },
       "multiworld": {
         "passed": true,
@@ -564,6 +503,28 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
+      }
+    }
+  },
+  "bakingadventure_vanilla": {
+    "name": "Baking Adventure",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Baking Adventure"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true
       }
     }
   },
@@ -618,28 +579,6 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
-    }
-  },
-  "codingadventure_vanilla": {
-    "name": "Coding Adventure",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Coding Adventure"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true
-      }
     },
     "test_results": {
       "minimal_spoiler": {
@@ -662,15 +601,15 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 62,
-        "total_locations": 62
+        "locations_checked": 16,
+        "total_locations": 16
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 1
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -678,6 +617,28 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
+      }
+    }
+  },
+  "codingadventure_vanilla": {
+    "name": "Coding Adventure",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Coding Adventure"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true
       }
     }
   },
@@ -731,6 +692,45 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 1,
+        "seeds_failed": 0,
+        "total_seeds": 1,
+        "first_failure_seed": null,
+        "seed_range": "1"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 62,
+        "total_locations": 62
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 1
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2611,7 +2611,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-18Feb2026-041545_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-18Feb2026-051325_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -9302,7 +9302,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-02-18T04:33:01.533995+00:00",
+    "test_data_updated": "2026-02-18T05:30:19.392437+00:00",
     "games_with_test_data": 151,
     "total_games": 165,
     "games_without_test_data": 14,

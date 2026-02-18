@@ -74,9 +74,9 @@ class Boss(Choice):
     option_daos = 36
     option_egg_dragon = 37
     option_master = 38
-    option_random_low = 39
-    option_random_middle = 40
-    option_random_sinistral = 41
+    option_random_middle = 39
+    option_random_sinistral = 40
+    option_random_low = 41
     option_random_high = 42
     default = 38
 
@@ -350,9 +350,9 @@ Boss.name_lookup = {
     36: 'daos',
     37: 'egg_dragon',
     38: 'master',
-    39: 'random-low',
-    40: 'random-middle',
-    41: 'random-sinistral',
+    39: 'random-middle',
+    40: 'random-sinistral',
+    41: 'random-low',
     42: 'random-high'
 }
 
