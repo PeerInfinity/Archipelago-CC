@@ -179,24 +179,52 @@
             "name": "Menu->Swamp Palace",
             "connected_region": "Swamp Palace",
             "access_rule": {
-              "rule": "And",
+              "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Dark World South",
-                    "_original_ast_type": "region_check"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "smz3_CanAccessMiseryMirePortal",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "True_"
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Mirror"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "smz3_CanLiftHeavy",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Flute",
+                          "Mirror"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Flippers",
-                      "Mirror",
-                      "MoonPearl"
-                    ]
+                    "item_name": "Book"
                   }
                 }
               ]
@@ -531,32 +559,84 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hammer",
-                          "Mirror"
-                        ]
-                      }
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "attr": "CanAcquireAtLeast"
                     },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
+                    "_original_ast_type": "function_call",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 4
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "constant",
+                            "value": 7
+                          }
+                        },
+                        "op": "/",
+                        "right": {
+                          "type": "constant",
+                          "value": 7
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": 480
                       }
-                    }
-                  ]
+                    ]
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "attr": "CanAcquireAtLeast"
+                    },
+                    "_original_ast_type": "function_call",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 7
+                      },
+                      {
+                        "type": "constant",
+                        "value": 24
+                      }
+                    ]
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "AST_region_check",
                   "args": {
-                    "region": "Light World Death Mountain West",
+                    "region": "Dark World Death Mountain East",
                     "_original_ast_type": "region_check"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "MoonPearl"
+                  }
                 }
               ]
             }
@@ -565,37 +645,7 @@
             "name": "Menu->Light World North West",
             "connected_region": "Light World North West",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hammer",
-                          "Mirror"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "AST_region_check",
-                  "args": {
-                    "region": "Light World Death Mountain West",
-                    "_original_ast_type": "region_check"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
