@@ -578,6 +578,14 @@
       "reason": "Simplifying this exporter is currently not a priority."
     },
     {
+      "name": "TOEM original.yaml",
+      "reason": "Simplifying this exporter is currently not a priority."
+    },
+    {
+      "name": "TOEM rule builder.yaml",
+      "reason": "Simplifying this exporter is currently not a priority."
+    },
+    {
       "name": "TUNIC.yaml",
       "reason": "Simplifying this exporter is currently not a priority."
     },

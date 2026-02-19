@@ -97,8 +97,9 @@ def main():
 
     # Load appropriate exclude list based on mode if not explicitly provided
     if args.skip_list is None:
-        # Determine the appropriate test_type based on mode
-        if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures or args.only_worldgen or args.include_pattern == "WorldGen":
+        if args.permanent_excludes_only:
+            exclude_test_type = 'permanent'
+        elif args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures or args.only_worldgen or args.include_pattern == "WorldGen":
             exclude_test_type = 'worldgen'
         else:
             # For spoiler/multiclient/multiworld tests, use 'main' (permanent + main test exclusions)
@@ -107,7 +108,8 @@ def main():
 
     # Handle --all-promptfiles mode: run all prompt-generating modes with separate output files
     if args.all_promptfiles:
-        return run_all_promptfiles(project_root, script_path=Path(__file__).resolve())
+        extra_args = ['--permanent-excludes-only'] if args.permanent_excludes_only else None
+        return run_all_promptfiles(project_root, script_path=Path(__file__).resolve(), extra_args=extra_args)
 
     # Load world mapping (needed for filtering by custom code status)
     # Used by: --basic-spoiler-debug, --helper-export, normal mode, and worldgen modes
@@ -601,7 +603,7 @@ def main():
                     continue
 
                 # Skip games that require JavaScript helpers (cannot be removed)
-                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['requires_javascript_helpers']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
@@ -681,7 +683,7 @@ def main():
                     continue
 
                 # Skip games whose exporters are fully simplified
-                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['exporter_fully_simplified']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
                     current_index = (current_index + 1) % len(template_files)
@@ -757,7 +759,7 @@ def main():
                     continue
 
                 # Skip games that require JavaScript helpers (cannot be removed)
-                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['requires_javascript_helpers']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
