@@ -1337,11 +1337,12 @@ export class JsonUI {
     for (const dataKey in loadedData) {
       // Check core types first (if we handle them this way)
       if (dataKey === 'rulesConfig') {
-        // TODO: Implement live rules reload
-        log('info', 
-          '[JsonUI] Found rulesConfig, calling apply function (placeholder)...'
-        );
-        // this.applyRulesConfig(loadedData.rulesConfig);
+        log('info', '[JsonUI] Found rulesConfig, applying via files:jsonLoaded...');
+        eventBus.publish('files:jsonLoaded', {
+          jsonData: loadedData.rulesConfig,
+          selectedPlayerId: '1',
+          sourceName: 'jsonModuleImport'
+        }, 'json');
       } else if (dataKey === 'userSettings') {
         // Implement live settings application
         log('info', 
