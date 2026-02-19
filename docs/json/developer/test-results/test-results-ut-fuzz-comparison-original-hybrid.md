@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-02-19 21:12:34 UTC
+**Generated:** 2026-02-19 21:13:17 UTC
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -38,7 +38,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Bomb Rush Cyberfunk | ✅ | ✅ | 1.4KB | 40.3KB | 325.2KB |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | 50.1KB |
 | Castlevania - Circle of the Moon | ✅ | ✅ | 4.0KB | ✅ | 93.7KB |
-| Castlevania 64 | ❌ 1/10 | ✅ | ✅ | ✅ | 137.7KB |
+| Castlevania 64 | ❌ | ✅ | ✅ | ✅ | 137.7KB |
 | Celeste (Open World) | ❌ 4/10 | ✅ | ✅ | ✅ | 1039.3KB |
 | Celeste 64 | ✅ | ✅ | 4.1KB | ✅ | 53.3KB |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | 16.1KB |
@@ -52,7 +52,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Donkey Kong Country 3 | ⚠️ 7/10 | ✅ | ✅ | ✅ | 122.3KB |
 | EarthBound | ⚠️ 5/10 | N/A | ✅ | ✅ | 337.5KB |
 | Factorio | ❌ | ✅ | 8.8KB | ✅ | 290.0KB |
-| Faxanadu | ❌ 1/10 | ✅ | ✅ | ✅ | 68.0KB |
+| Faxanadu | ❌ 2/10 | ✅ | ✅ | ✅ | 68.0KB |
 | Final Fantasy | ✅ | ✅ | ✅ | ✅ | 50.2KB |
 | Final Fantasy Mystic Quest | ⚠️ 9/10 | ❌ | 13.9KB | ✅ | 548.0KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 361.3KB |
@@ -63,7 +63,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kingdom Hearts | ❌ 4/10 | ✅ | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ❌ 1/10 | 20.4KB | ✅ | 1630.5KB |
 | Kirby's Dream Land 3 | ❌ | ✅ | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ❌ | ✅ | 3.6KB | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ❌ 2/10 | ✅ | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ | ✅ | 38.2KB | 10.7KB | 939.9KB |
 | Links Awakening DX | ❌ 1/10 | ✅ | 7.3KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 122.7KB |
@@ -94,7 +94,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Subnautica | ❌ 1/10 | ✅ | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ | ✅ | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ❌ 4/10 | ✅ | ✅ | ✅ | 100.9KB |
-| Super Mario Land 2 | ❌ 3/10 | ✅ | 96.3KB | ✅ | 919.0KB |
+| Super Mario Land 2 | ❌ 4/10 | ✅ | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ⚠️ 7/10 | ✅ | ✅ | ✅ | 177.6KB |
 | Super Metroid | ❌ | ❌ | 61.0KB | 114.5KB | 625.0KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.6KB |
@@ -102,15 +102,15 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.1KB |
 | Terraria | ⚠️ 9/10 | ✅ | 16.9KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.5KB |
-| The Messenger | ❌ 1/10 | ✅ | 15.2KB | ✅ | 210.3KB |
-| The Wind Waker | ❌ 1/5 | ✅ | 7.0KB | ✅ | 250.1KB |
+| The Messenger | ❌ | ✅ | 15.2KB | ✅ | 210.3KB |
+| The Wind Waker | ❌ | ✅ | 7.0KB | ✅ | 250.1KB |
 | The Witness | ✅ | ✅ | 14.2KB | ✅ | 392.1KB |
 | Timespinner | ❌ | ✅ | 2.2KB | ✅ | 262.7KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.0KB |
 | VVVVVV | ⚠️ 8/10 | ✅ | 3.8KB | ✅ | 22.4KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.0KB |
-| Yacht Dice | ❌ | ✅ | 0.9KB | 285.0KB | 248.4KB |
-| Yoshi's Island | ❌ 3/10 | ✅ | 9.2KB | ✅ | 295.2KB |
+| Yacht Dice | ❌ 1/10 | ✅ | 0.9KB | 285.0KB | 248.4KB |
+| Yoshi's Island | ❌ 2/10 | ✅ | 9.2KB | ✅ | 295.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ✅ | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.1KB |
 | shapez | ⚠️ 8/10 | ✅ | ✅ | ✅ | 153.7KB |

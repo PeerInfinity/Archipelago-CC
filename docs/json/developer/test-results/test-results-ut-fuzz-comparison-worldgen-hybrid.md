@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-02-19 21:12:34 UTC
+**Generated:** 2026-02-19 21:13:17 UTC
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -16,19 +16,19 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 ## Summary
 
 - **Total Games Tested:** 87
-- **Passing Both:** 70 (80.5%)
+- **Passing Both:** 65 (74.7%)
 - **Passing Worldgen Only:** 3 (3.4%)
-- **Passing Hybrid Only:** 9 (10.3%)
+- **Passing Hybrid Only:** 14 (16.1%)
 - **Passing Neither:** 5 (5.7%)
 - **Passing Hybrid with no custom code:** 42 (48.3%)
-- **Passing Hybrid Only with no custom code:** 2 (2.3%)
+- **Passing Hybrid Only with no custom code:** 3 (3.4%)
 
 ## Full Comparison
 
 | Game Name | Worldgen Result | Hybrid Result | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | ✅ | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | ✅ | ✅ | 14.0KB | ✅ | 664.1KB |
+| A Link to the Past | ⚠️ 8/9 | ✅ | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ✅ | ✅ | ✅ | 25.6KB |
@@ -51,7 +51,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | 1033.9KB |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | 122.3KB |
 | EarthBound | ✅ | N/A | ✅ | ✅ | 337.5KB |
-| Factorio | ✅ | ✅ | 8.8KB | ✅ | 290.0KB |
+| Factorio | ⚠️ 9/10 | ✅ | 8.8KB | ✅ | 290.0KB |
 | Faxanadu | ✅ | ✅ | ✅ | ✅ | 68.0KB |
 | Final Fantasy | ✅ | ✅ | ✅ | ✅ | 50.2KB |
 | Final Fantasy Mystic Quest | ✅ | ❌ | 13.9KB | ✅ | 548.0KB |
@@ -79,11 +79,11 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Old School Runescape | ✅ | ✅ | 1.0KB | ✅ | 305.1KB |
 | Overcooked! 2 | ✅ | ✅ | 28.5KB | ✅ | 488.2KB |
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.0KB |
-| Pokemon Emerald | ❌ 2/6 | ✅ | 5.2KB | 8.7KB | 1350.0KB |
+| Pokemon Emerald | ❌ 3/7 | ✅ | 5.2KB | 8.7KB | 1350.0KB |
 | Pokemon Red and Blue | ❌ | ✅ | 12.2KB | 13.0KB | 1270.1KB |
 | Raft | ✅ | ✅ | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 145.0KB |
-| SMZ3 | ❌ | ✅ | 54.2KB | 51.3KB | 1886.9KB |
+| SMZ3 | ❌ 1/10 | ✅ | 54.2KB | 51.3KB | 1886.9KB |
 | Satisfactory | ✅ | N/A | 41.8KB | ✅ | 1618.9KB |
 | Saving Princess | ✅ | ✅ | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ | ✅ | 5.6KB | 7.5KB | 414.9KB |
@@ -100,12 +100,12 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.6KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.6KB |
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.1KB |
-| Terraria | ✅ | ✅ | 16.9KB | ✅ | 278.6KB |
+| Terraria | ❌ 2/9 | ✅ | 16.9KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.5KB |
 | The Messenger | ✅ | ✅ | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | ✅ | ✅ | 7.0KB | ✅ | 250.1KB |
 | The Witness | ✅ | ✅ | 14.2KB | ✅ | 392.1KB |
-| Timespinner | ✅ | ✅ | 2.2KB | ✅ | 262.7KB |
+| Timespinner | ❌ 4/10 | ✅ | 2.2KB | ✅ | 262.7KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.0KB |
 | VVVVVV | ✅ | ✅ | 3.8KB | ✅ | 22.4KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.0KB |
@@ -113,16 +113,15 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Yoshi's Island | ✅ | ✅ | 9.2KB | ✅ | 295.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ✅ | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.1KB |
-| shapez | ✅ | ✅ | ✅ | ✅ | 153.7KB |
+| shapez | ⚠️ 9/10 | ✅ | ✅ | ✅ | 153.7KB |
 
-## Games Passing Both (70)
+## Games Passing Both (65)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ✅ | 25.6KB |
@@ -144,7 +143,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | DOOM II | ✅ | ✅ | 322.4KB |
 | Dark Souls III | ✅ | ✅ | 1033.9KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.3KB |
-| Factorio | 8.8KB | ✅ | 290.0KB |
 | Faxanadu | ✅ | ✅ | 68.0KB |
 | Final Fantasy | ✅ | ✅ | 50.2KB |
 | Heretic | ✅ | ✅ | 361.3KB |
@@ -180,17 +178,14 @@ These games have 100% success rate in both Universal Tracker versions.
 | TOEM original | 0.6KB | ✅ | 99.6KB |
 | TOEM rule builder | 0.5KB | ✅ | 99.6KB |
 | TUNIC | 3.1KB | ✅ | 649.1KB |
-| Terraria | 16.9KB | ✅ | 278.6KB |
 | The Legend of Zelda | ✅ | ✅ | 554.5KB |
 | The Messenger | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | 7.0KB | ✅ | 250.1KB |
 | The Witness | 14.2KB | ✅ | 392.1KB |
-| Timespinner | 2.2KB | ✅ | 262.7KB |
 | Undertale | ✅ | ✅ | 56.0KB |
 | VVVVVV | 3.8KB | ✅ | 22.4KB |
 | Wargroove | ✅ | ✅ | 44.0KB |
 | Yoshi's Island | 9.2KB | ✅ | 295.2KB |
-| shapez | ✅ | ✅ | 153.7KB |
 
 ## Games Passing Worldgen Only (3)
 
@@ -202,12 +197,14 @@ These games pass in the Worldgen UT but fail in the Hybrid UT.
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
 | Satisfactory | 41.8KB | ✅ | 1618.9KB |
 
-## Games Passing Hybrid Only (9)
+## Games Passing Hybrid Only (14)
 
 These games pass in the Hybrid UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Link to the Past | 14.0KB | ✅ | 664.1KB |
+| Factorio | 8.8KB | ✅ | 290.0KB |
 | Hollow Knight | ✅ | ✅ | 3500.0KB |
 | Kingdom Hearts | ✅ | ✅ | 748.6KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.6KB |
@@ -215,8 +212,11 @@ These games pass in the Hybrid UT but fail in the Worldgen UT.
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1270.1KB |
 | SMZ3 | 54.2KB | 51.3KB | 1886.9KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2407.6KB |
+| Terraria | 16.9KB | ✅ | 278.6KB |
+| Timespinner | 2.2KB | ✅ | 262.7KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 643.9KB |
+| shapez | ✅ | ✅ | 153.7KB |
 
 ## Games Passing Neither (5)
 
