@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-17 18:26:48 UTC
+**Generated:** 2026-02-19 21:13:17 UTC
 
 **Source Data Created:** 2026-02-17T17:20:01.437704+00:00
 
@@ -53,11 +53,11 @@
 | Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Blasphemous | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% |
-| Bomb Rush Cyberfunk | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Bomb Rush Cyberfunk* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Castlevania 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Celeste (Open World) | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Celeste (Open World)* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Celeste 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | ChecksFinder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Choo-Choo Charles | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -78,11 +78,11 @@
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Jak and Daxter: The Precursor Legacy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Kingdom Hearts | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
-| Kingdom Hearts 2 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
-| Kirby's Dream Land 3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Kingdom Hearts* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| *Kingdom Hearts 2* | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| *Kirby's Dream Land 3* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Landstalker - The Treasures of King Nole | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
-| Lingo | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
+| *Lingo* | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
 | Links Awakening DX | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -99,35 +99,35 @@
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Pokemon Emerald | ❌ | 10 | 3 | 4 | 0 | 3 | ❌ 30.0% |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Raft* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Satisfactory | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Secret of Evermore | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Secret of Evermore* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Sonic Adventure 2 Battle | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
-| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Stardew Valley | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Starcraft 2* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Stardew Valley* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Subnautica | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Super Mario 64 | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
 | Super Mario Land 2 | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
 | Super Mario World | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
-| Super Metroid | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
+| *Super Metroid* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| TUNIC | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *TUNIC* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | The Messenger | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | The Wind Waker | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
-| The Witness | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Timespinner | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | VVVVVV | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Yacht Dice | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| *Yacht Dice* | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | Yoshi's Island | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | Yu-Gi-Oh! 2006 | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
 | Zillion | ❌ | 10 | 0 | 8 | 1 | 1 | ❌ 0.0% |
@@ -238,6 +238,7 @@ Games NOT expected to pass original_seeded mode and failed as expected.
 
 ## Notes
 
+- *Italic game names* are in the exclude list for this test type
 - **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise
 - **Total:** Number of fuzz runs attempted for this game
 - **Success:** Number of runs where UT matched Python sphere log
