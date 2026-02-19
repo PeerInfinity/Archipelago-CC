@@ -241,26 +241,26 @@ export class TestOrchestrator {
   getSphereDataForWorker() {
     try {
       if (!window.centralRegistry || typeof window.centralRegistry.getPublicFunction !== 'function') {
-        logger.warn('[TestOrchestrator] centralRegistry not available');
+        logger.warn('centralRegistry not available');
         return null;
       }
 
       const getSphereData = window.centralRegistry.getPublicFunction('sphereState', 'getSphereData');
       if (!getSphereData) {
-        logger.warn('[TestOrchestrator] sphereState getSphereData not available');
+        logger.warn('sphereState getSphereData not available');
         return null;
       }
 
       const sphereData = getSphereData();
       if (!sphereData || sphereData.length === 0) {
-        logger.warn('[TestOrchestrator] No sphere data available from sphereState');
+        logger.warn('No sphere data available from sphereState');
         return null;
       }
 
-      logger.info(`[TestOrchestrator] Got ${sphereData.length} spheres from sphereState`);
+      logger.info(`Got ${sphereData.length} spheres from sphereState`);
       return sphereData;
     } catch (error) {
-      logger.error('[TestOrchestrator] Error getting sphere data:', error);
+      logger.error('Error getting sphere data:', error);
       return null;
     }
   }
@@ -277,7 +277,7 @@ export class TestOrchestrator {
    * @returns {Promise<Object>} Test results
    */
   async runWorkerSideSpoilerTest(sphereData, playerId, logPath) {
-    logger.info(`[TestOrchestrator] Running worker-side spoiler test with ${sphereData.length} spheres`);
+    logger.info(`Running worker-side spoiler test with ${sphereData.length} spheres`);
 
     const currentAbortController = this.abortController;
 
@@ -293,9 +293,9 @@ export class TestOrchestrator {
       if (profiler.enabled) {
         try {
           await stateManager.setWorkerProfiling(true);
-          logger.info('[TestOrchestrator] Worker profiling enabled');
+          logger.info('Worker profiling enabled');
         } catch (error) {
-          logger.warn('[TestOrchestrator] Failed to enable worker profiling:', error);
+          logger.warn('Failed to enable worker profiling:', error);
         }
       }
 
@@ -350,7 +350,7 @@ export class TestOrchestrator {
         testResult = { passed: false, aborted: true };
       } else {
         this.uiCallbacks.log('error', `Error during worker-side spoiler test: ${error.message}`);
-        logger.error('[TestOrchestrator] Worker-side test error:', error);
+        logger.error('Worker-side test error:', error);
         testResult = { passed: false, error: error.message };
       }
     } finally {
@@ -430,7 +430,7 @@ export class TestOrchestrator {
     // Get the worker from stateManager
     const worker = stateManager.worker;
     if (!worker) {
-      logger.warn('[TestOrchestrator] No worker available for message handling');
+      logger.warn('No worker available for message handling');
       return;
     }
 
@@ -605,9 +605,9 @@ export class TestOrchestrator {
       if (profiler.enabled) {
         try {
           await stateManager.setWorkerProfiling(true);
-          logger.info('[TestOrchestrator] Worker profiling enabled');
+          logger.info('Worker profiling enabled');
         } catch (error) {
-          logger.warn('[TestOrchestrator] Failed to enable worker profiling:', error);
+          logger.warn('Failed to enable worker profiling:', error);
         }
       }
 
@@ -779,7 +779,7 @@ export class TestOrchestrator {
               console.log('\n' + workerResult.report);
             }
           } catch (error) {
-            logger.warn('[TestOrchestrator] Failed to get worker profiling report:', error);
+            logger.warn('Failed to get worker profiling report:', error);
           }
 
           this.uiCallbacks.log('info', 'Profiling data available in window.__profilingData__');
