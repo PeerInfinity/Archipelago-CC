@@ -196,7 +196,7 @@ def print_comparison(comparison: Dict[str, List], ut_meta: Dict, wg_meta: Dict):
     # Metadata
     print("UT Fuzz Test:")
     print(f"  UT Version: {ut_meta.get('ut_version', 'unknown')}")
-    print(f"  Seed: {ut_meta.get('seed', 'unknown')}")
+    print(f"  Seed: {ut_meta.get('starting_seed', ut_meta.get('seed', 'unknown'))}")
     print(f"  Runs per game: {ut_meta.get('runs_per_game', 'unknown')}")
     print()
 

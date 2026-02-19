@@ -152,8 +152,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         excluded_games: Dict mapping game names to exclusion reasons (from template-exclude-list.json)
     """
     # Determine seed info and UT version
-    seed = metadata.get('seed', 'random')
-    seed_display = f"Fixed (seed={seed})" if seed != 'random' else "Random"
+    seed_mode = metadata.get('seed_mode', 'random')
+    starting_seed = metadata.get('starting_seed')
+    if seed_mode == 'fixed' and starting_seed is not None:
+        seed_display = f"Fixed (seed={starting_seed})"
+    else:
+        seed_display = "Random"
     ut_version = metadata.get('ut_version', 'worldgen')
 
     # Map ut_version to display strings
