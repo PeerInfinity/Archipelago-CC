@@ -29,7 +29,8 @@ from lib.test_utils import (
     build_and_load_world_mapping,
     check_virtual_environment,
     check_http_server,
-    load_template_exclude_list
+    load_template_exclude_list,
+    cleanup_empty_worldgen_dirs,
 )
 from lib.test_results import (
     is_test_passing,
@@ -1000,6 +1001,9 @@ def main():
         print(f"Timestamped backup will be saved to: {os.path.basename(timestamped_file)}")
     print(f"Testing templates from: {templates_dir}")
     
+    # Clean up empty worldgen directories left over from previous runs
+    cleanup_empty_worldgen_dirs(project_root)
+
     # Build world mapping once at startup
     world_mapping = build_and_load_world_mapping(project_root)
 

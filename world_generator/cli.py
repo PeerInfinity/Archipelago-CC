@@ -8,10 +8,36 @@ Usage:
 import argparse
 import json
 import logging
+import shutil
 import sys
 from pathlib import Path
 
 from .generator import WorldGenerator
+
+
+def _cleanup_empty_worldgen_dirs(worlds_dir: Path) -> None:
+    """Remove empty worldgen temp directories to prevent warnings on the next run.
+
+    These are leftover directories from interrupted fuzz/worldgen runs that
+    don't have an __init__.py, causing warnings when worlds are loaded.
+    They typically have names like 'adventure_worldgen_86998726363870010506'.
+    """
+    if not worlds_dir.is_dir():
+        return
+    removed_count = 0
+    for entry in worlds_dir.iterdir():
+        if not entry.is_dir():
+            continue
+        name = entry.name
+        if name.endswith(("_worldgen", "_worldgen2")) or "_worldgen_" in name or (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
+            if not (entry / "__init__.py").exists():
+                try:
+                    shutil.rmtree(entry)
+                    removed_count += 1
+                except OSError:
+                    pass
+    if removed_count > 0:
+        logging.getLogger(__name__).debug(f"Cleaned up {removed_count} empty worldgen directories")
 
 
 def setup_logging(verbose: bool = False) -> None:
@@ -112,6 +138,9 @@ Examples:
 
     setup_logging(args.verbose)
     logger = logging.getLogger(__name__)
+
+    # Clean up empty worldgen temp directories left over from interrupted previous runs
+    _cleanup_empty_worldgen_dirs(Path(__file__).parent.parent / "worlds")
 
     # Validate input file
     input_path = Path(args.input)

@@ -32,7 +32,6 @@ import json
 import os
 import random
 import signal
-import shutil
 import sys
 import time
 from datetime import datetime, timezone
@@ -48,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from lib.test_utils import (
     extract_game_name_from_template,
     load_template_exclude_list,
+    cleanup_empty_worldgen_dirs,
 )
 
 # Project root
@@ -62,41 +62,8 @@ TEMPLATES_DIR = PROJECT_ROOT / "Players" / "Templates"
 OUTPUT_DIR = PROJECT_ROOT / "scripts" / "output" / "multiworld-ut-fuzz"
 
 
-def cleanup_empty_worldgen_directories():
-    """
-    Remove empty worldgen directories that were created during testing.
-
-    The UT validation process creates temporary worldgen directories
-    that may not get cleaned up properly if the test fails or is interrupted.
-    They typically have names like 'adventure_worldgen_86998726363870010506'.
-    """
-    worlds_dir = PROJECT_ROOT / "worlds"
-    if not worlds_dir.exists():
-        return
-
-    removed_count = 0
-    for entry in worlds_dir.iterdir():
-        if not entry.is_dir():
-            continue
-
-        # Look for directories matching the pattern: *_worldgen_<numbers>
-        # or *_<numbers> that don't have an __init__.py
-        name = entry.name
-        if "_worldgen_" in name or (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
-            init_file = entry / "__init__.py"
-            if not init_file.exists():
-                try:
-                    shutil.rmtree(entry)
-                    removed_count += 1
-                except OSError:
-                    pass  # Ignore errors during cleanup
-
-    if removed_count > 0:
-        print(f"Cleaned up {removed_count} empty worldgen directories")
-
-
 # Clean up empty worldgen directories before importing fuzz (which triggers world loading)
-cleanup_empty_worldgen_directories()
+cleanup_empty_worldgen_dirs()
 
 # Import fuzz.py's YAML generation logic
 from fuzz import generate_random_yaml, world_from_apworld_name

@@ -14,6 +14,7 @@ This module provides common utility functions used across testing scripts includ
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import urllib.request
@@ -192,6 +193,36 @@ def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
     except (FileNotFoundError, json.JSONDecodeError):
         print("Warning: Could not load world mapping, using empty mapping")
         return {}
+
+
+def cleanup_empty_worldgen_dirs(project_root: Optional[str] = None) -> None:
+    """Remove empty worldgen temp directories from worlds/.
+
+    These are leftover directories from interrupted fuzz/worldgen runs that
+    don't have an __init__.py, causing warnings when worlds are loaded.
+    They typically have names like 'adventure_worldgen_86998726363870010506'.
+    """
+    if project_root is None:
+        project_root = str(Path(__file__).parent.parent.parent)
+    worlds_dir = Path(project_root) / "worlds"
+    if not worlds_dir.exists():
+        return
+
+    removed_count = 0
+    for entry in worlds_dir.iterdir():
+        if not entry.is_dir():
+            continue
+        name = entry.name
+        if name.endswith(("_worldgen", "_worldgen2")) or "_worldgen_" in name or (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
+            if not (entry / "__init__.py").exists():
+                try:
+                    shutil.rmtree(entry)
+                    removed_count += 1
+                except OSError:
+                    pass
+
+    if removed_count > 0:
+        print(f"Cleaned up {removed_count} empty worldgen directories")
 
 
 def extract_game_name_from_template(template_path: str) -> Optional[str]:
