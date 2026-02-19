@@ -4394,7 +4394,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 4
                   }
                 },
                 {
@@ -4438,7 +4438,7 @@
               ]
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Small Key (Agahnims Tower)",
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
@@ -4455,13 +4455,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
-                  }
-                },
-                {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -4476,15 +4469,18 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Lamp"
+                    "items": [
+                      "Lamp",
+                      "Small Key (Agahnims Tower)"
+                    ]
                   }
                 }
               ]
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Small Key (Agahnims Tower)",
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
@@ -4504,7 +4500,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 2
                   }
                 },
                 {
@@ -4551,7 +4547,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 3
                   }
                 },
                 {
@@ -18842,7 +18838,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 6,
+        "max_count": 4,
         "hint_text": "a small key to Hyrule Castle"
       },
       "Small Key (Eastern Palace)": {
@@ -18881,7 +18877,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 2,
+        "max_count": 4,
         "hint_text": "a small key to Castle Tower"
       },
       "Small Key (Swamp Palace)": {
@@ -19460,11 +19456,11 @@
       "Shovel": 1,
       "Silver Bow": 1,
       "Single Arrow": 1,
-      "Small Key (Agahnims Tower)": 2,
+      "Small Key (Agahnims Tower)": 4,
       "Small Key (Desert Palace)": 4,
       "Small Key (Eastern Palace)": 2,
       "Small Key (Ganons Tower)": 8,
-      "Small Key (Hyrule Castle)": 6,
+      "Small Key (Hyrule Castle)": 4,
       "Small Key (Ice Palace)": 6,
       "Small Key (Misery Mire)": 6,
       "Small Key (Palace of Darkness)": 6,
@@ -19635,8 +19631,8 @@
           "items=['Rupees (300",
           "items=['Piece of Heart'], locations=['Bumper Cave Ledge'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Rupees (300",
-          "items=['Small Key (Hyrule Castle",
-          "items=['Small Key (Hyrule Castle",
+          "items=['Small Key (Agahnims Tower",
+          "items=['Small Key (Agahnims Tower",
           "items=['Quake'], locations=['Catfish'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Piece of Heart'], locations=['Cave 45'], world=False, from_pool=True, force='silent', count=1, percentage=100",
           "items=['Piece of Heart'], locations=['Checkerboard Cave'], world=False, from_pool=True, force='silent', count=1, percentage=100",
