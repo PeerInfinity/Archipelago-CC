@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-02-18 21:54:12 UTC
+**Generated:** 2026-02-19 00:08:32 UTC
 
 **Source Data Created:** 2026-02-18T20:50:43.869101+00:00
 
@@ -66,13 +66,13 @@
 | Hollow Knight | ❌ Failed | 0 | 0 | 70.1 | 🔴 0.0% | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | 0 | 13.1 | 🔴 0.0% | 21.5KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | 0 | 13.1 | 🔴 0.0% | 21.7KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 20.3KB | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 20.4KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.1KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.2KB | 10.7KB |
+| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.3KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | Math Adventure | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
@@ -87,31 +87,31 @@
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 2.7KB | ✅ |
 | Pokemon Emerald | ✅ Passed | 0 | 19.2 | 19.2 | 🟢 Complete | 5.2KB | 8.7KB |
-| Pokemon Red and Blue | ❌ Failed | 0 | 6.18 | 10.2 | 🟡 60.6% | 12.1KB | 13.0KB |
+| Pokemon Red and Blue | ❌ Failed | 0 | 6.18 | 10.2 | 🟡 60.6% | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
-| SMZ3 | ❌ Failed | 0 | 0 | 16.2 | 🔴 0.0% | 53.9KB | 51.3KB |
-| Satisfactory | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | 41.6KB | ✅ |
+| SMZ3 | ❌ Failed | 0 | 0 | 16.2 | 🔴 0.0% | 54.2KB | 51.3KB |
+| Satisfactory | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 7.5KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.6KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 90.1KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 29.3KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Sudoku | ❌ Failed | 0 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 60.9KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 61.0KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.1KB | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 16.8KB | ✅ |
+| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 16.9KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 7.0KB | ✅ |
-| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 14.1KB | ✅ |
+| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 14.2KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 3.8KB | ✅ |
