@@ -66,7 +66,7 @@ on:
         default: false
 
       update_main_results:
-        description: 'Update the main test results file on ut-fuzz-test branch with this game result'
+        description: 'Update the main test results file on the mode-specific branch with this game result'
         type: boolean
         default: false
 
@@ -297,10 +297,10 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.update_main_results }}" = "true" ]; then
-            echo "**Main results updated:** Yes (ut-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+            UT_HYPHEN="${{ inputs.ut_version }}" && UT_HYPHEN="${UT_HYPHEN//_/-}" && echo "**Main results updated:** Yes (test-results-ut-fuzz-${UT_HYPHEN} branch)" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Update main results on ut-fuzz-test branch
+      - name: Update main results on main branch
         if: ${{ !cancelled() && inputs.update_main_results }}
         run: |
           # Determine the UT version label for the output filename
@@ -333,13 +333,17 @@ jobs:
             exit 0
           fi
 
-          # Stash any changes and fetch ut-fuzz-test branch
-          git stash push -m "stash-for-ut-fuzz-update" || true
-          git fetch origin ut-fuzz-test || { echo "ut-fuzz-test branch not found"; exit 0; }
+          # Compute the target branch name
+          UT_MODE="${{ inputs.ut_version }}"
+          MAIN_BRANCH="test-results-ut-fuzz-${UT_MODE//_/-}"
 
-          # Create a temporary worktree for the ut-fuzz-test branch
+          # Stash any changes and fetch the main branch
+          git stash push -m "stash-for-ut-fuzz-update" || true
+          git fetch origin $MAIN_BRANCH || { echo "$MAIN_BRANCH branch not found"; exit 0; }
+
+          # Create a temporary worktree for the main branch
           WORKTREE_DIR=$(mktemp -d)
-          git worktree add "${WORKTREE_DIR}" origin/ut-fuzz-test
+          git worktree add "${WORKTREE_DIR}" origin/$MAIN_BRANCH
 
           # Restore single game results to the worktree
           git stash pop || true
@@ -427,8 +431,8 @@ jobs:
           Runs: ${{ inputs.runs }}
           Seed: ${{ inputs.starting_seed || 'random' }}
           "
-            git push origin HEAD:ut-fuzz-test
-            echo "Successfully updated main results on ut-fuzz-test branch"
+            git push origin HEAD:$MAIN_BRANCH
+            echo "Successfully updated main results on $MAIN_BRANCH branch"
           else
             echo "No changes to commit"
           fi
@@ -844,10 +848,10 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.update_main_results }}" = "true" ]; then
-            echo "**Main results updated:** Yes (ut-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+            UT_HYPHEN="${{ inputs.ut_version }}" && UT_HYPHEN="${UT_HYPHEN//_/-}" && echo "**Main results updated:** Yes (test-results-ut-fuzz-${UT_HYPHEN} branch)" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Update main results on ut-fuzz-test branch
+      - name: Update main results on main branch
         if: inputs.update_main_results
         run: |
           # Determine the UT version label for the output filename
@@ -880,12 +884,16 @@ jobs:
             exit 0
           fi
 
-          # Fetch ut-fuzz-test branch
-          git fetch origin ut-fuzz-test || { echo "ut-fuzz-test branch not found"; exit 0; }
+          # Compute the target branch name
+          UT_MODE="${{ inputs.ut_version }}"
+          MAIN_BRANCH="test-results-ut-fuzz-${UT_MODE//_/-}"
 
-          # Create a temporary worktree for the ut-fuzz-test branch
+          # Fetch the main branch
+          git fetch origin $MAIN_BRANCH || { echo "$MAIN_BRANCH branch not found"; exit 0; }
+
+          # Create a temporary worktree for the main branch
           WORKTREE_DIR=$(mktemp -d)
-          git worktree add "${WORKTREE_DIR}" origin/ut-fuzz-test
+          git worktree add "${WORKTREE_DIR}" origin/$MAIN_BRANCH
 
           # Copy single game results to the worktree
           cp "${SINGLE_GAME_FILE}" "${WORKTREE_DIR}/${SINGLE_GAME_FILE}"
@@ -973,8 +981,8 @@ jobs:
           Seed: ${{ inputs.starting_seed || 1 }}
           Parallel Runners: 10
           "
-            git push origin HEAD:ut-fuzz-test
-            echo "Successfully updated main results on ut-fuzz-test branch"
+            git push origin HEAD:$MAIN_BRANCH
+            echo "Successfully updated main results on $MAIN_BRANCH branch"
           else
             echo "No changes to commit"
           fi

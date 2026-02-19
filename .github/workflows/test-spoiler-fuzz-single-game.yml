@@ -53,7 +53,7 @@ on:
         type: string
 
       update_main_results:
-        description: 'Update the main test results file on spoiler-fuzz-test branch with this game result'
+        description: 'Update the main test results file on test-results-spoiler-fuzz branch with this game result'
         type: boolean
         default: false
 
@@ -279,10 +279,10 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.update_main_results }}" = "true" ]; then
-            echo "**Main results updated:** Yes (spoiler-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+            echo "**Main results updated:** Yes (test-results-spoiler-fuzz branch)" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Update main results on spoiler-fuzz-test branch
+      - name: Update main results on test-results-spoiler-fuzz branch
         if: ${{ !cancelled() && inputs.update_main_results }}
         run: |
           # Determine seed mode for the output filename
@@ -304,13 +304,13 @@ jobs:
             exit 0
           fi
 
-          # Stash any changes and fetch spoiler-fuzz-test branch
+          # Stash any changes and fetch test-results-spoiler-fuzz branch
           git stash push -m "stash-for-spoiler-fuzz-update" || true
-          git fetch origin spoiler-fuzz-test || { echo "spoiler-fuzz-test branch not found"; exit 0; }
+          git fetch origin test-results-spoiler-fuzz || { echo "test-results-spoiler-fuzz branch not found"; exit 0; }
 
-          # Create a temporary worktree for the spoiler-fuzz-test branch
+          # Create a temporary worktree for the test-results-spoiler-fuzz branch
           WORKTREE_DIR=$(mktemp -d)
-          git worktree add "${WORKTREE_DIR}" origin/spoiler-fuzz-test
+          git worktree add "${WORKTREE_DIR}" origin/test-results-spoiler-fuzz
 
           # Restore single game results to the worktree
           git stash pop || true
@@ -399,8 +399,8 @@ jobs:
           Runs: ${{ inputs.runs }}
           Seed: ${{ inputs.starting_seed || 'random' }}
           "
-            git push origin HEAD:spoiler-fuzz-test
-            echo "Successfully updated main results on spoiler-fuzz-test branch"
+            git push origin HEAD:test-results-spoiler-fuzz
+            echo "Successfully updated main results on test-results-spoiler-fuzz branch"
           else
             echo "No changes to commit"
           fi
@@ -826,10 +826,10 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
           if [ "${{ inputs.update_main_results }}" = "true" ]; then
-            echo "**Main results updated:** Yes (spoiler-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+            echo "**Main results updated:** Yes (test-results-spoiler-fuzz branch)" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Update main results on spoiler-fuzz-test branch
+      - name: Update main results on test-results-spoiler-fuzz branch
         if: inputs.update_main_results
         run: |
           # Determine seed mode for the output filename
@@ -851,12 +851,12 @@ jobs:
             exit 0
           fi
 
-          # Fetch spoiler-fuzz-test branch
-          git fetch origin spoiler-fuzz-test || { echo "spoiler-fuzz-test branch not found"; exit 0; }
+          # Fetch test-results-spoiler-fuzz branch
+          git fetch origin test-results-spoiler-fuzz || { echo "test-results-spoiler-fuzz branch not found"; exit 0; }
 
-          # Create a temporary worktree for the spoiler-fuzz-test branch
+          # Create a temporary worktree for the test-results-spoiler-fuzz branch
           WORKTREE_DIR=$(mktemp -d)
-          git worktree add "${WORKTREE_DIR}" origin/spoiler-fuzz-test
+          git worktree add "${WORKTREE_DIR}" origin/test-results-spoiler-fuzz
 
           # Copy single game results to the worktree
           cp "${SINGLE_GAME_FILE}" "${WORKTREE_DIR}/${SINGLE_GAME_FILE}"
@@ -945,8 +945,8 @@ jobs:
           Seed: ${{ inputs.starting_seed || 1 }}
           Parallel Runners: 10
           "
-            git push origin HEAD:spoiler-fuzz-test
-            echo "Successfully updated main results on spoiler-fuzz-test branch"
+            git push origin HEAD:test-results-spoiler-fuzz
+            echo "Successfully updated main results on test-results-spoiler-fuzz branch"
           else
             echo "No changes to commit"
           fi

@@ -74,24 +74,25 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Create or switch to spoiler-fuzz-test branch
+      - name: Create or switch to test branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin spoiler-fuzz-test; then
-            git checkout spoiler-fuzz-test
-            git pull origin spoiler-fuzz-test
+          BRANCH="${{ inputs.test_apworlds && 'test-results-spoiler-fuzz-apworlds' || 'test-results-spoiler-fuzz' }}"
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
+            git pull origin $BRANCH
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync spoiler-fuzz-test with main"
-              git push origin spoiler-fuzz-test
+              git commit -m "Sync $BRANCH with main"
+              git push origin $BRANCH
             fi
           else
-            git checkout -b spoiler-fuzz-test origin/main
-            git push -u origin spoiler-fuzz-test
+            git checkout -b $BRANCH origin/main
+            git push -u origin $BRANCH
           fi
 
       - name: Delete existing test results
@@ -116,7 +117,8 @@ jobs:
           # Commit if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "Delete existing spoiler fuzz test results before new test run ($MODE)"
-            git push origin spoiler-fuzz-test
+            BRANCH="${{ inputs.test_apworlds && 'test-results-spoiler-fuzz-apworlds' || 'test-results-spoiler-fuzz' }}"
+            git push origin $BRANCH
           fi
 
       - name: Install system dependencies for apworld setup
@@ -218,10 +220,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout spoiler-fuzz-test branch
+      - name: Checkout test branch
         uses: actions/checkout@v4
         with:
-          ref: spoiler-fuzz-test
+          ref: ${{ inputs.test_apworlds && 'test-results-spoiler-fuzz-apworlds' || 'test-results-spoiler-fuzz' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -392,10 +394,10 @@ jobs:
     if: ${{ !cancelled() }}
 
     steps:
-      - name: Checkout spoiler-fuzz-test branch
+      - name: Checkout test branch
         uses: actions/checkout@v4
         with:
-          ref: spoiler-fuzz-test
+          ref: ${{ inputs.test_apworlds && 'test-results-spoiler-fuzz-apworlds' || 'test-results-spoiler-fuzz' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -498,7 +500,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin spoiler-fuzz-test || true
+          BRANCH="${{ inputs.test_apworlds && 'test-results-spoiler-fuzz-apworlds' || 'test-results-spoiler-fuzz' }}"
+          git pull origin $BRANCH || true
 
           # Add test results JSON
           git add -f scripts/output/spoiler-fuzz/test-results-*.json
@@ -528,5 +531,5 @@ jobs:
             - Documentation markdown
             ${{ inputs.test_apworlds && '- World mapping for apworlds (world-mapping-unofficial.json)' || '' }}
             "
-            git push origin spoiler-fuzz-test
+            git push origin $BRANCH
           fi

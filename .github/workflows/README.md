@@ -7,11 +7,11 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
 | Workflow | Trigger | Purpose | Results Branch |
 |----------|---------|---------|----------------|
 | [Test ALTTP Spoiler](#test-alttp-spoiler) | Push/PR/Manual | ALTTP spoiler and regression tests | N/A |
-| [Test All Sequential](#test-all-sequential) | Manual | Comprehensive sequential testing | `test-results-update` |
-| [Test Spoiler Fuzz](#test-spoiler-fuzz) | Manual | Fuzz testing for spoiler generation | `spoiler-fuzz-test` |
-| [Test UT Fuzz](#test-ut-fuzz) | Manual | Universal Tracker fuzz testing | `ut-fuzz-test` |
-| [Test Multiworld UT Fuzz](#test-multiworld-ut-fuzz) | Manual | Multiworld assembly UT testing | `multiworld-ut-fuzz-test` |
-| [Test World Generator](#test-world-generator) | Manual | World generator consistency testing | `test-results-update` |
+| [Test All Sequential](#test-all-sequential) | Manual | Comprehensive sequential testing | `test-results-original` / `test-results-worldgen` / `test-results-apworld` |
+| [Test Spoiler Fuzz](#test-spoiler-fuzz) | Manual | Fuzz testing for spoiler generation | `test-results-spoiler-fuzz` / `test-results-spoiler-fuzz-apworlds` |
+| [Test UT Fuzz](#test-ut-fuzz) | Manual | Universal Tracker fuzz testing | `test-results-ut-fuzz-{mode}` / `test-results-ut-fuzz-apworlds-{mode}` |
+| [Test Multiworld UT Fuzz](#test-multiworld-ut-fuzz) | Manual | Multiworld assembly UT testing | `test-results-multiworld-ut-fuzz` |
+| [Test World Generator](#test-world-generator) | Manual | World generator consistency testing | `test-results-world-generator` / `test-results-world-generator-canonical` / `test-results-world-generator-random` |
 
 ## Running Workflows Manually
 
@@ -182,14 +182,21 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 ## Result Branches
 
-Test workflows commit results to specific branches:
+Each workflow mode saves results to a dedicated branch to prevent concurrent runs from overwriting each other:
 
-| Branch | Workflows | Content |
-|--------|-----------|---------|
-| `test-results-update` | Most test workflows | Test result JSON and charts |
-| `spoiler-fuzz-test` | Spoiler fuzzer | Spoiler fuzz results |
-| `ut-fuzz-test` | UT fuzzer | UT fuzz results |
-| `multiworld-ut-fuzz-test` | Multiworld UT | Multiworld UT fuzz results |
+| Branch | Workflow | Content |
+|--------|----------|---------|
+| `test-results-original` | Test All Sequential (original) | Spoiler/multiclient/multiworld results |
+| `test-results-worldgen` | Test All Sequential (worldgen) | Spoiler/multiclient/multiworld results (worldgen) |
+| `test-results-apworld` | Test All Sequential (apworld) | Spoiler/multiclient/multiworld results (apworld) |
+| `test-results-spoiler-fuzz` | Test Spoiler Fuzz (bundled) | Spoiler fuzz results |
+| `test-results-spoiler-fuzz-apworlds` | Test Spoiler Fuzz (apworlds) | Spoiler fuzz results (apworld) |
+| `test-results-ut-fuzz-{mode}` | Test UT Fuzz (bundled) | UT fuzz results (mode = original, original-seeded, worldgen, pickle, hybrid) |
+| `test-results-ut-fuzz-apworlds-{mode}` | Test UT Fuzz (apworlds) | UT fuzz results (apworld) |
+| `test-results-multiworld-ut-fuzz` | Test Multiworld UT Fuzz | Multiworld UT fuzz results |
+| `test-results-world-generator` | Test World Generator (both) | World generator results |
+| `test-results-world-generator-canonical` | Test World Generator (canonical) | Canonical world generator results |
+| `test-results-world-generator-random` | Test World Generator (random) | Random world generator results |
 
 ---
 

@@ -109,23 +109,24 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Create or switch to test-results-update branch
+      - name: Create or switch to test branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin test-results-update; then
-            git checkout test-results-update
-            git pull origin test-results-update
+          BRANCH="${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}"
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
+            git pull origin $BRANCH
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync test-results-update with main"
-              git push origin test-results-update
+              git commit -m "Sync $BRANCH with main"
+              git push origin $BRANCH
             fi
           else
-            git checkout -b test-results-update origin/main
+            git checkout -b $BRANCH origin/main
           fi
 
       - name: Delete existing test results
@@ -158,7 +159,8 @@ jobs:
           # Commit if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "Delete existing test results before new test run"
-            git push origin test-results-update
+            BRANCH="${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}"
+            git push origin $BRANCH
           fi
 
       - name: Install system dependencies for apworld setup
@@ -541,10 +543,10 @@ jobs:
     if: ${{ !cancelled() && inputs.enable_minimal_spoilers }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -609,7 +611,7 @@ jobs:
             Start seed: ${{ inputs.start_seed }}
             Template type: ${{ inputs.template_type }}
             "
-            git push origin test-results-update
+            git push origin ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           fi
 
   # Full Spoiler Tests (10 parallel jobs)
@@ -627,10 +629,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -855,10 +857,10 @@ jobs:
     if: ${{ !cancelled() && inputs.enable_full_spoilers }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -923,7 +925,7 @@ jobs:
             Start seed: ${{ inputs.start_seed }}
             Template type: ${{ inputs.template_type }}
             "
-            git push origin test-results-update
+            git push origin ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           fi
 
   # Multiclient Tests (10 parallel jobs)
@@ -941,10 +943,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1117,10 +1119,10 @@ jobs:
     if: ${{ !cancelled() && inputs.enable_multiclient }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1183,7 +1185,7 @@ jobs:
             Generated by workflow run: ${{ github.run_id }}
             Template type: ${{ inputs.template_type }}
             "
-            git push origin test-results-update
+            git push origin ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           fi
 
   # Multiworld Test (single job version) - Original templates
@@ -1195,10 +1197,10 @@ jobs:
     timeout-minutes: 180
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1348,10 +1350,10 @@ jobs:
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1405,7 +1407,7 @@ jobs:
             Generated by workflow run: ${{ github.run_id }}
             Template type: ${{ inputs.template_type }}
             "
-            git push origin test-results-update
+            git push origin ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           fi
 
   # Multiworld Tests (10 parallel jobs)
@@ -1423,10 +1425,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1576,10 +1578,10 @@ jobs:
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -1642,6 +1644,6 @@ jobs:
             Generated by workflow run: ${{ github.run_id }}
             Template type: ${{ inputs.template_type }}
             "
-            git push origin test-results-update
+            git push origin ${{ inputs.template_type == 'worldgen' && 'test-results-worldgen' || inputs.template_type == 'apworld' && 'test-results-apworld' || 'test-results-original' }}
           fi
 

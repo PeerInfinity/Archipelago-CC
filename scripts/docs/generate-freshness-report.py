@@ -189,6 +189,12 @@ REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] 
         'Test UT Fuzzer',
         'test-ut-fuzz.yml'
     ),
+    r'test-results-ut-fuzz-original_seeded\.md$': (
+        'python scripts/docs/generate_ut_fuzz_chart.py --original_seeded',
+        'Generate UT fuzz chart (original_seeded)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
+    ),
     r'test-results-ut-fuzz-hybrid\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --hybrid',
         'Generate UT fuzz chart (hybrid)',
@@ -204,6 +210,12 @@ REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] 
     r'test-results-ut-fuzz-apworlds-original\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --apworld --original',
         'Generate UT fuzz chart (apworld original)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
+    ),
+    r'test-results-ut-fuzz-apworlds-original_seeded\.md$': (
+        'python scripts/docs/generate_ut_fuzz_chart.py --apworld --original_seeded',
+        'Generate UT fuzz chart (apworld original_seeded)',
         'Test UT Fuzzer',
         'test-ut-fuzz.yml'
     ),
@@ -310,27 +322,31 @@ WORKFLOW_OVERVIEW = [
         'file': 'test-ut-fuzz.yml',
         'description': 'Fuzz tests Universal Tracker by generating random option combinations and tracking games.',
         'inputs': [
-            ('ut_mode', 'original, worldgen, pickle, hybrid'),
+            ('ut_mode', 'original, original_seeded, worldgen, pickle, hybrid'),
             ('test_apworlds', 'boolean (default: false)'),
             ('runs_per_game', 'number (default: 10)'),
             ('seed', 'number (default: 1)'),
         ],
         'results': [
             ('bundled / original', 'scripts/output/ut-fuzz/test-results-original-fixed-seed.json', ['test-results-ut-fuzz-original.md']),
+            ('bundled / original_seeded', 'scripts/output/ut-fuzz/test-results-original_seeded-fixed-seed.json', ['test-results-ut-fuzz-original_seeded.md']),
             ('bundled / worldgen', 'scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json', ['test-results-ut-fuzz-worldgen.md']),
             ('bundled / hybrid', 'scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json', ['test-results-ut-fuzz-hybrid.md']),
             ('bundled / pickle', 'scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json', ['test-results-ut-fuzz-pickle.md']),
             ('apworlds / original', 'scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json', ['test-results-ut-fuzz-apworlds-original.md']),
+            ('apworlds / original_seeded', 'scripts/output/ut-fuzz/test-results-apworlds-original_seeded-fixed-seed.json', ['test-results-ut-fuzz-apworlds-original_seeded.md']),
             ('apworlds / worldgen', 'scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json', ['test-results-ut-fuzz-apworlds-worldgen.md']),
             ('apworlds / hybrid', 'scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json', ['test-results-ut-fuzz-apworlds-hybrid.md']),
             ('apworlds / pickle', 'scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json', ['test-results-ut-fuzz-apworlds-pickle.md']),
         ],
         'derived_docs': [
+            ('test-results-ut-fuzz-comparison-original-original_seeded.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
             ('test-results-ut-fuzz-comparison-original-worldgen.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
             ('test-results-ut-fuzz-comparison-original-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
             ('test-results-ut-fuzz-comparison-original-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
             ('test-results-ut-fuzz-comparison-worldgen-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
             ('test-results-ut-fuzz-comparison-worldgen-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-apworlds-comparison-original-original_seeded.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
             ('test-results-ut-fuzz-apworlds-comparison-original-worldgen.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
             ('test-results-ut-fuzz-apworlds-comparison-original-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
             ('test-results-ut-fuzz-apworlds-comparison-original-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
