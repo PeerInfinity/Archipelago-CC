@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle
 
-**Generated:** 2026-02-19 21:14:34 UTC
+**Generated:** 2026-02-19 21:12:34 UTC
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -36,7 +36,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Bomb Rush Cyberfunk | ✅ | ✅ |
 | Bumper Stickers | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ | ✅ |
-| Castlevania 64 | ❌ | ✅ |
+| Castlevania 64 | ❌ 1/10 | ✅ |
 | Celeste (Open World) | ❌ 4/10 | ✅ |
 | Celeste 64 | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ |
@@ -50,7 +50,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Donkey Kong Country 3 | ⚠️ 7/10 | ✅ |
 | EarthBound | ⚠️ 5/10 | ✅ |
 | Factorio | ❌ | ✅ |
-| Faxanadu | ❌ 2/10 | ✅ |
+| Faxanadu | ❌ 1/10 | ✅ |
 | Final Fantasy | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ⚠️ 9/10 | ✅ |
 | Heretic | ✅ | ✅ |
@@ -61,7 +61,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kingdom Hearts | ❌ 4/10 | ✅ |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ❌ 44/95 |
 | Kirby's Dream Land 3 | ❌ | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ 2/10 | ✅ |
+| Landstalker - The Treasures of King Nole | ❌ | ✅ |
 | Lingo | ✅ | ✅ |
 | Links Awakening DX | ❌ 1/10 | ❌ 23/100 |
 | Lufia II Ancient Cave | ✅ | ✅ |
@@ -92,7 +92,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Subnautica | ❌ 1/10 | ✅ |
 | Sudoku | ✅ | ✅ |
 | Super Mario 64 | ❌ 4/10 | ✅ |
-| Super Mario Land 2 | ❌ 4/10 | ✅ |
+| Super Mario Land 2 | ❌ 3/10 | ✅ |
 | Super Mario World | ⚠️ 7/10 | ✅ |
 | Super Metroid | ❌ | ⚠️ 49/57 |
 | TOEM original | ✅ | ✅ |
@@ -100,15 +100,15 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | TUNIC | ✅ | ✅ |
 | Terraria | ⚠️ 9/10 | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ | ❌ 2/100 |
-| The Wind Waker | ❌ | ✅ |
+| The Messenger | ❌ 1/10 | ❌ 2/100 |
+| The Wind Waker | ❌ 1/5 | ✅ |
 | The Witness | ✅ | ✅ |
 | Timespinner | ❌ | ✅ |
 | Undertale | ✅ | ✅ |
 | VVVVVV | ⚠️ 8/10 | ✅ |
 | Wargroove | ✅ | ✅ |
-| Yacht Dice | ❌ 1/10 | ✅ |
-| Yoshi's Island | ❌ 2/10 | ✅ |
+| Yacht Dice | ❌ | ✅ |
+| Yoshi's Island | ❌ 3/10 | ✅ |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ✅ |
 | Zillion | ❌ | ⚠️ 78/79 |
 | shapez | ⚠️ 8/10 | ✅ |
