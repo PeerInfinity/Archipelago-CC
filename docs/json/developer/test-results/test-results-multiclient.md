@@ -10,11 +10,11 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-02-19 00:08:32 UTC
+**Generated:** 2026-02-19 08:47:52 UTC
 
-**Source Data Created:** 2026-02-18T21:44:26.505409+00:00
+**Source Data Created:** 2026-02-19T08:38:16.566633+00:00
 
-**Source Data Last Updated:** 2026-02-18T21:44:26.505421+00:00
+**Source Data Last Updated:** 2026-02-19T08:38:16.566641+00:00
 
 ## Summary
 
@@ -87,7 +87,7 @@
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Pokemon Emerald | ❌ Failed | 0 | ❌ | 1033/1061 | 166/194 | 867/867 | ❌ | 1060/1061 | 5.2KB | 8.7KB |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 678/1010 | 105/161 | 569/845 | ❌ | 735/1010 | 12.2KB | 13.0KB |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 940/1010 | 133/161 | 803/845 | ❌ | 960/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 107/316 | 107/316 | 0/0 | ❌ | 105/316 | 54.2KB | 51.3KB |

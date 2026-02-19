@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-02-19 00:08:32 UTC
+**Generated:** 2026-02-19 08:47:52 UTC
 
-**Source Data Created:** 2026-02-18T20:50:43.869101+00:00
+**Source Data Created:** 2026-02-19T07:05:35.181990+00:00
 
-**Source Data Last Updated:** 2026-02-18T20:50:43.869110+00:00
+**Source Data Last Updated:** 2026-02-19T07:05:35.182015+00:00
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -29,8 +29,8 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 79/87 passed (90.8%)
-- **Full Test:** 80/87 passed (92.0%)
+- **Minimal Test:** 81/87 passed (93.1%)
+- **Full Test:** 82/87 passed (94.3%)
 - **Multiclient Test:** 77/87 passed (88.5%)
 - **Multiworld Test:** 75/75 passed (100.0%)
 
@@ -45,9 +45,9 @@ Additional information:
 
 - **Templates passing all 4 tests:** 75/87 (86.2%)
 - **Templates passing 3 tests:** 2/87 (2.3%)
-- **Templates passing 2 tests:** 2/87 (2.3%)
+- **Templates passing 2 tests:** 4/87 (4.6%)
 - **Templates passing 1 test:** 1/87 (1.1%)
-- **Templates passing 0 tests:** 7/87 (8.0%)
+- **Templates passing 0 tests:** 5/87 (5.7%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -101,7 +101,7 @@ Of the 75 templates passing all 4 tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 83.0KB |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 21.7KB | 4.6KB | 257.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 748.6KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 20.4KB | ✅ | 1630.5KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 20.4KB | ✅ | 1630.5KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.1KB | ✅ | 528.6KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 38.2KB | 10.7KB | 939.9KB |
@@ -115,7 +115,7 @@ Of the 75 templates passing all 4 tests:
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 45.8KB |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 217.4KB |
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 73.8KB |
-| Ocarina of Time | ❌ Failed | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1274.3KB |
+| Ocarina of Time | ✅ Passed | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 1274.3KB |
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 305.1KB |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.5KB | ✅ | 488.2KB |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 123.0KB |
@@ -130,9 +130,9 @@ Of the 75 templates passing all 4 tests:
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 149.8KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 262.1KB |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 29.3KB | 90.1KB | 1086.7KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.8KB | 8.0KB | 2407.6KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 18.8KB | 8.0KB | 2407.6KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 205.4KB |
-| Sudoku | ❌ Failed | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 2.1KB |
+| Sudoku | ✅ Passed | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 100.9KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 96.3KB | ✅ | 919.0KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 177.6KB |
