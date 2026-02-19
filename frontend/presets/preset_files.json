@@ -719,11 +719,11 @@
         "total_locations": 62
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 1
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -811,11 +811,11 @@
         "total_locations": 9
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -1102,13 +1102,6 @@
         "client2_passed": false,
         "locations_checked": 130,
         "total_locations": 305
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 1
       }
     }
   },
@@ -1579,11 +1572,11 @@
         "total_locations": 692
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 2
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -2180,13 +2173,6 @@
         "client2_passed": false,
         "locations_checked": 0,
         "total_locations": 1
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -2354,13 +2340,6 @@
         "client2_passed": false,
         "locations_checked": 135,
         "total_locations": 1389
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
       }
     }
   },
@@ -2527,13 +2506,6 @@
         "client2_passed": false,
         "locations_checked": 145,
         "total_locations": 239
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 4
       }
     }
   },
@@ -2611,7 +2583,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-18Feb2026-221750_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-19Feb2026-001553_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2705,11 +2677,11 @@
         "total_locations": 567
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": false,
@@ -3308,11 +3280,11 @@
         "total_locations": 117
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -3366,13 +3338,6 @@
         "client2_passed": false,
         "locations_checked": 0,
         "total_locations": 25
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -3600,13 +3565,6 @@
         "client2_passed": false,
         "locations_checked": 1060,
         "total_locations": 1061
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 5
       }
     }
   },
@@ -3652,15 +3610,8 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 960,
+        "locations_checked": 735,
         "total_locations": 1010
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 6
       }
     }
   },
@@ -3769,11 +3720,11 @@
         "total_locations": 223
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -3826,15 +3777,8 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 90,
+        "locations_checked": 105,
         "total_locations": 316
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 6
       }
     }
   },
@@ -3883,11 +3827,11 @@
         "total_locations": 555
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4361,13 +4305,6 @@
         "client2_passed": true,
         "locations_checked": 0,
         "total_locations": 0
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 3
       }
     }
   },
@@ -4478,11 +4415,11 @@
         "total_locations": 60
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4959,11 +4896,11 @@
         "total_locations": 113
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -5080,11 +5017,11 @@
         "total_locations": 147
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": false,
@@ -5379,13 +5316,6 @@
         "client2_passed": true,
         "locations_checked": 90,
         "total_locations": 90
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5493,13 +5423,6 @@
         "client2_passed": true,
         "locations_checked": 981,
         "total_locations": 981
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
       }
     }
   },
@@ -5547,13 +5470,6 @@
         "client2_passed": false,
         "locations_checked": 0,
         "total_locations": 147
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 9
       }
     }
   },
@@ -9302,7 +9218,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-02-18T22:36:02.111228+00:00",
+    "test_data_updated": "2026-02-19T00:33:36.299760+00:00",
     "games_with_test_data": 151,
     "total_games": 165,
     "games_without_test_data": 14,
