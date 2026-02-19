@@ -15,7 +15,7 @@ import argparse
 import json
 import os
 import sys
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List
 
 
 def load_results(filepath: str) -> Dict[str, Any]:
