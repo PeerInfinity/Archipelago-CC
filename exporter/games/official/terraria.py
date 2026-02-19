@@ -239,7 +239,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         if condition_name in self.rule_indices:
             rule = self.rules[self.rule_indices[condition_name]]
             if "Item" in rule.flags:
-                return str(rule.flags.get("Item")) or f"Post-{condition_name}"
+                return str(rule.flags.get("Item") or f"Post-{condition_name}")
         return condition_name
 
     def _create_list_unique_check(self, item_list: List[str], required_count: int) -> Dict[str, Any]:

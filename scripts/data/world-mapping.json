@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/official/ahit.py",
-    "exporter_size": 18681,
+    "exporter_size": 18674,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "A Hat in Time",
@@ -133,7 +133,7 @@
   },
   "Aquaria": {
     "exporter_path": "exporter/games/official/aquaria.py",
-    "exporter_size": 1889,
+    "exporter_size": 1859,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Aquaria",
@@ -551,7 +551,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/official/factorio.py",
-    "exporter_size": 9050,
+    "exporter_size": 9040,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Factorio",
@@ -606,7 +606,7 @@
   },
   "Final Fantasy Mystic Quest": {
     "exporter_path": "exporter/games/official/ffmq.py",
-    "exporter_size": 14253,
+    "exporter_size": 14230,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Final Fantasy Mystic Quest",
@@ -683,7 +683,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/official/inscryption.py",
-    "exporter_size": 8180,
+    "exporter_size": 8160,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Inscryption",
@@ -716,7 +716,7 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/official/jakanddaxter.py",
-    "exporter_size": 22178,
+    "exporter_size": 22054,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "game_logic_size": 4743,
     "game_name": "Jak and Daxter: The Precursor Legacy",
@@ -782,7 +782,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/official/lingo.py",
-    "exporter_size": 39108,
+    "exporter_size": 38972,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "game_name": "Lingo",
@@ -793,7 +793,7 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/official/ladx.py",
-    "exporter_size": 7468,
+    "exporter_size": 7527,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Links Awakening DX",
@@ -1057,7 +1057,7 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/official/overcooked2.py",
-    "exporter_size": 29232,
+    "exporter_size": 29192,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Overcooked! 2",
@@ -1112,7 +1112,7 @@
   },
   "Pokemon Red and Blue": {
     "exporter_path": "exporter/games/official/pokemon_rb.py",
-    "exporter_size": 12529,
+    "exporter_size": 12425,
     "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
     "game_logic_size": 13303,
     "game_name": "Pokemon Red and Blue",
@@ -1156,7 +1156,7 @@
   },
   "SMZ3": {
     "exporter_path": "exporter/games/official/smz3.py",
-    "exporter_size": 55486,
+    "exporter_size": 55220,
     "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
     "game_logic_size": 52544,
     "game_name": "SMZ3",
@@ -1167,7 +1167,7 @@
   },
   "Satisfactory": {
     "exporter_path": "exporter/games/official/satisfactory.py",
-    "exporter_size": 42774,
+    "exporter_size": 42606,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Satisfactory",
@@ -1211,7 +1211,7 @@
   },
   "Secret of Evermore": {
     "exporter_path": "exporter/games/official/soe.py",
-    "exporter_size": 5711,
+    "exporter_size": 5441,
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
     "game_logic_size": 7728,
     "game_name": "Secret of Evermore",
@@ -1266,7 +1266,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/official/sc2.py",
-    "exporter_size": 29955,
+    "exporter_size": 29354,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 92266,
     "game_name": "Starcraft 2",
@@ -1387,7 +1387,7 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/official/sm.py",
-    "exporter_size": 62416,
+    "exporter_size": 62373,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117281,
     "game_name": "Super Metroid",
@@ -1453,7 +1453,7 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/official/terraria.py",
-    "exporter_size": 17270,
+    "exporter_size": 17225,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Terraria",
@@ -1497,7 +1497,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/official/messenger.py",
-    "exporter_size": 15551,
+    "exporter_size": 15541,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "The Messenger",
@@ -1541,7 +1541,7 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/official/witness.py",
-    "exporter_size": 14548,
+    "exporter_size": 14470,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "The Witness",
