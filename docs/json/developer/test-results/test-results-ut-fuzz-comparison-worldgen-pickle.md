@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-02-19 21:13:17 UTC
+**Generated:** 2026-02-19 21:58:42 UTC
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Pickle-based Universal Tracker (loads serialized multiworld).
 

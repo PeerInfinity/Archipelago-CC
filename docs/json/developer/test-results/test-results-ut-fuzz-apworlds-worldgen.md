@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-19 21:13:17 UTC
+**Generated:** 2026-02-19 21:58:42 UTC
 
 **Source Data Created:** 2026-01-24T05:05:20.633697
 
@@ -14,7 +14,7 @@
 
 **Universal Tracker Version:** Worldgen (regenerates world from rules.json)
 
-**Seed Mode:** Fixed (seed=1)
+**Seed Mode:** Random
 
 **Runs Per Game:** 10
 
