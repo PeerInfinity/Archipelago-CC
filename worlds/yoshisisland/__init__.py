@@ -7,6 +7,7 @@ from typing import List, Set, TextIO, Dict
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 import settings
+from Utils import check_rom_available
 from .Items import get_item_names_per_category, item_table, filler_items, trap_items
 from .Locations import get_locations
 from .Regions import init_areas
@@ -84,13 +85,7 @@ class YoshisIslandWorld(World):
 
     @classmethod
     def stage_assert_generate(cls, multiworld: MultiWorld) -> None:
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("YoshisIsland").warning("Yoshi's Island ROM file not found at %s but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.", rom_file)
+        check_rom_available(get_base_rom_path(), cls.game)
 
     def fill_slot_data(self) -> Dict[str, List[int]]:
         return {
@@ -345,18 +340,7 @@ class YoshisIslandWorld(World):
     def generate_output(self, output_directory: str) -> None:
         rompath = ""  # if variable is not declared finally clause may fail
         
-        # Check if ROM exists and skip ROM-dependent steps if not
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                # This should not happen if stage_assert_generate worked correctly,
-                # but preserve original behavior just in case
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("YoshisIsland").warning("Yoshi's Island ROM file not found at %s but skip_required_files is set. Skipping ROM generation for player %s.", 
-                                rom_file, self.player)
-            # Set a placeholder ROM name to indicate ROM wasn't generated
+        if not check_rom_available(get_base_rom_path(), self.game):
             self.rom_name = "YOSHI_ROM_NOT_GENERATED"
             self.rom_name_available_event.set()
             return

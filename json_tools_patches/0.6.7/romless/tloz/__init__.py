@@ -4,6 +4,7 @@ from pkgutil import get_data
 
 import bsdiff4
 import Utils
+from Utils import check_rom_available
 import settings
 import typing
 
@@ -119,13 +120,7 @@ class TLoZWorld(World):
 
     @classmethod
     def stage_assert_generate(cls, multiworld: MultiWorld):
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("TLoZ").warning("TLoZ ROM file not found at %s but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.", rom_file)
+        check_rom_available(get_base_rom_path(), cls.game)
 
     def create_item(self, name: str):
         return TLoZItem(name, item_table[name].classification, self.item_name_to_id[name], self.player)
@@ -284,20 +279,8 @@ class TLoZWorld(World):
         return rom_data
 
     def generate_output(self, output_directory: str):
-        # Check if ROM exists and skip ROM-dependent steps if not
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                # This should not happen if stage_assert_generate worked correctly,
-                # but preserve original behavior just in case
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("TLoZ").warning("TLoZ ROM file not found at %s but skip_required_files is set. Skipping ROM generation for player %s.", 
-                                rom_file, self.player)
-            # Set a placeholder ROM name to indicate ROM wasn't generated
+        if not check_rom_available(get_base_rom_path(), self.game):
             self.rom_name = b"TLOZ_ROM_NOT_GENERATED"
-            # Make sure the event is set so the process can continue
             self.rom_name_available_event.set()
             return
             

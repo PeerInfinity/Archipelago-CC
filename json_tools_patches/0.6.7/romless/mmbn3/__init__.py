@@ -8,6 +8,7 @@ from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification, Region, 
 from worlds.AutoWorld import WebWorld, World
 
 from .Rom import MMBN3DeltaPatch, LocalRom, get_base_rom_path
+from Utils import check_rom_available
 from .Items import MMBN3Item, ItemData, item_table, all_items, item_frequencies, items_by_id, ItemType, item_groups
 from .Locations import Location, MMBN3Location, all_locations, location_table, location_data_table, \
     secret_locations, jobs, location_groups
@@ -462,18 +463,7 @@ class MMBN3World(World):
     def generate_output(self, output_directory: str) -> None:
         rompath: str = ""
 
-        # Check if ROM exists and skip ROM-dependent steps if not
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                # This should not happen if stage_assert_generate worked correctly,
-                # but preserve original behavior just in case
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("MMBN3").warning("MMBN3 ROM file not found at %s but skip_required_files is set. Skipping ROM generation for player %s.", 
-                                rom_file, self.player)
-            # Set a placeholder ROM name to indicate ROM wasn't generated
+        if not check_rom_available(get_base_rom_path(), self.game):
             self.rom_name = "MMBN3_ROM_NOT_GENERATED"
             return
 
@@ -544,13 +534,7 @@ class MMBN3World(World):
 
     @classmethod
     def stage_assert_generate(cls, multiworld: "MultiWorld") -> None:
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("MMBN3").warning("MMBN3 ROM file not found at %s but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.", rom_file)
+        check_rom_available(get_base_rom_path(), cls.game)
 
     def create_item(self, name: str) -> "Item":
         item = item_table[name]

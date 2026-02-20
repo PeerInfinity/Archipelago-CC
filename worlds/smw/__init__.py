@@ -18,6 +18,7 @@ from .Options import SMWOptions, smw_option_groups
 from .Presets import smw_options_presets
 from .Regions import create_regions, connect_regions
 from .Rom import LocalRom, patch_rom, get_base_rom_path, SMWDeltaPatch
+from Utils import check_rom_available
 from .Rules import set_rules
 
 
@@ -77,13 +78,7 @@ class SMWWorld(World):
 
     @classmethod
     def stage_assert_generate(cls, multiworld: MultiWorld):
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("SMW").warning("SMW ROM file not found at %s but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.", rom_file)
+        check_rom_available(get_base_rom_path(), cls.game)
 
     def fill_slot_data(self) -> dict:
         slot_data = self.options.as_dict(
@@ -220,18 +215,7 @@ class SMWWorld(World):
     def generate_output(self, output_directory: str):
         rompath = ""  # if variable is not declared finally clause may fail
         
-        # Check if ROM exists and skip ROM-dependent steps if not
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                # This should not happen if stage_assert_generate worked correctly,
-                # but preserve original behavior just in case
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("SMW").warning("SMW ROM file not found at %s but skip_required_files is set. Skipping ROM generation for player %s.", 
-                                rom_file, self.player)
-            # Set a placeholder ROM name to indicate ROM wasn't generated
+        if not check_rom_available(get_base_rom_path(), self.game):
             self.rom_name = "SMW_ROM_NOT_GENERATED"
             self.rom_name_available_event.set()
             return
