@@ -108,14 +108,24 @@ export async function loadCombinedModeData(options) {
   let baseCombinedData = {};
   const dataSources = {}; // To track the origin of each config piece
 
+  // An explicit ?mode= URL parameter means the user deliberately requested this mode's
+  // localStorage data — bypass the autoLoadMode guard in that case.
+  const explicitModeParam = urlParams.get('mode');
+  const modeExplicitlyRequested = !!(explicitModeParam && explicitModeParam !== 'reset');
+
   // Check if autoLoadMode is enabled (in addition to skipLocalStorageLoad flag)
-  const autoLoadModeEnabled = await shouldLoadFromLocalStorage(fetchJson, logger);
+  const autoLoadModeEnabled = modeExplicitlyRequested || await shouldLoadFromLocalStorage(fetchJson, logger);
   const shouldSkipLocalStorage = skipLocalStorageLoad || !autoLoadModeEnabled;
 
   if (!autoLoadModeEnabled && !skipLocalStorageLoad) {
     logger.info(
       'init',
       'autoLoadMode is disabled in settings. Skipping localStorage load for mode data.'
+    );
+  } else if (modeExplicitlyRequested && !skipLocalStorageLoad) {
+    logger.info(
+      'init',
+      `Mode "${currentActiveMode}" explicitly requested via URL — loading localStorage data.`
     );
   }
 
