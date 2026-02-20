@@ -130,6 +130,8 @@ export class PathAnalyzerLogic {
       // Continue trying to find paths anyway
     }
 
+    const regionsData = staticData?.regions;
+
     let startRegions = staticData?.startRegions;
 
     // Ensure startRegions is always an array
@@ -148,8 +150,6 @@ export class PathAnalyzerLogic {
         startRegions = [];
       }
     }
-
-    const regionsData = staticData?.regions;
 
     if (!regionsData) {
       this._logDebug(
