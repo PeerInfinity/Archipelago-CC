@@ -1,8 +1,5 @@
 // pathAnalyzerLogic.js
 import { evaluateRule } from '../shared/ruleEngine.js';
-// REMOVED: Global stateManager import
-// import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import loopState from '../loops/loopStateSingleton.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 // Helper function for logging with fallback
@@ -34,88 +31,6 @@ export class PathAnalyzerLogic {
    */
   setDebugMode(debug) {
     this.debugMode = debug;
-  }
-
-  /**
-   * Finds a path from the starting region to the target region using only discovered regions in loop mode
-   * @param {string} targetRegion - The region containing the location or exit to find a path to
-   * @param {object} staticData - The cached static game data (regions, items, etc.)
-   * @returns {Array<string>|null} - Array of region names in the path order, or null if no path found
-   */
-  findPathInLoopMode(targetRegion, staticData) {
-    // Get start region from loopState's playerState, or fall back to first static region
-    const startRegion = loopState.playerState?.startRegions?.[0]
-      || (staticData?.regions?.size > 0 ? staticData.regions.keys().next().value : null);
-
-    if (!startRegion) {
-      this._logDebug('Cannot find path in loop mode: No start region available.');
-      return null;
-    }
-
-    if (targetRegion === startRegion) {
-      return [startRegion];
-    }
-
-    if (!loopState.isRegionDiscovered(targetRegion)) {
-      return null;
-    }
-
-    // <<< ADDED: Check for regions data >>>
-    const regionsData = staticData?.regions;
-    if (!regionsData) {
-      this._logDebug(
-        'Cannot find path in loop mode: Static region data missing.'
-      );
-      return null;
-    }
-
-    const queue = [[startRegion]];
-    const visited = new Set([startRegion]);
-
-    while (queue.length > 0) {
-      const path = queue.shift();
-      const currentRegion = path[path.length - 1];
-
-      if (currentRegion === targetRegion) {
-        return path;
-      }
-
-      if (visited.size > this.maxPathFinderIterations) {
-        this._logDebug(
-          `Maximum iterations (${this.maxPathFinderIterations}) exceeded in findPathInLoopMode`
-        );
-        return null;
-      }
-
-      // Get the region data using the passed staticData
-      // Use Map.get() for O(1) lookup
-      const regionData = regionsData.get(currentRegion);
-      if (!regionData || !regionData.exits) {
-        continue;
-      }
-
-      for (const exit of regionData.exits) {
-        const nextRegion = exit.connected_region;
-
-        if (
-          !nextRegion ||
-          visited.has(nextRegion) ||
-          !loopState.isRegionDiscovered(nextRegion)
-        ) {
-          continue;
-        }
-
-        if (!loopState.isExitDiscovered(currentRegion, exit.name)) {
-          continue;
-        }
-
-        const newPath = [...path, nextRegion];
-        visited.add(nextRegion);
-        queue.push(newPath);
-      }
-    }
-
-    return null;
   }
 
   /**

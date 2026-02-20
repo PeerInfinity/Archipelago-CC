@@ -74,6 +74,9 @@ class EditorUI {
       log('info', 'Initializing EditorUI (Textarea)...');
       this.initializeEditor();
 
+      // Register this panel's ID with the data service so it can be activated on export
+      editorDataService.registerPanelId('editorPanel');
+
       // Subscribe to data service content changes
       this.unsubscribeContentChanged = editorDataService.onContentChanged(
         (content, sourceKey) => {

@@ -642,35 +642,11 @@ export class TestSpoilerUI {
     stopOnErrorContainer.appendChild(stopOnErrorCheckbox);
     stopOnErrorContainer.appendChild(stopOnErrorLabel);
 
-    // Checkbox for auto-collect events
-    const autoCollectCheckbox = document.createElement('input');
-    autoCollectCheckbox.type = 'checkbox';
-    autoCollectCheckbox.id = 'auto-collect-events-checkbox';
-    autoCollectCheckbox.checked = false;
-    autoCollectCheckbox.style.marginLeft = '10px';
-    autoCollectCheckbox.onchange = async (event) => {
-      const isEnabled = event.target.checked;
-      try {
-        await stateManager.setAutoCollectEventsConfig(isEnabled);
-        this.log('info', `Auto-collect events manually set to: ${isEnabled}`);
-      } catch (error) {
-        this.log('error', 'Failed to set auto-collect events config:', error);
-        event.target.checked = !isEnabled;
-      }
-    };
-
-    const autoCollectLabel = document.createElement('label');
-    autoCollectLabel.htmlFor = 'auto-collect-events-checkbox';
-    autoCollectLabel.textContent = 'Auto-collect Events';
-    autoCollectLabel.style.marginLeft = '2px';
-
     controlsDiv.appendChild(changeFileButton);
     controlsDiv.appendChild(testNameElement);
     controlsDiv.appendChild(runFullButton);
     controlsDiv.appendChild(stepButton);
     controlsDiv.appendChild(stopOnErrorContainer);
-    controlsDiv.appendChild(autoCollectCheckbox);
-    controlsDiv.appendChild(autoCollectLabel);
 
     this.controlsContainer.innerHTML = ''; // Clear previous controls
     this.controlsContainer.appendChild(controlsDiv);

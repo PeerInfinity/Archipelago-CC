@@ -113,33 +113,15 @@ export async function initializeApplication(dependencies) {
   const modesConfig = await loadModesConfiguration(fetchJson, logger);
   profiler.end('phase2:loadModesConfig');
 
-  // Validate that the current active mode exists in modes.json
-  let validatedMode = currentActiveMode;
+  // Check if the current active mode exists in modes.json.
+  // If not, file-based configs will automatically fall back to the "default" mode entry
+  // in modeDataLoader.js, but localStorage data for the requested mode is still loaded.
+  const validatedMode = currentActiveMode;
   if (!modesConfig[currentActiveMode]) {
-    logger.warn(
+    logger.info(
       'init',
-      `Mode "${currentActiveMode}" not found in modes.json. Falling back to "default" mode.`
+      `Mode "${currentActiveMode}" not found in modes.json. File configs will use "default" mode as fallback; localStorage data for "${currentActiveMode}" will still be loaded.`
     );
-
-    // Clear invalid mode from localStorage if it wasn't from URL
-    if (!urlParams.get('mode')) {
-      try {
-        localStorage.removeItem('archipelagoToolSuite_lastActiveMode');
-        logger.info('init', 'Cleared invalid mode from localStorage.');
-      } catch (e) {
-        logger.error('init', 'Error clearing invalid mode from localStorage:', e);
-      }
-    }
-
-    validatedMode = 'default';
-
-    // Save the corrected mode
-    try {
-      localStorage.setItem('archipelagoToolSuite_lastActiveMode', validatedMode);
-      logger.info('init', 'Saved corrected mode to localStorage: "default".');
-    } catch (e) {
-      logger.error('init', 'Error saving corrected mode to localStorage:', e);
-    }
   }
 
   // --- Phase 3: Load Combined Mode Data ---

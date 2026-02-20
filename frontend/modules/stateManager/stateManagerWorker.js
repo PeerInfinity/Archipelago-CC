@@ -207,6 +207,10 @@ self.onerror = function (message, source, lineno, colno, error) {
 import { StateManager } from './stateManager.js';
 // Import the actual rule evaluation function
 import { evaluateRule } from '../shared/ruleEngine.js';
+// Import PathAnalyzerLogic for worker-side path analysis
+import { PathAnalyzerLogic } from '../pathAnalyzer/pathAnalyzerLogic.js';
+// Import createSnapshotInterface for worker-side rule evaluation
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 // Import shared commands instead of StateManagerProxy to avoid window references
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js';
 // Import universal logger
@@ -1521,6 +1525,109 @@ async function handleMessage(message) {
           activeSpoilerTest.signalAnalysisComplete();
         }
         break;
+
+      case 'analyzePathToRegion': {
+        if (!workerInitialized || !stateManagerInstance) {
+          self.postMessage({ type: 'queryResponse', queryId: message.queryId,
+            error: 'Worker not initialized' });
+          break;
+        }
+        const { regionName, settings = {} } = message.payload;
+        const startTime = Date.now();
+        try {
+          const snapshot = stateManagerInstance.getSnapshot();
+          const staticData = stateManagerInstance.getStaticGameData();
+          const snapshotInterface = createSnapshotInterface(snapshot, staticData);
+          const logic = new PathAnalyzerLogic({
+            maxPaths: settings.maxPaths || 100,
+            maxAnalysisTimeMs: settings.maxAnalysisTimeMs || 10000,
+          });
+
+          // Check region reachability
+          const reachabilityStatus = snapshot?.regionReachability?.[regionName];
+          const isRegionActuallyReachable =
+            reachabilityStatus === true || reachabilityStatus === 'reachable' || reachabilityStatus === 'checked';
+
+          // DFS path finding (blocking operation, now off main thread)
+          let iterationCount = 0;
+          const paths = logic.findPathsToRegionWithCallback(
+            regionName, null, snapshot, staticData,
+            (count) => { iterationCount = count; }
+          );
+
+          // Aggregate nodes and build path details
+          const allNodes = {
+            primaryBlockers: [], secondaryBlockers: [], tertiaryBlockers: [],
+            primaryRequirements: [], secondaryRequirements: [], tertiaryRequirements: [],
+          };
+          let accessiblePathCount = 0;
+          const pathDetails = [];
+
+          if (paths.length > 0) {
+            for (const path of paths) {
+              const transitions = logic.findAllTransitions(path, snapshot, staticData, snapshotInterface);
+              const isViable = transitions.every(t => t.transitionAccessible);
+              if (isViable) accessiblePathCount++;
+
+              for (const transition of transitions) {
+                for (const exit of transition.exits) {
+                  if (exit.access_rule) {
+                    const ruleNodes = logic.analyzeRuleForNodes(exit.access_rule, snapshotInterface);
+                    Object.keys(allNodes).forEach(key => allNodes[key].push(...(ruleNodes[key] || [])));
+                  }
+                }
+              }
+
+              // Serialize transitions — strip access_rule (main thread looks up from its staticData cache)
+              pathDetails.push({
+                isViable,
+                transitions: transitions.map(t => ({
+                  fromRegion: t.fromRegion,
+                  toRegion: t.toRegion,
+                  transitionAccessible: t.transitionAccessible,
+                  isBlocking: t.isBlocking,
+                  exits: t.exits.map(e => ({
+                    name: e.name,
+                    connected_region: e.connected_region,
+                    isAccessible: e.isAccessible,
+                  })),
+                })),
+              });
+            }
+          } else {
+            // No paths: analyze direct connections for requirements display
+            const directResult = logic.analyzeDirectConnections(regionName, staticData, snapshotInterface);
+            if (directResult?.nodes) {
+              Object.keys(allNodes).forEach(key => allNodes[key].push(...(directResult.nodes[key] || [])));
+            }
+          }
+
+          // Deduplicate allNodes before sending
+          Object.keys(allNodes).forEach(key => { allNodes[key] = logic.deduplicateNodes(allNodes[key]); });
+
+          self.postMessage({
+            type: 'queryResponse',
+            queryId: message.queryId,
+            result: {
+              paths,
+              pathDetails,
+              allNodes,
+              accessiblePathCount,
+              isRegionActuallyReachable,
+              timedOut: false,
+              elapsedMs: Date.now() - startTime,
+              iterationCount,
+            },
+          });
+        } catch (e) {
+          self.postMessage({
+            type: 'queryResponse',
+            queryId: message.queryId,
+            error: e.message,
+          });
+        }
+        break;
+      }
 
       default:
         log(

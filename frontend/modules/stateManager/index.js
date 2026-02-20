@@ -173,7 +173,7 @@ function register(registrationApi) {
     'stateManagerRuntime', // Data Key
     {
       displayName: 'Game State (Inv/Checks)', // Checkbox Label
-      defaultChecked: true, // Checkbox default state
+      defaultChecked: false, // Snapshot is a superset; use that instead
       requiresReload: false, // Can this data be applied live?
       getSaveDataFunction: async () => {
         // Assumes stateManagerProxySingleton is the proxy instance
@@ -182,6 +182,24 @@ function register(registrationApi) {
       applyLoadedDataFunction: (loadedData) => {
         // Assumes stateManagerProxySingleton is the proxy instance
         stateManagerProxySingleton.applyRuntimeStateData(loadedData);
+      },
+    }
+  );
+
+  registrationApi.registerJsonDataHandler(
+    'stateManagerSnapshot', // Data Key
+    {
+      displayName: 'Snapshot (Full State)', // Checkbox Label
+      defaultChecked: true, // Superset of Game State (Inv/Checks)
+      requiresReload: false,
+      getSaveDataFunction: () => {
+        return stateManagerProxySingleton.getLatestStateSnapshot();
+      },
+      applyLoadedDataFunction: (loadedData) => {
+        const runtimeStateData = {};
+        if (loadedData.inventory) runtimeStateData.inventory = loadedData.inventory;
+        if (loadedData.checkedLocations) runtimeStateData.checkedLocations = loadedData.checkedLocations;
+        stateManagerProxySingleton.applyRuntimeStateData(runtimeStateData);
       },
     }
   );

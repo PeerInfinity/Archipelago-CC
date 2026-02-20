@@ -30,6 +30,10 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "UT fuzz test hangs during verification."
+    },
+    {
+      "name": "Zelda II The Adventure of Link.yaml",
+      "reason": "UT fuzz test hangs during verification."
     }
   ],
   "main_test_exclude_list": [

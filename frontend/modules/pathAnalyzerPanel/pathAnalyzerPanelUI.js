@@ -239,7 +239,7 @@ export class PathAnalyzerPanelUI {
         'info',
         `[PathAnalyzerPanelUI for ${this.moduleId}] Panel destroyed, publishing ui:panelManuallyClosed.`
       );
-      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId });
+      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId }, this.moduleId);
     }
   }
 

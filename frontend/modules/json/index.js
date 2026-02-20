@@ -34,6 +34,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('json:exportToEditor');
   registrationApi.registerEventBusPublisher('editor:requestContent');
   registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher('files:jsonLoaded');
 
   // TODO: Register any event bus subscribers or publishers if needed directly by the module index
   // TODO: Register any dispatcher receivers or senders if needed

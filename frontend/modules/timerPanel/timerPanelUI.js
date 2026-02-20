@@ -170,7 +170,7 @@ export class TimerPanelUI {
         'info',
         `[TimerPanelUI for ${this.moduleId}] Panel destroyed, publishing ui:panelManuallyClosed.`
       );
-      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId });
+      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId }, this.moduleId);
     } else {
       log(
         'warn',
