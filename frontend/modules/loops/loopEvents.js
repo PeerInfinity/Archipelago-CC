@@ -6,6 +6,83 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 // Track loop mode state
 let isLoopModeActive = false;
 
+/**
+ * Finds a path from the starting region to the target region using only discovered regions in loop mode.
+ * Uses BFS, filtering to only discovered regions and exits.
+ * @param {string} targetRegion - The region to find a path to
+ * @param {object} loopState - The loop state singleton
+ * @returns {Array<string>|null} - Array of region names in the path order, or null if no path found
+ */
+function findPathInLoopMode(targetRegion, loopState) {
+  const staticData = stateManager.getStaticData();
+  const startRegion = loopState.playerState?.startRegions?.[0]
+    || (staticData?.regions?.size > 0 ? staticData.regions.keys().next().value : null);
+
+  if (!startRegion) {
+    log('warn', '[LoopEvents] Cannot find path in loop mode: No start region available.');
+    return null;
+  }
+
+  if (targetRegion === startRegion) {
+    return [startRegion];
+  }
+
+  if (!loopState.isRegionDiscovered(targetRegion)) {
+    return null;
+  }
+
+  const regionsData = staticData?.regions;
+  if (!regionsData) {
+    log('warn', '[LoopEvents] Cannot find path in loop mode: Static region data missing.');
+    return null;
+  }
+
+  const queue = [[startRegion]];
+  const visited = new Set([startRegion]);
+  const MAX_ITERATIONS = 10000;
+
+  while (queue.length > 0) {
+    const path = queue.shift();
+    const currentRegion = path[path.length - 1];
+
+    if (currentRegion === targetRegion) {
+      return path;
+    }
+
+    if (visited.size > MAX_ITERATIONS) {
+      log('warn', `[LoopEvents] Maximum iterations (${MAX_ITERATIONS}) exceeded in findPathInLoopMode`);
+      return null;
+    }
+
+    const regionData = regionsData.get(currentRegion);
+    if (!regionData || !regionData.exits) {
+      continue;
+    }
+
+    for (const exit of regionData.exits) {
+      const nextRegion = exit.connected_region;
+
+      if (
+        !nextRegion ||
+        visited.has(nextRegion) ||
+        !loopState.isRegionDiscovered(nextRegion)
+      ) {
+        continue;
+      }
+
+      if (!loopState.isExitDiscovered(currentRegion, exit.name)) {
+        continue;
+      }
+
+      const newPath = [...path, nextRegion];
+      visited.add(nextRegion);
+      queue.push(newPath);
+    }
+  }
+
+  return null;
+}
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -199,104 +276,90 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   log('info', `[LoopEvents] Processing exit click from ${sourceRegion} to ${destinationRegion}, current region: ${currentRegion}`);
 
-  // Import and use path analyzer to find path to the exit's source region
-  import('../pathAnalyzer/pathAnalyzerLogic.js').then((module) => {
-    const PathAnalyzerLogic = module.PathAnalyzerLogic;
-    const pathAnalyzer = new PathAnalyzerLogic();
+  // Find path from current region to the region containing the exit
+  const path = findPathInLoopMode(sourceRegion, loopStateSingleton);
 
-    // Find path from current region to the region containing the exit
-    const path = pathAnalyzer.findPathInLoopMode(sourceRegion);
-
-    if (!path) {
-      log('error', `[LoopEvents] Cannot find path from ${currentRegion} to ${sourceRegion}`);
-      if (window.consoleManager) {
-        window.consoleManager.print(`Cannot find a path to ${sourceRegion} in discovery mode.`, 'error');
-      }
-      return;
+  if (!path) {
+    log('error', `[LoopEvents] Cannot find path from ${currentRegion} to ${sourceRegion}`);
+    if (window.consoleManager) {
+      window.consoleManager.print(`Cannot find a path to ${sourceRegion} in discovery mode.`, 'error');
     }
+    return;
+  }
 
-    log('info', `[LoopEvents] Found path to exit: ${path.join(' -> ')}`);
+  log('info', `[LoopEvents] Found path to exit: ${path.join(' -> ')}`);
 
-    // Build the sequence of moves
-    const moves = [];
+  // Build the sequence of moves
+  const moves = [];
 
-    // First, navigate to the source region if not already there
-    for (let i = 0; i < path.length - 1; i++) {
-      const fromRegion = path[i];
-      const toRegion = path[i + 1];
+  // First, navigate to the source region if not already there
+  for (let i = 0; i < path.length - 1; i++) {
+    const fromRegion = path[i];
+    const toRegion = path[i + 1];
 
-      // Find the exit that connects these regions
-      const instance = stateManager.instance;
-      const regionData = instance?.regions[fromRegion];
-      const exitToUse = regionData?.exits?.find(
-        (e) =>
-          e.connected_region === toRegion &&
-          discoveryStateSingleton.isExitDiscovered(fromRegion, e.name)
-      );
+    // Find the exit that connects these regions
+    const instance = stateManager.instance;
+    const regionData = instance?.regions[fromRegion];
+    const exitToUse = regionData?.exits?.find(
+      (e) =>
+        e.connected_region === toRegion &&
+        discoveryStateSingleton.isExitDiscovered(fromRegion, e.name)
+    );
 
-      if (exitToUse) {
-        moves.push({
-          type: 'regionMove',
-          sourceRegion: fromRegion,
-          targetRegion: toRegion,
-          exitUsed: exitToUse.name
-        });
-      } else {
-        log('warn', `[LoopEvents] Could not find discovered exit from ${fromRegion} to ${toRegion}`);
-        // Stop here if we can't find a valid path
-        return;
-      }
-    }
-
-    // Handle the final action based on whether the exit is discovered
-    if (!isDiscovered) {
-      // Exit is undiscovered - need to explore the source region
-      log('info', `[LoopEvents] Exit ${exitName} is undiscovered, adding explore action for ${sourceRegion}`);
-
-      // Add explore custom action
-      const exploreAction = {
-        type: 'explore',
-        regionName: sourceRegion,
-        repeatExplore: true // Set repeat explore for undiscovered exits
-      };
-
-      // Use playerState API to add the explore action
-      if (playerStateAPI.addCustomAction) {
-        playerStateAPI.addCustomAction(exploreAction);
-        log('info', `[LoopEvents] Added explore action for ${sourceRegion}`);
-      } else {
-        log('error', '[LoopEvents] addCustomAction not available in playerState API');
-      }
-    } else {
-      // Exit is discovered - add final move through the clicked exit
+    if (exitToUse) {
       moves.push({
         type: 'regionMove',
-        sourceRegion: sourceRegion,
-        targetRegion: destinationRegion,
-        exitUsed: exitName
+        sourceRegion: fromRegion,
+        targetRegion: toRegion,
+        exitUsed: exitToUse.name
       });
-    }
-
-    // Publish all the region move events
-    const loopDispatcher = getLoopsModuleDispatcher();
-    if (loopDispatcher && moves.length > 0) {
-      moves.forEach((move, index) => {
-        log('info', `[LoopEvents] Publishing user:regionMove ${index + 1}/${moves.length}: ${move.sourceRegion} -> ${move.targetRegion}`);
-
-        // Publish via dispatcher (like regionGraph does)
-        loopDispatcher.publish('user:regionMove', {
-          sourceRegion: move.sourceRegion,
-          targetRegion: move.targetRegion,
-          exitUsed: move.exitUsed
-        });
-      });
-    } else if (moves.length === 0 && !isDiscovered) {
-      // We only added an explore action, no moves needed
-      log('info', '[LoopEvents] No moves needed, only explore action was added');
     } else {
-      log('error', '[LoopEvents] Dispatcher not available or no moves to publish');
+      log('warn', `[LoopEvents] Could not find discovered exit from ${fromRegion} to ${toRegion}`);
+      return;
     }
-  }).catch((error) => {
-    log('error', '[LoopEvents] Failed to load path analyzer:', error);
-  });
+  }
+
+  // Handle the final action based on whether the exit is discovered
+  if (!isDiscovered) {
+    // Exit is undiscovered - need to explore the source region
+    log('info', `[LoopEvents] Exit ${exitName} is undiscovered, adding explore action for ${sourceRegion}`);
+
+    const exploreAction = {
+      type: 'explore',
+      regionName: sourceRegion,
+      repeatExplore: true
+    };
+
+    if (playerStateAPI.addCustomAction) {
+      playerStateAPI.addCustomAction(exploreAction);
+      log('info', `[LoopEvents] Added explore action for ${sourceRegion}`);
+    } else {
+      log('error', '[LoopEvents] addCustomAction not available in playerState API');
+    }
+  } else {
+    // Exit is discovered - add final move through the clicked exit
+    moves.push({
+      type: 'regionMove',
+      sourceRegion: sourceRegion,
+      targetRegion: destinationRegion,
+      exitUsed: exitName
+    });
+  }
+
+  // Publish all the region move events
+  const loopDispatcher = getLoopsModuleDispatcher();
+  if (loopDispatcher && moves.length > 0) {
+    moves.forEach((move, index) => {
+      log('info', `[LoopEvents] Publishing user:regionMove ${index + 1}/${moves.length}: ${move.sourceRegion} -> ${move.targetRegion}`);
+      loopDispatcher.publish('user:regionMove', {
+        sourceRegion: move.sourceRegion,
+        targetRegion: move.targetRegion,
+        exitUsed: move.exitUsed
+      });
+    });
+  } else if (moves.length === 0 && !isDiscovered) {
+    log('info', '[LoopEvents] No moves needed, only explore action was added');
+  } else {
+    log('error', '[LoopEvents] Dispatcher not available or no moves to publish');
+  }
 }
