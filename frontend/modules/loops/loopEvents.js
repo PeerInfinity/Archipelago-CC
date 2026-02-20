@@ -1,87 +1,10 @@
 import loopStateSingleton from './loopStateSingleton.js';
-import { getLoopsModuleDispatcher, moduleInfo, getPlayerStateAPI } from './index.js'; // Import the dispatcher getter, moduleInfo, and playerState API
+import { getLoopsModuleDispatcher, moduleInfo, getPlayerStateAPI, getPathFinder } from './index.js'; // Import the dispatcher getter, moduleInfo, and playerState API
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
 // Track loop mode state
 let isLoopModeActive = false;
-
-/**
- * Finds a path from the starting region to the target region using only discovered regions in loop mode.
- * Uses BFS, filtering to only discovered regions and exits.
- * @param {string} targetRegion - The region to find a path to
- * @param {object} loopState - The loop state singleton
- * @returns {Array<string>|null} - Array of region names in the path order, or null if no path found
- */
-function findPathInLoopMode(targetRegion, loopState) {
-  const staticData = stateManager.getStaticData();
-  const startRegion = loopState.playerState?.startRegions?.[0]
-    || (staticData?.regions?.size > 0 ? staticData.regions.keys().next().value : null);
-
-  if (!startRegion) {
-    log('warn', '[LoopEvents] Cannot find path in loop mode: No start region available.');
-    return null;
-  }
-
-  if (targetRegion === startRegion) {
-    return [startRegion];
-  }
-
-  if (!loopState.isRegionDiscovered(targetRegion)) {
-    return null;
-  }
-
-  const regionsData = staticData?.regions;
-  if (!regionsData) {
-    log('warn', '[LoopEvents] Cannot find path in loop mode: Static region data missing.');
-    return null;
-  }
-
-  const queue = [[startRegion]];
-  const visited = new Set([startRegion]);
-  const MAX_ITERATIONS = 10000;
-
-  while (queue.length > 0) {
-    const path = queue.shift();
-    const currentRegion = path[path.length - 1];
-
-    if (currentRegion === targetRegion) {
-      return path;
-    }
-
-    if (visited.size > MAX_ITERATIONS) {
-      log('warn', `[LoopEvents] Maximum iterations (${MAX_ITERATIONS}) exceeded in findPathInLoopMode`);
-      return null;
-    }
-
-    const regionData = regionsData.get(currentRegion);
-    if (!regionData || !regionData.exits) {
-      continue;
-    }
-
-    for (const exit of regionData.exits) {
-      const nextRegion = exit.connected_region;
-
-      if (
-        !nextRegion ||
-        visited.has(nextRegion) ||
-        !loopState.isRegionDiscovered(nextRegion)
-      ) {
-        continue;
-      }
-
-      if (!loopState.isExitDiscovered(currentRegion, exit.name)) {
-        continue;
-      }
-
-      const newPath = [...path, nextRegion];
-      visited.add(nextRegion);
-      queue.push(newPath);
-    }
-  }
-
-  return null;
-}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -277,7 +200,12 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
   log('info', `[LoopEvents] Processing exit click from ${sourceRegion} to ${destinationRegion}, current region: ${currentRegion}`);
 
   // Find path from current region to the region containing the exit
-  const path = findPathInLoopMode(sourceRegion, loopStateSingleton);
+  const pathFinder = getPathFinder();
+  if (!pathFinder) {
+    log('error', '[LoopEvents] PathFinder not available');
+    return;
+  }
+  const path = pathFinder.findDiscoveredPath(sourceRegion, loopStateSingleton);
 
   if (!path) {
     log('error', `[LoopEvents] Cannot find path from ${currentRegion} to ${sourceRegion}`);
@@ -298,8 +226,7 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
     const toRegion = path[i + 1];
 
     // Find the exit that connects these regions
-    const instance = stateManager.instance;
-    const regionData = instance?.regions[fromRegion];
+    const regionData = stateManager.getStaticData()?.regions?.get(fromRegion);
     const exitToUse = regionData?.exits?.find(
       (e) =>
         e.connected_region === toRegion &&
