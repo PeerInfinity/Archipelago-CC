@@ -35,11 +35,32 @@ All settings below are under the `general_options` section of `host.yaml`.
 - **Type:** `bool`
 - **Default:** `false`
 
-When `true`, suppresses the interactive file browser that normally opens when a required file (like a ROM) is missing. Instead, a warning is logged and execution continues.
+Enables ROM-less (headless) generation. When `true`, generation proceeds even when required files (ROM files) are missing — ROM patching is skipped, but all other artifacts (multidata, spoiler log, rules JSON, sphere log) are still produced normally.
 
-This is essential for headless/automated generation where no GUI is available. Without it, generation would hang waiting for user input when a game's ROM file isn't present.
+This setting has three effects, applied in order:
 
-**Defined in:** `settings.py` (module-level global + `GeneralOptions` field)
+**1. GUI file browser suppression (`settings.py`)**
+
+When any `Path`-typed setting refers to a missing required file, the interactive file picker that would normally open is bypassed. A warning is logged and the missing path is returned as-is. Without this, headless generation would hang waiting for user input.
+
+**2. `stage_assert_generate` — allow generation to proceed**
+
+ROM-based worlds check for their ROM file in `stage_assert_generate`. Normally a missing ROM raises `FileNotFoundError` and aborts generation. With this flag set, the error is suppressed and a warning is logged instead, allowing generation to continue into the fill/placement phase.
+
+**3. `generate_output` — skip ROM patching, set placeholder**
+
+In `generate_output`, if the ROM is still missing, the world:
+- Sets a placeholder `rom_name` (e.g., `"ALTTP_ROM_NOT_GENERATED"`) instead of patching a ROM
+- Fires any threading events that downstream code waits on (`rom_name_available_event`, etc.)
+- Returns early, skipping all ROM I/O
+
+`modify_multidata` then checks for the placeholder and skips adding a `connect_name` entry, so the multidata file is not corrupted with a fake ROM identity.
+
+**Supported worlds**
+
+The following worlds have been patched to support this flag: `alttp`, `apsudoku`, `dkc3`, `ff1`, `lufia2ac`, `mmbn3`, `oot`, `smw`, `soe`, `tloz`, `yoshisisland`.
+
+**Defined in:** `settings.py` (module-level global + `GeneralOptions` field); world-level logic in each world's `__init__.py`
 
 ---
 
