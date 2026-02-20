@@ -20,48 +20,8 @@
   ],
   "ut_fuzz_exclude_list": [
     {
-      "name": "An Untitled Story.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Castlevania Dawn of Sorrow.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "DORONKO WANKO.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "GZDoom.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Ittle Dew 2.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Lil Gator Game.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Minishoot Adventures.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Pseudoregalia.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Ship of Harkinian.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
-      "name": "Spyro 3.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
-    },
-    {
       "name": "Tevi.yaml",
-      "reason": "Split 8 isolation experiment: the last game in split 8 has repeatedly timed out (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp). Excluding all other split 8 games to identify which one causes the hang. Suspected culprit: Tevi (runs just before the hanging game)."
+      "reason": "Confirmed culprit in split 8 hang pattern: when Tevi runs before another game in the same split, the subsequent game hangs for the full 900s timeout. Multiple games were affected (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp) before this was isolated. Likely causes orphaned processes that block the next game's fuzz.py startup."
     }
   ],
   "main_test_exclude_list": [
