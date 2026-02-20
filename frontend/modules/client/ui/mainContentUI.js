@@ -24,7 +24,7 @@ function log(level, message, ...data) {
 }
 
 // const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI'; // May not be needed, or keep for logging
-const CLIENT_MODULE_ID = 'Client'; // This module's ID for logging or other purposes
+const CLIENT_MODULE_ID = 'client'; // This module's ID for logging or other purposes
 
 class MainContentUI {
   constructor(container, componentState) {
@@ -1090,7 +1090,7 @@ class MainContentUI {
       log('info', 
         '[MainContentUI] Panel disposed, publishing ui:panelManuallyClosed.'
       );
-      bus.publish('ui:panelManuallyClosed', { moduleId: CLIENT_MODULE_ID });
+      bus.publish('ui:panelManuallyClosed', { moduleId: CLIENT_MODULE_ID }, CLIENT_MODULE_ID);
     } else {
       log('warn', 
         '[MainContentUI] Could not get eventBus or publish function to send ui:panelManuallyClosed.'

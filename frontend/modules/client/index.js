@@ -191,6 +191,7 @@ export function register(registrationApi) {
   // MainContentUI might still publish these, so keep registration for now
   registrationApi.registerEventBusPublisher('network:disconnectRequest'); // This is if MainContentUI publishes disconnect on EventBus
   registrationApi.registerEventBusPublisher('network:connectRequest'); // This is if MainContentUI publishes connect on EventBus (though it now calls directly)
+  registrationApi.registerEventBusPublisher('ui:panelManuallyClosed');
   // Removed event bus registrations for control:start and control:quickCheck as they are now internal to Timer module
   // registrationApi.registerEventBusPublisher('control:start');
   // registrationApi.registerEventBusPublisher('control:quickCheck');
