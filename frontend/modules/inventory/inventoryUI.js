@@ -54,6 +54,23 @@ export class InventoryUI {
     };
     eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'inventory');
 
+    // If the app is already initialized (e.g., this panel was created after a layout reload
+    // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
+    // In that case, initialize immediately with existing static data.
+    const existingStaticData = stateManager.getStaticData();
+    if (existingStaticData?.items && existingStaticData?.groups) {
+      this.attachEventBusListeners();
+      this.dispatcher = getDispatcher();
+      this.isInitialized = true;
+      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.itemData = existingStaticData.items;
+      this.groupNames = Array.isArray(existingStaticData.groups)
+        ? existingStaticData.groups
+        : Object.keys(existingStaticData.groups || {});
+      this.initializeUI(this.itemData, this.groupNames);
+      this.updateDisplay();
+    }
+
     this.container.on('destroy', () => {
       this.destroy();
     });
