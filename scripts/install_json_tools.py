@@ -92,9 +92,13 @@ def run_command(
     check: bool = True,
     capture_output: bool = True,
     env: Optional[dict] = None,
+    stdin_text: Optional[str] = None,
 ) -> Tuple[bool, str, str]:
     """
     Run a command and return (success, stdout, stderr).
+
+    If stdin_text is provided, it is piped to the process's stdin.
+    This is useful for auto-answering interactive prompts.
     """
     print(f"\n  Running: {description}")
     print(f"  Command: {' '.join(str(c) for c in cmd)}")
@@ -111,6 +115,7 @@ def run_command(
             capture_output=capture_output,
             text=True,
             env=full_env,
+            input=stdin_text,
         )
 
         if result.stdout and not capture_output:
@@ -341,12 +346,14 @@ def run_installer(
         print(f"  [DRY RUN] Would run: {' '.join(cmd)}")
         return True
 
-    # Run the installer
+    # Run the installer (pipe newlines to auto-answer any "press enter" prompts
+    # from Archipelago's ModuleUpdate.py)
     success, _, _ = run_command(
         cmd,
         f"Install JSON Tools ({version})",
         cwd=target_dir,
         capture_output=False,
+        stdin_text="\n",
     )
 
     return success
