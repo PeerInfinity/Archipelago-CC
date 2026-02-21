@@ -158,7 +158,7 @@ SCRIPT_CATEGORIES = {
             "Run full test-all-templates.py for Adventure",
             script_path="scripts/test/test-all-templates.py",
             command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "Adventure.yaml", "-p"]
+                     "--include-list", "Adventure.yaml", "--minimal-spoilers", "-p"]
         ),
         ScriptAction(
             "Test Adventure UT Worldgen",
@@ -193,7 +193,7 @@ SCRIPT_CATEGORIES = {
             "Run full test-all-templates.py for ALTTP",
             script_path="scripts/test/test-all-templates.py",
             command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "A Link to the Past.yaml", "-p"]
+                     "--include-list", "A Link to the Past.yaml", "--minimal-spoilers", "-p"]
         ),
         ScriptAction(
             "Test ALTTP UT Worldgen",
