@@ -29,7 +29,6 @@ from ..config import load_config, save_config, InstallerConfig, configure_export
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity, check_installer_compatibility
 from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
-from ..installer.patcher import apply_bundled_patches, revert_patches, get_patch_summary
 from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
 
 
@@ -52,17 +51,15 @@ class InstallerApp(App):
     comp_presets = BooleanProperty(False)
     comp_docs = BooleanProperty(True)
     comp_scripts = BooleanProperty(True)
-    comp_main_patches = BooleanProperty(True)
     comp_romless_patches = BooleanProperty(True)
     comp_demo_worlds = BooleanProperty(False)
     comp_tracker = BooleanProperty(True)
     comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
 
-    # Patch options (monkey patch and main patches are mutually exclusive)
+    # Patch options
     apply_monkey_patch = BooleanProperty(True)
-    apply_main_patches = BooleanProperty(False)
-    apply_romless_patches = BooleanProperty(False)
+    apply_romless_patches_prop = BooleanProperty(False)
 
     # Export settings configuration
     configure_export = BooleanProperty(True)
@@ -226,7 +223,7 @@ class InstallerApp(App):
         options_box = BoxLayout(size_hint_y=None, height=35, spacing=10)
 
         # Monkey patch checkbox (default checked)
-        monkey_row = BoxLayout(size_hint_x=0.33)
+        monkey_row = BoxLayout(size_hint_x=0.5)
         self.monkey_patch_cb = CheckBox(
             active=self.apply_monkey_patch,
             size_hint_x=None,
@@ -243,35 +240,17 @@ class InstallerApp(App):
         monkey_row.add_widget(monkey_label)
         options_box.add_widget(monkey_row)
 
-        # Main patches checkbox (default unchecked, mutually exclusive with monkey patch)
-        main_patch_row = BoxLayout(size_hint_x=0.33)
-        self.main_patch_cb = CheckBox(
-            active=self.apply_main_patches,
-            size_hint_x=None,
-            width=40,
-        )
-        self.main_patch_cb.bind(active=self.on_main_patch_toggle)
-        main_patch_row.add_widget(self.main_patch_cb)
-        main_patch_label = Label(
-            text='3 Main Files Patch for JSON Export',
-            halign='left',
-            valign='middle',
-        )
-        main_patch_label.bind(size=main_patch_label.setter('text_size'))
-        main_patch_row.add_widget(main_patch_label)
-        options_box.add_widget(main_patch_row)
-
         # ROM-less patches checkbox (default unchecked)
-        romless_row = BoxLayout(size_hint_x=0.33)
+        romless_row = BoxLayout(size_hint_x=0.5)
         self.romless_patch_cb = CheckBox(
-            active=self.apply_romless_patches,
+            active=self.apply_romless_patches_prop,
             size_hint_x=None,
             width=40,
         )
-        self.romless_patch_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches', val))
+        self.romless_patch_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches_prop', val))
         romless_row.add_widget(self.romless_patch_cb)
         romless_label = Label(
-            text='11 ROM-less World File Patches',
+            text='ROM-less World File Patches',
             halign='left',
             valign='middle',
         )
@@ -420,20 +399,8 @@ class InstallerApp(App):
             setattr(self, prop_name, value)
 
     def on_monkey_patch_toggle(self, instance, value: bool):
-        """Handle monkey patch checkbox toggle - mutually exclusive with main patches."""
+        """Handle monkey patch checkbox toggle."""
         self.apply_monkey_patch = value
-        if value and self.apply_main_patches:
-            # Uncheck main patches when monkey patch is checked
-            self.apply_main_patches = False
-            self.main_patch_cb.active = False
-
-    def on_main_patch_toggle(self, instance, value: bool):
-        """Handle main patch checkbox toggle - mutually exclusive with monkey patch."""
-        self.apply_main_patches = value
-        if value and self.apply_monkey_patch:
-            # Uncheck monkey patch when main patches is checked
-            self.apply_monkey_patch = False
-            self.monkey_patch_cb.active = False
 
     def on_preset_normal(self, instance, value: bool):
         """Handle normal preset selection."""
@@ -498,79 +465,18 @@ class InstallerApp(App):
 
         Clock.schedule_once(show)
 
-    def show_confirmation_dialog(self, title: str, message: str, event: threading.Event, result_holder: list):
-        """
-        Show a confirmation dialog and set the event when user responds.
-
-        Args:
-            title: Dialog title.
-            message: Dialog message.
-            event: Threading event to signal when dialog is dismissed.
-            result_holder: List to store the result (True for confirm, False for cancel).
-        """
-        def show(dt):
-            content = BoxLayout(orientation='vertical', padding=10, spacing=10)
-
-            # Message label with text wrapping
-            msg_label = Label(
-                text=message,
-                halign='left',
-                valign='top',
-                size_hint_y=0.8,
-            )
-            msg_label.bind(size=msg_label.setter('text_size'))
-            content.add_widget(msg_label)
-
-            # Button row
-            btn_box = BoxLayout(size_hint_y=None, height=40, spacing=10)
-
-            proceed_btn = Button(text='Proceed')
-            cancel_btn = Button(text='Cancel')
-
-            btn_box.add_widget(proceed_btn)
-            btn_box.add_widget(cancel_btn)
-            content.add_widget(btn_box)
-
-            popup = Popup(
-                title=title,
-                content=content,
-                size_hint=(0.85, 0.6),
-                auto_dismiss=False,
-            )
-
-            def on_proceed(instance):
-                result_holder.append(True)
-                popup.dismiss()
-                event.set()
-
-            def on_cancel(instance):
-                result_holder.append(False)
-                popup.dismiss()
-                event.set()
-
-            proceed_btn.bind(on_press=on_proceed)
-            cancel_btn.bind(on_press=on_cancel)
-            popup.open()
-
-        Clock.schedule_once(show)
-
     def show_help(self, instance):
         """Show help information about the installer."""
         help_text = """JSON Tools Installer Help
 
 PATCH OPTIONS
-The installer offers three ways to enable JSON export functionality:
+The installer offers two ways to enable JSON export functionality:
 
 [b]Monkey Patch for JSON Export[/b] (Recommended)
 Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
 
-[b]3 Main Files Patch for JSON Export[/b]
-Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
-
-[b]11 ROM-less World File Patches[/b]
-Additional patches that allow seed generation for games that normally require ROM files. Useful for testing. Requires main patches to also be installed (monkey patch alone is not sufficient).
-
-Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
+[b]ROM-less World File Patches[/b]
+Additional patches that allow seed generation for games that normally require ROM files. Useful for testing. Includes settings.py (for skip_required_files) and worlds/RomlessUtils.py (for check_rom_available).
 
 EXPORT SETTINGS
 Configure how Archipelago exports game data to host.yaml:
@@ -737,48 +643,12 @@ For more information, see the README.md file."""
                         self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
                     self.installer_config.patches.method = "monkey"
 
-                elif self.apply_main_patches and "main_patches" in components:
-                    # File-based patching - needs confirmation
-                    from ..installer.patcher import PATCH_FILES
-
-                    confirm_message = (
-                        "File-based patching will modify the following core Archipelago files:\n\n"
-                        + "\n".join(f"  - {f}" for f in PATCH_FILES) +
-                        "\n\n"
-                        "These patches enable JSON export and sphere logging functionality.\n"
-                        "Original files will be backed up and can be restored later.\n\n"
-                        "Do you want to proceed with file-based patching?"
-                    )
-
-                    # Show confirmation dialog and wait for response
-                    confirm_event = threading.Event()
-                    confirm_result = []
-                    self.show_confirmation_dialog(
-                        "Confirm File Patching",
-                        confirm_message,
-                        confirm_event,
-                        confirm_result,
-                    )
-                    confirm_event.wait()  # Block until user responds
-
-                    if confirm_result and confirm_result[0]:
-                        self.update_status("Applying main patches...")
-                        self.update_progress(85)
-                        patch_result = apply_bundled_patches(self.installer_config)
-                        if not patch_result.success:
-                            self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
-                        else:
-                            self.installer_config.patches.method = "file"
-                    else:
-                        self.update_status("File patching cancelled, using no patches...")
-                        self.installer_config.patches.method = "none"
-
                 else:
                     # No patching selected
                     self.installer_config.patches.method = "none"
 
                 # Apply ROM-less patches if checkbox is checked
-                if self.apply_romless_patches and "romless_patches" in components:
+                if self.apply_romless_patches_prop and "romless_patches" in components:
                     self.update_status("Applying ROM-less patches...")
                     self.update_progress(90)
                     romless_result = apply_romless_patches(self.installer_config)
@@ -835,12 +705,8 @@ For more information, see the README.md file."""
     def _uninstall_thread(self):
         """Uninstall logic."""
         try:
-            self.update_status("Reverting main patches...")
-            self.update_progress(20)
-            revert_patches(self.installer_config)
-
             self.update_status("Reverting ROM-less patches...")
-            self.update_progress(30)
+            self.update_progress(20)
             revert_romless_patches(self.installer_config)
 
             self.update_status("Removing components...")
@@ -876,11 +742,6 @@ For more information, see the README.md file."""
         def revert():
             try:
                 errors = []
-
-                self.update_status("Reverting main patches...")
-                main_result = revert_patches(self.installer_config)
-                if main_result.errors:
-                    errors.extend(main_result.errors)
 
                 self.update_status("Reverting ROM-less patches...")
                 romless_result = revert_romless_patches(self.installer_config)

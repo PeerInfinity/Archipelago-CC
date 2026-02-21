@@ -40,7 +40,7 @@ Options:
                         Default is stable (PeerInfinity/Archipelago @ JSONExport)
     --all               Install all components (frontend, presets, docs, etc.)
     --romless           Install and apply ROM-less patches (enables ALTTP testing)
-    --patch-mode MODE   Patching mode: monkey (default), file, or none
+    --patch-mode MODE   Patching mode: monkey (default) or none
     --fresh             Delete existing target directory before cloning
     --target-dir DIR    Install to specified directory (default: ./archipelago-json-tools)
     --test MODE         Test mode: auto (default), adventure, alttp, or none
@@ -336,9 +336,7 @@ def run_installer(
         "--yes",  # Skip confirmation prompts
     ]
 
-    if patch_mode == "file":
-        cmd.append("--file-patch")
-    elif patch_mode == "none":
+    if patch_mode == "none":
         cmd.append("--no-patch")
     # monkey patching is the default, no flag needed
 
@@ -538,9 +536,9 @@ def main():
     )
     parser.add_argument(
         "--patch-mode",
-        choices=["monkey", "file", "none"],
+        choices=["monkey", "none"],
         default="monkey",
-        help="Patching mode: monkey (default, runtime patching), file (copy patched files), or none",
+        help="Patching mode: monkey (default, runtime patching) or none",
     )
     parser.add_argument(
         "--fresh",

@@ -59,7 +59,7 @@ class InstallationInfo:
 @dataclass
 class PatchInfo:
     """Information about applied patches."""
-    method: str = "monkey"  # "none", "monkey", or "file"
+    method: str = "monkey"  # "none" or "monkey"
     backups: List[BackupInfo] = field(default_factory=list)
     applied_at: Optional[str] = None
     romless_applied: bool = False

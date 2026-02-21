@@ -8,7 +8,7 @@ from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification, Region, 
 from worlds.AutoWorld import WebWorld, World
 
 from .Rom import MMBN3DeltaPatch, LocalRom, get_base_rom_path
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 from .Items import MMBN3Item, ItemData, item_table, all_items, item_frequencies, items_by_id, ItemType, item_groups
 from .Locations import Location, MMBN3Location, all_locations, location_table, location_data_table, \
     secret_locations, jobs, location_groups

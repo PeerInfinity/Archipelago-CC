@@ -145,8 +145,7 @@ python -m worlds.json_tools_installer status
 | `presets` | Pre-generated game data (~75MB, requires frontend) | No |
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
-| `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
+| `romless_patches` | Patched world files for generation without ROMs | Yes |
 
 ### Version Sources
 

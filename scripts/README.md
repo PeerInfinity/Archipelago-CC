@@ -422,8 +422,8 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   # Basic installation (monkey patching, tests with Adventure)
   python scripts/install_json_tools.py --dev --target-dir ~/Archipelago-vanilla
 
-  # File patching + ROM-less + ALTTP test
-  python scripts/install_json_tools.py --dev --patch-mode file --romless --target-dir ~/Archipelago-vanilla
+  # ROM-less + ALTTP test
+  python scripts/install_json_tools.py --dev --romless --target-dir ~/Archipelago-vanilla
 
   # Fresh install (delete existing target first)
   python scripts/install_json_tools.py --dev --fresh --target-dir ~/Archipelago-vanilla
@@ -440,7 +440,7 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   |--------|-------------|
   | `--dev` | Use development branch (Archipelago-CC @ main). Default is stable. |
   | `--target-dir DIR` | Installation directory (default: `./archipelago-json-tools`) |
-  | `--patch-mode MODE` | `monkey` (default, runtime patching), `file` (copy patched files), or `none` |
+  | `--patch-mode MODE` | `monkey` (default, runtime patching) or `none` |
   | `--romless` | Apply ROM-less patches (enables ALTTP and other ROM-based game testing) |
   | `--fresh` | Delete existing target directory before cloning |
   | `--test MODE` | `auto` (default: ALTTP if --romless, else Adventure), `adventure`, `alttp`, or `none` |

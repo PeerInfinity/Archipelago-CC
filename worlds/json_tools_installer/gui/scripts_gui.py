@@ -120,16 +120,6 @@ SCRIPT_CATEGORIES = {
     ],
     "Patches": [
         ScriptAction(
-            "Apply Main Patches",
-            "Patch core files for JSON export support",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
-            "Revert Main Patches",
-            "Restore original core files from backups",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
             "Apply ROM-less Patches",
             "Enable generation without ROM files (for testing)",
             command=None  # Handled specially
@@ -355,60 +345,10 @@ class ScriptsApp(App):
             self.enable_auto_monkey_patches()
         elif "monkey" in action_name and "disable" in action_name:
             self.disable_auto_monkey_patches()
-        elif "main" in action_name and "apply" in action_name:
-            self.apply_main_patches()
-        elif "main" in action_name and "revert" in action_name:
-            self.revert_main_patches()
         elif "rom-less" in action_name and "apply" in action_name:
             self.apply_romless_patches()
         elif "rom-less" in action_name and "revert" in action_name:
             self.revert_romless_patches()
-
-    def apply_main_patches(self):
-        """Apply main patches."""
-        def do_apply():
-            try:
-                from ..installer.patcher import apply_bundled_patches
-                from ..config import load_config
-                config = load_config()
-                result = apply_bundled_patches(config)
-                if result.success:
-                    msg = f"Applied patches to: {', '.join(result.patched_files)}"
-                    if result.warnings:
-                        msg += f"\n\nWarnings: {', '.join(result.warnings)}"
-                    Clock.schedule_once(lambda dt: self.show_message("Success", msg))
-                else:
-                    Clock.schedule_once(lambda dt: self.show_message("Error",
-                        f"Failed: {', '.join(result.errors)}"))
-            except Exception as e:
-                error_msg = str(e)
-                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
-
-        thread = threading.Thread(target=do_apply)
-        thread.daemon = True
-        thread.start()
-
-    def revert_main_patches(self):
-        """Revert main patches."""
-        def do_revert():
-            try:
-                from ..installer.patcher import revert_patches
-                from ..config import load_config
-                config = load_config()
-                result = revert_patches(config)
-                if result.success:
-                    msg = f"Reverted: {', '.join(result.patched_files)}"
-                    Clock.schedule_once(lambda dt: self.show_message("Success", msg))
-                else:
-                    Clock.schedule_once(lambda dt: self.show_message("Error",
-                        f"Failed: {', '.join(result.errors)}"))
-            except Exception as e:
-                error_msg = str(e)
-                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
-
-        thread = threading.Thread(target=do_revert)
-        thread.daemon = True
-        thread.start()
 
     def apply_romless_patches(self):
         """Apply ROM-less patches."""
@@ -494,7 +434,7 @@ class ScriptsApp(App):
 
                 # Update config to not use monkey patching
                 config = load_config()
-                config.patches.method = "file"
+                config.patches.method = "none"
                 save_config(config)
 
                 # Uninstall from current session if any

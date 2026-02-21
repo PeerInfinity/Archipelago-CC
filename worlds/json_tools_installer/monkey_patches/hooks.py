@@ -1,12 +1,8 @@
 """
 Runtime monkey patching hooks for JSON Tools.
 
-This module provides runtime patches for Archipelago core files when
-file-based patching is not available or desired. This is used as a
-fallback for AP versions without pre-made patches.
-
-The hooks wrap core functions to add JSON export functionality without
-modifying the actual source files.
+This module provides runtime patches for Archipelago core files to add
+JSON export functionality without modifying the actual source files.
 
 Hooks installed (in order):
 1. temp_dir_capture: Wraps AutoWorld.call_stage to set temp_dir_for_sphere_log
@@ -43,59 +39,6 @@ _original_functions = {}
 
 # Module-level state for communication between hooks
 _module_state = {}
-
-
-def is_main_patched() -> bool:
-    """
-    Check if Main.py has hook support for post-output callbacks.
-
-    Detects the hook system (call_post_output_hooks from worlds.Hooks).
-    If present, monkey patching is not needed.
-
-    Returns:
-        True if Main.py has hook support, False otherwise.
-    """
-    try:
-        import Main
-        return hasattr(Main, 'call_post_output_hooks')
-    except ImportError:
-        return False
-
-
-def is_baseclasses_patched() -> bool:
-    """
-    Check if BaseClasses.py has been file-patched with sphere logging.
-
-    The file patch adds a check for save_sphere_log at the start of
-    Spoiler.create_playthrough(). We detect this by inspecting the
-    source code of the method.
-
-    Returns:
-        True if BaseClasses.py has the file patch applied, False otherwise.
-    """
-    try:
-        import BaseClasses
-        import inspect
-
-        # Get the source code of create_playthrough
-        source = inspect.getsource(BaseClasses.Spoiler.create_playthrough)
-
-        # The file patch adds this import within create_playthrough
-        return 'create_playthrough_with_logging' in source
-    except (ImportError, OSError, TypeError):
-        # OSError can occur if source is not available
-        # TypeError can occur if it's a built-in
-        return False
-
-
-def are_file_patches_applied() -> bool:
-    """
-    Check if file patches have been applied to core Archipelago files.
-
-    Returns:
-        True if both Main.py and BaseClasses.py have been patched.
-    """
-    return is_main_patched() and is_baseclasses_patched()
 
 
 def install_hooks(
@@ -179,17 +122,11 @@ def _install_temp_dir_hook() -> bool:
     This wraps AutoWorld.call_stage() to set multiworld.temp_dir_for_sphere_log
     when generate_output is called, mirroring what the file patch does in Main.py
     after the thread pool exits (line 381).
-
-    Skips installation if Main.py already has file patches applied.
     """
     hook_name = "temp_dir_capture"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
-        return True
-
-    if is_main_patched():
-        logger.info(f"Skipping {hook_name} hook: Main.py already has file patch applied")
         return True
 
     try:
@@ -230,18 +167,11 @@ def _install_slot_data_cache_hook() -> bool:
     write_multidata() calls it, the result is cached on the world instance.
     The exporter finds it via its existing hasattr(world, '_cached_slot_data')
     check (world_data.py:272).
-
-    Skips installation if Main.py already has file patches applied (which
-    add the caching inline in write_multidata).
     """
     hook_name = "slot_data_cache"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
-        return True
-
-    if is_main_patched():
-        logger.info(f"Skipping {hook_name} hook: Main.py already has file patch applied")
         return True
 
     try:
@@ -287,17 +217,11 @@ def _install_export_hook() -> bool:
     Fallback path: wraps Main.main() for the rare case where spoiler is
     disabled (args.spoiler == 0, to_file not called). In this case,
     exports run after main() returns — outside temp_dir, not in ZIP.
-
-    Skips installation if Main.py already has file patches applied.
     """
     hook_name = "export_rules"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
-        return True
-
-    if is_main_patched():
-        logger.info(f"Skipping {hook_name} hook: Main.py already has file patch applied")
         return True
 
     try:
@@ -371,17 +295,11 @@ def _install_sphere_logging_hook() -> bool:
     Install hook for sphere log generation during playthrough creation.
 
     This wraps Spoiler.create_playthrough() to log sphere information.
-    Skips installation if BaseClasses.py already has file patches applied.
     """
     hook_name = "sphere_logging"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
-        return True
-
-    # Check if file patch is already applied
-    if is_baseclasses_patched():
-        logger.info(f"Skipping {hook_name} hook: BaseClasses.py already has file patch applied")
         return True
 
     try:

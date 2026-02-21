@@ -97,14 +97,6 @@ COMPONENTS: Dict[str, Component] = {
         required=False,
         size_estimate_mb=0.5,
     ),
-    "main_patches": Component(
-        name="main_patches",
-        display_name="Main Patches",
-        description="Patched core files for JSON export support",
-        source_paths=["json_tools_patches/0.6.7/main"],
-        required=False,
-        size_estimate_mb=0.2,
-    ),
     "romless_patches": Component(
         name="romless_patches",
         display_name="ROM-less Generation Patches",
@@ -170,7 +162,6 @@ DEFAULT_COMPONENTS = {
     "frontend",
     "docs",
     "scripts",
-    "main_patches",
     "romless_patches",
     "tracker",
     "testing",

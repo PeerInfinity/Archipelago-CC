@@ -4,7 +4,7 @@ from pkgutil import get_data
 
 import bsdiff4
 import Utils
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 import settings
 import typing
 
