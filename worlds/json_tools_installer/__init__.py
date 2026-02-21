@@ -12,7 +12,10 @@ Components are available in the Archipelago Launcher after installation.
 
 __version__ = "1.0.0"
 
+from typing import ClassVar
+
 from worlds.AutoWorld import WebWorld, World
+from .json_tools_settings import JSONToolsSettings
 
 # Import and register launcher components
 from . import components as _components
@@ -45,6 +48,8 @@ class JSONToolsInstallerWorld(World):
     game = "JSON Tools Installer"
     hidden = True
     web = JSONToolsInstallerWeb()
+    settings_key = "json_tools"
+    settings: ClassVar[JSONToolsSettings]
 
     # Empty mappings - no actual items or locations
     item_name_to_id = {}

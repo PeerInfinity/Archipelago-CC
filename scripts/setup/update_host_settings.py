@@ -6,9 +6,13 @@ import yaml
 import argparse
 import os
 
-# Define the available settings with their types
-BOOLEAN_SETTINGS = [
+# Settings that stay under general_options
+GENERAL_OPTIONS_BOOLEAN_SETTINGS = [
     'skip_required_files',
+]
+
+# Settings that go under json_tools namespace
+JSON_TOOLS_BOOLEAN_SETTINGS = [
     'save_rules_json',
     'save_tracker_pickle',
     'skip_preset_copy_if_rules_identical',
@@ -26,11 +30,15 @@ BOOLEAN_SETTINGS = [
     'use_tracking_mode_config',
 ]
 
+# Combined list for CLI argument generation
+BOOLEAN_SETTINGS = GENERAL_OPTIONS_BOOLEAN_SETTINGS + JSON_TOOLS_BOOLEAN_SETTINGS
+
 STRING_SETTINGS = {
     'rules_json_format': ['rule_builder', 'ast', 'both'],  # list of valid choices
 }
 
 # Preset configurations
+# Settings are split between general_options (skip_required_files) and json_tools (everything else)
 PRESETS = {
     'normal': {
         'skip_required_files': False,
@@ -131,7 +139,12 @@ PRESETS = {
 
 
 def update_host_yaml(settings=None):
-    """Update specific settings in host.yaml"""
+    """Update specific settings in host.yaml.
+
+    Routes settings to the correct namespace:
+    - skip_required_files -> general_options
+    - all other export settings -> json_tools
+    """
     # Get the project root directory (parent of scripts directory)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     # Go up two levels: setup -> scripts -> project root
@@ -148,11 +161,17 @@ def update_host_yaml(settings=None):
 
     # Update settings if provided
     if settings:
-        # Ensure general_options section exists
+        # Ensure sections exist
         if 'general_options' not in data:
             data['general_options'] = {}
+        if 'json_tools' not in data:
+            data['json_tools'] = {}
+
         for key, value in settings.items():
-            data['general_options'][key] = value
+            if key in GENERAL_OPTIONS_BOOLEAN_SETTINGS:
+                data['general_options'][key] = value
+            else:
+                data['json_tools'][key] = value
             print(f"Set {key} = {value}")
 
     # Write back to file

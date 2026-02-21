@@ -1700,9 +1700,8 @@ class Spoiler:
 
         # Check if sphere logging is enabled and use enhanced version if so
         try:
-            from settings import get_settings
-            settings = get_settings()
-            if settings.general_options.save_sphere_log:
+            from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
+            if get_json_tools_settings().save_sphere_log:
                 from exporter.sphere_logger import create_playthrough_with_logging
                 return create_playthrough_with_logging(self, create_paths)
         except (ImportError, AttributeError):
