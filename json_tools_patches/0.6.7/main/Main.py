@@ -19,7 +19,7 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
-from exporter import export_game_rules, export_multiworld_pickle
+from worlds.Hooks import call_post_output_hooks
 
 __all__ = ["main"]
 
@@ -387,35 +387,8 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
         if args.spoiler:
             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
 
-        # Export rules data after create_playthrough so sphere_log.jsonl is included.
-        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
-        # so it won't repopulate caches that were cleared by stage_modify_multidata.
-        # The export functions handle the decision logic internally based on settings.
-        settings = get_settings()
-        from exporter import clear_rule_cache
-        from exporter.games import clear_handler_cache
-        export_game_rules(
-            multiworld,
-            temp_dir,
-            outfilebase,
-            settings.general_options.update_frontend_presets,
-            settings.general_options.skip_preset_copy_if_rules_identical,
-            settings.general_options.rules_json_format,
-            clear_game_presets=settings.general_options.clear_game_presets,
-            clear_all_presets=settings.general_options.clear_all_presets
-        )
-        # Clear exporter caches to allow GC
-        clear_rule_cache()
-        clear_handler_cache()
-
-        # Export multiworld as pickle for tracker (alternative to rules_json)
-        export_multiworld_pickle(
-            multiworld,
-            temp_dir,
-            outfilebase,
-            settings.general_options.update_frontend_presets,
-            settings.general_options.skip_preset_copy_if_rules_identical,
-        )
+        # Run post-output hooks (e.g., JSON rule export, pickle export)
+        call_post_output_hooks(multiworld, temp_dir, outfilebase)
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")

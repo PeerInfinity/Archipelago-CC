@@ -41,19 +41,17 @@ _module_state = {}
 
 def is_main_patched() -> bool:
     """
-    Check if Main.py has been file-patched with exporter functionality.
+    Check if Main.py has hook support for post-output callbacks.
 
-    The file patch adds 'from exporter import export_game_rules' to Main.py.
-    If this import exists in the Main module, the file patch has been applied
-    and monkey patching is not needed.
+    Detects the hook system (call_post_output_hooks from worlds.Hooks).
+    If present, monkey patching is not needed.
 
     Returns:
-        True if Main.py has the file patch applied, False otherwise.
+        True if Main.py has hook support, False otherwise.
     """
     try:
         import Main
-        # Check if export_game_rules was imported into Main module
-        return hasattr(Main, 'export_game_rules')
+        return hasattr(Main, 'call_post_output_hooks')
     except ImportError:
         return False
 
