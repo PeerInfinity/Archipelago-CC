@@ -274,14 +274,11 @@ def clear_installation(config: InstallerConfig) -> None:
 
 
 # Export settings presets for host.yaml configuration
-# json_tools settings go under the 'json_tools' namespace in host.yaml
-# skip_required_files stays under 'general_options'
+# All settings go under the 'json_tools' namespace in host.yaml
 EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
     "normal": {
-        "general_options": {
-            "skip_required_files": False,
-        },
         "json_tools": {
+            "skip_required_files": False,
             "save_rules_json": False,
             "rules_json_format": "rule_builder",
             "skip_preset_copy_if_rules_identical": False,
@@ -301,10 +298,8 @@ EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
         },
     },
     "minimal-spoilers": {
-        "general_options": {
-            "skip_required_files": True,
-        },
         "json_tools": {
+            "skip_required_files": True,
             "save_rules_json": True,
             "rules_json_format": "rule_builder",
             "skip_preset_copy_if_rules_identical": False,
@@ -355,8 +350,7 @@ def configure_export_settings(
     """
     Configure export settings in host.yaml.
 
-    This adds the export-related settings to host.yaml's json_tools section,
-    and skip_required_files to general_options.
+    This adds the export-related settings to host.yaml's json_tools section.
     These settings are needed for JSON export and sphere logging to work.
 
     Args:

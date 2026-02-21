@@ -525,7 +525,6 @@ class GeneralOptions(Group):
         # created on demand, so marked as optional
 
     output_path: OutputPath = OutputPath("output")
-    skip_required_files: bool = False
 
 
 class ServerOptions(Group):
@@ -831,6 +830,11 @@ class Settings(Group):
                     raise ex
                 # TODO: detect if upgrade is required
                 # TODO: once we have a cache for _world_settings_name_cache, detect if any game section is missing
+                # Extract skip_required_files early, before update() triggers any Path resolution
+                global skip_required_files
+                jt = (options or {}).get('json_tools', {})
+                if isinstance(jt, dict):
+                    skip_required_files = jt.get('skip_required_files', False)
                 self.update(options or {})
             self._filename = location
 
@@ -908,9 +912,5 @@ def get_settings() -> Settings:
                 res = Settings(None)
                 res.save(user_path(filenames[1]))
             setattr(get_settings, "_cache", res)
-
-            # Update the global variable after loading/creating settings
-            global skip_required_files
-            skip_required_files = res.general_options.skip_required_files
 
         return res

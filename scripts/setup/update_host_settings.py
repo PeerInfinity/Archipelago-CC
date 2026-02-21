@@ -8,11 +8,11 @@ import os
 
 # Settings that stay under general_options
 GENERAL_OPTIONS_BOOLEAN_SETTINGS = [
-    'skip_required_files',
 ]
 
 # Settings that go under json_tools namespace
 JSON_TOOLS_BOOLEAN_SETTINGS = [
+    'skip_required_files',
     'save_rules_json',
     'save_tracker_pickle',
     'skip_preset_copy_if_rules_identical',

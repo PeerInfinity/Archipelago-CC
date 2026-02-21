@@ -11,6 +11,7 @@ from settings import Group
 
 class JSONToolsSettings(Group):
     """Settings for JSON Tools (rule export, sphere logging, etc.)"""
+    skip_required_files: bool = False  # Also extracted early in Settings.__init__ for Group.__getattribute__
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # Options: "rule_builder", "ast", "both"
     save_tracker_pickle: bool = False  # Export multiworld as pickle for tracker (alternative to rules_json)
