@@ -164,17 +164,17 @@ SCRIPT_CATEGORIES = {
             "Test Adventure UT Worldgen",
             "Run UT worldgen fuzz test for Adventure",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--include-list", "Adventure.yaml", "--runs", "10",
                      "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test Adventure UT Pickle",
             "Run UT pickle fuzz test for Adventure",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--include-list", "Adventure.yaml", "--runs", "10",
                      "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test ALTTP Generation",
@@ -199,17 +199,17 @@ SCRIPT_CATEGORIES = {
             "Test ALTTP UT Worldgen",
             "Run UT worldgen fuzz test for ALTTP",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
                      "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test ALTTP UT Pickle",
             "Run UT pickle fuzz test for ALTTP",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
                      "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
     ],
 }
