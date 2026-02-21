@@ -253,7 +253,7 @@
 
 
      # Option parsing, handling incompatible options, building useful-item table
-@@ -1075,6 +1082,26 @@
+@@ -1075,6 +1082,27 @@
              for entrance in all_entrances:
                  self.multiworld.spoiler.set_entrance(entrance, entrance.replaces, 'entrance', self.player)
 
