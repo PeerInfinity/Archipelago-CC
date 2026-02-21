@@ -26,6 +26,7 @@ PATCH_FILES = [
     "Main.py",
     "BaseClasses.py",
     "settings.py",
+    "worlds/Hooks.py",
 ]
 
 
@@ -367,6 +368,8 @@ def apply_bundled_patches(
                 result.warnings.append(f"Could not backup {filename}")
 
         try:
+            # Ensure parent directory exists (for subdirectory paths like worlds/Hooks.py)
+            target_path.parent.mkdir(parents=True, exist_ok=True)
             # Copy patched file
             shutil.copy2(patch_file, target_path)
             if filename not in [p.split(" ")[0] for p in result.patched_files]:

@@ -16,6 +16,10 @@
     "requirements.txt": {
       "patched_sha256": "1bbf18a2b82cedc8c12711812bd24a5d9e0ce0a4179a7e22fb1583c41ddc8e49",
       "original_sha256": "b700e29960db11278978d7a25c1b8f921b6f2991068d1f9622660e59d639e9c9"
+    },
+    "worlds/Hooks.py": {
+      "patched_sha256": "0fe5b0eaa69edbb5b2bcbe9be7e56b2286ced4a52d2f7e2211e6a7f539556671",
+      "original_sha256": null
     }
   }
 }
