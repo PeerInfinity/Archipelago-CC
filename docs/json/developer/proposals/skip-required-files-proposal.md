@@ -221,10 +221,12 @@ A completely separate code path for testing.
 
 ## Reference Implementation
 
-This fork has a fully working implementation covering 9 ROM worlds. The changes to upstream files are:
+This fork has a fully working implementation covering 11 ROM worlds. The changes to upstream files are:
 
-- `settings.py`: ~10 lines (global + `GeneralOptions` field + `get_settings()` update)
+- `settings.py`: ~6 lines (module-level global + early extraction in `Settings.__init__` + `Group.__getattribute__` check)
 - `Utils.py`: ~20 lines (`check_rom_available` function)
 - Per world: ~10 lines replaced by 3–4 lines using the helper
+
+**Note:** The fork's implementation differs slightly from this proposal. To minimize fork divergence in `settings.py`, the fork places `skip_required_files` under the `json_tools` namespace (owned by the `json_tools_installer` APWorld) rather than in `GeneralOptions`. The module-level global is synced via early extraction from raw yaml in `Settings.__init__`, before `self.update()` triggers any `Path` resolution. For upstream, `GeneralOptions` is the more natural home since the setting is not specific to JSON tools.
 
 See [core-files.diff](../diffs/core-files.diff) for the exact `settings.py` changes and [world-init-files.diff](../diffs/world-init-files.diff) for the world-level changes.
