@@ -11,10 +11,9 @@ Steps:
 1. Clones the official Archipelago repository
 2. Creates a virtual environment and installs dependencies
 3. Downloads and installs the JSON Tools Installer apworld
-4. Runs the installer to download and patch JSON Tools components
+4. Runs the installer to download, patch, and optionally apply ROM-less patches
 5. Sets up the development environment
-6. Optionally applies ROM-less patches for testing ROM-based games
-7. Runs verification tests (spoiler + UT fuzz) on a single game
+6. Runs verification tests (spoiler + UT fuzz) on a single game
 
 Usage:
     # Install stable version with default components (tests with Adventure)
@@ -320,6 +319,7 @@ def run_installer(
     version: str,
     install_all: bool,
     patch_mode: str = "monkey",
+    romless: bool = False,
     dry_run: bool = False,
 ) -> bool:
     """Run the JSON Tools installer."""
@@ -342,6 +342,9 @@ def run_installer(
 
     if install_all:
         cmd.append("--all")
+
+    if romless:
+        cmd.append("--apply-romless-patches")
 
     if dry_run:
         print(f"  [DRY RUN] Would run: {' '.join(cmd)}")
@@ -387,48 +390,6 @@ def setup_dev_environment(target_dir: Path, dry_run: bool = False) -> bool:
     return success
 
 
-def apply_romless_patches(target_dir: Path, dry_run: bool = False) -> bool:
-    """Apply ROM-less patches to allow generation without ROM files.
-
-    This delegates to scripts/setup/apply_romless_patches.py which uses
-    the world-init-files.diff to patch world files. The diff-based approach
-    will fail cleanly if the Archipelago version doesn't match.
-
-    Note: ROM-less generation also requires skip_required_files support in
-    settings.py, which should be provided by the core JSON Tools patches.
-    If that support is missing, the world patches will fail at runtime.
-    """
-    print_header("Applying ROM-less Patches")
-
-    venv_path = target_dir / ".venv"
-    python_exe = get_python_executable(venv_path)
-    patch_script = target_dir / "scripts" / "setup" / "apply_romless_patches.py"
-
-    if dry_run:
-        print(f"  [DRY RUN] Would run: {python_exe} {patch_script}")
-        return True
-
-    if not patch_script.exists():
-        print(f"  [SKIP] ROM-less patches script not found: {patch_script}")
-        print("  (romless_patches component may not be installed)")
-        return True  # Not a failure, just skip
-
-    success, _, _ = run_command(
-        [str(python_exe), str(patch_script)],
-        "Apply ROM-less patches to world files",
-        cwd=target_dir,
-        capture_output=False,
-    )
-
-    if not success:
-        print("  [FAIL] Failed to apply ROM-less patches")
-        print("  This may indicate an incompatible Archipelago version.")
-        print("  ROM-less generation will not be available.")
-        return False
-
-    return True
-
-
 def run_verification_tests(
     target_dir: Path,
     game_name: str,
@@ -452,7 +413,7 @@ def run_verification_tests(
 
     if dry_run:
         print(f"  [DRY RUN] Would run spoiler test: {python_exe} {spoiler_script} --include-list \"{template_name}\"")
-        print(f"  [DRY RUN] Would run UT fuzz test: {python_exe} {fuzz_script} --runs 1 --include-list \"{template_name}\"")
+        print(f"  [DRY RUN] Would run UT fuzz test: {python_exe} {fuzz_script} --runs 10 --include-list \"{template_name}\"")
         return True
 
     all_passed = True
@@ -482,7 +443,7 @@ def run_verification_tests(
     else:
         print(f"\n  Running UT fuzz test for {game_name}...\n")
         success, _, _ = run_command(
-            [str(python_exe), str(fuzz_script), "--runs", "1", "--include-list", template_name],
+            [str(python_exe), str(fuzz_script), "--runs", "10", "--include-list", template_name],
             f"UT fuzz test ({game_name})",
             cwd=target_dir,
             capture_output=False,
@@ -612,8 +573,8 @@ def main():
         print("\n[FAIL] Failed to extract apworld")
         return 1
 
-    # Step 5: Run installer
-    if not run_installer(target_dir, version, args.all, args.patch_mode, args.dry_run):
+    # Step 5: Run installer (includes romless patches if requested)
+    if not run_installer(target_dir, version, args.all, args.patch_mode, args.romless, args.dry_run):
         print("\n[FAIL] Failed to run JSON Tools installer")
         return 1
 
@@ -624,12 +585,6 @@ def main():
             # Don't fail on this
     else:
         print("\n[SKIP] Skipping development environment setup (--skip-setup)")
-
-    # Step 7: Apply ROM-less patches (if requested)
-    if args.romless:
-        apply_romless_patches(target_dir, args.dry_run)
-    else:
-        print("\n[SKIP] Skipping ROM-less patches (use --romless to enable)")
 
     # Step 8: Run tests
     results_ok = True
