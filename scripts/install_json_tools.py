@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Standalone installation script for JSON Tools.
+End-to-end installation test script for JSON Tools.
 
-This script automates the complete setup process for JSON Tools in a fresh
-Archipelago installation. It:
+This is a developer tool for testing the installation pipeline — not intended
+for end users. It verifies that JSON Tools can be installed from scratch into
+a fresh Archipelago clone and that the resulting installation works correctly.
+
+Steps:
 
 1. Clones the official Archipelago repository
 2. Creates a virtual environment and installs dependencies
