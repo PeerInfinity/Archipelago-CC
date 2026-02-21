@@ -470,13 +470,12 @@ class InstallerApp(App):
         help_text = """JSON Tools Installer Help
 
 PATCH OPTIONS
-The installer offers two ways to enable JSON export functionality:
 
 [b]Monkey Patch for JSON Export[/b] (Recommended)
-Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
+Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions. This is the only patching needed for JSON export.
 
 [b]ROM-less World File Patches[/b]
-Additional patches that allow seed generation for games that normally require ROM files. Useful for testing. Includes settings.py (for skip_required_files) and worlds/RomlessUtils.py (for check_rom_available).
+Optional patches that allow seed generation for games that normally require ROM files. Useful for testing. Includes settings.py (for skip_required_files) and worlds/RomlessUtils.py (for check_rom_available).
 
 EXPORT SETTINGS
 Configure how Archipelago exports game data to host.yaml:
