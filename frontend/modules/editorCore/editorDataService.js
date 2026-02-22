@@ -44,8 +44,32 @@ class EditorDataService {
     this.unsubscribeHandles = {};
     this.changeCallbacks = [];
     this.isInitialized = false;
+    this.registeredPanelIds = [];
 
     log('info', 'EditorDataService instance created');
+  }
+
+  /**
+   * Register an editor panel ID so it can be activated when export data arrives.
+   * Each editor UI should call this when it initializes.
+   */
+  registerPanelId(panelId) {
+    if (!this.registeredPanelIds.includes(panelId)) {
+      this.registeredPanelIds.push(panelId);
+      log('info', `EditorDataService: registered panel ID "${panelId}"`);
+    }
+  }
+
+  /**
+   * Publish ui:activatePanel for every registered editor panel.
+   */
+  _activateRegisteredPanels() {
+    const ids = this.registeredPanelIds.length > 0
+      ? this.registeredPanelIds
+      : ['editorPanel']; // fallback for backwards-compat if nothing registered yet
+    for (const panelId of ids) {
+      eventBus.publish(EDITOR_EVENTS.ACTIVATE_PANEL, { panelId }, 'editorCore');
+    }
   }
 
   /**
@@ -176,7 +200,7 @@ class EditorDataService {
 
           // Activate the Editor panel
           if (eventData.activatePanel !== false) {
-            eventBus.publish(EDITOR_EVENTS.ACTIVATE_PANEL, { panelId: 'editorPanel' }, 'editorCore');
+            this._activateRegisteredPanels();
           }
         } catch (e) {
           log('error', 'Error stringifying export data:', e);
@@ -204,7 +228,7 @@ class EditorDataService {
 
         // Activate the Editor panel
         if (eventData.activatePanel !== false) {
-          eventBus.publish(EDITOR_EVENTS.ACTIVATE_PANEL, { panelId: 'editorPanel' }, 'editorCore');
+          this._activateRegisteredPanels();
         }
       }
     });

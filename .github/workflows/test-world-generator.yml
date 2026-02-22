@@ -47,23 +47,24 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Create or switch to test-results-update branch
+      - name: Create or switch to test branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin test-results-update; then
-            git checkout test-results-update
-            git pull origin test-results-update
+          BRANCH="${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}"
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
+            git pull origin $BRANCH
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync test-results-update with main"
-              git push origin test-results-update
+              git commit -m "Sync $BRANCH with main"
+              git push origin $BRANCH
             fi
           else
-            git checkout -b test-results-update origin/main
+            git checkout -b $BRANCH origin/main
           fi
 
       - name: Delete existing test results
@@ -81,7 +82,8 @@ jobs:
           # Commit if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "Delete existing world generator test results before new test run"
-            git push origin test-results-update
+            BRANCH="${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}"
+            git push origin $BRANCH
           fi
 
   # Run canonical tests (--canonical-seed 1) - 10 parallel jobs
@@ -99,10 +101,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -218,10 +220,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -326,10 +328,10 @@ jobs:
     if: ${{ always() && !cancelled() && needs.setup.result == 'success' }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -401,7 +403,8 @@ jobs:
             Seed: ${{ inputs.seed }}
             Test mode: ${{ inputs.test_mode }}
             "
-            git push origin test-results-update
+            BRANCH="${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}"
+            git push origin $BRANCH
           fi
 
   # Cleanup (runs even if previous steps failed)
@@ -412,10 +415,10 @@ jobs:
     if: ${{ always() }}
 
     steps:
-      - name: Checkout test-results-update branch
+      - name: Checkout results branch
         uses: actions/checkout@v4
         with:
-          ref: test-results-update
+          ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5

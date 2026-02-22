@@ -2489,6 +2489,31 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
+def _cleanup_empty_worldgen_dirs() -> None:
+    """Remove empty worldgen temp directories to prevent warnings on the next run.
+
+    These are leftover directories from interrupted fuzz/worldgen runs that
+    don't have an __init__.py, causing warnings when worlds are loaded.
+    They typically have names like 'adventure_worldgen_86998726363870010506'.
+    """
+    worlds_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "worlds")
+    if not os.path.isdir(worlds_dir):
+        return
+    removed_count = 0
+    for name in os.listdir(worlds_dir):
+        if not name.endswith(("_worldgen", "_worldgen2")) and "_worldgen_" not in name and not (name.split("_")[-1].isdigit() and len(name.split("_")[-1]) > 10):
+            continue
+        entry = os.path.join(worlds_dir, name)
+        if os.path.isdir(entry) and not os.path.isfile(os.path.join(entry, "__init__.py")):
+            try:
+                shutil.rmtree(entry)
+                removed_count += 1
+            except OSError:
+                pass
+    if removed_count > 0:
+        logger.debug(f"Cleaned up {removed_count} empty worldgen directories")
+
+
 def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
@@ -2511,10 +2536,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     """
 
     # Determine whether to export rules.json based on settings mode.
-    from settings import get_settings
-    settings = get_settings()
+    from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
+    jt = get_json_tools_settings()
 
-    if getattr(settings.general_options, 'use_tracking_mode_config', False):
+    if jt.use_tracking_mode_config:
         # Config-based logic: use tracking-mode-config.json
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
@@ -2523,11 +2548,12 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 return {}
     else:
         # Simple flag-based logic
-        if not getattr(settings.general_options, 'save_rules_json', False):
+        if not jt.save_rules_json:
             # save_rules_json is False - don't export
             return {}
 
     os.makedirs(output_dir, exist_ok=True)
+    _cleanup_empty_worldgen_dirs()
 
     # --- Configuration for Excluded Fields (now defined globally) ---
     

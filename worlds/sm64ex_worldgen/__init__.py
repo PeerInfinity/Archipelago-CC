@@ -81,7 +81,7 @@ class SM64World(RuleWorldMixin, World):
     options_dataclass = SuperMario64WorldGenOptions
     options: SuperMario64WorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {

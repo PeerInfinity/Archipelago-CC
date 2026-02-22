@@ -70,7 +70,6 @@ def main():
         ALTTPWorld.export_rule_patches = {
             'cap_key_counts': {
                 'Small Key (Desert Palace)': 1,
-                'Small Key (Agahnims Tower)': 0,
                 'Small Key (Palace of Darkness)': 5,
                 'Small Key (Swamp Palace)': 4,
                 'Small Key (Ganons Tower)': 4,

@@ -263,18 +263,18 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     """
     global _previous_fractional_state, _previous_integer_state
 
-    from settings import get_settings
     from BaseClasses import CollectionState
+    from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
 
-    settings = get_settings()
+    jt = get_json_tools_settings()
 
     # Set up logging options
-    log_fractional_sphere_details = settings.general_options.log_fractional_sphere_details
-    log_integer_sphere_details = settings.general_options.log_integer_sphere_details
-    verbose_sphere_log = settings.general_options.verbose_sphere_log
-    extend_sphere_log_to_all_locations = settings.general_options.extend_sphere_log_to_all_locations
-    auto_collect_events = settings.general_options.auto_collect_events
-    filter_event_items = settings.general_options.filter_event_items
+    log_fractional_sphere_details = jt.log_fractional_sphere_details
+    log_integer_sphere_details = jt.log_integer_sphere_details
+    verbose_sphere_log = jt.verbose_sphere_log
+    extend_sphere_log_to_all_locations = jt.extend_sphere_log_to_all_locations
+    auto_collect_events = jt.auto_collect_events
+    filter_event_items = jt.filter_event_items
 
     # Reset state trackers at the start
     _previous_fractional_state = None

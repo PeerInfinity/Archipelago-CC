@@ -1,12 +1,14 @@
 """
 Runtime monkey patching hooks for JSON Tools.
 
-This module provides runtime patches for Archipelago core files when
-file-based patching is not available or desired. This is used as a
-fallback for AP versions without pre-made patches.
+This module provides runtime patches for Archipelago core files to add
+JSON export functionality without modifying the actual source files.
 
-The hooks wrap core functions to add JSON export functionality without
-modifying the actual source files.
+Hooks installed (in order):
+1. temp_dir_capture: Wraps AutoWorld.call_stage to set temp_dir_for_sphere_log
+2. slot_data_cache: Wraps World.fill_slot_data to cache results as _cached_slot_data
+3. sphere_logging: Wraps Spoiler.create_playthrough for sphere log generation
+4. export_rules: Wraps Spoiler.to_file (primary) + Main.main (fallback) for export
 
 Usage:
     from worlds.json_tools_installer.monkey_patches import install_hooks, uninstall_hooks
@@ -24,7 +26,7 @@ Usage:
 import functools
 import logging
 import tempfile
-from typing import Callable, Optional, Any, TYPE_CHECKING
+from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from BaseClasses import MultiWorld
@@ -39,67 +41,18 @@ _original_functions = {}
 _module_state = {}
 
 
-def is_main_patched() -> bool:
-    """
-    Check if Main.py has been file-patched with exporter functionality.
-
-    The file patch adds 'from exporter import export_game_rules' to Main.py.
-    If this import exists in the Main module, the file patch has been applied
-    and monkey patching is not needed.
-
-    Returns:
-        True if Main.py has the file patch applied, False otherwise.
-    """
-    try:
-        import Main
-        # Check if export_game_rules was imported into Main module
-        return hasattr(Main, 'export_game_rules')
-    except ImportError:
-        return False
-
-
-def is_baseclasses_patched() -> bool:
-    """
-    Check if BaseClasses.py has been file-patched with sphere logging.
-
-    The file patch adds a check for save_sphere_log at the start of
-    Spoiler.create_playthrough(). We detect this by inspecting the
-    source code of the method.
-
-    Returns:
-        True if BaseClasses.py has the file patch applied, False otherwise.
-    """
-    try:
-        import BaseClasses
-        import inspect
-
-        # Get the source code of create_playthrough
-        source = inspect.getsource(BaseClasses.Spoiler.create_playthrough)
-
-        # The file patch adds this import within create_playthrough
-        return 'create_playthrough_with_logging' in source
-    except (ImportError, OSError, TypeError):
-        # OSError can occur if source is not available
-        # TypeError can occur if it's a built-in
-        return False
-
-
-def are_file_patches_applied() -> bool:
-    """
-    Check if file patches have been applied to core Archipelago files.
-
-    Returns:
-        True if both Main.py and BaseClasses.py have been patched.
-    """
-    return is_main_patched() and is_baseclasses_patched()
-
-
 def install_hooks(
     export_rules: bool = True,
     sphere_logging: bool = True,
 ) -> dict:
     """
     Install runtime hooks into Archipelago core.
+
+    Installation order:
+    1. temp_dir_capture (if export_rules) - wrap call_stage
+    2. slot_data_cache (if export_rules) - wrap fill_slot_data
+    3. sphere_logging - wrap create_playthrough
+    4. export_rules - wrap to_file + Main.main fallback
 
     Args:
         export_rules: Install hook for exporting rules JSON after generation.
@@ -111,10 +64,14 @@ def install_hooks(
     results = {}
 
     if export_rules:
-        results["export_rules"] = _install_export_hook()
+        results["temp_dir_capture"] = _install_temp_dir_hook()
+        results["slot_data_cache"] = _install_slot_data_cache_hook()
 
     if sphere_logging:
         results["sphere_logging"] = _install_sphere_logging_hook()
+
+    if export_rules:
+        results["export_rules"] = _install_export_hook()
 
     return results
 
@@ -139,6 +96,8 @@ def uninstall_hooks() -> dict:
             results[hook_name] = False
             logger.error(f"Failed to uninstall hook {hook_name}: {e}")
 
+    _module_state.clear()
+
     return results
 
 
@@ -152,12 +111,112 @@ def get_installed_hooks() -> list:
     return list(_installed_hooks.keys())
 
 
+# ---------------------------------------------------------------------------
+# Hook: temp_dir_capture — wrap AutoWorld.call_stage
+# ---------------------------------------------------------------------------
+
+def _install_temp_dir_hook() -> bool:
+    """
+    Install hook to capture temp_dir from call_stage("generate_output", temp_dir).
+
+    This wraps AutoWorld.call_stage() to set multiworld.temp_dir_for_sphere_log
+    when generate_output is called, mirroring what the file patch does in Main.py
+    after the thread pool exits (line 381).
+    """
+    hook_name = "temp_dir_capture"
+
+    if hook_name in _installed_hooks:
+        logger.warning(f"Hook {hook_name} already installed")
+        return True
+
+    try:
+        from worlds import AutoWorld
+
+        original_call_stage = AutoWorld.call_stage
+        _original_functions[hook_name] = (AutoWorld, "call_stage", original_call_stage)
+
+        @functools.wraps(original_call_stage)
+        def hooked_call_stage(multiworld, method_name, *args):
+            """Wrapped call_stage that captures temp_dir for sphere logging."""
+            if method_name == "generate_output" and args:
+                multiworld.temp_dir_for_sphere_log = args[0]
+            return original_call_stage(multiworld, method_name, *args)
+
+        AutoWorld.call_stage = hooked_call_stage
+        _installed_hooks[hook_name] = hooked_call_stage
+        logger.info(f"Installed hook: {hook_name}")
+        return True
+
+    except ImportError as e:
+        logger.error(f"Could not import AutoWorld module: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"Failed to install {hook_name} hook: {e}")
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Hook: slot_data_cache — wrap World.fill_slot_data
+# ---------------------------------------------------------------------------
+
+def _install_slot_data_cache_hook() -> bool:
+    """
+    Install hook to cache fill_slot_data() results as _cached_slot_data.
+
+    This wraps World.fill_slot_data() on the base class so that when
+    write_multidata() calls it, the result is cached on the world instance.
+    The exporter finds it via its existing hasattr(world, '_cached_slot_data')
+    check (world_data.py:272).
+    """
+    hook_name = "slot_data_cache"
+
+    if hook_name in _installed_hooks:
+        logger.warning(f"Hook {hook_name} already installed")
+        return True
+
+    try:
+        from worlds import AutoWorld
+
+        original_fill_slot_data = AutoWorld.World.fill_slot_data
+        _original_functions[hook_name] = (
+            AutoWorld.World, "fill_slot_data", original_fill_slot_data
+        )
+
+        @functools.wraps(original_fill_slot_data)
+        def caching_fill_slot_data(self):
+            """Wrapped fill_slot_data that caches result as _cached_slot_data."""
+            result = original_fill_slot_data(self)
+            self._cached_slot_data = result
+            return result
+
+        AutoWorld.World.fill_slot_data = caching_fill_slot_data
+        _installed_hooks[hook_name] = caching_fill_slot_data
+        logger.info(f"Installed hook: {hook_name}")
+        return True
+
+    except ImportError as e:
+        logger.error(f"Could not import AutoWorld module: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"Failed to install {hook_name} hook: {e}")
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Hook: export_rules — wrap Spoiler.to_file (primary) + Main.main (fallback)
+# ---------------------------------------------------------------------------
+
 def _install_export_hook() -> bool:
     """
     Install hook to export rules JSON after seed generation.
 
-    This wraps Main.main() to call the exporter after generation completes.
-    Skips installation if Main.py already has file patches applied.
+    Primary path: wraps Spoiler.to_file() which is called inside
+    `with output as temp_dir:` — exported files are written to temp_dir
+    and included in the output ZIP.
+
+    Fallback path: wraps Main.main() for the rare case where spoiler is
+    disabled (args.spoiler == 0, to_file not called). In this case,
+    exports run after main() returns — outside temp_dir, not in ZIP.
     """
     hook_name = "export_rules"
 
@@ -165,80 +224,82 @@ def _install_export_hook() -> bool:
         logger.warning(f"Hook {hook_name} already installed")
         return True
 
-    # Check if file patch is already applied
-    if is_main_patched():
-        logger.info(f"Skipping {hook_name} hook: Main.py already has file patch applied")
-        return True
-
     try:
         import Main
+        import BaseClasses
 
+        # --- Primary: wrap Spoiler.to_file ---
+        original_to_file = BaseClasses.Spoiler.to_file
+        _original_functions["export_to_file"] = (
+            BaseClasses.Spoiler, "to_file", original_to_file
+        )
+
+        @functools.wraps(original_to_file)
+        def hooked_to_file(self, filename, *args, **kwargs):
+            """Wrapped to_file that runs export_post_output_hook in temp_dir."""
+            import os
+            result = original_to_file(self, filename, *args, **kwargs)
+
+            temp_dir = os.path.dirname(filename)
+            outfilebase = os.path.basename(filename).removesuffix('_Spoiler.txt')
+
+            try:
+                from ..export_hook import export_post_output_hook
+                export_post_output_hook(self.multiworld, temp_dir, outfilebase)
+                _module_state['export_ran'] = True
+            except Exception:
+                logger.exception("Export hook failed in to_file wrapper")
+
+            return result
+
+        BaseClasses.Spoiler.to_file = hooked_to_file
+        _installed_hooks["export_to_file"] = hooked_to_file
+
+        # --- Fallback: wrap Main.main for spoiler-disabled case ---
         original_main = Main.main
         _original_functions[hook_name] = (Main, "main", original_main)
 
         @functools.wraps(original_main)
         def hooked_main(*args, **kwargs):
-            """Wrapped Main.main that exports rules and/or pickle after generation."""
-            import os
-
-            # Set up output directory for sphere logging before generation runs
-            # This ensures sphere_log.jsonl goes to a consistent location
-            # The file patch normally sets multiworld.temp_dir_for_sphere_log,
-            # but we need to set it via a different mechanism since we don't
-            # have the multiworld object until after main() returns.
-            # We use the 'output' directory as a fallback location.
-            output_dir = 'output'
-            if args and hasattr(args[0], 'outputpath') and args[0].outputpath:
-                output_dir = args[0].outputpath
-            os.makedirs(output_dir, exist_ok=True)
-
-            # Store the output directory for _post_generation_export to find
-            _module_state['output_dir'] = output_dir
-
+            """Wrapped Main.main — fallback export when spoiler is disabled."""
+            _module_state['export_ran'] = False
             result = original_main(*args, **kwargs)
 
-            # result is the multiworld object
-            multiworld = result
-
-            # Try to export after successful generation
-            # The export functions handle their own decision logic internally
-            if multiworld is not None:
+            if not _module_state.get('export_ran') and result is not None:
                 try:
-                    _post_generation_export(multiworld)
+                    _post_generation_export(result)
                 except Exception as e:
-                    logger.warning(f"Post-generation export failed: {e}")
+                    logger.warning(f"Fallback post-generation export failed: {e}")
 
             return result
 
         Main.main = hooked_main
         _installed_hooks[hook_name] = hooked_main
-        logger.info(f"Installed hook: {hook_name}")
+        logger.info(f"Installed hook: {hook_name} (to_file wrapper + main fallback)")
         return True
 
     except ImportError as e:
-        logger.error(f"Could not import Main module: {e}")
+        logger.error(f"Could not import Main/BaseClasses module: {e}")
         return False
     except Exception as e:
         logger.error(f"Failed to install {hook_name} hook: {e}")
         return False
 
 
+# ---------------------------------------------------------------------------
+# Hook: sphere_logging — wrap Spoiler.create_playthrough
+# ---------------------------------------------------------------------------
+
 def _install_sphere_logging_hook() -> bool:
     """
     Install hook for sphere log generation during playthrough creation.
 
     This wraps Spoiler.create_playthrough() to log sphere information.
-    Skips installation if BaseClasses.py already has file patches applied.
     """
     hook_name = "sphere_logging"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
-        return True
-
-    # Check if file patch is already applied
-    if is_baseclasses_patched():
-        logger.info(f"Skipping {hook_name} hook: BaseClasses.py already has file patch applied")
         return True
 
     try:
@@ -278,20 +339,24 @@ def _install_sphere_logging_hook() -> bool:
         return False
 
 
+# ---------------------------------------------------------------------------
+# Fallback export (degraded path — files NOT in ZIP)
+# ---------------------------------------------------------------------------
+
 def _post_generation_export(multiworld: "MultiWorld"):
     """
-    Called after generation to export rules JSON and/or pickle.
+    Fallback export when spoiler is disabled (to_file never called).
 
-    This mirrors the export calls in Main.py but works via monkey patching.
-    The export functions handle their own decision logic internally based
-    on settings, so we just call them and let them decide whether to export.
+    This is the degraded path — exports run after Main.main() returns,
+    outside `with output as temp_dir:`, so files are NOT included in
+    the output ZIP. They are still written to frontend/presets/ if
+    update_frontend_presets is enabled.
 
     Args:
         multiworld: The MultiWorld object from generation
     """
     import os
     import shutil
-    from ..config import get_export_setting
 
     # Build the filename base from seed_name
     seed_name = getattr(multiworld, 'seed_name', None)
@@ -301,23 +366,12 @@ def _post_generation_export(multiworld: "MultiWorld"):
 
     filename_base = f"AP_{seed_name}"
 
-    # Get export settings (falls back to installer config if host.yaml doesn't have them)
-    update_presets = get_export_setting('update_frontend_presets', False)
-    skip_if_identical = get_export_setting('skip_preset_copy_if_rules_identical', False)
-    rules_format = get_export_setting('rules_json_format', 'rule_builder')
-    clear_game_presets = get_export_setting('clear_game_presets', False)
-    clear_all_presets = get_export_setting('clear_all_presets', False)
-
     # Find where the sphere_log was written by the sphere_logging hook
-    # It writes to temp_dir_for_sphere_log, output_path, or 'output' directory
     sphere_log_filename = f"{filename_base}_sphere_log.jsonl"
     sphere_log_source = None
 
-    # Check possible locations in order of preference
-    # Include the output_dir stored by hooked_main if available
     possible_dirs = [
         getattr(multiworld, 'temp_dir_for_sphere_log', None),
-        _module_state.get('output_dir'),
         getattr(multiworld, 'output_path', None),
         'output',
     ]
@@ -329,59 +383,22 @@ def _post_generation_export(multiworld: "MultiWorld"):
                 logger.debug(f"Found sphere_log at: {sphere_log_source}")
                 break
 
-    # Create a temporary directory for exports
-    # The exporters will copy to presets if save_presets=True
     with tempfile.TemporaryDirectory() as temp_dir:
-        # Copy sphere_log into temp_dir if it exists elsewhere
         if sphere_log_source:
             dest_path = os.path.join(temp_dir, sphere_log_filename)
             try:
                 shutil.copy2(sphere_log_source, dest_path)
-                logger.debug(f"Copied sphere_log to temp_dir: {dest_path}")
             except Exception as e:
                 logger.warning(f"Failed to copy sphere_log: {e}")
-        # Export rules JSON
-        # The exporter handles its own decision logic based on settings
+
         try:
-            from exporter import export_game_rules, clear_rule_cache
-            from exporter.games import clear_handler_cache
-
-            logger.info("Exporting rules via monkey patch hook")
-            export_game_rules(
-                multiworld,
-                temp_dir,
-                filename_base,
-                save_presets=update_presets,
-                skip_preset_copy_if_rules_identical=skip_if_identical,
-                rules_json_format=rules_format,
-                clear_game_presets=clear_game_presets,
-                clear_all_presets=clear_all_presets,
-            )
-            # Clear exporter caches to allow GC
-            clear_rule_cache()
-            clear_handler_cache()
+            from ..export_hook import export_post_output_hook
+            logger.info("Exporting rules via monkey patch fallback (spoiler disabled)")
+            export_post_output_hook(multiworld, temp_dir, filename_base)
         except ImportError:
-            logger.debug("Exporter module not found, skipping rules export")
+            logger.debug("Export hook not available, skipping")
         except Exception as e:
-            logger.warning(f"Rules export failed: {e}")
-
-        # Export pickle
-        # The exporter handles its own decision logic based on settings
-        try:
-            from exporter.pickle_exporter import export_multiworld_pickle
-
-            logger.info("Exporting pickle via monkey patch hook")
-            export_multiworld_pickle(
-                multiworld,
-                temp_dir,
-                filename_base,
-                save_presets=update_presets,
-                skip_preset_copy_if_rules_identical=skip_if_identical,
-            )
-        except ImportError:
-            logger.debug("Pickle exporter module not found, skipping pickle export")
-        except Exception as e:
-            logger.warning(f"Pickle export failed: {e}")
+            logger.warning(f"Fallback rules export failed: {e}")
 
 
 def _create_playthrough_with_logging(

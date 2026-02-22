@@ -299,7 +299,6 @@ def _make_patched_fill_dungeons(original_fill_dungeons):
 # maximum value that avoids circular dependencies.
 _VANILLA_KEY_CAP_COUNTS = {
     'Small Key (Desert Palace)': 1,
-    'Small Key (Agahnims Tower)': 0,
     'Small Key (Palace of Darkness)': 5,
     'Small Key (Swamp Palace)': 4,
     'Small Key (Ganons Tower)': 4,

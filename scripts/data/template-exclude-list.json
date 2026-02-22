@@ -20,16 +20,8 @@
   ],
   "ut_fuzz_exclude_list": [
     {
-      "name": "XCOM 2 War of the Chosen.yaml",
-      "reason": "UT fuzz test hangs during verification."
-    },
-    {
-      "name": "Yu-Gi-Oh! Dungeon Dice Monsters.yaml",
-      "reason": "UT fuzz test hangs during verification."
-    },
-    {
-      "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
-      "reason": "UT fuzz test hangs during verification."
+      "name": "Tevi.yaml",
+      "reason": "Confirmed culprit in split 8 hang pattern: when Tevi runs before another game in the same split, the subsequent game hangs for the full 900s timeout. Multiple games were affected (XCOM 2, Yu-Gi-Oh! DDM, Yu-Gi-Oh! FM, Zelda II, osu!, PlateUp) before this was isolated. Likely causes orphaned processes that block the next game's fuzz.py startup."
     }
   ],
   "main_test_exclude_list": [
@@ -575,6 +567,14 @@
     },
     {
       "name": "Super Metroid.yaml",
+      "reason": "Simplifying this exporter is currently not a priority."
+    },
+    {
+      "name": "TOEM original.yaml",
+      "reason": "Simplifying this exporter is currently not a priority."
+    },
+    {
+      "name": "TOEM rule builder.yaml",
       "reason": "Simplifying this exporter is currently not a priority."
     },
     {

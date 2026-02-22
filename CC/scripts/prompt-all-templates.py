@@ -12,8 +12,8 @@ from pathlib import Path
 # Add parent scripts directory to path to import shared modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'scripts')))
 
-from lib.test_utils import read_host_yaml_config, load_template_exclude_list
-from lib.test_results import is_test_passing, load_existing_results
+from lib.test_utils import load_template_exclude_list
+from lib.test_results import is_test_passing
 
 # Import from prompt_lib package
 from prompt_lib import (
@@ -97,8 +97,9 @@ def main():
 
     # Load appropriate exclude list based on mode if not explicitly provided
     if args.skip_list is None:
-        # Determine the appropriate test_type based on mode
-        if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures or args.only_worldgen or args.include_pattern == "WorldGen":
+        if args.permanent_excludes_only:
+            exclude_test_type = 'permanent'
+        elif args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures or args.only_worldgen or args.include_pattern == "WorldGen":
             exclude_test_type = 'worldgen'
         else:
             # For spoiler/multiclient/multiworld tests, use 'main' (permanent + main test exclusions)
@@ -107,7 +108,8 @@ def main():
 
     # Handle --all-promptfiles mode: run all prompt-generating modes with separate output files
     if args.all_promptfiles:
-        return run_all_promptfiles(project_root, script_path=Path(__file__).resolve())
+        extra_args = ['--permanent-excludes-only'] if args.permanent_excludes_only else None
+        return run_all_promptfiles(project_root, script_path=Path(__file__).resolve(), extra_args=extra_args)
 
     # Load world mapping (needed for filtering by custom code status)
     # Used by: --basic-spoiler-debug, --helper-export, normal mode, and worldgen modes
@@ -119,7 +121,7 @@ def main():
     # Handle worldgen modes - these iterate through failures, not templates
     if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
-        collected_prompts = [] if args.promptfile else None
+        collected_prompts: list[str] = []
 
         if args.worldgen_world_failures:
             failures = get_worldgen_world_failures(project_root, args.worldgen_test_mode)
@@ -287,7 +289,7 @@ def main():
     # Handle UT fuzz failures mode - games that pass canonical worldgen but fail UT fuzz
     if args.ut_fuzz_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
-        collected_prompts = [] if args.promptfile else None
+        collected_prompts: list[str] = []
 
         failures = get_ut_fuzz_worldgen_pass_failures(
             project_root,
@@ -336,7 +338,7 @@ def main():
     # Handle UT fuzz apworld failures mode - community apworlds that fail UT fuzz
     if args.ut_fuzz_apworld_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
-        collected_prompts = [] if args.promptfile else None
+        collected_prompts: list[str] = []
 
         failures = get_ut_fuzz_apworld_failures(
             project_root,
@@ -397,7 +399,7 @@ def main():
     # Handle UT fuzz single failure mode - detailed prompt for each failing seed
     if args.ut_fuzz_single_failure:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
-        collected_prompts = [] if args.promptfile else None
+        collected_prompts: list[str] = []
 
         failures = get_ut_fuzz_all_single_failures(
             project_root,
@@ -459,7 +461,7 @@ def main():
     # Handle spoiler fuzz failures mode - games that pass UT fuzz but fail spoiler fuzz
     if args.spoiler_fuzz_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
-        collected_prompts = [] if args.promptfile else None
+        collected_prompts: list[str] = []
 
         failures = get_spoiler_fuzz_ut_pass_failures(
             project_root,
@@ -516,7 +518,7 @@ def main():
     quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
 
     # Initialize prompts collection for --promptfile mode
-    collected_prompts = [] if args.promptfile else None
+    collected_prompts: list[str] = []
 
     # Get all template files
     template_files = get_template_files(args.template_dir, args.skip_list)
@@ -601,7 +603,7 @@ def main():
                     continue
 
                 # Skip games that require JavaScript helpers (cannot be removed)
-                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['requires_javascript_helpers']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
@@ -681,7 +683,7 @@ def main():
                     continue
 
                 # Skip games whose exporters are fully simplified
-                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['exporter_fully_simplified']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
                     current_index = (current_index + 1) % len(template_files)
@@ -757,7 +759,7 @@ def main():
                     continue
 
                 # Skip games that require JavaScript helpers (cannot be removed)
-                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                if not args.permanent_excludes_only and template_file in prompt_exclusions['requires_javascript_helpers']:
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)

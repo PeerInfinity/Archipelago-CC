@@ -37,23 +37,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create or switch to test-results-update branch
+      - name: Create or switch to test-results-world-generator branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin test-results-update; then
-            git checkout test-results-update
-            git pull origin test-results-update
+          if git ls-remote --exit-code --heads origin test-results-world-generator; then
+            git checkout test-results-world-generator
+            git pull origin test-results-world-generator
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync test-results-update with main"
-              git push origin test-results-update
+              git commit -m "Sync test-results-world-generator with main"
+              git push origin test-results-world-generator
             fi
           else
-            git checkout -b test-results-update origin/main
+            git checkout -b test-results-world-generator origin/main
           fi
 
       - name: Set up Python
@@ -147,7 +147,7 @@ jobs:
           # Commit if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "Delete existing world generator test results before new test run"
-            git push origin test-results-update
+            git push origin test-results-world-generator
           fi
 
       - name: Start HTTP server
@@ -216,5 +216,5 @@ jobs:
           Canonical seed: ${{ inputs.canonical_seed || 'disabled' }}
           Include list: ${{ inputs.include_list || 'all' }}
           "
-            git push origin test-results-update
+            git push origin test-results-world-generator
           fi

@@ -512,7 +512,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agahnim 1", player),
-        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 4), HelperCall(helper_func=has_sword, helper_name="has_sword", body_rule=(Has("Fighter Sword")) | (Has("Master Sword")) | (Has("Tempered Sword")) | (Has("Golden Sword"))), Has('Lamp'))
     )
 
     world.set_rule(
@@ -1471,17 +1471,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), HasAll('Lamp', 'Small Key (Agahnims Tower)'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Archer Key Drop", player),
-        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 2), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Circle of Pots Key Drop", player),
-        And(Has('Small Key (Agahnims Tower)', 0), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
+        And(Has('Small Key (Agahnims Tower)', 3), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Lamp'))
     )
 
     multiworld.get_location("Agahnim 1", player).access_rule = \

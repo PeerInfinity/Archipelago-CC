@@ -74,6 +74,21 @@ const CSS = `
 .module-controls button:hover:not(:disabled) {
     background-color: #777;
 }
+.module-badge {
+    font-size: 0.7em;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.module-badge-service {
+    background-color: #2e2e2e;
+    color: #777;
+    border: 1px solid #4a4a4a;
+}
 `;
 
 export class ModulesPanel {
@@ -254,21 +269,28 @@ export class ModulesPanel {
       const nameDiv = document.createElement('div');
       nameDiv.className = 'module-name';
 
-      // Add icon - use module's icon if it has one (panel module), otherwise use a default
-      const iconSpan = document.createElement('span');
-      if (state.definition.icon) {
+      const hasPanel = !!state.definition.componentType;
+
+      // Panel modules: show icon. Service modules: no icon, show badge instead.
+      if (hasPanel && state.definition.icon) {
+        const iconSpan = document.createElement('span');
         iconSpan.textContent = state.definition.icon;
-        iconSpan.title = 'Has panel';
-      } else {
-        iconSpan.textContent = '▪️'; // Black square for non-panel modules
-        iconSpan.title = 'Service module (no panel)';
+        iconSpan.style.marginRight = '8px';
+        nameDiv.appendChild(iconSpan);
       }
-      iconSpan.style.marginRight = '8px';
-      nameDiv.appendChild(iconSpan);
 
       const nameText = document.createElement('span');
       nameText.textContent = state.definition.title || moduleId;
       nameDiv.appendChild(nameText);
+
+      if (!hasPanel) {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'module-badge module-badge-service';
+        badgeSpan.textContent = 'service';
+        badgeSpan.title = 'No UI panel — background service module';
+        nameDiv.appendChild(badgeSpan);
+      }
+
       const descDiv = document.createElement('div');
       descDiv.className = 'module-description';
       descDiv.textContent =

@@ -107,11 +107,11 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Shovel": 1,
     "Silver Bow": 1,
     "Single Arrow": 1,
-    "Small Key (Agahnims Tower)": 2,
+    "Small Key (Agahnims Tower)": 4,
     "Small Key (Desert Palace)": 4,
     "Small Key (Eastern Palace)": 2,
     "Small Key (Ganons Tower)": 8,
-    "Small Key (Hyrule Castle)": 6,
+    "Small Key (Hyrule Castle)": 4,
     "Small Key (Ice Palace)": 6,
     "Small Key (Misery Mire)": 6,
     "Small Key (Palace of Darkness)": 6,
@@ -345,7 +345,7 @@ class ALTTPWorld(RuleWorldMixin, World):
     options_dataclass = ALinktothePastVanillaWorldGenOptions
     options: ALinktothePastVanillaWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
     # Use auto indirect conditions since entrance rules have region dependencies
     # that aren't registered via RuleBuilder.set_rule()
@@ -558,8 +558,6 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Eastern Palace - Prize": "Green Pendant",
         "Master Sword Pedestal": "Master Sword",
         "Hyrule Castle - Map Chest": "Map (Hyrule Castle)",
-        "Castle Tower - Dark Maze": "Small Key (Hyrule Castle)",
-        "Castle Tower - Room 03": "Small Key (Hyrule Castle)",
         "Hyrule Castle - Boomerang Guard Key Drop": "Small Key (Hyrule Castle)",
         "Hyrule Castle - Map Guard Key Drop": "Small Key (Hyrule Castle)",
         "Sewers - Dark Cross": "Small Key (Hyrule Castle)",
@@ -568,6 +566,8 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Sanctuary": "Sanctuary Heart Container",
         "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
         "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+        "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
+        "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
         "Agahnim 1": "Beat Agahnim 1",
         "Old Man": "Magic Mirror",
         "Ether Tablet": "Ether",

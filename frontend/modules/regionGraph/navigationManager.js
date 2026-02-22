@@ -132,7 +132,7 @@ export class NavigationManager {
       // Region may not exist yet (e.g. placeholder before rules load) or in this graph
       const staticData = stateManager.getStaticData?.();
       const existsInStaticData = staticData?.regions?.has(regionName);
-      const logLevel = (!existsInStaticData || this.isStartRegion(regionName)) ? 'debug' : 'warn';
+      const logLevel = (!existsInStaticData || !this.ui.graphInitialized || this.isStartRegion(regionName)) ? 'debug' : 'warn';
       logger[logLevel](`Region node not found: ${regionName}`);
       return;
     }

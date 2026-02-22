@@ -8,6 +8,7 @@
 import eventBus from '../../app/core/eventBus.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 // Modes that support the Apply button
 const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'metaGameJsFile', 'latestSnapshot'];
@@ -60,6 +61,14 @@ class EditorUI {
     };
     eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler, 'editor');
 
+    // If the app is already initialized (e.g., this panel was created after a layout reload
+    // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
+    // In that case, initialize immediately.
+    if (stateManager.getStaticData()) {
+      this.initialize();
+      eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
+    }
+
     this.container.on('destroy', () => {
       this.onPanelDestroy();
     });
@@ -73,6 +82,9 @@ class EditorUI {
     if (!this.isInitialized) {
       log('info', 'Initializing EditorUI (Textarea)...');
       this.initializeEditor();
+
+      // Register this panel's ID with the data service so it can be activated on export
+      editorDataService.registerPanelId('editorPanel');
 
       // Subscribe to data service content changes
       this.unsubscribeContentChanged = editorDataService.onContentChanged(

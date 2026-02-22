@@ -56,24 +56,24 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Create or switch to multiworld-ut-fuzz-test branch
+      - name: Create or switch to test-results-multiworld-ut-fuzz branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin multiworld-ut-fuzz-test; then
-            git checkout multiworld-ut-fuzz-test
-            git pull origin multiworld-ut-fuzz-test
+          if git ls-remote --exit-code --heads origin test-results-multiworld-ut-fuzz; then
+            git checkout test-results-multiworld-ut-fuzz
+            git pull origin test-results-multiworld-ut-fuzz
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync multiworld-ut-fuzz-test with main"
-              git push origin multiworld-ut-fuzz-test
+              git commit -m "Sync test-results-multiworld-ut-fuzz with main"
+              git push origin test-results-multiworld-ut-fuzz
             fi
           else
-            git checkout -b multiworld-ut-fuzz-test origin/main
-            git push -u origin multiworld-ut-fuzz-test
+            git checkout -b test-results-multiworld-ut-fuzz origin/main
+            git push -u origin test-results-multiworld-ut-fuzz
           fi
 
   # Multiworld UT Fuzz Tests
@@ -84,10 +84,10 @@ jobs:
     timeout-minutes: 360  # 6 hours - multiworld tests take longer
 
     steps:
-      - name: Checkout multiworld-ut-fuzz-test branch
+      - name: Checkout test-results-multiworld-ut-fuzz branch
         uses: actions/checkout@v4
         with:
-          ref: multiworld-ut-fuzz-test
+          ref: test-results-multiworld-ut-fuzz
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -186,7 +186,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin multiworld-ut-fuzz-test || true
+          git pull origin test-results-multiworld-ut-fuzz || true
 
           # Add test results JSON
           mkdir -p scripts/output/multiworld-ut-fuzz
@@ -210,5 +210,5 @@ jobs:
             - Test results JSON
             - Generated documentation (test-results-multiworld-ut-fuzz.md)
             "
-            git push origin multiworld-ut-fuzz-test
+            git push origin test-results-multiworld-ut-fuzz
           fi

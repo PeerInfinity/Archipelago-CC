@@ -25,6 +25,8 @@ def create_argument_parser():
                        nargs='*',
                        default=None,
                        help='List of template files to skip (default: auto-detected based on mode)')
+    parser.add_argument('--permanent-excludes-only', action='store_true',
+                       help='Only apply permanent exclusions when building the skip list, ignoring mode-specific exclude lists (main_test_exclude_list, worldgen_test_exclude_list, etc.)')
     parser.add_argument('-s', '--seed', type=int, default=1,
                        help='Seed number to use for generation (default: 1)')
     parser.add_argument('--max-loops', type=int, default=1,

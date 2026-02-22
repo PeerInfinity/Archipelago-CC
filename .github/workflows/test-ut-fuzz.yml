@@ -72,8 +72,22 @@ jobs:
   setup-branch:
     name: Setup UT Fuzz Test Branch
     runs-on: ubuntu-latest
+    outputs:
+      branch_name: ${{ steps.compute-branch.outputs.branch_name }}
 
     steps:
+      - name: Compute branch name
+        id: compute-branch
+        run: |
+          UT_MODE="${{ inputs.ut_mode }}"
+          UT_MODE_HYPHEN="${UT_MODE//_/-}"
+          if [ "${{ inputs.test_apworlds }}" = "true" ]; then
+            BRANCH="test-results-ut-fuzz-apworlds-${UT_MODE_HYPHEN}"
+          else
+            BRANCH="test-results-ut-fuzz-${UT_MODE_HYPHEN}"
+          fi
+          echo "branch_name=${BRANCH}" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -83,24 +97,25 @@ jobs:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Create or switch to ut-fuzz-test branch
+      - name: Create or switch to test branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
 
-          if git ls-remote --exit-code --heads origin ut-fuzz-test; then
-            git checkout ut-fuzz-test
-            git pull origin ut-fuzz-test
+          BRANCH="${{ steps.compute-branch.outputs.branch_name }}"
+          if git ls-remote --exit-code --heads origin $BRANCH; then
+            git checkout $BRANCH
+            git pull origin $BRANCH
             git rm -rf .
             git checkout origin/main -- .
             if ! git diff --staged --quiet; then
-              git commit -m "Sync ut-fuzz-test with main"
-              git push origin ut-fuzz-test
+              git commit -m "Sync $BRANCH with main"
+              git push origin $BRANCH
             fi
           else
-            git checkout -b ut-fuzz-test origin/main
-            git push -u origin ut-fuzz-test
+            git checkout -b $BRANCH origin/main
+            git push -u origin $BRANCH
           fi
 
       - name: Delete existing test results
@@ -116,7 +131,7 @@ jobs:
           # Commit if there are changes
           if ! git diff --staged --quiet; then
             git commit -m "Delete existing UT fuzz test results before new test run"
-            git push origin ut-fuzz-test
+            git push origin ${{ steps.compute-branch.outputs.branch_name }}
           fi
 
       - name: Install system dependencies for apworld setup
@@ -219,10 +234,10 @@ jobs:
         split_total: [10]
 
     steps:
-      - name: Checkout ut-fuzz-test branch
+      - name: Checkout test branch
         uses: actions/checkout@v4
         with:
-          ref: ut-fuzz-test
+          ref: ${{ needs.setup-branch.outputs.branch_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -395,10 +410,10 @@ jobs:
     if: ${{ !cancelled() }}
 
     steps:
-      - name: Checkout ut-fuzz-test branch
+      - name: Checkout test branch
         uses: actions/checkout@v4
         with:
-          ref: ut-fuzz-test
+          ref: ${{ needs.setup-branch.outputs.branch_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -503,7 +518,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull origin ut-fuzz-test || true
+          git pull origin ${{ needs.setup-branch.outputs.branch_name }} || true
 
           # Add test results JSON
           git add -f scripts/output/ut-fuzz/test-results-*.json
@@ -532,5 +547,5 @@ jobs:
             - Generated documentation (test-results-ut-fuzz.md)
             ${{ inputs.test_apworlds && '- World mapping for apworlds (world-mapping-unofficial.json)' || '' }}
             "
-            git push origin ut-fuzz-test
+            git push origin ${{ needs.setup-branch.outputs.branch_name }}
           fi

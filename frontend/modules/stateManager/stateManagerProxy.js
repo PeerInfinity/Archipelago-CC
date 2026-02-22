@@ -2580,6 +2580,24 @@ export class StateManagerProxy {
   }
 
   /**
+   * Run path analysis for a region in the worker thread.
+   *
+   * Offloads DFS path finding and rule analysis to the worker, keeping the main thread responsive.
+   * Returns pre-computed paths, transitions, and node categorizations.
+   *
+   * @param {string} regionName - The region to analyze paths to
+   * @param {Object} settings - Analysis settings (maxPaths, maxAnalysisTimeMs)
+   * @returns {Promise<Object>} Analysis result with paths, pathDetails, allNodes, accessiblePathCount, etc.
+   */
+  async analyzePathToRegion(regionName, settings = {}) {
+    const timeoutMs = (settings.maxAnalysisTimeMs || 10000) + 5000;
+    return this.sendQueryToWorker({
+      command: 'analyzePathToRegion',
+      payload: { regionName, settings },
+    }, timeoutMs);
+  }
+
+  /**
    * Abort a running spoiler test
    *
    * Signals the worker to stop processing the current spoiler test.

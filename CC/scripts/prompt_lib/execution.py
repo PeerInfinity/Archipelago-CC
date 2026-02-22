@@ -70,7 +70,7 @@ def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False, use_full_spoile
         return None
 
 
-def run_all_promptfiles(project_root, script_path=None):
+def run_all_promptfiles(project_root, script_path=None, extra_args=None):
     """Run all prompt-generating modes and output to separate files.
 
     Creates CC/scripts/prompts/ directory and generates a separate prompt file for each mode.
@@ -78,6 +78,7 @@ def run_all_promptfiles(project_root, script_path=None):
     Args:
         project_root: Path to the project root directory.
         script_path: Path to the prompt-all-templates.py script. If None, will be inferred.
+        extra_args: Additional arguments to pass to each subprocess invocation (e.g. ['--permanent-excludes-only']).
     """
     prompts_dir = Path(project_root) / 'CC' / 'scripts' / 'prompts'
     prompts_dir.mkdir(exist_ok=True)
@@ -117,7 +118,7 @@ def run_all_promptfiles(project_root, script_path=None):
         print(f"{'='*60}")
 
         # Run the script with --promptfile (quiet mode) and capture output
-        cmd = ['python', str(script_path), '--promptfile'] + mode_args
+        cmd = ['python', str(script_path), '--promptfile'] + mode_args + (extra_args or [])
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
         if result.returncode != 0:

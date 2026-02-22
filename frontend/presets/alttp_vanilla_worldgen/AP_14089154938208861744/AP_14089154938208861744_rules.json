@@ -4204,7 +4204,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 4
                   }
                 },
                 {
@@ -4241,7 +4241,7 @@
               ]
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Small Key (Agahnims Tower)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4270,22 +4270,18 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
+                    "items": [
+                      "Lamp",
+                      "Small Key (Agahnims Tower)"
+                    ]
                   }
                 }
               ]
             },
             "item": {
-              "name": "Small Key (Hyrule Castle)",
+              "name": "Small Key (Agahnims Tower)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4317,7 +4313,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 2
                   }
                 },
                 {
@@ -4362,7 +4358,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Agahnims Tower)",
-                    "count": 0
+                    "count": 3
                   }
                 },
                 {
@@ -18452,7 +18448,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 6,
+        "max_count": 4,
         "hint_text": "a small key to Hyrule Castle"
       },
       "Small Key (Eastern Palace)": {
@@ -18491,7 +18487,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 2,
+        "max_count": 4,
         "hint_text": "a small key to Castle Tower"
       },
       "Small Key (Swamp Palace)": {
@@ -19021,11 +19017,11 @@
       "Shovel": 1,
       "Silver Bow": 1,
       "Single Arrow": 1,
-      "Small Key (Agahnims Tower)": 2,
+      "Small Key (Agahnims Tower)": 4,
       "Small Key (Desert Palace)": 4,
       "Small Key (Eastern Palace)": 2,
       "Small Key (Ganons Tower)": 8,
-      "Small Key (Hyrule Castle)": 6,
+      "Small Key (Hyrule Castle)": 4,
       "Small Key (Ice Palace)": 6,
       "Small Key (Misery Mire)": 6,
       "Small Key (Palace of Darkness)": 6,
@@ -19193,8 +19189,6 @@
       "Eastern Palace - Prize": "Green Pendant",
       "Master Sword Pedestal": "Master Sword",
       "Hyrule Castle - Map Chest": "Map (Hyrule Castle)",
-      "Castle Tower - Dark Maze": "Small Key (Hyrule Castle)",
-      "Castle Tower - Room 03": "Small Key (Hyrule Castle)",
       "Hyrule Castle - Boomerang Guard Key Drop": "Small Key (Hyrule Castle)",
       "Hyrule Castle - Map Guard Key Drop": "Small Key (Hyrule Castle)",
       "Sewers - Dark Cross": "Small Key (Hyrule Castle)",
@@ -19203,6 +19197,8 @@
       "Sanctuary": "Sanctuary Heart Container",
       "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
       "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+      "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
+      "Castle Tower - Room 03": "Small Key (Agahnims Tower)",
       "Agahnim 1": "Beat Agahnim 1",
       "Old Man": "Magic Mirror",
       "Ether Tablet": "Ether",
