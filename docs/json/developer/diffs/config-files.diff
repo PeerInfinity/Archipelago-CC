@@ -1,11 +1,31 @@
-diff --git a/.gitattributes b/.gitattributes
+--- a/.gitattributes
++++ b/.gitattributes
 @@ -1,2 +1,4 @@
  worlds/blasphemous/region_data.py linguist-generated=true
  worlds/yachtdice/YachtWeights.py linguist-generated=true
 +.gitignore merge=ours
 +README.md merge=ours
 \ No newline at end of file
-diff --git a/.github/workflows/codeql-analysis.yml b/.github/workflows/codeql-analysis.yml
+--- a/.github/pyright-config.json
++++ b/.github/pyright-config.json
+@@ -2,15 +2,12 @@
+   "include": [
+     "../BizHawkClient.py",
+     "../Patch.py",
+-    "../rule_builder/cached_world.py",
+-    "../rule_builder/options.py",
+     "../rule_builder/rules.py",
+     "../test/param.py",
+     "../test/general/test_groups.py",
+     "../test/general/test_helpers.py",
+     "../test/general/test_memory.py",
+     "../test/general/test_names.py",
+-    "../test/general/test_rule_builder.py",
+     "../test/multiworld/__init__.py",
+     "../test/multiworld/test_multiworlds.py",
+     "../test/netutils/__init__.py",
+--- a/.github/workflows/codeql-analysis.yml
++++ b/.github/workflows/codeql-analysis.yml
 @@ -32,6 +32,10 @@
    analyze:
      name: Analyze
@@ -17,7 +37,8 @@ diff --git a/.github/workflows/codeql-analysis.yml b/.github/workflows/codeql-an
  
      strategy:
        fail-fast: false
-diff --git a/.gitignore b/.gitignore
+--- a/.gitignore
++++ b/.gitignore
 @@ -53,7 +53,7 @@
  mystery_result_*.yaml
  *-errors.txt
@@ -136,7 +157,8 @@ diff --git a/.gitignore b/.gitignore
 +journey-to-ascension-modified/
 +fuzz_output/
 \ No newline at end of file
-diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
 @@ -1,148 +1,102 @@
 -# [Archipelago](https://archipelago.gg) ![Discord Shield](https://discordapp.com/api/guilds/731205301247803413/widget.png?style=shield) | [Install](https://github.com/ArchipelagoMW/Archipelago/releases)
 +# Archipelago JSON Export Tools (Claude Code Fork)
