@@ -5,7 +5,7 @@ import threading
 import typing
 
 import settings
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 from BaseClasses import Item, CollectionState, Tutorial, MultiWorld
 from worlds.AutoWorld import World, WebWorld, LogicMixin
 from .Client import ALTTPSNIClient

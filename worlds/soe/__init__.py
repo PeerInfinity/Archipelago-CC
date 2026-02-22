@@ -9,7 +9,8 @@ import pyevermizer  # from package
 
 import settings
 from BaseClasses import Item, ItemClassification, Location, LocationProgressType, Region, Tutorial
-from Utils import check_rom_available, output_path
+from Utils import output_path
+from worlds.RomlessUtils import check_rom_available
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule, set_rule
 from .logic import SoEPlayerLogic

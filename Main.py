@@ -19,7 +19,6 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
-from worlds.Hooks import call_post_output_hooks
 
 __all__ = ["main"]
 
@@ -35,9 +34,6 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
     start = time.perf_counter()
     # initialize the multiworld
     multiworld = MultiWorld(args.multi)
-
-    # Set output directory for sphere logging
-    multiworld.temp_dir_for_sphere_log = args.outputpath
 
     logger = logging.getLogger()
     multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
@@ -277,9 +273,6 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
                 for slot in multiworld.player_ids:
                     slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
-                    # Cache slot_data on the world for the exporter to use
-                    # This avoids calling fill_slot_data twice
-                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
 
                 def precollect_hint(location: Location, auto_status: HintStatus):
                     entrance = er_hint_data.get(location.player, {}).get(location.address, "")
@@ -376,19 +369,12 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                     logger.info(f'Generating output files ({i}/{len(output_file_futures)}).')
                 future.result()
 
-        # Make temp_dir available for sphere_log.jsonl in Spoiler.create_playthrough
-        if hasattr(multiworld, 'spoiler'): # Ensure spoiler object exists
-            multiworld.temp_dir_for_sphere_log = temp_dir
-
         if args.spoiler > 1:
             logger.info('Calculating playthrough.')
             multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
 
         if args.spoiler:
             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
-
-        # Run post-output hooks (e.g., JSON rule export, pickle export)
-        call_post_output_hooks(multiworld, temp_dir, outfilebase)
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")

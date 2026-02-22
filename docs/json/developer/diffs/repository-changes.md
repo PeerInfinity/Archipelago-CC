@@ -2,14 +2,14 @@
 
 This document tracks the differences between this repository and the upstream Archipelago repository.
 
-**Upstream commit:** `1dd91ec85b894c2a1d62ad688af074f2166ee621` (Core, Tests: allow Archipelago items in all worlds #5893)
-**Upstream date:** February 5, 2026 07:56:25 +0000
-**Upstream version:** 0.6.5+80
-**Last updated:** 2026-02-11
+**Upstream commit:** `0de09cd7` (Core: Better scaling explicit indirect conditions #4582)
+**Upstream date:** February 21, 2026
+**Upstream version:** 0.6.7
+**Last updated:** 2026-02-21
 
 ## Summary
 
-- **Modified upstream files:** 22 (plus 2 temporary compatibility fixes)
+- **Modified upstream files:** 17
 - **New top-level directories:** 16
 - **New files in existing directories:** ~36
 - **Auto-generated world directories:** 76
@@ -102,31 +102,31 @@ Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placi
 
 ## Modified Files
 
-The following 22 files have been modified from the upstream version (plus 2 temporary fixes):
+The following 17 files have been modified from the upstream version:
 
 ### Core Files (see core-files.diff)
 ```
-BaseClasses.py
-Main.py
 settings.py
 ```
 
 ### Configuration Files (see config-files.diff)
 ```
 .gitattributes
-.github/pyright-config.json
 .github/workflows/codeql-analysis.yml
 .gitignore
-pytest.ini
-requirements.txt
 README.md
 ```
 
-### Temporary Upstream Compatibility Fixes
-These files have minor type annotation fixes for pyright strict mode compliance. These are expected to be fixed in upstream and can be dropped on the next merge.
+### World Bug/Determinism Fixes (see world-minor-fixes.diff, alttp-bunny-rules.diff)
 ```
-test/param.py
-worlds/AutoSNIClient.py
+worlds/alttp/Rules.py
+worlds/landstalker/Hints.py
+worlds/lufia2ac/Options.py
+```
+
+### New Files
+```
+worlds/RomlessUtils.py
 ```
 
 ### World Init Files (see world-init-files.diff)
@@ -149,9 +149,9 @@ worlds/yoshisisland/__init__.py
 ## Key Modifications
 
 ### Core Files
-- **BaseClasses.py** - Modified for JSON export functionality and sphere logging
-- **Main.py** - Enhanced with JSON export, pickle export, vanilla placement trigger, preset clearing, and workflow changes
-- **settings.py** - Configuration changes for JSON export, sphere logging, pickle export, preset clearing, tracking mode config, and skip_required_files
+- **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section. Required for romless world patches.
+
+Note: `BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, and `Launcher.py` now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches (installed at runtime by the JSON Tools Installer).
 
 ### World Implementations (skip_required_files support)
 Modified world implementations to support generation without ROM files:
@@ -170,13 +170,12 @@ Modified world implementations to support generation without ROM files:
 ### Configuration Files
 - **.gitignore** - Added patterns for project-specific files
 - **.gitattributes** - Merge strategy for .gitignore and README.md
-- **.github/pyright-config.json** - Removed references to `cached_world.py`, `options.py`, and `test_rule_builder.py` (consolidated into `rules.py` in this repo)
-- **pytest.ini** - Added warning filters
-- **requirements.txt** - Additional dependencies (astunparse, psutil)
 - **README.md** - Documentation updates
 
+Note: `pytest.ini` and `requirements.txt` now match upstream exactly. Fork-specific dependencies (dill, astunparse, psutil) are handled by the JSON Tools Installer.
+
 ### GitHub Workflows
-- **codeql-analysis.yml** - Added permissions for security events
+- **codeql-analysis.yml** - Added explicit permissions for security events (safer for forks)
 - **unittests.yml** - Disabled (renamed to .disabled)
 - Multiple new workflows for testing and deployment
 
@@ -185,7 +184,7 @@ Modified world implementations to support generation without ROM files:
 ## New Major Features
 
 ### Rule Builder (`rule_builder/`)
-A declarative rule definition system based on [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048). Provides:
+A declarative rule definition system extending [upstream's Rule Builder](https://github.com/ArchipelagoMW/Archipelago/pull/5048) (now merged). Provides:
 - Clean, serializable Python API for defining game logic
 - Rule caching and optimization
 - Human-readable explanations
@@ -259,9 +258,9 @@ The following major components were developed specifically for this project:
   - Comprehensive automated testing infrastructure
   - 76 auto-generated world packages from JSON rules
 
-- The latest merge from upstream was performed on November 29, 2025, capturing the state of Archipelago version 0.6.5-rc1
+- The latest sync from upstream was performed on February 21, 2026, bringing the fork up to Archipelago 0.6.7 (commit `0de09cd7`)
 
-- Most changes are additions rather than modifications, with only 22 files modified from upstream (plus 2 temporary pyright fixes)
+- Most changes are additions rather than modifications, with only 17 files modified from upstream
 
 - The majority of the ~2,000 new files are contained within:
   - `frontend/` - Web client (~400 files)
@@ -271,6 +270,6 @@ The following major components were developed specifically for this project:
 
 ---
 
-**Last updated:** 2026-02-11
-**Base commit:** 1dd91ec85b894c2a1d62ad688af074f2166ee621
-**Upstream version:** 0.6.5+80
+**Last updated:** 2026-02-21
+**Base commit:** 0de09cd7 (Core: Better scaling explicit indirect conditions #4582)
+**Upstream version:** 0.6.7

@@ -914,6 +914,13 @@ def open_directory(title: str, suggest: str = "") -> typing.Optional[str]:
 
 
 def messagebox(title: str, text: str, error: bool = False) -> None:
+    if not gui_enabled:
+        if error:
+            logging.error(f"{title}: {text}")
+        else:
+            logging.info(f"{title}: {text}")
+        return
+
     if is_kivy_running():
         from kvui import MessageBox
         MessageBox(title, text, error).open()
@@ -949,6 +956,9 @@ def messagebox(title: str, text: str, error: bool = False) -> None:
         root.update()
 
 
+gui_enabled = not sys.stdout or "--nogui" not in sys.argv
+"""Checks if the user wanted no GUI mode and has a terminal to use it with."""
+
 def title_sorted(data: typing.Iterable, key=None, ignore: typing.AbstractSet[str] = frozenset(("a", "the"))):
     """Sorts a sequence of text ignoring typical articles like "a" or "the" in the beginning."""
     def sorter(element: Union[str, Dict[str, Any]]) -> str:
@@ -969,37 +979,6 @@ def read_snes_rom(stream: BinaryIO, strip_header: bool = True) -> bytearray:
     if strip_header and len(buffer) % 0x400 == 0x200:
         return buffer[0x200:]
     return buffer
-
-
-def check_rom_available(rom_path: str, game_name: str) -> bool:
-    """Check whether a required ROM file is available for generation.
-
-    Returns ``True`` if the file exists at *rom_path*.  If the file is missing
-    and ``skip_required_files`` is set in host.yaml, logs a warning and returns
-    ``False`` so the caller can skip ROM-dependent steps.  If the file is
-    missing and ``skip_required_files`` is not set, raises ``FileNotFoundError``.
-
-    Typical usage in ``stage_assert_generate``::
-
-        if not check_rom_available(get_base_rom_path(), cls.game):
-            return  # ROM missing but skip_required_files is set; skip ROM checks
-
-    Typical usage in ``generate_output``::
-
-        if not check_rom_available(get_base_rom_path(), self.game):
-            self.rom_name = b"GAME_ROM_NOT_GENERATED"
-            self.rom_name_available_event.set()
-            return
-    """
-    if os.path.exists(rom_path):
-        return True
-    from settings import skip_required_files
-    if skip_required_files:
-        logging.getLogger(game_name).warning(
-            "Required file not found at %s, skipping ROM generation as skip_required_files is set.", rom_path
-        )
-        return False
-    raise FileNotFoundError(rom_path)
 
 
 _faf_tasks: "Set[asyncio.Task[typing.Any]]" = set()

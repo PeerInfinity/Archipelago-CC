@@ -7,7 +7,8 @@ from typing import Any, ClassVar, Dict, Iterator, List, Set, Tuple, Type
 import settings
 from BaseClasses import Item, ItemClassification, Location, MultiWorld, Region, Tutorial
 from Options import PerGameCommonOptions
-from Utils import __version__, check_rom_available
+from Utils import __version__
+from worlds.RomlessUtils import check_rom_available
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_rule, CollectionRule, set_rule
 from .Client import L2ACSNIClient  # noqa: F401

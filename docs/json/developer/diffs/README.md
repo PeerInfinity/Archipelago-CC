@@ -1,42 +1,36 @@
 # Diff Files from Upstream
 
-This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The patches are designed for **Archipelago 0.6.7**. The diffs were originally generated against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621` (February 5, 2026, 0.6.5+80) and have been updated for 0.6.7.
+This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The diffs are generated against upstream commit `0de09cd7` (February 21, 2026, Archipelago 0.6.7).
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (155 lines)
+### 1. `core-files.diff` (40 lines)
 Changes to the main Archipelago core files:
-- **BaseClasses.py** - Core data structures and sphere logging modifications
-- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, pickle export, and workflow changes
-- **settings.py** - Configuration settings for JSON export, sphere logging, pickle export, preset clearing, tracking mode config, and skip_required_files
+- **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section
 
-These are the most significant changes that affect core Archipelago functionality.
+This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `config-files.diff` (175 lines)
+### 2. `config-files.diff` (383 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
-- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
+- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
 - **.gitignore** - Ignore patterns for project-specific files (extensive additions)
-- **pytest.ini** - Test configuration (added warning filters)
-- **requirements.txt** - Python dependency modifications (added astunparse, psutil)
+- **README.md** - Project documentation
 
-These files configure the development environment and CI/CD pipeline.
+These files configure the development environment and CI/CD pipeline. Note: `pytest.ini` and `requirements.txt` now match upstream exactly.
 
-**Not included in the diff** (tracked separately):
-- **.github/pyright-config.json** - Removed references to `cached_world.py`, `options.py`, and `test_rule_builder.py` since these are consolidated into `rules.py` in this repo. See [rule-builder-modifications.md](./rule-builder-modifications.md).
-
-### 3. `alttp-bunny-rules.diff` (27 lines)
+### 3. `alttp-bunny-rules.diff` (24 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
-- **worlds/alttp/Rules.py** - Fixed missing `(state)` invocation and Python late binding bug in superbunny path lambdas
+- **worlds/alttp/Rules.py** - Fixed Python late binding bug in superbunny path lambdas (pre-compute `path_rule` outside lambda, use default argument binding)
 
-These bugs caused superbunny access rules to always evaluate to `True` in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
+These bugs caused superbunny access rules to capture the wrong loop variable in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `world-minor-fixes.diff` (24 lines)
+### 4. `world-minor-fixes.diff` (21 lines)
 Minor fixes to upstream world files that improve output consistency without changing game behavior:
 - **worlds/lufia2ac/Options.py** - Changed `Boss.extra_options` from `set(random_groups)` to `list(random_groups)` so that `enumerate()` in `AssembleCustomizableChoices.__new__` assigns stable integer keys to the random group names. Without this, set iteration order is non-deterministic, causing the `boss` option's `name_lookup` to map different integers to different group names on each run, producing inconsistent JSON export output.
 - **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
 
-### 5. `world-init-files.diff` (472 lines)
+### 5. `world-init-files.diff` (413 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -50,7 +44,7 @@ Changes to world implementation initialization files to support `skip_required_f
 - **worlds/tloz/__init__.py** - The Legend of Zelda
 - **worlds/yoshisisland/__init__.py** - Yoshi's Island
 
-These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs.
+These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs. The romless world patches import `check_rom_available` from `worlds.RomlessUtils` (a new file in this repository).
 
 ## How to Use These Diffs
 
@@ -71,28 +65,13 @@ git apply docs/json/developer/diffs/core-files.diff
 git apply docs/json/developer/diffs/config-files.diff
 git apply docs/json/developer/diffs/world-minor-fixes.diff
 git apply docs/json/developer/diffs/world-init-files.diff
+# Also copy worlds/RomlessUtils.py (needed by world-init-files patches)
 ```
-
-### Reviewing Specific Files
-To see changes for a specific file:
-```bash
-# Example: View just BaseClasses.py changes
-grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-files.diff | \
-  grep -B 999999 "^diff --git" | head -n -1
-```
-
-## Temporary Upstream Compatibility Fixes
-
-The following upstream files have minor type annotation fixes for pyright strict mode compliance. These are expected to be fixed in upstream and can be dropped on the next merge:
-- **test/param.py** - Added `cast()` for `sorted()` argument type
-- **worlds/AutoSNIClient.py** - Added `cast()` for `Iterable[object]` type
-
-These are not included in the diff files since they are temporary.
 
 ## Notes
 
-- These diffs are designed for Archipelago **0.6.7**, originally generated against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
-- Total lines changed across all diffs: 853 lines (155 + 175 + 27 + 24 + 472)
+- These diffs are generated against upstream commit `0de09cd7` (Archipelago 0.6.7)
+- Total lines changed across all diffs: 881 lines (40 + 383 + 24 + 21 + 413)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
@@ -168,8 +147,9 @@ For full documentation, see [worlds/json_tools_installer/README.md](../../../../
 
 These diffs were created using:
 ```bash
-git diff 1dd91ec85b894c2a1d62ad688af074f2166ee621 HEAD -- [files...] > [output.diff]
+diff -u ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
 ```
+Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09cd7`.
 
 ## Related Documentation
 

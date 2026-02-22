@@ -1,78 +1,7 @@
---- a/BaseClasses.py
-+++ b/BaseClasses.py
-@@ -1697,6 +1697,17 @@
-
-     def create_playthrough(self, create_paths: bool = True) -> None:
-         """Destructive to the multiworld while it is run, damage gets repaired afterwards."""
-+
-+        # Check if sphere logging is enabled and use enhanced version if so
-+        try:
-+            from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
-+            if get_json_tools_settings().save_sphere_log:
-+                from exporter.sphere_logger import create_playthrough_with_logging
-+                return create_playthrough_with_logging(self, create_paths)
-+        except (ImportError, AttributeError):
-+            pass  # Fall through to original implementation
-+
-         from itertools import chain
-         # get locations containing progress items
-         multiworld = self.multiworld
---- a/Main.py
-+++ b/Main.py
-@@ -19,6 +19,7 @@
- from settings import get_settings
- from worlds import AutoWorld
- from worlds.generic.Rules import exclusion_rules, locality_rules
-+from worlds.Hooks import call_post_output_hooks
-
- __all__ = ["main"]
-
-@@ -35,6 +36,9 @@
-     # initialize the multiworld
-     multiworld = MultiWorld(args.multi)
-
-+    # Set output directory for sphere logging
-+    multiworld.temp_dir_for_sphere_log = args.outputpath
-+
-     logger = logging.getLogger()
-     multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
-     multiworld.plando_options = args.plando
-@@ -273,6 +277,9 @@
-
-                 for slot in multiworld.player_ids:
-                     slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
-+                    # Cache slot_data on the world for the exporter to use
-+                    # This avoids calling fill_slot_data twice
-+                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
-
-                 def precollect_hint(location: Location, auto_status: HintStatus):
-                     entrance = er_hint_data.get(location.player, {}).get(location.address, "")
-@@ -369,6 +376,10 @@
-                     logger.info(f'Generating output files ({i}/{len(output_file_futures)}).')
-                 future.result()
-
-+        # Make temp_dir available for sphere_log.jsonl in Spoiler.create_playthrough
-+        if hasattr(multiworld, 'spoiler'): # Ensure spoiler object exists
-+            multiworld.temp_dir_for_sphere_log = temp_dir
-+
-         if args.spoiler > 1:
-             logger.info('Calculating playthrough.')
-             multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
-@@ -376,6 +387,9 @@
-         if args.spoiler:
-             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
-
-+        # Run post-output hooks (e.g., JSON rule export, pickle export)
-+        call_post_output_hooks(multiworld, temp_dir, outfilebase)
-+
-         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
-         logger.info(f"Creating final archive at {zipfilename}")
-         with zipfile.ZipFile(zipfilename, mode="w", compression=zipfile.ZIP_DEFLATED,
---- a/settings.py
-+++ b/settings.py
+diff --git a/settings.py b/settings.py
 @@ -23,6 +23,7 @@
  ]
-
+ 
  no_gui = False
 +skip_required_files = False
  skip_autosave = False
@@ -91,7 +20,8 @@
                  with _lock:  # lock to avoid opening multiple
                      new = None if no_gui else attr.browse()
                      if new is None:
-@@ -832,6 +839,10 @@
+@@ -823,6 +830,11 @@
+                     raise ex
                  # TODO: detect if upgrade is required
                  # TODO: once we have a cache for _world_settings_name_cache, detect if any game section is missing
 +                # Extract skip_required_files early, before update() triggers any Path resolution
@@ -100,3 +30,11 @@
 +                if isinstance(jt, dict):
 +                    skip_required_files = jt.get('skip_required_files', False)
                  self.update(options or {})
+             self._filename = location
+ 
+@@ -900,4 +912,5 @@
+                 res = Settings(None)
+                 res.save(user_path(filenames[1]))
+             setattr(get_settings, "_cache", res)
++
+         return res

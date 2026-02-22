@@ -16,7 +16,7 @@ from .Names import ItemName, LocationName
 from .Options import DKC3Options, dkc3_option_groups
 from .Regions import create_regions, connect_regions
 from .Rom import LocalRom, patch_rom, get_base_rom_path, DKC3DeltaPatch
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 from .Rules import set_rules
 
 
