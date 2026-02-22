@@ -89,6 +89,22 @@ jobs:
               git commit --no-edit
             fi
             git push origin generated-presets
+
+            # Remove files that exist on generated-presets but not on main.
+            # The merge advances the merge base but can't remove files whose
+            # deletion predates the common ancestor. Exclude paths that the
+            # generate script intentionally creates.
+            git diff --name-only origin/main HEAD --diff-filter=A -- . \
+              ':(exclude)frontend/presets/' \
+              ':(exclude)worlds/*_worldgen*/' \
+              ':(exclude)frontend/modules/textAdventure-remote/shared/' \
+              ':(exclude)scripts/data/world-mapping.json' \
+              ':(exclude)scripts/output/' \
+            | xargs -r git rm -f
+            if ! git diff --staged --quiet; then
+              git commit -m "Remove files deleted on main"
+              git push origin generated-presets
+            fi
           else
             git checkout -b generated-presets origin/main
           fi
