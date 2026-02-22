@@ -6,9 +6,7 @@
 
 [📖 Learn about this test](../tests/test-multiworld.md)
 
-[View Original Template Results](./test-results-multiworld.md)
-
-**Generated:** 2026-02-19 08:47:52 UTC
+**Generated:** 2026-02-22 16:10:06 UTC
 
 **Source Data Created:** 2026-01-24T09:07:06.238122
 
@@ -100,7 +98,7 @@
 | Mario Kart Double Dash | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
 | MetroCUBEvania | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | Metroid Fusion | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
-| Metroid Zero Mission | ❌ Failed | — | 2 | 2 | 9.7KB | ✅ |
+| Metroid Zero Mission | ❌ Failed | — | 2 | 2 | 9.8KB | ✅ |
 | Minishoot Adventures | ❌ Failed | — | 3 | 3 | 25.9KB | ✅ |
 | Minit | ❌ Failed | ❌ Failed | 5 | 5 | 23.9KB | ✅ |
 | Monster Sanctuary | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
@@ -113,7 +111,7 @@
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Pseudoregalia | ❌ Failed | — | 4 | 4 | 17.1KB | ✅ |
 | Rabi-Ribi | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
-| Rain World | ❌ Failed | — | 3 | 3 | 11.7KB | ✅ |
+| Rain World | ❌ Failed | — | 3 | 3 | 11.8KB | ✅ |
 | Ratchet & Clank 2 | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
 | Reventure | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
 | Rift Wizard | ✅ Passed | ✅ Passed | 9 | 9 | 7.7KB | ✅ |
@@ -128,15 +126,15 @@
 | Sonic Heroes | ❌ Failed | — | 10 | 10 | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | Sonic the Hedgehog 1 | ❌ Failed | ❌ Failed | 2 | 2 | 9.4KB | ✅ |
-| Soul Blazer | ❌ Failed | — | 4 | 4 | 10.6KB | ✅ |
+| Soul Blazer | ❌ Failed | — | 4 | 4 | 10.5KB | ✅ |
 | Spinball | ❌ Failed | ❌ Failed | 7 | 7 | ✅ | ✅ |
-| Spyro 3 | ❌ Failed | — | 4 | 4 | 15.2KB | ✅ |
+| Spyro 3 | ❌ Failed | — | 4 | 4 | 15.3KB | ✅ |
 | Stacklands | ❌ Failed | — | 5 | 5 | 12.7KB | ✅ |
-| Star Fox 64 | ❌ Failed | — | 3 | 3 | 17.1KB | ✅ |
+| Star Fox 64 | ❌ Failed | — | 3 | 3 | 17.2KB | ✅ |
 | Star Wars Episode I Racer | ❌ Failed | ❌ Failed | 5 | 5 | 5.7KB | ✅ |
 | Super Cat Planet | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | Symphony of the Night | ❌ Failed | ❌ Failed | 8 | 8 | ✅ | ✅ |
-| System Shock 2 | ❌ Failed | — | 4 | 4 | 15.0KB | ✅ |
+| System Shock 2 | ❌ Failed | — | 4 | 4 | 15.1KB | ✅ |
 | TCG Card Shop Simulator | ❌ Failed | — | 5 | 5 | ✅ | ✅ |
 | Tetris Attack | ❌ Failed | — | 5 | 5 | 23.1KB | ✅ |
 | Tevi | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
@@ -151,7 +149,7 @@
 | Watery Words | ✅ Passed | ✅ Passed | 4 | 4 | 9.1KB | ✅ |
 | Wordipelago | ❌ Failed | — | 4 | 4 | 19.5KB | ✅ |
 | XCOM 2 War of the Chosen | ❌ Failed | — | 9 | 9 | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | — | 3 | 3 | 28.7KB | ✅ |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | — | 3 | 3 | 28.8KB | ✅ |
 | Yu-Gi-Oh! Forbidden Memories | ❌ Failed | — | 7 | 7 | ✅ | ✅ |
 | osu! | ✅ Passed | — | 10 | 10 | ✅ | ✅ |
 | plateup | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |

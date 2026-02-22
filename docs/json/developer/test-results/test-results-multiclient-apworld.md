@@ -6,9 +6,7 @@
 
 [📖 Learn about this test](../tests/test-multiclient.md)
 
-[View Original Template Results](./test-results-multiclient.md)
-
-**Generated:** 2026-02-19 08:47:52 UTC
+**Generated:** 2026-02-22 16:10:06 UTC
 
 **Source Data Created:** 2026-01-24T07:47:35.849691
 
@@ -96,7 +94,7 @@
 | Mario Kart Double Dash | ❌ Failed | 1399 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | MetroCUBEvania | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Metroid Fusion | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Metroid Zero Mission | ❌ Failed | 1 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 9.7KB | ✅ |
+| Metroid Zero Mission | ❌ Failed | 1 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 9.8KB | ✅ |
 | Minishoot Adventures | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 25.9KB | ✅ |
 | Minit | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 23.9KB | ✅ |
 | Monster Sanctuary | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
@@ -109,7 +107,7 @@
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Pseudoregalia | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 17.1KB | ✅ |
 | Rabi-Ribi | ❌ Failed | 1482 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Rain World | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 11.7KB | ✅ |
+| Rain World | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 11.8KB | ✅ |
 | Ratchet & Clank 2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Reventure | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Rift Wizard | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 7.7KB | ✅ |
@@ -124,15 +122,15 @@
 | Sonic Heroes | ❌ Failed | 8831 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Sonic the Hedgehog 1 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 9.4KB | ✅ |
-| Soul Blazer | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 10.6KB | ✅ |
+| Soul Blazer | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 10.5KB | ✅ |
 | Spinball | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Spyro 3 | ❌ Failed | 2113 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 15.2KB | ✅ |
+| Spyro 3 | ❌ Failed | 2113 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 15.3KB | ✅ |
 | Stacklands | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 12.7KB | ✅ |
-| Star Fox 64 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 17.1KB | ✅ |
+| Star Fox 64 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 17.2KB | ✅ |
 | Star Wars Episode I Racer | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 5.7KB | ✅ |
 | Super Cat Planet | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Symphony of the Night | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| System Shock 2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 15.0KB | ✅ |
+| System Shock 2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 15.1KB | ✅ |
 | TCG Card Shop Simulator | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Tetris Attack | ❌ Failed | 1 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 23.1KB | ✅ |
 | Tevi | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
@@ -147,7 +145,7 @@
 | Watery Words | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 9.1KB | ✅ |
 | Wordipelago | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 19.5KB | ✅ |
 | XCOM 2 War of the Chosen | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 28.7KB | ✅ |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 28.8KB | ✅ |
 | Yu-Gi-Oh! Forbidden Memories | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | osu! | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | plateup | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
