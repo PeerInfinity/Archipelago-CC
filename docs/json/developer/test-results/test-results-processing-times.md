@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-02-22 16:30:36 UTC
+**Generated:** 2026-02-22 16:57:39 UTC
 
 **Source Data Created:** 2026-02-22T16:10:05.892876+00:00
 
@@ -116,8 +116,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Undertale | 27.2s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
+| 2 | Super Metroid | 27.0s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 3 | VVVVVV | 24.9s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 4 | TOEM original | 24.3s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 5 | Secret of Evermore | 24.2s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 6 | Metamath | 23.1s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml |
+| 7 | Stardew Valley | 23.0s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 8 | Timespinner | 19.0s | 7 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Satisfactory.yaml (+2 more) |
+| 9 | Saving Princess | 17.7s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+1 more) |
+| 10 | Meritous | 17.1s | 5 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 95.1s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Kirby's Dream Land 3 | 54.9s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml |
+| 3 | VVVVVV | 43.8s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 4 | Secret of Evermore | 41.9s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 5 | Kingdom Hearts 2 | 35.0s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 6 | Satisfactory | 32.1s | 5 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Satisfactory.yaml |
+| 7 | Dark Souls III | 32.0s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 8 | Super Metroid | 30.9s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 9 | Kingdom Hearts | 25.0s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml |
+| 10 | Raft | 18.7s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Hylics 2.yaml, Math Adventure.yaml, Raft.yaml |
