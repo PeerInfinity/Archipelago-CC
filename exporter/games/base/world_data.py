@@ -266,9 +266,8 @@ class WorldDataMixin:
             lines = [line.strip() for line in docstring.strip().split('\n')]
             world_data['world_description'] = '\n'.join(lines)
 
-        # Export slot_data if available (cached by Main.py before exporter is called)
-        # This avoids calling fill_slot_data twice, which can cause memory leaks
-        # for worlds that populate class variables (like Landstalker's cached_spheres)
+        # Export slot_data if available (cached by the slot_data_cache monkey patch
+        # hook which wraps fill_slot_data() on both the base class and all subclasses)
         if hasattr(world, '_cached_slot_data') and world._cached_slot_data:
             world_data['slot_data'] = world._cached_slot_data
 

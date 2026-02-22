@@ -28,6 +28,13 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
     nodes to reduce rules.json file size.
     """
 
+    # Use resolved_items from sphere log. SDV's collect() computes virtual event
+    # items (Received Progressive Weapon, Received Progression Item/Percent) that
+    # depend on per-item events_to_collect data not available in the frontend.
+    # The JS game logic hooks are skipped when adding resolved items to avoid
+    # double-counting (see SKIP_HOOKS_FOR_RESOLVED_ITEMS below).
+    USE_RESOLVED_ITEMS = True
+
     # Threshold for preserving Has rules as helpers (in rule nodes)
     # Has rules with more than this many nodes will be preserved as helper calls
     # Set to 0 to disable (inline everything), or a positive number to enable
@@ -75,6 +82,17 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                 'event': True,
                 'type': 'Event',
                 'max_count': 1000  # Arbitrary high limit
+            },
+            'Received Progressive Weapon': {
+                'name': 'Received Progressive Weapon',
+                'id': None,  # Event items have no ID
+                'groups': ['Event'],
+                'advancement': True,
+                'useful': False,
+                'trap': False,
+                'event': True,
+                'type': 'Event',
+                'max_count': 5  # Tracks best weapon tier (1-5)
             }
         }
 

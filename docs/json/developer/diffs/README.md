@@ -4,33 +4,34 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (40 lines)
+### 1. `core-files.diff` (41 lines)
 Changes to the main Archipelago core files:
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section
 
 This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `config-files.diff` (383 lines)
+### 2. `config-files.diff` (405 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
+- **.github/pyright-config.json** - Removed 3 entries from exclude list (`rule_builder/cached_world.py`, `rule_builder/options.py`, `test/general/test_rule_builder.py`) because the fork consolidates `cached_world.py` into `rules.py`
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
 - **.gitignore** - Ignore patterns for project-specific files (extensive additions)
 - **README.md** - Project documentation
 
 These files configure the development environment and CI/CD pipeline. Note: `pytest.ini` and `requirements.txt` now match upstream exactly.
 
-### 3. `alttp-bunny-rules.diff` (24 lines)
+### 3. `alttp-bunny-rules.diff` (25 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
 - **worlds/alttp/Rules.py** - Fixed Python late binding bug in superbunny path lambdas (pre-compute `path_rule` outside lambda, use default argument binding)
 
 These bugs caused superbunny access rules to capture the wrong loop variable in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `world-minor-fixes.diff` (21 lines)
+### 4. `world-minor-fixes.diff` (22 lines)
 Minor fixes to upstream world files that improve output consistency without changing game behavior:
 - **worlds/lufia2ac/Options.py** - Changed `Boss.extra_options` from `set(random_groups)` to `list(random_groups)` so that `enumerate()` in `AssembleCustomizableChoices.__new__` assigns stable integer keys to the random group names. Without this, set iteration order is non-deterministic, causing the `boss` option's `name_lookup` to map different integers to different group names on each run, producing inconsistent JSON export output.
 - **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
 
-### 5. `world-init-files.diff` (413 lines)
+### 5. `world-init-files.diff` (424 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -45,6 +46,17 @@ Changes to world implementation initialization files to support `skip_required_f
 - **worlds/yoshisisland/__init__.py** - Yoshi's Island
 
 These modifications allow world generation to proceed without ROM files when `skip_required_files` is enabled, enabling JSON export for games without requiring their base ROMs. The romless world patches import `check_rom_available` from `worlds.RomlessUtils` (a new file in this repository).
+
+### 6. Rule Builder Modifications (documented separately)
+Changes to the Rule Builder module (`rule_builder/`), which exists in upstream since PR #5048 was merged:
+- **rule_builder/__init__.py** - Upstream: empty file (0 bytes). Fork: 165 lines with full API exports for all rule types, AST format support, pathfinding tools, and documentation
+- **rule_builder/rules.py** - Upstream: 1,822 lines. Fork: 4,224 lines (+2,402 lines). Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and 15 new rule types for AST format support
+
+These changes are not included in the `.diff` files because of their size. Instead, they are documented in:
+- **[fork-vs-upstream-rule-builder.md](./fork-vs-upstream-rule-builder.md)** - Detailed API comparison table
+- **[rule-builder-modifications.md](./rule-builder-modifications.md)** - Overview of all modifications and new modules
+
+Note: `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodified** from upstream.
 
 ## How to Use These Diffs
 
@@ -71,7 +83,8 @@ git apply docs/json/developer/diffs/world-init-files.diff
 ## Notes
 
 - These diffs are generated against upstream commit `0de09cd7` (Archipelago 0.6.7)
-- Total lines changed across all diffs: 881 lines (40 + 383 + 24 + 21 + 413)
+- Total lines changed across diff files: 917 lines (41 + 405 + 25 + 22 + 424)
+- Additionally, 3 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py, .github/pyright-config.json)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
@@ -147,9 +160,9 @@ For full documentation, see [worlds/json_tools_installer/README.md](../../../../
 
 These diffs were created using:
 ```bash
-diff -u ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
+diff -u --label a/[file] --label b/[file] ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
 ```
-Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09cd7`.
+Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09cd7`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
 
 ## Related Documentation
 

@@ -6,9 +6,12 @@ JSON export functionality without modifying the actual source files.
 
 Hooks installed (in order):
 1. temp_dir_capture: Wraps AutoWorld.call_stage to set temp_dir_for_sphere_log
-2. slot_data_cache: Wraps World.fill_slot_data to cache results as _cached_slot_data
+2. slot_data_cache: Wraps World.fill_slot_data (base class) to cache results
 3. sphere_logging: Wraps Spoiler.create_playthrough for sphere log generation
 4. export_rules: Wraps Spoiler.to_file (primary) + Main.main (fallback) for export
+
+Deferred patches (applied at start of Main.main when all worlds are loaded):
+- slot_data_cache subclasses: Wraps fill_slot_data on every world subclass override
 
 Usage:
     from worlds.json_tools_installer.monkey_patches import install_hooks, uninstall_hooks
@@ -96,6 +99,14 @@ def uninstall_hooks() -> dict:
             results[hook_name] = False
             logger.error(f"Failed to uninstall hook {hook_name}: {e}")
 
+    # Restore subclass fill_slot_data patches
+    for game_name, world_class, original in _subclass_patches:
+        try:
+            world_class.fill_slot_data = original
+        except Exception as e:
+            logger.error(f"Failed to restore fill_slot_data for {game_name}: {e}")
+    _subclass_patches.clear()
+
     _module_state.clear()
 
     return results
@@ -159,14 +170,26 @@ def _install_temp_dir_hook() -> bool:
 # Hook: slot_data_cache — wrap World.fill_slot_data
 # ---------------------------------------------------------------------------
 
+def _make_caching_wrapper(original_method):
+    """Create a fill_slot_data wrapper that caches the result as _cached_slot_data."""
+    @functools.wraps(original_method)
+    def caching_fill_slot_data(self):
+        result = original_method(self)
+        self._cached_slot_data = result
+        return result
+    return caching_fill_slot_data
+
+
 def _install_slot_data_cache_hook() -> bool:
     """
     Install hook to cache fill_slot_data() results as _cached_slot_data.
 
-    This wraps World.fill_slot_data() on the base class so that when
-    write_multidata() calls it, the result is cached on the world instance.
-    The exporter finds it via its existing hasattr(world, '_cached_slot_data')
-    check (world_data.py:272).
+    At import time, wraps World.fill_slot_data() on the base class only.
+    Subclass overrides are wrapped later by _patch_fill_slot_data_subclasses(),
+    which is called from hooked_main() when all worlds are guaranteed loaded.
+
+    The exporter reads the cached value via hasattr(world, '_cached_slot_data')
+    (world_data.py).
     """
     hook_name = "slot_data_cache"
 
@@ -182,15 +205,8 @@ def _install_slot_data_cache_hook() -> bool:
             AutoWorld.World, "fill_slot_data", original_fill_slot_data
         )
 
-        @functools.wraps(original_fill_slot_data)
-        def caching_fill_slot_data(self):
-            """Wrapped fill_slot_data that caches result as _cached_slot_data."""
-            result = original_fill_slot_data(self)
-            self._cached_slot_data = result
-            return result
-
-        AutoWorld.World.fill_slot_data = caching_fill_slot_data
-        _installed_hooks[hook_name] = caching_fill_slot_data
+        AutoWorld.World.fill_slot_data = _make_caching_wrapper(original_fill_slot_data)
+        _installed_hooks[hook_name] = True
         logger.info(f"Installed hook: {hook_name}")
         return True
 
@@ -200,6 +216,40 @@ def _install_slot_data_cache_hook() -> bool:
     except Exception as e:
         logger.error(f"Failed to install {hook_name} hook: {e}")
         return False
+
+
+# Track subclass patches separately so they can be uninstalled
+_subclass_patches: list[tuple[str, type, object]] = []
+
+
+def _patch_fill_slot_data_subclasses() -> int:
+    """
+    Wrap fill_slot_data() on every registered world subclass that overrides it.
+
+    Must be called after all worlds are loaded (e.g. from hooked_main) so that
+    AutoWorldRegister.world_types is fully populated.  Patching only the base
+    class is insufficient because Python's MRO dispatches directly to subclass
+    methods, bypassing any wrapper on the base.
+
+    Returns the number of subclasses patched.
+    """
+    from worlds.AutoWorld import AutoWorldRegister
+
+    count = 0
+    for game_name, world_class in AutoWorldRegister.world_types.items():
+        if "fill_slot_data" in world_class.__dict__:
+            original = world_class.__dict__["fill_slot_data"]
+            # Skip if already wrapped (e.g. loaded before installer and
+            # somehow already patched — shouldn't happen, but be safe)
+            if getattr(original, '__wrapped__', None) is not None:
+                continue
+            world_class.fill_slot_data = _make_caching_wrapper(original)
+            _subclass_patches.append((game_name, world_class, original))
+            count += 1
+
+    if count:
+        logger.info(f"Patched fill_slot_data on {count} world subclasses")
+    return count
 
 
 # ---------------------------------------------------------------------------
@@ -262,6 +312,10 @@ def _install_export_hook() -> bool:
         @functools.wraps(original_main)
         def hooked_main(*args, **kwargs):
             """Wrapped Main.main — fallback export when spoiler is disabled."""
+            # Deferred patch: all worlds are now loaded, so wrap every subclass
+            # fill_slot_data to cache results for the exporter.
+            _patch_fill_slot_data_subclasses()
+
             _module_state['export_ran'] = False
             result = original_main(*args, **kwargs)
 

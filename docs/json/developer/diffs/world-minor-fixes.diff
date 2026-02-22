@@ -1,4 +1,5 @@
-diff --git a/worlds/lufia2ac/Options.py b/worlds/lufia2ac/Options.py
+--- a/worlds/lufia2ac/Options.py
++++ b/worlds/lufia2ac/Options.py
 @@ -219,7 +219,7 @@
          "random-high": ["venge_ghost", "white_dragon_x3", "fire_dragon", "ghost_ship", "tank"],
          "random-sinistral": ["gades_c", "amon", "erim", "daos"],
@@ -8,7 +9,8 @@ diff --git a/worlds/lufia2ac/Options.py b/worlds/lufia2ac/Options.py
  
      @property
      def flag(self) -> int:
-diff --git a/worlds/landstalker/Hints.py b/worlds/landstalker/Hints.py
+--- a/worlds/landstalker/Hints.py
++++ b/worlds/landstalker/Hints.py
 @@ -128,7 +128,7 @@
      hint_texts.append(f"Did you know that your world contains {int(percent)} percent of all progression items?")
  
