@@ -433,6 +433,7 @@ class ShiversWorld(RuleWorldMixin, World):
         self.pot_completed_list = []
         self.storage_placements = {'Workshop Drawers': 'Metal Pot Bottom', 'Anansi Music Box': 'Empty', 'Greenhouse': 'Cloth Pot Top', 'Theater': 'Empty', 'Shaman Hut': 'Empty', 'Alchemy': 'Oil Pot Bottom', 'Ocean': 'Lightning Pot Top', 'Janitor Closet': 'Lightning Pot Bottom', 'Lyre': 'Metal Pot Top', 'Gallows': 'Crystal Pot Top', 'Slide': 'Ash Pot Bottom', 'Chinese Solitaire': 'Sand Pot Top', 'UFO': 'Wood Pot Bottom', 'Skull Bridge': 'Ash Pot Top', 'Egypt': 'Cloth Pot Bottom', 'Desk Drawer': 'Crystal Pot Bottom', 'Eagles Nest': 'Wax Pot Top', 'Skeleton': 'Wood Pot Top', 'Tar River': 'Wax Pot Bottom', 'Clock Tower': 'Water Pot Bottom', 'Library Cabinet': 'Oil Pot Top', 'Transforming Mask': 'Water Pot Top', 'Library Statue': 'Sand Pot Bottom'}
         self.world_description = "Shivers is a horror themed point and click adventure.\nExplore the mysteries of Windlenot's Museum of the Strange and Unusual."
+        self.slot_data = {'StoragePlacements': {'Workshop Drawers': 'Metal Pot Bottom', 'Anansi Music Box': 'Empty', 'Greenhouse': 'Cloth Pot Top', 'Theater': 'Empty', 'Shaman Hut': 'Empty', 'Alchemy': 'Oil Pot Bottom', 'Ocean': 'Lightning Pot Top', 'Janitor Closet': 'Lightning Pot Bottom', 'Lyre': 'Metal Pot Top', 'Gallows': 'Crystal Pot Top', 'Slide': 'Ash Pot Bottom', 'Chinese Solitaire': 'Sand Pot Top', 'UFO': 'Wood Pot Bottom', 'Skull Bridge': 'Ash Pot Top', 'Egypt': 'Cloth Pot Bottom', 'Desk Drawer': 'Crystal Pot Bottom', 'Eagles Nest': 'Wax Pot Top', 'Skeleton': 'Wood Pot Top', 'Tar River': 'Wax Pot Bottom', 'Clock Tower': 'Water Pot Bottom', 'Library Cabinet': 'Oil Pot Top', 'Transforming Mask': 'Water Pot Top', 'Library Statue': 'Sand Pot Bottom'}, 'ExcludedLocations': [], 'IxupiCapturesNeeded': 10, 'ElevatorsStaySolved': 1, 'EarlyBeth': 1, 'EarlyLightning': 0, 'FrontDoorUsable': 0, 'PuzzleCollectBehavior': 1}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -670,4 +671,13 @@ class ShiversWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "StoragePlacements": {'Workshop Drawers': 'Metal Pot Bottom', 'Anansi Music Box': 'Empty', 'Greenhouse': 'Cloth Pot Top', 'Theater': 'Empty', 'Shaman Hut': 'Empty', 'Alchemy': 'Oil Pot Bottom', 'Ocean': 'Lightning Pot Top', 'Janitor Closet': 'Lightning Pot Bottom', 'Lyre': 'Metal Pot Top', 'Gallows': 'Crystal Pot Top', 'Slide': 'Ash Pot Bottom', 'Chinese Solitaire': 'Sand Pot Top', 'UFO': 'Wood Pot Bottom', 'Skull Bridge': 'Ash Pot Top', 'Egypt': 'Cloth Pot Bottom', 'Desk Drawer': 'Crystal Pot Bottom', 'Eagles Nest': 'Wax Pot Top', 'Skeleton': 'Wood Pot Top', 'Tar River': 'Wax Pot Bottom', 'Clock Tower': 'Water Pot Bottom', 'Library Cabinet': 'Oil Pot Top', 'Transforming Mask': 'Water Pot Top', 'Library Statue': 'Sand Pot Bottom'},
+            "ExcludedLocations": [],
+            "IxupiCapturesNeeded": 10,
+            "ElevatorsStaySolved": 1,
+            "EarlyBeth": 1,
+            "EarlyLightning": 0,
+            "FrontDoorUsable": 0,
+            "PuzzleCollectBehavior": 1,
+        }

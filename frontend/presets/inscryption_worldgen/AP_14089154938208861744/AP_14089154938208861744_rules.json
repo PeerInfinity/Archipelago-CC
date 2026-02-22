@@ -34,35 +34,57 @@
             "name": "Menu -> Act 3",
             "connected_region": "Act 3",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Epitaph Piece": 9,
-                  "Camera Replica": 1,
-                  "Film Roll": 1,
-                  "Monocle": 1,
-                  "Pile Of Meat": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Epitaph Piece",
+                    "count": 9
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Camera Replica",
+                      "Film Roll",
+                      "Monocle",
+                      "Pile Of Meat"
+                    ]
+                  }
                 }
-              }
+              ]
             }
           },
           {
             "name": "Menu -> Epilogue",
             "connected_region": "Epilogue",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Epitaph Piece": 9,
-                  "Camera Replica": 1,
-                  "Film Roll": 1,
-                  "Gems Module": 1,
-                  "Inspectometer Battery": 1,
-                  "Monocle": 1,
-                  "Pile Of Meat": 1,
-                  "Quill": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Epitaph Piece",
+                    "count": 9
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Camera Replica",
+                      "Film Roll",
+                      "Gems Module",
+                      "Inspectometer Battery",
+                      "Monocle",
+                      "Pile Of Meat",
+                      "Quill"
+                    ]
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -1856,14 +1878,25 @@
             "name": "Act 3 - Trader 2",
             "id": 147081,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Holo Pelt": 2,
-                  "Gems Module": 1,
-                  "Inspectometer Battery": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Gems Module",
+                      "Inspectometer Battery"
+                    ]
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Currency",
@@ -1877,14 +1910,25 @@
             "name": "Act 3 - Trader 3",
             "id": 147082,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Holo Pelt": 3,
-                  "Gems Module": 1,
-                  "Inspectometer Battery": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Gems Module",
+                      "Inspectometer Battery"
+                    ]
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Fishbot Card",
@@ -1898,14 +1942,25 @@
             "name": "Act 3 - Trader 4",
             "id": 147083,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Holo Pelt": 4,
-                  "Gems Module": 1,
-                  "Inspectometer Battery": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Gems Module",
+                      "Inspectometer Battery"
+                    ]
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Card Pack",
@@ -1919,14 +1974,25 @@
             "name": "Act 3 - Trader 5",
             "id": 147084,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Holo Pelt": 5,
-                  "Gems Module": 1,
-                  "Inspectometer Battery": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Holo Pelt",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Gems Module",
+                      "Inspectometer Battery"
+                    ]
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Quill",
@@ -3177,6 +3243,18 @@
       "required_epitaph_pieces_name": "Epitaph Piece",
       "required_epitaph_pieces_count": 9,
       "world_description": "Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...",
+      "slot_data": {
+        "death_link": 0,
+        "act1_death_link_behaviour": 0,
+        "goal": 0,
+        "randomize_codes": 0,
+        "randomize_deck": 0,
+        "randomize_sigils": 0,
+        "optional_death_card": 2,
+        "skip_tutorial": 1,
+        "skip_epilogue": 0,
+        "epitaph_pieces_randomization": 0
+      },
       "web": {
         "theme": "dirt",
         "tutorials": [

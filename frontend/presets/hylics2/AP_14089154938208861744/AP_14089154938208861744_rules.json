@@ -3728,6 +3728,13 @@
         }
       },
       "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",
+      "slot_data": {
+        "party_shuffle": 0,
+        "medallion_shuffle": 0,
+        "random_start": 0,
+        "start_location": "Waynehouse",
+        "death_link": 0
+      },
       "web": {
         "theme": "ocean",
         "tutorials": [

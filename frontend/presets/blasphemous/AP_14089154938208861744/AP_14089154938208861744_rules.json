@@ -88863,6 +88863,1259 @@
         "RE402"
       ],
       "world_description": "Blasphemous is a challenging Metroidvania set in the cursed land of Cvstodia. Play as the Penitent One, trapped\nin an endless cycle of death and rebirth, and free the world from its terrible fate in your quest to break\nyour eternal damnation!",
+      "slot_data": {
+        "locationinfo": [
+          {
+            "gameId": "PR14",
+            "apId": 1909000
+          },
+          {
+            "gameId": "RB07",
+            "apId": 1909001
+          },
+          {
+            "gameId": "CO04",
+            "apId": 1909002
+          },
+          {
+            "gameId": "QI55",
+            "apId": 1909003
+          },
+          {
+            "gameId": "RESCUED_CHERUB_07",
+            "apId": 1909004
+          },
+          {
+            "gameId": "QI31",
+            "apId": 1909005
+          },
+          {
+            "gameId": "RE02",
+            "apId": 1909006
+          },
+          {
+            "gameId": "RE04",
+            "apId": 1909007
+          },
+          {
+            "gameId": "RE10",
+            "apId": 1909008
+          },
+          {
+            "gameId": "RB01",
+            "apId": 1909009
+          },
+          {
+            "gameId": "QI66",
+            "apId": 1909010
+          },
+          {
+            "gameId": "Tirso[500]",
+            "apId": 1909011
+          },
+          {
+            "gameId": "Tirso[1000]",
+            "apId": 1909012
+          },
+          {
+            "gameId": "Tirso[2000]",
+            "apId": 1909013
+          },
+          {
+            "gameId": "Tirso[5000]",
+            "apId": 1909014
+          },
+          {
+            "gameId": "Tirso[10000]",
+            "apId": 1909015
+          },
+          {
+            "gameId": "QI56",
+            "apId": 1909016
+          },
+          {
+            "gameId": "RESCUED_CHERUB_08",
+            "apId": 1909017
+          },
+          {
+            "gameId": "Lvdovico[500]",
+            "apId": 1909018
+          },
+          {
+            "gameId": "Lvdovico[1000]",
+            "apId": 1909019
+          },
+          {
+            "gameId": "PR03",
+            "apId": 1909020
+          },
+          {
+            "gameId": "QI01",
+            "apId": 1909021
+          },
+          {
+            "gameId": "CO43",
+            "apId": 1909022
+          },
+          {
+            "gameId": "CO16",
+            "apId": 1909023
+          },
+          {
+            "gameId": "Sword[D01Z02S06]",
+            "apId": 1909024
+          },
+          {
+            "gameId": "QI65",
+            "apId": 1909025
+          },
+          {
+            "gameId": "RB104",
+            "apId": 1909026
+          },
+          {
+            "gameId": "RB105",
+            "apId": 1909027
+          },
+          {
+            "gameId": "PR11",
+            "apId": 1909028
+          },
+          {
+            "gameId": "Undertaker[250]",
+            "apId": 1909029
+          },
+          {
+            "gameId": "Undertaker[500]",
+            "apId": 1909030
+          },
+          {
+            "gameId": "Undertaker[750]",
+            "apId": 1909031
+          },
+          {
+            "gameId": "Undertaker[1000]",
+            "apId": 1909032
+          },
+          {
+            "gameId": "Undertaker[1250]",
+            "apId": 1909033
+          },
+          {
+            "gameId": "Undertaker[1500]",
+            "apId": 1909034
+          },
+          {
+            "gameId": "Undertaker[1750]",
+            "apId": 1909035
+          },
+          {
+            "gameId": "Undertaker[2000]",
+            "apId": 1909036
+          },
+          {
+            "gameId": "Undertaker[2500]",
+            "apId": 1909037
+          },
+          {
+            "gameId": "Undertaker[3000]",
+            "apId": 1909038
+          },
+          {
+            "gameId": "Undertaker[5000]",
+            "apId": 1909039
+          },
+          {
+            "gameId": "QI201",
+            "apId": 1909040
+          },
+          {
+            "gameId": "RB04",
+            "apId": 1909041
+          },
+          {
+            "gameId": "CO14",
+            "apId": 1909042
+          },
+          {
+            "gameId": "CO36",
+            "apId": 1909043
+          },
+          {
+            "gameId": "RESCUED_CHERUB_10",
+            "apId": 1909044
+          },
+          {
+            "gameId": "QI06",
+            "apId": 1909045
+          },
+          {
+            "gameId": "RB20",
+            "apId": 1909046
+          },
+          {
+            "gameId": "HE02",
+            "apId": 1909047
+          },
+          {
+            "gameId": "RESCUED_CHERUB_38",
+            "apId": 1909048
+          },
+          {
+            "gameId": "CO30",
+            "apId": 1909049
+          },
+          {
+            "gameId": "CO03",
+            "apId": 1909050
+          },
+          {
+            "gameId": "RESCUED_CHERUB_09",
+            "apId": 1909051
+          },
+          {
+            "gameId": "PR01",
+            "apId": 1909052
+          },
+          {
+            "gameId": "RB17",
+            "apId": 1909053
+          },
+          {
+            "gameId": "QI48",
+            "apId": 1909054
+          },
+          {
+            "gameId": "CO21",
+            "apId": 1909055
+          },
+          {
+            "gameId": "CO38",
+            "apId": 1909056
+          },
+          {
+            "gameId": "RESCUED_CHERUB_33",
+            "apId": 1909057
+          },
+          {
+            "gameId": "BS01",
+            "apId": 1909058
+          },
+          {
+            "gameId": "QI38",
+            "apId": 1909059
+          },
+          {
+            "gameId": "QI58",
+            "apId": 1909060
+          },
+          {
+            "gameId": "RB05",
+            "apId": 1909061
+          },
+          {
+            "gameId": "RB09",
+            "apId": 1909062
+          },
+          {
+            "gameId": "CO09",
+            "apId": 1909063
+          },
+          {
+            "gameId": "QI67",
+            "apId": 1909064
+          },
+          {
+            "gameId": "PR16",
+            "apId": 1909065
+          },
+          {
+            "gameId": "RESCUED_CHERUB_13",
+            "apId": 1909066
+          },
+          {
+            "gameId": "Oil[D01Z05S07]",
+            "apId": 1909067
+          },
+          {
+            "gameId": "QI12",
+            "apId": 1909068
+          },
+          {
+            "gameId": "RESCUED_CHERUB_14",
+            "apId": 1909069
+          },
+          {
+            "gameId": "QI45",
+            "apId": 1909070
+          },
+          {
+            "gameId": "RESCUED_CHERUB_12",
+            "apId": 1909071
+          },
+          {
+            "gameId": "RESCUED_CHERUB_11",
+            "apId": 1909072
+          },
+          {
+            "gameId": "CO41",
+            "apId": 1909073
+          },
+          {
+            "gameId": "CO32",
+            "apId": 1909074
+          },
+          {
+            "gameId": "RESCUED_CHERUB_15",
+            "apId": 1909075
+          },
+          {
+            "gameId": "Lady[D01Z05S22]",
+            "apId": 1909076
+          },
+          {
+            "gameId": "QI75",
+            "apId": 1909077
+          },
+          {
+            "gameId": "Sword[D01Z05S24]",
+            "apId": 1909078
+          },
+          {
+            "gameId": "CO44",
+            "apId": 1909079
+          },
+          {
+            "gameId": "RESCUED_CHERUB_22",
+            "apId": 1909080
+          },
+          {
+            "gameId": "Lady[D01Z05S26]",
+            "apId": 1909081
+          },
+          {
+            "gameId": "RB03",
+            "apId": 1909082
+          },
+          {
+            "gameId": "QI101",
+            "apId": 1909083
+          },
+          {
+            "gameId": "CO11",
+            "apId": 1909084
+          },
+          {
+            "gameId": "QI59",
+            "apId": 1909085
+          },
+          {
+            "gameId": "RB10",
+            "apId": 1909086
+          },
+          {
+            "gameId": "RESCUED_CHERUB_23",
+            "apId": 1909087
+          },
+          {
+            "gameId": "QI20",
+            "apId": 1909088
+          },
+          {
+            "gameId": "QI68",
+            "apId": 1909089
+          },
+          {
+            "gameId": "QI07",
+            "apId": 1909090
+          },
+          {
+            "gameId": "CO19",
+            "apId": 1909091
+          },
+          {
+            "gameId": "RESCUED_CHERUB_27",
+            "apId": 1909092
+          },
+          {
+            "gameId": "PR04",
+            "apId": 1909093
+          },
+          {
+            "gameId": "HE05",
+            "apId": 1909094
+          },
+          {
+            "gameId": "RESCUED_CHERUB_24",
+            "apId": 1909095
+          },
+          {
+            "gameId": "QI46",
+            "apId": 1909096
+          },
+          {
+            "gameId": "CO29",
+            "apId": 1909097
+          },
+          {
+            "gameId": "QI08",
+            "apId": 1909098
+          },
+          {
+            "gameId": "RB32",
+            "apId": 1909099
+          },
+          {
+            "gameId": "CO01",
+            "apId": 1909100
+          },
+          {
+            "gameId": "RESCUED_CHERUB_25",
+            "apId": 1909101
+          },
+          {
+            "gameId": "RB15",
+            "apId": 1909102
+          },
+          {
+            "gameId": "RB38",
+            "apId": 1909103
+          },
+          {
+            "gameId": "CO42",
+            "apId": 1909104
+          },
+          {
+            "gameId": "RESCUED_CHERUB_31",
+            "apId": 1909105
+          },
+          {
+            "gameId": "Oil[D02Z02S10]",
+            "apId": 1909106
+          },
+          {
+            "gameId": "QI53",
+            "apId": 1909107
+          },
+          {
+            "gameId": "RESCUED_CHERUB_26",
+            "apId": 1909108
+          },
+          {
+            "gameId": "Lady[D02Z02S12]",
+            "apId": 1909109
+          },
+          {
+            "gameId": "HE11",
+            "apId": 1909110
+          },
+          {
+            "gameId": "RB106",
+            "apId": 1909111
+          },
+          {
+            "gameId": "Amanecida[D02Z02S14]",
+            "apId": 1909112
+          },
+          {
+            "gameId": "QI11",
+            "apId": 1909113
+          },
+          {
+            "gameId": "RB37",
+            "apId": 1909114
+          },
+          {
+            "gameId": "RB02",
+            "apId": 1909115
+          },
+          {
+            "gameId": "CO05",
+            "apId": 1909116
+          },
+          {
+            "gameId": "RB08",
+            "apId": 1909117
+          },
+          {
+            "gameId": "CO15",
+            "apId": 1909118
+          },
+          {
+            "gameId": "HE03",
+            "apId": 1909119
+          },
+          {
+            "gameId": "Sword[D02Z03S13]",
+            "apId": 1909120
+          },
+          {
+            "gameId": "Lady[D02Z03S15]",
+            "apId": 1909121
+          },
+          {
+            "gameId": "RB24",
+            "apId": 1909122
+          },
+          {
+            "gameId": "QI61",
+            "apId": 1909123
+          },
+          {
+            "gameId": "BS03",
+            "apId": 1909124
+          },
+          {
+            "gameId": "QI40",
+            "apId": 1909125
+          },
+          {
+            "gameId": "QI57",
+            "apId": 1909126
+          },
+          {
+            "gameId": "RB107",
+            "apId": 1909127
+          },
+          {
+            "gameId": "CO13",
+            "apId": 1909128
+          },
+          {
+            "gameId": "QI47",
+            "apId": 1909129
+          },
+          {
+            "gameId": "RB22",
+            "apId": 1909130
+          },
+          {
+            "gameId": "RESCUED_CHERUB_16",
+            "apId": 1909131
+          },
+          {
+            "gameId": "Amanecida[D03Z01S03]",
+            "apId": 1909132
+          },
+          {
+            "gameId": "QI63",
+            "apId": 1909133
+          },
+          {
+            "gameId": "RB13",
+            "apId": 1909134
+          },
+          {
+            "gameId": "QI14",
+            "apId": 1909135
+          },
+          {
+            "gameId": "CO08",
+            "apId": 1909136
+          },
+          {
+            "gameId": "PR10",
+            "apId": 1909137
+          },
+          {
+            "gameId": "CO33",
+            "apId": 1909138
+          },
+          {
+            "gameId": "RESCUED_CHERUB_18",
+            "apId": 1909139
+          },
+          {
+            "gameId": "QI19",
+            "apId": 1909140
+          },
+          {
+            "gameId": "CO07",
+            "apId": 1909141
+          },
+          {
+            "gameId": "QI41",
+            "apId": 1909142
+          },
+          {
+            "gameId": "RESCUED_CHERUB_17",
+            "apId": 1909143
+          },
+          {
+            "gameId": "HE06",
+            "apId": 1909144
+          },
+          {
+            "gameId": "RESCUED_CHERUB_37",
+            "apId": 1909145
+          },
+          {
+            "gameId": "QI52",
+            "apId": 1909146
+          },
+          {
+            "gameId": "RB28",
+            "apId": 1909147
+          },
+          {
+            "gameId": "QI103",
+            "apId": 1909148
+          },
+          {
+            "gameId": "QI44",
+            "apId": 1909149
+          },
+          {
+            "gameId": "CO12",
+            "apId": 1909150
+          },
+          {
+            "gameId": "RE07",
+            "apId": 1909151
+          },
+          {
+            "gameId": "RESCUED_CHERUB_19",
+            "apId": 1909152
+          },
+          {
+            "gameId": "QI10",
+            "apId": 1909153
+          },
+          {
+            "gameId": "RESCUED_CHERUB_21",
+            "apId": 1909154
+          },
+          {
+            "gameId": "RESCUED_CHERUB_20",
+            "apId": 1909155
+          },
+          {
+            "gameId": "QI13",
+            "apId": 1909156
+          },
+          {
+            "gameId": "RB06",
+            "apId": 1909157
+          },
+          {
+            "gameId": "Oil[D03Z03S13]",
+            "apId": 1909158
+          },
+          {
+            "gameId": "BS04",
+            "apId": 1909159
+          },
+          {
+            "gameId": "QI39",
+            "apId": 1909160
+          },
+          {
+            "gameId": "CO23",
+            "apId": 1909161
+          },
+          {
+            "gameId": "RESCUED_CHERUB_35",
+            "apId": 1909162
+          },
+          {
+            "gameId": "RB14",
+            "apId": 1909163
+          },
+          {
+            "gameId": "QI37",
+            "apId": 1909164
+          },
+          {
+            "gameId": "CO39",
+            "apId": 1909165
+          },
+          {
+            "gameId": "RESCUED_CHERUB_28",
+            "apId": 1909166
+          },
+          {
+            "gameId": "RB21",
+            "apId": 1909167
+          },
+          {
+            "gameId": "Amanecida[D04Z01S04]",
+            "apId": 1909168
+          },
+          {
+            "gameId": "QI102",
+            "apId": 1909169
+          },
+          {
+            "gameId": "RE402",
+            "apId": 1909170
+          },
+          {
+            "gameId": "RESCUED_CHERUB_30",
+            "apId": 1909171
+          },
+          {
+            "gameId": "CO17",
+            "apId": 1909172
+          },
+          {
+            "gameId": "CO34",
+            "apId": 1909173
+          },
+          {
+            "gameId": "CO35",
+            "apId": 1909174
+          },
+          {
+            "gameId": "RB33",
+            "apId": 1909175
+          },
+          {
+            "gameId": "CO20",
+            "apId": 1909176
+          },
+          {
+            "gameId": "RESCUED_CHERUB_29",
+            "apId": 1909177
+          },
+          {
+            "gameId": "Sword[D04Z02S12]",
+            "apId": 1909178
+          },
+          {
+            "gameId": "Oil[D04Z02S14]",
+            "apId": 1909179
+          },
+          {
+            "gameId": "QI60",
+            "apId": 1909180
+          },
+          {
+            "gameId": "HE01",
+            "apId": 1909181
+          },
+          {
+            "gameId": "BS05",
+            "apId": 1909182
+          },
+          {
+            "gameId": "RE03",
+            "apId": 1909183
+          },
+          {
+            "gameId": "QI54",
+            "apId": 1909184
+          },
+          {
+            "gameId": "HE201",
+            "apId": 1909185
+          },
+          {
+            "gameId": "PR201",
+            "apId": 1909186
+          },
+          {
+            "gameId": "CO18",
+            "apId": 1909187
+          },
+          {
+            "gameId": "RESCUED_CHERUB_01",
+            "apId": 1909188
+          },
+          {
+            "gameId": "QI50",
+            "apId": 1909189
+          },
+          {
+            "gameId": "CO22",
+            "apId": 1909190
+          },
+          {
+            "gameId": "RB31",
+            "apId": 1909191
+          },
+          {
+            "gameId": "PR07",
+            "apId": 1909192
+          },
+          {
+            "gameId": "RB203",
+            "apId": 1909193
+          },
+          {
+            "gameId": "CO28",
+            "apId": 1909194
+          },
+          {
+            "gameId": "RB30",
+            "apId": 1909195
+          },
+          {
+            "gameId": "RESCUED_CHERUB_02",
+            "apId": 1909196
+          },
+          {
+            "gameId": "Sword[D05Z01S13]",
+            "apId": 1909197
+          },
+          {
+            "gameId": "Lady[D05Z01S14]",
+            "apId": 1909198
+          },
+          {
+            "gameId": "QI62",
+            "apId": 1909199
+          },
+          {
+            "gameId": "PR15",
+            "apId": 1909200
+          },
+          {
+            "gameId": "Oil[D05Z01S19]",
+            "apId": 1909201
+          },
+          {
+            "gameId": "RESCUED_CHERUB_32",
+            "apId": 1909202
+          },
+          {
+            "gameId": "RB301",
+            "apId": 1909203
+          },
+          {
+            "gameId": "QI64",
+            "apId": 1909204
+          },
+          {
+            "gameId": "HE07",
+            "apId": 1909205
+          },
+          {
+            "gameId": "RE05",
+            "apId": 1909206
+          },
+          {
+            "gameId": "PR05",
+            "apId": 1909207
+          },
+          {
+            "gameId": "CO31",
+            "apId": 1909208
+          },
+          {
+            "gameId": "BS06",
+            "apId": 1909209
+          },
+          {
+            "gameId": "QI104",
+            "apId": 1909210
+          },
+          {
+            "gameId": "RB12",
+            "apId": 1909211
+          },
+          {
+            "gameId": "QI49",
+            "apId": 1909212
+          },
+          {
+            "gameId": "QI71",
+            "apId": 1909213
+          },
+          {
+            "gameId": "QI02",
+            "apId": 1909214
+          },
+          {
+            "gameId": "QI03",
+            "apId": 1909215
+          },
+          {
+            "gameId": "QI04",
+            "apId": 1909216
+          },
+          {
+            "gameId": "Sword[D06Z01S11]",
+            "apId": 1909217
+          },
+          {
+            "gameId": "CO06",
+            "apId": 1909218
+          },
+          {
+            "gameId": "PR12",
+            "apId": 1909219
+          },
+          {
+            "gameId": "RESCUED_CHERUB_36",
+            "apId": 1909220
+          },
+          {
+            "gameId": "CO40",
+            "apId": 1909221
+          },
+          {
+            "gameId": "HE04",
+            "apId": 1909222
+          },
+          {
+            "gameId": "Lady[D06Z01S24]",
+            "apId": 1909223
+          },
+          {
+            "gameId": "BS16",
+            "apId": 1909224
+          },
+          {
+            "gameId": "PR08",
+            "apId": 1909225
+          },
+          {
+            "gameId": "BS12",
+            "apId": 1909226
+          },
+          {
+            "gameId": "PR09",
+            "apId": 1909227
+          },
+          {
+            "gameId": "HE101",
+            "apId": 1909228
+          },
+          {
+            "gameId": "QI105",
+            "apId": 1909229
+          },
+          {
+            "gameId": "LaudesBossTrigger[30000]",
+            "apId": 1909230
+          },
+          {
+            "gameId": "Amanecida[D09Z01S01]",
+            "apId": 1909231
+          },
+          {
+            "gameId": "QI51",
+            "apId": 1909232
+          },
+          {
+            "gameId": "RB11",
+            "apId": 1909233
+          },
+          {
+            "gameId": "BS14",
+            "apId": 1909234
+          },
+          {
+            "gameId": "RESCUED_CHERUB_05",
+            "apId": 1909235
+          },
+          {
+            "gameId": "QI72",
+            "apId": 1909236
+          },
+          {
+            "gameId": "RB16",
+            "apId": 1909237
+          },
+          {
+            "gameId": "QI70",
+            "apId": 1909238
+          },
+          {
+            "gameId": "CO27",
+            "apId": 1909239
+          },
+          {
+            "gameId": "Oil[D09Z01S12]",
+            "apId": 1909240
+          },
+          {
+            "gameId": "CO10",
+            "apId": 1909241
+          },
+          {
+            "gameId": "QI69",
+            "apId": 1909242
+          },
+          {
+            "gameId": "RESCUED_CHERUB_03",
+            "apId": 1909243
+          },
+          {
+            "gameId": "CO24",
+            "apId": 1909244
+          },
+          {
+            "gameId": "RESCUED_CHERUB_34",
+            "apId": 1909245
+          },
+          {
+            "gameId": "CO26",
+            "apId": 1909246
+          },
+          {
+            "gameId": "CO02",
+            "apId": 1909247
+          },
+          {
+            "gameId": "CO37",
+            "apId": 1909248
+          },
+          {
+            "gameId": "RESCUED_CHERUB_04",
+            "apId": 1909249
+          },
+          {
+            "gameId": "RB204",
+            "apId": 1909250
+          },
+          {
+            "gameId": "RESCUED_CHERUB_06",
+            "apId": 1909251
+          },
+          {
+            "gameId": "RE401",
+            "apId": 1909252
+          },
+          {
+            "gameId": "Sword[D17Z01S08]",
+            "apId": 1909253
+          },
+          {
+            "gameId": "BS13",
+            "apId": 1909254
+          },
+          {
+            "gameId": "PR203",
+            "apId": 1909255
+          },
+          {
+            "gameId": "QI204",
+            "apId": 1909256
+          },
+          {
+            "gameId": "QI301",
+            "apId": 1909257
+          },
+          {
+            "gameId": "RE01",
+            "apId": 1909258
+          },
+          {
+            "gameId": "CO25",
+            "apId": 1909259
+          },
+          {
+            "gameId": "RB108",
+            "apId": 1909260
+          },
+          {
+            "gameId": "RB202",
+            "apId": 1909261
+          },
+          {
+            "gameId": "RB201",
+            "apId": 1909262
+          },
+          {
+            "gameId": "BossTrigger[5000]",
+            "apId": 1909263
+          },
+          {
+            "gameId": "QI202",
+            "apId": 1909264
+          },
+          {
+            "gameId": "PR202",
+            "apId": 1909265
+          },
+          {
+            "gameId": "QI203",
+            "apId": 1909266
+          },
+          {
+            "gameId": "QI106",
+            "apId": 1909267
+          },
+          {
+            "gameId": "RB18",
+            "apId": 1909268
+          },
+          {
+            "gameId": "RB19",
+            "apId": 1909269
+          },
+          {
+            "gameId": "RB25",
+            "apId": 1909270
+          },
+          {
+            "gameId": "RB26",
+            "apId": 1909271
+          },
+          {
+            "gameId": "QI107",
+            "apId": 1909272
+          },
+          {
+            "gameId": "QI108",
+            "apId": 1909273
+          },
+          {
+            "gameId": "QI109",
+            "apId": 1909274
+          },
+          {
+            "gameId": "QI110",
+            "apId": 1909275
+          },
+          {
+            "gameId": "PR101",
+            "apId": 1909276
+          },
+          {
+            "gameId": "QI32",
+            "apId": 1909277
+          },
+          {
+            "gameId": "QI33",
+            "apId": 1909278
+          },
+          {
+            "gameId": "QI34",
+            "apId": 1909279
+          },
+          {
+            "gameId": "QI35",
+            "apId": 1909280
+          },
+          {
+            "gameId": "QI79",
+            "apId": 1909281
+          },
+          {
+            "gameId": "QI80",
+            "apId": 1909282
+          },
+          {
+            "gameId": "QI81",
+            "apId": 1909283
+          },
+          {
+            "gameId": "Arena_NailManager[1000]",
+            "apId": 1909284
+          },
+          {
+            "gameId": "HE10",
+            "apId": 1909285
+          },
+          {
+            "gameId": "Arena_NailManager[3000]",
+            "apId": 1909286
+          },
+          {
+            "gameId": "RB34",
+            "apId": 1909287
+          },
+          {
+            "gameId": "Arena_NailManager[5000]",
+            "apId": 1909288
+          },
+          {
+            "gameId": "RB35",
+            "apId": 1909289
+          },
+          {
+            "gameId": "RB36",
+            "apId": 1909290
+          },
+          {
+            "gameId": "COMBO_1",
+            "apId": 1909291
+          },
+          {
+            "gameId": "COMBO_2",
+            "apId": 1909292
+          },
+          {
+            "gameId": "COMBO_3",
+            "apId": 1909293
+          },
+          {
+            "gameId": "CHARGED_1",
+            "apId": 1909294
+          },
+          {
+            "gameId": "CHARGED_2",
+            "apId": 1909295
+          },
+          {
+            "gameId": "CHARGED_3",
+            "apId": 1909296
+          },
+          {
+            "gameId": "RANGED_1",
+            "apId": 1909297
+          },
+          {
+            "gameId": "RANGED_2",
+            "apId": 1909298
+          },
+          {
+            "gameId": "RANGED_3",
+            "apId": 1909299
+          },
+          {
+            "gameId": "VERTICAL_1",
+            "apId": 1909300
+          },
+          {
+            "gameId": "VERTICAL_2",
+            "apId": 1909301
+          },
+          {
+            "gameId": "VERTICAL_3",
+            "apId": 1909302
+          },
+          {
+            "gameId": "LUNGE_1",
+            "apId": 1909303
+          },
+          {
+            "gameId": "LUNGE_2",
+            "apId": 1909304
+          },
+          {
+            "gameId": "LUNGE_3",
+            "apId": 1909305
+          }
+        ],
+        "doors": {},
+        "cfg": {
+          "LogicDifficulty": 1,
+          "StartingLocation": 0,
+          "VersionCreated": "AP",
+          "UnlockTeleportation": true,
+          "AllowHints": true,
+          "AllowPenitence": false,
+          "ShuffleReliquaries": true,
+          "ShuffleBootsOfPleading": false,
+          "ShufflePurifiedHand": false,
+          "ShuffleDash": false,
+          "ShuffleWallClimb": false,
+          "ShuffleSwordSkills": false,
+          "ShuffleThorns": true,
+          "JunkLongQuests": false,
+          "StartWithWheel": false,
+          "EnemyShuffleType": 0,
+          "MaintainClass": true,
+          "AreaScaling": true,
+          "BossShuffleType": 0,
+          "DoorShuffleType": 0
+        },
+        "ending": 0,
+        "death_link": false
+      },
       "web": {
         "theme": "stone",
         "tutorials": [

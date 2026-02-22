@@ -610,13 +610,23 @@
             "name": "Catch All Fish Reward",
             "id": 83038,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Golden Feather": 7,
-                  "Progressive Fishing Rod": 2
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 7
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Fishing Rod",
+                    "count": 2
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Seashell",
@@ -968,13 +978,22 @@
             "name": "Return to Shell Kid",
             "id": 83132,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Seashell": 15,
-                  "Shell Necklace": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Seashell",
+                    "count": 15
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Shell Necklace"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Golden Feather",
@@ -1178,13 +1197,22 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Golden Feather": 0,
-                      "Bucket": 1
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -1716,13 +1744,22 @@
             "name": "Hawk Peak East Buried Chest",
             "id": 83107,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Golden Feather": 3,
-                  "Shovel": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Shovel"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Stick",
@@ -1901,13 +1938,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Golden Feather": 0,
-                          "Bucket": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1988,13 +2034,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Golden Feather": 0,
-                          "Bucket": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2060,13 +2115,22 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Golden Feather": 0,
-                      "Bucket": 1
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -2893,6 +2957,16 @@
         }
       },
       "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
+      "slot_data": {
+        "settings": {
+          "goal": 3,
+          "logicLevel": 1,
+          "costMultiplier": 100,
+          "shopCheckLogic": 1,
+          "minShopCheckLogic": 1,
+          "easierRaces": false
+        }
+      },
       "web": {
         "theme": "ocean",
         "tutorials": [

@@ -44611,6 +44611,462 @@
       ],
       "pc_item": "Escape Rope",
       "world_description": "Pok\u00e9mon Red and Pok\u00e9mon Blue are the original monster-collecting turn-based RPGs.  Explore the Kanto region with\nyour Pok\u00e9mon, catch more than 150 unique creatures, earn badges from the region's Gym Leaders, and challenge the\nElite Four to become the champion!",
+      "slot_data": {
+        "second_fossil_check_condition": 3,
+        "require_item_finder": 0,
+        "randomize_hidden_items": 0,
+        "badges_needed_for_hm_moves": 1,
+        "oaks_aide_rt_2": 10,
+        "oaks_aide_rt_11": 20,
+        "oaks_aide_rt_15": 30,
+        "extra_key_items": 0,
+        "extra_strength_boulders": 0,
+        "tea": 0,
+        "old_man": 1,
+        "elite_four_badges_condition": 8,
+        "elite_four_key_items_condition": 0,
+        "elite_four_pokedex_condition": 0,
+        "victory_road_condition": 7,
+        "route_22_gate_condition": 7,
+        "route_3_condition": 1,
+        "robbed_house_officer": 1,
+        "viridian_gym_condition": 7,
+        "cerulean_cave_badges_condition": 4,
+        "cerulean_cave_key_items_condition": 12,
+        "free_fly_map": 9,
+        "town_map_fly_map": 0,
+        "extra_badges": {},
+        "randomize_pokedex": 0,
+        "trainersanity": 0,
+        "death_link": 0,
+        "prizesanity": 0,
+        "key_items_only": 0,
+        "poke_doll_skip": 0,
+        "bicycle_gate_skips": 0,
+        "stonesanity": 0,
+        "door_shuffle": 0,
+        "warp_tile_shuffle": 0,
+        "dark_rock_tunnel_logic": 1,
+        "split_card_key": 0,
+        "all_elevators_locked": 1,
+        "require_pokedex": 1,
+        "area_1_to_1_mapping": 1,
+        "blind_trainers": 0,
+        "game_version": 0,
+        "exp_all": 1,
+        "type_chart": [
+          [
+            "Water",
+            "Fire",
+            20
+          ],
+          [
+            "Fire",
+            "Grass",
+            20
+          ],
+          [
+            "Fire",
+            "Ice",
+            20
+          ],
+          [
+            "Grass",
+            "Water",
+            20
+          ],
+          [
+            "Electric",
+            "Water",
+            20
+          ],
+          [
+            "Water",
+            "Rock",
+            20
+          ],
+          [
+            "Ghost",
+            "Ghost",
+            20
+          ],
+          [
+            "Fire",
+            "Bug",
+            20
+          ],
+          [
+            "Water",
+            "Ground",
+            20
+          ],
+          [
+            "Electric",
+            "Flying",
+            20
+          ],
+          [
+            "Grass",
+            "Ground",
+            20
+          ],
+          [
+            "Grass",
+            "Rock",
+            20
+          ],
+          [
+            "Ice",
+            "Grass",
+            20
+          ],
+          [
+            "Ice",
+            "Ground",
+            20
+          ],
+          [
+            "Ice",
+            "Flying",
+            20
+          ],
+          [
+            "Fighting",
+            "Normal",
+            20
+          ],
+          [
+            "Fighting",
+            "Rock",
+            20
+          ],
+          [
+            "Fighting",
+            "Ice",
+            20
+          ],
+          [
+            "Poison",
+            "Grass",
+            20
+          ],
+          [
+            "Poison",
+            "Bug",
+            20
+          ],
+          [
+            "Ground",
+            "Fire",
+            20
+          ],
+          [
+            "Ground",
+            "Electric",
+            20
+          ],
+          [
+            "Ground",
+            "Rock",
+            20
+          ],
+          [
+            "Ground",
+            "Poison",
+            20
+          ],
+          [
+            "Flying",
+            "Fighting",
+            20
+          ],
+          [
+            "Flying",
+            "Bug",
+            20
+          ],
+          [
+            "Flying",
+            "Grass",
+            20
+          ],
+          [
+            "Psychic",
+            "Fighting",
+            20
+          ],
+          [
+            "Psychic",
+            "Poison",
+            20
+          ],
+          [
+            "Bug",
+            "Grass",
+            20
+          ],
+          [
+            "Bug",
+            "Psychic",
+            20
+          ],
+          [
+            "Bug",
+            "Poison",
+            20
+          ],
+          [
+            "Rock",
+            "Fire",
+            20
+          ],
+          [
+            "Rock",
+            "Flying",
+            20
+          ],
+          [
+            "Rock",
+            "Bug",
+            20
+          ],
+          [
+            "Rock",
+            "Ice",
+            20
+          ],
+          [
+            "Ice",
+            "Dragon",
+            20
+          ],
+          [
+            "Dragon",
+            "Dragon",
+            20
+          ],
+          [
+            "Water",
+            "Water",
+            5
+          ],
+          [
+            "Fire",
+            "Fire",
+            5
+          ],
+          [
+            "Electric",
+            "Electric",
+            5
+          ],
+          [
+            "Ice",
+            "Ice",
+            5
+          ],
+          [
+            "Grass",
+            "Grass",
+            5
+          ],
+          [
+            "Psychic",
+            "Psychic",
+            5
+          ],
+          [
+            "Fire",
+            "Water",
+            5
+          ],
+          [
+            "Grass",
+            "Fire",
+            5
+          ],
+          [
+            "Water",
+            "Grass",
+            5
+          ],
+          [
+            "Electric",
+            "Grass",
+            5
+          ],
+          [
+            "Normal",
+            "Rock",
+            5
+          ],
+          [
+            "Fire",
+            "Rock",
+            5
+          ],
+          [
+            "Grass",
+            "Bug",
+            5
+          ],
+          [
+            "Grass",
+            "Poison",
+            5
+          ],
+          [
+            "Grass",
+            "Flying",
+            5
+          ],
+          [
+            "Ice",
+            "Water",
+            5
+          ],
+          [
+            "Fighting",
+            "Poison",
+            5
+          ],
+          [
+            "Fighting",
+            "Flying",
+            5
+          ],
+          [
+            "Fighting",
+            "Psychic",
+            5
+          ],
+          [
+            "Fighting",
+            "Bug",
+            5
+          ],
+          [
+            "Poison",
+            "Poison",
+            5
+          ],
+          [
+            "Poison",
+            "Ground",
+            5
+          ],
+          [
+            "Poison",
+            "Rock",
+            5
+          ],
+          [
+            "Poison",
+            "Ghost",
+            5
+          ],
+          [
+            "Ground",
+            "Grass",
+            5
+          ],
+          [
+            "Ground",
+            "Bug",
+            5
+          ],
+          [
+            "Flying",
+            "Electric",
+            5
+          ],
+          [
+            "Flying",
+            "Rock",
+            5
+          ],
+          [
+            "Bug",
+            "Fire",
+            5
+          ],
+          [
+            "Bug",
+            "Fighting",
+            5
+          ],
+          [
+            "Bug",
+            "Flying",
+            5
+          ],
+          [
+            "Bug",
+            "Ghost",
+            5
+          ],
+          [
+            "Rock",
+            "Fighting",
+            5
+          ],
+          [
+            "Rock",
+            "Ground",
+            5
+          ],
+          [
+            "Fire",
+            "Dragon",
+            5
+          ],
+          [
+            "Water",
+            "Dragon",
+            5
+          ],
+          [
+            "Electric",
+            "Dragon",
+            5
+          ],
+          [
+            "Grass",
+            "Dragon",
+            5
+          ],
+          [
+            "Ground",
+            "Flying",
+            0
+          ],
+          [
+            "Normal",
+            "Ghost",
+            0
+          ],
+          [
+            "Electric",
+            "Ground",
+            0
+          ],
+          [
+            "Fighting",
+            "Ghost",
+            0
+          ],
+          [
+            "Ghost",
+            "Normal",
+            0
+          ],
+          [
+            "Ghost",
+            "Psychic",
+            0
+          ]
+        ]
+      },
       "web": {
         "theme": "grass",
         "tutorials": [

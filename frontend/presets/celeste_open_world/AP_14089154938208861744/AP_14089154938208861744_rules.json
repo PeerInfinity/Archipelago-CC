@@ -7410,13 +7410,6 @@
             "access_rule": {
               "rule": "True_"
             }
-          },
-          {
-            "name": "2a_end_3_north-west -> 2a_end_2_north-east",
-            "connected_region": "2a_end_2_north-east",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": []
@@ -7441,13 +7434,6 @@
           {
             "name": "2a_end_3_west -> 2a_end_3_room",
             "connected_region": "2a_end_3_room",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "2a_end_3_west -> 2a_end_2_east",
-            "connected_region": "2a_end_2_east",
             "access_rule": {
               "rule": "True_"
             }
@@ -19904,7 +19890,10 @@
             "name": "Mirror Temple A - Room b-01c Strawberry",
             "id": 211877993,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Boosters"
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -20905,7 +20894,10 @@
             "name": "Mirror Temple A - Room b-10 Strawberry",
             "id": 211877999,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Boosters"
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -27274,13 +27266,6 @@
           {
             "name": "6a_b-00_west -> 6a_b-00_room",
             "connected_region": "6a_b-00_room",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "6a_b-00_west -> 6a_20_east",
-            "connected_region": "6a_20_east",
             "access_rule": {
               "rule": "True_"
             }
@@ -37897,7 +37882,6 @@
         "groups": [
           "Everything",
           "Interactables",
-          "Shields",
           "Touch Switches"
         ],
         "classification": "progression",
@@ -39431,7 +39415,6 @@
       "Interactables",
       "Keys",
       "Red Bubbles",
-      "Shields",
       "Touch Switches",
       "Traps"
     ]
@@ -40092,6 +40075,112 @@
       "epilogue_start_region": "8a_outside_east",
       "strawberries_required": 40,
       "world_description": "Celeste (Open World) is a randomizer for the original Celeste. In this acclaimed platformer created by ExOK Games, you control Madeline as she attempts to climb the titular mountain, meeting friends and obstacles along the way.  Progression is found in unlocking the ability to interact with various objects in the areas, such as springs, traffic blocks, feathers, and many more. Please be safe on the climb.",
+      "slot_data": {
+        "apworld_version": 10005,
+        "min_mod_version": 10000,
+        "death_link": 0,
+        "death_link_amnesty": 10,
+        "trap_link": 0,
+        "active_levels": [
+          "0a",
+          "1a",
+          "2a",
+          "3a",
+          "4a",
+          "5a",
+          "6a",
+          "7a",
+          "8a"
+        ],
+        "goal_area": "7a",
+        "lock_goal_area": 1,
+        "strawberries_required": 40,
+        "checkpointsanity": 0,
+        "binosanity": 0,
+        "keysanity": 0,
+        "gemsanity": 0,
+        "carsanity": 0,
+        "roomsanity": 0,
+        "include_goldens": 0,
+        "include_core": 0,
+        "include_farewell": 0,
+        "include_b_sides": 0,
+        "include_c_sides": 0,
+        "trap_expiration_action": 1,
+        "trap_expiration_amount": 5,
+        "active_traps": {
+          "32": 2,
+          "33": 2,
+          "34": 2,
+          "35": 2,
+          "36": 2,
+          "37": 2,
+          "38": 2,
+          "40": 2,
+          "41": 2,
+          "42": 2,
+          "43": 2,
+          "44": 2
+        },
+        "madeline_hair_length": 4,
+        "madeline_one_dash_hair_color": 11285042,
+        "madeline_two_dash_hair_color": 16739823,
+        "madeline_no_dash_hair_color": 4503551,
+        "madeline_feather_hair_color": 16766556,
+        "music_shuffle": 0,
+        "music_map": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 6,
+          "7": 7,
+          "8": 8,
+          "9": 9,
+          "10": 10,
+          "11": 11,
+          "12": 12,
+          "13": 13,
+          "14": 14,
+          "15": 15,
+          "16": 16,
+          "17": 17,
+          "18": 18,
+          "19": 19,
+          "20": 20,
+          "21": 21,
+          "22": 22,
+          "23": 23,
+          "24": 24,
+          "25": 25,
+          "26": 26,
+          "27": 27,
+          "28": 28,
+          "29": 29,
+          "30": 30,
+          "31": 31,
+          "32": 32,
+          "33": 33,
+          "34": 34,
+          "35": 35,
+          "36": 36,
+          "37": 37,
+          "38": 38,
+          "39": 39,
+          "40": 40,
+          "41": 41,
+          "42": 42,
+          "43": 43,
+          "44": 44,
+          "45": 45,
+          "46": 46,
+          "47": 47
+        },
+        "require_cassettes": 0,
+        "chosen_poem": 3
+      },
       "web": {
         "theme": "ice",
         "tutorials": [

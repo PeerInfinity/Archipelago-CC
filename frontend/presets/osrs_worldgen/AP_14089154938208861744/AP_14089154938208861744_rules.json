@@ -11282,6 +11282,22 @@
       ],
       "base_id": 458752,
       "world_description": "The best retro fantasy MMORPG on the planet. Old School is RuneScape but\u2026 older! This is the open world you know and love, but as it was in 2007.\nThe Randomizer takes the form of a Chunk-Restricted f2p Ironman that takes a brand new account up through defeating\nthe Green Dragon of Crandor and earning a spot in the fabled Champion's Guild!",
+      "slot_data": {
+        "brutal_grinds": 0,
+        "data_csv_tag": "v2.0.5",
+        "starting_area": "Area: Lumbridge",
+        "max_prayer_level": 50,
+        "max_magic_level": 50,
+        "max_runecraft_level": 50,
+        "max_mining_level": 50,
+        "max_crafting_level": 50,
+        "max_smithing_level": 50,
+        "max_fishing_level": 50,
+        "max_cooking_level": 50,
+        "max_firemaking_level": 50,
+        "max_woodcutting_level": 50,
+        "max_combat_level": 50
+      },
       "web": {
         "theme": "stone",
         "tutorials": [

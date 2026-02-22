@@ -68014,6 +68014,14 @@
         }
       ],
       "world_description": "A python port of Super Metroid & A Link To The Past Crossover Item Randomizer based on v11.2 of Total's SMZ3.\nThis is allowed as long as we keep features and logic as close as possible as the original.",
+      "slot_data": {
+        "goal": 0,
+        "open_tower": 7,
+        "ganon_vulnerable": 7,
+        "open_tourian": 4,
+        "sm_logic": 0,
+        "key_shuffle": 0
+      },
       "web": {
         "theme": "grass",
         "tutorials": [

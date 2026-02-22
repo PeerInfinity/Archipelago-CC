@@ -1,4 +1,5 @@
-diff --git a/settings.py b/settings.py
+--- a/settings.py
++++ b/settings.py
 @@ -23,6 +23,7 @@
  ]
  

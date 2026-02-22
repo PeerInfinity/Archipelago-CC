@@ -4128,9 +4128,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Post-Plantera",
                       "Hallow",
-                      "Hardmode",
-                      "Post-Plantera"
+                      "Hardmode"
                     ]
                   }
                 },
@@ -4727,8 +4727,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Bone",
                   "Hardmode Anvil",
+                  "Bone",
                   "Soul of Light",
                   "Soul of Night"
                 ]
@@ -9894,6 +9894,20 @@
         "Post-The Twins": "The Twins"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
+      "slot_data": {
+        "goal": [
+          "Skeletron Prime",
+          "The Destroyer",
+          "The Twins"
+        ],
+        "deathlink": false,
+        "calamity": 0,
+        "getfixedboi": 0,
+        "early_achievements": 1,
+        "normal_achievements": 1,
+        "grindy_achievements": 0,
+        "fishing_achievements": 0
+      },
       "web": {
         "theme": "grass",
         "tutorials": [

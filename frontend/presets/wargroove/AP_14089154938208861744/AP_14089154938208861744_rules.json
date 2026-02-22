@@ -1779,6 +1779,19 @@
         }
       },
       "world_description": "Command an army, in this retro style turn based strategy game!",
+      "slot_data": {
+        "seed": "bHgGslEfAlsYkXhU",
+        "income_boost": 25,
+        "commander_defense_boost": 2,
+        "can_choose_commander": false,
+        "commander_choice": 0,
+        "player_sacrifice_limit": 0,
+        "player_summon_limit": 0,
+        "ai_sacrifice_limit": 0,
+        "ai_summon_limit": 0,
+        "death_link": 0,
+        "starting_groove_multiplier": 20
+      },
       "web": {
         "theme": "grass",
         "tutorials": [

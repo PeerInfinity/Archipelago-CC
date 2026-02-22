@@ -4066,13 +4066,22 @@
             "name": "Sewers Back Door",
             "connected_region": "Sewers (Dark)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Hyrule Castle)": 4,
-                  "Lamp": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Hyrule Castle)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
+                  }
                 }
-              }
+              ]
             }
           },
           {
@@ -4202,12 +4211,16 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Agahnims Tower)": 4,
-                      "Lamp": 1
-                    }
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -4307,12 +4320,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Agahnims Tower)": 2,
-                      "Lamp": 1
-                    }
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -4347,12 +4364,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Agahnims Tower)": 3,
-                      "Lamp": 1
-                    }
+                    "item_name": "Small Key (Agahnims Tower)",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -8511,13 +8532,22 @@
             "name": "Swamp Palace (Center)",
             "connected_region": "Swamp Palace (Center)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Swamp Palace)": 3,
-                  "Hammer": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hammer"
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -8575,13 +8605,22 @@
             "name": "Swamp Palace - Trench 1 Pot Key",
             "id": 1310742,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Swamp Palace)": 2,
-                  "Moon Pearl": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Small Key (Swamp Palace)",
@@ -8608,13 +8647,22 @@
             "name": "Swamp Palace (North)",
             "connected_region": "Swamp Palace (North)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Swamp Palace)": 5,
-                  "Hookshot": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hookshot"
+                  }
                 }
-              }
+              ]
             }
           },
           {
@@ -9155,13 +9203,22 @@
             "name": "Thieves' Town - Attic",
             "id": 59917,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Thieves Town)": 3,
-                  "Moon Pearl": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Thieves Town)",
+                    "count": 3
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Rupees (20)",
@@ -9506,13 +9563,22 @@
             "name": "Skull Woods First Section (Right) North Door",
             "connected_region": "Skull Woods First Section",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Skull Woods)": 5,
-                  "Moon Pearl": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -9551,13 +9617,22 @@
             "name": "Skull Woods First Section (Left) Door to Exit",
             "connected_region": "Skull Woods First Section",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Skull Woods)": 5,
-                  "Moon Pearl": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
                 }
-              }
+              ]
             }
           },
           {
@@ -9775,12 +9850,16 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Skull Woods)": 4,
-                      "Fire Rod": 1
-                    }
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire Rod"
                   }
                 }
               ]
@@ -10231,13 +10310,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Small Key (Ice Palace)": 5,
-                          "Cane of Somaria": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Small Key (Ice Palace)",
+                            "count": 5
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Cane of Somaria"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10999,13 +11087,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAnyCount",
-                  "args": {
-                    "items": {
-                      "Small Key (Misery Mire)": 4,
-                      "Big Key (Misery Mire)": 1
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 4
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Big Key (Misery Mire)"
+                      }
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12087,15 +12184,26 @@
             "name": "Turtle Rock (Trinexx)",
             "connected_region": "Turtle Rock (Trinexx)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Turtle Rock)": 6,
-                  "Big Key (Turtle Rock)": 1,
-                  "Cane of Somaria": 1,
-                  "Moon Pearl": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 6
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Big Key (Turtle Rock)",
+                      "Cane of Somaria",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
-              }
+              ]
             }
           },
           {
@@ -12566,14 +12674,20 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Palace of Darkness)": 6,
-                      "Big Key (Palace of Darkness)": 1,
-                      "Hammer": 1,
-                      "Lamp": 1
-                    }
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 6
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Big Key (Palace of Darkness)",
+                      "Hammer",
+                      "Lamp"
+                    ]
                   }
                 }
               ]
@@ -12787,13 +12901,22 @@
             "name": "Palace of Darkness Maze Door",
             "connected_region": "Palace of Darkness (Maze)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Palace of Darkness)": 6,
-                  "Lamp": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Palace of Darkness)",
+                    "count": 6
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lamp"
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -14014,13 +14137,22 @@
             "name": "Ganons Tower (Double Switch Room)",
             "connected_region": "Ganons Tower (Firesnake Room)",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Small Key (Ganons Tower)": 6,
-                  "Hookshot": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 6
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hookshot"
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -15184,12 +15316,16 @@
                   "_original_ast_type": "rb_defined_helper"
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Small Key (Ganons Tower)": 7,
-                      "Moon Pearl": 1
-                    }
+                    "item_name": "Small Key (Ganons Tower)",
+                    "count": 7
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -20875,6 +21011,39 @@
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
       "world_description": "The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!",
+      "slot_data": {
+        "crystals_needed_for_gt": 7,
+        "crystals_needed_for_ganon": 7,
+        "open_pyramid": 2,
+        "big_key_shuffle": 0,
+        "small_key_shuffle": 0,
+        "compass_shuffle": 0,
+        "map_shuffle": 0,
+        "progressive": 2,
+        "swordless": 0,
+        "retro_bow": 0,
+        "retro_caves": 0,
+        "shop_item_slots": 0,
+        "boss_shuffle": 0,
+        "pot_shuffle": 0,
+        "enemy_shuffle": 0,
+        "key_drop_shuffle": 1,
+        "bombless_start": 0,
+        "randomize_shop_inventories": 0,
+        "shuffle_shop_inventories": 0,
+        "shuffle_capacity_upgrades": 0,
+        "entrance_shuffle": 0,
+        "dark_room_logic": 0,
+        "goal": 0,
+        "mode": 1,
+        "triforce_pieces_mode": 2,
+        "triforce_pieces_percentage": 150,
+        "triforce_pieces_required": 20,
+        "triforce_pieces_available": 30,
+        "triforce_pieces_extra": 10,
+        "mm_medalion": "Quake",
+        "tr_medalion": "Ether"
+      },
       "web": {
         "theme": "grass",
         "tutorials": [

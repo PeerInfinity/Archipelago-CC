@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "VVVVVV",
-  "game_directory": "v6",
+  "game_name": "VVVVVV WorldGen",
+  "game_directory": "v6_worldgen",
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
@@ -679,7 +679,28 @@
     }
   },
   "canonical_placements": {
-    "1": {}
+    "1": {
+      "Overworld (Pipe-shaped Segment)": "Trinket 14",
+      "Overworld (Left of Ship)": "Trinket 03",
+      "Overworld (Square Room)": "Trinket 08",
+      "Overworld (Sad Elephant)": "Trinket 01",
+      "It's a Secret to Nobody": "Trinket 20",
+      "Trench Warfare": "Trinket 02",
+      "NPC Trinket": "Trinket 07",
+      "V": "Trinket 17",
+      "Young Man, It's Worth the Challenge": "Trinket 04",
+      "Overworld (Outside Entanglement Generator)": "Trinket 16",
+      "The Tantalizing Trinket": "Trinket 09",
+      "Purest Unobtainium": "Trinket 10",
+      "The Tower 1": "Trinket 18",
+      "The Tower 2": "Trinket 15",
+      "One Way Room": "Trinket 11",
+      "You Just Keep Coming Back": "Trinket 12",
+      "Clarion Call": "Trinket 06",
+      "Prize for the Reckless": "Trinket 05",
+      "Doing things the hard way": "Trinket 19",
+      "Edge Games": "Trinket 13"
+    }
   },
   "progression_mapping": {
     "1": {}
@@ -689,8 +710,9 @@
   },
   "world": {
     "1": {
-      "game": "VVVVVV",
+      "game": "VVVVVV WorldGen",
       "world_class_name": "V6World",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "area_cost": false,
@@ -706,9 +728,11 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": []
+        "start_location_hints": [],
+        "use_canonical_options": true
       },
       "option_definitions": {
         "accessibility": {
@@ -760,6 +784,16 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
         }
       },
       "area_connections": {
@@ -829,7 +863,7 @@
           }
         ]
       },
-      "world_directory": "v6"
+      "world_directory": "v6_worldgen"
     }
   },
   "exporter": {},
@@ -928,5 +962,6 @@
         }
       }
     }
-  }
+  },
+  "is_canonical": true
 }

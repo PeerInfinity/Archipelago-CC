@@ -524,6 +524,7 @@ class ToemWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'ToemWorld'
+        self.slot_data = {'version': '0.1.0', 'options': {'include_basto': 0, 'include_items': 1, 'include_casettes': 1, 'include_achievements': 0}}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -763,4 +764,7 @@ class ToemWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "version": "0.1.0",
+            "options": {'include_basto': 0, 'include_items': 1, 'include_casettes': 1, 'include_achievements': 0},
+        }

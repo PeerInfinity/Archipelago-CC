@@ -295,22 +295,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -347,22 +365,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -399,22 +435,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -451,22 +505,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -503,22 +575,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -561,22 +651,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -613,22 +721,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -665,22 +791,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -717,22 +861,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -769,22 +931,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -821,22 +1001,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -873,22 +1071,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -925,22 +1141,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -994,19 +1228,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1047,19 +1290,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1100,19 +1352,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1153,19 +1414,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1206,19 +1476,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1265,19 +1544,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1318,19 +1606,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1371,19 +1668,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1424,19 +1730,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1477,19 +1792,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1530,19 +1854,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1583,19 +1916,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1636,19 +1978,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1689,19 +2040,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1742,19 +2102,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1809,19 +2178,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1892,19 +2270,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -1981,19 +2368,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2064,19 +2460,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2171,19 +2576,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2281,19 +2695,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2364,19 +2787,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2447,19 +2879,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2530,19 +2971,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2619,19 +3069,28 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Blue Ring",
-                          "Heart Container"
+                          "Heart Container",
+                          "Blue Ring"
                         ]
                       }
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 0,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -2713,13 +3172,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -2793,13 +3261,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -2873,13 +3350,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -2953,13 +3439,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3036,13 +3531,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3120,13 +3624,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3200,13 +3713,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3280,13 +3802,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3390,13 +3921,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3470,13 +4010,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3580,13 +4129,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3660,13 +4218,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3740,13 +4307,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3820,13 +4396,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3900,13 +4485,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -3980,13 +4574,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4074,13 +4677,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4154,13 +4766,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4234,13 +4855,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4321,13 +4951,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4411,13 +5050,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4495,13 +5143,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4575,13 +5232,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4655,13 +5321,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4735,13 +5410,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4815,13 +5499,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4895,13 +5588,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -4975,13 +5677,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5055,13 +5766,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5149,13 +5869,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5233,13 +5962,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5317,13 +6055,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5400,13 +6147,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5484,13 +6240,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5569,13 +6334,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5652,13 +6426,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5736,13 +6519,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5819,13 +6611,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5902,13 +6703,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -5985,13 +6795,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6068,13 +6887,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6151,13 +6979,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6235,13 +7072,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6319,13 +7165,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6403,13 +7258,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6486,13 +7350,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6569,13 +7442,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6652,13 +7534,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6736,13 +7627,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6847,13 +7747,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -6937,13 +7846,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7024,13 +7942,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7111,13 +8038,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7198,13 +8134,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7303,13 +8248,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7411,13 +8365,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7498,13 +8461,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7615,13 +8587,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7732,13 +8713,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7819,13 +8809,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -7906,13 +8905,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8000,13 +9008,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8090,13 +9107,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8207,13 +9233,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8294,13 +9329,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8381,13 +9425,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8468,13 +9521,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8555,13 +9617,22 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 3,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 3
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "HasAll",
@@ -8656,22 +9727,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -8704,12 +9793,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -8746,22 +9839,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -8794,12 +9905,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -8836,22 +9951,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -8884,12 +10017,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -8926,22 +10063,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -8974,12 +10129,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9016,22 +10175,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9064,12 +10241,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9106,22 +10287,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9154,12 +10353,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9196,22 +10399,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9244,12 +10465,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9286,22 +10511,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9334,12 +10577,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9376,22 +10623,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9424,12 +10689,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9466,22 +10735,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9514,12 +10801,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9556,22 +10847,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9604,12 +10913,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9646,22 +10959,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9694,12 +11025,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9736,22 +11071,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9784,12 +11137,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9826,22 +11183,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9874,12 +11249,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -9916,22 +11295,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -9964,12 +11361,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10006,22 +11407,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10054,12 +11473,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10096,22 +11519,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10144,12 +11585,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10186,22 +11631,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10234,12 +11697,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10276,22 +11743,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10324,12 +11809,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10366,22 +11855,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10414,12 +11921,16 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10456,22 +11967,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10504,14 +12033,20 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Bow": 1,
-                      "Silver Arrow": 1,
-                      "Stepladder": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bow",
+                      "Silver Arrow",
+                      "Stepladder"
+                    ]
                   }
                 }
               ]
@@ -10550,22 +12085,40 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 4,
-                          "Blue Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 4
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "HasAllCounts",
-                      "args": {
-                        "items": {
-                          "Heart Container": 2,
-                          "Red Ring": 1
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": 2
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
                         }
-                      }
+                      ]
                     },
                     {
                       "rule": "Has",
@@ -10598,13 +12151,19 @@
                   ]
                 },
                 {
-                  "rule": "HasAllCounts",
+                  "rule": "Has",
                   "args": {
-                    "items": {
-                      "Triforce Fragment": 8,
-                      "Stepladder": 1,
-                      "Triforce of Power": 1
-                    }
+                    "item_name": "Triforce Fragment",
+                    "count": 8
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Stepladder",
+                      "Triforce of Power"
+                    ]
                   }
                 }
               ]
@@ -12050,6 +13609,11 @@
       ],
       "base_id": 7000,
       "world_description": "The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.",
+      "slot_data": {
+        "TakeAnyLeft": 7115,
+        "TakeAnyMiddle": 7126,
+        "TakeAnyRight": 7129
+      },
       "web": {
         "theme": "stone",
         "tutorials": [

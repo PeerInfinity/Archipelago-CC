@@ -69,10 +69,6 @@ class EarlyEnergyForm(Choice):
     option_early_and_local = 2
     default = 1
 
-class InfiniteHotSoup(DefaultOnToggle):
-    """Option for Infinite Hot Soup."""
-    display_name = "Infinite Hot Soup"
-
 class IngredientRandomizer(Choice):
     """Option for Randomize Ingredients."""
     display_name = "Randomize Ingredients"
@@ -81,20 +77,9 @@ class IngredientRandomizer(Choice):
     option_all_ingredients = 2
     default = 0
 
-class LightNeededToGetToDarkPlaces(Choice):
+class LightNeededToGetToDarkPlaces(DefaultOnToggle):
     """Option for Light needed to get to dark places."""
     display_name = "Light needed to get to dark places"
-    option_off = 0
-    option_on = 1
-    option_sun_form = 2
-    default = 1
-
-class MaximumIngredientAmount(Range):
-    """Option for Maximum ingredient amount."""
-    display_name = "Maximum ingredient amount"
-    range_start = 2
-    range_end = 20
-    default = 8
 
 class MiniBossesToBeat(Range):
     """Option for Minibosses to beat."""
@@ -103,59 +88,9 @@ class MiniBossesToBeat(Range):
     range_end = 8
     default = 0
 
-class NoProgressionAbyss(Toggle):
-    """Option for No progression in the Abyss."""
-    display_name = "No progression in the Abyss"
-    default = False
-
-class NoProgressionArnassiRuins(Toggle):
-    """Option for No progression in Arnassi Ruins."""
-    display_name = "No progression in Arnassi Ruins"
-    default = False
-
-class NoProgressionBody(Toggle):
-    """Option for No progression in the Body."""
-    display_name = "No progression in the Body"
-    default = False
-
-class NoProgressionEnergyTemple(Toggle):
-    """Option for No progression in the Energy Temple."""
-    display_name = "No progression in the Energy Temple"
-    default = False
-
-class NoProgressionFrozenVeil(Toggle):
-    """Option for No progression in the Frozen Veil."""
-    display_name = "No progression in the Frozen Veil"
-    default = False
-
 class NoProgressionHardOrHiddenLocations(Toggle):
     """Option for No progression in hard or hidden locations."""
     display_name = "No progression in hard or hidden locations"
-    default = False
-
-class NoProgressionKelpForest(Toggle):
-    """Option for No progression in Kelp Forest."""
-    display_name = "No progression in Kelp Forest"
-    default = False
-
-class NoProgressionMithalas(Toggle):
-    """Option for No progression in Mithalas."""
-    display_name = "No progression in Mithalas"
-    default = False
-
-class NoProgressionSimonSays(Toggle):
-    """Option for No progression in Simon says area."""
-    display_name = "No progression in Simon says area"
-    default = False
-
-class NoProgressionSunkenCity(Toggle):
-    """Option for No progression in the Sunken City."""
-    display_name = "No progression in the Sunken City"
-    default = False
-
-class NoProgressionVeil(Toggle):
-    """Option for No progression in the Veil."""
-    display_name = "No progression in the Veil"
     default = False
 
 class Objective(Choice):
@@ -163,23 +98,7 @@ class Objective(Choice):
     display_name = "Objective"
     option_kill_the_creator = 0
     option_obtain_secrets_and_kill_the_creator = 1
-    option_killing_the_four_gods = 2
-    option_gods_and_creator = 3
     default = 0
-
-class OpenBodyTongue(Toggle):
-    """Option for Open the body tongue."""
-    display_name = "Open the body tongue"
-    default = False
-
-class SaveHealing(DefaultOnToggle):
-    """Option for Save heal Naija."""
-    display_name = "Save heal Naija"
-
-class SkipFinalBoss3rdForm(Toggle):
-    """Option for Skip final boss third form."""
-    display_name = "Skip final boss third form"
-    default = False
 
 class SkipFirstVision(Toggle):
     """Option for Skip Naija's first vision."""
@@ -188,11 +107,6 @@ class SkipFirstVision(Toggle):
 
 class StartInventoryFromPool(StartInventoryPool):
     """Start inventory from pool for Start Inventory from Pool."""
-
-class ThroneAsLocation(Toggle):
-    """Option for Throne as a location."""
-    display_name = "Throne as a location"
-    default = False
 
 class TurtleRandomizer(Choice):
     """Option for Turtle Randomizer."""
@@ -224,28 +138,12 @@ class AquariaWorldGenOptions(PerGameCommonOptions):
     dish_randomizer: DishRandomizer
     early_bind_song: EarlyBindSong
     early_energy_form: EarlyEnergyForm
-    infinite_hot_soup: InfiniteHotSoup
     ingredient_randomizer: IngredientRandomizer
     light_needed_to_get_to_dark_places: LightNeededToGetToDarkPlaces
-    maximum_ingredient_amount: MaximumIngredientAmount
     mini_bosses_to_beat: MiniBossesToBeat
-    no_progression_abyss: NoProgressionAbyss
-    no_progression_arnassi_ruins: NoProgressionArnassiRuins
-    no_progression_body: NoProgressionBody
-    no_progression_energy_temple: NoProgressionEnergyTemple
-    no_progression_frozen_veil: NoProgressionFrozenVeil
     no_progression_hard_or_hidden_locations: NoProgressionHardOrHiddenLocations
-    no_progression_kelp_forest: NoProgressionKelpForest
-    no_progression_mithalas: NoProgressionMithalas
-    no_progression_simon_says: NoProgressionSimonSays
-    no_progression_sunken_city: NoProgressionSunkenCity
-    no_progression_veil: NoProgressionVeil
     objective: Objective
-    open_body_tongue: OpenBodyTongue
-    save_healing: SaveHealing
-    skip_final_boss_3rd_form: SkipFinalBoss3rdForm
     skip_first_vision: SkipFirstVision
     start_inventory_from_pool: StartInventoryFromPool
-    throne_as_location: ThroneAsLocation
     turtle_randomizer: TurtleRandomizer
     unconfine_home_water: UnconfineHomeWater

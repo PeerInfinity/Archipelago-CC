@@ -288,13 +288,22 @@
             "name": "Tower of Trunk Hidden Mattock",
             "id": 400113,
             "access_rule": {
-              "rule": "HasAnyCount",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Deluge": 1
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Deluge"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Progressive Shield",
@@ -521,17 +530,28 @@
             "name": "Trunk -> Path to Mascon",
             "connected_region": "Path to Mascon",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Joker Spring Flow": 1,
-                  "Key Queen": 1,
-                  "Ring of Ruby": 1,
-                  "Sky Spring Flow": 1,
-                  "Tower of Fortress Spring Flow": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Joker Spring Flow",
+                      "Key Queen",
+                      "Ring of Ruby",
+                      "Sky Spring Flow",
+                      "Tower of Fortress Spring Flow"
+                    ]
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -768,13 +788,22 @@
             "name": "Path to Mascon -> Tower of Red Potion",
             "connected_region": "Tower of Red Potion",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Red Potion": 4,
-                  "Key Queen": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Red Potion",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Key Queen"
+                  }
                 }
-              }
+              ]
             }
           },
           {
@@ -1029,13 +1058,22 @@
             "name": "Tower of Suffer Hidden Wingboots",
             "id": 400149,
             "access_rule": {
-              "rule": "HasAnyCount",
-              "args": {
-                "items": {
-                  "Progressive Sword": 2,
-                  "Deluge": 1
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Deluge"
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Progressive Armor",
@@ -2787,6 +2825,15 @@
         "Poison": 13
       },
       "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
+      "slot_data": {
+        "keep_shop_red_potions": 0,
+        "random_musics": 0,
+        "random_sounds": 0,
+        "random_npcs": 0,
+        "random_monsters": 0,
+        "random_rewards": 0,
+        "daxanadu_version": "0.3.0"
+      },
       "web": {
         "theme": "dirt",
         "tutorials": [

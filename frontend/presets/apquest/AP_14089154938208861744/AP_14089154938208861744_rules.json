@@ -421,6 +421,13 @@
         }
       },
       "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
+      "slot_data": {
+        "hard_mode": 0,
+        "hammer": 0,
+        "extra_starting_chest": 0,
+        "confetti_explosiveness": 3,
+        "player_sprite": 0
+      },
       "web": {
         "theme": "grassFlowers",
         "tutorials": [

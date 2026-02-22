@@ -1,4 +1,5 @@
-diff --git a/worlds/alttp/Rules.py b/worlds/alttp/Rules.py
+--- a/worlds/alttp/Rules.py
++++ b/worlds/alttp/Rules.py
 @@ -1731,16 +1731,18 @@
                  if not is_link(new_region):
                      # For glitch rulesets, establish superbunny and revival rules.

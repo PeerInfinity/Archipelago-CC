@@ -139,13 +139,22 @@
             "name": "Money Sink",
             "connected_region": "The Craftsman's Corner",
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Shards": 4566,
-                  "Money Wrench": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Shards",
+                    "count": 4566
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Money Wrench"
+                  }
                 }
-              }
+              ]
             }
           }
         ],
@@ -7297,6 +7306,59 @@
       "world_description": "As a demon army besieges his village, a young ninja ventures through a cursed world, to deliver a scroll paramount\nto his clan\u2019s survival. What begins as a classic action platformer soon unravels into an expansive time-traveling\nadventure full of thrills, surprises, and humor.",
       "use_paren_number_accumulator": true,
       "maximum_price": 4566,
+      "slot_data": {
+        "shop": {
+          "HP_UPGRADE_1": 27,
+          "ENEMY_DROP_HP": 291,
+          "DAMAGE_REDUCTION": 149,
+          "HP_UPGRADE_2": 357,
+          "SHURIKEN": 92,
+          "ENEMY_DROP_MANA": 109,
+          "SHURIKEN_UPGRADE_1": 345,
+          "CHECKPOINT_FULL": 147,
+          "POTION_FULL_HEAL_AND_HP": 513,
+          "SHURIKEN_UPGRADE_2": 772,
+          "ATTACK_PROJECTILE": 67,
+          "AIR_RECOVER": 170,
+          "SWIM_DASH": 506,
+          "GLIDE_ATTACK": 381,
+          "CHARGED_ATTACK": 527,
+          "QUARBLE_DISCOUNT_50": 56,
+          "TIME_WARP": 142,
+          "POWER_SEAL": 479,
+          "POWER_SEAL_WORLD_MAP": 413
+        },
+        "figures": {
+          "GREEN_KAPPA": 236,
+          "BLUE_KAPPA": 106,
+          "OUNTARDE": 264,
+          "RED_KAPPA": 348,
+          "DEMON_KING": 1271,
+          "QUILLSHROOM": 193,
+          "JUMPING_QUILLSHROOM": 208,
+          "SCURUBU": 108,
+          "JUMPING_SCURUBU": 267,
+          "WALLAXER": 265,
+          "BARMATHAZEL": 714,
+          "QUEEN_OF_QUILLS": 406,
+          "DEMON_HIVE": 357
+        },
+        "max_price": 7600,
+        "required_seals": 0,
+        "starting_portals": [
+          "Autumn Hills Portal",
+          "Howling Grotto Portal",
+          "Glacial Peak Portal",
+          "Sunken Shrine Portal",
+          "Riviere Turquoise Portal",
+          "Searing Crags Portal"
+        ],
+        "portal_exits": [],
+        "transitions": [],
+        "music_box": 1,
+        "death_link": 0,
+        "logic_level": 0
+      },
       "web": {
         "theme": "ocean",
         "tutorials": [

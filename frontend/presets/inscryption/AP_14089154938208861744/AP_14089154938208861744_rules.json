@@ -3129,6 +3129,18 @@
       "required_epitaph_pieces_name": "Epitaph Piece",
       "required_epitaph_pieces_count": 9,
       "world_description": "Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...",
+      "slot_data": {
+        "death_link": 0,
+        "act1_death_link_behaviour": 0,
+        "goal": 0,
+        "randomize_codes": 0,
+        "randomize_deck": 0,
+        "randomize_sigils": 0,
+        "optional_death_card": 2,
+        "skip_tutorial": 1,
+        "skip_epilogue": 0,
+        "epitaph_pieces_randomization": 0
+      },
       "web": {
         "theme": "dirt",
         "tutorials": [

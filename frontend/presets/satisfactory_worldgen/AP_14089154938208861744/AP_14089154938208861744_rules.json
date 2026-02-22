@@ -235,10 +235,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Space Elevator",
                   "Can Produce: Automated Wiring",
                   "Can Produce: Smart Plating",
-                  "Can Produce: Versatile Framework"
+                  "Can Produce: Versatile Framework",
+                  "Can Build: Space Elevator"
                 ]
               }
             },
@@ -581,8 +581,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -602,8 +602,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -665,8 +665,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Modular Frame",
-                              "Recipe: Modular Frame"
+                              "Recipe: Modular Frame",
+                              "Can Produce: Modular Frame"
                             ]
                           }
                         },
@@ -680,8 +680,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -717,8 +717,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -809,8 +809,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -870,8 +870,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -891,8 +891,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -960,8 +960,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -1007,8 +1007,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -1032,8 +1032,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -1075,8 +1075,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -1096,8 +1096,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -1159,8 +1159,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Modular Frame",
-                              "Recipe: Modular Frame"
+                              "Recipe: Modular Frame",
+                              "Can Produce: Modular Frame"
                             ]
                           }
                         },
@@ -1174,8 +1174,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -1211,8 +1211,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -1286,8 +1286,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Silica",
-                                              "Recipe: Silica"
+                                              "Recipe: Silica",
+                                              "Can Produce: Silica"
                                             ]
                                           }
                                         },
@@ -1370,8 +1370,8 @@
                                                   "rule": "HasAny",
                                                   "args": {
                                                     "items": [
-                                                      "Can Produce: Silica",
-                                                      "Recipe: Silica"
+                                                      "Recipe: Silica",
+                                                      "Can Produce: Silica"
                                                     ]
                                                   }
                                                 },
@@ -1436,8 +1436,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Quartz Crystal",
-                                      "Recipe: Quartz Crystal"
+                                      "Recipe: Quartz Crystal",
+                                      "Can Produce: Quartz Crystal"
                                     ]
                                   }
                                 },
@@ -1473,8 +1473,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Copper Sheet",
-                                              "Recipe: Copper Sheet"
+                                              "Recipe: Copper Sheet",
+                                              "Can Produce: Copper Sheet"
                                             ]
                                           }
                                         },
@@ -1581,8 +1581,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 },
@@ -1621,8 +1621,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -1642,8 +1642,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -1699,8 +1699,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -1714,8 +1714,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Quickwire",
-                              "Recipe: Quickwire"
+                              "Recipe: Quickwire",
+                              "Can Produce: Quickwire"
                             ]
                           }
                         },
@@ -1729,8 +1729,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Copper Sheet",
-                                      "Recipe: Copper Sheet"
+                                      "Recipe: Copper Sheet",
+                                      "Can Produce: Copper Sheet"
                                     ]
                                   }
                                 },
@@ -1773,8 +1773,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -1839,8 +1839,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -1886,8 +1886,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -1911,8 +1911,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -1954,8 +1954,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -1975,8 +1975,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -2044,8 +2044,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -2110,8 +2110,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -2119,8 +2119,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 },
@@ -2199,8 +2199,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -2230,8 +2230,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Modular Frame",
-                              "Recipe: Modular Frame"
+                              "Recipe: Modular Frame",
+                              "Can Produce: Modular Frame"
                             ]
                           }
                         },
@@ -2245,8 +2245,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -2282,8 +2282,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -2345,8 +2345,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -2366,8 +2366,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -2423,8 +2423,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -2438,8 +2438,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -2568,8 +2568,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -2602,8 +2602,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -2639,8 +2639,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -2648,8 +2648,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 },
@@ -2688,8 +2688,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Rotor",
-                              "Recipe: Rotor"
+                              "Recipe: Rotor",
+                              "Can Produce: Rotor"
                             ]
                           }
                         },
@@ -2709,8 +2709,8 @@
                                           "rule": "HasAny",
                                           "args": {
                                             "items": [
-                                              "Can Produce: Steel Ingot",
-                                              "Recipe: Steel Ingot"
+                                              "Recipe: Steel Ingot",
+                                              "Can Produce: Steel Ingot"
                                             ]
                                           }
                                         },
@@ -2778,8 +2778,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -2930,8 +2930,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -2992,8 +2992,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -3058,8 +3058,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -3079,8 +3079,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -4648,8 +4648,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Can Produce: Rotor",
-                  "Recipe: Rotor"
+                  "Recipe: Rotor",
+                  "Can Produce: Rotor"
                 ]
               }
             }
@@ -5940,8 +5940,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Can Produce: Rotor",
-                  "Recipe: Rotor"
+                  "Recipe: Rotor",
+                  "Can Produce: Rotor"
                 ]
               }
             }
@@ -5956,8 +5956,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -5965,8 +5965,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 }
@@ -5983,8 +5983,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -5992,8 +5992,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 }
@@ -7152,8 +7152,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -7167,8 +7167,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7207,8 +7207,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7238,8 +7238,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7278,8 +7278,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7303,8 +7303,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 },
@@ -7312,8 +7312,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Rotor",
-                      "Recipe: Rotor"
+                      "Recipe: Rotor",
+                      "Can Produce: Rotor"
                     ]
                   }
                 }
@@ -7342,8 +7342,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -7389,8 +7389,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7414,8 +7414,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Modular Frame",
-                      "Recipe: Modular Frame"
+                      "Recipe: Modular Frame",
+                      "Can Produce: Modular Frame"
                     ]
                   }
                 }
@@ -7432,8 +7432,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Can Produce: Copper Sheet",
-                      "Recipe: Copper Sheet"
+                      "Recipe: Copper Sheet",
+                      "Can Produce: Copper Sheet"
                     ]
                   }
                 },
@@ -7447,8 +7447,8 @@
                           "rule": "HasAny",
                           "args": {
                             "items": [
-                              "Can Produce: Steel Ingot",
-                              "Recipe: Steel Ingot"
+                              "Recipe: Steel Ingot",
+                              "Can Produce: Steel Ingot"
                             ]
                           }
                         },
@@ -7484,8 +7484,8 @@
                                   "rule": "HasAny",
                                   "args": {
                                     "items": [
-                                      "Can Produce: Steel Ingot",
-                                      "Recipe: Steel Ingot"
+                                      "Recipe: Steel Ingot",
+                                      "Can Produce: Steel Ingot"
                                     ]
                                   }
                                 },
@@ -9520,9 +9520,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Plate",
                       "Can Produce: Screw",
+                      "Can Build: Assembler",
                       "Recipe: Reinforced Iron Plate"
                     ]
                   }
@@ -9531,9 +9531,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Plate",
                       "Can Produce: Rubber",
+                      "Can Build: Assembler",
                       "Recipe: Adhered Iron Plate"
                     ]
                   }
@@ -9542,9 +9542,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Plate",
                       "Can Produce: Screw",
+                      "Can Build: Assembler",
                       "Recipe: Bolted Iron Plate"
                     ]
                   }
@@ -9553,9 +9553,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Plate",
-                      "Can Produce: Wire"
+                      "Can Produce: Wire",
+                      "Can Build: Assembler"
                     ]
                   }
                 }
@@ -9582,9 +9582,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Rod",
                       "Can Produce: Screw",
+                      "Can Build: Assembler",
                       "Recipe: Rotor"
                     ]
                   }
@@ -9593,9 +9593,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Copper Sheet",
                       "Can Produce: Screw",
+                      "Can Build: Assembler",
                       "Recipe: Copper Rotor"
                     ]
                   }
@@ -9604,9 +9604,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Steel Pipe",
                       "Can Produce: Wire",
+                      "Can Build: Assembler",
                       "Recipe: Steel Rotor"
                     ]
                   }
@@ -9634,9 +9634,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Steel Pipe",
                       "Can Produce: Wire",
+                      "Can Build: Assembler",
                       "Recipe: Stator"
                     ]
                   }
@@ -9645,9 +9645,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Quickwire",
                       "Can Produce: Steel Pipe",
+                      "Can Build: Assembler",
                       "Recipe: Quickwire Stator"
                     ]
                   }
@@ -9672,9 +9672,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Iron Ingot",
                   "Can Produce: Plastic",
+                  "Can Build: Assembler",
                   "Recipe: Coated Iron Plate"
                 ]
               }
@@ -9697,9 +9697,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Caterium Ingot",
-                  "Can Produce: Copper Ingot"
+                  "Can Produce: Copper Ingot",
+                  "Can Build: Assembler"
                 ]
               }
             },
@@ -9724,9 +9724,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Rubber",
                       "Can Produce: Wire",
+                      "Can Build: Assembler",
                       "Recipe: Insulated Cable"
                     ]
                   }
@@ -9735,9 +9735,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Quickwire",
                       "Can Produce: Rubber",
+                      "Can Build: Assembler",
                       "Recipe: Quickwire Cable"
                     ]
                   }
@@ -9762,9 +9762,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Caterium Ingot",
                   "Can Produce: Copper Ingot",
+                  "Can Build: Assembler",
                   "Recipe: Fused Quickwire"
                 ]
               }
@@ -9790,9 +9790,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Limestone",
                       "Can Produce: Silica",
+                      "Can Build: Assembler",
                       "Recipe: Fine Concrete"
                     ]
                   }
@@ -9801,9 +9801,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Limestone",
                       "Can Produce: Rubber",
+                      "Can Build: Assembler",
                       "Recipe: Rubber Concrete"
                     ]
                   }
@@ -9828,9 +9828,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Limestone",
                   "Can Produce: Raw Quartz",
+                  "Can Build: Assembler",
                   "Recipe: Cheap Silica"
                 ]
               }
@@ -9853,9 +9853,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Coal",
                   "Can Produce: Sulfur",
+                  "Can Build: Assembler",
                   "Recipe: Compacted Coal"
                 ]
               }
@@ -9881,9 +9881,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Rotor",
                       "Can Produce: Stator",
+                      "Can Build: Assembler",
                       "Recipe: Motor"
                     ]
                   }
@@ -9892,9 +9892,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Electromagnetic Control Rod",
                       "Can Produce: Rotor",
+                      "Can Build: Assembler",
                       "Recipe: Electric Motor"
                     ]
                   }
@@ -9922,9 +9922,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Iron Rod",
                       "Can Produce: Reinforced Iron Plate",
+                      "Can Build: Assembler",
                       "Recipe: Modular Frame"
                     ]
                   }
@@ -9933,9 +9933,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Screw",
+                      "Can Build: Assembler",
                       "Recipe: Bolted Frame"
                     ]
                   }
@@ -9944,9 +9944,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Steel Pipe",
+                      "Can Build: Assembler",
                       "Recipe: Steeled Frame"
                     ]
                   }
@@ -9974,9 +9974,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Concrete",
                       "Can Produce: Steel Beam",
+                      "Can Build: Assembler",
                       "Recipe: Encased Industrial Beam"
                     ]
                   }
@@ -9985,9 +9985,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Concrete",
                       "Can Produce: Steel Pipe",
+                      "Can Build: Assembler",
                       "Recipe: Encased Industrial Pipe"
                     ]
                   }
@@ -10012,9 +10012,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Circuit Board",
                   "Can Produce: Crystal Oscillator",
+                  "Can Build: Assembler",
                   "Recipe: Crystal Computer"
                 ]
               }
@@ -10040,9 +10040,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Copper Sheet",
                       "Can Produce: Plastic",
+                      "Can Build: Assembler",
                       "Recipe: Circuit Board"
                     ]
                   }
@@ -10051,9 +10051,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Petroleum Coke",
                       "Can Produce: Rubber",
+                      "Can Build: Assembler",
                       "Recipe: Electrode Circuit Board"
                     ]
                   }
@@ -10062,9 +10062,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Copper Sheet",
                       "Can Produce: Silica",
+                      "Can Build: Assembler",
                       "Recipe: Silicon Circuit Board"
                     ]
                   }
@@ -10073,9 +10073,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Plastic",
                       "Can Produce: Quickwire",
+                      "Can Build: Assembler",
                       "Recipe: Caterium Circuit Board"
                     ]
                   }
@@ -10103,9 +10103,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Copper Sheet",
                       "Can Produce: Quickwire",
+                      "Can Build: Assembler",
                       "Recipe: AI Limiter"
                     ]
                   }
@@ -10114,9 +10114,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Plastic",
                       "Can Produce: Quickwire",
+                      "Can Build: Assembler",
                       "Recipe: Plastic AI Limiter"
                     ]
                   }
@@ -10144,9 +10144,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: AI Limiter",
                       "Can Produce: Stator",
+                      "Can Build: Assembler",
                       "Recipe: Electromagnetic Control Rod"
                     ]
                   }
@@ -10155,9 +10155,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: High-Speed Connector",
                       "Can Produce: Stator",
+                      "Can Build: Assembler",
                       "Recipe: Electromagnetic Connection Rod"
                     ]
                   }
@@ -10182,9 +10182,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Reinforced Iron Plate",
                   "Can Produce: Rotor",
+                  "Can Build: Assembler",
                   "Recipe: Smart Plating"
                 ]
               }
@@ -10207,9 +10207,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Modular Frame",
                   "Can Produce: Steel Beam",
+                  "Can Build: Assembler",
                   "Recipe: Versatile Framework"
                 ]
               }
@@ -10232,9 +10232,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Cable",
                   "Can Produce: Stator",
+                  "Can Build: Assembler",
                   "Recipe: Automated Wiring"
                 ]
               }
@@ -10257,9 +10257,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Aluminum Ingot",
                   "Can Produce: Copper Ingot",
+                  "Can Build: Assembler",
                   "Recipe: Alclad Aluminum Sheet"
                 ]
               }
@@ -10282,9 +10282,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Aluminum Ingot",
                   "Can Produce: Copper Ingot",
+                  "Can Build: Assembler",
                   "Recipe: Alclad Casing"
                 ]
               }
@@ -10310,9 +10310,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Alclad Aluminum Sheet",
                       "Can Produce: Silica",
+                      "Can Build: Assembler",
                       "Recipe: Heat Sink"
                     ]
                   }
@@ -10321,9 +10321,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Assembler",
                       "Can Produce: Aluminum Casing",
                       "Can Produce: Rubber",
+                      "Can Build: Assembler",
                       "Recipe: Heat Exchanger"
                     ]
                   }
@@ -10348,9 +10348,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Biomass",
                   "Can Produce: Mycelia",
+                  "Can Build: Assembler",
                   "Recipe: Fabric"
                 ]
               }
@@ -10373,9 +10373,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Copper Sheet",
                   "Can Produce: Iron Plate",
+                  "Can Build: Assembler",
                   "Recipe: Coated Iron Canister"
                 ]
               }
@@ -10398,9 +10398,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Compacted Coal",
                   "Can Produce: Sulfur",
+                  "Can Build: Assembler",
                   "Recipe: Fine Black Powder"
                 ]
               }
@@ -10423,9 +10423,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Copper Sheet",
                   "Can Produce: Smokeless Powder",
+                  "Can Build: Assembler",
                   "Recipe: Rifle Ammo"
                 ]
               }
@@ -10448,9 +10448,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Assembler",
                   "Can Produce: Black Powder",
                   "Can Produce: Steel Pipe",
+                  "Can Build: Assembler",
                   "Recipe: Nobelisk"
                 ]
               }
@@ -10479,10 +10479,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Crystal Oscillator",
                   "Can Produce: Rotor",
                   "Can Produce: Stator",
+                  "Can Build: Manufacturer",
                   "Recipe: Rigor Motor"
                 ]
               }
@@ -10508,11 +10508,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Encased Industrial Beam",
                       "Can Produce: Modular Frame",
                       "Can Produce: Screw",
                       "Can Produce: Steel Pipe",
+                      "Can Build: Manufacturer",
                       "Recipe: Heavy Modular Frame"
                     ]
                   }
@@ -10521,11 +10521,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Encased Industrial Beam",
                       "Can Produce: Modular Frame",
                       "Can Produce: Rubber",
                       "Can Produce: Screw",
+                      "Can Build: Manufacturer",
                       "Recipe: Heavy Flexible Frame"
                     ]
                   }
@@ -10534,11 +10534,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Concrete",
                       "Can Produce: Encased Industrial Beam",
                       "Can Produce: Modular Frame",
                       "Can Produce: Steel Pipe",
+                      "Can Build: Manufacturer",
                       "Recipe: Heavy Encased Frame"
                     ]
                   }
@@ -10566,10 +10566,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Cable",
                       "Can Produce: Circuit Board",
                       "Can Produce: Plastic",
+                      "Can Build: Manufacturer",
                       "Recipe: Computer"
                     ]
                   }
@@ -10578,10 +10578,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Circuit Board",
                       "Can Produce: Quickwire",
                       "Can Produce: Rubber",
+                      "Can Build: Manufacturer",
                       "Recipe: Caterium Computer"
                     ]
                   }
@@ -10609,10 +10609,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Cable",
                       "Can Produce: Quartz Crystal",
                       "Can Produce: Reinforced Iron Plate",
+                      "Can Build: Manufacturer",
                       "Recipe: Crystal Oscillator"
                     ]
                   }
@@ -10621,10 +10621,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: AI Limiter",
                       "Can Produce: Quartz Crystal",
                       "Can Produce: Rubber",
+                      "Can Build: Manufacturer",
                       "Recipe: Insulated Crystal Oscillator"
                     ]
                   }
@@ -10652,10 +10652,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Cable",
                       "Can Produce: Circuit Board",
                       "Can Produce: Quickwire",
+                      "Can Build: Manufacturer",
                       "Recipe: High-Speed Connector"
                     ]
                   }
@@ -10664,10 +10664,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Circuit Board",
                       "Can Produce: Quickwire",
                       "Can Produce: Silica",
+                      "Can Build: Manufacturer",
                       "Recipe: Silicon High-Speed Connector"
                     ]
                   }
@@ -10692,10 +10692,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Plastic",
                   "Can Produce: Reinforced Iron Plate",
                   "Can Produce: Rotor",
+                  "Can Build: Manufacturer",
                   "Recipe: Plastic Smart Plating"
                 ]
               }
@@ -10718,10 +10718,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Modular Frame",
                   "Can Produce: Rubber",
                   "Can Produce: Steel Beam",
+                  "Can Build: Manufacturer",
                   "Recipe: Flexible Framework"
                 ]
               }
@@ -10744,10 +10744,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: High-Speed Connector",
                   "Can Produce: Stator",
                   "Can Produce: Wire",
+                  "Can Build: Manufacturer",
                   "Recipe: Automated Speed Wiring"
                 ]
               }
@@ -10773,10 +10773,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Aluminum Casing",
                       "Can Produce: Computer",
                       "Can Produce: Crystal Oscillator",
+                      "Can Build: Manufacturer",
                       "Recipe: Radio Control Unit"
                     ]
                   }
@@ -10785,10 +10785,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Heat Sink",
                       "Can Produce: High-Speed Connector",
                       "Can Produce: Quartz Crystal",
+                      "Can Build: Manufacturer",
                       "Recipe: Radio Connection Unit"
                     ]
                   }
@@ -10797,11 +10797,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Manufacturer",
                       "Can Produce: Aluminum Casing",
                       "Can Produce: Circuit Board",
                       "Can Produce: Crystal Oscillator",
                       "Can Produce: Rubber",
+                      "Can Build: Manufacturer",
                       "Recipe: Radio Control System"
                     ]
                   }
@@ -10826,13 +10826,13 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
-                  "Can Produce: Hazmat Suit",
-                  "Can Produce: Iodine-Infused Filter",
                   "Can Produce: Quickwire",
                   "Can Produce: Silica",
                   "Can Produce: Sulfur",
                   "Can Produce: Uranium",
+                  "Can Produce: Hazmat Suit",
+                  "Can Produce: Iodine-Infused Filter",
+                  "Can Build: Manufacturer",
                   "Recipe: Infused Uranium Cell"
                 ]
               }
@@ -10855,10 +10855,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Coal",
                   "Can Produce: Fabric",
                   "Can Produce: Rubber",
+                  "Can Build: Manufacturer",
                   "Recipe: Gas Filter"
                 ]
               }
@@ -10881,10 +10881,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Aluminum Casing",
                   "Can Produce: Gas Filter",
                   "Can Produce: Quickwire",
+                  "Can Build: Manufacturer",
                   "Recipe: Iodine-Infused Filter"
                 ]
               }
@@ -10907,10 +10907,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Manufacturer",
                   "Can Produce: Reanimated SAM",
                   "Can Produce: Steel Pipe",
                   "Can Produce: Wire",
+                  "Can Build: Manufacturer",
                   "Recipe: SAM Fluctuator"
                 ]
               }
@@ -10960,9 +10960,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Packager",
                       "Can Produce: Empty Canister",
                       "Can Produce: Fuel",
+                      "Can Build: Packager",
                       "Recipe: Packaged Fuel"
                     ]
                   }
@@ -11008,9 +11008,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Packager",
                       "Can Produce: Empty Canister",
                       "Can Produce: Turbofuel",
+                      "Can Build: Packager",
                       "Recipe: Packaged Turbofuel"
                     ]
                   }
@@ -11056,9 +11056,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Packager",
                       "Can Produce: Empty Canister",
                       "Can Produce: Water",
+                      "Can Build: Packager",
                       "Recipe: Packaged Water"
                     ]
                   }
@@ -11146,9 +11146,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Polymer Resin",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Residual Plastic"
                         ]
                       }
@@ -11180,9 +11180,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Fuel",
                           "Can Produce: Rubber",
+                          "Can Build: Refinery",
                           "Recipe: Recycled Plastic"
                         ]
                       }
@@ -11266,9 +11266,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Polymer Resin",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Residual Rubber"
                         ]
                       }
@@ -11300,9 +11300,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Fuel",
                           "Can Produce: Plastic",
+                          "Can Build: Refinery",
                           "Recipe: Recycled Rubber"
                         ]
                       }
@@ -11350,9 +11350,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Wire",
+                      "Can Build: Refinery",
                       "Recipe: Coated Cable"
                     ]
                   }
@@ -11398,9 +11398,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Copper Ingot",
                       "Can Produce: Water",
+                      "Can Build: Refinery",
                       "Recipe: Steamed Copper Sheet"
                     ]
                   }
@@ -11800,9 +11800,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Limestone",
                       "Can Produce: Water",
+                      "Can Build: Refinery",
                       "Recipe: Wet Concrete"
                     ]
                   }
@@ -11848,9 +11848,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Bauxite",
                       "Can Produce: Water",
+                      "Can Build: Refinery",
                       "Recipe: Alumina Solution"
                     ]
                   }
@@ -11896,9 +11896,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Nitric Acid",
                       "Can Produce: Raw Quartz",
+                      "Can Build: Refinery",
                       "Recipe: Quartz Purification"
                     ]
                   }
@@ -11947,9 +11947,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Raw Quartz",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Pure Quartz Crystal"
                         ]
                       }
@@ -11981,9 +11981,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Nitric Acid",
                           "Can Produce: Raw Quartz",
+                          "Can Build: Refinery",
                           "Recipe: Quartz Purification"
                         ]
                       }
@@ -12034,9 +12034,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Iron Ore",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Pure Iron Ingot"
                         ]
                       }
@@ -12068,9 +12068,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Iron Ore",
                           "Can Produce: Sulfuric Acid",
+                          "Can Build: Refinery",
                           "Recipe: Leached Iron ingot"
                         ]
                       }
@@ -12121,9 +12121,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Copper Ore",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Pure Copper Ingot"
                         ]
                       }
@@ -12155,9 +12155,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Copper Ore",
                           "Can Produce: Sulfuric Acid",
+                          "Can Build: Refinery",
                           "Recipe: Leached Copper Ingot"
                         ]
                       }
@@ -12208,9 +12208,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Caterium Ore",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Pure Caterium Ingot"
                         ]
                       }
@@ -12242,9 +12242,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Caterium Ore",
                           "Can Produce: Sulfuric Acid",
+                          "Can Build: Refinery",
                           "Recipe: Leached Caterium Ingot"
                         ]
                       }
@@ -12342,9 +12342,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Bauxite",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Alumina Solution"
                         ]
                       }
@@ -12376,9 +12376,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Bauxite",
                           "Can Produce: Water",
+                          "Can Build: Refinery",
                           "Recipe: Sloppy Alumina"
                         ]
                       }
@@ -12429,9 +12429,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Alumina Solution",
                           "Can Produce: Coal",
+                          "Can Build: Refinery",
                           "Recipe: Aluminum Scrap"
                         ]
                       }
@@ -12463,9 +12463,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Alumina Solution",
                           "Can Produce: Petroleum Coke",
+                          "Can Build: Refinery",
                           "Recipe: Electrode Aluminum Scrap"
                         ]
                       }
@@ -12513,9 +12513,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Sulfur",
                       "Can Produce: Water",
+                      "Can Build: Refinery",
                       "Recipe: Sulfuric Acid"
                     ]
                   }
@@ -12561,9 +12561,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Polymer Resin",
                       "Can Produce: Water",
+                      "Can Build: Refinery",
                       "Recipe: Polyester Fabric"
                     ]
                   }
@@ -12609,9 +12609,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Packaged Water",
+                      "Can Build: Refinery",
                       "Recipe: Diluted Packaged Fuel"
                     ]
                   }
@@ -12660,9 +12660,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Compacted Coal",
                           "Can Produce: Fuel",
+                          "Can Build: Refinery",
                           "Recipe: Turbofuel"
                         ]
                       }
@@ -12694,9 +12694,9 @@
                       "rule": "HasAll",
                       "args": {
                         "items": [
-                          "Can Build: Refinery",
                           "Can Produce: Compacted Coal",
                           "Can Produce: Heavy Oil Residue",
+                          "Can Build: Refinery",
                           "Recipe: Turbo Heavy Fuel"
                         ]
                       }
@@ -12744,9 +12744,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Refinery",
                       "Can Produce: Black Powder",
                       "Can Produce: Heavy Oil Residue",
+                      "Can Build: Refinery",
                       "Recipe: Smokeless Powder"
                     ]
                   }
@@ -12798,9 +12798,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Water",
+                      "Can Build: Blender",
                       "Recipe: Diluted Fuel"
                     ]
                   }
@@ -12846,10 +12846,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Dissolved Silica",
                       "Can Produce: Limestone",
                       "Can Produce: Water",
+                      "Can Build: Blender",
                       "Recipe: Quartz Purification"
                     ]
                   }
@@ -12895,11 +12895,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Bauxite",
                       "Can Produce: Coal",
                       "Can Produce: Sulfuric Acid",
                       "Can Produce: Water",
+                      "Can Build: Blender",
                       "Recipe: Instant Scrap"
                     ]
                   }
@@ -12945,10 +12945,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Iron Plate",
                       "Can Produce: Nitrogen Gas",
                       "Can Produce: Water",
+                      "Can Build: Blender",
                       "Recipe: Nitric Acid"
                     ]
                   }
@@ -12994,12 +12994,12 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Concrete",
-                      "Can Produce: Hazmat Suit",
-                      "Can Produce: Iodine-Infused Filter",
                       "Can Produce: Sulfuric Acid",
                       "Can Produce: Uranium",
+                      "Can Produce: Hazmat Suit",
+                      "Can Produce: Iodine-Infused Filter",
+                      "Can Build: Blender",
                       "Recipe: Encased Uranium Cell"
                     ]
                   }
@@ -13045,11 +13045,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Blender",
                       "Can Produce: Fuel",
                       "Can Produce: Heavy Oil Residue",
                       "Can Produce: Petroleum Coke",
                       "Can Produce: Sulfur",
+                      "Can Build: Blender",
                       "Recipe: Turbo Blend Fuel"
                     ]
                   }
@@ -13258,9 +13258,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Miner Mk.1",
                   "Can Produce: Hazmat Suit",
-                  "Can Produce: Iodine-Infused Filter"
+                  "Can Produce: Iodine-Infused Filter",
+                  "Can Build: Miner Mk.1"
                 ]
               }
             },
@@ -13506,9 +13506,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Iron Ingot",
                   "Can Produce: Steel Ingot",
+                  "Can Build: Foundry",
                   "Recipe: Steel Cast Plate"
                 ]
               }
@@ -13531,9 +13531,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Concrete",
                   "Can Produce: Steel Ingot",
+                  "Can Build: Foundry",
                   "Recipe: Molded Steel Pipe"
                 ]
               }
@@ -13556,9 +13556,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Concrete",
                   "Can Produce: Steel Ingot",
+                  "Can Build: Foundry",
                   "Recipe: Molded Beam"
                 ]
               }
@@ -13581,9 +13581,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Coal",
                   "Can Produce: Raw Quartz",
+                  "Can Build: Foundry",
                   "Recipe: Fused Quartz Crystal"
                 ]
               }
@@ -13609,9 +13609,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Copper Ore",
                       "Can Produce: Iron Ore",
+                      "Can Build: Foundry",
                       "Recipe: Iron Alloy Ingot"
                     ]
                   }
@@ -13620,9 +13620,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Iron Ore",
-                      "Can Produce: Limestone"
+                      "Can Produce: Limestone",
+                      "Can Build: Foundry"
                     ]
                   }
                 }
@@ -13649,9 +13649,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Coal",
                       "Can Produce: Iron Ore",
+                      "Can Build: Foundry",
                       "Recipe: Steel Ingot"
                     ]
                   }
@@ -13660,9 +13660,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Iron Ore",
                       "Can Produce: Petroleum Coke",
+                      "Can Build: Foundry",
                       "Recipe: Coke Steel Ingot"
                     ]
                   }
@@ -13671,9 +13671,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Compacted Coal",
                       "Can Produce: Iron Ore",
+                      "Can Build: Foundry",
                       "Recipe: Compacted Steel Ingot"
                     ]
                   }
@@ -13682,9 +13682,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Coal",
                       "Can Produce: Iron Ingot",
+                      "Can Build: Foundry",
                       "Recipe: Solid Steel Ingot"
                     ]
                   }
@@ -13712,9 +13712,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Copper Ore",
                       "Can Produce: Iron Ore",
+                      "Can Build: Foundry",
                       "Recipe: Copper Alloy Ingot"
                     ]
                   }
@@ -13723,9 +13723,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Can Build: Foundry",
                       "Can Produce: Copper Ore",
                       "Can Produce: Petroleum Coke",
+                      "Can Build: Foundry",
                       "Recipe: Tempered Copper Ingot"
                     ]
                   }
@@ -13750,9 +13750,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Caterium Ore",
                   "Can Produce: Petroleum Coke",
+                  "Can Build: Foundry",
                   "Recipe: Tempered Caterium Ingot"
                 ]
               }
@@ -13775,9 +13775,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Foundry",
                   "Can Produce: Aluminum Scrap",
                   "Can Produce: Silica",
+                  "Can Build: Foundry",
                   "Recipe: Aluminum Ingot"
                 ]
               }
@@ -13895,11 +13895,11 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Equipment Workshop",
                   "Can Produce: Alclad Aluminum Sheet",
                   "Can Produce: Fabric",
                   "Can Produce: Plastic",
                   "Can Produce: Rubber",
+                  "Can Build: Equipment Workshop",
                   "Recipe: Hazmat Suit"
                 ]
               }
@@ -13922,9 +13922,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Equipment Workshop",
                   "Can Produce: Coal",
                   "Can Produce: Sulfur",
+                  "Can Build: Equipment Workshop",
                   "Recipe: Black Powder"
                 ]
               }
@@ -13947,10 +13947,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Can Build: Equipment Workshop",
                   "Can Produce: Reinforced Iron Plate",
                   "Can Produce: Screw",
                   "Can Produce: Wire",
+                  "Can Build: Equipment Workshop",
                   "Recipe: Object Scanner"
                 ]
               }
@@ -29791,6 +29791,312 @@
         ]
       },
       "world_description": "Satisfactory is a first-person open-world factory building game with a dash of exploration and combat.\nExplore an alien planet, create multi-story factories, and enter conveyor belt heaven!",
+      "slot_data": {
+        "Data": {
+          "HubLayout": [
+            [
+              {
+                "1338025": 200,
+                "1338051": 100,
+                "1338052": 100
+              },
+              {
+                "1338051": 150,
+                "1338052": 150,
+                "1338115": 300
+              },
+              {
+                "1338115": 300,
+                "1338094": 300,
+                "1338051": 100
+              },
+              {
+                "1338115": 100,
+                "1338094": 200,
+                "1338025": 200
+              }
+            ],
+            [
+              {
+                "1338017": 200,
+                "1338052": 200,
+                "1338094": 500,
+                "1338051": 300
+              },
+              {
+                "1338094": 500,
+                "1338017": 100,
+                "1338025": 100
+              },
+              {
+                "1338091": 50,
+                "1338051": 300,
+                "1338017": 150
+              },
+              {
+                "1338025": 400,
+                "1338115": 500,
+                "1338052": 200,
+                "1338051": 200
+              },
+              {
+                "1338090": 50,
+                "1338025": 200,
+                "1338052": 300,
+                "1338051": 300
+              }
+            ],
+            [
+              {
+                "1338090": 150,
+                "1338091": 50,
+                "1338017": 500
+              },
+              {
+                "1338059": 25,
+                "1338091": 100,
+                "1338017": 100,
+                "1338051": 400
+              },
+              {
+                "1338059": 50,
+                "1338091": 150,
+                "1338025": 500,
+                "1338115": 1000
+              },
+              {
+                "1338090": 100,
+                "1338052": 600,
+                "1338115": 1500
+              }
+            ],
+            [
+              {
+                "1338059": 100,
+                "1338102": 200,
+                "1338017": 500,
+                "1338025": 1000
+              },
+              {
+                "1338102": 200,
+                "1338104": 200,
+                "1338090": 400
+              },
+              {
+                "1338104": 100,
+                "1338059": 100,
+                "1338091": 200,
+                "1338025": 500
+              },
+              {
+                "1338036": 50,
+                "1338102": 100,
+                "1338059": 200,
+                "1338115": 2000
+              },
+              {
+                "1338030": 500,
+                "1338104": 300,
+                "1338036": 50
+              }
+            ],
+            [
+              {
+                "1338060": 50,
+                "1338017": 100,
+                "1338051": 500
+              },
+              {
+                "1338060": 50,
+                "1338036": 100,
+                "1338104": 500,
+                "1338030": 500
+              },
+              {
+                "1338092": 200,
+                "1338036": 300,
+                "1338059": 400
+              },
+              {
+                "1338077": 200,
+                "1338102": 400,
+                "1338030": 1000
+              },
+              {
+                "1338060": 100,
+                "1338036": 100,
+                "1338077": 200,
+                "1338092": 200
+              }
+            ],
+            [
+              {
+                "1338060": 200,
+                "1338059": 200,
+                "1338077": 400,
+                "1338017": 1000
+              },
+              {
+                "1338060": 250,
+                "1338036": 500,
+                "1338104": 1000,
+                "1338102": 1000
+              },
+              {
+                "1338024": 50,
+                "1338104": 4000,
+                "1338030": 1000
+              },
+              {
+                "1338045": 50,
+                "1338077": 1000,
+                "1338092": 1000
+              },
+              {
+                "1338045": 50,
+                "1338024": 100,
+                "1338092": 400,
+                "1338025": 1000
+              }
+            ],
+            [
+              {
+                "1338024": 100,
+                "1338045": 100,
+                "1338060": 250,
+                "1338092": 500
+              },
+              {
+                "1338002": 100,
+                "1338045": 100,
+                "1338024": 100,
+                "1338060": 250
+              },
+              {
+                "1338002": 200,
+                "1338036": 400,
+                "1338090": 600
+              },
+              {
+                "1338187": 50,
+                "1338007": 100,
+                "1338087": 500
+              },
+              {
+                "1338002": 200,
+                "1338007": 400,
+                "1338024": 200,
+                "1338077": 1000
+              }
+            ],
+            [
+              {
+                "1338088": 50,
+                "1338002": 100,
+                "1338007": 200,
+                "1338060": 300
+              },
+              {
+                "1338106": 50,
+                "1338045": 200,
+                "1338017": 1000,
+                "1338025": 2000
+              },
+              {
+                "1338088": 50,
+                "1338007": 200,
+                "1338002": 400,
+                "1338115": 3000
+              },
+              {
+                "1338042": 50,
+                "1338106": 100,
+                "1338104": 1000
+              },
+              {
+                "1338109": 50,
+                "1338042": 100,
+                "1338026": 200,
+                "1338087": 2500
+              }
+            ],
+            [
+              {
+                "1338042": 100,
+                "1338088": 250,
+                "1338026": 500
+              },
+              {
+                "1338122": 50,
+                "1338124": 100,
+                "1338109": 200,
+                "1338106": 400
+              },
+              {
+                "1338014": 100,
+                "1338122": 250,
+                "1338124": 500,
+                "1338042": 500
+              },
+              {
+                "1338107": 100,
+                "1338109": 250,
+                "1338088": 500,
+                "1338126": 1000
+              },
+              {
+                "1338122": 250,
+                "1338124": 250,
+                "1338002": 500,
+                "1338051": 10000
+              }
+            ]
+          ],
+          "ExplorationCosts": {
+            "1338057": 40,
+            "1338099": 20,
+            "1338043": 4,
+            "1338174": 200,
+            "1338151": 400,
+            "1338150": 20
+          },
+          "Options": {
+            "GoalSelection": [
+              "Space Elevator Phase"
+            ],
+            "GoalRequirement": 0,
+            "FinalElevatorPhase": 2,
+            "FinalResourceSinkPointsTotal": 2166000,
+            "FinalResourceSinkPointsPerMinute": 50000,
+            "FreeSampleEquipment": 1,
+            "FreeSampleBuildings": 5,
+            "FreeSampleParts": -2,
+            "FreeSampleRadioactive": false,
+            "EnergyLink": true,
+            "StartingRecipies": [
+              1338203,
+              1338215,
+              1338218,
+              1338220,
+              1338224,
+              1338244,
+              1338259,
+              1338262,
+              1338347,
+              1338600,
+              1338601,
+              1338616,
+              1338617
+            ]
+          },
+          "SlotDataVersion": 1,
+          "UT": {
+            "Seed": 0.028579171973249107,
+            "RandomizeTier0": true
+          }
+        },
+        "DeathLink": false
+      },
       "web": {
         "theme": "dirt",
         "tutorials": [
