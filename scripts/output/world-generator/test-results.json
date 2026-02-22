@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-02-22T21:23:36.899028+00:00",
+    "timestamp": "2026-02-22T23:02:37.016364+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -18,7 +18,7 @@
     "shapez": {
       "template": "shapez.yaml",
       "game_name": "shapez",
-      "timestamp": "2026-02-22T21:23:40.248118+00:00",
+      "timestamp": "2026-02-22T23:02:40.479453+00:00",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 4.03
+          "processing_time_seconds": 4.63
         },
         "spoiler_test": {
           "success": false,
@@ -40,7 +40,7 @@
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
           "error": null,
-          "processing_time_seconds": 0.54
+          "processing_time_seconds": 0.57
         },
         "seed_generation": {
           "success": false

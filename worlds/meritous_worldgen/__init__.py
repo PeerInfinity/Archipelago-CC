@@ -506,7 +506,7 @@ class MeritousWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Wervyn Anixil", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
@@ -521,7 +521,7 @@ class MeritousWorld(RuleWorldMixin, World):
 
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("Victory", self.player)
+            lambda state: state.has_any(["Full Victory", "Victory"], self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

@@ -112604,7 +112604,35 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_hk_siblings_ending"
+          },
+          {
+            "type": "helper",
+            "name": "_hk_can_beat_radiance"
+          },
+          {
+            "type": "state_method",
+            "method": "count",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Godhome_Flower_Quest"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_grub_goal"
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

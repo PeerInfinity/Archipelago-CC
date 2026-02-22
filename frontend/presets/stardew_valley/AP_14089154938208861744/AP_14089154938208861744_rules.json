@@ -73109,6 +73109,10 @@
   },
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      },
       "total_progression_items": 367
     }
   },

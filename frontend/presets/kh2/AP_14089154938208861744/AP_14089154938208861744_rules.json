@@ -32268,7 +32268,16 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory",
+        "count": {
+          "type": "constant",
+          "value": 1
+        }
+      }
+    }
   },
   "helpers": {
     "1": {

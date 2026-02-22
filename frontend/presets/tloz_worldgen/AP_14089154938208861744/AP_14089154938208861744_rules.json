@@ -12075,7 +12075,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Rescued Zelda!"
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true

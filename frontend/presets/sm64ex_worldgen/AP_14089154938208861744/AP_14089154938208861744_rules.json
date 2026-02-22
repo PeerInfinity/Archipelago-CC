@@ -3942,7 +3942,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "BitS: Top"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true

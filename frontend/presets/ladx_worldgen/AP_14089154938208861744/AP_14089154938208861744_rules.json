@@ -25920,6 +25920,10 @@
       ],
       "prog_items_init": {
         "RUPEES": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "An Alarm Clock"
       }
     }
   },
