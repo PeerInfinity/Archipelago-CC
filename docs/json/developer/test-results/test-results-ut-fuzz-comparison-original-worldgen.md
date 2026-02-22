@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-02-22 16:08:47 UTC
+**Generated:** 2026-02-19 21:59:55 UTC
 
 **Source Data Last Updated:** 2026-02-19T21:12:34
 
@@ -20,17 +20,17 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 87
 - **Passing Both:** 41 (47.1%)
 - **Passing Original Only:** 0 (0.0%)
-- **Passing Worldgen Only:** 26 (29.9%)
-- **Passing Neither:** 20 (23.0%)
-- **Passing Worldgen with no custom code:** 41 (47.1%)
-- **Passing Worldgen Only with no custom code:** 14 (16.1%)
+- **Passing Worldgen Only:** 27 (31.0%)
+- **Passing Neither:** 19 (21.8%)
+- **Passing Worldgen with no custom code:** 40 (46.0%)
+- **Passing Worldgen Only with no custom code:** 13 (14.9%)
 
 ## Full Comparison
 
 | Game Name | Original Result | Worldgen Result | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 1/10 | ✅ | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | ❌ | ✅ | 14.0KB | ✅ | 664.1KB |
+| A Link to the Past | ❌ | ⚠️ 8/9 | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ✅ | ✅ | ✅ | 25.6KB |
@@ -65,7 +65,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Kingdom Hearts | ❌ 4/10 | ❌ 4/10 | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ❌ | 20.4KB | ✅ | 1630.5KB |
 | Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ❌ | ⚠️ 8/10 | 3.6KB | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ❌ | ✅ | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ | ✅ | 38.2KB | 10.7KB | 939.9KB |
 | Links Awakening DX | ❌ 1/10 | ✅ | 7.3KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 122.7KB |
@@ -85,14 +85,14 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Pokemon Red and Blue | ❌ | ❌ | 12.2KB | 13.0KB | 1270.1KB |
 | Raft | ✅ | ✅ | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 145.0KB |
-| SMZ3 | ❌ | ❌ 2/10 | 54.2KB | 51.3KB | 1886.9KB |
+| SMZ3 | ❌ | ❌ 1/10 | 54.2KB | 51.3KB | 1886.9KB |
 | Satisfactory | ❌ | ✅ | 41.8KB | ✅ | 1618.9KB |
 | Saving Princess | ❌ 3/10 | ✅ | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ | ✅ | 5.6KB | 7.5KB | 414.9KB |
 | Shivers | ❌ | ✅ | ✅ | ✅ | 149.8KB |
 | Sonic Adventure 2 Battle | ❌ 1/10 | ✅ | ✅ | ✅ | 262.1KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.7KB |
-| Stardew Valley | ❌ | ❌ 1/10 | 18.8KB | 8.0KB | 2407.6KB |
+| Stardew Valley | ❌ | ❌ | 18.8KB | 8.0KB | 2407.6KB |
 | Subnautica | ❌ 1/10 | ✅ | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ | ✅ | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ❌ 4/10 | ✅ | ✅ | ✅ | 100.9KB |
@@ -109,13 +109,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | The Witness | ✅ | ✅ | 14.2KB | ✅ | 392.1KB |
 | Timespinner | ❌ | ❌ 4/10 | 2.2KB | ✅ | 262.7KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.0KB |
-| VVVVVV | ⚠️ 8/10 | ❌ | 3.8KB | ✅ | 22.4KB |
+| VVVVVV | ⚠️ 8/10 | ✅ | 3.8KB | ✅ | 22.4KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.0KB |
 | Yacht Dice | ❌ | ❌ | 0.9KB | 285.0KB | 248.4KB |
-| Yoshi's Island | ❌ 3/10 | ⚠️ 9/10 | 9.2KB | ✅ | 295.2KB |
+| Yoshi's Island | ❌ 3/10 | ✅ | 9.2KB | ✅ | 295.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ⚠️ 5/10 | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.1KB |
-| shapez | ⚠️ 8/10 | ✅ | ✅ | ✅ | 153.7KB |
+| shapez | ⚠️ 8/10 | ⚠️ 9/10 | ✅ | ✅ | 153.7KB |
 
 ## Games Passing Both (41)
 
@@ -165,14 +165,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Undertale | ✅ | ✅ | 56.0KB |
 | Wargroove | ✅ | ✅ | 44.0KB |
 
-## Games Passing Worldgen Only (26)
+## Games Passing Worldgen Only (27)
 
 These games pass in the Worldgen UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | 14.0KB | ✅ | 664.1KB |
 | Castlevania 64 | ✅ | ✅ | 137.7KB |
 | Celeste (Open World) | ✅ | ✅ | 1039.3KB |
 | DLCQuest | 1.2KB | ✅ | 49.7KB |
@@ -181,6 +180,7 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Faxanadu | ✅ | ✅ | 68.0KB |
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
 | Jak and Daxter: The Precursor Legacy | 21.7KB | 4.6KB | 257.6KB |
+| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Links Awakening DX | 7.3KB | ✅ | 703.0KB |
 | Mega Man 2 | ✅ | ✅ | 51.6KB |
 | Metamath | ✅ | ✅ | 45.8KB |
@@ -196,20 +196,21 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Super Mario World | ✅ | ✅ | 177.6KB |
 | The Messenger | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | 7.0KB | ✅ | 250.1KB |
-| shapez | ✅ | ✅ | 153.7KB |
+| VVVVVV | 3.8KB | ✅ | 22.4KB |
+| Yoshi's Island | 9.2KB | ✅ | 295.2KB |
 
-## Games Passing Neither (20)
+## Games Passing Neither (19)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Link to the Past | 14.0KB | ✅ | 664.1KB |
 | Factorio | 8.8KB | ✅ | 290.0KB |
 | Hollow Knight | ✅ | ✅ | 3500.0KB |
 | Kingdom Hearts | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | 20.4KB | ✅ | 1630.5KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Ocarina of Time | ✅ | ✅ | 1274.3KB |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1350.0KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1270.1KB |
@@ -219,11 +220,10 @@ These games fail in both Universal Tracker versions.
 | Super Metroid | 61.0KB | 114.5KB | 625.0KB |
 | Terraria | 16.9KB | ✅ | 278.6KB |
 | Timespinner | 2.2KB | ✅ | 262.7KB |
-| VVVVVV | 3.8KB | ✅ | 22.4KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
-| Yoshi's Island | 9.2KB | ✅ | 295.2KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ✅ | ✅ | 321.1KB |
+| shapez | ✅ | ✅ | 153.7KB |
 
 ## Notes
 

@@ -4,6 +4,7 @@
  * Handles virtual event items that are computed based on progression item collection:
  * - "Received Progression Item": Incremented by 1 for each item collected (ALL items, not just advancement)
  * - "Received Progression Percent": Computed as (received_progression_item_count * 100) // total_progression_items
+ * - "Received Progressive Weapon": Max count across all weapon types (Progressive Weapon/Sword/Club/Dagger)
  *
  * IMPORTANT: In Python's StardewValleyWorld.collect(), the received_progression_item counter
  * is incremented for EVERY item that gets successfully collected, not just advancement items.
@@ -14,6 +15,9 @@
  */
 
 import * as helpers from './helpers.js';
+
+// Weapon types that contribute to "Received Progressive Weapon" (matches APWeapon.all_weapons)
+const ALL_WEAPONS = ['Progressive Weapon', 'Progressive Sword', 'Progressive Club', 'Progressive Dagger'];
 
 /**
  * State module for Stardew Valley
@@ -58,9 +62,13 @@ export const stardewValleyStateModule = {
       sm.inventory['Received Progression Percent'] = 0;
       sm._logDebug('[Stardew Valley Logic] Created Received Progression Percent (was missing)');
     }
+    if (!('Received Progressive Weapon' in sm.inventory)) {
+      sm.inventory['Received Progressive Weapon'] = 0;
+      sm._logDebug('[Stardew Valley Logic] Created Received Progressive Weapon (was missing)');
+    }
 
     sm._logDebug(
-      `[Stardew Valley Logic] Virtual items initialized: Progression Item=${sm.inventory['Received Progression Item']}, Progression Percent=${sm.inventory['Received Progression Percent']}, total=${sm.totalProgressionItems || 0}`
+      `[Stardew Valley Logic] Virtual items initialized: Progression Item=${sm.inventory['Received Progression Item']}, Progression Percent=${sm.inventory['Received Progression Percent']}, Progressive Weapon=${sm.inventory['Received Progressive Weapon']}, total=${sm.totalProgressionItems || 0}`
     );
   },
 
@@ -78,6 +86,12 @@ export const stardewValleyStateModule = {
    * @param {number} count - How many were added
    */
   afterItemAdded(sm, itemName, count) {
+    // When use_resolved_items is enabled, the sphere log's resolved_items already
+    // contain the correct virtual item values. Skip hooks to avoid double-counting.
+    if (sm._skipGameLogicHooks) {
+      return;
+    }
+
     // Check if this item is a known game item
     // We count ALL items toward progression, not just advancement items
     // This matches Python's StardewValleyWorld.collect() behavior
@@ -90,7 +104,7 @@ export const stardewValleyStateModule = {
     }
 
     // Skip virtual progression items to avoid counting them recursively
-    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent') {
+    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent' || itemName === 'Received Progressive Weapon') {
       return;
     }
 
@@ -109,6 +123,16 @@ export const stardewValleyStateModule = {
         `[Stardew Valley Logic] Updated progression: items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
       );
     }
+
+    // Update "Received Progressive Weapon" = max count across all weapon types
+    if (ALL_WEAPONS.includes(itemName)) {
+      let maxWeapon = 0;
+      for (const weapon of ALL_WEAPONS) {
+        maxWeapon = Math.max(maxWeapon, sm.inventory[weapon] || 0);
+      }
+      sm.inventory['Received Progressive Weapon'] = maxWeapon;
+      sm._logDebug(`[Stardew Valley Logic] Updated Progressive Weapon: ${maxWeapon}`);
+    }
   },
 
   /**
@@ -120,6 +144,11 @@ export const stardewValleyStateModule = {
    * @param {number} count - How many were removed
    */
   afterItemRemoved(sm, itemName, count) {
+    // When use_resolved_items is enabled, skip hooks to avoid double-counting.
+    if (sm._skipGameLogicHooks) {
+      return;
+    }
+
     // Check if this item is a known game item
     const itemDef = sm.itemData[itemName];
     if (!itemDef) {
@@ -128,7 +157,7 @@ export const stardewValleyStateModule = {
     }
 
     // Skip virtual progression items to avoid counting them recursively
-    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent') {
+    if (itemName === 'Received Progression Item' || itemName === 'Received Progression Percent' || itemName === 'Received Progressive Weapon') {
       return;
     }
 
@@ -145,6 +174,16 @@ export const stardewValleyStateModule = {
       sm._logDebug(
         `[Stardew Valley Logic] Updated progression (after removal): items=${sm.inventory['Received Progression Item']}, percent=${newPercent}`
       );
+    }
+
+    // Recompute "Received Progressive Weapon" on weapon removal
+    if (ALL_WEAPONS.includes(itemName)) {
+      let maxWeapon = 0;
+      for (const weapon of ALL_WEAPONS) {
+        maxWeapon = Math.max(maxWeapon, sm.inventory[weapon] || 0);
+      }
+      sm.inventory['Received Progressive Weapon'] = maxWeapon;
+      sm._logDebug(`[Stardew Valley Logic] Updated Progressive Weapon (after removal): ${maxWeapon}`);
     }
   },
 
