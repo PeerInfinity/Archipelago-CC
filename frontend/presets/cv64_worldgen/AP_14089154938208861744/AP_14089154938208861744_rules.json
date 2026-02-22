@@ -5045,6 +5045,10 @@
       ],
       "prog_items_init": {
         "gold": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "The Count Downed"
       }
     }
   },

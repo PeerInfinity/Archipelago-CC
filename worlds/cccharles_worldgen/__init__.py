@@ -1692,7 +1692,7 @@ class CCCharlesWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Final Boss", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

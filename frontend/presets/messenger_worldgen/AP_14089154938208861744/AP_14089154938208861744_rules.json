@@ -7391,6 +7391,10 @@
       ],
       "prog_items_init": {
         "Shards": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Do the Thing!"
       }
     }
   },

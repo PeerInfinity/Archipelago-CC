@@ -450,17 +450,6 @@
     "template_file": "DOOM 1993.yaml",
     "world_directory": "doom_1993"
   },
-  "DOOM 1993 WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "DOOM 1993 WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "DOOM 1993 WorldGen.yaml",
-    "world_directory": "doom_1993_worldgen"
-  },
   "DOOM II": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -471,17 +460,6 @@
     "has_custom_game_logic": false,
     "template_file": "DOOM II.yaml",
     "world_directory": "doom_ii"
-  },
-  "DOOM II WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "DOOM II WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "DOOM II WorldGen.yaml",
-    "world_directory": "doom_ii_worldgen"
   },
   "Dark Souls III": {
     "exporter_path": null,
@@ -636,17 +614,6 @@
     "has_custom_game_logic": false,
     "template_file": "Heretic.yaml",
     "world_directory": "heretic"
-  },
-  "Heretic WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Heretic WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Heretic WorldGen.yaml",
-    "world_directory": "heretic_worldgen"
   },
   "Hollow Knight": {
     "exporter_path": null,
@@ -989,17 +956,6 @@
     "template_file": "Muse Dash.yaml",
     "world_directory": "musedash"
   },
-  "Muse Dash WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Muse Dash WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Muse Dash WorldGen.yaml",
-    "world_directory": "musedash_worldgen"
-  },
   "Noita": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1088,17 +1044,6 @@
     "template_file": "Paint.yaml",
     "world_directory": "paint"
   },
-  "Paint WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Paint WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Paint WorldGen.yaml",
-    "world_directory": "paint_worldgen"
-  },
   "Pokemon Emerald": {
     "exporter_path": "exporter/games/official/pokemon_emerald.py",
     "exporter_size": 5358,
@@ -1175,17 +1120,6 @@
     "has_custom_game_logic": false,
     "template_file": "Satisfactory.yaml",
     "world_directory": "satisfactory"
-  },
-  "Satisfactory WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Satisfactory WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Satisfactory WorldGen.yaml",
-    "world_directory": "satisfactory_worldgen"
   },
   "Saving Princess": {
     "exporter_path": null,

@@ -1932,7 +1932,29 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": {
+          "type": "f_string",
+          "parts": [
+            {
+              "type": "constant",
+              "value": "Statement "
+            },
+            {
+              "type": "formatted_value",
+              "value": {
+                "type": "constant",
+                "value": 10
+              }
+            }
+          ],
+          "all_simple": true,
+          "value": "Statement 10"
+        }
+      }
+    }
   },
   "helpers": {}
 }

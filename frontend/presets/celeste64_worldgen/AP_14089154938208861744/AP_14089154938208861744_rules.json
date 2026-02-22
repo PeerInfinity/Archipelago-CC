@@ -2120,7 +2120,35 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Strawberry",
+            "count": {
+              "type": "constant",
+              "value": 16
+            }
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Badeline Island"
+              },
+              {
+                "type": "constant",
+                "value": "Region"
+              }
+            ]
+          }
+        ]
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true

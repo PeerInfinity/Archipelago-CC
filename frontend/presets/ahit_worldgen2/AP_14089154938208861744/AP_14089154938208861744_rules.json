@@ -7915,6 +7915,10 @@
       ],
       "prog_items_init": {
         "PONS": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Time Piece Cluster"
       }
     }
   },

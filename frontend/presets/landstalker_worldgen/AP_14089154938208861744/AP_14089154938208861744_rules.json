@@ -7946,6 +7946,10 @@
       ],
       "prog_items_init": {
         "GOLDS": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "King Nole's Treasure"
       }
     }
   },

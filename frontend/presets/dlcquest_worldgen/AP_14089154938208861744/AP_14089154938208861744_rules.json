@@ -1987,6 +1987,10 @@
       ],
       "prog_items_init": {
         " coins": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory Basic"
       }
     }
   },
