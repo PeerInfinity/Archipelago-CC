@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-02-19 21:59:55 UTC
+**Generated:** 2026-02-22 19:18:56 UTC
 
-**Source Data Last Updated:** 2026-02-19T21:13:17
+**Source Data Last Updated:** 2026-02-19T21:14:34
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -18,9 +18,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 ## Summary
 
 - **Total Games Tested:** 87
-- **Passing Both:** 63 (72.4%)
+- **Passing Both:** 61 (70.1%)
 - **Passing Worldgen Only:** 5 (5.7%)
-- **Passing Hybrid Only:** 2 (2.3%)
+- **Passing Hybrid Only:** 4 (4.6%)
 - **Passing Neither:** 17 (19.5%)
 - **Passing Hybrid with no custom code:** 39 (44.8%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
@@ -29,8 +29,8 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 
 | Game Name | Worldgen Result | Hybrid Result | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ✅ | ✅ | 18.2KB | ✅ | 230.1KB |
-| A Link to the Past | ⚠️ 8/9 | ✅ | 14.0KB | ✅ | 664.1KB |
+| A Hat in Time | ⚠️ 9/10 | ✅ | 18.2KB | ✅ | 230.1KB |
+| A Link to the Past | ✅ | ✅ | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ✅ | ✅ | ✅ | 25.6KB |
@@ -65,7 +65,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Kingdom Hearts | ❌ 4/10 | ❌ 4/10 | ✅ | ✅ | 748.6KB |
 | Kingdom Hearts 2 | ❌ | ⚠️ 6/10 | 20.4KB | ✅ | 1630.5KB |
 | Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.6KB |
-| Landstalker - The Treasures of King Nole | ✅ | ✅ | 3.6KB | ✅ | 209.1KB |
+| Landstalker - The Treasures of King Nole | ⚠️ 9/10 | ✅ | 3.6KB | ✅ | 209.1KB |
 | Lingo | ✅ | ✅ | 38.2KB | 10.7KB | 939.9KB |
 | Links Awakening DX | ✅ | ✅ | 7.3KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 122.7KB |
@@ -86,14 +86,14 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Raft | ✅ | ✅ | 6.5KB | ✅ | 198.3KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 145.0KB |
 | SMZ3 | ❌ 1/10 | ❌ 1/10 | 54.2KB | 51.3KB | 1886.9KB |
-| Satisfactory | ✅ | ❌ | 41.8KB | ✅ | 1618.9KB |
+| Satisfactory | ⚠️ 9/10 | ❌ | 41.8KB | ✅ | 1618.9KB |
 | Saving Princess | ✅ | ✅ | ✅ | ✅ | 33.3KB |
 | Secret of Evermore | ✅ | ✅ | 5.6KB | 7.5KB | 414.9KB |
 | Shivers | ✅ | ✅ | ✅ | ✅ | 149.8KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | 262.1KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.7KB |
 | Stardew Valley | ❌ | ⚠️ 9/10 | 18.8KB | 8.0KB | 2407.6KB |
-| Subnautica | ✅ | ✅ | 2.2KB | ✅ | 205.4KB |
+| Subnautica | ⚠️ 9/10 | ✅ | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ | ✅ | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ✅ | ✅ | ✅ | ✅ | 100.9KB |
 | Super Mario Land 2 | ✅ | ✅ | 96.3KB | ✅ | 919.0KB |
@@ -107,7 +107,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | The Messenger | ✅ | ✅ | 15.2KB | ✅ | 210.3KB |
 | The Wind Waker | ✅ | ⚠️ 4/5 | 7.0KB | ✅ | 250.1KB |
 | The Witness | ✅ | ✅ | 14.2KB | ✅ | 392.1KB |
-| Timespinner | ❌ 4/10 | ❌ 4/10 | 2.2KB | ✅ | 262.7KB |
+| Timespinner | ⚠️ 5/10 | ❌ 4/10 | 2.2KB | ✅ | 262.7KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.0KB |
 | VVVVVV | ✅ | ✅ | 3.8KB | ✅ | 22.4KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.0KB |
@@ -115,15 +115,15 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Yoshi's Island | ✅ | ⚠️ 9/10 | 9.2KB | ✅ | 295.2KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ⚠️ 5/10 | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.1KB |
-| shapez | ⚠️ 9/10 | ⚠️ 9/10 | ✅ | ✅ | 153.7KB |
+| shapez | ✅ | ⚠️ 9/10 | ✅ | ✅ | 153.7KB |
 
-## Games Passing Both (63)
+## Games Passing Both (61)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 18.2KB | ✅ | 230.1KB |
+| A Link to the Past | 14.0KB | ✅ | 664.1KB |
 | A Short Hike | ✅ | ✅ | 71.6KB |
 | APQuest | ✅ | ✅ | 10.9KB |
 | Adventure | ✅ | ✅ | 25.6KB |
@@ -151,7 +151,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Hylics 2 | ✅ | ✅ | 100.3KB |
 | Inscryption | 8.0KB | ✅ | 83.0KB |
 | Jak and Daxter: The Precursor Legacy | 21.7KB | 4.6KB | 257.6KB |
-| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
 | Lingo | 38.2KB | 10.7KB | 939.9KB |
 | Links Awakening DX | 7.3KB | ✅ | 703.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 122.7KB |
@@ -172,7 +171,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Secret of Evermore | 5.6KB | 7.5KB | 414.9KB |
 | Shivers | ✅ | ✅ | 149.8KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 262.1KB |
-| Subnautica | 2.2KB | ✅ | 205.4KB |
 | Sudoku | ✅ | ✅ | 2.1KB |
 | Super Mario 64 | ✅ | ✅ | 100.9KB |
 | Super Mario Land 2 | 96.3KB | ✅ | 919.0KB |
@@ -195,18 +193,20 @@ These games pass in the Worldgen UT but fail in the Hybrid UT.
 |-----------|:--------:|:---------:|:----------:|
 | EarthBound | ✅ | ✅ | 337.5KB |
 | Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.0KB |
-| Satisfactory | 41.8KB | ✅ | 1618.9KB |
 | The Wind Waker | 7.0KB | ✅ | 250.1KB |
 | Yoshi's Island | 9.2KB | ✅ | 295.2KB |
+| shapez | ✅ | ✅ | 153.7KB |
 
-## Games Passing Hybrid Only (2)
+## Games Passing Hybrid Only (4)
 
 These games pass in the Hybrid UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 14.0KB | ✅ | 664.1KB |
+| A Hat in Time | 18.2KB | ✅ | 230.1KB |
 | Factorio | 8.8KB | ✅ | 290.0KB |
+| Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.1KB |
+| Subnautica | 2.2KB | ✅ | 205.4KB |
 
 ## Games Passing Neither (17)
 
@@ -222,6 +222,7 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1350.0KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1270.1KB |
 | SMZ3 | 54.2KB | 51.3KB | 1886.9KB |
+| Satisfactory | 41.8KB | ✅ | 1618.9KB |
 | Starcraft 2 | 29.3KB | 90.1KB | 1086.7KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2407.6KB |
 | Super Metroid | 61.0KB | 114.5KB | 625.0KB |
@@ -230,7 +231,6 @@ These games fail in both Universal Tracker versions.
 | Yacht Dice | 0.9KB | 285.0KB | 248.4KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 643.9KB |
 | Zillion | ✅ | ✅ | 321.1KB |
-| shapez | ✅ | ✅ | 153.7KB |
 
 ## Notes
 
