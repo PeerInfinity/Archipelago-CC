@@ -113,22 +113,13 @@
             "name": "Menu -> Second Floor",
             "connected_region": "Second Floor",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Key",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Second Floor Key"
-                  }
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Key": 2,
+                  "Second Floor Key": 1
                 }
-              ]
+              }
             }
           }
         ],

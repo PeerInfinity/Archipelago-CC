@@ -201,6 +201,7 @@ class SavingPrincessWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'SavingPrincessWorld'
+        self.music_table = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         self.is_pool_expanded = True
         self.world_description = 'Explore a space station crawling with rogue machines and even rival bounty hunters\nwith the same objective as you - but with far, far different intentions!\n\nExpand your arsenal as you collect upgrades to your trusty arm cannon and armor!'
         self.slot_data = types.SimpleNamespace(death_link=0, expanded_pool=1, instant_saving=1, sprint_availability=2, cliff_weapon_upgrade=1, ace_weapon_upgrade=1, shake_intensity=50, iframes_duration=100, music_table=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])

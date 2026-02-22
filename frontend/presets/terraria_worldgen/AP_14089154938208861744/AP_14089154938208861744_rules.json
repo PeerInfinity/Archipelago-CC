@@ -4128,9 +4128,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Post-Plantera",
                       "Hallow",
-                      "Hardmode"
+                      "Hardmode",
+                      "Post-Plantera"
                     ]
                   }
                 },
@@ -4727,8 +4727,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Hardmode Anvil",
                   "Bone",
+                  "Hardmode Anvil",
                   "Soul of Light",
                   "Soul of Night"
                 ]

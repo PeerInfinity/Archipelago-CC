@@ -34,57 +34,35 @@
             "name": "Menu -> Act 3",
             "connected_region": "Act 3",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Film Roll",
-                      "Monocle",
-                      "Pile Of Meat"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Epitaph Piece": 9,
+                  "Camera Replica": 1,
+                  "Film Roll": 1,
+                  "Monocle": 1,
+                  "Pile Of Meat": 1
                 }
-              ]
+              }
             }
           },
           {
             "name": "Menu -> Epilogue",
             "connected_region": "Epilogue",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Epitaph Piece",
-                    "count": 9
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Camera Replica",
-                      "Film Roll",
-                      "Gems Module",
-                      "Inspectometer Battery",
-                      "Monocle",
-                      "Pile Of Meat",
-                      "Quill"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Epitaph Piece": 9,
+                  "Camera Replica": 1,
+                  "Film Roll": 1,
+                  "Gems Module": 1,
+                  "Inspectometer Battery": 1,
+                  "Monocle": 1,
+                  "Pile Of Meat": 1,
+                  "Quill": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -1878,25 +1856,14 @@
             "name": "Act 3 - Trader 2",
             "id": 147081,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Holo Pelt": 2,
+                  "Gems Module": 1,
+                  "Inspectometer Battery": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -1910,25 +1877,14 @@
             "name": "Act 3 - Trader 3",
             "id": 147082,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Holo Pelt": 3,
+                  "Gems Module": 1,
+                  "Inspectometer Battery": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Fishbot Card",
@@ -1942,25 +1898,14 @@
             "name": "Act 3 - Trader 4",
             "id": 147083,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Holo Pelt": 4,
+                  "Gems Module": 1,
+                  "Inspectometer Battery": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Card Pack",
@@ -1974,25 +1919,14 @@
             "name": "Act 3 - Trader 5",
             "id": 147084,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holo Pelt",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Gems Module",
-                      "Inspectometer Battery"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Holo Pelt": 5,
+                  "Gems Module": 1,
+                  "Inspectometer Battery": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Quill",
