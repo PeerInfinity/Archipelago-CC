@@ -130,7 +130,7 @@ The upstream pyright config (`.github/pyright-config.json`) uses `typeCheckingMo
 Key type annotation changes in `rules.py`:
 - `@override` decorators on all `RuleWorldMixin` methods that override `World` methods
 - `@override` decorators on all `get_value`/`get_count` subclass methods
-- `cast()` with `# pyright: ignore` for `state.rule_cache` access (matching upstream's pattern for `rule_builder_cache`)
+- `cast()` with `# pyright: ignore` for `state.rule_builder_cache` access (matching upstream's pattern)
 - `# pyright: ignore[reportIncompatibleMethodOverride]` on `RuleWorldMixin` methods with intentionally narrowed parameter types (accepts `Rule[Self]` instead of `CollectionRule | Rule[Any]`)
 - Explicit `dict[str, Any]` type annotations where pyright infers `dict[str, str]`
 - Parameterized `default_factory` lambdas for `dict` and `list` dataclass fields
