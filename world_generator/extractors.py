@@ -191,6 +191,7 @@ class ExtractedData:
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
+    completion_condition: Optional[Dict[str, Any]] = None  # Analyzed completion condition rule
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -1146,6 +1147,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # This is needed for games like Jigsaw that use non-standard patterns (e.g., "17 Puzzle Pieces" -> "pcs")
     # that can't be auto-detected but are explicitly defined in the game's export handler.
     game_info = json_data.get('game_info', {}).get(player_id, {})
+    completion_condition = game_info.get('completion_condition')
     if not accumulator_rules and 'accumulator_rules' in game_info:
         accumulator_rules = game_info['accumulator_rules']
         logger.info(f"Using accumulator_rules from game_info: {accumulator_rules}")
@@ -1231,4 +1233,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
         dungeons=dungeons,
+        completion_condition=completion_condition,
     )

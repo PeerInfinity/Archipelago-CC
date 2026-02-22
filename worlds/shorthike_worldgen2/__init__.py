@@ -595,6 +595,11 @@ class ShortHikeWorld(RuleWorldMixin, World):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
 
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.can_reach_location("Collect 15 Seashells", self.player) and state.has("Golden Feather", self.player, 12) and state.can_reach_location("Tough Bird Salesman (400 Coins)", self.player) and state.can_reach_location("Ranger May Shell Necklace Golden Feather", self.player) and state.can_reach_location("Sue the Rabbit Shoes Reward", self.player) and state.can_reach_location("Wristwatch Trade", self.player) and state.can_reach_location("Return Camping Permit", self.player) and state.can_reach_location("Boat Challenge Reward", self.player) and state.can_reach_location("Shovel Kid Trade", self.player) and state.can_reach_location("Purchase Sunhat", self.player) and state.can_reach_location("Artist Golden Feather", self.player)
+
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
 

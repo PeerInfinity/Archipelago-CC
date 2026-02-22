@@ -503,6 +503,11 @@ class InscryptionWorld(RuleWorldMixin, World):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
 
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Film Roll", self.player) and state.has("Epitaph Piece", self.player, 9) and state.has("Camera Replica", self.player) and state.has("Pile Of Meat", self.player) and state.has("Monocle", self.player) and state.has("Quill", self.player) and state.has("Gems Module", self.player) and state.has("Inspectometer Battery", self.player)
+
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
 
