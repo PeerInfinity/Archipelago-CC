@@ -953,7 +953,6 @@ class EarthBoundWorld(RuleWorldMixin, World):
         self.Badge_region = 'Northern Onett'
         self.area_levels = {'Northern Onett': 1, "Ness's Mind": 2, 'Global ATM Access': 2, 'Onett': 2, 'Arcade': 3, 'Twoson': 3, 'Summers': 3, 'Tenda Village': 3, 'Common Condiment Shop': 3, 'Scaraba': 3, 'Winters': 3, 'Fourside': 5, 'Dusty Dunes Desert': 5, 'Moonside': 7, 'Gold Mine': 8, 'Peaceful Rest Valley': 10, 'Pyramid': 12, 'Snow Wood Boarding School': 14, 'Deep Darkness': 14, 'Happy-Happy Village': 14, 'Southern Scaraba': 14, 'Lilliput Steps': 15, 'Happy-Happy HQ': 17, "Everdred's House": 18, 'Dungeon Man': 19, 'Threed': 21, 'Dalaam': 21, 'Andonuts Lab Area': 21, 'Pink Cloud': 21, 'Rainy Circle': 23, 'Brickroad Maze': 25, 'Southern Winters': 26, 'Summers Museum': 27, 'Lumine Hall': 27, 'Fourside Dept. Store': 29, 'Boogey Tent': 30, 'Lost Underworld': 30, 'Fire Spring': 32, 'Giant Step': 34, 'Monotoli Building': 36, 'Monkey Caves': 38, 'Deep Darkness Darkness': 40, 'Stonehenge Base': 42, 'Magnet Hill': 44, 'Threed Underground': 46, 'Grapefruit Falls': 48, "Belch's Factory": 49, 'Saturn Valley': 51, 'Cave of the Present': 51, 'Cave of the Past': 51, 'Endgame': 53, 'Upper Saturn Valley': 53, 'Milky Well': 53, 'Magicant': 56, 'Sea of Eden': 57}
         self.world_description = 'EarthBound is a contemporary-themed JRPG. Take four psychically-endowed children\nacross the world in search of 8 Melodies to defeat Giygas, the cosmic evil.'
-        self.slot_data = types.SimpleNamespace(starting_area=0, pizza_logic=1, free_sancs=0, shopsanity=0, hint_man_hints=[['NULL', 0], ['NULL', 0], [15401199, 1], ['NULL', 0], [15400988, 1], [15401182, 1]])
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -1193,10 +1192,4 @@ class EarthBoundWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "starting_area": 0,
-            "pizza_logic": 1,
-            "free_sancs": 0,
-            "shopsanity": 0,
-            "hint_man_hints": [['NULL', 0], ['NULL', 0], [15401199, 1], ['NULL', 0], [15400988, 1], [15401182, 1]],
-        }
+        return {}

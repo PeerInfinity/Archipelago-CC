@@ -7013,11 +7013,6 @@
         "Resource Pack: 5 ExplosiveGoo"
       ],
       "world_description": "Raft is a flooded world exploration game. You're stranded on a small raft in the middle of the\nocean, and you must survive on trash floating by you on the top of the water and around/on any\nislands that you come across.",
-      "slot_data": {
-        "IslandGenerationDistance": 8,
-        "ExpensiveResearch": false,
-        "DeathLink": false
-      },
       "web": {
         "theme": "ocean",
         "tutorials": [

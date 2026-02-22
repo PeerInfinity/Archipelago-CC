@@ -238,6 +238,86 @@ export class PathFinder {
   }
 
   /**
+   * Build adjacency map based on discovery state (for loop/discovery mode).
+   * Only includes exits that have been discovered.
+   * @param {Object} staticData - Static game data
+   * @param {Object} discoveryState - Object with isRegionDiscovered(region) and isExitDiscovered(region, exitName) methods
+   * @returns {Map} Map of region -> array of {region, exitName} connections
+   */
+  buildDiscoveryMap(staticData, discoveryState) {
+    const adjacencyMap = new Map();
+
+    for (const regionName of staticData.regions.keys()) {
+      adjacencyMap.set(regionName, []);
+    }
+
+    for (const [regionName, regionData] of staticData.regions.entries()) {
+      if (!discoveryState.isRegionDiscovered(regionName)) continue;
+      if (!regionData.exits) continue;
+
+      for (const exit of regionData.exits) {
+        const targetRegion = exit.connected_region;
+        if (!targetRegion || !staticData.regions.has(targetRegion)) continue;
+        if (!discoveryState.isRegionDiscovered(targetRegion)) continue;
+        if (!discoveryState.isExitDiscovered(regionName, exit.name)) continue;
+
+        adjacencyMap.get(regionName).push({
+          region: targetRegion,
+          exitName: exit.name
+        });
+      }
+    }
+
+    return adjacencyMap;
+  }
+
+  /**
+   * Find the shortest path using discovery state (for loop/discovery mode).
+   * Only traverses regions and exits that have been discovered.
+   * @param {string} targetRegion - Target region
+   * @param {Object} discoveryState - Object with isRegionDiscovered() and isExitDiscovered() methods
+   * @param {string|null} startRegion - Starting region, or null to use the game's start region
+   * @returns {Array<string>|null} Array of region names in path order, or null if no path found
+   */
+  findDiscoveredPath(targetRegion, discoveryState, startRegion = null) {
+    if (!targetRegion || !discoveryState) return null;
+
+    const staticData = this.stateManager.getStaticData();
+    if (!staticData?.regions) return null;
+
+    const effectiveStart = startRegion
+      || staticData.startRegions?.[0]
+      || (staticData.regions.size > 0 ? staticData.regions.keys().next().value : null);
+
+    if (!effectiveStart) return null;
+    if (effectiveStart === targetRegion) return [effectiveStart];
+
+    if (!discoveryState.isRegionDiscovered(targetRegion)) return null;
+
+    const adjacencyMap = this.buildDiscoveryMap(staticData, discoveryState);
+
+    const queue = [[effectiveStart]];
+    const visited = new Set([effectiveStart]);
+
+    while (queue.length > 0) {
+      const path = queue.shift();
+      const currentRegion = path[path.length - 1];
+
+      if (currentRegion === targetRegion) return path;
+
+      const connections = adjacencyMap.get(currentRegion) || [];
+      for (const connection of connections) {
+        if (!visited.has(connection.region)) {
+          visited.add(connection.region);
+          queue.push([...path, connection.region]);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Find the path with detailed exit information for each step
    * @param {string} sourceRegion - Starting region
    * @param {string} targetRegion - Destination region

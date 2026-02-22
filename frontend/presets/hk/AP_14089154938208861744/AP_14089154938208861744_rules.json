@@ -112176,6 +112176,30 @@
         ]
       },
       "created_shop_items": 0,
+      "cached_filler_items": [
+        "One_Geo",
+        "Soul_Refill",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg"
+      ],
       "charm_costs": [
         1,
         1,
@@ -112223,322 +112247,6 @@
         "1": 46
       },
       "world_description": "Beneath the fading town of Dirtmouth sleeps a vast, ancient kingdom. Many are drawn beneath the surface,\nsearching for riches, or glory, or answers to old secrets.\n\nAs the enigmatic Knight, you\u2019ll traverse the depths, unravel its mysteries and conquer its evils.",
-      "slot_data": {
-        "options": {
-          "RandomizeDreamers": 1,
-          "RandomizeSkills": 1,
-          "RandomizeFocus": 0,
-          "RandomizeSwim": 0,
-          "RandomizeCharms": 1,
-          "RandomizeKeys": 1,
-          "RandomizeMaskShards": 1,
-          "RandomizeVesselFragments": 1,
-          "RandomizeCharmNotches": 1,
-          "RandomizePaleOre": 1,
-          "RandomizeGeoChests": 0,
-          "RandomizeJunkPitChests": 0,
-          "RandomizeRancidEggs": 1,
-          "RandomizeRelics": 1,
-          "RandomizeWhisperingRoots": 0,
-          "RandomizeBossEssence": 0,
-          "RandomizeGrubs": 0,
-          "RandomizeMimics": 0,
-          "RandomizeMaps": 0,
-          "RandomizeStags": 1,
-          "RandomizeLifebloodCocoons": 1,
-          "RandomizeGrimmkinFlames": 0,
-          "RandomizeJournalEntries": 0,
-          "RandomizeNail": 0,
-          "RandomizeGeoRocks": 0,
-          "RandomizeBossGeo": 0,
-          "RandomizeSoulTotems": 0,
-          "RandomizeLoreTablets": 0,
-          "RandomizeElevatorPass": 0,
-          "PreciseMovement": 0,
-          "ProficientCombat": 0,
-          "BackgroundObjectPogos": 0,
-          "EnemyPogos": 0,
-          "ObscureSkips": 0,
-          "ShadeSkips": 0,
-          "InfectionSkips": 0,
-          "FireballSkips": 0,
-          "SpikeTunnels": 0,
-          "AcidSkips": 0,
-          "DamageBoosts": 0,
-          "DangerousSkips": 0,
-          "DarkRooms": 0,
-          "ComplexSkips": 0,
-          "DifficultSkips": 0,
-          "RemoveSpellUpgrades": 0,
-          "StartLocation": 0,
-          "Goal": 0,
-          "GrubHuntGoal": 46,
-          "WhitePalace": 0,
-          "ExtraPlatforms": 1,
-          "AddUnshuffledLocations": 0,
-          "StartingGeo": 0,
-          "DeathLink": 0,
-          "DeathLinkShade": 2,
-          "DeathLinkBreaksFragileCharms": 0,
-          "MinimumGeoPrice": 1,
-          "MaximumGeoPrice": 400,
-          "MinimumGrubPrice": 1,
-          "MaximumGrubPrice": 23,
-          "MinimumEssencePrice": 1,
-          "MaximumEssencePrice": 1400,
-          "MinimumCharmPrice": 1,
-          "MaximumCharmPrice": 20,
-          "RandomCharmCosts": -1,
-          "MinimumEggPrice": 1,
-          "MaximumEggPrice": 10,
-          "EggShopSlots": 0,
-          "SlyShopSlots": 8,
-          "SlyKeyShopSlots": 6,
-          "IseldaShopSlots": 2,
-          "SalubraShopSlots": 5,
-          "SalubraCharmShopSlots": 5,
-          "LegEaterShopSlots": 3,
-          "GrubfatherRewardSlots": 7,
-          "SeerRewardSlots": 8,
-          "ExtraShopSlots": 0,
-          "SplitCrystalHeart": 0,
-          "SplitMothwingCloak": 0,
-          "SplitMantisClaw": 0,
-          "CostSanity": 0,
-          "CostSanityHybridChance": 10,
-          "CostSanityEggWeight": 1,
-          "CostSanityGrubWeight": 1,
-          "CostSanityEssenceWeight": 1,
-          "CostSanityCharmWeight": 1,
-          "CostSanityGeoWeight": 8
-        },
-        "seed": -957509070,
-        "location_costs": {
-          "Dash_Slash": {
-            "GEO": 800
-          },
-          "Unbreakable_Heart": {
-            "GEO": 600
-          },
-          "Unbreakable_Greed": {
-            "GEO": 450
-          },
-          "Unbreakable_Strength": {
-            "GEO": 750
-          },
-          "Vessel_Fragment-Basin": {
-            "GEO": 3000
-          },
-          "Crossroads_Stag": {
-            "GEO": 50
-          },
-          "Greenpath_Stag": {
-            "GEO": 140
-          },
-          "Queen's_Station_Stag": {
-            "GEO": 120
-          },
-          "Queen's_Gardens_Stag": {
-            "GEO": 200
-          },
-          "City_Storerooms_Stag": {
-            "GEO": 200
-          },
-          "King's_Station_Stag": {
-            "GEO": 300
-          },
-          "Distant_Village_Stag": {
-            "GEO": 250
-          },
-          "Hidden_Station_Stag": {
-            "GEO": 300
-          },
-          "Stag_Nest_Stag": {
-            "GEO": 300
-          },
-          "Sly_1": {
-            "GEO": 15
-          },
-          "Sly_2": {
-            "GEO": 48
-          },
-          "Sly_3": {
-            "GEO": 50
-          },
-          "Sly_4": {
-            "GEO": 90
-          },
-          "Sly_5": {
-            "GEO": 146
-          },
-          "Sly_6": {
-            "GEO": 246
-          },
-          "Sly_7": {
-            "GEO": 258
-          },
-          "Sly_8": {
-            "GEO": 272
-          },
-          "Sly_(Key)_1": {
-            "GEO": 64
-          },
-          "Sly_(Key)_2": {
-            "GEO": 82
-          },
-          "Sly_(Key)_3": {
-            "GEO": 96
-          },
-          "Sly_(Key)_4": {
-            "GEO": 151
-          },
-          "Sly_(Key)_5": {
-            "GEO": 214
-          },
-          "Sly_(Key)_6": {
-            "GEO": 396
-          },
-          "Iselda_1": {
-            "GEO": 73
-          },
-          "Iselda_2": {
-            "GEO": 372
-          },
-          "Salubra_1": {
-            "GEO": 7
-          },
-          "Salubra_2": {
-            "GEO": 114
-          },
-          "Salubra_3": {
-            "GEO": 123
-          },
-          "Salubra_4": {
-            "GEO": 137
-          },
-          "Salubra_5": {
-            "GEO": 190
-          },
-          "Salubra_(Requires_Charms)_1": {
-            "CHARMS": 2,
-            "GEO": 4
-          },
-          "Salubra_(Requires_Charms)_2": {
-            "CHARMS": 7,
-            "GEO": 9
-          },
-          "Salubra_(Requires_Charms)_3": {
-            "CHARMS": 11,
-            "GEO": 94
-          },
-          "Salubra_(Requires_Charms)_4": {
-            "CHARMS": 11,
-            "GEO": 166
-          },
-          "Salubra_(Requires_Charms)_5": {
-            "CHARMS": 11,
-            "GEO": 249
-          },
-          "Leg_Eater_1": {
-            "GEO": 142
-          },
-          "Leg_Eater_2": {
-            "GEO": 258
-          },
-          "Leg_Eater_3": {
-            "GEO": 264
-          },
-          "Grubfather_1": {
-            "GRUBS": 4
-          },
-          "Grubfather_2": {
-            "GRUBS": 10
-          },
-          "Grubfather_3": {
-            "GRUBS": 10
-          },
-          "Grubfather_4": {
-            "GRUBS": 10
-          },
-          "Grubfather_5": {
-            "GRUBS": 15
-          },
-          "Grubfather_6": {
-            "GRUBS": 15
-          },
-          "Grubfather_7": {
-            "GRUBS": 17
-          },
-          "Seer_1": {
-            "ESSENCE": 193
-          },
-          "Seer_2": {
-            "ESSENCE": 253
-          },
-          "Seer_3": {
-            "ESSENCE": 344
-          },
-          "Seer_4": {
-            "ESSENCE": 400
-          },
-          "Seer_5": {
-            "ESSENCE": 462
-          },
-          "Seer_6": {
-            "ESSENCE": 663
-          },
-          "Seer_7": {
-            "ESSENCE": 1250
-          },
-          "Seer_8": {
-            "ESSENCE": 1252
-          }
-        },
-        "notch_costs": [
-          1,
-          1,
-          1,
-          2,
-          2,
-          2,
-          3,
-          2,
-          3,
-          1,
-          3,
-          1,
-          3,
-          1,
-          2,
-          2,
-          1,
-          2,
-          3,
-          2,
-          4,
-          2,
-          2,
-          2,
-          3,
-          1,
-          4,
-          2,
-          4,
-          1,
-          2,
-          3,
-          2,
-          4,
-          3,
-          5,
-          1,
-          3,
-          2,
-          2
-        ],
-        "grub_count": 46,
-        "is_race": false
-      },
       "web": {
         "theme": "grass",
         "tutorials": [

@@ -2704,15 +2704,6 @@
         "Poison": 13
       },
       "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
-      "slot_data": {
-        "keep_shop_red_potions": 0,
-        "random_musics": 0,
-        "random_sounds": 0,
-        "random_npcs": 0,
-        "random_monsters": 0,
-        "random_rewards": 0,
-        "daxanadu_version": "0.3.0"
-      },
       "web": {
         "theme": "dirt",
         "tutorials": [

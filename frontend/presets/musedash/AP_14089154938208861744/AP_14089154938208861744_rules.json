@@ -9491,12 +9491,6 @@
       "victory_song_name": "Magical Wonderland",
       "location_count": 90,
       "world_description": "Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.\nPlay through a selection of randomly chosen songs, collecting music sheets\nuntil you have enough to play and complete the goal song!",
-      "slot_data": {
-        "victoryLocation": "Magical Wonderland",
-        "deathLink": 0,
-        "musicSheetWinCount": 7,
-        "gradeNeeded": 0
-      },
       "web": {
         "theme": "partyTime",
         "tutorials": [

@@ -14044,38 +14044,6 @@
         "Sea of Eden": 57
       },
       "world_description": "EarthBound is a contemporary-themed JRPG. Take four psychically-endowed children\nacross the world in search of 8 Melodies to defeat Giygas, the cosmic evil.",
-      "slot_data": {
-        "starting_area": 0,
-        "pizza_logic": 1,
-        "free_sancs": 0,
-        "shopsanity": 0,
-        "hint_man_hints": [
-          [
-            "NULL",
-            0
-          ],
-          [
-            "NULL",
-            0
-          ],
-          [
-            15401199,
-            1
-          ],
-          [
-            "NULL",
-            0
-          ],
-          [
-            15400988,
-            1
-          ],
-          [
-            15401182,
-            1
-          ]
-        ]
-      },
       "web": {
         "theme": "ocean",
         "tutorials": [

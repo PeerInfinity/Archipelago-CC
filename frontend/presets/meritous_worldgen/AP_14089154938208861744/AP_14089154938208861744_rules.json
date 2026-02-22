@@ -2323,15 +2323,6 @@
       "item_cache_cost": 0,
       "death_link": 0,
       "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
-      "slot_data": {
-        "goal": 0,
-        "cost_scale": [
-          80,
-          5,
-          4
-        ],
-        "death_link": 0
-      },
       "web": {
         "theme": "ice",
         "tutorials": [

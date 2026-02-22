@@ -320,7 +320,6 @@ class OSRSWorld(RuleWorldMixin, World):
         self.available_QP_locations = ["1 QP (Cook's Assistant)", '3 QP (Demon Slayer)', '1 QP (The Restless Ghost)', '5 QP (Romeo & Juliet)', '1 QP (Sheep Shearer)', '1 QP (Shield of Arrav)', '4 QP (Ernest the Chicken)', '3 QP (Vampyre Slayer)', '1 QP (Imp Catcher)', '3 QP (Prince Ali Rescue)', "1 QP (Doric's Quest)", "3 QP (Black Knights' Fortress)", "1 QP (Witch's Potion)", "1 QP (The Knight's Sword)", '5 QP (Goblin Diplomacy)', "2 QP (Pirate's Treasure)", '1 QP (Rune Mysteries)', '1 QP (Misthalin Mystery)', '2 QP (The Corsair Curse)', '1 QP (X Marks The Spot)', '1 QP (Below Ice Mountain)']
         self.base_id = 458752
         self.world_description = "The best retro fantasy MMORPG on the planet. Old School is RuneScape but… older! This is the open world you know and love, but as it was in 2007.\nThe Randomizer takes the form of a Chunk-Restricted f2p Ironman that takes a brand new account up through defeating\nthe Green Dragon of Crandor and earning a spot in the fabled Champion's Guild!"
-        self.slot_data = types.SimpleNamespace(brutal_grinds=0, data_csv_tag='v2.0.5', starting_area='Area: Lumbridge', max_prayer_level=50, max_magic_level=50, max_runecraft_level=50, max_mining_level=50, max_crafting_level=50, max_smithing_level=50, max_fishing_level=50, max_cooking_level=50, max_firemaking_level=50, max_woodcutting_level=50, max_combat_level=50)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -576,19 +575,4 @@ class OSRSWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "brutal_grinds": 0,
-            "data_csv_tag": "v2.0.5",
-            "starting_area": "Area: Lumbridge",
-            "max_prayer_level": 50,
-            "max_magic_level": 50,
-            "max_runecraft_level": 50,
-            "max_mining_level": 50,
-            "max_crafting_level": 50,
-            "max_smithing_level": 50,
-            "max_fishing_level": 50,
-            "max_cooking_level": 50,
-            "max_firemaking_level": 50,
-            "max_woodcutting_level": 50,
-            "max_combat_level": 50,
-        }
+        return {}

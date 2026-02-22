@@ -5577,26 +5577,6 @@
       },
       "total_revivals": 7,
       "world_description": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters \u2013 with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.",
-      "slot_data": {
-        "itemPickupStep": 1,
-        "shrineUseStep": 0,
-        "goal": 1,
-        "victory": 0,
-        "totalLocations": 40,
-        "chestsPerStage": 10,
-        "shrinesPerStage": 5,
-        "scavengersPerStage": 0,
-        "scannerPerStage": 1,
-        "altarsPerStage": 1,
-        "totalRevivals": 4,
-        "startWithRevive": 1,
-        "finalStageDeath": 0,
-        "deathLink": 0,
-        "requireStages": 1,
-        "progressiveStages": 1,
-        "seed": "1495483245308833",
-        "offset": 37000
-      },
       "web": {
         "theme": "grass",
         "tutorials": [

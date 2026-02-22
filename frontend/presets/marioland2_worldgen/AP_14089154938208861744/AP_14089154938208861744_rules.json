@@ -36220,9 +36220,6 @@
         "mario_zone_3_claw_set_len": 1,
         "turtle_zone_1_sharks": 0
       },
-      "slot_data": {
-        "energy_link": 1
-      },
       "web": {
         "theme": "grass",
         "tutorials": [

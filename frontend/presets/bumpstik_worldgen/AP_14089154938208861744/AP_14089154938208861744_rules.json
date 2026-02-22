@@ -17,22 +17,13 @@
             "name": "To Level 1",
             "connected_region": "Level 1",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Treasure Bumper",
-                    "count": 8
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Booster Bumper"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Treasure Bumper": 8,
+                  "Booster Bumper": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -374,23 +365,13 @@
             "name": "To Level 2",
             "connected_region": "Level 2",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Booster Bumper",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Treasure Bumper",
-                    "count": 16
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Booster Bumper": 2,
+                  "Treasure Bumper": 16
                 }
-              ]
+              }
             }
           }
         ],
@@ -762,23 +743,13 @@
             "name": "To Level 3",
             "connected_region": "Level 3",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Booster Bumper",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Treasure Bumper",
-                    "count": 24
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Booster Bumper": 3,
+                  "Treasure Bumper": 24
                 }
-              ]
+              }
             }
           }
         ],
@@ -1192,23 +1163,13 @@
             "name": "To Level 4",
             "connected_region": "Level 4",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Booster Bumper",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Treasure Bumper",
-                    "count": 32
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Booster Bumper": 5,
+                  "Treasure Bumper": 32
                 }
-              ]
+              }
             }
           }
         ],

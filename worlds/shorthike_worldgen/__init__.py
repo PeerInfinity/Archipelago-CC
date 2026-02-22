@@ -415,7 +415,6 @@ class ShortHikeWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'ShortHikeWorld'
         self.world_description = "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you."
-        self.slot_data = {'settings': {'goal': 3, 'logicLevel': 1, 'costMultiplier': 100, 'shopCheckLogic': 1, 'minShopCheckLogic': 1, 'easierRaces': False}}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -685,6 +684,4 @@ class ShortHikeWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "settings": {'goal': 3, 'logicLevel': 1, 'costMultiplier': 100, 'shopCheckLogic': 1, 'minShopCheckLogic': 1, 'easierRaces': False},
-        }
+        return {}

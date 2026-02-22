@@ -974,7 +974,6 @@ class ALTTPWorld(RuleWorldMixin, World):
         self.save_and_quit_from_boss = True
         self.rupoor_cost = 10
         self.world_description = 'The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!'
-        self.slot_data = types.SimpleNamespace(crystals_needed_for_gt=7, crystals_needed_for_ganon=7, open_pyramid=2, big_key_shuffle=0, small_key_shuffle=0, compass_shuffle=0, map_shuffle=0, progressive=0, swordless=0, retro_bow=0, retro_caves=0, shop_item_slots=0, boss_shuffle=0, pot_shuffle=0, enemy_shuffle=0, key_drop_shuffle=0, bombless_start=0, randomize_shop_inventories=0, shuffle_shop_inventories=0, shuffle_capacity_upgrades=0, entrance_shuffle=0, dark_room_logic=0, goal=0, mode=0, triforce_pieces_mode=2, triforce_pieces_percentage=150, triforce_pieces_required=20, triforce_pieces_available=30, triforce_pieces_extra=10, mm_medalion='Ether', tr_medalion='Quake')
         self.crystals_needed_for_gt = 7
 
     def _create_shops(self, shops_data: list) -> list:
@@ -1247,36 +1246,4 @@ class ALTTPWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "crystals_needed_for_gt": 7,
-            "crystals_needed_for_ganon": 7,
-            "open_pyramid": 2,
-            "big_key_shuffle": 0,
-            "small_key_shuffle": 0,
-            "compass_shuffle": 0,
-            "map_shuffle": 0,
-            "progressive": 0,
-            "swordless": 0,
-            "retro_bow": 0,
-            "retro_caves": 0,
-            "shop_item_slots": 0,
-            "boss_shuffle": 0,
-            "pot_shuffle": 0,
-            "enemy_shuffle": 0,
-            "key_drop_shuffle": 0,
-            "bombless_start": 0,
-            "randomize_shop_inventories": 0,
-            "shuffle_shop_inventories": 0,
-            "shuffle_capacity_upgrades": 0,
-            "entrance_shuffle": 0,
-            "dark_room_logic": 0,
-            "goal": 0,
-            "mode": 0,
-            "triforce_pieces_mode": 2,
-            "triforce_pieces_percentage": 150,
-            "triforce_pieces_required": 20,
-            "triforce_pieces_available": 30,
-            "triforce_pieces_extra": 10,
-            "mm_medalion": "Ether",
-            "tr_medalion": "Quake",
-        }
+        return {}

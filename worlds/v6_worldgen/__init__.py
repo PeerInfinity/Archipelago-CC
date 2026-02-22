@@ -164,7 +164,6 @@ class V6World(RuleWorldMixin, World):
         self.area_cost_map = {1: 1, 2: 2, 3: 3, 4: 4, 0: 0}
         self.music_map = {1: 1, 2: 2, 3: 3, 4: 4, 9: 9, 11: 11, 12: 12}
         self.world_description = 'VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?'
-        self.slot_data = {'MusicRando': {1: 1, 2: 2, 3: 3, 4: 4, 9: 9, 11: 11, 12: 12}, 'AreaRando': {1: 1, 2: 2, 3: 3, 4: 4, 0: 0}, 'DoorCost': 3, 'AreaCostRando': {1: 1, 2: 2, 3: 3, 4: 4, 0: 0}, 'DeathLink': 0, 'DeathLink_Amnesty': 15}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -402,11 +401,4 @@ class V6World(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "MusicRando": {1: 1, 2: 2, 3: 3, 4: 4, 9: 9, 11: 11, 12: 12},
-            "AreaRando": {1: 1, 2: 2, 3: 3, 4: 4, 0: 0},
-            "DoorCost": 3,
-            "AreaCostRando": {1: 1, 2: 2, 3: 3, 4: 4, 0: 0},
-            "DeathLink": 0,
-            "DeathLink_Amnesty": 15,
-        }
+        return {}

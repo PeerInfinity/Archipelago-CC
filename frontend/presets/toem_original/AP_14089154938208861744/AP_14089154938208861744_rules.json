@@ -4177,15 +4177,6 @@
           "display_name": "Start Inventory from Pool"
         }
       },
-      "slot_data": {
-        "version": "0.1.0",
-        "options": {
-          "include_basto": 0,
-          "include_items": 1,
-          "include_casettes": 1,
-          "include_achievements": 0
-        }
-      },
       "web": {
         "theme": "grassFlowers",
         "tutorials": [

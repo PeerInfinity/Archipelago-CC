@@ -36220,9 +36220,6 @@
       },
       "coin_fragments_required": 1,
       "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
-      "slot_data": {
-        "energy_link": 1
-      },
       "web": {
         "theme": "grass",
         "tutorials": [
