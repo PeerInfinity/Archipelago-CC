@@ -38300,7 +38300,18 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "helper",
+        "name": "_can_get",
+        "args": [
+          {
+            "type": "constant",
+            "value": "KFF: Soul of the Lords"
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

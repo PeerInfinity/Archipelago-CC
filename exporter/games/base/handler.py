@@ -1819,6 +1819,26 @@ class BaseGameExportHandler(
         elif hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = dict(world.prog_items_init)
 
+        # Export completion_condition if available and non-trivial
+        try:
+            completion_func = world.multiworld.completion_condition.get(world.player)
+            if completion_func is not None:
+                from BaseClasses import CollectionState
+                empty_state = CollectionState(world.multiworld)
+                if not completion_func(empty_state):  # Non-trivial condition
+                    from exporter.analyzer import analyze_rule
+                    from exporter.games.base.utilities import extract_closure_vars
+                    closure_vars = extract_closure_vars(completion_func)
+                    closure_vars.setdefault('world', world)
+                    closure_vars.setdefault('self', world)
+                    result = analyze_rule(rule_func=completion_func, closure_vars=closure_vars,
+                                          game_handler=self, player_context=world.player)
+                    if result and result.get('type') != 'error':
+                        game_info['completion_condition'] = result
+        except Exception as e:
+            import logging
+            logging.getLogger('exporter').debug(f"Could not export completion_condition: {e}")
+
         return game_info
 
     def get_required_fields(self) -> List[str]:

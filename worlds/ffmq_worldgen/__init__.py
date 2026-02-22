@@ -984,6 +984,11 @@ class FFMQWorld(RuleWorldMixin, World):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
 
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Dark King", self.player)
+
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
 

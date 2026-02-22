@@ -3,11 +3,201 @@
 Contains the __init__.py generator (the largest single template function).
 """
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from ._template_utils import _format_dict_repr, is_valid_identifier
 from .extractors import ExtractedData
 from ._sanitization import sanitize_for_class_name
+
+
+def _generate_completion_lambda(rule_dict: Dict[str, Any],
+                                helpers: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Generate a Python lambda string from an analyzed completion condition rule.
+
+    Pattern-matches the analyzed rule JSON and returns a lambda string like:
+        lambda state: state.has("Item", self.player)
+
+    Args:
+        rule_dict: Analyzed rule dictionary from the exporter's analyze_rule()
+        helpers: Optional dict of helper name -> HelperData for resolving helper references
+
+    Returns:
+        Lambda body string (the part after "lambda state: "), or None if unrecognized
+    """
+    rule_type = rule_dict.get('type')
+
+    if rule_type in ('item_check', 'count_check'):
+        item_raw = rule_dict.get('item', '')
+        # item can be a string or a dict (e.g., f_string with a 'value' field)
+        item = _extract_constant_value(item_raw) if isinstance(item_raw, dict) else item_raw
+        if not isinstance(item, str):
+            return None
+        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+        count_raw = rule_dict.get('count')
+        # count can be an int or a dict (e.g., {"type": "constant", "value": 9})
+        count = _extract_constant_value(count_raw) if isinstance(count_raw, dict) else count_raw
+        if isinstance(count, int) and count > 1:
+            return f'state.has("{item_escaped}", self.player, {count})'
+        elif count is not None and not isinstance(count, int):
+            return None  # Can't handle non-constant counts (e.g., helper-based)
+        return f'state.has("{item_escaped}", self.player)'
+
+    if rule_type == 'location_check':
+        # location_check -> state.can_reach(location, "Location", self.player)
+        loc_raw = rule_dict.get('location', '')
+        loc = _extract_constant_value(loc_raw) if isinstance(loc_raw, dict) else loc_raw
+        if isinstance(loc, str):
+            loc_escaped = loc.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.can_reach("{loc_escaped}", "Location", self.player)'
+
+    if rule_type == 'can_reach':
+        # Top-level can_reach (not wrapped in state_method)
+        region = rule_dict.get('region', '')
+        resolution = rule_dict.get('resolution', 'Region')
+        if isinstance(region, str) and isinstance(resolution, str):
+            region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
+            res_escaped = resolution.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.can_reach("{region_escaped}", "{res_escaped}", self.player)'
+
+    if rule_type == 'state_method':
+        method = rule_dict.get('method', '')
+        args = rule_dict.get('args', [])
+
+        if method == 'has_all_counts' and args:
+            # args[0] should be a dict or constant wrapping a dict
+            counts_dict = _extract_constant_value(args[0])
+            if isinstance(counts_dict, dict):
+                entries = ', '.join(
+                    f'"{k.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}": {v}'
+                    for k, v in counts_dict.items()
+                )
+                return f'state.has_all_counts({{{entries}}}, self.player)'
+
+        if method in ('has_all', 'has_any') and args:
+            items_list = _extract_constant_value(args[0])
+            if isinstance(items_list, list):
+                items_str = ', '.join(
+                    f'"{i.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"'
+                    for i in items_list
+                )
+                return f'state.{method}([{items_str}], self.player)'
+
+        if method == 'can_reach' and len(args) >= 2:
+            target = _extract_constant_value(args[0])
+            reach_type = _extract_constant_value(args[1])
+            if isinstance(target, str) and isinstance(reach_type, str):
+                target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                type_escaped = reach_type.replace('\\', '\\\\').replace('"', '\\"')
+                return f'state.can_reach("{target_escaped}", "{type_escaped}", self.player)'
+
+        if method == 'can_reach_location' and args:
+            loc = _extract_constant_value(args[0])
+            if isinstance(loc, str):
+                loc_escaped = loc.replace('\\', '\\\\').replace('"', '\\"')
+                return f'state.can_reach_location("{loc_escaped}", self.player)'
+
+    if rule_type == 'helper' and helpers:
+        helper_name = rule_dict.get('name', '')
+        helper_args = rule_dict.get('args', [])
+        helper_data = helpers.get(helper_name)
+        if helper_data is not None:
+            body = helper_data.body if hasattr(helper_data, 'body') else helper_data.get('body')
+            params = helper_data.params if hasattr(helper_data, 'params') else helper_data.get('params', [])
+            if body:
+                # Substitute args into the body if the helper has parameters
+                resolved_body = body
+                if params and helper_args:
+                    resolved_body = _substitute_helper_args(body, params, helper_args)
+                return _generate_completion_lambda(resolved_body, helpers=helpers)
+
+    if rule_type == 'and':
+        conditions = rule_dict.get('conditions', [])
+        parts = []
+        for cond in conditions:
+            part = _generate_completion_lambda(cond, helpers=helpers)
+            if part is None:
+                return None
+            parts.append(part)
+        if parts:
+            return ' and '.join(parts)
+
+    if rule_type == 'or':
+        conditions = rule_dict.get('conditions', [])
+        parts = []
+        for cond in conditions:
+            part = _generate_completion_lambda(cond, helpers=helpers)
+            if part is None:
+                return None
+            parts.append(f'({part})' if ' and ' in part else part)
+        if parts:
+            return ' or '.join(parts)
+
+    # Fallback: walk the tree looking for the first item_check
+    first_item_check = _find_first_item_check(rule_dict)
+    if first_item_check:
+        return _generate_completion_lambda(first_item_check, helpers=helpers)
+
+    return None
+
+
+def _extract_constant_value(arg: Any) -> Any:
+    """Extract the value from a constant wrapper or return as-is."""
+    if isinstance(arg, dict):
+        if arg.get('type') == 'constant':
+            return arg.get('value')
+        if arg.get('type') == 'f_string' and 'value' in arg:
+            return arg.get('value')
+        # Some analyzers put values directly
+        if 'value' in arg:
+            return arg.get('value')
+    return arg
+
+
+def _substitute_helper_args(body: Dict[str, Any], params: list, args: list) -> Dict[str, Any]:
+    """Substitute helper arguments into a helper body.
+
+    Replaces {"type": "name", "name": param_name} nodes with the corresponding
+    argument value from the call site.
+    """
+    import copy
+    result = copy.deepcopy(body)
+    # Build param -> arg mapping
+    param_map = {}
+    for i, param_name in enumerate(params):
+        if i < len(args):
+            param_map[param_name] = args[i]
+    return _substitute_names(result, param_map)
+
+
+def _substitute_names(node: Any, param_map: Dict[str, Any]) -> Any:
+    """Recursively substitute name references in a rule tree."""
+    if isinstance(node, dict):
+        if node.get('type') == 'name' and node.get('name') in param_map:
+            return param_map[node['name']]
+        return {k: _substitute_names(v, param_map) for k, v in node.items()}
+    if isinstance(node, list):
+        return [_substitute_names(item, param_map) for item in node]
+    return node
+
+
+def _find_first_item_check(rule_dict: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Recursively find the first item_check or count_check node in a rule tree."""
+    if not isinstance(rule_dict, dict):
+        return None
+    if rule_dict.get('type') in ('item_check', 'count_check'):
+        return rule_dict
+    for key in ('conditions', 'condition', 'left', 'right'):
+        val = rule_dict.get(key)
+        if isinstance(val, list):
+            for item in val:
+                found = _find_first_item_check(item)
+                if found:
+                    return found
+        elif isinstance(val, dict):
+            found = _find_first_item_check(val)
+            if found:
+                return found
+    return None
 
 
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
@@ -52,7 +242,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
     canonical_advancement_content = '\n'.join(canonical_advancement_entries)
 
-    # Find victory location and item
+    # Find victory location and item (heuristic: event with "victory" in name)
     victory_location = None
     victory_item = None
     for loc_name, loc_data in data.locations.items():
@@ -63,11 +253,24 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 victory_item = item_name
                 break
 
+    # Determine completion condition lambda body
+    completion_lambda_body = None
+    if data.completion_condition:
+        completion_lambda_body = _generate_completion_lambda(data.completion_condition,
+                                                              helpers=data.helpers)
+
+    # Fall back to victory item heuristic
+    if completion_lambda_body is None and victory_item:
+        vi_escaped = victory_item.replace('\\', '\\\\').replace('"', '\\"')
+        completion_lambda_body = f'state.has("{vi_escaped}", self.player)'
+
+    # Build victory_section: place event item + set completion condition
     victory_section = ''
-    if victory_location and victory_item:
+    if victory_location and victory_item and completion_lambda_body:
+        # Have both event placement and completion condition
         victory_section = f'''
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("{victory_location}", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
@@ -82,7 +285,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \\
-            lambda state: state.has("{victory_item}", self.player)
+            lambda state: {completion_lambda_body}
+'''
+    elif completion_lambda_body:
+        # Have completion condition but no event placement needed
+        victory_section = f'''
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \\
+            lambda state: {completion_lambda_body}
 '''
 
     # Generate canonical seed sections only if enabled

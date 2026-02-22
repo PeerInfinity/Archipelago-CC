@@ -9527,7 +9527,189 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Music Sheet",
+        "count": {
+          "type": "helper",
+          "name": "get_music_sheet_win_count"
+        }
+      }
+    }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "get_music_sheet_count": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "multiplier",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "music_sheet_count_percentage"
+                },
+                "attr": "value"
+              },
+              "op": "/",
+              "right": {
+                "type": "constant",
+                "value": 100.0
+              }
+            }
+          },
+          {
+            "type": "assign",
+            "name": "song_count",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "helper",
+                "name": "len",
+                "args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "starting_songs"
+                  }
+                ]
+              },
+              "op": "+",
+              "right": {
+                "type": "helper",
+                "name": "len",
+                "args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "included_songs"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "max",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 1
+                },
+                {
+                  "type": "helper",
+                  "name": "floor",
+                  "args": [
+                    {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "song_count"
+                      },
+                      "op": "*",
+                      "right": {
+                        "type": "name",
+                        "name": "multiplier"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "get_music_sheet_win_count": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "multiplier",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "music_sheet_win_count_percentage"
+                },
+                "attr": "value"
+              },
+              "op": "/",
+              "right": {
+                "type": "constant",
+                "value": 100.0
+              }
+            }
+          },
+          {
+            "type": "assign",
+            "name": "sheet_count",
+            "value": {
+              "type": "helper",
+              "name": "get_music_sheet_count"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "max",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 1
+                },
+                {
+                  "type": "helper",
+                  "name": "floor",
+                  "args": [
+                    {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "sheet_count"
+                      },
+                      "op": "*",
+                      "right": {
+                        "type": "name",
+                        "name": "multiplier"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
 }
