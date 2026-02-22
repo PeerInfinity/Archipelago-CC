@@ -2675,22 +2675,13 @@
             "name": "Second Switch Locked Chest (Bottle Grotto) -> D2 Room 5",
             "connected_region": "D2 Room 5",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Bottle Grotto)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Bottle Grotto)": 5,
+                  "Progressive Power Bracelet": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -2801,22 +2792,13 @@
             "name": "D2 Room 5 -> Second Switch Locked Chest (Bottle Grotto)",
             "connected_region": "Second Switch Locked Chest (Bottle Grotto)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Bottle Grotto)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Bottle Grotto)": 5,
+                  "Progressive Power Bracelet": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -4475,22 +4457,13 @@
             "name": "D4 Room 5 -> D4 Room 7",
             "connected_region": "D4 Room 7",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Angler's Tunnel)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Angler's Tunnel)": 5,
+                  "Progressive Sword": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -4513,16 +4486,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
+                    "items": {
+                      "Small Key (Angler's Tunnel)": 5,
+                      "Flippers": 1
+                    }
                   }
                 }
               ]
@@ -4797,22 +4766,13 @@
             "name": "D4 Room 7 -> D4 Room 5",
             "connected_region": "D4 Room 5",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Angler's Tunnel)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Angler's Tunnel)": 5,
+                  "Progressive Sword": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -4870,16 +4830,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)",
-                    "count": 5
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
+                    "items": {
+                      "Small Key (Angler's Tunnel)": 5,
+                      "Flippers": 1
+                    }
                   }
                 }
               ]
@@ -7857,22 +7813,13 @@
             "name": "D8 Room 6 -> D8 Room 7",
             "connected_region": "D8 Room 7",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Turtle Rock)": 7,
+                  "Hookshot": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -7899,22 +7846,13 @@
             "name": "D8 Room 7 -> D8 Room 6",
             "connected_region": "D8 Room 6",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Turtle Rock)": 7,
+                  "Hookshot": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -8012,25 +7950,14 @@
             "name": "D8 Room 9 -> Nightmare Key/Big Zamboni Chest (Turtle Rock)",
             "connected_region": "Nightmare Key/Big Zamboni Chest (Turtle Rock)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Feather",
-                      "Progressive Sword"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Turtle Rock)": 7,
+                  "Feather": 1,
+                  "Progressive Sword": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -8044,25 +7971,14 @@
             "name": "Nightmare Key/Big Zamboni Chest (Turtle Rock) -> D8 Room 9",
             "connected_region": "D8 Room 9",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Feather",
-                      "Progressive Sword"
-                    ]
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Turtle Rock)": 7,
+                  "Feather": 1,
+                  "Progressive Sword": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -9272,29 +9188,18 @@
             "name": "D7 Room 2 -> Mirror Shield Chest (Eagle's Tower)",
             "connected_region": "Mirror Shield Chest (Eagle's Tower)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Eagle's Tower)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Boomerang",
-                      "Bow",
-                      "Hookshot",
-                      "Magic Rod",
-                      "Progressive Sword"
-                    ]
-                  }
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Small Key (Eagle's Tower)": 3,
+                  "Bomb": 1,
+                  "Boomerang": 1,
+                  "Bow": 1,
+                  "Hookshot": 1,
+                  "Magic Rod": 1,
+                  "Progressive Sword": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -10343,22 +10248,13 @@
             "name": "Lower Small Key (Color Dungeon) -> Nightmare Key Chest (Color Dungeon)",
             "connected_region": "Nightmare Key Chest (Color Dungeon)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Color Dungeon)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Powder"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Color Dungeon)": 3,
+                  "Magic Powder": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -10524,22 +10420,13 @@
             "name": "Nightmare Key Chest (Color Dungeon) -> Lower Small Key (Color Dungeon)",
             "connected_region": "Lower Small Key (Color Dungeon)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Color Dungeon)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Powder"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Color Dungeon)": 3,
+                  "Magic Powder": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -12776,16 +12663,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "RUPEES",
-                    "count": 1480
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ocarina"
+                    "items": {
+                      "RUPEES": 1480,
+                      "Ocarina": 1
+                    }
                   }
                 }
               ]
@@ -12862,16 +12745,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "RUPEES",
-                    "count": 1480
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ocarina"
+                    "items": {
+                      "RUPEES": 1480,
+                      "Ocarina": 1
+                    }
                   }
                 }
               ]
@@ -13610,16 +13489,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Small Key (Catfish's Maw)",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
+                    "items": {
+                      "Small Key (Catfish's Maw)": 2,
+                      "Hookshot": 1
+                    }
                   }
                 }
               ]
@@ -13856,16 +13731,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Small Key (Catfish's Maw)",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
+                    "items": {
+                      "Small Key (Catfish's Maw)": 2,
+                      "Hookshot": 1
+                    }
                   }
                 }
               ]
@@ -14569,25 +14440,14 @@
             "name": "D6 Room -> Mini-Moldorm, Spark Chest (Face Shrine)",
             "connected_region": "Mini-Moldorm, Spark Chest (Face Shrine)",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Magic Rod"
-                    ]
-                  }
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Power Bracelet": 2,
+                  "Bomb": 1,
+                  "Magic Rod": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -14715,25 +14575,14 @@
             "name": "Mini-Moldorm, Spark Chest (Face Shrine) -> D6 Room",
             "connected_region": "D6 Room",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bomb",
-                      "Magic Rod"
-                    ]
-                  }
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Power Bracelet": 2,
+                  "Bomb": 1,
+                  "Magic Rod": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -15213,22 +15062,13 @@
             "name": "D6 Room 4 -> Tile Room Key (Face Shrine)",
             "connected_region": "Tile Room Key (Face Shrine)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feather"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Power Bracelet": 2,
+                  "Feather": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -15242,22 +15082,13 @@
             "name": "Tile Room Key (Face Shrine) -> D6 Room 4",
             "connected_region": "D6 Room 4",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feather"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Power Bracelet": 2,
+                  "Feather": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -15303,23 +15134,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Face Shrine)",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
+                    "items": {
+                      "Progressive Power Bracelet": 2,
+                      "Small Key (Face Shrine)": 2,
+                      "Pegasus Boots": 1
+                    }
                   }
                 }
               ]
@@ -15429,23 +15250,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAllCounts",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Face Shrine)",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
+                    "items": {
+                      "Progressive Power Bracelet": 2,
+                      "Small Key (Face Shrine)": 2,
+                      "Pegasus Boots": 1
+                    }
                   }
                 }
               ]
@@ -15458,43 +15269,23 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Face Shrine)",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Hookshot",
-                          "Progressive Power Bracelet"
-                        ]
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Small Key (Face Shrine)": 3,
+                      "Hookshot": 1,
+                      "Progressive Power Bracelet": 1
                     }
-                  ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Face Shrine)",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Small Key (Face Shrine)": 3,
+                      "Hookshot": 1
                     }
-                  ]
+                  }
                 }
               ]
             }
@@ -15526,22 +15317,13 @@
             "name": "Pot Locked Chest (Face Shrine) -> Top Right Horse Heads Chest (Face Shrine)",
             "connected_region": "Top Right Horse Heads Chest (Face Shrine)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Face Shrine)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Face Shrine)": 3,
+                  "Hookshot": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -16625,22 +16407,13 @@
             "name": "D1 Room -> Nightmare Key Chest (Tail Cave)",
             "connected_region": "Nightmare Key Chest (Tail Cave)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Tail Cave)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feather"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Tail Cave)": 3,
+                  "Feather": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -16945,22 +16718,13 @@
             "name": "Nightmare Key Chest (Tail Cave) -> D1 Room",
             "connected_region": "D1 Room",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Tail Cave)",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feather"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Small Key (Tail Cave)": 3,
+                  "Feather": 1
                 }
-              ]
+              }
             }
           }
         ],

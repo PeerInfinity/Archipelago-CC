@@ -2093,23 +2093,13 @@
             "name": "Lower sealed cracked wall",
             "connected_region": "Castle Center: big crystal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magical Nitro",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mandragora",
-                    "count": 2
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Magical Nitro": 2,
+                  "Mandragora": 2
                 }
-              ]
+              }
             }
           },
           {

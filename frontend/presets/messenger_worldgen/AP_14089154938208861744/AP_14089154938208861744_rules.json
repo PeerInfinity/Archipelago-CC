@@ -139,22 +139,13 @@
             "name": "Money Sink",
             "connected_region": "The Craftsman's Corner",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shards",
-                    "count": 4566
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Money Wrench"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Shards": 4566,
+                  "Money Wrench": 1
                 }
-              ]
+              }
             }
           }
         ],
