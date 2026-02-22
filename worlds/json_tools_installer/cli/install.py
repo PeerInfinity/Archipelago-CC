@@ -28,7 +28,6 @@ from pathlib import Path
 
 from ..config import (
     load_config,
-    save_config,
     update_installation_info,
     clear_installation,
     InstallerConfig,
@@ -45,16 +44,10 @@ from ..installer.downloader import (
 )
 from ..installer.extractor import (
     extract_tools,
-    get_extractable_components,
     list_installed_components,
     remove_component,
     COMPONENTS,
     DEFAULT_COMPONENTS,
-)
-from ..installer.patcher import (
-    apply_bundled_patches,
-    revert_patches,
-    get_patch_summary,
 )
 from ..installer.romless_patcher import (
     apply_romless_patches,
@@ -119,8 +112,8 @@ def do_install(
         version: Version to install ("stable" or "dev").
         components: List of component names to install.
         dry_run: If True, only show what would be done.
-        patch_mode: Patch mode - "none", "monkey" (default), or "file".
-        skip_confirmation: If True, skip confirmation prompts for file patching.
+        patch_mode: Patch mode - "none" or "monkey" (default).
+        skip_confirmation: If True, skip confirmation prompts.
         configure_export: If True, configure export settings in host.yaml.
         export_preset: Export settings preset to use ("normal" or "minimal-spoilers").
         apply_romless: If True, apply ROM-less patches after extraction.
@@ -225,62 +218,6 @@ def do_install(
             print(f"  [OK] Installed {success_count}/{len(hook_results)} runtime hooks")
             config.patches.method = "monkey"
 
-        elif patch_mode == "file":
-            # File-based patching - needs confirmation
-            from ..installer.patcher import PATCH_FILES
-
-            print("\n  File-based patching will modify the following core Archipelago files:")
-            for f in PATCH_FILES:
-                print(f"    - {f}")
-            print("\n  These patches enable JSON export and sphere logging functionality.")
-            print("  Original files will be backed up and can be restored later.")
-
-            if not skip_confirmation:
-                response = input("\n  Proceed with file-based patching? [y/N]: ")
-                if response.lower() != 'y':
-                    print("  [INFO] File patching cancelled, no patches applied.")
-                    config.patches.method = "none"
-                    # Continue with installation without patching
-                else:
-                    print("\n  Applying patches from downloaded patch files...")
-                    patch_result = apply_bundled_patches(config)
-
-                    if patch_result.warnings:
-                        for warning in patch_result.warnings:
-                            print(f"  [WARN] {warning}")
-
-                    if not patch_result.success:
-                        print("  [ERROR] Patching failed:")
-                        for error in patch_result.errors:
-                            print(f"    - {error}")
-                        return False
-
-                    if patch_result.patched_files:
-                        print(f"  [OK] Patched {len(patch_result.patched_files)} files")
-                        for f in patch_result.patched_files:
-                            print(f"    - {f}")
-                    config.patches.method = "file"
-            else:
-                # Skip confirmation with --yes flag
-                print("\n  Applying patches from downloaded patch files...")
-                patch_result = apply_bundled_patches(config)
-
-                if patch_result.warnings:
-                    for warning in patch_result.warnings:
-                        print(f"  [WARN] {warning}")
-
-                if not patch_result.success:
-                    print("  [ERROR] Patching failed:")
-                    for error in patch_result.errors:
-                        print(f"    - {error}")
-                    return False
-
-                if patch_result.patched_files:
-                    print(f"  [OK] Patched {len(patch_result.patched_files)} files")
-                    for f in patch_result.patched_files:
-                        print(f"    - {f}")
-                config.patches.method = "file"
-
         else:
             # No patching (patch_mode == "none")
             print("\n  [INFO] No patching selected, skipping patch application.")
@@ -295,9 +232,9 @@ def do_install(
             print("\n  Applying ROM-less patches...")
             romless_result = apply_romless_patches(config)
             if romless_result.success:
-                if romless_result.patched_files:
-                    print(f"  [OK] Applied ROM-less patches to {len(romless_result.patched_files)} files")
-                    for f in romless_result.patched_files:
+                if romless_result.patched_worlds:
+                    print(f"  [OK] Applied ROM-less patches to {len(romless_result.patched_worlds)} files")
+                    for f in romless_result.patched_worlds:
                         print(f"    - {f}")
             else:
                 print("  [WARN] ROM-less patching issues:")
@@ -340,16 +277,16 @@ def do_uninstall(config: InstallerConfig, dry_run: bool = False) -> bool:
     """
     print_header("Uninstalling JSON Tools")
 
-    # Revert patches first
-    print("  Reverting patches...")
+    # Revert romless patches first
+    print("  Reverting ROM-less patches...")
     if not dry_run:
-        patch_result = revert_patches(config)
-        if patch_result.patched_files:
-            for f in patch_result.patched_files:
+        romless_result = revert_romless_patches(config)
+        if romless_result.patched_worlds:
+            for f in romless_result.patched_worlds:
                 print(f"    - {f}")
-        if patch_result.errors:
-            print("  [WARN] Some patches could not be reverted:")
-            for error in patch_result.errors:
+        if romless_result.errors:
+            print("  [WARN] Some ROM-less patches could not be reverted:")
+            for error in romless_result.errors:
                 print(f"    - {error}")
 
     # Remove installed components
@@ -425,11 +362,6 @@ def main(args=None):
         help="Install documentation (default component)",
     )
     parser.add_argument(
-        "--main-patches",
-        action="store_true",
-        help="Install patched core files for JSON export support (default component)",
-    )
-    parser.add_argument(
         "--romless-patches",
         action="store_true",
         help="Install ROM-less generation patches (default component)",
@@ -469,7 +401,7 @@ def main(args=None):
     parser.add_argument(
         "--revert-patches",
         action="store_true",
-        help="Revert patches only (keep tools)",
+        help="Revert ROM-less patches only (keep tools)",
     )
 
     # Options
@@ -479,17 +411,10 @@ def main(args=None):
         help="Show what would be done without making changes",
     )
 
-    # Patch mode options (mutually exclusive)
-    patch_group = parser.add_mutually_exclusive_group()
-    patch_group.add_argument(
+    parser.add_argument(
         "--no-patch",
         action="store_true",
         help="Do not apply any patches (JSON export will not work without manual setup)",
-    )
-    patch_group.add_argument(
-        "--file-patch",
-        action="store_true",
-        help="Use file-based patching instead of monkey patching (modifies core files)",
     )
     # Note: monkey patching is the default, no flag needed
 
@@ -553,10 +478,10 @@ def main(args=None):
         return 0 if success else 1
 
     if parsed.revert_patches:
-        print_header("Reverting Patches")
+        print_header("Reverting ROM-less Patches")
         if not parsed.dry_run:
-            result = revert_patches(config)
-            for f in result.patched_files:
+            result = revert_romless_patches(config)
+            for f in result.patched_worlds:
                 print(f"  - {f}")
             if result.errors:
                 for e in result.errors:
@@ -578,7 +503,6 @@ def main(args=None):
             "frontend": "frontend",
             "presets": "presets",
             "docs": "docs",
-            "main_patches": "main_patches",
             "romless_patches": "romless_patches",
             "demo_worlds": "demo_worlds",
             "worldgen_worlds": "worldgen_worlds",
@@ -605,8 +529,6 @@ def main(args=None):
     # Determine patch mode (default is monkey patching)
     if parsed.no_patch:
         patch_mode = "none"
-    elif parsed.file_patch:
-        patch_mode = "file"
     else:
         patch_mode = "monkey"  # Default
 

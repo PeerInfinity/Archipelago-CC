@@ -131,7 +131,7 @@ class BaseGameExportHandler(
     # When False, option values are kept as option_value references
     #   - Rules remain generic and can work with different option configurations
     #   - Requires runtime option resolution in the frontend
-    # This can be overridden by the host.yaml setting: general_options.resolve_options_to_constants
+    # This can be overridden by the host.yaml setting: json_tools.resolve_options_to_constants
     RESOLVE_OPTIONS_TO_CONSTANTS: bool = True
 
     # Set of helper function names to export as definitions (manual whitelist)
@@ -1023,7 +1023,7 @@ class BaseGameExportHandler(
         resolved at runtime by the frontend. This allows rules to work with
         different option configurations.
 
-        The host.yaml setting (general_options.resolve_options_to_constants) takes
+        The host.yaml setting (json_tools.resolve_options_to_constants) takes
         precedence over the class variable RESOLVE_OPTIONS_TO_CONSTANTS.
 
         Returns:
@@ -1031,9 +1031,9 @@ class BaseGameExportHandler(
         """
         # Check host.yaml setting first (takes precedence)
         try:
-            from settings import get_settings
-            settings = get_settings()
-            host_setting = getattr(settings.general_options, 'resolve_options_to_constants', None)
+            from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
+            jt = get_json_tools_settings()
+            host_setting = getattr(jt, 'resolve_options_to_constants', None)
             if host_setting is not None:
                 return host_setting
         except Exception:

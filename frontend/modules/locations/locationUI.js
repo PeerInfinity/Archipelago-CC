@@ -99,6 +99,19 @@ export class LocationUI {
     this.container.on('destroy', () => {
       this.onPanelDestroy();
     });
+
+    // If the app is already initialized (e.g., this panel was created after a layout reload
+    // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
+    // In that case, initialize immediately and render with whatever data is available.
+    const existingStaticData = stateManager.getStaticData();
+    if (existingStaticData?.locations) {
+      this.initialize();
+      this.dispatcher = getDispatcher();
+      this.isInitialized = true;
+      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.originalLocationOrder = stateManager.getOriginalLocationOrder() || [];
+      this.updateLocationDisplay();
+    }
   }
 
   async subscribeToSettings() {

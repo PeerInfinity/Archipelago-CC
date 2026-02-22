@@ -12,10 +12,21 @@ Components are available in the Archipelago Launcher after installation.
 
 __version__ = "1.0.0"
 
+from typing import ClassVar
+
 from worlds.AutoWorld import WebWorld, World
+from .json_tools_settings import JSONToolsSettings
 
 # Import and register launcher components
 from . import components as _components
+
+# Register post-output generation hook (works in fork where worlds/Hooks.py exists)
+try:
+    from worlds.Hooks import register_post_output_hook
+    from .export_hook import export_post_output_hook
+    register_post_output_hook(export_post_output_hook)
+except ImportError:
+    pass  # worlds/Hooks.py doesn't exist (vanilla AP without hook support)
 
 # Auto-install monkey patches if configured
 try:
@@ -37,6 +48,8 @@ class JSONToolsInstallerWorld(World):
     game = "JSON Tools Installer"
     hidden = True
     web = JSONToolsInstallerWeb()
+    settings_key = "json_tools"
+    settings: ClassVar[JSONToolsSettings]
 
     # Empty mappings - no actual items or locations
     item_name_to_id = {}

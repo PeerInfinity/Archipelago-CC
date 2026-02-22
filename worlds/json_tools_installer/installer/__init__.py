@@ -5,7 +5,7 @@ Provides functionality for:
 - Detecting Archipelago version
 - Downloading tools from GitHub
 - Extracting and installing files
-- Patching core files with backup/restore
+- ROM-less patching with backup/restore
 """
 
 from .version_detector import (
@@ -22,12 +22,11 @@ from .extractor import (
     extract_tools,
     get_extractable_components,
 )
-from .patcher import (
-    apply_bundled_patches,
-    revert_patches,
-    check_patch_status,
-    get_bundled_patches_dir,
-    get_available_patch_versions,
+from .romless_patcher import (
+    apply_romless_patches,
+    revert_romless_patches,
+    check_romless_patch_status,
+    get_romless_patch_summary,
 )
 
 __all__ = [
@@ -39,9 +38,8 @@ __all__ = [
     "get_download_url",
     "extract_tools",
     "get_extractable_components",
-    "apply_bundled_patches",
-    "revert_patches",
-    "check_patch_status",
-    "get_bundled_patches_dir",
-    "get_available_patch_versions",
+    "apply_romless_patches",
+    "revert_romless_patches",
+    "check_romless_patch_status",
+    "get_romless_patch_summary",
 ]

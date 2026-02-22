@@ -1,6 +1,6 @@
 import itertools
 import sys
-from typing import Any, Callable, Iterable, cast
+from typing import Any, Callable, Iterable
 
 
 def classvar_matrix(**kwargs: Iterable[Any]) -> Callable[[type], None]:
@@ -21,7 +21,7 @@ def classvar_matrix(**kwargs: Iterable[Any]) -> Callable[[type], None]:
     keys: tuple[str]
     values: Iterable[Iterable[Any]]
     keys, values = zip(*kwargs.items())
-    values = map(lambda v: sorted(cast(Iterable[Any], v)) if isinstance(v, (set, frozenset)) else v, values)
+    values = map(lambda v: sorted(v) if isinstance(v, (set, frozenset)) else v, values)
     permutations_dicts = [dict(zip(keys, v)) for v in itertools.product(*values)]
 
     def decorator(cls: type) -> None:

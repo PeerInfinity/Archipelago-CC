@@ -66,7 +66,7 @@ Rule Builder Classes -> Composition -> Resolution -> to_dict() -> JSON Structure
 | **Serialization method** | Post-hoc AST inspection | Built-in `to_dict()` |
 | **World code changes required** | None | Must use `RuleWorldMixin` |
 | **Backward compatibility** | Full - works with existing worlds | Requires world conversion |
-| **Caching** | Rule analysis cache by function ID | State cache in `CollectionState.rule_cache` |
+| **Caching** | Rule analysis cache by function ID | State cache in `CollectionState.rule_builder_cache` |
 | **Game-specific handlers** | 80+ handler files | Custom rules inherit from base |
 | **Human-readable output** | Via Rule Builder conversion | `explain()` method |
 | **Rule optimization** | Post-analysis cleanup | Instance reuse via equality |
@@ -146,7 +146,7 @@ Cache key: `(id(rule_func), id(game_handler), player)`
 **Rule Builder Format** (adds to `BaseClasses.py`):
 ```python
 # Per-player rule cache in CollectionState
-self.rule_cache: dict[int, dict[int, bool]] = {}
+self.rule_builder_cache: dict[int, dict[int, bool]] = {}
 ```
 - Rules that evaluate to the same result share instances
 - Cache invalidation hooks for item collection/removal

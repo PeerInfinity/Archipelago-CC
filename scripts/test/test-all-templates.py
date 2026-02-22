@@ -649,7 +649,7 @@ def main():
         else:
             # Read host.yaml to determine spoiler output directory
             host_config = read_host_yaml_config(project_root)
-            extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
+            extend_sphere_log = host_config.get('json_tools', {}).get('extend_sphere_log_to_all_locations', True)
             if extend_sphere_log:
                 retest_results_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
             else:
@@ -921,7 +921,7 @@ def main():
         else:
             # Spoiler mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
-            extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
+            extend_sphere_log = host_config.get('json_tools', {}).get('extend_sphere_log_to_all_locations', True)
 
             if extend_sphere_log:
                 args.output_file = 'scripts/output/spoiler-full/test-results.json'

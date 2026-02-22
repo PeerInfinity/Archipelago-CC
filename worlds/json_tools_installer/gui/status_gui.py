@@ -19,7 +19,7 @@ from kivy.uix.gridlayout import GridLayout
 from ..config import load_config
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.extractor import list_installed_components, COMPONENTS
-from ..installer.patcher import get_patch_summary
+from ..installer.romless_patcher import get_romless_patch_summary
 
 
 class StatusApp(App):
@@ -51,7 +51,7 @@ class StatusApp(App):
         config = load_config()
         version_info = detect_ap_version()
         installed = list_installed_components()
-        patch_summary = get_patch_summary(config)
+        patch_summary = get_romless_patch_summary(config)
 
         # Section: AP Version
         content.add_widget(Label(text='[b]Archipelago Version[/b]', markup=True, size_hint_y=None, height=30))
@@ -94,26 +94,35 @@ class StatusApp(App):
             content.add_widget(Label(text=comp.display_name, size_hint_y=None, height=25))
             content.add_widget(Label(text=status, markup=True, size_hint_y=None, height=25))
 
-        # Section: Patches
+        # Section: ROM-less Patches
         content.add_widget(Label(text='', size_hint_y=None, height=10))
         content.add_widget(Label(text='', size_hint_y=None, height=10))
-        content.add_widget(Label(text='[b]Patches[/b]', markup=True, size_hint_y=None, height=30))
+        content.add_widget(Label(text='[b]ROM-less Patches[/b]', markup=True, size_hint_y=None, height=30))
         content.add_widget(Label(text='', size_hint_y=None, height=30))
 
-        content.add_widget(Label(text='Patched Files:', size_hint_y=None, height=25))
+        content.add_widget(Label(text='Worlds Patched:', size_hint_y=None, height=25))
         content.add_widget(Label(
-            text=f"{patch_summary['patched_count']}/{patch_summary['total_files']}",
+            text=f"{patch_summary['patched_count']}/{patch_summary['available_worlds']}",
             size_hint_y=None, height=25
         ))
 
-        content.add_widget(Label(text='Backups:', size_hint_y=None, height=25))
-        content.add_widget(Label(text=str(patch_summary['backup_count']), size_hint_y=None, height=25))
+        content.add_widget(Label(text='Infrastructure:', size_hint_y=None, height=25))
+        content.add_widget(Label(
+            text=f"{patch_summary['infrastructure_patched']}/{patch_summary['infrastructure_files']}",
+            size_hint_y=None, height=25
+        ))
 
-        for filename, status in patch_summary['files'].items():
+        for world_name, status in patch_summary['worlds'].items():
             patched = '[color=00ff00]Patched[/color]' if status.is_patched else 'Original'
             backup = ' (backup)' if status.has_backup else ''
-            content.add_widget(Label(text=f'  {filename}:', size_hint_y=None, height=25))
+            content.add_widget(Label(text=f'  {world_name}:', size_hint_y=None, height=25))
             content.add_widget(Label(text=f'{patched}{backup}', markup=True, size_hint_y=None, height=25))
+
+        for infra_key, status in patch_summary['infrastructure'].items():
+            label = infra_key.replace('infra:', '')
+            patched = '[color=00ff00]Installed[/color]' if status.is_patched else 'Not installed'
+            content.add_widget(Label(text=f'  {label}:', size_hint_y=None, height=25))
+            content.add_widget(Label(text=patched, markup=True, size_hint_y=None, height=25))
 
         scroll.add_widget(content)
         root.add_widget(scroll)

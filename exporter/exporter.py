@@ -2536,10 +2536,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     """
 
     # Determine whether to export rules.json based on settings mode.
-    from settings import get_settings
-    settings = get_settings()
+    from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
+    jt = get_json_tools_settings()
 
-    if getattr(settings.general_options, 'use_tracking_mode_config', False):
+    if jt.use_tracking_mode_config:
         # Config-based logic: use tracking-mode-config.json
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
@@ -2548,7 +2548,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 return {}
     else:
         # Simple flag-based logic
-        if not getattr(settings.general_options, 'save_rules_json', False):
+        if not jt.save_rules_json:
             # save_rules_json is False - don't export
             return {}
 

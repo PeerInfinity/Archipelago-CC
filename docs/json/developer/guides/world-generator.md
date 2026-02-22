@@ -327,7 +327,7 @@ Generated worlds have rule caching disabled by default:
 rule_caching_enabled: ClassVar[bool] = False
 ```
 
-This is required because the Rule Builder's caching system uses `CollectionState.rule_cache`, which is added by [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) but isn't present in the base Archipelago codebase. Disabling caching ensures compatibility.
+This is required because the Rule Builder's caching system uses `CollectionState.rule_builder_cache`, which is added by [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) but isn't present in the base Archipelago codebase. Disabling caching ensures compatibility.
 
 ## Troubleshooting
 
@@ -349,9 +349,9 @@ This is required because the Rule Builder's caching system uses `CollectionState
 
 **Solution:** Check if the source JSON contains unsupported rule types. The generator logs warnings for rules it can't fully convert. Complex rules may need manual adjustment.
 
-### CollectionState Missing rule_cache
+### CollectionState Missing rule_builder_cache
 
-**Problem:** `AttributeError: 'CollectionState' object has no attribute 'rule_cache'`
+**Problem:** `AttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'`
 
 **Solution:** Ensure the generated world has `rule_caching_enabled = False` in the world class. This is set by default in the generator.
 

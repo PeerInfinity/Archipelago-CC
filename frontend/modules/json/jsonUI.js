@@ -1337,11 +1337,12 @@ export class JsonUI {
     for (const dataKey in loadedData) {
       // Check core types first (if we handle them this way)
       if (dataKey === 'rulesConfig') {
-        // TODO: Implement live rules reload
-        log('info', 
-          '[JsonUI] Found rulesConfig, calling apply function (placeholder)...'
-        );
-        // this.applyRulesConfig(loadedData.rulesConfig);
+        log('info', '[JsonUI] Found rulesConfig, applying via files:jsonLoaded...');
+        eventBus.publish('files:jsonLoaded', {
+          jsonData: loadedData.rulesConfig,
+          selectedPlayerId: '1',
+          sourceName: 'jsonModuleImport'
+        }, 'json');
       } else if (dataKey === 'userSettings') {
         // Implement live settings application
         log('info', 
@@ -1354,10 +1355,13 @@ export class JsonUI {
           log('error', '[JsonUI] Error applying settings:', e);
         }
       } else if (dataKey === 'layoutConfig') {
-        // Skip live layout configuration application - layouts will be applied on page reload
-        log('info', 
-          '[JsonUI] Found layoutConfig, skipping live application (will be applied on reload)'
-        );
+        log('info', '[JsonUI] Found layoutConfig, applying live...');
+        try {
+          await this._applyLayoutConfig(loadedData[dataKey]);
+          log('info', '[JsonUI] layoutConfig applied successfully');
+        } catch (e) {
+          log('error', '[JsonUI] Error applying layoutConfig live:', e);
+        }
       }
       // Check registered module handlers
       else if (handlers.has(dataKey)) {
@@ -1410,27 +1414,10 @@ export class JsonUI {
     let transformedConfig = this._transformLayoutConfigSizes(layoutConfig);
     log('info', '[JsonUI] Transformed layout config sizes from numbers to strings');
 
-    // Check if the layout config is a "Resolved Config" and convert it if needed
-    let configToLoad = transformedConfig;
-    
-    // According to Golden Layout 2.x docs, when reloading a saved layout,
-    // first convert the saved "Resolved Config" to a "Config" by calling LayoutConfig.fromResolved()
-    if (window.LayoutConfig && typeof window.LayoutConfig.fromResolved === 'function') {
-      try {
-        configToLoad = window.LayoutConfig.fromResolved(transformedConfig);
-        log('info', '[JsonUI] Converted resolved config to config using LayoutConfig.fromResolved()');
-      } catch (e) {
-        log('warn', '[JsonUI] Failed to convert with LayoutConfig.fromResolved(), using config as-is:', e);
-        // If conversion fails, try using the config as-is
-      }
-    } else {
-      log('warn', '[JsonUI] LayoutConfig.fromResolved() not available, using config as-is');
-    }
-
     // Apply the layout using Golden Layout 2.x loadLayout() method
     if (typeof goldenLayoutInstance.loadLayout === 'function') {
       try {
-        await goldenLayoutInstance.loadLayout(configToLoad);
+        await goldenLayoutInstance.loadLayout(transformedConfig);
         log('info', '[JsonUI] Layout loaded successfully using loadLayout()');
       } catch (e) {
         log('error', '[JsonUI] Error calling loadLayout():', e);
@@ -1478,6 +1465,12 @@ export class JsonUI {
       // Remove "dimensions" entries
       if (key === 'dimensions') {
         log('info', `[JsonUI] Removed "dimensions" property from layout config`);
+        continue;
+      }
+
+      // Remove "activeItemIndex" so no panel is forced active on load (GL defaults to first tab)
+      if (key === 'activeItemIndex') {
+        log('info', `[JsonUI] Removed "activeItemIndex" property from layout config`);
         continue;
       }
       

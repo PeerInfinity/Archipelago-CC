@@ -412,13 +412,46 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 
 ### Root Scripts (scripts/)
 
-- **`install_json_tools.py`** - Standalone JSON Tools installation script
+- **`install_json_tools.py`** - End-to-end installation test script. Verifies that JSON Tools can be
+  installed from scratch into a fresh Archipelago clone and that the resulting installation works
+  correctly. Not intended for end users — this is a developer tool for testing the installation
+  pipeline. It clones Archipelago, creates a venv, downloads and runs the JSON Tools installer,
+  sets up the dev environment, optionally applies ROM-less patches, and runs verification tests.
+
   ```bash
-  python scripts/install_json_tools.py                       # Basic installation
-  python scripts/install_json_tools.py --dev --all           # Dev version with all components
-  python scripts/install_json_tools.py --romless             # Enable ROM-less testing
-  python scripts/install_json_tools.py --target-dir /path    # Custom installation directory
+  # Basic installation (monkey patching, tests with Adventure)
+  python scripts/install_json_tools.py --dev --target-dir ~/Archipelago-vanilla
+
+  # ROM-less + ALTTP test
+  python scripts/install_json_tools.py --dev --romless --target-dir ~/Archipelago-vanilla
+
+  # Fresh install (delete existing target first)
+  python scripts/install_json_tools.py --dev --fresh --target-dir ~/Archipelago-vanilla
+
+  # Dev version with all components, skip tests
+  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir ~/Archipelago-vanilla
+
+  # Dry run (preview what would be done)
+  python scripts/install_json_tools.py --dev --dry-run --target-dir ~/Archipelago-vanilla
   ```
+
+  **Key options:**
+  | Option | Description |
+  |--------|-------------|
+  | `--dev` | Use development branch (Archipelago-CC @ main). Default is stable. |
+  | `--target-dir DIR` | Installation directory (default: `./archipelago-json-tools`) |
+  | `--patch-mode MODE` | `monkey` (default, runtime patching) or `none` |
+  | `--romless` | Apply ROM-less patches (enables ALTTP and other ROM-based game testing) |
+  | `--fresh` | Delete existing target directory before cloning |
+  | `--test MODE` | `auto` (default: ALTTP if --romless, else Adventure), `adventure`, `alttp`, or `none` |
+  | `--all` | Install all components (frontend, presets, docs, etc.) |
+  | `--skip-clone` | Skip cloning (assume Archipelago already exists in target) |
+  | `--skip-setup` | Skip development environment setup |
+  | `--skip-tests` | Same as `--test none` |
+  | `--dry-run` / `-n` | Show what would be done without making changes |
+
+  **Verification tests** run both a spoiler test (`test-all-templates.py`) and a UT fuzz test
+  (`test-all-ut-fuzz.py --runs 1`) for a single game, ensuring the installation works end-to-end.
 
 - **`install_apworlds.py`** - Bulk install APWorlds from community index
   ```bash
