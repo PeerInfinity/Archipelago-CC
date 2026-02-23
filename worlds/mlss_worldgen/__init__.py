@@ -191,14 +191,6 @@ class MarioLuigiSuperstarSagaWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["jamesbrq"]
-        ),
-        Tutorial(
-            "Setup Guide",
-            "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
-            "Español",
-            "setup_es.md",
-            "setup/es",
-            ["GreenMarco"]
         )
     ]
 

@@ -61,14 +61,6 @@ class AdventureWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["JusticePS"]
-        ),
-        Tutorial(
-            "Guide de configuration Multimonde",
-            "Un guide pour configurer Adventure MultiWorld",
-            "Français",
-            "setup_fr.md",
-            "setup/fr",
-            ["TheLynk"]
         )
     ]
 

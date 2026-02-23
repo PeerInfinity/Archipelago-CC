@@ -5200,31 +5200,11 @@
             ]
           },
           {
-            "name": "Multiworld Setup Guide",
-            "description": "A guide to playing shapez with Archipelago:",
-            "language": "Deutsch",
-            "file_name": "setup_de.md",
-            "link": "setup/de",
-            "authors": [
-              "BlastSlimey"
-            ]
-          },
-          {
             "name": "Changing datapackage settings",
             "description": "3000 locations are too many or not enough? Here's how you can change that:",
             "language": "English",
             "file_name": "datapackage_settings_en.md",
             "link": "datapackage_settings/en",
-            "authors": [
-              "BlastSlimey"
-            ]
-          },
-          {
-            "name": "Changing datapackage settings",
-            "description": "3000 locations are too many or not enough? Here's how you can change that:",
-            "language": "Deutsch",
-            "file_name": "datapackage_settings_de.md",
-            "link": "datapackage_settings/de",
             "authors": [
               "BlastSlimey"
             ]
