@@ -245,13 +245,19 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Find victory location and item (heuristic: event with "victory" in name)
     victory_location = None
     victory_item = None
+    all_events = []
     for loc_name, loc_data in data.locations.items():
         if loc_data.is_event:
             item_name = data.original_placements.get(loc_name, '')
+            all_events.append((loc_name, item_name))
             if 'victory' in item_name.lower() or 'victory' in loc_name.lower():
                 victory_location = loc_name
                 victory_item = item_name
                 break
+
+    # If no "victory" match found but there's exactly one event, use it as the victory
+    if not victory_location and len(all_events) == 1:
+        victory_location, victory_item = all_events[0]
 
     # Determine completion condition lambda body
     completion_lambda_body = None

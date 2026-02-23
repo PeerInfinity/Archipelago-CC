@@ -267,20 +267,29 @@ class MetamathWorld(World):
 
     def create_item(self, name: str) -> Item:
         """Create a single item."""
-        if name in self.item_name_to_id:
-            item_data = self.item_table.get(name)
-            if item_data:
-                return MetamathItem(
-                    name,
-                    item_data.classification,
-                    self.item_name_to_id[name],
-                    self.player
-                )
-        # Fallback to filler
+        # Check instance-level table first (rebuilt in generate_early for actual proof size)
+        item_data = getattr(self, 'item_table', item_table).get(name)
+        if item_data:
+            return MetamathItem(
+                name,
+                item_data.classification,
+                item_data.code,
+                self.player
+            )
+        # Fall back to class-level table (default 100-statement table)
+        class_item_data = item_table.get(name)
+        if class_item_data:
+            return MetamathItem(
+                name,
+                class_item_data.classification,
+                class_item_data.code,
+                self.player
+            )
+        # Last resort: create as filler with the requested name
         return MetamathItem(
-            "Proof Hint",
+            name,
             ItemClassification.filler,
-            self.item_name_to_id.get("Proof Hint", 234791999),
+            self.item_name_to_id.get(name, self.item_name_to_id.get("Proof Hint", 234791999)),
             self.player
         )
 
