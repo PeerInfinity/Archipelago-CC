@@ -894,14 +894,10 @@ class _ShopWrapper:
     web_theme = data.metadata.web_theme or "ocean"
 
     # Build tutorials content
-    # Only include English tutorials - the world generator only creates setup_en.md,
-    # so non-English tutorials would reference files that don't exist.
     tutorials_content = "[]"
     if data.metadata.web_tutorials:
         tutorial_entries = []
         for t in data.metadata.web_tutorials:
-            if t.language.lower() != "english" and t.language.lower() != "en":
-                continue
             name_escaped = t.name.replace('\\', '\\\\').replace('"', '\\"')
             desc_escaped = t.description.replace('\\', '\\\\').replace('"', '\\"')
             lang_escaped = t.language.replace('\\', '\\\\').replace('"', '\\"')

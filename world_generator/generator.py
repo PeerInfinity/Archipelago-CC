@@ -278,28 +278,22 @@ class WorldGenerator:
         # self.data is guaranteed non-None when this method is called from generate()
         assert self.data is not None
 
-        # Create a basic setup_en.md
-        setup_md = docs_dir / 'setup_en.md'
-        if not setup_md.exists() or self.force:
-            setup_content = f"""# {self.data.metadata.game_name} Setup Guide
+        # Create a doc file for each tutorial referenced in the metadata
+        tutorial_files_created = set()
+        for tutorial in self.data.metadata.web_tutorials:
+            if tutorial.file_name and tutorial.file_name not in tutorial_files_created:
+                tutorial_md = docs_dir / tutorial.file_name
+                if not tutorial_md.exists() or self.force:
+                    tutorial_content = f"# {tutorial.name}\n\n{tutorial.description}\n"
+                    tutorial_md.write_text(tutorial_content)
+                tutorial_files_created.add(tutorial.file_name)
 
-## Required Software
-
-- Archipelago client
-
-## Installation
-
-1. Download the game's .apworld file
-2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with {self.data.metadata.game_name}
-
-## Joining a Game
-
-1. Open the Archipelago client
-2. Connect to the server
-3. Start playing!
-"""
-            setup_md.write_text(setup_content)
+        # Create setup_en.md if no tutorials created it
+        if 'setup_en.md' not in tutorial_files_created:
+            setup_md = docs_dir / 'setup_en.md'
+            if not setup_md.exists() or self.force:
+                setup_content = f"# {self.data.metadata.game_name} Setup Guide\n\nGenerated world package.\n"
+                setup_md.write_text(setup_content)
 
         # Create game info file (en_GameName.md) for WebHost integration
         game_info_md = docs_dir / f'en_{self.data.metadata.game_name}.md'
