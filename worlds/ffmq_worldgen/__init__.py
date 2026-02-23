@@ -152,6 +152,14 @@ class FinalFantasyMysticQuestWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["Alchav"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["Artea"]
         )
     ]
 

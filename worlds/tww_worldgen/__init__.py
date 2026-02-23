@@ -118,6 +118,14 @@ class TheWindWakerWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["tanjo3", "Lunix"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago The Wind Waker software on your computer.",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["mobby45"]
         )
     ]
 

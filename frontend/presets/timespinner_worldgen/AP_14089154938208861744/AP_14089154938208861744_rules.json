@@ -9308,6 +9308,18 @@
             "authors": [
               "Jarno"
             ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "language": "Deutsch",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "Grrmo",
+              "Fynxes",
+              "Blaze0168"
+            ]
           }
         ]
       },

@@ -81,6 +81,14 @@ class DLCQuestWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["axe_y"]
+        ),
+        Tutorial(
+            "Guide de configuration MultiWorld",
+            "Un guide pour configurer DLCQuest sur votre PC.",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["Deoxis"]
         )
     ]
 

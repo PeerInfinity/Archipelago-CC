@@ -184,6 +184,14 @@ class TimespinnerWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["Jarno"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "Deutsch",
+            "setup_de.md",
+            "setup/de",
+            ["Grrmo", "Fynxes", "Blaze0168"]
         )
     ]
 

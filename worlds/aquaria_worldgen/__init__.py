@@ -202,6 +202,14 @@ class AquariaWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["Tioui"]
+        ),
+        Tutorial(
+            "Guide de configuration Multimonde",
+            "Un guide pour configurer Aquaria MultiWorld",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["Tioui"]
         )
     ]
 

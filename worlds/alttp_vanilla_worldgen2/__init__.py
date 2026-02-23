@@ -265,12 +265,52 @@ class ALinktothePastVanillaWorldGen2Web(WebWorld):
             ["Farrak Kilhn", "Berserker"]
         ),
         Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Deutsch",
+            "multiworld_de.md",
+            "multiworld/de",
+            ["Fischfilet"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Español",
+            "multiworld_es.md",
+            "multiworld/es",
+            ["Edos"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Français",
+            "multiworld_fr.md",
+            "multiworld/fr",
+            ["Coxla"]
+        ),
+        Tutorial(
             "MSU-1 Setup Guide",
             "A guide to setting up MSU-1, which allows for custom in-game music.",
             "English",
             "msu1_en.md",
             "msu1/en",
             ["Farrak Kilhn"]
+        ),
+        Tutorial(
+            "MSU-1 Setup Guide",
+            "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "Español",
+            "msu1_es.md",
+            "msu1/es",
+            ["Edos"]
+        ),
+        Tutorial(
+            "MSU-1 Setup Guide",
+            "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "Français",
+            "msu1_fr.md",
+            "msu1/fr",
+            ["Coxla"]
         ),
         Tutorial(
             "Plando Guide",
