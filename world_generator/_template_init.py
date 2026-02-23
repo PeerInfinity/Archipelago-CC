@@ -853,12 +853,16 @@ class _ShopWrapper:
     # Non-event locked items are placed via canonical_placements in _place_original_items().
     itempool_entries = []
     if data.canonical_placements or canonical_seed is not None:
-        # Count only event items that are locked (these are subtracted from pool)
+        # Count locked items that are event items or placed at event locations
+        # (these are subtracted from pool since they're in LOCKED_PLACEMENTS)
         event_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
+                loc_data = data.locations.get(loc_name)
+                is_event_item = item_data and item_data.is_event
+                is_event_location = loc_data and loc_data.is_event
+                if is_event_item or is_event_location:
                     event_item_counts[item_name] = event_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
