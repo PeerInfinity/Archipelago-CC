@@ -479,9 +479,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         # Only include truly locked items (events) - not canonical placements
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
-                # Check if this is an event item (id=None)
+                # Check if this is an event item (id=None) or placed at an event location
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
+                loc_data = data.locations.get(loc_name)
+                is_event_item = item_data and item_data.is_event
+                is_event_location = loc_data and loc_data.is_event
+                if is_event_item or is_event_location:
                     loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
                     item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                     locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
