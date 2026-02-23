@@ -316,7 +316,7 @@ class WoodcuttingTaskWeight(Range):
 
 
 @dataclass
-class OldSchoolRunescapeWorldGenOptions(PerGameCommonOptions):
+class WoodcuttingTaskWeightOptions(PerGameCommonOptions):
     """Options for Old School Runescape WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

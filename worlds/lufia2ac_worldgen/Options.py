@@ -358,7 +358,7 @@ Boss.name_lookup = {
 
 
 @dataclass
-class LufiaIIAncientCaveWorldGenOptions(PerGameCommonOptions):
+class ShufflePartyMembersOptions(PerGameCommonOptions):
     """Options for Lufia II Ancient Cave WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

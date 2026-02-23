@@ -144,7 +144,7 @@ class ShufflePipeTraversal(Choice):
 
 
 @dataclass
-class SuperMarioLand2WorldGenOptions(PerGameCommonOptions):
+class ShufflePipeTraversalOptions(PerGameCommonOptions):
     """Options for Super Mario Land 2 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -24,23 +24,13 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Badeline Island Checkpoint": 1,
-    "Badeline Tower Checkpoint": 1,
     "Breakable Blocks": 1,
     "Cassettes": 1,
-    "Climb Sign Checkpoint": 1,
     "Coins": 1,
     "Dash Refills": 1,
-    "Double Dash House Checkpoint": 1,
     "Double Dash Refills": 1,
-    "Feather Maze Checkpoint": 1,
     "Feathers": 1,
-    "Freeway Checkpoint": 1,
-    "Freeway Feather Checkpoint": 1,
-    "Granny Checkpoint": 1,
-    "Intro Checkpoint": 1,
     "Raspberry": 2,
-    "South-East Tower Checkpoint": 1,
     "Springs": 1,
     "Strawberry": 20,
     "Traffic Blocks": 1,

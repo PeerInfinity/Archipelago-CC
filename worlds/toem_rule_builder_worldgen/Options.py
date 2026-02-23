@@ -52,7 +52,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class TOEMrulebuilderWorldGenOptions(PerGameCommonOptions):
+class StartInventoryFromPoolOptions(PerGameCommonOptions):
     """Options for TOEM rule builder WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

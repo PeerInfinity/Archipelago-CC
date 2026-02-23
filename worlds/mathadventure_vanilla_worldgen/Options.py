@@ -34,7 +34,7 @@ class VanillaPlacement(Toggle):
 
 
 @dataclass
-class MathAdventureVanillaWorldGenOptions(PerGameCommonOptions):
+class VanillaPlacementOptions(PerGameCommonOptions):
     """Options for Math Adventure Vanilla WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

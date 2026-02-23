@@ -105,7 +105,7 @@ class VictoryCondition(Choice):
 
 
 @dataclass
-class NoitaWorldGenOptions(PerGameCommonOptions):
+class VictoryConditionOptions(PerGameCommonOptions):
     """Options for Noita WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

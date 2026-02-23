@@ -263,11 +263,6 @@ class BossRandoType(Choice):
     option_manual = 3
     default = 0
 
-class Cantoran(Toggle):
-    """Option for Cantoran."""
-    display_name = "Cantoran"
-    default = False
-
 class DadPercent(Toggle):
     """Option for Dad Percent."""
     display_name = "Dad Percent"
@@ -362,11 +357,6 @@ class HpCap(Range):
     range_start = 1
     range_end = 999
     default = 999
-
-class Inverted(Toggle):
-    """Option for Inverted."""
-    display_name = "Inverted"
-    default = False
 
 class LevelCap(Range):
     """Option for Level Cap."""
@@ -495,7 +485,7 @@ class UnchainedKeys(Toggle):
 
 
 @dataclass
-class TimespinnerWorldGenOptions(PerGameCommonOptions):
+class UnchainedKeysOptions(PerGameCommonOptions):
     """Options for Timespinner WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
@@ -537,7 +527,6 @@ class TimespinnerWorldGenOptions(PerGameCommonOptions):
     boss_healing: BossHealing
     boss_rando: BossRando
     boss_rando_type: BossRandoType
-    cantoran: Cantoran
     dad_percent: DadPercent
     damage_rando: DamageRando
     death_link: DeathLink
@@ -553,7 +542,6 @@ class TimespinnerWorldGenOptions(PerGameCommonOptions):
     gyre_archives: GyreArchives
     has_replaced_options: HasReplacedOptions
     hp_cap: HpCap
-    inverted: Inverted
     level_cap: LevelCap
     lock_key_amadeus: LockKeyAmadeus
     loot_pool: LootPool

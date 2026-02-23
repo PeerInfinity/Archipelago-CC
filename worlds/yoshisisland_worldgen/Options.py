@@ -218,7 +218,7 @@ class YoshiSingularityColor(Choice):
 
 
 @dataclass
-class YoshisIslandWorldGenOptions(PerGameCommonOptions):
+class YoshiSingularityColorOptions(PerGameCommonOptions):
     """Options for Yoshi's Island WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

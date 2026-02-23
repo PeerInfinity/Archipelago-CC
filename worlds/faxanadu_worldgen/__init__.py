@@ -52,7 +52,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Thunder": 1,
     "Tilte": 1,
     "Unlock Wingboots": 1,
-    "Wingboots": 4,
 }
 
 # Locked placements - items that must be placed via place_locked_item

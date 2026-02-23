@@ -271,7 +271,7 @@ class TeleportTraps(Range):
 
 
 @dataclass
-class FactorioWorldGenOptions(PerGameCommonOptions):
+class TeleportTrapsOptions(PerGameCommonOptions):
     """Options for Factorio WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

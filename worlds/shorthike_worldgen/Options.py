@@ -140,7 +140,7 @@ class ToyShovels(Range):
 
 
 @dataclass
-class AShortHikeWorldGenOptions(PerGameCommonOptions):
+class ToyShovelsOptions(PerGameCommonOptions):
     """Options for A Short Hike WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
