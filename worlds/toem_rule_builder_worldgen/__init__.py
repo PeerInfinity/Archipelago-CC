@@ -592,24 +592,6 @@ class ToemWorld(RuleWorldMixin, World):
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
 
-    def generate_basic(self) -> None:
-        """Place victory event item and set completion condition."""
-        victory_location = self.multiworld.get_location("TOEM Experienced", self.player)
-
-        # Only place if not already filled (e.g., by _place_locked_items)
-        if victory_location.item is None:
-            victory_item = TOEMrulebuilderWorldGenItem(
-                "TOEM Experienced",
-                item_table["TOEM Experienced"].classification,
-                None,
-                self.player
-            )
-            victory_location.place_locked_item(victory_item)
-
-        # Set completion condition
-        self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("TOEM Experienced", self.player)
-
     def set_rules(self) -> None:
         """Set access rules."""
         set_rules(self)
@@ -688,6 +670,24 @@ class ToemWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("TOEM Experienced", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = TOEMrulebuilderWorldGenItem(
+                "TOEM Experienced",
+                item_table["TOEM Experienced"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("TOEM Experienced", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

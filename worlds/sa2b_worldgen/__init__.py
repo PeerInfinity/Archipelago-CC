@@ -717,7 +717,20 @@ class SA2BWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Set completion condition."""
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("Finalhazard", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = SonicAdventure2BattleWorldGenItem(
+                "What Maria Wanted",
+                item_table["What Maria Wanted"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
         self.multiworld.completion_condition[self.player] = \
             lambda state: state.has("What Maria Wanted", self.player)
 

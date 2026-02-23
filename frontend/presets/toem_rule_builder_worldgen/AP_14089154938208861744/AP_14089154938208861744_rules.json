@@ -4379,7 +4379,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "TOEM Experienced"
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true
