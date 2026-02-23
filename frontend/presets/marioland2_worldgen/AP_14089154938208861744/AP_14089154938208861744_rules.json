@@ -1815,7 +1815,8 @@
         "id": 19,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -1827,7 +1828,8 @@
         "id": 20,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -1839,7 +1841,8 @@
         "id": 21,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -1851,7 +1854,8 @@
         "id": 22,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -1863,7 +1867,8 @@
         "id": 23,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -1875,7 +1880,8 @@
         "id": 24,
         "groups": [
           "Event",
-          "Everything"
+          "Everything",
+          "Golden Coins"
         ],
         "classification": "progression_skip_balancing",
         "type": "Event",
@@ -29175,6 +29181,7 @@
       "Coins",
       "Difficulties",
       "Everything",
+      "Golden Coins",
       "Level Progression",
       "Powerups"
     ]
