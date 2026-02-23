@@ -57,10 +57,10 @@ general_options:
   save_tracker_pickle: true
 ```
 
-Or use the `pickle-mode` preset:
+Or use the `ut-pickle` preset:
 
 ```bash
-python scripts/setup/update_host_settings.py pickle-mode
+python scripts/setup/update_host_settings.py ut-pickle
 ```
 
 ### Loading Pickles
