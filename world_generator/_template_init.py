@@ -888,10 +888,16 @@ class _ShopWrapper:
     itempool_content = '\n'.join(itempool_entries)
 
     # Build item_name_groups dictionary (preserve original order)
+    # Filter out event items — they have no ID and aren't in item_name_to_id,
+    # so including them in groups causes test_item_name_group_has_valid_item to fail
     item_name_groups_entries = []
     for group_name, item_names in data.item_name_groups.items():
+        non_event_items = [name for name in item_names
+                          if name in data.items and not data.items[name].is_event]
+        if not non_event_items:
+            continue
         group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
-        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in item_names)
+        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in non_event_items)
         item_name_groups_entries.append(f'        "{group_escaped}": frozenset([{items_list}]),')
 
     item_name_groups_content = '\n'.join(item_name_groups_entries)
