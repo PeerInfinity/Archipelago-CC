@@ -463,6 +463,16 @@
             "authors": [
               "NewSoupVi"
             ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up APQuest for MultiWorld.",
+            "language": "German",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "NewSoupVi"
+            ]
           }
         ]
       },

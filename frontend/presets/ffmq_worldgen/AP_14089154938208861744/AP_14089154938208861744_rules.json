@@ -21616,6 +21616,16 @@
             "authors": [
               "Alchav"
             ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Artea"
+            ]
           }
         ]
       },

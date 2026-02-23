@@ -1949,6 +1949,16 @@
             "authors": [
               "axe_y"
             ]
+          },
+          {
+            "name": "Guide de configuration MultiWorld",
+            "description": "Un guide pour configurer DLCQuest sur votre PC.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Deoxis"
+            ]
           }
         ]
       },

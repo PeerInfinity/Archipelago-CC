@@ -3201,6 +3201,16 @@
             "authors": [
               "DrBibop"
             ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "Un guide pour configurer Inscryption Archipelago Multiworld",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Glowbuzz"
+            ]
           }
         ]
       },

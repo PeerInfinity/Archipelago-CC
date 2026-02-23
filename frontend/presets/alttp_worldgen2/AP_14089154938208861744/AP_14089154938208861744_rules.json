@@ -20838,6 +20838,36 @@
             ]
           },
           {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Deutsch",
+            "file_name": "multiworld_de.md",
+            "link": "multiworld/de",
+            "authors": [
+              "Fischfilet"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Espa\u00f1ol",
+            "file_name": "multiworld_es.md",
+            "link": "multiworld/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Fran\u00e7ais",
+            "file_name": "multiworld_fr.md",
+            "link": "multiworld/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
             "name": "MSU-1 Setup Guide",
             "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
             "language": "English",
@@ -20845,6 +20875,26 @@
             "link": "msu1/en",
             "authors": [
               "Farrak Kilhn"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Espa\u00f1ol",
+            "file_name": "msu1_es.md",
+            "link": "msu1/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Fran\u00e7ais",
+            "file_name": "msu1_fr.md",
+            "link": "msu1/fr",
+            "authors": [
+              "Coxla"
             ]
           },
           {
