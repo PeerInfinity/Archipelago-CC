@@ -90,14 +90,6 @@ class InscryptionWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["DrBibop"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "Un guide pour configurer Inscryption Archipelago Multiworld",
-            "Français",
-            "setup_fr.md",
-            "setup/fr",
-            ["Glowbuzz"]
         )
     ]
 

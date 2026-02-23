@@ -90,27 +90,11 @@ class shapezWorldGenWeb(WebWorld):
             ["BlastSlimey"]
         ),
         Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to playing shapez with Archipelago:",
-            "Deutsch",
-            "setup_de.md",
-            "setup/de",
-            ["BlastSlimey"]
-        ),
-        Tutorial(
             "Changing datapackage settings",
             "3000 locations are too many or not enough? Here's how you can change that:",
             "English",
             "datapackage_settings_en.md",
             "datapackage_settings/en",
-            ["BlastSlimey"]
-        ),
-        Tutorial(
-            "Changing datapackage settings",
-            "3000 locations are too many or not enough? Here's how you can change that:",
-            "Deutsch",
-            "datapackage_settings_de.md",
-            "datapackage_settings/de",
             ["BlastSlimey"]
         )
     ]

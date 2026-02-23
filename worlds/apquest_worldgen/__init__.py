@@ -55,14 +55,6 @@ class APQuestWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["NewSoupVi"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up APQuest for MultiWorld.",
-            "German",
-            "setup_de.md",
-            "setup/de",
-            ["NewSoupVi"]
         )
     ]
 
