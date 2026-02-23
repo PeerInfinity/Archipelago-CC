@@ -173,6 +173,6 @@ A more thorough analysis comparing the exact changes to `rules.py` against the o
 ## Related Documentation
 
 - **Original PR:** https://github.com/ArchipelagoMW/Archipelago/pull/5048
-- **Rule Builder README:** [rule_builder/README.md](../../../../rule_builder/README.md)
-- **Format Converter Guide:** [format-converter.md](../guides/format-converter.md)
-- **Rule Types Reference:** [rule-types-reference.md](../reference/rule-types-reference.md)
+- **Rule Builder README:** [rule_builder/README.md](../../../../../rule_builder/README.md)
+- **Format Converter Guide:** [format-converter.md](../../guides/format-converter.md)
+- **Rule Types Reference:** [rule-types-reference.md](../../reference/rule-types-reference.md)

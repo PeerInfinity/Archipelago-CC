@@ -53,8 +53,8 @@ Changes to the Rule Builder module (`rule_builder/`), which exists in upstream s
 - **rule_builder/rules.py** - Upstream: 1,822 lines. Fork: 4,224 lines (+2,402 lines). Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and 15 new rule types for AST format support
 
 These changes are not included in the `.diff` files because of their size. Instead, they are documented in:
-- **[fork-vs-upstream-rule-builder.md](./fork-vs-upstream-rule-builder.md)** - Detailed API comparison table
-- **[rule-builder-modifications.md](./rule-builder-modifications.md)** - Overview of all modifications and new modules
+- **[fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md)** - Detailed API comparison table
+- **[rule-builder-modifications.md](./rule-builder/rule-builder-modifications.md)** - Overview of all modifications and new modules
 
 Note: `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodified** from upstream.
 
@@ -169,6 +169,6 @@ Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09c
 - **[repository-changes.md](./repository-changes.md)** - Complete overview of all changes from upstream
 - **[fuzzer-modifications.md](./fuzzer-modifications.md)** - Changes made to the Archipelago fuzzer
 - **[universal-tracker-modifications.md](./universal-tracker-modifications.md)** - Changes made to Universal Tracker
-- **[rule-builder-modifications.md](./rule-builder-modifications.md)** - Changes made to Rule Builder
+- **[rule-builder-modifications.md](./rule-builder/rule-builder-modifications.md)** - Changes made to Rule Builder
 - **[JSON Tools Installer](../../../../worlds/json_tools_installer/README.md)** - APWorld for automated installation on vanilla Archipelago
 - **[Main README](../../../../README.md)** - Project overview and getting started guide
