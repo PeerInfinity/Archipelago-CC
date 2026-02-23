@@ -117,7 +117,7 @@ settings.py
 README.md
 ```
 
-### Rule Builder (see [fork-vs-upstream-rule-builder.md](./fork-vs-upstream-rule-builder.md) and [rule-builder-modifications.md](./rule-builder-modifications.md))
+### Rule Builder (see [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) and [rule-builder-modifications.md](./rule-builder/rule-builder-modifications.md))
 ```
 rule_builder/__init__.py
 rule_builder/rules.py
@@ -176,7 +176,7 @@ Modified world implementations to support generation without ROM files:
 - Yoshi's Island (yoshisisland)
 
 ### Rule Builder
-- **rule_builder/rules.py** - Extended from 1,822 to 4,224 lines. Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and many new rule types for AST format support (`Not`, `CountItem`, `Compare`, `Arithmetic`, `Conditional`, `HelperCall`, etc.). See [fork-vs-upstream-rule-builder.md](./fork-vs-upstream-rule-builder.md) for detailed comparison.
+- **rule_builder/rules.py** - Extended from 1,822 to 4,224 lines. Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and many new rule types for AST format support (`Not`, `CountItem`, `Compare`, `Arithmetic`, `Conditional`, `HelperCall`, etc.). See [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) for detailed comparison.
 - **rule_builder/__init__.py** - Upstream: empty file. Fork: 165 lines with full API exports and documentation.
 
 ### Configuration Files
@@ -204,7 +204,7 @@ The upstream Rule Builder ([PR #5048](https://github.com/ArchipelagoMW/Archipela
 - Additional rule types for full AST format coverage (15 new classes)
 - JSON serialization/deserialization (`to_dict()`/`from_dict()` on Resolved rules)
 
-The upstream files `rule_builder/cached_world.py` and `rule_builder/options.py` are unmodified. See [rule-builder-modifications.md](./rule-builder-modifications.md) and [fork-vs-upstream-rule-builder.md](./fork-vs-upstream-rule-builder.md) for details.
+The upstream files `rule_builder/cached_world.py` and `rule_builder/options.py` are unmodified. See [rule-builder-modifications.md](./rule-builder/rule-builder-modifications.md) and [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) for details.
 
 ### World Generator (`world_generator/`)
 Converts JSON rules files back into functional Archipelago world packages:

@@ -50,7 +50,7 @@ Documentation of changes from upstream Archipelago:
 | [Core Files](./diffs/core-files.diff) | Changes to Main.py, BaseClasses.py |
 | [Config Files](./diffs/config-files.diff) | Configuration modifications |
 | [World Init Files](./diffs/world-init-files.diff) | World __init__.py changes |
-| [Rule Builder Modifications](./diffs/rule-builder-modifications.md) | Rule Builder customizations |
+| [Rule Builder Modifications](./diffs/rule-builder/rule-builder-modifications.md) | Rule Builder customizations |
 | [Universal Tracker Modifications](./diffs/universal-tracker-modifications.md) | UT integration changes |
 | [Fuzzer Modifications](./diffs/fuzzer-modifications.md) | Fuzzer enhancements |
 
