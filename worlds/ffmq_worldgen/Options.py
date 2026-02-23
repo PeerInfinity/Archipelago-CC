@@ -308,7 +308,7 @@ class TweakFrustratingDungeons(Toggle):
 
 
 @dataclass
-class TweakFrustratingDungeonsOptions(PerGameCommonOptions):
+class FinalFantasyMysticQuestWorldGenOptions(PerGameCommonOptions):
     """Options for Final Fantasy Mystic Quest WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

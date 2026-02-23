@@ -308,7 +308,7 @@ class Warps(Choice):
 
 
 @dataclass
-class WarpsOptions(PerGameCommonOptions):
+class LinksAwakeningDXWorldGenOptions(PerGameCommonOptions):
     """Options for Links Awakening DX WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

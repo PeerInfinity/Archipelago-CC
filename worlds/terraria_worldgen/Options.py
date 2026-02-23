@@ -89,7 +89,7 @@ class NormalAchievements(DefaultOnToggle):
 
 
 @dataclass
-class NormalAchievementsOptions(PerGameCommonOptions):
+class TerrariaWorldGenOptions(PerGameCommonOptions):
     """Options for Terraria WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -34,7 +34,7 @@ class VanillaPlacement(Toggle):
 
 
 @dataclass
-class VanillaPlacementOptions(PerGameCommonOptions):
+class BakingAdventureWorldGenOptions(PerGameCommonOptions):
     """Options for Baking Adventure WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -72,7 +72,7 @@ class TrapChance(Range):
 
 
 @dataclass
-class TrapChanceOptions(PerGameCommonOptions):
+class APQuestWorldGenOptions(PerGameCommonOptions):
     """Options for APQuest WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

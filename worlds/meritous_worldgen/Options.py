@@ -59,7 +59,7 @@ class ItemCacheCost(Choice):
 
 
 @dataclass
-class ItemCacheCostOptions(PerGameCommonOptions):
+class MeritousWorldGenOptions(PerGameCommonOptions):
     """Options for Meritous WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

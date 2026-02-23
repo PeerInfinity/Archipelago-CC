@@ -50,7 +50,7 @@ class Triforcelocations(Choice):
 
 
 @dataclass
-class TriforcelocationsOptions(PerGameCommonOptions):
+class TheLegendofZeldaWorldGenOptions(PerGameCommonOptions):
     """Options for The Legend of Zelda WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

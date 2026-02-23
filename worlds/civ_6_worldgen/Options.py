@@ -77,7 +77,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class StartInventoryFromPoolOptions(PerGameCommonOptions):
+class CivilizationVIWorldGenOptions(PerGameCommonOptions):
     """Options for Civilization VI WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

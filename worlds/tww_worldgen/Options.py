@@ -312,7 +312,7 @@ class SwordMode(Choice):
 
 
 @dataclass
-class SwordModeOptions(PerGameCommonOptions):
+class TheWindWakerWorldGenOptions(PerGameCommonOptions):
     """Options for The Wind Waker WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

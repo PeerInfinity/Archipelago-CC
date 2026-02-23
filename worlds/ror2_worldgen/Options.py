@@ -290,7 +290,7 @@ class YellowScrap(Range):
 
 
 @dataclass
-class YellowScrapOptions(PerGameCommonOptions):
+class RiskofRain2WorldGenOptions(PerGameCommonOptions):
     """Options for Risk of Rain 2 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

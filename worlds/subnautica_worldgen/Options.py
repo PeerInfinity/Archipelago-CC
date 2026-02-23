@@ -86,7 +86,7 @@ class SwimRule(Choice):
 
 
 @dataclass
-class SwimRuleOptions(PerGameCommonOptions):
+class SubnauticaWorldGenOptions(PerGameCommonOptions):
     """Options for Subnautica WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

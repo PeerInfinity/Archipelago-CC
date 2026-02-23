@@ -32,7 +32,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class StartInventoryFromPoolOptions(PerGameCommonOptions):
+class ChooChooCharlesWorldGenOptions(PerGameCommonOptions):
     """Options for Choo-Choo Charles WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

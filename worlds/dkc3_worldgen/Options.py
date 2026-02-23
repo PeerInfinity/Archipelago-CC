@@ -124,7 +124,7 @@ class StartingLifeCount(Range):
 
 
 @dataclass
-class StartingLifeCountOptions(PerGameCommonOptions):
+class DonkeyKongCountry3WorldGenOptions(PerGameCommonOptions):
     """Options for Donkey Kong Country 3 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

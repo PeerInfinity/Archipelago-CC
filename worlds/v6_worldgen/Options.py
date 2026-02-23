@@ -63,7 +63,7 @@ class MusicRando(Toggle):
 
 
 @dataclass
-class MusicRandoOptions(PerGameCommonOptions):
+class VVVVVVWorldGenOptions(PerGameCommonOptions):
     """Options for VVVVVV WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
