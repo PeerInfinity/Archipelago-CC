@@ -1211,7 +1211,7 @@
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/official/stardew_valley.py",
-    "exporter_size": 20065,
+    "exporter_size": 20489,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
     "game_logic_size": 10071,
     "game_name": "Stardew Valley",
