@@ -24,7 +24,6 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Activated Flute": 1,
     "Arrows (10)": 12,
     "Big Key (Desert Palace)": 1,
     "Big Key (Eastern Palace)": 1,
@@ -118,7 +117,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Small Key (Thieves Town)": 3,
     "Small Key (Tower of Hera)": 1,
     "Small Key (Turtle Rock)": 6,
-    "Triforce": 1,
     "__max_boss_heart_container": 10,
     "__max_heart_piece": 24,
     "__max_progressive_bottle": 4,
