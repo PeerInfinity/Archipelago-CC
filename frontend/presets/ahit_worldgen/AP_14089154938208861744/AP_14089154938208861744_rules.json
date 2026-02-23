@@ -6858,7 +6858,6 @@
       "Burger",
       "Cake",
       "Crayon",
-      "Event",
       "Everything",
       "Necklace",
       "Train",
@@ -8019,17 +8018,6 @@
         "Necklace": [
           "Relic (Necklace Bust)",
           "Relic (Necklace)"
-        ],
-        "Event": [
-          "AFR Access",
-          "Birdhouse Cleared",
-          "HUMT Access",
-          "Lava Cake Cleared",
-          "TIHS Access",
-          "TOD Access",
-          "Time Piece Cluster",
-          "Twilight Bell Cleared",
-          "Windmill Cleared"
         ]
       }
     }

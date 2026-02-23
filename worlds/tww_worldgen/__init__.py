@@ -175,7 +175,6 @@ class TWWWorld(RuleWorldMixin, World):
         "Big Keys": frozenset(["DRC Big Key", "FW Big Key", "TotG Big Key", "ET Big Key", "WT Big Key"]),
         "Small Keys": frozenset(["DRC Small Key", "FW Small Key", "TotG Small Key", "ET Small Key", "WT Small Key"]),
         "Dungeon Items": frozenset(["DRC Dungeon Map", "DRC Compass", "FW Dungeon Map", "FW Compass", "TotG Dungeon Map", "TotG Compass", "FF Dungeon Map", "FF Compass", "ET Dungeon Map", "ET Compass", "WT Dungeon Map", "WT Compass"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

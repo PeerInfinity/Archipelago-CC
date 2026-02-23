@@ -100,7 +100,6 @@ class BakingAdventureWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

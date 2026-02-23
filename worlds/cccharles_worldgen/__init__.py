@@ -140,7 +140,6 @@ class CCCharlesWorld(RuleWorldMixin, World):
         "Paint Can": frozenset(["Orange Paint Can", "Green Paint Can", "White Paint Can", "Pink Paint Can", "Grey Paint Can", "Blue Paint Can", "Black Paint Can", "Lime Paint Can", "Teal Paint Can", "Red Paint Can", "Purple Paint Can"]),
         "Weapons": frozenset(["The Boomer", "Bob", "Bug Spray"]),
         "Eggs": frozenset(["Green Egg", "Blue Egg", "Red Egg"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

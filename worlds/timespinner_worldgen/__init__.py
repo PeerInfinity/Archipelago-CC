@@ -238,7 +238,6 @@ class TimespinnerWorld(RuleWorldMixin, World):
         "Laser Access": frozenset(["Laser Access A", "Laser Access I", "Laser Access M"]),
         "Lab Access": frozenset(["Lab Access Genza", "Lab Access Experiment", "Lab Access Research", "Lab Access Dynamo"]),
         "Key": frozenset(["Drawbridge Key"]),
-        "Event": frozenset(["Killed Emperor", "Killed Maw", "Killed Twins", "Killed Aelana", "Killed Nightmare"]),
     }
 
     # Placements are deterministically reproduced by world generator

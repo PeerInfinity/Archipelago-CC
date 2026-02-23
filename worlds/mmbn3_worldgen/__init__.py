@@ -284,7 +284,6 @@ class MMBN3World(RuleWorldMixin, World):
         "Zenny": frozenset(["200z", "500z", "600z", "800z", "900z", "1000z", "1200z", "1400z", "1600z", "1800z", "2000z", "3000z", "9000z", "10000z", "30000z", "50000z"]),
         "BugFrags": frozenset(["30 BugFrags", "10 BugFrags", "1 BugFrag"]),
         "Navi Chips": frozenset(["Roll R", "Roll V2 R", "Roll V3 R", "GutsMan G", "GutsMan V2 G", "GutsMan V3 G", "ProtoMan B", "ProtoMan V2 B", "ProtoMan V3 B", "FlashMan F", "FlashMan V2 F", "FlashMan V3 F", "BeastMan B", "BeastMan V2 B", "BeastMan V3 B", "BubblMan B", "BubblMan V2 B", "BubblMan V3 B", "DesertMan D", "DesertMan V2 D", "DesertMan V3 D", "PlantMan P", "PlantMan V2 P", "PlantMan V3 P", "FlamMan F", "FlamMan V2 F", "FlamMan V3 F", "DrillMan D", "DrillMan V2 D", "DrillMan V3 D", "MetalMan M", "MetalMan V2 M", "MetalMan V3 M", "KingMan K", "KingMan V2 K", "KingMan V3 K", "BowlMan B", "BowlMan V2 B", "BowlMan V3 B"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

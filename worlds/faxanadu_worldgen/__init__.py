@@ -114,7 +114,6 @@ class FaxanaduWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Progressive Sword", "Progressive Armor", "Progressive Shield", "Spring Elixir", "Mattock", "Unlock Wingboots", "Key Jack", "Key Queen", "Key King", "Key Joker", "Key Ace", "Ring of Ruby", "Ring of Dworf", "Demons Ring", "Black Onyx", "Deluge", "Thunder", "Fire", "Death", "Tilte", "Ring of Elf", "Magical Rod", "Pendant", "Hourglass", "Red Potion", "Elixir", "Glove", "Ointment", "Poison", "Wingboots"]),
-        "Event": frozenset(["Sky Spring Flow", "Joker Spring Flow", "Tower of Fortress Spring Flow", "Killed Evil One"]),
     }
 
     # Placements are deterministically reproduced by world generator

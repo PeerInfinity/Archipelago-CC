@@ -127,7 +127,6 @@ class NoitaWorld(RuleWorldMixin, World):
         "Repeatable Perks": frozenset(["Extra Life Perk"]),
         "Orbs": frozenset(["Orb"]),
         "Items": frozenset(["Random Potion", "Secret Potion", "Powder Pouch", "Chaos Die", "Greed Die", "Kammi", "Refreshing Gourd", "Sädekivi", "Broken Wand"]),
-        "Event": frozenset(["Victory", "Portal to Holy Mountain 1", "Portal to Holy Mountain 2", "Portal to Holy Mountain 3", "Portal to Holy Mountain 4", "Portal to Holy Mountain 5", "Portal to Holy Mountain 6", "Portal to Holy Mountain 7"]),
     }
 
     # Placements are deterministically reproduced by world generator

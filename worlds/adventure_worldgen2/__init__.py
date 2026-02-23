@@ -106,7 +106,6 @@ class AdventureWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["nothing", "Sword", "Bridge", "Yellow Key", "White Key", "Black Key", "Chalice", "Magnet", "Left Difficulty Switch", "Right Difficulty Switch", "Freeincarnate", "Slow Yorgle", "Slow Grundle", "Slow Rhindle", "Revive Dragons"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

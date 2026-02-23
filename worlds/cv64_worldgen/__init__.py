@@ -115,7 +115,6 @@ class CV64World(RuleWorldMixin, World):
         "Everything": frozenset(["Red jewel(S)", "Red jewel(L)", "Special1", "Special2", "Roast chicken", "Roast beef", "Healing kit", "Purifying", "Cure ampoule", "PowerUp", "Knife", "Holy water", "Cross", "Axe", "Ice Trap", "Magical Nitro", "Mandragora", "Sun card", "Moon card", "Archives Key", "Left Tower Key", "Storeroom Key", "Garden Key", "Copper Key", "Chamber Key", "Execution Key", "Science Key1", "Science Key2", "Science Key3", "Clocktower Key1", "Clocktower Key2", "Clocktower Key3", "500 GOLD", "300 GOLD", "100 GOLD", "PermaUp"]),
         "Bomb": frozenset(["Magical Nitro", "Mandragora"]),
         "Ingredient": frozenset(["Magical Nitro", "Mandragora"]),
-        "Event": frozenset(["Crystal", "The Count Downed"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)

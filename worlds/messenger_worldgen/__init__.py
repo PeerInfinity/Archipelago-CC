@@ -150,7 +150,6 @@ class MessengerWorld(RuleWorldMixin, World):
         "Crest": frozenset(["Sun Crest", "Moon Crest"]),
         "Phobe": frozenset(["Necro", "Pyro", "Claustro", "Acro"]),
         "Phobekin": frozenset(["Necro", "Pyro", "Claustro", "Acro"]),
-        "Event": frozenset(["Do the Thing!", "Autumn Hills Portal", "Howling Grotto Portal", "Searing Crags Portal", "Glacial Peak Portal", "Riviere Turquoise Portal", "Sunken Shrine Portal"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)

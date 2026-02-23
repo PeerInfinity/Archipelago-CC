@@ -96,7 +96,6 @@ class MathAdventureWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["df-2", "df-3", "df-4", "ax-1cn", "2cn", "oveq2i", "oveq1i", "addassi", "3eqtri", "eqtr4i"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements match the original non-randomized game

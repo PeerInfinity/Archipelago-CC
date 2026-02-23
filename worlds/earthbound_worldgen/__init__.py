@@ -288,7 +288,6 @@ class EarthBoundWorld(RuleWorldMixin, World):
         "PSI": frozenset(["Onett Teleport", "Twoson Teleport", "Happy-Happy Village Teleport", "Threed Teleport", "Saturn Valley Teleport", "Dusty Dunes Teleport", "Fourside Teleport", "Winters Teleport", "Summers Teleport", "Scaraba Teleport", "Dalaam Teleport", "Deep Darkness Teleport", "Tenda Village Teleport", "Lost Underworld Teleport", "Progressive Poo PSI", "Magicant Teleport"]),
         "Photos": frozenset(["Photograph"]),
         "Money": frozenset(["$10", "$100", "$1000"]),
-        "Event": frozenset(["Power of the Earth", "ATM Access", "Melody", "Valley Bridge Repair", "Threed Tunnels Clear", "Submarine to Deep Darkness", "Saved Earth"]),
     }
 
     # Placements are deterministically reproduced by world generator

@@ -98,7 +98,6 @@ class APQuestWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Key", "Sword", "Shield", "Hammer", "Health Upgrade", "Confetti Cannon", "Math Trap"]),
-        "Event": frozenset(["Top Left Room Button Pressed", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

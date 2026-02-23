@@ -126,7 +126,6 @@ class RiskOfRainWorld(RuleWorldMixin, World):
         "Fillers": frozenset(["Money", "Lunar Coin", "1000 Exp"]),
         "Stages": frozenset(["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Progressive Stage"]),
         "Environments": frozenset(["Aphelian Sanctuary", "Void Fields", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Bazaar Between Time", "Distant Roost", "Distant Roost (2)", "Abyssal Depths", "Wetland Aspect", "Rallypoint Delta", "Hidden Realm: Gilded Coast", "Titanic Plains", "Titanic Plains (2)", "Abandoned Aqueduct", "Hidden Realm: A Moment, Whole", "Verdant Falls", "Commencement", "Hidden Realm: A Moment, Fractured", "Sundered Grove", "Siren's Call", "Sky Meadow", "Siphoned Forest", "Sulfur Pools", "The Planetarium", "Void Locus", "Scorched Acres"]),
-        "Event": frozenset(["Stage 5", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
