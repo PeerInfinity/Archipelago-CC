@@ -46,6 +46,8 @@ class TestBase(unittest.TestCase):
         exclusion_dict = {
             "A Link to the Past":
                 {"Pendants", "Crystals"},
+            "DLCQuest":
+                {"coins"},
             "Ocarina of Time":
                 {"medallions", "stones", "rewards", "logic_bottles"},
             "Starcraft 2":
