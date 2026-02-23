@@ -240,8 +240,10 @@ The `update_host_settings.py` script provides named presets that configure multi
 | `normal` | All export features disabled (upstream-like behavior) |
 | `minimal-spoilers` | Export rules JSON + sphere log for progression items only |
 | `full-spoilers` | Export rules JSON + sphere log for all locations |
-| `ut-fuzz` | Export for UT comparison testing (events auto-collected, filtered) |
-| `pickle-mode` | Export pickle instead of JSON |
+| `ut-hybrid` | UT hybrid mode — config picks best tracking mode per game |
+| `ut-worldgen` | UT worldgen mode — export rules.json for worldgen-based tracking |
+| `ut-pickle` | UT pickle mode — export pickle for pickle-based tracking |
+| `ut-original` | UT original mode — YAML-based tracking, no extra exports |
 
 ### Preset Details
 
@@ -261,17 +263,28 @@ The standard configuration for generating frontend presets:
 
 Same as `minimal-spoilers` but with `extend_sphere_log_to_all_locations` enabled, so the sphere log includes every location regardless of item classification.
 
-#### `ut-fuzz`
+#### `ut-hybrid`
 
-Configured for Universal Tracker comparison testing:
-- Same base as `minimal-spoilers`
-- Enables `auto_collect_events` and `filter_event_items` to match UT's sphere behavior
-- Enables `use_tracking_mode_config` for per-game export decisions
+Enables [hybrid mode](../../../../worlds/tracker/docs/hybrid-mode.md) for Universal Tracker:
+- Enables `use_tracking_mode_config` — the exporter reads `tracking-mode-config.json` to determine the best tracking mode per game and exports only the necessary files
+- Does not set `save_rules_json` or `save_tracker_pickle` — the config drives export decisions
 
-#### `pickle-mode`
+#### `ut-worldgen`
 
-Uses pickle export instead of JSON:
+Forces worldgen-based tracking for all games:
+- Enables `save_rules_json` for worldgen-based tracking
+- Disables `use_tracking_mode_config` — all games use worldgen mode uniformly
+
+#### `ut-pickle`
+
+Forces pickle-based tracking for all games:
 - Enables `save_tracker_pickle` instead of `save_rules_json`
+- Still enables `save_sphere_log` and `update_frontend_presets`
+
+#### `ut-original`
+
+Forces original YAML-based tracking for all games:
+- No extra exports needed — UT regenerates from player YAML files
 - Still enables `save_sphere_log` and `update_frontend_presets`
 
 ---

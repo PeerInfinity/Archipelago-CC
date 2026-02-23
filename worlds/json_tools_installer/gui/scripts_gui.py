@@ -106,16 +106,28 @@ SCRIPT_CATEGORIES = {
             command=[sys.executable, "scripts/setup/update_host_settings.py", "full-spoilers"]
         ),
         ScriptAction(
-            "Pickle Mode",
-            "Export tracker pickle instead of JSON (save_tracker_pickle=True, save_rules_json=False)",
+            "UT Hybrid",
+            "Config picks best tracking mode per game (uses tracking-mode-config.json)",
             script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "pickle-mode"]
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-hybrid"]
         ),
         ScriptAction(
-            "UT Fuzz",
-            "Enable event auto-collection and filtering to match Universal Tracker behavior",
+            "UT Worldgen",
+            "Export rules.json for worldgen-based tracking",
             script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-fuzz"]
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-worldgen"]
+        ),
+        ScriptAction(
+            "UT Pickle",
+            "Export tracker pickle for pickle-based tracking",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-pickle"]
+        ),
+        ScriptAction(
+            "UT Original",
+            "YAML-based tracking (no extra exports needed)",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-original"]
         ),
     ],
     "Patches": [
