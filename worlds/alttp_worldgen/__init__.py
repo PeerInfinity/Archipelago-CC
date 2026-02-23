@@ -126,6 +126,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
+    "Flute Activation Spot": "Activated Flute",
     "Floodgate": "Open Floodgate",
     "Missing Smith": "Return Smith",
     "Capacity Upgrade Shop": "Capacity Upgrade Shop",
@@ -143,6 +144,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
     "Turtle Rock - Prize": "Crystal 3",
     "Palace of Darkness - Prize": "Blue Pendant",
     "Agahnim 2": "Beat Agahnim 2",
+    "Ganon": "Triforce",
 }
 
 # Starting items - items the player begins with (precollected)
