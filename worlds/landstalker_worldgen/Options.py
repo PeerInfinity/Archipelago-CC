@@ -145,7 +145,7 @@ class UseSpellBook(DefaultOnToggle):
 
 
 @dataclass
-class LandstalkerTheTreasuresofKingNoleWorldGenOptions(PerGameCommonOptions):
+class UseSpellBookOptions(PerGameCommonOptions):
     """Options for Landstalker - The Treasures of King Nole WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

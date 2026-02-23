@@ -69,7 +69,7 @@ class StartLocation(Choice):
 
 
 @dataclass
-class Hylics2WorldGenOptions(PerGameCommonOptions):
+class StartLocationOptions(PerGameCommonOptions):
     """Options for Hylics 2 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

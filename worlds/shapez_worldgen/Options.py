@@ -173,7 +173,7 @@ class TrapsPercentage(Range):
 
 
 @dataclass
-class shapezWorldGenOptions(PerGameCommonOptions):
+class TrapsPercentageOptions(PerGameCommonOptions):
     """Options for shapez WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

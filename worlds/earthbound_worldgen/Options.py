@@ -392,7 +392,7 @@ class Weaponizer(Choice):
 
 
 @dataclass
-class EarthBoundWorldGenOptions(PerGameCommonOptions):
+class WeaponizerOptions(PerGameCommonOptions):
     """Options for EarthBound WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -53,7 +53,7 @@ class TradeQuestHinting(Choice):
 
 
 @dataclass
-class MegaManBattleNetwork3WorldGenOptions(PerGameCommonOptions):
+class TradeQuestHintingOptions(PerGameCommonOptions):
     """Options for MegaMan Battle Network 3 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

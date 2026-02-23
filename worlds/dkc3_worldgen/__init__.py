@@ -28,8 +28,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Bear Coin": 18,
     "Bonus Coin": 85,
     "DK Coin": 41,
-    "Donkey Kong": 1,
-    "Krematoa Cog": 5,
+    "Krematoa Cog": 4,
     "Progressive Boat Upgrade": 3,
 }
 

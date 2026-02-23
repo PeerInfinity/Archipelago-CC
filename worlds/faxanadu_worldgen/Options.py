@@ -82,7 +82,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class FaxanaduWorldGenOptions(PerGameCommonOptions):
+class StartInventoryFromPoolOptions(PerGameCommonOptions):
     """Options for Faxanadu WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

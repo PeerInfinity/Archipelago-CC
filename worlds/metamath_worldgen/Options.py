@@ -76,7 +76,7 @@ class Theorem(Choice):
 
 
 @dataclass
-class MetamathWorldGenOptions(PerGameCommonOptions):
+class TheoremOptions(PerGameCommonOptions):
     """Options for Metamath WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -32,7 +32,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Gun Pack": 1,
     "Loading Screen": 7,
     "Map Pack": 1,
-    "Movement Pack": 1,
     "Name Change Pack": 4,
     "Night Map Pack": 1,
     "Pause Menu Pack": 1,

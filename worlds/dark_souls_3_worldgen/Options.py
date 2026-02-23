@@ -282,7 +282,7 @@ class SmoothUpgradedWeapons(DefaultOnToggle):
 
 
 @dataclass
-class DarkSoulsIIIWorldGenOptions(PerGameCommonOptions):
+class SmoothUpgradedWeaponsOptions(PerGameCommonOptions):
     """Options for Dark Souls III WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -24,9 +24,8 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Arrow": 1,
     "Blue Ring": 1,
-    "Bomb": 26,
+    "Bomb": 25,
     "Book of Magic": 1,
     "Boomerang": 1,
     "Bow": 1,
@@ -49,13 +48,11 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Red Candle": 1,
     "Red Ring": 1,
     "Silver Arrow": 1,
-    "Small Key": 49,
+    "Small Key": 48,
     "Stepladder": 1,
     "Sword": 2,
-    "Triforce Fragment": 8,
     "Water of Life (Blue)": 3,
-    "Water of Life (Red)": 2,
-    "White Sword": 1,
+    "Water of Life (Red)": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item

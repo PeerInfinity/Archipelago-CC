@@ -24,21 +24,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Baked Cookies": 1,
-    "Basic Dough": 1,
-    "Butter Sugar Base": 1,
-    "Cookie Dough": 1,
-    "Creamed Mixture": 1,
-    "Egg Mixture": 1,
-    "Electric Mixer": 1,
-    "Flour Mixture": 1,
-    "Measured Flour": 1,
-    "Measuring Tools": 1,
-    "Mixing Bowls": 1,
-    "Preheated Oven": 1,
-    "Prepared Sheets": 1,
-    "Shaped Cookies": 1,
-    "Softened Butter": 1,
+
 }
 
 # Locked placements - items that must be placed via place_locked_item

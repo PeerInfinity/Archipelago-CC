@@ -200,7 +200,7 @@ class TotalStrawberries(Range):
 
 
 @dataclass
-class Celeste64WorldGenOptions(PerGameCommonOptions):
+class TotalStrawberriesOptions(PerGameCommonOptions):
     """Options for Celeste 64 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -29,7 +29,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "5 coins": 15,
     "50 coins": 20,
     "Blue Switch Palace": 1,
-    "Boss Token": 11,
     "Carry": 1,
     "Climb": 1,
     "Green Switch Palace": 1,
@@ -42,7 +41,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Spin Jump": 1,
     "Super Star Activate": 1,
     "Swim": 1,
-    "The Princess": 1,
     "Yellow Switch Palace": 1,
     "Yoshi": 1,
 }

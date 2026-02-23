@@ -286,7 +286,7 @@ class TrapLink(Toggle):
 
 
 @dataclass
-class SuperMarioWorldWorldGenOptions(PerGameCommonOptions):
+class TrapLinkOptions(PerGameCommonOptions):
     """Options for Super Mario World WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

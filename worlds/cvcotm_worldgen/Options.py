@@ -196,7 +196,7 @@ class SubWeaponShuffle(Toggle):
 
 
 @dataclass
-class CastlevaniaCircleoftheMoonWorldGenOptions(PerGameCommonOptions):
+class SubWeaponShuffleOptions(PerGameCommonOptions):
     """Options for Castlevania - Circle of the Moon WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

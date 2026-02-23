@@ -100,7 +100,7 @@ class TemyInclude(Toggle):
 
 
 @dataclass
-class UndertaleWorldGenOptions(PerGameCommonOptions):
+class TemyIncludeOptions(PerGameCommonOptions):
     """Options for Undertale WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

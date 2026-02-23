@@ -143,7 +143,7 @@ class StrictMoveRequirements(DefaultOnToggle):
 
 
 @dataclass
-class SuperMario64WorldGenOptions(PerGameCommonOptions):
+class StrictMoveRequirementsOptions(PerGameCommonOptions):
     """Options for Super Mario 64 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

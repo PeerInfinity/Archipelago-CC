@@ -34,7 +34,7 @@ class VanillaPlacement(Toggle):
 
 
 @dataclass
-class CodingAdventureWorldGenOptions(PerGameCommonOptions):
+class VanillaPlacementOptions(PerGameCommonOptions):
     """Options for Coding Adventure WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
