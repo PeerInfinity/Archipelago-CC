@@ -114,7 +114,6 @@ class MeritousWorld(RuleWorldMixin, World):
         "Important Artifacts": frozenset(["Shield Boost", "Circuit Booster", "Metabolism", "Dodge Enhancer"]),
         "PSI Keys": frozenset(["PSI Key 1", "PSI Key 2", "PSI Key 3"]),
         "Crystals": frozenset(["Crystals x500", "Crystals x1000", "Crystals x2000"]),
-        "Event": frozenset(["Meridian Defeated", "Ataraxia Defeated", "Merodach Defeated", "Victory", "Full Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

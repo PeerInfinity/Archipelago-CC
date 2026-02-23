@@ -119,7 +119,6 @@ class L2ACWorld(RuleWorldMixin, World):
         "Capsule monsters": frozenset(["JELZE", "FLASH", "GUSTO", "ZEPPY", "DARBI", "SULLY", "BLAZE"]),
         "Iris treasures": frozenset(["Iris sword", "Iris shield", "Iris helmet", "Iris armor", "Iris ring", "Iris jewel", "Iris staff", "Iris pot", "Iris tiara"]),
         "Blue chest items": frozenset(["Sizzle sword", "Blaze sword", "Gades blade", "Sky sword", "Snow sword", "Fry sword", "Mega ax", "Spark staff", "Air whip", "Water spear", "Dragon spear", "Mirak plate", "Ruse armor", "Flame shield", "Water gaunt", "Bolt shield", "Cryst shield", "Dark mirror", "Apron shield", "Agony helm", "Boom turban", "Aqua helm", "Ice hairband", "Hairpin", "Earring", "Dia ring", "Sea ring", "Engage ring", "Water jewel", "Thundo jewel", "Earth jewel", "Twist jewel", "Gloom jewel", "Tidal jewel", "Catfish jwl.", "Camu jewel", "Spido jewel", "Gorgan rock", "Black eye", "Silver eye", "Gold eye"]),
-        "Event": frozenset(["Progressive chest access", "Final Floor access"]),
     }
 
     # Placements are deterministically reproduced by world generator

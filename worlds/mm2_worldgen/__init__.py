@@ -112,7 +112,6 @@ class MM2World(RuleWorldMixin, World):
         "Weapons": frozenset(["Atomic Fire", "Air Shooter", "Leaf Shield", "Bubble Lead", "Quick Boomerang", "Time Stopper", "Metal Blade", "Crash Bomber"]),
         "Items": frozenset(["Item 1 - Propeller", "Item 2 - Rocket", "Item 3 - Bouncy"]),
         "Stages": frozenset(["Heat Man Access Codes", "Air Man Access Codes", "Wood Man Access Codes", "Bubble Man Access Codes", "Quick Man Access Codes", "Flash Man Access Codes", "Metal Man Access Codes", "Crash Man Access Codes"]),
-        "Event": frozenset(["Wily Stage 1 - Completed", "Wily Stage 2 - Completed", "Wily Stage 3 - Completed", "Wily Stage 4 - Completed", "Wily Stage 5 - Completed", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

@@ -154,7 +154,6 @@ class YoshisIslandWorld(RuleWorldMixin, World):
         "Consumable": frozenset(["Anytime Egg", "Anywhere Pow", "Winged Cloud Maker", "Pocket Melon", "Pocket Fire Melon", "Pocket Ice Melon", "Magnifying Glass", "+10 Stars", "+20 Stars"]),
         "Lives": frozenset(["1-Up", "2-Up", "3-Up", "10-Up"]),
         "Traps": frozenset(["Fuzzy Trap", "Reversal Trap", "Darkness Trap", "Freeze Trap"]),
-        "Event": frozenset(["Boss Clear", "Bandit Consumables", "Bandit Watermelons", "Saved Baby Luigi"]),
     }
 
     # Placements are deterministically reproduced by world generator

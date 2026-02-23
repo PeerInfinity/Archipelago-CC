@@ -107,7 +107,6 @@ class WargrooveWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Spearman", "Wagon", "Mage", "Archer", "Knight", "Ballista", "Golem", "Harpy", "Witch", "Dragon", "Balloon", "Barge", "Merfolk", "Turtle", "Harpoon Ship", "Warship", "Thief", "Rifleman", "Eastern Bridges", "Southern Walls", "Final Bridges", "Final Walls", "Final Sickle", "Income Boost", "Commander Defense Boost", "Cherrystone Commanders", "Felheim Commanders", "Floran Commanders", "Heavensong Commanders", "Requiem Commanders", "Outlaw Commanders"]),
-        "Event": frozenset(["Wargroove Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

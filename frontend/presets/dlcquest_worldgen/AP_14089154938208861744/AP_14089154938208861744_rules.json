@@ -1698,9 +1698,7 @@
   },
   "item_groups": {
     "1": [
-      "Event",
-      "Everything",
-      "coins"
+      "Everything"
     ]
   },
   "itempool_counts": {

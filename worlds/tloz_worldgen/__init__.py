@@ -131,7 +131,6 @@ class TLoZWorld(RuleWorldMixin, World):
         "candles": frozenset(["Red Candle", "Candle"]),
         "arrows": frozenset(["Silver Arrow", "Arrow"]),
         "swords": frozenset(["Sword", "White Sword", "Magical Sword"]),
-        "Event": frozenset(["Boss 1 Defeated", "Boss 2 Defeated", "Boss 3 Defeated", "Boss 4 Defeated", "Boss 5 Defeated", "Boss 6 Defeated", "Boss 7 Defeated", "Boss 8 Defeated", "Triforce of Power", "Rescued Zelda!"]),
     }
 
     # Placements are deterministically reproduced by world generator

@@ -131,7 +131,6 @@ class UndertaleWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Key Piece", "Monster Candy", "Croquet Roll", "Stick", "Bandage", "Rock Candy", "Pumpkin Rings", "Spider Donut", "Stoic Onion", "Ghost Fruit", "Spider Cider", "Butterscotch Pie", "Faded Ribbon", "Toy Knife", "Tough Glove", "Manly Bandanna", "Snowman Piece", "Nice Cream", "Puppydough Icecream", "Bisicle", "Unisicle", "Cinnamon Bun", "Temmie Flakes", "Abandoned Quiche", "Old Tutu", "Ballet Shoes", "Punch Card", "Annoying Dog", "Dog Salad", "Dog Residue", "Astronaut Food", "Instant Noodles", "Crab Apple", "Hot Dog...?", "Hot Cat", "Glamburger", "Sea Tea", "Starfait", "Legendary Hero", "Cloudy Glasses", "Torn Notebook", "Stained Apron", "Burnt Pan", "Cowboy Hat", "Empty Gun", "Heart Locket", "Worn Dagger", "Real Knife", "The Locket", "Bad Memory", "Dream", "Undyne's Letter", "Undyne Letter EX", "Popato Chisps", "Junk Food", "Mystery Key", "Face Steak", "Hush Puppy", "Snail Pie", "temy armor", "ATK Up", "DEF Up", "HP Up", "FIGHT", "ACT", "ITEM", "MERCY", "Ruins Key", "Snowdin Key", "Waterfall Key", "Hotland Key", "Core Key", "Progressive Plot", "Progressive Weapons", "Progressive Armor", "Complete Skeleton", "Fish", "DT Extractor", "Mettaton Plush", "Left Home Key", "LOVE", "Right Home Key", "1000G", "500G", "100G"]),
-        "Event": frozenset(["Papyrus Date", "Undyne Date", "Alphys Date"]),
     }
 
     # Placements are deterministically reproduced by world generator

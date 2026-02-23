@@ -107,7 +107,6 @@ class SavingPrincessWorld(RuleWorldMixin, World):
         "Keys": frozenset(["Cave Key", "Volcanic Key", "Arctic Key", "Swamp Key"]),
         "Filler": frozenset(["Full Heal", "Quick-fire Mode", "Active Camouflage"]),
         "Traps": frozenset(["Ice Trap", "Shake Trap", "Ninja Trap"]),
-        "Event": frozenset(["PRINCESS"]),
     }
 
     # Placements are deterministically reproduced by world generator

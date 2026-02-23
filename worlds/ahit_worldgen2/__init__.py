@@ -129,7 +129,6 @@ class HatInTimeWorld(RuleWorldMixin, World):
         "Crayon": frozenset(["Relic (Crayon Box)", "Relic (Red Crayon)", "Relic (Blue Crayon)", "Relic (Green Crayon)"]),
         "Cake": frozenset(["Relic (Cake Stand)", "Relic (Shortcake)", "Relic (Chocolate Cake Slice)", "Relic (Chocolate Cake)"]),
         "Necklace": frozenset(["Relic (Necklace Bust)", "Relic (Necklace)"]),
-        "Event": frozenset(["HUMT Access", "TOD Access", "AFR Access", "Birdhouse Cleared", "Lava Cake Cleared", "Windmill Cleared", "Twilight Bell Cleared", "TIHS Access", "Time Piece Cluster"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)

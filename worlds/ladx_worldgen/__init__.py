@@ -216,7 +216,6 @@ class LinksAwakeningWorld(RuleWorldMixin, World):
         "Songs": frozenset(["Ballad of the Wind Fish", "Manbo's Mambo", "Frog's Song of Soul"]),
         "Instruments": frozenset(["Full Moon Cello", "Conch Horn", "Sea Lily's Bell", "Surf Harp", "Wind Marimba", "Coral Triangle", "Organ of Evening Calm", "Thunder Drum"]),
         "Trading Items": frozenset(["Yoshi Doll", "Ribbon", "Dog Food", "Bananas", "Stick", "Honeycomb", "Pineapple", "Hibiscus", "Letter", "Broom", "Fishing Hook", "Necklace", "Scale", "Magnifying Glass"]),
-        "Event": frozenset(["ANGLER_KEYHOLE", "CASTLE_BUTTON", "RAFT", "MEDICINE2", "An Alarm Clock", "Can Play Trendy Game"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)

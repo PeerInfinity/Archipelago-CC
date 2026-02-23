@@ -163,7 +163,6 @@ class ShapezWorld(RuleWorldMixin, World):
         "Traps": frozenset(["Belt Upgrade Trap", "Miner Upgrade Trap", "Processors Upgrade Trap", "Painting Upgrade Trap", "Demonic Belt Upgrade Trap", "Demonic Miner Upgrade Trap", "Demonic Processors Upgrade Trap", "Demonic Painting Upgrade Trap", "Locked Building Trap", "Throttled Building Trap", "Malfunctioning Trap", "Inflation Trap", "Belts Clearing Trap", "Inventory Draining Trap", "Blueprint Shapes Draining Trap", "Level Shapes Draining Trap", "Upgrade Shapes Draining Trap"]),
         "Bundles": frozenset(["Blueprint Shapes Bundle", "Level Shapes Bundle", "Upgrade Shapes Bundle"]),
         "Most Important Buildings": frozenset(["Belt", "Extractor"]),
-        "Event": frozenset(["Goal"]),
     }
 
     # Placements are deterministically reproduced by world generator

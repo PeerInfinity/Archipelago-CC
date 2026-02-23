@@ -124,7 +124,6 @@ class SA2BWorld(RuleWorldMixin, World):
         "Fruits": frozenset(["Chao Garden Fruit", "Hero Garden Fruit", "Dark Garden Fruit", "Strong Fruit", "Tasty Fruit", "Hero Fruit", "Dark Fruit", "Round Fruit", "Triangle Fruit", "Square Fruit", "Heart Fruit", "Chao Fruit", "Smart Fruit", "Orange Fruit", "Blue Fruit", "Pink Fruit", "Green Fruit", "Purple Fruit", "Yellow Fruit", "Red Fruit", "Mushroom", "Super Mushroom", "Mint Candy", "Grapes"]),
         "Seeds": frozenset(["Strong Seed", "Tasty Seed", "Hero Seed", "Dark Seed", "Round Seed", "Triangle Seed", "Square Seed"]),
         "Hats": frozenset(["Pumpkin", "Skull", "Apple", "Bucket", "Empty Can", "Cardboard Box", "Flower Pot", "Paper Bag", "Pan", "Stump", "Watermelon", "Red Wool Beanie", "Blue Wool Beanie", "Black Wool Beanie", "Pacifier"]),
-        "Event": frozenset(["What Maria Wanted"]),
     }
 
     # Placements are deterministically reproduced by world generator

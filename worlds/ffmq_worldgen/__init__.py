@@ -209,7 +209,6 @@ class FFMQWorld(RuleWorldMixin, World):
         "Shields": frozenset(["Steel Shield", "Venus Shield", "Aegis Shield", "Progressive Shield"]),
         "Accessories": frozenset(["Charm", "Magic Ring", "Cupid Locket", "Progressive Accessory"]),
         "Refills": frozenset(["Bomb Refill", "Projectile Refill"]),
-        "Event": frozenset(["Minotaur", "Kaeli 1", "Kaeli 2", "Barrel Pushed", "Tristam", "Tristam Bone Item Given", "Long Spine Bombed", "Short Spine Bombed", "Skull 1 Bombed", "Skull 2 Bombed", "Flamerus Rex", "Phoebe 1", "Summer Aquaria", "Phanquid", "Freezer Crab", "Ice Pyramid 1F Statue", "Ice Pyramid 3F Statue", "Ice Pyramid 4F Statue", "Ice Pyramid 5F Statue", "Ice Golem", "Ship Liberated", "Spencer Cave Libra Block Bombed", "Reuben 1", "Jinn", "Reuben Dad Saved", "Medusa", "Lava Dome Plate", "Dualhead Hydra", "Gidrah", "Dullahan", "Rainbow Bridge", "Pazuzu 1F", "Pazuzu 2F Lock", "Pazuzu 2F", "Pazuzu 3F", "Pazuzu 4F Lock", "Pazuzu 4F", "Pazuzu 5F", "Pazuzu 6F Lock", "Pazuzu 6F", "Pazuzu", "Ship Dock Access", "Ship Steering Wheel", "Ship Loaned", "Stone Golem", "Twinhead Wyvern", "Zuh", "Dark King"]),
     }
 
     # Progressive item mapping: progressive_item -> [component_items_in_order]

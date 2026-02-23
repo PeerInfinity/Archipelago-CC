@@ -237,7 +237,6 @@ class MLSSWorld(RuleWorldMixin, World):
         "Beanfruit": frozenset(["Bean Fruit 1", "Bean Fruit 2", "Bean Fruit 3", "Bean Fruit 4", "Bean Fruit 5", "Bean Fruit 6", "Bean Fruit 7"]),
         "Neon Egg": frozenset(["Blue Neon Egg", "Red Neon Egg", "Green Neon Egg", "Yellow Neon Egg", "Purple Neon Egg", "Orange Neon Egg", "Azure Neon Egg"]),
         "Beanstar Piece": frozenset(["Beanstar Piece 1", "Beanstar Piece 2", "Beanstar Piece 3", "Beanstar Piece 4"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator

@@ -126,7 +126,6 @@ class CVCotMWorld(RuleWorldMixin, World):
         "Action": frozenset(["Mercury Card", "Venus Card", "Jupiter Card", "Mars Card", "Diana Card", "Apollo Card", "Neptune Card", "Saturn Card", "Uranus Card", "Pluto Card"]),
         "Action Card": frozenset(["Mercury Card", "Venus Card", "Jupiter Card", "Mars Card", "Diana Card", "Apollo Card", "Neptune Card", "Saturn Card", "Uranus Card", "Pluto Card"]),
         "Freeze Action": frozenset(["Mercury Card", "Mars Card"]),
-        "Event": frozenset(["The Count Downed"]),
     }
 
     # Placements are deterministically reproduced by world generator
