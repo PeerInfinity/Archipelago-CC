@@ -1698,7 +1698,8 @@
   },
   "item_groups": {
     "1": [
-      "Everything"
+      "Everything",
+      "coins"
     ]
   },
   "itempool_counts": {

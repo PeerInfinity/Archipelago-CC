@@ -386,6 +386,8 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Compasses": frozenset(["Compass (Ganons Tower)", "Compass (Turtle Rock)", "Compass (Thieves Town)", "Compass (Tower of Hera)", "Compass (Ice Palace)", "Compass (Skull Woods)", "Compass (Misery Mire)", "Compass (Palace of Darkness)", "Compass (Swamp Palace)", "Compass (Agahnims Tower)", "Compass (Desert Palace)", "Compass (Eastern Palace)", "Compass (Hyrule Castle)"]),
         "Big Keys": frozenset(["Big Key (Ganons Tower)", "Big Key (Turtle Rock)", "Big Key (Thieves Town)", "Big Key (Tower of Hera)", "Big Key (Ice Palace)", "Big Key (Skull Woods)", "Big Key (Misery Mire)", "Big Key (Palace of Darkness)", "Big Key (Swamp Palace)", "Big Key (Agahnims Tower)", "Big Key (Desert Palace)", "Big Key (Eastern Palace)", "Big Key (Hyrule Castle)"]),
         "Small Keys": frozenset(["Small Key (Hyrule Castle)", "Small Key (Eastern Palace)", "Small Key (Desert Palace)", "Small Key (Agahnims Tower)", "Small Key (Swamp Palace)", "Small Key (Palace of Darkness)", "Small Key (Misery Mire)", "Small Key (Skull Woods)", "Small Key (Ice Palace)", "Small Key (Tower of Hera)", "Small Key (Thieves Town)", "Small Key (Turtle Rock)", "Small Key (Ganons Tower)", "Small Key (Universal)"]),
+        "Pendants": frozenset(["Red Pendant", "Green Pendant", "Blue Pendant"]),
+        "Crystals": frozenset(["Crystal 2", "Crystal 4", "Crystal 3", "Crystal 5", "Crystal 6", "Crystal 7", "Crystal 1"]),
     }
 
     # Progressive item mapping: progressive_item -> [component_items_in_order]
