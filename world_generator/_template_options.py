@@ -314,10 +314,10 @@ class Accessibility(Choice):
         if class_code:
             # Deduplicate by class name - some worlds export both snake_case and
             # CamelCase variants of the same option (backwards-compat aliases)
-            class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
-            if class_name in seen_class_names:
+            option_class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
+            if option_class_name in seen_class_names:
                 continue
-            seen_class_names.add(class_name)
+            seen_class_names.add(option_class_name)
             option_classes.append(class_code)
             option_fields.append(field_code)
             imports_needed.add(import_name)
