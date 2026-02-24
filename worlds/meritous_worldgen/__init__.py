@@ -24,6 +24,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Agate Knife": 1,
     "Circuit Booster": 1,
     "Circuit Charge upgrade": 23,
     "Circuit Refill upgrade": 22,
@@ -32,8 +33,10 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Crystals x1000": 5,
     "Crystals x2000": 5,
     "Crystals x500": 7,
+    "Cursed Seal": 1,
     "Dodge Enhancer": 1,
     "Ethereal Monocle": 1,
+    "Evolution Trap": 3,
     "Map": 1,
     "Metabolism": 1,
     "PSI Key 1": 1,

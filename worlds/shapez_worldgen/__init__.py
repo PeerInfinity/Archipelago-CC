@@ -24,6 +24,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Balancer": 1,
     "Belt Reader": 1,
     "Big Belt Upgrade": 9,
     "Big Miner Upgrade": 12,
@@ -53,6 +54,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Small Painting Upgrade": 7,
     "Small Processors Upgrade": 10,
     "Stacker": 1,
+    "Storage": 1,
     "Switch": 1,
     "Trash": 1,
     "Tunnel": 1,
