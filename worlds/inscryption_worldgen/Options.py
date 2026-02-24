@@ -107,7 +107,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class StartInventoryFromPoolOptions(PerGameCommonOptions):
+class InscryptionWorldGenOptions(PerGameCommonOptions):
     """Options for Inscryption WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

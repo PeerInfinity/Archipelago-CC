@@ -92,7 +92,7 @@ class TimeIsMoney(Choice):
 
 
 @dataclass
-class TimeIsMoneyOptions(PerGameCommonOptions):
+class DLCQuestWorldGenOptions(PerGameCommonOptions):
     """Options for DLCQuest WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

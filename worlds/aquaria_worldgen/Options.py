@@ -213,7 +213,7 @@ class UnconfineHomeWater(Choice):
 
 
 @dataclass
-class UnconfineHomeWaterOptions(PerGameCommonOptions):
+class AquariaWorldGenOptions(PerGameCommonOptions):
     """Options for Aquaria WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

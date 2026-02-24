@@ -87,7 +87,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class StartInventoryFromPoolOptions(PerGameCommonOptions):
+class WargrooveWorldGenOptions(PerGameCommonOptions):
     """Options for Wargroove WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

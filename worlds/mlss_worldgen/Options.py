@@ -229,7 +229,7 @@ class XpMultiplier(Range):
 
 
 @dataclass
-class XpMultiplierOptions(PerGameCommonOptions):
+class MarioLuigiSuperstarSagaWorldGenOptions(PerGameCommonOptions):
     """Options for Mario & Luigi Superstar Saga WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

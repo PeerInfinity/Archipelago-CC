@@ -78,7 +78,7 @@ class Turners(Range):
 
 
 @dataclass
-class TurnersOptions(PerGameCommonOptions):
+class BumperStickersWorldGenOptions(PerGameCommonOptions):
     """Options for Bumper Stickers WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

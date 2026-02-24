@@ -443,7 +443,7 @@ class StartInventoryFromPool(StartInventoryPool):
 
 
 @dataclass
-class StartInventoryFromPoolOptions(PerGameCommonOptions):
+class AHatinTimeWorldGenOptions(PerGameCommonOptions):
     """Options for A Hat in Time WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

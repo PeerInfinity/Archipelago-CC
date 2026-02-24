@@ -797,7 +797,7 @@ class Whistlesanity(Choice):
 
 
 @dataclass
-class WhistlesanityOptions(PerGameCommonOptions):
+class SonicAdventure2BattleWorldGenOptions(PerGameCommonOptions):
     """Options for Sonic Adventure 2 Battle WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

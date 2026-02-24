@@ -618,7 +618,7 @@ class UwPalettes(Choice):
 
 
 @dataclass
-class UwPalettesOptions(PerGameCommonOptions):
+class ALinktothePastVanillaWorldGenOptions(PerGameCommonOptions):
     """Options for A Link to the Past Vanilla WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -95,7 +95,7 @@ class TrapChance(Range):
 
 
 @dataclass
-class TrapChanceOptions(PerGameCommonOptions):
+class SavingPrincessWorldGenOptions(PerGameCommonOptions):
     """Options for Saving Princess WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

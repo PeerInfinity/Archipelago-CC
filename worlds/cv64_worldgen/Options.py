@@ -386,7 +386,7 @@ class WindowColorR(Range):
 
 
 @dataclass
-class WindowColorROptions(PerGameCommonOptions):
+class Castlevania64WorldGenOptions(PerGameCommonOptions):
     """Options for Castlevania 64 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

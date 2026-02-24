@@ -134,7 +134,7 @@ class Traps(Toggle):
 
 
 @dataclass
-class TrapsOptions(PerGameCommonOptions):
+class TheMessengerWorldGenOptions(PerGameCommonOptions):
     """Options for The Messenger WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

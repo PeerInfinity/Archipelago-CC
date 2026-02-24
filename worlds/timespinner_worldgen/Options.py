@@ -485,7 +485,7 @@ class UnchainedKeys(Toggle):
 
 
 @dataclass
-class UnchainedKeysOptions(PerGameCommonOptions):
+class TimespinnerWorldGenOptions(PerGameCommonOptions):
     """Options for Timespinner WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

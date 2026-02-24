@@ -99,7 +99,7 @@ class PuzzleHintsRequired(DefaultOnToggle):
 
 
 @dataclass
-class PuzzleHintsRequiredOptions(PerGameCommonOptions):
+class ShiversWorldGenOptions(PerGameCommonOptions):
     """Options for Shivers WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

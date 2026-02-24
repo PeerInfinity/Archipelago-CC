@@ -127,7 +127,7 @@ class YokuJumps(Toggle):
 
 
 @dataclass
-class YokuJumpsOptions(PerGameCommonOptions):
+class MegaMan2WorldGenOptions(PerGameCommonOptions):
     """Options for Mega Man 2 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

@@ -109,7 +109,7 @@ class StarsToWin(Range):
 
 
 @dataclass
-class StarsToWinOptions(PerGameCommonOptions):
+class Overcooked2WorldGenOptions(PerGameCommonOptions):
     """Options for Overcooked! 2 WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions

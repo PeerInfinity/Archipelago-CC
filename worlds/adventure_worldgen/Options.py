@@ -133,7 +133,7 @@ class YorgleSpeed(Range):
 
 
 @dataclass
-class YorgleSpeedOptions(PerGameCommonOptions):
+class AdventureWorldGenOptions(PerGameCommonOptions):
     """Options for Adventure WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
