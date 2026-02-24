@@ -24,6 +24,17 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "1Up Mushroom": 29,
+    "Cannon Unlock BoB": 1,
+    "Cannon Unlock CCM": 1,
+    "Cannon Unlock JRB": 1,
+    "Cannon Unlock RR": 1,
+    "Cannon Unlock SL": 1,
+    "Cannon Unlock SSL": 1,
+    "Cannon Unlock THI": 1,
+    "Cannon Unlock TTM": 1,
+    "Cannon Unlock WDW": 1,
+    "Cannon Unlock WF": 1,
     "Metal Cap": 1,
     "Power Star": 105,
     "Progressive Key": 2,

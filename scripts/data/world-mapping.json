@@ -18,7 +18,7 @@
     "game_name": "A Hat in Time WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "A Hat in Time WorldGen.yaml",
     "world_directory": "ahit_worldgen"
   },
   "A Link to the Past": {
@@ -40,7 +40,7 @@
     "game_name": "A Link to the Past Vanilla WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "A Link to the Past Vanilla WorldGen.yaml",
     "world_directory": "alttp_vanilla_worldgen"
   },
   "A Link to the Past WorldGen": {
@@ -51,7 +51,7 @@
     "game_name": "A Link to the Past WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "A Link to the Past WorldGen.yaml",
     "world_directory": "alttp_worldgen"
   },
   "A Short Hike": {
@@ -73,7 +73,7 @@
     "game_name": "A Short Hike WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "A Short Hike WorldGen.yaml",
     "world_directory": "shorthike_worldgen"
   },
   "APQuest": {
@@ -95,7 +95,7 @@
     "game_name": "APQuest WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "APQuest WorldGen.yaml",
     "world_directory": "apquest_worldgen"
   },
   "APWorld Manager": {
@@ -128,7 +128,7 @@
     "game_name": "Adventure WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Adventure WorldGen.yaml",
     "world_directory": "adventure_worldgen"
   },
   "Aquaria": {
@@ -150,7 +150,7 @@
     "game_name": "Aquaria WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Aquaria WorldGen.yaml",
     "world_directory": "aquaria_worldgen"
   },
   "Archipelago": {
@@ -183,7 +183,7 @@
     "game_name": "Baking Adventure Vanilla WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Baking Adventure Vanilla WorldGen.yaml",
     "world_directory": "bakingadventure_vanilla_worldgen"
   },
   "Baking Adventure WorldGen": {
@@ -194,7 +194,7 @@
     "game_name": "Baking Adventure WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Baking Adventure WorldGen.yaml",
     "world_directory": "bakingadventure_worldgen"
   },
   "Blasphemous": {
@@ -238,7 +238,7 @@
     "game_name": "Bumper Stickers WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Bumper Stickers WorldGen.yaml",
     "world_directory": "bumpstik_worldgen"
   },
   "Castlevania - Circle of the Moon": {
@@ -260,7 +260,7 @@
     "game_name": "Castlevania - Circle of the Moon WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Castlevania - Circle of the Moon WorldGen.yaml",
     "world_directory": "cvcotm_worldgen"
   },
   "Castlevania 64": {
@@ -282,7 +282,7 @@
     "game_name": "Castlevania 64 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Castlevania 64 WorldGen.yaml",
     "world_directory": "cv64_worldgen"
   },
   "Celeste (Open World)": {
@@ -315,7 +315,7 @@
     "game_name": "Celeste 64 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Celeste 64 WorldGen.yaml",
     "world_directory": "celeste64_worldgen"
   },
   "ChecksFinder": {
@@ -359,7 +359,7 @@
     "game_name": "Choo-Choo Charles WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Choo-Choo Charles WorldGen.yaml",
     "world_directory": "cccharles_worldgen"
   },
   "Civilization VI": {
@@ -381,7 +381,7 @@
     "game_name": "Civilization VI WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Civilization VI WorldGen.yaml",
     "world_directory": "civ_6_worldgen"
   },
   "Coding Adventure": {
@@ -403,7 +403,7 @@
     "game_name": "Coding Adventure Vanilla WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Coding Adventure Vanilla WorldGen.yaml",
     "world_directory": "codingadventure_vanilla_worldgen"
   },
   "Coding Adventure WorldGen": {
@@ -414,7 +414,7 @@
     "game_name": "Coding Adventure WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Coding Adventure WorldGen.yaml",
     "world_directory": "codingadventure_worldgen"
   },
   "DLCQuest": {
@@ -436,7 +436,7 @@
     "game_name": "DLCQuest WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "DLCQuest WorldGen.yaml",
     "world_directory": "dlcquest_worldgen"
   },
   "DOOM 1993": {
@@ -480,7 +480,7 @@
     "game_name": "Dark Souls III WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Dark Souls III WorldGen.yaml",
     "world_directory": "dark_souls_3_worldgen"
   },
   "Donkey Kong Country 3": {
@@ -502,7 +502,7 @@
     "game_name": "Donkey Kong Country 3 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Donkey Kong Country 3 WorldGen.yaml",
     "world_directory": "dkc3_worldgen"
   },
   "EarthBound": {
@@ -524,7 +524,7 @@
     "game_name": "EarthBound WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "EarthBound WorldGen.yaml",
     "world_directory": "earthbound_worldgen"
   },
   "Factorio": {
@@ -546,7 +546,7 @@
     "game_name": "Factorio WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Factorio WorldGen.yaml",
     "world_directory": "factorio_worldgen"
   },
   "Faxanadu": {
@@ -568,7 +568,7 @@
     "game_name": "Faxanadu WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Faxanadu WorldGen.yaml",
     "world_directory": "faxanadu_worldgen"
   },
   "Final Fantasy": {
@@ -601,7 +601,7 @@
     "game_name": "Final Fantasy Mystic Quest WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Final Fantasy Mystic Quest WorldGen.yaml",
     "world_directory": "ffmq_worldgen"
   },
   "Heretic": {
@@ -645,7 +645,7 @@
     "game_name": "Hylics 2 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Hylics 2 WorldGen.yaml",
     "world_directory": "hylics2_worldgen"
   },
   "Inscryption": {
@@ -667,7 +667,7 @@
     "game_name": "Inscryption WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Inscryption WorldGen.yaml",
     "world_directory": "inscryption_worldgen"
   },
   "JSON Tools Installer": {
@@ -744,7 +744,7 @@
     "game_name": "Landstalker - The Treasures of King Nole WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Landstalker - The Treasures of King Nole WorldGen.yaml",
     "world_directory": "landstalker_worldgen"
   },
   "Lingo": {
@@ -777,7 +777,7 @@
     "game_name": "Links Awakening DX WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Links Awakening DX WorldGen.yaml",
     "world_directory": "ladx_worldgen"
   },
   "Lufia II Ancient Cave": {
@@ -799,7 +799,7 @@
     "game_name": "Lufia II Ancient Cave WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Lufia II Ancient Cave WorldGen.yaml",
     "world_directory": "lufia2ac_worldgen"
   },
   "Mario & Luigi Superstar Saga": {
@@ -821,7 +821,7 @@
     "game_name": "Mario & Luigi Superstar Saga WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Mario & Luigi Superstar Saga WorldGen.yaml",
     "world_directory": "mlss_worldgen"
   },
   "Math Adventure": {
@@ -843,7 +843,7 @@
     "game_name": "Math Adventure Vanilla WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Math Adventure Vanilla WorldGen.yaml",
     "world_directory": "mathadventure_vanilla_worldgen"
   },
   "Math Adventure WorldGen": {
@@ -854,7 +854,7 @@
     "game_name": "Math Adventure WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Math Adventure WorldGen.yaml",
     "world_directory": "mathadventure_worldgen"
   },
   "Mega Man 2": {
@@ -876,7 +876,7 @@
     "game_name": "Mega Man 2 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Mega Man 2 WorldGen.yaml",
     "world_directory": "mm2_worldgen"
   },
   "MegaMan Battle Network 3": {
@@ -898,7 +898,7 @@
     "game_name": "MegaMan Battle Network 3 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "MegaMan Battle Network 3 WorldGen.yaml",
     "world_directory": "mmbn3_worldgen"
   },
   "Meritous": {
@@ -920,7 +920,7 @@
     "game_name": "Meritous WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Meritous WorldGen.yaml",
     "world_directory": "meritous_worldgen"
   },
   "Metamath": {
@@ -942,7 +942,7 @@
     "game_name": "Metamath WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Metamath WorldGen.yaml",
     "world_directory": "metamath_worldgen"
   },
   "Muse Dash": {
@@ -975,7 +975,7 @@
     "game_name": "Noita WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Noita WorldGen.yaml",
     "world_directory": "noita_worldgen"
   },
   "Ocarina of Time": {
@@ -1008,7 +1008,7 @@
     "game_name": "Old School Runescape WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Old School Runescape WorldGen.yaml",
     "world_directory": "osrs_worldgen"
   },
   "Overcooked! 2": {
@@ -1030,7 +1030,7 @@
     "game_name": "Overcooked! 2 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Overcooked! 2 WorldGen.yaml",
     "world_directory": "overcooked2_worldgen"
   },
   "Paint": {
@@ -1096,7 +1096,7 @@
     "game_name": "Risk of Rain 2 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Risk of Rain 2 WorldGen.yaml",
     "world_directory": "ror2_worldgen"
   },
   "SMZ3": {
@@ -1140,7 +1140,7 @@
     "game_name": "Saving Princess WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Saving Princess WorldGen.yaml",
     "world_directory": "saving_princess_worldgen"
   },
   "Secret of Evermore": {
@@ -1173,7 +1173,7 @@
     "game_name": "Shivers WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Shivers WorldGen.yaml",
     "world_directory": "shivers_worldgen"
   },
   "Sonic Adventure 2 Battle": {
@@ -1195,7 +1195,7 @@
     "game_name": "Sonic Adventure 2 Battle WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Sonic Adventure 2 Battle WorldGen.yaml",
     "world_directory": "sa2b_worldgen"
   },
   "Starcraft 2": {
@@ -1239,7 +1239,7 @@
     "game_name": "Subnautica WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Subnautica WorldGen.yaml",
     "world_directory": "subnautica_worldgen"
   },
   "Sudoku": {
@@ -1272,7 +1272,7 @@
     "game_name": "Super Mario 64 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Super Mario 64 WorldGen.yaml",
     "world_directory": "sm64ex_worldgen"
   },
   "Super Mario Land 2": {
@@ -1294,7 +1294,7 @@
     "game_name": "Super Mario Land 2 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Super Mario Land 2 WorldGen.yaml",
     "world_directory": "marioland2_worldgen"
   },
   "Super Mario World": {
@@ -1316,7 +1316,7 @@
     "game_name": "Super Mario World WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Super Mario World WorldGen.yaml",
     "world_directory": "smw_worldgen"
   },
   "Super Metroid": {
@@ -1349,7 +1349,7 @@
     "game_name": "TOEM original WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "TOEM original WorldGen.yaml",
     "world_directory": "toem_original_worldgen"
   },
   "TOEM rule builder": {
@@ -1371,7 +1371,7 @@
     "game_name": "TOEM rule builder WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "TOEM rule builder WorldGen.yaml",
     "world_directory": "toem_rule_builder_worldgen"
   },
   "TUNIC": {
@@ -1404,7 +1404,7 @@
     "game_name": "Terraria WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Terraria WorldGen.yaml",
     "world_directory": "terraria_worldgen"
   },
   "The Legend of Zelda": {
@@ -1426,7 +1426,7 @@
     "game_name": "The Legend of Zelda WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "The Legend of Zelda WorldGen.yaml",
     "world_directory": "tloz_worldgen"
   },
   "The Messenger": {
@@ -1448,7 +1448,7 @@
     "game_name": "The Messenger WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "The Messenger WorldGen.yaml",
     "world_directory": "messenger_worldgen"
   },
   "The Wind Waker": {
@@ -1470,7 +1470,7 @@
     "game_name": "The Wind Waker WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "The Wind Waker WorldGen.yaml",
     "world_directory": "tww_worldgen"
   },
   "The Witness": {
@@ -1503,7 +1503,7 @@
     "game_name": "Timespinner WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Timespinner WorldGen.yaml",
     "world_directory": "timespinner_worldgen"
   },
   "Undertale": {
@@ -1525,7 +1525,7 @@
     "game_name": "Undertale WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Undertale WorldGen.yaml",
     "world_directory": "undertale_worldgen"
   },
   "Universal Tracker": {
@@ -1558,7 +1558,7 @@
     "game_name": "VVVVVV WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "VVVVVV WorldGen.yaml",
     "world_directory": "v6_worldgen"
   },
   "Wargroove": {
@@ -1580,7 +1580,7 @@
     "game_name": "Wargroove WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Wargroove WorldGen.yaml",
     "world_directory": "wargroove_worldgen"
   },
   "Yacht Dice": {
@@ -1613,7 +1613,7 @@
     "game_name": "Yoshi's Island WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Yoshi's Island WorldGen.yaml",
     "world_directory": "yoshisisland_worldgen"
   },
   "Yu-Gi-Oh! 2006": {

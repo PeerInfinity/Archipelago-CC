@@ -41,7 +41,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Death Statue": 1,
     "Detox Grass": 9,
     "Einstein Whistle": 1,
-    "EkeEke": 51,
+    "EkeEke": 59,
     "Fireproof": 1,
     "Garlic": 2,
     "Gola's Eye": 1,

@@ -23,7 +23,16 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-
+    "2cn": 1,
+    "3eqtri": 1,
+    "addassi": 1,
+    "ax-1cn": 1,
+    "df-2": 1,
+    "df-3": 1,
+    "df-4": 1,
+    "eqtr4i": 1,
+    "oveq1i": 1,
+    "oveq2i": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
