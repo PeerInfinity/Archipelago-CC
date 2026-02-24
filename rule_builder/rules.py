@@ -585,19 +585,16 @@ class Rule(Generic[TWorld]):
         """Resolve a rule with the given world"""
         for option_filter in self.options:
             if not option_filter.check(world.options):
-                return True_().resolve(world) if self.filtered_resolution else world.false_rule
+                if self.filtered_resolution:
+                    return True_().resolve(world)
+                return getattr(world, "false_rule", None) or False_().resolve(world)
         return self._instantiate(world)
 
     def to_dict(self) -> dict[str, Any]:
-        """Returns a JSON compatible dict representation of this rule.
-
-        Empty 'options' and 'args' fields are omitted to reduce JSON size.
-        """
+        """Returns a JSON compatible dict representation of this rule."""
         result: dict[str, Any] = {"rule": self.__class__.__qualname__}
-        if self.options:
-            result["options"] = [o.to_dict() for o in self.options]
-        if self.filtered_resolution:
-            result["filtered_resolution"] = self.filtered_resolution
+        result["options"] = [o.to_dict() for o in self.options]
+        result["filtered_resolution"] = self.filtered_resolution
         args = {
             field.name: getattr(self, field.name, None)
             for field in dataclasses.fields(self)
@@ -640,7 +637,7 @@ class Rule(Generic[TWorld]):
         if isinstance(other, Iterable):
             if not other:
                 return self
-            return True_(options=other)
+            return Or(self, True_(options=other))
         if self.options == other.options:
             if isinstance(self, Or):
                 if isinstance(other, Or):
@@ -686,7 +683,7 @@ class Rule(Generic[TWorld]):
         player: int
         """The player this rule is for"""
 
-        caching_enabled: bool = dataclasses.field(repr=False, default=True, kw_only=True)
+        caching_enabled: bool = dataclasses.field(repr=False, compare=False, default=True, kw_only=True)
         """If the world this rule is for has caching enabled"""
 
         force_recalculate: ClassVar[bool] = False
@@ -1253,10 +1250,8 @@ class Has(Rule[TWorld], game="Archipelago"):
     def to_dict(self) -> dict[str, Any]:
         """Returns a JSON compatible dict, omitting count when it equals 1."""
         result: dict[str, Any] = {"rule": self.__class__.__qualname__}
-        if self.options:
-            result["options"] = [o.to_dict() for o in self.options]
-        if self.filtered_resolution:
-            result["filtered_resolution"] = self.filtered_resolution
+        result["options"] = [o.to_dict() for o in self.options]
+        result["filtered_resolution"] = self.filtered_resolution
         args: dict[str, Any] = {"item_name": self.item_name}
         # Handle both static and Rule counts
         if isinstance(self.count, Rule):
@@ -1478,7 +1473,7 @@ class HasAny(Rule[TWorld], game="Archipelago"):
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         if len(self.item_names) == 0:
             # match state.has_any
-            return world.false_rule
+            return getattr(world, "false_rule", None) or False_().resolve(world)
         if len(self.item_names) == 1:
             return Has(self.item_names[0]).resolve(world)
         return self.Resolved(self.item_names, player=world.player, caching_enabled=getattr(world, "rule_caching_enabled", False))
@@ -1696,7 +1691,7 @@ class HasAnyCount(Rule[TWorld], game="Archipelago"):
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         if len(self.item_counts) == 0:
             # match state.has_any_count
-            return world.false_rule
+            return getattr(world, "false_rule", None) or False_().resolve(world)
         if len(self.item_counts) == 1:
             item = next(iter(self.item_counts))
             return Has(item, self.item_counts[item]).resolve(world)
@@ -1813,7 +1808,7 @@ class HasFromList(Rule[TWorld], game="Archipelago"):
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         if len(self.item_names) == 0:
             # match state.has_from_list
-            return world.false_rule
+            return getattr(world, "false_rule", None) or False_().resolve(world)
         if len(self.item_names) == 1:
             return Has(self.item_names[0], self.count).resolve(world)
         return self.Resolved(
@@ -1945,7 +1940,7 @@ class HasFromListUnique(Rule[TWorld], game="Archipelago"):
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         if len(self.item_names) == 0 or len(self.item_names) < self.count:
             # match state.has_from_list_unique
-            return world.false_rule
+            return getattr(world, "false_rule", None) or False_().resolve(world)
         if len(self.item_names) == 1:
             return Has(self.item_names[0]).resolve(world)
         return self.Resolved(

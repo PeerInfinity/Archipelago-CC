@@ -40,6 +40,9 @@ class TestBase(unittest.TestCase):
             "Ceres",
             "Gauntlet Top",
             "Mama Turtle"
+        },
+        "shapez": {
+            "Achievements needing a MAM",  # unreachable with default settings
         }
     }
 
