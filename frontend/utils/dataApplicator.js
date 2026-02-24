@@ -80,9 +80,33 @@ export async function applyLoadedData(loadedData, sourceName) {
 }
 
 /**
+ * Extract a direct Golden Layout config from a value that may be either a
+ * direct GL config (`{ root: ... }`) or a preset collection
+ * (`{ default: { root: ... }, compact: { root: ... } }`).
+ *
+ * @param {object} config - Layout config in either format.
+ * @returns {object} A direct GL config with a `.root` property.
+ */
+export function extractDirectLayoutConfig(config) {
+  if (!config || typeof config !== 'object') return config;
+  // Already a direct GL config
+  if (config.root) return config;
+  // Preset collection — try 'default', then first key with a .root
+  if (config.default && config.default.root) return config.default;
+  for (const key in config) {
+    if (Object.prototype.hasOwnProperty.call(config, key) &&
+        config[key] && typeof config[key] === 'object' && config[key].root) {
+      return config[key];
+    }
+  }
+  return config; // give it back as-is and let the caller deal with it
+}
+
+/**
  * Apply a Golden Layout configuration live, without reloading the page.
  *
  * @param {object} layoutConfig - Raw or saved layout configuration object.
+ *   May be a direct GL config or a preset collection.
  */
 export async function applyLayoutConfig(layoutConfig) {
   if (!layoutConfig) {
@@ -91,6 +115,12 @@ export async function applyLayoutConfig(layoutConfig) {
   }
 
   log('info', 'Attempting to apply layout config:', layoutConfig);
+
+  // Normalise: if we received a preset collection, extract the direct GL config
+  const directConfig = extractDirectLayoutConfig(layoutConfig);
+  if (directConfig !== layoutConfig) {
+    log('info', 'Extracted direct GL config from preset collection');
+  }
 
   let goldenLayoutInstance = null;
 
@@ -102,7 +132,7 @@ export async function applyLayoutConfig(layoutConfig) {
   }
 
   // Transform layout config to ensure size values are strings (Golden Layout 2.x requirement)
-  const transformedConfig = transformLayoutConfigSizes(layoutConfig);
+  const transformedConfig = transformLayoutConfigSizes(directConfig);
   log('info', 'Transformed layout config sizes from numbers to strings');
 
   if (typeof goldenLayoutInstance.loadLayout === 'function') {

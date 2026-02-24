@@ -738,11 +738,21 @@ async function handleLayoutConfig(params) {
 
   if (baseCombinedData.layoutConfig) {
     if (isValidLayoutObject(baseCombinedData.layoutConfig)) {
-      layoutPresets = baseCombinedData.layoutConfig;
-      logger.info(
-        'init',
-        'layoutPresets populated from combined data (either localStorage or file).'
-      );
+      // If it's a direct GL config (has .root), wrap it as a preset collection
+      // so consumers like mobileLayoutManager can find it at layoutPresets.default
+      if (baseCombinedData.layoutConfig.root) {
+        layoutPresets = { default: baseCombinedData.layoutConfig };
+        logger.info(
+          'init',
+          'layoutPresets wrapped direct GL config as { default: config }.'
+        );
+      } else {
+        layoutPresets = baseCombinedData.layoutConfig;
+        logger.info(
+          'init',
+          'layoutPresets populated from preset collection in combined data.'
+        );
+      }
     } else {
       logger.warn(
         'init',

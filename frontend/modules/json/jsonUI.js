@@ -3,7 +3,7 @@ import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { applyLoadedData, transformLayoutConfigSizes } from '../../utils/dataApplicator.js';
+import { applyLoadedData, transformLayoutConfigSizes, extractDirectLayoutConfig } from '../../utils/dataApplicator.js';
 
 
 // Helper function for logging with fallback
@@ -376,17 +376,19 @@ export class JsonUI {
           rawLayoutConfig ? 'SUCCESS' : 'FAILED'
         );
       } else {
-        // Fallback to loaded preset if live one isn't available
-        rawLayoutConfig = window.G_combinedModeData?.layoutConfig;
-        log('info', 
+        // Fallback to loaded preset if live one isn't available.
+        // G_combinedModeData.layoutConfig may be a preset collection
+        // ({ default: { root: ... } }), so extract the direct GL config.
+        rawLayoutConfig = extractDirectLayoutConfig(window.G_combinedModeData?.layoutConfig);
+        log('info',
           '[JsonUI] Could not get live layout, falling back to preset layoutConfig from G_combinedModeData:',
           rawLayoutConfig ? 'SUCCESS' : 'FAILED'
         );
       }
-      
+
       log('info', '[JsonUI] rawLayoutConfig type:', typeof rawLayoutConfig);
       log('info', '[JsonUI] rawLayoutConfig exists:', !!rawLayoutConfig);
-      
+
       // Clean the layout config for compatibility with Golden Layout 2.x on reload
       if (rawLayoutConfig) {
         log('info', '[JsonUI] About to transform layout config...');
@@ -531,10 +533,11 @@ export class JsonUI {
       ) {
         rawLayoutConfig = this.container.layoutManager.saveLayout();
       } else {
-        // Fallback to loaded preset if live one isn't available
-        rawLayoutConfig = window.G_combinedModeData?.layoutConfig;
+        // Fallback to loaded preset if live one isn't available.
+        // G_combinedModeData.layoutConfig may be a preset collection, so extract direct config.
+        rawLayoutConfig = extractDirectLayoutConfig(window.G_combinedModeData?.layoutConfig);
       }
-      
+
       // Clean the layout config for compatibility with Golden Layout 2.x on reload
       if (rawLayoutConfig) {
         return transformLayoutConfigSizes(rawLayoutConfig);

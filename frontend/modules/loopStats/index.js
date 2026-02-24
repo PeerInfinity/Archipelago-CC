@@ -113,20 +113,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   log('info', `[${thisModuleId} Module] Initializing with priority ${priorityIndex}...`);
 
-  // Subscribe to panel creation to set loopState reference
-  if (moduleEventBus) {
-    moduleEventBus.subscribe('goldenLayout:componentCreated', (data) => {
-      if (data.componentType === 'loopStatsPanel' && data.instance) {
-        loopStatsUIInstance = data.instance;
-        // Set loopState reference
-        if (loopStateSingleton) {
-          loopStatsUIInstance.setLoopState(loopStateSingleton);
-        }
-        log('info', `[${thisModuleId} Module] LoopStatsUI instance created and configured`);
-      }
-    }, thisModuleId);
-  }
-
   log('info', `[${thisModuleId} Module] Initialization complete.`);
 
   // Return cleanup function

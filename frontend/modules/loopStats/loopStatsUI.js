@@ -7,6 +7,7 @@
 
 import eventBus from '../../app/core/eventBus.js';
 import { queueAnalyzer } from './queueAnalyzer.js';
+import loopStateSingleton from '../loops/loopStateSingleton.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -34,8 +35,8 @@ export class LoopStatsUI {
     // Expansion state for action rows
     this.expandedRows = new Set();
 
-    // Reference to loopState (will be set via API)
-    this.loopState = null;
+    // Reference to loopState singleton
+    this.loopState = loopStateSingleton;
 
     // Event subscriptions
     this.subscriptions = [];
