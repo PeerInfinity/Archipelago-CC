@@ -81,8 +81,8 @@
             },
             {
               "type": "component",
-              "componentType": "settingsPanel",
-              "title": "Settings"
+              "componentType": "optionsPanel",
+              "title": "Options"
             },
             {
               "type": "component",
@@ -98,11 +98,6 @@
               "type": "component",
               "componentType": "playerStatePanel",
               "title": "Player State"
-            },
-            {
-              "type": "component",
-              "componentType": "discoveryPanel",
-              "title": "Discovery"
             },
             {
               "type": "component",

@@ -19,11 +19,30 @@
     "generalSettings": {
       "type": "object",
       "properties": {
-        "theme": {
+        "autoSaveMode": {
+          "type": "boolean",
+          "default": false
+        },
+        "autoLoadMode": {
+          "type": "boolean",
+          "default": false
+        },
+        "layoutMode": {
           "type": "string",
-          "enum": ["dark", "light"],
-          "default": "dark"
+          "enum": ["auto", "desktop", "mobile"],
+          "default": "auto"
         }
+      },
+      "additionalProperties": false
+    },
+    "colorblindMode": {
+      "type": "object",
+      "properties": {
+        "regions": { "type": "boolean", "default": false },
+        "locations": { "type": "boolean", "default": false },
+        "exits": { "type": "boolean", "default": false },
+        "dungeons": { "type": "boolean", "default": false },
+        "loops": { "type": "boolean", "default": false }
       },
       "additionalProperties": false
     },

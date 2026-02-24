@@ -50,6 +50,10 @@
       "path": "./modules/settings/index.js",
       "enabled": true
     },
+    "optionsPanel": {
+      "path": "./modules/optionsPanel/index.js",
+      "enabled": true
+    },
     "commonUI": {
       "path": "./modules/commonUI/index.js",
       "enabled": true
@@ -210,6 +214,7 @@
     "editor",
     "editorCodeMirror6",
     "settings",
+    "optionsPanel",
     "commonUI",
     "locations",
     "exits",

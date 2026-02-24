@@ -12,7 +12,7 @@ function log(level, message, ...data) {
   }
 }
 
-// const SETTINGS_STORAGE_KEY = 'appSettings'; // No longer using localStorage directly
+// const SETTINGS_STORAGE_KEY = 'appSettings'; // Not currently used; mode system has its own keys
 
 class SettingsManager {
   constructor() {
@@ -307,6 +307,25 @@ class SettingsManager {
   async getGeneralSettings() {
     await this.ensureLoaded();
     return this.settings?.generalSettings ?? {};
+  }
+
+  /**
+   * Resets in-memory settings to the defaults loaded from settings.json.
+   * Publishes 'settings:changed' event.
+   * @returns {Promise<void>}
+   */
+  async resetToDefaults() {
+    if (!this._defaultSettings) {
+      log('warn', 'No default settings available for reset.');
+      return;
+    }
+    this.settings = JSON.parse(JSON.stringify(this._defaultSettings));
+    log('info', 'Settings reset to defaults.');
+    eventBus.publish('settings:changed', {
+      key: '*',
+      value: this.settings,
+      settings: await this.getSettings(),
+    }, 'core');
   }
 }
 

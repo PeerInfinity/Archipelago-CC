@@ -102,6 +102,12 @@ export class JsonUI {
       <div class="json-panel-container panel-container" style="overflow-y: auto; height: 100%;">
         <div class="json-header">
           <h2>JSON Data Management</h2>
+          <div style="margin-top: 10px;">
+            <button id="json-btn-save-localstorage" class="button" style="background-color: #2e7d32; margin-right: 8px;">Save to LocalStorage</button>
+          </div>
+          <div style="margin-top: 8px;">
+            <button id="json-btn-reset-defaults" class="button" style="background-color: #c42b1c;">Reset Default Mode</button>
+          </div>
         </div>
 
         <div class="json-section">
@@ -161,12 +167,6 @@ export class JsonUI {
           </div>
           <div style="margin-top: 15px;">
             <button id="json-btn-export-live-layout" class="button">Export Live Layout</button>
-          </div>
-          <div style="margin-top: 15px;">
-            <button id="json-btn-save-localstorage" class="button">Save to LocalStorage</button>
-          </div>
-          <div style="margin-top: 15px;">
-            <button id="json-btn-reset-defaults" class="button button-danger">Reset Default Mode</button>
           </div>
         </div>
 

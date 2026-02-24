@@ -2,11 +2,9 @@
   "activeLayout": "default",
   "customLayoutConfig": null,
   "generalSettings": {
-    "theme": "dark",
-    "showDevTools": false,
-    "debugMode": false,
+    "layoutMode": "auto",
     "autoSaveMode": false,
-    "autoLoadMode": false
+    "autoLoadMode": true
   },
   "//": "playerId can be a string or number. It is used by StateManager.",
   "playerId": "1",
@@ -136,8 +134,6 @@
       "defaultServer": "ws://localhost:38281"
     },
     "inventory": {
-      "showItemGroups": true,
-      "defaultSort": "original",
       "showName": true,
       "showLabel1": true,
       "showLabel2": true
