@@ -872,7 +872,10 @@ class _ShopWrapper:
             adjusted_count -= data.starting_items.get(item_name, 0)
             if adjusted_count > 0:
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
+                # Skip true event items (id=None) - they have no ID and can't be in the pool.
+                # Don't use is_event here because some items (e.g., ALttP small keys) have
+                # event=True in the JSON but still have valid IDs and must be in the pool.
+                if item_data and item_data.item_id is None:
                     continue
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
