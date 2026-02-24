@@ -847,26 +847,48 @@ class _ShopWrapper:
 {create_shops_method}'''
 
     # Build itempool_counts dictionary
-    # Subtract all locked items and starting items from the pool counts.
-    # Locked items are placed via LOCKED_PLACEMENTS (events, items at event locations,
-    # and other always-locked items like keys), so they must not also be in the pool.
+    # The subtraction logic must match what actually ends up in LOCKED_PLACEMENTS:
+    # - When canonical_placements exist: LOCKED_PLACEMENTS only has event items/locations,
+    #   so only subtract those. Non-event locked items stay in the pool for non-seed-1 games
+    #   (they're placed via canonical_placements only for seed=1).
+    # - When no canonical_placements: all locked items go into LOCKED_PLACEMENTS,
+    #   so subtract all of them from the pool.
     itempool_entries = []
-    locked_item_counts: Dict[str, int] = {}
-    for loc_name, item_name in data.locked_placements.items():
-        if item_name:
-            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+    if data.canonical_placements or canonical_seed is not None:
+        # Only subtract items that are in LOCKED_PLACEMENTS
+        # (event items or items at event locations)
+        locked_event_counts: Dict[str, int] = {}
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                item_data = data.items.get(item_name)
+                loc_data = data.locations.get(loc_name)
+                is_event_item = item_data and item_data.is_event
+                is_event_location = loc_data and loc_data.is_event
+                if is_event_item or is_event_location:
+                    locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
 
-    for item_name, count in data.itempool_counts.items():
-        # Subtract locked items and starting items from the count
-        adjusted_count = count - locked_item_counts.get(item_name, 0)
-        adjusted_count -= data.starting_items.get(item_name, 0)
-        if adjusted_count > 0:
-            # Skip event items entirely (they shouldn't be in the pool)
-            item_data = data.items.get(item_name)
-            if item_data and item_data.is_event:
-                continue
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
+        for item_name, count in data.itempool_counts.items():
+            adjusted_count = count - locked_event_counts.get(item_name, 0)
+            adjusted_count -= data.starting_items.get(item_name, 0)
+            if adjusted_count > 0:
+                item_data = data.items.get(item_name)
+                if item_data and item_data.is_event:
+                    continue
+                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
+    else:
+        # No canonical_placements - subtract all locked items
+        locked_item_counts: Dict[str, int] = {}
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+
+        for item_name, count in data.itempool_counts.items():
+            adjusted_count = count - locked_item_counts.get(item_name, 0)
+            adjusted_count -= data.starting_items.get(item_name, 0)
+            if adjusted_count > 0:
+                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
 
     itempool_content = '\n'.join(itempool_entries)
 
