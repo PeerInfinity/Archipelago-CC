@@ -5,6 +5,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 ## Done
 
 - [JSON Panel](./json.md)
+- [Editor Panel](./editor.md) (covers both textarea and CodeMirror 6 editors)
 
 ## UI Panel Modules
 
@@ -12,8 +13,6 @@ These are the panels users interact with directly — highest priority.
 
 - [ ] dungeons.md — Dungeon bosses and medallion requirements
 - [ ] discoveryPanel.md — Discovery mode settings and discovered items
-- [ ] editor.md — JSON viewer/editor for inspecting app data
-- [ ] editorCodeMirror6.md — CodeMirror 6 editor (syntax highlighting, code folding)
 - [ ] events.md — Debug panel for event bus inspection
 - [ ] exits.md — Region exits and accessibility status
 - [ ] helpers.md — Game helper functions with live evaluation

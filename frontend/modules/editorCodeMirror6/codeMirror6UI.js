@@ -7,7 +7,7 @@
 
 import eventBus from '../../app/core/eventBus.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
-import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { applyLoadedData } from '../../utils/dataApplicator.js';
 
 // Modes that support the Apply button
 const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'metaGameJsFile', 'latestSnapshot'];
@@ -190,6 +190,14 @@ class CodeMirror6UI {
     // Create Apply button (visible for supported modes)
     this.applyButton = this._createButton('Apply', this._handleApplyClick);
     this.applyButton.title = 'Apply changes (Ctrl+Enter)';
+    this.applyButton.style.backgroundColor = '#2e7d32';
+    this.applyButton.style.color = '#fff';
+    this.applyButton.addEventListener('mouseenter', () => {
+      this.applyButton.style.backgroundColor = '#388e3c';
+    });
+    this.applyButton.addEventListener('mouseleave', () => {
+      this.applyButton.style.backgroundColor = '#2e7d32';
+    });
     controlsDiv.appendChild(this.applyButton);
 
     // Update Apply button visibility based on current source
@@ -467,39 +475,7 @@ class CodeMirror6UI {
   async _applyDataForExport(jsonText) {
     const loadedData = JSON.parse(jsonText);
     log('info', '[CodeMirror6UI] Applying data for export...');
-
-    // Apply data using the same logic as jsonUI._applyNonReloadData
-    const handlers = centralRegistry.getAllJsonDataHandlers();
-
-    for (const dataKey in loadedData) {
-      if (dataKey === 'modeName' || dataKey === 'savedTimestamp') continue;
-
-      if (dataKey === 'rulesConfig' && loadedData.rulesConfig) {
-        // Apply rules directly
-        eventBus.publish('files:jsonLoaded', {
-          jsonData: loadedData.rulesConfig,
-          selectedPlayerId: '1',
-          sourceName: 'editorApplyExport'
-        }, 'editorCodeMirror6');
-        log('info', '[CodeMirror6UI] Applied rulesConfig from export data');
-      } else if (dataKey === 'userSettings' && loadedData.userSettings) {
-        // Apply user settings via settings manager
-        if (window.settingsManager) {
-          await window.settingsManager.updateSettings(loadedData.userSettings);
-          log('info', '[CodeMirror6UI] Applied userSettings from export data');
-        }
-      } else if (handlers.has(dataKey)) {
-        const handler = handlers.get(dataKey);
-        if (!handler.requiresReload && handler.applyLoadedDataFunction) {
-          try {
-            handler.applyLoadedDataFunction(loadedData[dataKey]);
-            log('info', `[CodeMirror6UI] Applied ${dataKey} from export data`);
-          } catch (e) {
-            log('error', `[CodeMirror6UI] Error applying ${dataKey}:`, e);
-          }
-        }
-      }
-    }
+    await applyLoadedData(loadedData, 'editorCodeMirror6');
   }
 
   async _applyMetaGameJsFile(jsText) {

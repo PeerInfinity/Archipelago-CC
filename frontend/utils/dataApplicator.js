@@ -1,0 +1,200 @@
+/**
+ * Shared utility for applying loaded data (rules, settings, layout, module data).
+ *
+ * Used by jsonUI, editorUI, and codeMirror6UI so the logic lives in one place.
+ */
+
+import eventBus from '../app/core/eventBus.js';
+import settingsManager from '../app/core/settingsManager.js';
+import { centralRegistry } from '../app/core/centralRegistry.js';
+
+// Helper function for logging with fallback
+function log(level, message, ...data) {
+  if (typeof window !== 'undefined' && window.logger) {
+    window.logger[level]('dataApplicator', message, ...data);
+  } else {
+    const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+    consoleMethod(`[dataApplicator] ${message}`, ...data);
+  }
+}
+
+/**
+ * Apply loaded data to the running application without a page reload.
+ *
+ * Handles rulesConfig, userSettings, layoutConfig, and any registered
+ * module data handlers from the central registry.
+ *
+ * @param {object} loadedData - The data object (e.g. from a mode export).
+ * @param {string} sourceName - Identifier for eventBus publish calls.
+ * @returns {Promise<{requiresReload: boolean}>} Whether any data type required a reload.
+ */
+export async function applyLoadedData(loadedData, sourceName) {
+  const handlers = centralRegistry.getAllJsonDataHandlers();
+  let requiresReload = false;
+
+  log('info', `Applying non-reload data (source: ${sourceName}):`, loadedData);
+
+  for (const dataKey in loadedData) {
+    if (dataKey === 'modeName' || dataKey === 'savedTimestamp') continue;
+
+    if (dataKey === 'rulesConfig' && loadedData.rulesConfig) {
+      log('info', 'Found rulesConfig, applying via files:jsonLoaded...');
+      eventBus.publish('files:jsonLoaded', {
+        jsonData: loadedData.rulesConfig,
+        selectedPlayerId: '1',
+        sourceName,
+      }, sourceName);
+    } else if (dataKey === 'userSettings' && loadedData.userSettings) {
+      log('info', 'Found userSettings, applying settings...');
+      try {
+        await settingsManager.updateSettings(loadedData.userSettings);
+        log('info', 'Settings applied successfully');
+      } catch (e) {
+        log('error', 'Error applying settings:', e);
+      }
+    } else if (dataKey === 'layoutConfig') {
+      log('info', 'Found layoutConfig, applying live...');
+      try {
+        await applyLayoutConfig(loadedData[dataKey]);
+        log('info', 'layoutConfig applied successfully');
+      } catch (e) {
+        log('error', 'Error applying layoutConfig live:', e);
+      }
+    } else if (handlers.has(dataKey)) {
+      const handler = handlers.get(dataKey);
+      if (!handler.requiresReload) {
+        log('info', `Applying non-reload data for ${dataKey}...`);
+        try {
+          handler.applyLoadedDataFunction(loadedData[dataKey]);
+        } catch (e) {
+          log('error', `Error calling applyLoadedDataFunction for ${dataKey}:`, e);
+        }
+      } else {
+        requiresReload = true;
+        log('info', `Data type ${dataKey} requires reload.`);
+      }
+    }
+  }
+
+  return { requiresReload };
+}
+
+/**
+ * Apply a Golden Layout configuration live, without reloading the page.
+ *
+ * @param {object} layoutConfig - Raw or saved layout configuration object.
+ */
+export async function applyLayoutConfig(layoutConfig) {
+  if (!layoutConfig) {
+    log('warn', 'No layout config provided to apply');
+    return;
+  }
+
+  log('info', 'Attempting to apply layout config:', layoutConfig);
+
+  let goldenLayoutInstance = null;
+
+  if (window.goldenLayoutInstance) {
+    goldenLayoutInstance = window.goldenLayoutInstance;
+    log('info', 'Using window.goldenLayoutInstance for layout application');
+  } else {
+    throw new Error('No Golden Layout instance available for layout application');
+  }
+
+  // Transform layout config to ensure size values are strings (Golden Layout 2.x requirement)
+  const transformedConfig = transformLayoutConfigSizes(layoutConfig);
+  log('info', 'Transformed layout config sizes from numbers to strings');
+
+  if (typeof goldenLayoutInstance.loadLayout === 'function') {
+    try {
+      await goldenLayoutInstance.loadLayout(transformedConfig);
+      log('info', 'Layout loaded successfully using loadLayout()');
+
+      // Re-publish the initialization event so newly created panels populate
+      // their data.  On initial page load this fires once from index.js;
+      // after a live layout reload the new component instances need it again.
+      // Deferred by a frame so Golden Layout finishes its layout pass and
+      // panel containers have proper dimensions before panels try to render.
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      log('info', 'Re-publishing app:readyForUiDataLoad for new panels');
+      eventBus.publish('app:readyForUiDataLoad', {
+        getModuleManager: () => window.moduleManagerApi,
+      }, 'core');
+    } catch (e) {
+      log('error', 'Error calling loadLayout():', e);
+      throw new Error(`Failed to load layout: ${e.message}`);
+    }
+  } else {
+    throw new Error('Golden Layout instance does not have loadLayout() method available');
+  }
+}
+
+/**
+ * Transform a layout config for Golden Layout 2.x compatibility:
+ * 1. Remove problematic 'dimensions' entries
+ * 2. Remove 'activeItemIndex'
+ * 3. Convert 'size' attributes to 'width'/'height' based on parent container type
+ *
+ * @param {object} config - Raw layout configuration.
+ * @returns {object} Transformed configuration.
+ */
+export function transformLayoutConfigSizes(config) {
+  if (!config || typeof config !== 'object') {
+    return config;
+  }
+
+  log('info', 'Processing layout config: convert size attributes based on container type');
+  return convertSizeAttributes(config);
+}
+
+/**
+ * Recursively converts size attributes based on parent-child relationships
+ * and removes dimensions/activeItemIndex entries.
+ */
+function convertSizeAttributes(config, parentType = null) {
+  if (!config || typeof config !== 'object') {
+    return config;
+  }
+
+  if (Array.isArray(config)) {
+    return config.map(item => convertSizeAttributes(item, parentType));
+  }
+
+  const converted = {};
+  for (const [key, value] of Object.entries(config)) {
+    // Remove "dimensions" entries
+    if (key === 'dimensions') {
+      log('info', 'Removed "dimensions" property from layout config');
+      continue;
+    }
+
+    // Remove "activeItemIndex" so no panel is forced active on load
+    if (key === 'activeItemIndex') {
+      log('info', 'Removed "activeItemIndex" property from layout config');
+      continue;
+    }
+
+    // Handle "size" attribute based on parent-child relationship
+    if (key === 'size') {
+      if (config.type === 'stack' && parentType === 'row') {
+        converted.width = value;
+        log('info', `Converted "size" to "width" for stack in row container: ${value}`);
+      } else if (config.type === 'stack' && parentType === 'column') {
+        converted.height = value;
+        log('info', `Converted "size" to "height" for stack in column container: ${value}`);
+      } else {
+        log('info', `Removed "size" property from ${config.type || 'unknown'} container (parent: ${parentType || 'none'})`);
+      }
+      continue;
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      const currentType = config.type || parentType;
+      converted[key] = convertSizeAttributes(value, currentType);
+    } else {
+      converted[key] = value;
+    }
+  }
+
+  return converted;
+}

@@ -3,6 +3,7 @@ import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { applyLoadedData, transformLayoutConfigSizes } from '../../utils/dataApplicator.js';
 
 
 // Helper function for logging with fallback
@@ -123,22 +124,22 @@ export class JsonUI {
           </div>
           <h4>Include in Operations:</h4>
           <div class="checkbox-container">
-            <button class="button button-small text-export-btn" data-config-key="rulesConfig">Text</button>
+            <button class="button button-small text-export-btn" data-config-key="rulesConfig">Edit</button>
             <input type="checkbox" id="json-chk-rules" data-config-key="rulesConfig" checked />
             <label for="json-chk-rules">Rules Config (rules.json)</label>
           </div>
           <div class="checkbox-container">
-            <button class="button button-small text-export-btn" data-config-key="moduleConfig">Text</button>
+            <button class="button button-small text-export-btn" data-config-key="moduleConfig">Edit</button>
             <input type="checkbox" id="json-chk-modules" data-config-key="moduleConfig" checked />
             <label for="json-chk-modules">Module Config (modules.json)</label>
           </div>
           <div class="checkbox-container">
-            <button class="button button-small text-export-btn" data-config-key="layoutConfig">Text</button>
+            <button class="button button-small text-export-btn" data-config-key="layoutConfig">Edit</button>
             <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" checked />
             <label for="json-chk-layout">Layout Config (layout_presets.json / Current)</label>
           </div>
           <div class="checkbox-container">
-            <button class="button button-small text-export-btn" data-config-key="userSettings">Text</button>
+            <button class="button button-small text-export-btn" data-config-key="userSettings">Edit</button>
             <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" checked />
             <label for="json-chk-settings">User Settings (settings.json)</label>
           </div>
@@ -390,7 +391,7 @@ export class JsonUI {
       if (rawLayoutConfig) {
         log('info', '[JsonUI] About to transform layout config...');
         try {
-          dataToSave.layoutConfig = this._transformLayoutConfigSizes(rawLayoutConfig);
+          dataToSave.layoutConfig = transformLayoutConfigSizes(rawLayoutConfig);
           log('info', '[JsonUI] Successfully processed layoutConfig for export. Keys in result:', Object.keys(dataToSave.layoutConfig || {}));
           log('info', '[JsonUI] Final dataToSave.layoutConfig type:', typeof dataToSave.layoutConfig);
         } catch (transformError) {
@@ -536,7 +537,7 @@ export class JsonUI {
       
       // Clean the layout config for compatibility with Golden Layout 2.x on reload
       if (rawLayoutConfig) {
-        return this._transformLayoutConfigSizes(rawLayoutConfig);
+        return transformLayoutConfigSizes(rawLayoutConfig);
       } else {
         return rawLayoutConfig;
       }
@@ -643,10 +644,11 @@ export class JsonUI {
         return;
       }
 
-      // Export the section data directly (without the outer wrapper key)
-      const exportData = sectionData;
+      // Wrap the section data under its config key so that applyLoadedData
+      // can recognise it (e.g. { layoutConfig: {...} } or { rulesConfig: {...} }).
+      const exportData = { [configKey]: sectionData };
 
-      log('info', 
+      log('info',
         `[JsonUI] Export section ${configKey} to text. Data:`,
         exportData
       );
@@ -825,7 +827,7 @@ export class JsonUI {
       }
 
       // Apply non-reloadable data
-      await this._applyNonReloadData(loadedData);
+      await applyLoadedData(loadedData, 'json');
 
       // Show success alert
       alert(
@@ -943,7 +945,7 @@ export class JsonUI {
         //   );
 
         // --- Apply non-reloadable data ---
-        await this._applyNonReloadData(loadedData); // Apply data directly from loadedData
+        await applyLoadedData(loadedData, 'json');
 
         // Show alert (might need adjustment based on requiresReload checks)
         alert(
@@ -1017,7 +1019,7 @@ export class JsonUI {
       localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
 
       alert(
-        `Configuration for mode '${modeName}' saved to LocalStorage. Please RELOAD the page to apply the changes.`
+        `Configuration for mode '${modeName}' saved to LocalStorage, and will be loaded from LocalStorage next time the page is loaded.`
       );
       this._populateKnownModesList(); // Refresh after saving
     } catch (error) {
@@ -1292,7 +1294,7 @@ export class JsonUI {
 
       const textButton = document.createElement('button');
       textButton.classList.add('button', 'button-small', 'text-export-btn');
-      textButton.textContent = 'Text';
+      textButton.textContent = 'Edit';
       textButton.dataset.configKey = dataKey;
       // Add event listener directly to the button
       textButton.addEventListener('click', () => {
@@ -1324,185 +1326,4 @@ export class JsonUI {
       log('info', `[JsonUI] Added checkbox for ${dataKey}`);
     });
   }
-
-  async _applyNonReloadData(loadedData) {
-    const handlers = centralRegistry.getAllJsonDataHandlers();
-    let requiresReloadDetected = false;
-
-    log('info', 
-      '[JsonUI] Applying non-reload data from loaded data:',
-      loadedData
-    );
-
-    for (const dataKey in loadedData) {
-      // Check core types first (if we handle them this way)
-      if (dataKey === 'rulesConfig') {
-        log('info', '[JsonUI] Found rulesConfig, applying via files:jsonLoaded...');
-        eventBus.publish('files:jsonLoaded', {
-          jsonData: loadedData.rulesConfig,
-          selectedPlayerId: '1',
-          sourceName: 'jsonModuleImport'
-        }, 'json');
-      } else if (dataKey === 'userSettings') {
-        // Implement live settings application
-        log('info', 
-          '[JsonUI] Found userSettings, applying settings...'
-        );
-        try {
-          await settingsManager.updateSettings(loadedData.userSettings);
-          log('info', '[JsonUI] Settings applied successfully');
-        } catch (e) {
-          log('error', '[JsonUI] Error applying settings:', e);
-        }
-      } else if (dataKey === 'layoutConfig') {
-        log('info', '[JsonUI] Found layoutConfig, applying live...');
-        try {
-          await this._applyLayoutConfig(loadedData[dataKey]);
-          log('info', '[JsonUI] layoutConfig applied successfully');
-        } catch (e) {
-          log('error', '[JsonUI] Error applying layoutConfig live:', e);
-        }
-      }
-      // Check registered module handlers
-      else if (handlers.has(dataKey)) {
-        const handler = handlers.get(dataKey);
-        if (!handler.requiresReload) {
-          log('info', `[JsonUI] Applying non-reload data for ${dataKey}...`);
-          try {
-            handler.applyLoadedDataFunction(loadedData[dataKey]);
-          } catch (e) {
-            log('error', 
-              `[JsonUI] Error calling applyLoadedDataFunction for ${dataKey}:`,
-              e
-            );
-          }
-        } else {
-          // Check if this data type was actually selected by the user implicitly (it's in the loaded file)
-          // We might not have checkbox state here, but presence implies intent
-          requiresReloadDetected = true;
-          log('info', `[JsonUI] Data type ${dataKey} requires reload.`);
-        }
-      }
-    }
-
-    // Optionally adjust the alert message based on requiresReloadDetected
-    // For now, the generic alert in _handleLoadFromFile should suffice.
-  }
-
-  async _applyLayoutConfig(layoutConfig) {
-    if (!layoutConfig) {
-      log('warn', '[JsonUI] No layout config provided to apply');
-      return;
-    }
-
-    log('info', '[JsonUI] Attempting to apply layout config:', layoutConfig);
-
-    // Check if we have access to the Golden Layout instance
-    let goldenLayoutInstance = null;
-    
-    if (window.goldenLayoutInstance) {
-      goldenLayoutInstance = window.goldenLayoutInstance;
-      log('info', '[JsonUI] Using window.goldenLayoutInstance for layout application');
-    } else if (this.container && this.container.layoutManager) {
-      goldenLayoutInstance = this.container.layoutManager;
-      log('info', '[JsonUI] Using this.container.layoutManager for layout application');
-    } else {
-      throw new Error('No Golden Layout instance available for layout application');
-    }
-
-    // Transform layout config to ensure size values are strings (Golden Layout 2.x requirement)
-    let transformedConfig = this._transformLayoutConfigSizes(layoutConfig);
-    log('info', '[JsonUI] Transformed layout config sizes from numbers to strings');
-
-    // Apply the layout using Golden Layout 2.x loadLayout() method
-    if (typeof goldenLayoutInstance.loadLayout === 'function') {
-      try {
-        await goldenLayoutInstance.loadLayout(transformedConfig);
-        log('info', '[JsonUI] Layout loaded successfully using loadLayout()');
-      } catch (e) {
-        log('error', '[JsonUI] Error calling loadLayout():', e);
-        throw new Error(`Failed to load layout: ${e.message}`);
-      }
-    } else {
-      throw new Error('Golden Layout instance does not have loadLayout() method available');
-    }
-  }
-
-  /**
-   * Enhanced layout config transformation that:
-   * 1. Removes problematic 'size' and 'dimensions' entries that cause Golden Layout parsing issues
-   * 2. Optionally assigns IDs to stacks that don't have them (for easier tracking)
-   * 3. Preserves width/height percentage values from the actual Golden Layout instance
-   */
-  _transformLayoutConfigSizes(config) {
-    if (!config || typeof config !== 'object') {
-      return config;
-    }
-
-    log('info', '[JsonUI] Processing layout config: convert size attributes based on container type');
-
-    // Step 1: Get the json data from saveLayout (this is already done - config is the result)
-    // Step 2: Process the config to convert size attributes appropriately
-    const transformed = this._convertSizeAttributes(config);
-
-    return transformed;
-  }
-
-  /**
-   * Converts size attributes based on parent-child relationships and removes dimensions entries
-   */
-  _convertSizeAttributes(config, parentType = null) {
-    if (!config || typeof config !== 'object') {
-      return config;
-    }
-    
-    if (Array.isArray(config)) {
-      return config.map(item => this._convertSizeAttributes(item, parentType));
-    }
-    
-    const converted = {};
-    for (const [key, value] of Object.entries(config)) {
-      // Remove "dimensions" entries
-      if (key === 'dimensions') {
-        log('info', `[JsonUI] Removed "dimensions" property from layout config`);
-        continue;
-      }
-
-      // Remove "activeItemIndex" so no panel is forced active on load (GL defaults to first tab)
-      if (key === 'activeItemIndex') {
-        log('info', `[JsonUI] Removed "activeItemIndex" property from layout config`);
-        continue;
-      }
-      
-      // Handle "size" attribute based on parent-child relationship
-      if (key === 'size') {
-        if (config.type === 'stack' && parentType === 'row') {
-          // For "stack" entries whose parent is a "row", rename "size" to "width"
-          converted.width = value;
-          log('info', `[JsonUI] Converted "size" to "width" for stack in row container: ${value}`);
-        } else if (config.type === 'stack' && parentType === 'column') {
-          // For "stack" entries whose parent is a "column", rename "size" to "height"
-          converted.height = value;
-          log('info', `[JsonUI] Converted "size" to "height" for stack in column container: ${value}`);
-        } else {
-          // For all other entries, remove the "size" entries
-          log('info', `[JsonUI] Removed "size" property from ${config.type || 'unknown'} container (parent: ${parentType || 'none'})`);
-        }
-        continue;
-      }
-      
-      if (typeof value === 'object' && value !== null) {
-        // Pass the current item's type as the parent type for its children
-        const currentType = config.type || parentType;
-        converted[key] = this._convertSizeAttributes(value, currentType);
-      } else {
-        converted[key] = value;
-      }
-    }
-    
-    return converted;
-  }
-
-
-
 }
