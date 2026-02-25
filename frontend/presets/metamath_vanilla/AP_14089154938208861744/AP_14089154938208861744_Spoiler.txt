@@ -16,7 +16,7 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Vanilla Item Placement:          No
+Vanilla Item Placement:          Yes
 Randomize Items:                 No
 Theorem to Prove:                2P2E4
 Proof Complexity:                Moderate

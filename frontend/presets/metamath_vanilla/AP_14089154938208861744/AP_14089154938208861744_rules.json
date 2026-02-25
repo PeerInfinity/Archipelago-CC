@@ -1733,7 +1733,7 @@
         "start_location_hints": [],
         "starting_statements": 0,
         "theorem": 1,
-        "vanilla_placement": false
+        "vanilla_placement": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1829,6 +1829,7 @@
         }
       },
       "num_statements": 10,
+      "is_vanilla": true,
       "canonical_placements": {
         "Prove df-3: 3 = (2 + 1)": "df-3: 3 = (2 + 1)",
         "Prove df-4: 4 = (3 + 1)": "df-4: 4 = (3 + 1)",
@@ -2022,7 +2023,7 @@
         ],
         "theorem": "2p2e4",
         "randomize_items": false,
-        "vanilla_placement": 0
+        "vanilla_placement": 1
       },
       "web": {
         "theme": "grass",
@@ -2051,5 +2052,6 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {},
+  "is_vanilla": true
 }

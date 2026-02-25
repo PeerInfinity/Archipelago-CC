@@ -1,5 +1,5 @@
 import math
-from typing import Any, Dict, List, Set
+from typing import Any, ClassVar, Dict, List, Set
 from BaseClasses import CollectionState, Entrance, Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from .Items import (MetamathItem, item_table, item_groups, generate_item_table,
@@ -73,6 +73,11 @@ class MetamathWorld(World):
 
     def generate_early(self):
         """Load and parse the metamath proof based on options."""
+        # Vanilla placement disables randomization and marks world as vanilla
+        if self.options.vanilla_placement.value:
+            self.options.randomize_items.value = False
+            self.is_vanilla = True
+
         # If seed is 1, disable randomization to use canonical item placements
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
@@ -123,6 +128,13 @@ class MetamathWorld(World):
                 candidates = list(range(2, self.num_statements + 1))
                 random.shuffle(candidates)
                 self.starting_statements.update(candidates[:remaining])
+
+        # Build canonical placements dict (location -> item for vanilla placement)
+        # Must be after starting_statements is computed since starting items don't have locations
+        self.canonical_placements: Dict[str, str] = {}
+        for i in range(1, self.num_statements + 1):
+            if i not in self.starting_statements:
+                self.canonical_placements[self.get_location_name(i)] = self.get_item_name(i)
 
 
     def create_regions(self):
@@ -327,4 +339,5 @@ class MetamathWorld(World):
             "starting_statements": list(self.starting_statements),
             "theorem": self.options.theorem.current_key,
             "randomize_items": self.options.randomize_items.value,
+            "vanilla_placement": self.options.vanilla_placement.value,
         }

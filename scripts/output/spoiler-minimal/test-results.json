@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-02-19T07:05:35.181990+00:00",
-    "last_updated": "2026-02-19T07:05:35.182015+00:00",
+    "last_updated": "2026-02-25T08:03:50.748828+00:00",
     "script_version": "1.0.0"
   },
   "results": {
@@ -34882,6 +34882,104 @@
         "world_directory": "meritous"
       }
     },
+    "Metamath Vanilla WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "metamath_vanilla_worldgen",
+      "game_name_from_yaml": "Metamath Vanilla WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.68,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 52376,
+        "size_mb": 0.05
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.89,
+        "return_code": 0,
+        "sphere_reached": 3.1,
+        "success": true,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "Metamath Vanilla WorldGen.yaml",
+      "timestamp": "2026-02-25T08:03:11.983677+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Metamath Vanilla WorldGen",
+        "game_name_from_filename": "metamath_vanilla_worldgen",
+        "game_name_from_yaml": "Metamath Vanilla WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Metamath Vanilla WorldGen.yaml",
+        "world_directory": "metamath_vanilla_worldgen"
+      }
+    },
+    "Metamath Vanilla WorldGen2.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "metamath_vanilla_worldgen2",
+      "game_name_from_yaml": "Metamath Vanilla WorldGen2",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.64,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/metamath_vanilla_worldgen2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 52380,
+        "size_mb": 0.05
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.83,
+        "return_code": 0,
+        "sphere_reached": 3.1,
+        "success": true,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "Metamath Vanilla WorldGen2.yaml",
+      "timestamp": "2026-02-25T08:03:35.780134+00:00",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name": "Metamath Vanilla WorldGen2",
+        "game_name_from_filename": "metamath_vanilla_worldgen2",
+        "game_name_from_yaml": "Metamath Vanilla WorldGen2",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "template_file": "Metamath Vanilla WorldGen2.yaml",
+        "world_directory": "metamath_vanilla_worldgen2"
+      }
+    },
     "Metamath.yaml": {
       "analysis": {
         "error_count": 0,
@@ -35010,39 +35108,27 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "b109fbf93970c2e2bddc1d2efc99f9973b265d101ab43ed4eca383273ea96113",
-              "new_sphere_log_hash": "5ddaf9a267b5b2698cdee7924146f00f4a3655fa11c6ed9e2be1bc695ab5ac4b",
-              "original_rules_hash": "b109fbf93970c2e2bddc1d2efc99f9973b265d101ab43ed4eca383273ea96113",
-              "original_sphere_log_hash": "5ddaf9a267b5b2698cdee7924146f00f4a3655fa11c6ed9e2be1bc695ab5ac4b",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2026-02-19T06:59:51.403953+00:00"
-            }
-          },
           "game_name_from_filename": "metamath",
           "game_name_from_yaml": "Metamath",
           "generation": {
-            "error_count": 0,
+            "error_count": 1,
             "error_type": null,
-            "processing_time_seconds": 11.44,
+            "processing_time_seconds": 5.55,
             "return_code": 0,
             "success": true,
-            "warning_count": 1
+            "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 46852,
-            "size_mb": 0.04
+            "size_bytes": 51675,
+            "size_mb": 0.05
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 5.72,
+            "processing_time_seconds": 16.76,
             "return_code": 0,
             "sphere_reached": 3.1,
             "success": true,
@@ -35050,7 +35136,7 @@
             "warning_count": 0
           },
           "template_filename": "Metamath.yaml",
-          "timestamp": "2026-02-19T06:20:57.604003+00:00",
+          "timestamp": "2026-02-25T08:02:39.899438+00:00",
           "world_info": {
             "exporter_path": null,
             "exporter_size": 0,
@@ -35641,7 +35727,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Metamath.yaml",
-      "timestamp": "2026-02-19T06:20:57.604003+00:00",
+      "timestamp": "2026-02-25T08:02:39.899438+00:00",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": null,

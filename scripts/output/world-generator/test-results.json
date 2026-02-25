@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-02-24T02:53:16.536327+00:00",
+    "timestamp": "2026-02-25T08:01:13.259063+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -15,19 +15,19 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "shapez": {
-      "template": "shapez.yaml",
-      "game_name": "shapez",
-      "timestamp": "2026-02-24T02:53:19.864401+00:00",
+    "Metamath": {
+      "template": "Metamath.yaml",
+      "game_name": "Metamath",
+      "timestamp": "2026-02-25T08:01:15.888913+00:00",
       "original": {
         "generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 4.21
+          "processing_time_seconds": 5.66
         },
         "spoiler_test": {
           "success": false,
@@ -38,9 +38,9 @@
       "test_world": {
         "world_generation": {
           "success": true,
-          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
+          "world_dir": "/home/user/Archipelago-CC/worlds/metamath_worldgen",
           "error": null,
-          "processing_time_seconds": 0.56
+          "processing_time_seconds": 1.48
         },
         "seed_generation": {
           "success": false
@@ -57,9 +57,9 @@
           "success": false,
           "pass_fail": "unknown"
         },
-        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
-        "test_game_name": "shapez WorldGen",
-        "test_template_name": "shapez WorldGen.yaml"
+        "world_dir": "/home/user/Archipelago-CC/worlds/metamath_worldgen",
+        "test_game_name": "Metamath WorldGen",
+        "test_template_name": "Metamath WorldGen.yaml"
       },
       "errors": {
         "generation": [],

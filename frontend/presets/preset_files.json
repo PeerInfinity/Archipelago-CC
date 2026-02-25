@@ -9225,5 +9225,73 @@
       "multiworld",
       "spoiler_fuzz"
     ]
+  },
+  "metamath_vanilla": {
+    "name": "Metamath",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true
+      }
+    }
+  },
+  "metamath_vanilla_worldgen": {
+    "name": "Metamath Vanilla WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath Vanilla WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
+      }
+    }
+  },
+  "metamath_vanilla_worldgen2": {
+    "name": "Metamath Vanilla WorldGen2",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath Vanilla WorldGen2"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "is_canonical": true
+      }
+    }
   }
 }

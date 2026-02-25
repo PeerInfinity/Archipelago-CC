@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
-  "game_name": "Metamath",
-  "game_directory": "metamath",
+  "game_name": "Metamath Vanilla WorldGen2",
+  "game_directory": "metamath_vanilla_worldgen2",
   "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
@@ -94,7 +94,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -129,7 +129,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -163,7 +163,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -197,7 +197,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -234,7 +234,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -272,7 +272,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -313,7 +313,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -354,7 +354,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -380,7 +380,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }
@@ -398,175 +398,14 @@
     "1": {
       "df-2: 2 = (1 + 1)": {
         "name": "df-2: 2 = (1 + 1)",
-        "hint_text": "df 2: 2 = (1 + 1)",
         "id": 234790000,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "df-3: 3 = (2 + 1)": {
-        "name": "df-3: 3 = (2 + 1)",
-        "hint_text": "df 3: 3 = (2 + 1)",
-        "id": 234790001,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "df-4: 4 = (3 + 1)": {
-        "name": "df-4: 4 = (3 + 1)",
-        "hint_text": "df 4: 4 = (3 + 1)",
-        "id": 234790002,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "ax-1cn: 1 \u2208 \u2102": {
-        "name": "ax-1cn: 1 \u2208 \u2102",
-        "hint_text": "ax 1cn: 1 \u2208 \u2102",
-        "id": 234790003,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "2cn: 2 \u2208 \u2102": {
-        "name": "2cn: 2 \u2208 \u2102",
-        "id": 234790004,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "oveq2i: (2 + 2) = (2 + (1 + 1))": {
-        "name": "oveq2i: (2 + 2) = (2 + (1 + 1))",
-        "id": 234790005,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "oveq1i: (3 + 1) = ((2 + 1) + 1)": {
-        "name": "oveq1i: (3 + 1) = ((2 + 1) + 1)",
-        "id": 234790006,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "addassi: ((2 + 1) + 1) = (2 + (1 + 1))": {
-        "name": "addassi: ((2 + 1) + 1) = (2 + (1 + 1))",
-        "id": 234790007,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "3eqtri: 4 = (2 + (1 + 1))": {
-        "name": "3eqtri: 4 = (2 + (1 + 1))",
-        "id": 234790008,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "eqtr4i: (2 + 2) = 4": {
-        "name": "eqtr4i: (2 + 2) = 4",
-        "id": 234790009,
-        "groups": [],
-        "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "QED Moment": {
-        "name": "QED Moment",
-        "id": 234791992,
         "groups": [
-          "Everything",
-          "Hints"
+          "Everything"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
-        "max_count": 1
-      },
-      "Inference Help": {
-        "name": "Inference Help",
-        "id": 234791993,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Deduction Tip": {
-        "name": "Deduction Tip",
-        "id": 234791994,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Theorem Insight": {
-        "name": "Theorem Insight",
-        "id": 234791995,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Lemma Note": {
-        "name": "Lemma Note",
-        "id": 234791996,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Axiom Reference": {
-        "name": "Axiom Reference",
-        "id": 234791997,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Logic Guide": {
-        "name": "Logic Guide",
-        "id": 234791998,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Proof Hint": {
-        "name": "Proof Hint",
-        "id": 234791999,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "hint_text": "df 2: 2 = (1 + 1)"
       },
       "Statement 1": {
         "name": "Statement 1",
@@ -579,6 +418,17 @@
         "type": null,
         "max_count": 1
       },
+      "df-3: 3 = (2 + 1)": {
+        "name": "df-3: 3 = (2 + 1)",
+        "id": 234790001,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "df 3: 3 = (2 + 1)"
+      },
       "Statement 2": {
         "name": "Statement 2",
         "id": 234790001,
@@ -589,6 +439,17 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
+      },
+      "df-4: 4 = (3 + 1)": {
+        "name": "df-4: 4 = (3 + 1)",
+        "id": 234790002,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "df 4: 4 = (3 + 1)"
       },
       "Statement 3": {
         "name": "Statement 3",
@@ -601,6 +462,17 @@
         "type": null,
         "max_count": 1
       },
+      "ax-1cn: 1 \u2208 \u2102": {
+        "name": "ax-1cn: 1 \u2208 \u2102",
+        "id": 234790003,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "ax 1cn: 1 \u2208 \u2102"
+      },
       "Statement 4": {
         "name": "Statement 4",
         "id": 234790003,
@@ -609,6 +481,16 @@
           "Statements"
         ],
         "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "2cn: 2 \u2208 \u2102": {
+        "name": "2cn: 2 \u2208 \u2102",
+        "id": 234790004,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -623,6 +505,16 @@
         "type": null,
         "max_count": 1
       },
+      "oveq2i: (2 + 2) = (2 + (1 + 1))": {
+        "name": "oveq2i: (2 + 2) = (2 + (1 + 1))",
+        "id": 234790005,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Statement 6": {
         "name": "Statement 6",
         "id": 234790005,
@@ -631,6 +523,16 @@
           "Statements"
         ],
         "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "oveq1i: (3 + 1) = ((2 + 1) + 1)": {
+        "name": "oveq1i: (3 + 1) = ((2 + 1) + 1)",
+        "id": 234790006,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -645,6 +547,16 @@
         "type": null,
         "max_count": 1
       },
+      "addassi: ((2 + 1) + 1) = (2 + (1 + 1))": {
+        "name": "addassi: ((2 + 1) + 1) = (2 + (1 + 1))",
+        "id": 234790007,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Statement 8": {
         "name": "Statement 8",
         "id": 234790007,
@@ -656,6 +568,16 @@
         "type": null,
         "max_count": 1
       },
+      "3eqtri: 4 = (2 + (1 + 1))": {
+        "name": "3eqtri: 4 = (2 + (1 + 1))",
+        "id": 234790008,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Statement 9": {
         "name": "Statement 9",
         "id": 234790008,
@@ -664,6 +586,16 @@
           "Statements"
         ],
         "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "eqtr4i: (2 + 2) = 4": {
+        "name": "eqtr4i: (2 + 2) = 4",
+        "id": 234790009,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -1667,6 +1599,94 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
+      },
+      "QED Moment": {
+        "name": "QED Moment",
+        "id": 234791992,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Inference Help": {
+        "name": "Inference Help",
+        "id": 234791993,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Deduction Tip": {
+        "name": "Deduction Tip",
+        "id": 234791994,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Theorem Insight": {
+        "name": "Theorem Insight",
+        "id": 234791995,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Lemma Note": {
+        "name": "Lemma Note",
+        "id": 234791996,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Axiom Reference": {
+        "name": "Axiom Reference",
+        "id": 234791997,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Logic Guide": {
+        "name": "Logic Guide",
+        "id": 234791998,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
+      },
+      "Proof Hint": {
+        "name": "Proof Hint",
+        "id": 234791999,
+        "groups": [
+          "Everything",
+          "Hints"
+        ],
+        "classification": "filler",
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -1714,8 +1734,9 @@
   },
   "world": {
     "1": {
-      "game": "Metamath",
+      "game": "Metamath Vanilla WorldGen2",
       "world_class_name": "MetamathWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
@@ -1733,7 +1754,8 @@
         "start_location_hints": [],
         "starting_statements": 0,
         "theorem": 1,
-        "vanilla_placement": false
+        "use_canonical_options": true,
+        "vanilla_placement": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1808,6 +1830,11 @@
           "default": 1,
           "display_name": "Theorem to Prove"
         },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        },
         "vanilla_placement": {
           "type": "toggle",
           "default": false,
@@ -1829,6 +1856,7 @@
         }
       },
       "num_statements": 10,
+      "is_vanilla": true,
       "canonical_placements": {
         "Prove df-3: 3 = (2 + 1)": "df-3: 3 = (2 + 1)",
         "Prove df-4: 4 = (3 + 1)": "df-4: 4 = (3 + 1)",
@@ -2022,7 +2050,7 @@
         ],
         "theorem": "2p2e4",
         "randomize_items": false,
-        "vanilla_placement": 0
+        "vanilla_placement": 1
       },
       "web": {
         "theme": "grass",
@@ -2039,7 +2067,7 @@
           }
         ]
       },
-      "world_directory": "metamath"
+      "world_directory": "metamath_vanilla_worldgen2"
     }
   },
   "exporter": {},
@@ -2051,5 +2079,7 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {},
+  "is_vanilla": true,
+  "is_canonical": true
 }
