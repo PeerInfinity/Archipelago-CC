@@ -165,6 +165,19 @@ async function loadSingleModule(options) {
       moduleInstance = bundledModules[moduleId];
       logger.debug('init', `Using pre-bundled module: ${moduleId}`);
     } else {
+      if (bundledModules) {
+        // Running in bundled mode but this module is not in the bundle.
+        // Its transitive imports (eventBus, settingsManager, etc.) will be loaded
+        // as separate file-URL modules, creating different singleton instances from
+        // the ones already in the bundle. This breaks event subscriptions and shared
+        // state. Add this module to BUNDLED_MODULES in init-bundled.js to fix it.
+        logger.warn(
+          'init',
+          `Module "${moduleId}" is enabled but missing from __BUNDLED_MODULES__. ` +
+          `In bundled mode this causes duplicate singleton instances (eventBus, settingsManager, etc.) ` +
+          `which breaks event subscriptions. Add it to init-bundled.js.`
+        );
+      }
       // Dynamically import the module
       // IMPORTANT: Resolve path relative to frontend root, not this file's location
       // Module paths in module-configs/modules.json are like "./modules/foo/index.js"
