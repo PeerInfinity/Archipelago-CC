@@ -596,7 +596,7 @@ function createModuleManagerApi(options) {
       );
       try {
         // IMPORTANT: Resolve path relative to frontend root
-        // Module paths in modules.json are like "./modules/foo/index.js"
+        // Module paths in module-configs/modules.json are like "./modules/foo/index.js"
         // From this file's location (app/initialization/), we need to go up to frontend root
         const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
         const moduleInstance = await import(resolvedPath);

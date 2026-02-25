@@ -122,7 +122,7 @@ export class JsonUI {
             <button id="json-btn-check-all" class="button button-small">Check All</button>
             <button id="json-btn-uncheck-all" class="button button-small">Uncheck All</button>
           </div>
-          <h4>Include in Operations:</h4>
+          <h4>Core Data:</h4>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="rulesConfig">Edit</button>
             <input type="checkbox" id="json-chk-rules" data-config-key="rulesConfig" checked />
@@ -131,17 +131,17 @@ export class JsonUI {
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="moduleConfig">Edit</button>
             <input type="checkbox" id="json-chk-modules" data-config-key="moduleConfig" checked />
-            <label for="json-chk-modules">Module Config (modules.json)</label>
+            <label for="json-chk-modules">Module Config (module-configs/modules.json)</label>
           </div>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="layoutConfig">Edit</button>
             <input type="checkbox" id="json-chk-layout" data-config-key="layoutConfig" checked />
-            <label for="json-chk-layout">Layout Config (layout_presets.json / Current)</label>
+            <label for="json-chk-layout">Layout Config (layout-configs/layout_presets.json / Current)</label>
           </div>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="userSettings">Edit</button>
             <input type="checkbox" id="json-chk-settings" data-config-key="userSettings" checked />
-            <label for="json-chk-settings">User Settings (settings.json)</label>
+            <label for="json-chk-settings">User Settings (settings/settings.json)</label>
           </div>
           <!-- Placeholder for module-specific data checkboxes -->
         </div>

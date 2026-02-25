@@ -1,6 +1,6 @@
 {
   "title": "Application Settings",
-  "description": "Schema for frontend/settings.json",
+  "description": "Schema for frontend/settings/settings.json",
   "type": "object",
   "properties": {
     "activeGame": {
@@ -9,7 +9,7 @@
     },
     "activeLayout": {
       "type": ["string", "null"],
-      "description": "Name of the active layout preset (from layout_presets.json) or null for custom."
+      "description": "Name of the active layout preset (from layout-configs/layout_presets.json) or null for custom."
     },
     "customLayoutConfig": {
       "type": ["object", "null"],

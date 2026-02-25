@@ -35,7 +35,7 @@ async function shouldLoadFromLocalStorage(fetchJson, logger) {
     }
 
     // If not found in localStorage, fetch from default settings.json
-    const settingsJson = await fetchJson('./settings.json', 'Error loading settings.json for autoLoadMode check');
+    const settingsJson = await fetchJson('./settings/settings.json', 'Error loading settings.json for autoLoadMode check');
     if (settingsJson?.generalSettings?.autoLoadMode !== undefined) {
       return settingsJson.generalSettings.autoLoadMode;
     }

@@ -42,7 +42,7 @@ async function getAutoModeSettings(logger) {
     }
 
     // If not found in localStorage, fetch from default settings.json
-    const response = await fetch('./settings.json');
+    const response = await fetch('./settings/settings.json');
     if (response.ok) {
       const settingsJson = await response.json();
       if (settingsJson.generalSettings) {

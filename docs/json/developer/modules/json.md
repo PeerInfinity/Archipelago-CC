@@ -16,9 +16,9 @@
 
 - **Aggregate Configuration:** Gathers all current application configuration and state into a single, comprehensive JSON object. This includes:
   - `rulesConfig`: The currently loaded `rules.json`.
-  - `moduleConfig`: The module manifest from `modules.json`.
+  - `moduleConfig`: The module manifest from `module-configs/modules.json`.
   - `layoutConfig`: The current Golden Layout state.
-  - `userSettings`: The current application settings from `settings.json`.
+  - `userSettings`: The current application settings from `settings/settings.json`.
   - **Module-Specific Data:** Any data registered by other modules (e.g., the test list from the `Tests` module, runtime inventory/checks from the `StateManager` via `stateManagerRuntime`, or the full state snapshot via `stateManagerSnapshot`).
 - **Save to File:** Allows the user to download the aggregated configuration object as a single `.json` file. The user can select which parts of the configuration to include.
 - **Load from File:** Allows the user to upload a previously saved combined JSON file. This will apply the configurations and data from the file to the current session. All data types are applied live via the shared `applyLoadedData()` utility, including layout changes.

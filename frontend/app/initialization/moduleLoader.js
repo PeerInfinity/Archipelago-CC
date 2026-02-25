@@ -11,7 +11,7 @@ import { profiler } from '../../modules/shared/profiler.js';
  * These Maps are passed by reference and will be populated during execution.
  *
  * @param {Object} options - Configuration options
- * @param {Object} options.modulesData - Module configuration data from modules.json
+ * @param {Object} options.modulesData - Module configuration data from module-configs/modules.json
  * @param {Array} options.modulesData.loadPriority - Array of module IDs in load order
  * @param {Object} options.modulesData.moduleDefinitions - Object mapping module IDs to definitions
  * @param {Map} options.runtimeModuleStates - Map to store runtime module states (will be populated)
@@ -167,7 +167,7 @@ async function loadSingleModule(options) {
     } else {
       // Dynamically import the module
       // IMPORTANT: Resolve path relative to frontend root, not this file's location
-      // Module paths in modules.json are like "./modules/foo/index.js"
+      // Module paths in module-configs/modules.json are like "./modules/foo/index.js"
       // From this file's location (app/initialization/), we need to go up to frontend root
       const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
       moduleInstance = await import(resolvedPath);

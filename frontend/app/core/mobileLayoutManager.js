@@ -96,7 +96,7 @@ class MobileLayoutManager {
     this.columnPanels = []; // Reset column panels
     this.columnActivePanels = []; // Reset active panels
 
-    // Try to get panel order from default preset in layout_presets.json
+    // Try to get panel order from default preset in layout-configs/layout_presets.json
     if (this.layoutPresets && this.layoutPresets.default) {
       const defaultLayout = this.layoutPresets.default;
       if (defaultLayout.root && defaultLayout.root.content) {

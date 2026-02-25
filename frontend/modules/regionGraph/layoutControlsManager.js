@@ -107,24 +107,24 @@ export class LayoutControlsManager {
   async loadCheckboxSettings() {
     // Load checkbox states from settings
     const checkboxes = [
-      { id: '#forceShowLocations', setting: 'regionGraph.forceShowLocations', default: false },
-      { id: '#forceHideLocations', setting: 'regionGraph.forceHideLocations', default: false },
-      { id: '#keepRegionSetsComplete', setting: 'regionGraph.keepRegionSetsComplete', default: true },
-      { id: '#onlyShowLocationsInView', setting: 'regionGraph.onlyShowLocationsInView', default: false },
-      { id: '#movePlayerOneStep', setting: 'regionGraph.movePlayerOneStep', default: false },
-      { id: '#movePlayerDirectly', setting: 'regionGraph.movePlayerDirectly', default: true },
-      { id: '#showRegionInPanel', setting: 'regionGraph.showRegionInPanel', default: true },
-      { id: '#addToPath', setting: 'regionGraph.addToPath', default: true },
-      { id: '#overwritePath', setting: 'regionGraph.overwritePath', default: false },
-      { id: '#addLocationsToPath', setting: 'regionGraph.addLocationsToPath', default: false },
-      { id: '#checkAllLocationsInRegion', setting: 'regionGraph.checkAllLocationsInRegion', default: false },
-      { id: '#graph-show-undiscovered', setting: 'regionGraph.showUndiscovered', default: true }
+      { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
+      { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
+      { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
+      { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
+      { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
+      { id: '#movePlayerDirectly', setting: 'moduleSettings.regionGraph.movePlayerDirectly', default: true },
+      { id: '#showRegionInPanel', setting: 'moduleSettings.regionGraph.showRegionInPanel', default: true },
+      { id: '#addToPath', setting: 'moduleSettings.regionGraph.addToPath', default: true },
+      { id: '#overwritePath', setting: 'moduleSettings.regionGraph.overwritePath', default: false },
+      { id: '#addLocationsToPath', setting: 'moduleSettings.regionGraph.addLocationsToPath', default: false },
+      { id: '#checkAllLocationsInRegion', setting: 'moduleSettings.regionGraph.checkAllLocationsInRegion', default: false },
+      { id: '#graph-show-undiscovered', setting: 'moduleSettings.regionGraph.showUndiscovered', default: true }
     ];
 
     // Load numeric input settings
     const numericInputs = [
-      { id: '#maxLocationNodes', setting: 'regionGraph.maxLocationNodes', default: 100 },
-      { id: '#viewportStabilizeDelay', setting: 'regionGraph.viewportStabilizeDelay', default: 1000 }
+      { id: '#maxLocationNodes', setting: 'moduleSettings.regionGraph.maxLocationNodes', default: 100 },
+      { id: '#viewportStabilizeDelay', setting: 'moduleSettings.regionGraph.viewportStabilizeDelay', default: 1000 }
     ];
 
     for (const input of numericInputs) {
@@ -184,7 +184,7 @@ export class LayoutControlsManager {
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
     if (showUndiscoveredCheckbox) {
       showUndiscoveredCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#graph-show-undiscovered', 'regionGraph.showUndiscovered', e.target.checked);
+        await this.saveCheckboxSetting('#graph-show-undiscovered', 'moduleSettings.regionGraph.showUndiscovered', e.target.checked);
         // Rebuild the graph with new filtering
         if (this.ui.cy && this.ui.graphInitialized) {
           this.ui.loadGraphData();
@@ -197,7 +197,7 @@ export class LayoutControlsManager {
     if (keepRegionSetsCheckbox) {
       this.ui.keepRegionSetsComplete = keepRegionSetsCheckbox.checked;
       keepRegionSetsCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#keepRegionSetsComplete', 'regionGraph.keepRegionSetsComplete', e.target.checked);
+        await this.saveCheckboxSetting('#keepRegionSetsComplete', 'moduleSettings.regionGraph.keepRegionSetsComplete', e.target.checked);
         this.ui.keepRegionSetsComplete = e.target.checked;
         // Refresh location nodes if visible
         if (this.ui.locationsVisible) {
@@ -216,7 +216,7 @@ export class LayoutControlsManager {
         viewportDelayContainer.style.display = onlyInViewCheckbox.checked ? 'block' : 'none';
       }
       onlyInViewCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#onlyShowLocationsInView', 'regionGraph.onlyShowLocationsInView', e.target.checked);
+        await this.saveCheckboxSetting('#onlyShowLocationsInView', 'moduleSettings.regionGraph.onlyShowLocationsInView', e.target.checked);
         this.ui.onlyShowLocationsInView = e.target.checked;
         // Show/hide viewport delay setting
         if (viewportDelayContainer) {
@@ -245,13 +245,6 @@ export class LayoutControlsManager {
 
   async saveCheckboxSetting(checkboxId, settingKey, value) {
     try {
-      // Ensure the regionGraph settings section exists
-      const currentSettings = await settingsManager.getSettings();
-      if (!currentSettings.regionGraph) {
-        await settingsManager.updateSetting('regionGraph', {});
-      }
-
-      // Now update the specific setting
       await settingsManager.updateSetting(settingKey, value);
     } catch (error) {
       logger.warn(`Failed to save setting ${settingKey}:`, error);
@@ -260,13 +253,6 @@ export class LayoutControlsManager {
 
   async saveNumericSetting(settingKey, value) {
     try {
-      // Ensure the regionGraph settings section exists
-      const currentSettings = await settingsManager.getSettings();
-      if (!currentSettings.regionGraph) {
-        await settingsManager.updateSetting('regionGraph', {});
-      }
-
-      // Now update the specific setting
       await settingsManager.updateSetting(settingKey, value);
     } catch (error) {
       logger.warn(`Failed to save setting ${settingKey}:`, error);
