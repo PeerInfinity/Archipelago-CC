@@ -389,8 +389,8 @@ _findStackForColumn(column) {
 4. **External module loading** (section 3) — medium, uses column placement
 5. **Multi-instance panels** (section 5) — largest, independent of others
 
-## Open Questions
+## Resolved Questions
 
-1. **Stack creation sizing:** When creating a new stack dynamically, what width should it have? Equal split of remaining space? A fixed percentage?
-2. **Multi-instance panel titles:** When creating additional iframe panel instances, should titles auto-increment ("Iframe Panel 2", "Iframe Panel 3") or should the user provide a title?
-3. **Disabling multi-instance modules:** Should disabling a module close ALL instances, or just the "primary" one? (Plan assumes all.)
+1. **Stack creation sizing:** Equal split of remaining space. When creating a new stack, redistribute widths evenly across all stacks in the root row.
+2. **Multi-instance panel titles:** API allows code to specify a name. If none is specified, auto-increment ("Iframe Panel 2", "Iframe Panel 3"). No UI for user-entered names needed yet.
+3. **Disabling multi-instance modules:** Disabling closes ALL instances of the module.

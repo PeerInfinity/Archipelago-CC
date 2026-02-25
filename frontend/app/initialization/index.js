@@ -394,12 +394,67 @@ export async function initializeApplication(dependencies) {
 
     const moduleState = runtimeModuleStates.get(moduleId);
     if (moduleState && moduleState.enabled !== false) {
+      // For modules that allow multiple instances, only mark as disabled
+      // when the last instance is closed (i.e., no more panels of this type exist).
+      const moduleInstance = importedModules.get(moduleId);
+      if (moduleInstance?.moduleInfo?.allowMultipleInstances) {
+        const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+        if (componentType && panelManagerInstance?.goldenLayout?.root) {
+          const remaining = [];
+          function findComponents(item) {
+            if (item.isComponent && item.componentType === componentType) {
+              remaining.push(item);
+            } else if (item.contentItems) {
+              item.contentItems.forEach(findComponents);
+            }
+          }
+          findComponents(panelManagerInstance.goldenLayout.root);
+          if (remaining.length > 0) {
+            logger.debug(
+              'init',
+              `Panel closed for multi-instance module ${moduleId}, but ${remaining.length} instance(s) remain. Staying enabled.`
+            );
+            return;
+          }
+        }
+      }
+
       logger.debug(
         'init',
         `Panel closed by user for ${moduleId}. Updating module state to disabled.`
       );
       moduleState.enabled = false;
       eventBus.publish('module:stateChanged', { moduleId, enabled: false }, 'core');
+    }
+  }, 'core');
+
+  // Listen for external module load requests
+  eventBus.subscribe('module:loadExternalRequest', async ({ moduleId, modulePath }) => {
+    logger.info('init', `Loading external module: ${moduleId} from ${modulePath}`);
+
+    // Create a temporary module definition so enableModule can find it
+    if (!combinedModeData.moduleConfig.moduleDefinitions[moduleId]) {
+      combinedModeData.moduleConfig.moduleDefinitions[moduleId] = {
+        path: modulePath,
+        enabled: true,
+        isExternal: true,
+      };
+      // Add to load priority at the end
+      if (!combinedModeData.moduleConfig.loadPriority.includes(moduleId)) {
+        combinedModeData.moduleConfig.loadPriority.push(moduleId);
+      }
+    }
+
+    try {
+      await moduleManagerApi.enableModule(moduleId);
+      eventBus.publish('module:loaded', { moduleId }, 'core');
+    } catch (error) {
+      logger.error('init', `Failed to load external module ${moduleId}:`, error);
+      eventBus.publish('module:loadFailed', {
+        moduleId,
+        path: modulePath,
+        error: error.message,
+      }, 'core');
     }
   }, 'core');
 
@@ -792,15 +847,17 @@ function createModuleManagerApi(options) {
         actualModuleObject?.moduleInfo?.name ||
         actualModuleObject?.moduleInfo?.title;
       const panelTitle = titleFromInfo || moduleId;
+      const targetColumn = actualModuleObject?.moduleInfo?.column || null;
 
       if (componentType && panelManagerInstance) {
         logger.debug(
           'init',
-          `Re-adding panel for ${moduleId}. Type: ${componentType}, Title: ${panelTitle}`
+          `Re-adding panel for ${moduleId}. Type: ${componentType}, Title: ${panelTitle}, Column: ${targetColumn}`
         );
         await panelManagerInstance.createPanelForComponent(
           componentType,
-          panelTitle
+          panelTitle,
+          targetColumn
         );
         logger.debug(
           'init',
@@ -875,18 +932,24 @@ function createModuleManagerApi(options) {
 
       // Get componentType from centralRegistry
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+      const moduleInstance = importedModules.get(moduleId);
+      const allowsMultiple = moduleInstance?.moduleInfo?.allowMultipleInstances;
       let panelActionTaken = false;
       if (componentType) {
         logger.debug(
           'init',
-          `Closing panel for disabled module ${moduleId} (Component Type: ${componentType})`
+          `Closing panel(s) for disabled module ${moduleId} (Component Type: ${componentType}, multiple: ${!!allowsMultiple})`
         );
 
         if (
           panelManagerInstance &&
           typeof panelManagerInstance.destroyPanelByComponentType === 'function'
         ) {
-          panelManagerInstance.destroyPanelByComponentType(componentType);
+          if (allowsMultiple && typeof panelManagerInstance.destroyAllPanelsByComponentType === 'function') {
+            panelManagerInstance.destroyAllPanelsByComponentType(componentType);
+          } else {
+            panelManagerInstance.destroyPanelByComponentType(componentType);
+          }
           panelActionTaken = true;
         } else {
           logger.error(
@@ -947,6 +1010,57 @@ function createModuleManagerApi(options) {
   };
 
   api.getModuleManagerApi = () => api;
+
+  /**
+   * Creates an additional panel instance for a module that supports multiple instances.
+   * @param {string} moduleId - The module to create an instance for.
+   * @param {object} instanceState - Optional state passed to the component (e.g., { title: "Map View" }).
+   * @returns {object|null} The created panel item, or null if not supported.
+   */
+  api.createPanelInstance = async (moduleId, instanceState = {}) => {
+    const moduleState = runtimeModuleStates.get(moduleId);
+    if (!moduleState || !moduleState.enabled) {
+      logger.warn('init', `Cannot create instance: module ${moduleId} is not enabled.`);
+      return null;
+    }
+
+    const componentType = centralRegistry.getComponentTypeForModule(moduleId);
+    const moduleInstance = importedModules.get(moduleId);
+    const moduleInfoObj = moduleInstance?.moduleInfo;
+
+    if (!moduleInfoObj?.allowMultipleInstances) {
+      logger.warn('init', `Module ${moduleId} does not support multiple instances.`);
+      return null;
+    }
+
+    if (!componentType || !panelManagerInstance) {
+      logger.error('init', `Cannot create instance: missing componentType or panelManager.`);
+      return null;
+    }
+
+    // Determine title: explicit > auto-numbered > default
+    let title = instanceState.title;
+    if (!title) {
+      // Count existing instances to generate a number
+      const stacks = [];
+      function findComponents(item) {
+        if (item.isComponent && item.componentType === componentType) {
+          stacks.push(item);
+        } else if (item.contentItems) {
+          item.contentItems.forEach(findComponents);
+        }
+      }
+      if (panelManagerInstance.goldenLayout?.root?.contentItems) {
+        findComponents(panelManagerInstance.goldenLayout.root);
+      }
+      const instanceNumber = stacks.length + 1;
+      const baseTitle = moduleInfoObj.title || moduleId;
+      title = instanceNumber > 1 ? `${baseTitle} ${instanceNumber}` : baseTitle;
+    }
+
+    const column = instanceState.column || moduleInfoObj.column || null;
+    return panelManagerInstance.createAdditionalInstance(componentType, title, column, instanceState);
+  };
 
   return api;
 }
