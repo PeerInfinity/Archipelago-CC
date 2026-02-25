@@ -597,8 +597,10 @@ function createModuleManagerApi(options) {
       try {
         // IMPORTANT: Resolve path relative to frontend root
         // Module paths in module-configs/modules.json are like "./modules/foo/index.js"
-        // From this file's location (app/initialization/), we need to go up to frontend root
-        const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
+        // Use window.location.href (page URL) as base so this works in both bundled and
+        // unbundled modes. Using import.meta.url breaks in bundled mode because the bundle
+        // is at frontend/dist/bundle.js — two levels up lands at the repo root, not frontend/.
+        const resolvedPath = new URL(moduleDefinition.path, window.location.href).href;
         const moduleInstance = await import(resolvedPath);
         const moduleFileName = moduleDefinition.path.split('/').pop() || moduleDefinition.path;
         incrementFileCounter(`${moduleId} (${moduleFileName})`);
