@@ -848,8 +848,8 @@ function createModuleManagerApi(options) {
 
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       const titleFromInfo =
-        actualModuleObject?.moduleInfo?.name ||
-        actualModuleObject?.moduleInfo?.title;
+        actualModuleObject?.moduleInfo?.title ||
+        actualModuleObject?.moduleInfo?.name;
       const panelTitle = titleFromInfo || moduleId;
       const targetColumn = actualModuleObject?.moduleInfo?.column || null;
 
