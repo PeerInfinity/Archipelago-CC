@@ -25,39 +25,39 @@ Auto-Download Database:          Yes
 
 Starting Items:
 
-Statement 1
+df-2: 2 = (1 + 1)
 
 Locations:
 
-Prove Statement 2: Statement 2
-Prove Statement 3: Statement 3
-Prove Statement 4: Statement 4
-Prove Statement 5: Statement 5
-Prove Statement 6: Statement 6
-Prove Statement 7: Statement 7
-Prove Statement 8: Statement 8
-Prove Statement 9: Statement 9
-Prove Statement 10: Statement 10
+Prove df-3: 3 = (2 + 1): df-3: 3 = (2 + 1)
+Prove df-4: 4 = (3 + 1): df-4: 4 = (3 + 1)
+Prove ax-1cn: 1 ∈ ℂ: ax-1cn: 1 ∈ ℂ
+Prove 2cn: 2 ∈ ℂ: 2cn: 2 ∈ ℂ
+Prove oveq2i: (2 + 2) = (2 + (1 + 1)): oveq2i: (2 + 2) = (2 + (1 + 1))
+Prove oveq1i: (3 + 1) = ((2 + 1) + 1): oveq1i: (3 + 1) = ((2 + 1) + 1)
+Prove addassi: ((2 + 1) + 1) = (2 + (1 + 1)): addassi: ((2 + 1) + 1) = (2 + (1 + 1))
+Prove 3eqtri: 4 = (2 + (1 + 1)): 3eqtri: 4 = (2 + (1 + 1))
+Prove eqtr4i: (2 + 2) = 4: eqtr4i: (2 + 2) = 4
 
 Playthrough:
 
 0: {
-  Statement 1
+  df-2: 2 = (1 + 1)
 }
 1: {
-  Prove Statement 2: Statement 2
-  Prove Statement 4: Statement 4
-  Prove Statement 5: Statement 5
-  Prove Statement 6: Statement 6
+  Prove 2cn: 2 ∈ ℂ: 2cn: 2 ∈ ℂ
+  Prove ax-1cn: 1 ∈ ℂ: ax-1cn: 1 ∈ ℂ
+  Prove df-3: 3 = (2 + 1): df-3: 3 = (2 + 1)
+  Prove df-4: 4 = (3 + 1): df-4: 4 = (3 + 1)
+  Prove oveq2i: (2 + 2) = (2 + (1 + 1)): oveq2i: (2 + 2) = (2 + (1 + 1))
 }
 2: {
-  Prove Statement 3: Statement 3
-  Prove Statement 7: Statement 7
-  Prove Statement 9: Statement 9
+  Prove addassi: ((2 + 1) + 1) = (2 + (1 + 1)): addassi: ((2 + 1) + 1) = (2 + (1 + 1))
+  Prove oveq1i: (3 + 1) = ((2 + 1) + 1): oveq1i: (3 + 1) = ((2 + 1) + 1)
 }
 3: {
-  Prove Statement 8: Statement 8
+  Prove 3eqtri: 4 = (2 + (1 + 1)): 3eqtri: 4 = (2 + (1 + 1))
 }
 4: {
-  Prove Statement 10: Statement 10
+  Prove eqtr4i: (2 + 2) = 4: eqtr4i: (2 + 2) = 4
 }
