@@ -391,11 +391,18 @@ export async function initializeApplication(dependencies) {
   // Listen for panels being closed manually
   eventBus.subscribe('ui:panelManuallyClosed', ({ moduleId }) => {
     if (!moduleId) return;
-
     const moduleState = runtimeModuleStates.get(moduleId);
-    if (moduleState && moduleState.enabled !== false) {
+    if (!moduleState || moduleState.enabled === false) return;
+
+    // Defer all logic to the next event loop tick so GL can finish removing the panel from its
+    // tree (including _contentItems.splice). This ensures the multi-instance remaining-count check
+    // and destroyPanelByComponentType both see the updated tree state.
+    setTimeout(() => {
+      // Re-check: a concurrent close of another instance may have already disabled the module.
+      if (moduleState.enabled === false) return;
+
       // For modules that allow multiple instances, only mark as disabled
-      // when the last instance is closed (i.e., no more panels of this type exist).
+      // when the last instance is closed (i.e., no more panels of this type remain).
       const moduleInstance = importedModules.get(moduleId);
       if (moduleInstance?.moduleInfo?.allowMultipleInstances) {
         const componentType = centralRegistry.getComponentTypeForModule(moduleId);
@@ -419,15 +426,10 @@ export async function initializeApplication(dependencies) {
         }
       }
 
-      logger.debug(
-        'init',
-        `Panel closed by user for ${moduleId}. Disabling module.`
-      );
-      // Defer disableModule to the next event loop tick so GL can finish removing the panel from
-      // its tree first. Pass skipPanelDestroy since the panel is already gone — no need to find
-      // and remove it, which would just produce a spurious "no panel found" warning.
-      setTimeout(() => moduleManagerApi.disableModule(moduleId, { skipPanelDestroy: true }), 0);
-    }
+      logger.debug('init', `Panel closed by user for ${moduleId}. Disabling module.`);
+      // skipPanelDestroy: panel is already gone, no need to find and remove it.
+      moduleManagerApi.disableModule(moduleId, { skipPanelDestroy: true });
+    }, 0);
   }, 'core');
 
   // Listen for external module load requests
