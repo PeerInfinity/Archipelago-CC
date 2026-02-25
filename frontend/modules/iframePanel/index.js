@@ -9,6 +9,7 @@ export const moduleInfo = {
   icon: '🖼️',
   column: 3, // Right column
   description: 'Iframe Panel display panel.',
+  allowMultipleInstances: true,
 };
 
 // Helper function for logging with fallback
