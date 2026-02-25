@@ -121,9 +121,11 @@ class PanelManager {
         this.goldenLayout.on('itemDestroyed', (item) => {
           // Ensure this part is also robust
           try {
-            if (item.isComponent) {
-              const componentType = item.componentType;
-              const panelId = item.id;
+            // GL fires itemDestroyed with a BubblingEvent; the actual content item is in item.target
+            const contentItem = item.target || item;
+            if (contentItem.isComponent) {
+              const componentType = contentItem.componentType;
+              const panelId = contentItem.id;
               log(
                 'info',
                 `[PanelManager itemDestroyed Event] Component Type: ${componentType}, Panel ID: ${panelId}`

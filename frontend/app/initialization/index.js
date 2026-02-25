@@ -423,9 +423,10 @@ export async function initializeApplication(dependencies) {
         'init',
         `Panel closed by user for ${moduleId}. Disabling module.`
       );
-      // Call disableModule so all side-effects run (module:stateChanged, system:rehomeTimerUI).
-      // disableModule will try to destroy the panel but it's already gone — that's a safe no-op.
-      moduleManagerApi.disableModule(moduleId);
+      // Defer disableModule to the next event loop tick so GL can finish removing the panel from
+      // its tree first. This prevents destroyPanelByComponentType from finding and re-removing
+      // a panel that is already mid-removal, which would throw a GL internal error.
+      setTimeout(() => moduleManagerApi.disableModule(moduleId), 0);
     }
   }, 'core');
 

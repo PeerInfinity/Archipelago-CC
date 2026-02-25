@@ -9,7 +9,6 @@ import {
   // getHostedUIComponentType, // REMOVED
   setTimerPanelUIInstance, // ADDED
   getModuleDispatcher, // ADDED
-  getModuleEventBus, // ADDED
 } from './index.js';
 
 // Helper function for logging with fallback
@@ -162,21 +161,6 @@ export class TimerPanelUI {
       `[TimerPanelUI for ${this.moduleId}] GoldenLayout 'destroy' event. Calling onUnmount.`
     );
     this.onUnmount(); // onUnmount now includes setTimerPanelUIInstance(null)
-
-    // ADDED: Notify that this panel was manually closed, so ModuleManager can update state
-    const bus = getModuleEventBus();
-    if (bus && typeof bus.publish === 'function') {
-      log(
-        'info',
-        `[TimerPanelUI for ${this.moduleId}] Panel destroyed, publishing ui:panelManuallyClosed.`
-      );
-      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId }, this.moduleId);
-    } else {
-      log(
-        'warn',
-        `[TimerPanelUI for ${this.moduleId}] Could not get eventBus or publish function to send ui:panelManuallyClosed.`
-      );
-    }
 
     // Dispatch rehome event for TimerUI
     const dispatcher = getModuleDispatcher();
