@@ -1,0 +1,36 @@
+{
+  "autoStartTestsOnLoad": true,
+  "hideDisabledTests": true,
+  "randomizeOrder": false,
+  "defaultEnabledState": false,
+  "tests": [
+    {
+      "id": "test_textadventure_window_connection",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_window_basic_initialization",
+      "enabled": true
+    },
+    {
+      "id": "test_textadventure_window_custom_data_loading",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_window_movement_command",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_window_location_check_command",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_window_link_click",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_window_manager_ui",
+      "enabled": false
+    }
+  ]
+}

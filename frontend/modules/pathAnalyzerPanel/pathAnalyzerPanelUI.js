@@ -4,7 +4,6 @@ import {
   getPathAnalyzerPanelModuleId,
   setPathAnalyzerPanelUIInstance,
   getModuleDispatcher,
-  getModuleEventBus,
 } from './index.js';
 
 // Helper function for logging with fallback
@@ -231,16 +230,6 @@ export class PathAnalyzerPanelUI {
       `[PathAnalyzerPanelUI for ${this.moduleId}] GoldenLayout 'destroy' event.`
     );
     this.onUnmount();
-
-    // Notify that this panel was manually closed
-    const bus = getModuleEventBus();
-    if (bus && typeof bus.publish === 'function') {
-      log(
-        'info',
-        `[PathAnalyzerPanelUI for ${this.moduleId}] Panel destroyed, publishing ui:panelManuallyClosed.`
-      );
-      bus.publish('ui:panelManuallyClosed', { moduleId: this.moduleId }, this.moduleId);
-    }
   }
 
   _handleSelfModuleStateChange({ moduleId, enabled }) {

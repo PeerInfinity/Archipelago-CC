@@ -69,7 +69,7 @@ export class NavigationManager {
         if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
           if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
             const staticData = stateManager.getStaticData();
-            const regionData = staticData?.regions?.[regionName];
+            const regionData = staticData?.regions?.get(regionName);
             node.data('label', regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' '));
           } else {
             node.data('label', '???');
@@ -78,7 +78,7 @@ export class NavigationManager {
         } else {
           // Update the label to include count if region is in path
           const staticData = stateManager.getStaticData();
-          const regionData = staticData?.regions?.[regionName];
+          const regionData = staticData?.regions?.get(regionName);
           const baseText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
 
           if (count > 0) {

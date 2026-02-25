@@ -35,7 +35,7 @@ async function shouldLoadFromLocalStorage(fetchJson, logger) {
     }
 
     // If not found in localStorage, fetch from default settings.json
-    const settingsJson = await fetchJson('./settings.json', 'Error loading settings.json for autoLoadMode check');
+    const settingsJson = await fetchJson('./settings/settings.json', 'Error loading settings.json for autoLoadMode check');
     if (settingsJson?.generalSettings?.autoLoadMode !== undefined) {
       return settingsJson.generalSettings.autoLoadMode;
     }
@@ -738,11 +738,21 @@ async function handleLayoutConfig(params) {
 
   if (baseCombinedData.layoutConfig) {
     if (isValidLayoutObject(baseCombinedData.layoutConfig)) {
-      layoutPresets = baseCombinedData.layoutConfig;
-      logger.info(
-        'init',
-        'layoutPresets populated from combined data (either localStorage or file).'
-      );
+      // If it's a direct GL config (has .root), wrap it as a preset collection
+      // so consumers like mobileLayoutManager can find it at layoutPresets.default
+      if (baseCombinedData.layoutConfig.root) {
+        layoutPresets = { default: baseCombinedData.layoutConfig };
+        logger.info(
+          'init',
+          'layoutPresets wrapped direct GL config as { default: config }.'
+        );
+      } else {
+        layoutPresets = baseCombinedData.layoutConfig;
+        logger.info(
+          'init',
+          'layoutPresets populated from preset collection in combined data.'
+        );
+      }
     } else {
       logger.warn(
         'init',

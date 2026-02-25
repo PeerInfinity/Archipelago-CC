@@ -200,13 +200,13 @@ export class StateManagerProxy {
   initializeWorker() {
     log('info', '[stateManagerProxy] Creating Worker...');
     try {
-      // Determine worker URL - use absolute path in bundled mode since import.meta.url
-      // points to the bundle location, not the original module location
-      // Check if we're in a bundle by looking at import.meta.url (contains /dist/)
-      // We can't use window.__BUNDLED_MODULES__ because it's set after static imports complete
+      // Determine worker URL based on bundled vs unbundled mode.
+      // In bundled mode, import.meta.url points to dist/bundle.js, so we resolve
+      // relative to the page location instead (works for any deployment path).
+      // In unbundled mode, import.meta.url points to this module's actual location.
       const isBundled = import.meta.url.includes('/dist/');
       const workerUrl = isBundled
-        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.origin + '/frontend/')
+        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.href)
         : new URL('./stateManagerWorker.js', import.meta.url);
 
       log('info', `[stateManagerProxy] Worker URL: ${workerUrl.href} (bundled: ${!!isBundled})`);

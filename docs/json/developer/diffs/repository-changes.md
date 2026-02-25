@@ -9,7 +9,7 @@ This document tracks the differences between this repository and the upstream Ar
 
 ## Summary
 
-- **Modified upstream files:** 22
+- **Modified upstream files:** 24
 - **New top-level directories:** 15
 - **New files in existing directories:** ~36
 - **Auto-generated world directories:** 76
@@ -90,9 +90,10 @@ playwright.config.js - Playwright E2E test configuration
 vitest.config.js     - Vitest unit test configuration
 ```
 
-### Test Files (new)
+### Test Files (modified)
 ```
-test/hosting/webhost.py (modified for testing)
+test/general/test_items.py
+test/general/test_reachability.py
 ```
 
 Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placing ALTTP items in their vanilla (original game) locations using monkey patches and YAML plando. See [scripts/vanilla-alttp/README.md](../../../../scripts/vanilla-alttp/README.md) for details.
@@ -101,7 +102,7 @@ Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placi
 
 ## Modified Files
 
-The following 22 files have been modified from the upstream version:
+The following 24 files have been modified from the upstream version:
 
 ### Core Files (see core-files.diff)
 ```
@@ -130,6 +131,12 @@ Note: `rule_builder/` exists in upstream (merged from PR #5048). The fork extend
 worlds/alttp/Rules.py
 worlds/landstalker/Hints.py
 worlds/lufia2ac/Options.py
+```
+
+### Test Files (modified)
+```
+test/general/test_items.py
+test/general/test_reachability.py
 ```
 
 ### New Files
@@ -174,6 +181,10 @@ Modified world implementations to support generation without ROM files:
 - Secret of Evermore (soe)
 - The Legend of Zelda (tloz)
 - Yoshi's Island (yoshisisland)
+
+### Test Files
+- **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variants (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions)
+- **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic
 
 ### Rule Builder
 - **rule_builder/rules.py** - Extended from 1,822 to 4,224 lines. Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and many new rule types for AST format support (`Not`, `CountItem`, `Compare`, `Arithmetic`, `Conditional`, `HelperCall`, etc.). See [fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md) for detailed comparison.
@@ -276,7 +287,7 @@ The following major components were developed specifically for this project:
 
 - The latest sync from upstream was performed on February 21, 2026, bringing the fork up to Archipelago 0.6.7 (commit `0de09cd7`)
 
-- Most changes are additions rather than modifications, with only 22 files modified from upstream
+- Most changes are additions rather than modifications, with only 24 files modified from upstream
 
 - The majority of the ~2,000 new files are contained within:
   - `frontend/` - Web client (~400 files)

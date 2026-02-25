@@ -1,9 +1,11 @@
 import math
-from typing import Any, Dict, List, Set
+from typing import Any, ClassVar, Dict, List, Set
 from BaseClasses import CollectionState, Entrance, Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import MetamathItem, item_table, item_groups, generate_item_table
-from .Locations import MetamathLocation, location_table, generate_location_table
+from .Items import (MetamathItem, item_table, item_groups, generate_item_table,
+                    generate_item_table_from_proof, statement_item_name, FILLER_ITEMS)
+from .Locations import (MetamathLocation, location_table, generate_location_table,
+                        generate_location_table_from_proof, statement_location_name)
 from .Options import MetamathOptions, metamath_option_groups
 from .Rules import ProofStructure, ProofStatement, set_metamath_rules, parse_metamath_proof
 
@@ -41,9 +43,41 @@ class MetamathWorld(World):
         self.proof_structure: ProofStructure = None
         self.num_statements: int = 0
         self.starting_statements: Set[int] = set()
+        # Name mappings: statement index -> meaningful name
+        self._item_names: Dict[int, str] = {}
+        self._location_names: Dict[int, str] = {}
+        self._entrance_labels: Dict[int, str] = {}
+        # Reverse lookup: region/location name -> statement index
+        self._region_name_to_index: Dict[str, int] = {}
+
+    def _build_name_maps(self):
+        """Build meaningful name mappings from proof structure."""
+        for index, stmt in self.proof_structure.statements.items():
+            self._item_names[index] = statement_item_name(stmt.label, stmt.expression)
+            self._location_names[index] = statement_location_name(stmt.label, stmt.expression)
+            self._entrance_labels[index] = stmt.label if stmt.label else f"Statement {index}"
+        # Build reverse lookup
+        self._region_name_to_index = {name: idx for idx, name in self._location_names.items()}
+
+    def get_item_name(self, index: int) -> str:
+        """Get the meaningful item name for a statement index."""
+        return self._item_names.get(index, f"Statement {index}")
+
+    def get_location_name(self, index: int) -> str:
+        """Get the meaningful location/region name for a statement index."""
+        return self._location_names.get(index, f"Prove Statement {index}")
+
+    def get_entrance_label(self, index: int) -> str:
+        """Get a short label for entrance names."""
+        return self._entrance_labels.get(index, f"Statement {index}")
 
     def generate_early(self):
         """Load and parse the metamath proof based on options."""
+        # Vanilla placement disables randomization and marks world as vanilla
+        if self.options.vanilla_placement.value:
+            self.options.randomize_items.value = False
+            self.is_vanilla = True
+
         # If seed is 1, disable randomization to use canonical item placements
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
@@ -68,9 +102,12 @@ class MetamathWorld(World):
         self.proof_structure = parse_metamath_proof(theorem_name, auto_download)
         self.num_statements = len(self.proof_structure.statements)
 
-        # Regenerate item and location tables based on actual proof size
-        self.item_table = generate_item_table(self.num_statements)
-        self.location_table = generate_location_table(self.num_statements)
+        # Build meaningful name mappings from proof structure
+        self._build_name_maps()
+
+        # Regenerate item and location tables with meaningful names
+        self.item_table = generate_item_table_from_proof(self.proof_structure)
+        self.location_table = generate_location_table_from_proof(self.proof_structure)
 
         # Update name to id mappings
         self.item_name_to_id = {name: data.code for name, data in self.item_table.items()}
@@ -92,6 +129,13 @@ class MetamathWorld(World):
                 random.shuffle(candidates)
                 self.starting_statements.update(candidates[:remaining])
 
+        # Build canonical placements dict (location -> item for vanilla placement)
+        # Must be after starting_statements is computed since starting items don't have locations
+        self.canonical_placements: Dict[str, str] = {}
+        for i in range(1, self.num_statements + 1):
+            if i not in self.starting_statements:
+                self.canonical_placements[self.get_location_name(i)] = self.get_item_name(i)
+
 
     def create_regions(self):
         """Create one region per statement with connections based on proof dependencies."""
@@ -101,14 +145,13 @@ class MetamathWorld(World):
         statement_regions = {}
 
         for i in range(1, self.num_statements + 1):
-            # Create region with same name as location
-            region_name = f"Prove Statement {i}"
+            region_name = self.get_location_name(i)
             region = Region(region_name, self.player, self.multiworld)
             statement_regions[i] = region
 
             # Create location in this region (if not a starting statement)
             if i not in self.starting_statements:
-                loc_name = f"Prove Statement {i}"
+                loc_name = self.get_location_name(i)
                 if loc_name in self.location_name_to_id:
                     location = MetamathLocation(
                         self.player,
@@ -124,7 +167,7 @@ class MetamathWorld(World):
             region = statement_regions[i]
             dependencies = self.proof_structure.dependency_graph.get(i, [])
             if not dependencies:
-                menu_region.connect(region, f"To Statement {i}")
+                menu_region.connect(region, f"To {self.get_entrance_label(i)}")
 
         # Connect regions based on dependency graph
         # Create exits from each statement to statements that depend on it
@@ -135,8 +178,10 @@ class MetamathWorld(World):
                 for dependent in sorted(dependents):
                     if dependent in statement_regions:
                         target_region = statement_regions[dependent]
-                        # Create connection from this statement to statements that depend on it
-                        source_region.connect(target_region, f"From Statement {i} to Statement {dependent}")
+                        source_region.connect(
+                            target_region,
+                            f"From {self.get_entrance_label(i)} to {self.get_entrance_label(dependent)}"
+                        )
 
         # Add all regions to multiworld
         self.multiworld.regions.append(menu_region)
@@ -147,48 +192,39 @@ class MetamathWorld(World):
         set_metamath_rules(self, self.proof_structure)
 
         # Set completion condition - the goal is to prove the final theorem
-        # This is achieved by having all the items required to prove it
-        final_statement = self.num_statements
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(f"Statement {final_statement}", self.player)
+        final_item_name = self.get_item_name(self.num_statements)
+        self.multiworld.completion_condition[self.player] = \
+            lambda state, name=final_item_name: state.has(name, self.player)
 
         # Save dependency mappings for the exporter to use
-        # This helps the exporter resolve which items are actually required
-        # Store this directly on the world object so the exporter can access it
-
         location_dependencies = {}
         entrance_dependencies = {}
         exit_dependencies = {}
 
         for region in self.multiworld.get_regions(self.player):
-            if region.name.startswith("Prove Statement "):
-                stmt_num = int(region.name.split()[-1])
-                if stmt_num in self.proof_structure.dependency_graph:
-                    dependencies = self.proof_structure.dependency_graph[stmt_num]
-                    if dependencies:
-                        # Store the actual item names required for each location and entrance
-                        item_names = [f"Statement {d}" for d in sorted(dependencies)]
+            stmt_num = self._region_name_to_index.get(region.name)
 
-                        # Store for locations
-                        for location in region.locations:
-                            location_dependencies[location.name] = item_names
+            if stmt_num is not None and stmt_num in self.proof_structure.dependency_graph:
+                dependencies = self.proof_structure.dependency_graph[stmt_num]
+                if dependencies:
+                    item_names = [self.get_item_name(d) for d in sorted(dependencies)]
 
-                        # Store for entrances
-                        for entrance in region.entrances:
-                            entrance_dependencies[entrance.name] = item_names
+                    for location in region.locations:
+                        location_dependencies[location.name] = item_names
+
+                    for entrance in region.entrances:
+                        entrance_dependencies[entrance.name] = item_names
 
             # Also store exit dependencies - exits lead TO regions with dependencies
             for exit in region.exits:
-                if exit.connected_region and exit.connected_region.name.startswith("Prove Statement "):
-                    target_stmt_num = int(exit.connected_region.name.split()[-1])
-                    if target_stmt_num in self.proof_structure.dependency_graph:
+                if exit.connected_region:
+                    target_stmt_num = self._region_name_to_index.get(exit.connected_region.name)
+                    if target_stmt_num is not None and target_stmt_num in self.proof_structure.dependency_graph:
                         target_dependencies = self.proof_structure.dependency_graph[target_stmt_num]
                         if target_dependencies:
-                            # Store the actual item names required to reach the target
-                            target_item_names = [f"Statement {d}" for d in sorted(target_dependencies)]
+                            target_item_names = [self.get_item_name(d) for d in sorted(target_dependencies)]
                             exit_dependencies[exit.name] = target_item_names
 
-        # Store the dependencies directly on the world object
-        # The exporter can access this without needing a file
         self.location_dependencies = location_dependencies
         self.entrance_dependencies = entrance_dependencies
         self.exit_dependencies = exit_dependencies
@@ -205,8 +241,8 @@ class MetamathWorld(World):
 
         # Add statement items (only for non-starting statements)
         for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements:  # Only create items for statements that need to be found
-                item_name = f"Statement {i}"
+            if i not in self.starting_statements:
+                item_name = self.get_item_name(i)
                 if item_name in self.item_name_to_id:
                     item = MetamathItem(
                         item_name,
@@ -222,10 +258,8 @@ class MetamathWorld(World):
         num_fillers_needed = max(0, num_locations - num_items)
 
         if num_fillers_needed > 0:
-            hints = ["Proof Hint", "Logic Guide", "Axiom Reference", "Lemma Note",
-                    "Theorem Insight", "Deduction Tip", "Inference Help", "QED Moment"]
             for _ in range(num_fillers_needed):
-                hint = self.random.choice(hints)
+                hint = self.random.choice(FILLER_ITEMS)
                 if hint in self.item_name_to_id:
                     item = MetamathItem(
                         hint,
@@ -245,24 +279,21 @@ class MetamathWorld(World):
 
     def _place_original_items(self):
         """Place statement items in their corresponding prove locations when randomization is disabled."""
-        # In metamath, each statement i should be placed at location "Prove Statement i"
         for i in range(1, self.num_statements + 1):
             if i not in self.starting_statements:
-                item_name = f"Statement {i}"
-                location_name = f"Prove Statement {i}"
+                item_name = self.get_item_name(i)
+                location_name = self.get_location_name(i)
 
-                # Get the location and create the item
                 location = self.multiworld.get_location(location_name, self.player)
                 item = self.create_item(item_name)
 
-                # Place the item at its original location
                 location.place_locked_item(item)
 
     def generate_basic(self):
         """Generate the basic world structure."""
         # Pre-collect starting statements
         for stmt_index in self.starting_statements:
-            item_name = f"Statement {stmt_index}"
+            item_name = self.get_item_name(stmt_index)
             self.multiworld.push_precollected(self.create_item(item_name))
 
     def create_item(self, name: str) -> Item:
@@ -301,11 +332,12 @@ class MetamathWorld(World):
                     "label": stmt.label,
                     "expression": stmt.expression,
                     "dependencies": stmt.dependencies,
-                    "full_text": stmt.full_text  # Include full text description
+                    "full_text": stmt.full_text
                 }
                 for i, stmt in self.proof_structure.statements.items()
             },
             "starting_statements": list(self.starting_statements),
             "theorem": self.options.theorem.current_key,
             "randomize_items": self.options.randomize_items.value,
+            "vanilla_placement": self.options.vanilla_placement.value,
         }

@@ -2,6 +2,14 @@ from dataclasses import dataclass
 from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
 from typing import Dict
 
+class VanillaPlacement(Toggle):
+    """
+    If enabled, items will be placed in their original locations (proof statements will be
+    at their corresponding theorem locations) without any randomization.
+    """
+    display_name = "Vanilla Item Placement"
+    default = False
+
 class RandomizeItems(Toggle):
     """
     Enable item randomization. When disabled, all items will remain in their original locations
@@ -91,6 +99,7 @@ class AutoDownloadDatabase(Toggle):
 
 @dataclass
 class MetamathOptions(PerGameCommonOptions):
+    vanilla_placement: VanillaPlacement
     randomize_items: RandomizeItems
     theorem: TheoremSelection
     complexity: ProofComplexity
@@ -99,6 +108,7 @@ class MetamathOptions(PerGameCommonOptions):
 
 metamath_option_groups = [
     OptionGroup("Proof Settings", [
+        VanillaPlacement,
         RandomizeItems,
         TheoremSelection,
         ProofComplexity,

@@ -68,6 +68,15 @@ rm -f "Players/Templates/Coding Adventure Vanilla.yaml"
 python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 2
 python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 3
+mkdir -p "Players/Templates"
+cat > "Players/Templates/Metamath Vanilla.yaml" << 'YAMLEOF'
+name: Player{number}
+game: "Metamath"
+Metamath:
+  vanilla_placement: true
+YAMLEOF
+python Generate.py --weights_file_path "Templates/Metamath Vanilla.yaml" --multi 1 --seed 1
+rm -f "Players/Templates/Metamath Vanilla.yaml"
 python Generate.py --weights_file_path Templates/Metamath.yaml --multi 1 --seed 1
 python Generate.py --weights_file_path Templates/Metamath.yaml --multi 1 --seed 2
 python Generate.py --weights_file_path Templates/Metamath.yaml --multi 1 --seed 3
@@ -208,6 +217,7 @@ python scripts/test/test-world-generator.py --include-list "Math Adventure.yaml"
 python scripts/test/test-world-generator.py --include-list "Mega Man 2.yaml" --phase generate-test-worlds --seed 1 --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list "MegaMan Battle Network 3.yaml" --phase generate-test-worlds --seed 1 --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list Meritous.yaml --phase generate-test-worlds --seed 1 --canonical-seed 1
+python -m world_generator frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/metamath_vanilla_worldgen --game-name "Metamath Vanilla WorldGen" --force --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list Metamath.yaml --phase generate-test-worlds --seed 1 --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list "Muse Dash.yaml" --phase generate-test-worlds --seed 1 --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list Noita.yaml --phase generate-test-worlds --seed 1 --canonical-seed 1
@@ -281,6 +291,7 @@ python Generate.py --weights_file_path "Templates/Math Adventure WorldGen.yaml" 
 python Generate.py --weights_file_path "Templates/Mega Man 2 WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/MegaMan Battle Network 3 WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Meritous WorldGen.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Metamath Vanilla WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Muse Dash WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Noita WorldGen.yaml" --multi 1 --seed 1
@@ -319,6 +330,7 @@ python -m world_generator frontend/presets/adventure_worldgen/AP_140891549382088
 python -m world_generator frontend/presets/bakingadventure_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/bakingadventure_vanilla_worldgen2 --game-name "Baking Adventure Vanilla WorldGen2" --force --canonical-seed 1
 python -m world_generator frontend/presets/codingadventure_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/codingadventure_vanilla_worldgen2 --game-name "Coding Adventure Vanilla WorldGen2" --force --canonical-seed 1
 python -m world_generator frontend/presets/mathadventure_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/mathadventure_vanilla_worldgen2 --game-name "Math Adventure Vanilla WorldGen2" --force --canonical-seed 1
+python -m world_generator frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/metamath_vanilla_worldgen2 --game-name "Metamath Vanilla WorldGen2" --force --canonical-seed 1
 
 # ===== Regenerating templates (for WorldGen2) =====
 
@@ -334,6 +346,7 @@ python Generate.py --weights_file_path "Templates/Adventure WorldGen2.yaml" --mu
 python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Math Adventure Vanilla WorldGen2.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Metamath Vanilla WorldGen2.yaml" --multi 1 --seed 1
 
 # ===== Cleanup =====
 

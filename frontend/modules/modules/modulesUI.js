@@ -314,30 +314,24 @@ export class ModulesPanel {
       enableCheckbox.checked = isEnabled;
       enableCheckbox.disabled = isCoreModule;
       enableCheckbox.addEventListener('change', (event) => {
-        // Prevent user interaction for now until full enable/disable cycle is implemented for external
-        if (isExternal) {
-          event.target.checked = !event.target.checked; // Revert UI
-          alert(
-            'Enabling/disabling external modules is not fully implemented yet.'
-          );
-          return;
-        }
         this._handleEnableToggle(moduleId, event.target.checked);
       });
       enableLabel.appendChild(enableCheckbox);
       enableLabel.appendChild(document.createTextNode('Enabled'));
       controlsDiv.appendChild(enableLabel);
-      const upButton = document.createElement('button');
-      upButton.textContent = '▲';
-      upButton.title = 'Increase Priority (Move Up)';
-      upButton.disabled = isCoreModule || index === 0;
-      const downButton = document.createElement('button');
-      downButton.textContent = '▼';
-      downButton.title = 'Decrease Priority (Move Down)';
-      downButton.disabled =
-        isCoreModule || index === this.loadPriority.length - 1 || isExternal; // Disable for external initially
-      controlsDiv.appendChild(upButton);
-      controlsDiv.appendChild(downButton);
+
+      // Show "+" button for modules that support multiple instances
+      if (module.allowMultipleInstances && isEnabled) {
+        const addInstanceButton = document.createElement('button');
+        addInstanceButton.textContent = '+';
+        addInstanceButton.title = 'Open another instance of this panel';
+        addInstanceButton.dataset.action = 'addInstance';
+        addInstanceButton.addEventListener('click', () => {
+          this._handleCreateInstance(moduleId);
+        });
+        controlsDiv.appendChild(addInstanceButton);
+      }
+
       entryDiv.appendChild(infoDiv);
       entryDiv.appendChild(controlsDiv);
 
@@ -390,7 +384,8 @@ export class ModulesPanel {
           `State for module ${moduleId} not found locally after toggle.`
         );
         // Request full update if state is missing?
-        this._requestModuleData();
+        const mgr = window.moduleManagerApi;
+        if (mgr) this._requestModuleData(mgr);
         return; // Avoid further processing as state is inconsistent
       }
       log('info', `Module ${moduleId} state updated successfully.`);
@@ -408,12 +403,20 @@ export class ModulesPanel {
     }
   }
 
-  // _handlePriorityChange(moduleId, direction) {
-  //     log('info', `Changing priority for ${moduleId}: ${direction}`);
-  //     // TODO: Implement priority change logic using moduleManager
-  //     // This will likely involve calling something like moduleManager.changeModulePriority(moduleId, direction)
-  //     // and then calling this._requestModuleData() to refresh the UI.
-  // }
+  async _handleCreateInstance(moduleId) {
+    log('info', `Creating new instance for module ${moduleId}`);
+    const moduleManager = window.moduleManagerApi;
+    if (!moduleManager || typeof moduleManager.createPanelInstance !== 'function') {
+      log('error', 'Cannot create instance: ModuleManager or createPanelInstance not available.');
+      return;
+    }
+
+    try {
+      await moduleManager.createPanelInstance(moduleId);
+    } catch (error) {
+      log('error', `Failed to create instance for ${moduleId}:`, error);
+    }
+  }
 
   _updateCheckboxVisualState(moduleId, isChecked) {
     const checkbox = this.rootElement.querySelector(
@@ -427,16 +430,23 @@ export class ModulesPanel {
 
   // Example handler for external state changes
   _handleModuleStateChange({ moduleId, enabled }) {
-    log('info', 
+    log('info',
       `ModulesPanel received external state change for ${moduleId}: ${enabled}`
     );
     // Update local state if the module exists
     if (this.moduleStates[moduleId]) {
       this.moduleStates[moduleId].enabled = enabled;
     }
-    // Update the visual state of the checkbox regardless
-    // (Handles cases where state might have been out of sync)
+    // Update the visual state of the checkbox
     this._updateCheckboxVisualState(moduleId, enabled);
+    // Also update "+" button visibility for multi-instance modules
+    const entry = this.rootElement?.querySelector(`.module-entry[data-module-id="${moduleId}"]`);
+    if (entry) {
+      const addBtn = entry.querySelector('[data-action="addInstance"]');
+      if (addBtn) {
+        addBtn.style.display = enabled ? '' : 'none';
+      }
+    }
   }
 
   // Example handler for panel closing events
@@ -459,8 +469,10 @@ export class ModulesPanel {
   _handleModuleLoaded({ moduleId }) {
     log('info', `ModulesPanel notified that module ${moduleId} has loaded.`);
     // Refresh the entire list to ensure order and state are correct
-    // This is simpler than trying to patch the DOM for now
-    this._requestModuleData();
+    const moduleManager = window.moduleManagerApi;
+    if (moduleManager) {
+      this._requestModuleData(moduleManager);
+    }
   }
 
   // Handler for when a module fails to load

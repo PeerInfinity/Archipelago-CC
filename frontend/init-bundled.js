@@ -38,12 +38,15 @@ window.centralRegistry = centralRegistry;
 // Register frontend as publisher for events it publishes
 centralRegistry.registerEventBusPublisher('core', 'app:fullModeDataLoadedFromStorage');
 centralRegistry.registerEventBusPublisher('core', 'module:stateChanged');
+centralRegistry.registerEventBusPublisher('core', 'module:loaded');
+centralRegistry.registerEventBusPublisher('core', 'module:loadFailed');
 centralRegistry.registerEventBusPublisher('core', 'app:modesJsonLoaded');
 centralRegistry.registerEventBusPublisher('core', 'app:readyForUiDataLoad');
 centralRegistry.registerEventBusPublisher('core', 'app:activeModeDetermined');
 centralRegistry.registerEventBusPublisher('core', 'uiHostRegistry:hostStatusChanged');
 centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');
 centralRegistry.registerEventBusPublisher('core', 'settings:changed');
+centralRegistry.registerEventBusPublisher('panelManager', 'ui:panelManuallyClosed');
 
 // Import layout libraries
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';
@@ -69,6 +72,7 @@ import * as editorCoreModule from './modules/editorCore/index.js';
 import * as editorModule from './modules/editor/index.js';
 import * as editorCodeMirror6Module from './modules/editorCodeMirror6/index.js';
 import * as settingsModule from './modules/settings/index.js';
+import * as optionsPanelModule from './modules/optionsPanel/index.js';
 import * as commonUIModule from './modules/commonUI/index.js';
 import * as locationsModule from './modules/locations/index.js';
 import * as exitsModule from './modules/exits/index.js';
@@ -83,6 +87,7 @@ import * as discoveryPanelModule from './modules/discoveryPanel/index.js';
 import * as playerStateModule from './modules/playerState/index.js';
 import * as playerStatePanelModule from './modules/playerStatePanel/index.js';
 import * as loopsModule from './modules/loops/index.js';
+import * as loopStatsModule from './modules/loopStats/index.js';
 import * as presetsModule from './modules/presets/index.js';
 import * as spoilerTestModule from './modules/spoilerTest/index.js';
 import * as sphereStateModule from './modules/sphereState/index.js';
@@ -141,6 +146,7 @@ const BUNDLED_MODULES = {
   editor: editorModule,
   editorCodeMirror6: editorCodeMirror6Module,
   settings: settingsModule,
+  optionsPanel: optionsPanelModule,
   commonUI: commonUIModule,
   locations: locationsModule,
   exits: exitsModule,
@@ -155,6 +161,7 @@ const BUNDLED_MODULES = {
   playerState: playerStateModule,
   playerStatePanel: playerStatePanelModule,
   loops: loopsModule,
+  loopStats: loopStatsModule,
   presets: presetsModule,
   spoilerTest: spoilerTestModule,
   sphereState: sphereStateModule,

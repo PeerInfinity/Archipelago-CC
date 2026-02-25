@@ -1039,7 +1039,7 @@ export class RegionBlockBuilder {
         });
 
         // Check if location is queued in the path (only if the setting is enabled)
-        settingsManager.getSetting('regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
+        settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
           if (addToPathEnabled) {
             import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
               try {
@@ -1137,7 +1137,7 @@ export class RegionBlockBuilder {
               );
 
               // Check if we should add to path (use same setting as regionGraph)
-              const shouldAddToPath = await settingsManager.getSetting('regionGraph.addLocationsToPath', false);
+              const shouldAddToPath = await settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false);
               
               if (shouldAddToPath) {
                 // Add location check to path

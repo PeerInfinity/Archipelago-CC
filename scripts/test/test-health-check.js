@@ -76,7 +76,7 @@ async function checkFrontendFiles() {
   const requiredFiles = [
     'frontend/index.html',
     'frontend/init.js',
-    'frontend/modules.json',
+    'frontend/module-configs/modules.json',
     'frontend/modes.json'
   ];
 

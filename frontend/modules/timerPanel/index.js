@@ -45,8 +45,6 @@ export function register(registrationApi) {
     TimerPanelUI // The class constructor for this panel's UI
   );
 
-  registrationApi.registerEventBusPublisher('ui:panelManuallyClosed');
-
   // Register dispatcher receiver for system:rehomeTimerUI
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,

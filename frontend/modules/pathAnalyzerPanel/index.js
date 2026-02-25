@@ -38,8 +38,6 @@ export function register(registrationApi) {
     PathAnalyzerPanelUI // The class constructor for this panel's UI
   );
 
-  registrationApi.registerEventBusPublisher('ui:panelManuallyClosed');
-
   log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 

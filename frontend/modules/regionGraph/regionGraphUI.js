@@ -202,8 +202,19 @@ export class RegionGraphUI {
       logger.debug('All libraries already loaded, initializing graph');
       this.cytoscape = window.cytoscape;
       this.cytoscapeFcose = window.cytoscapeFcose;
-      this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
-      this.initializeGraph();
+      if (!window._cytoscapeFcoseRegistered) {
+        this.cytoscapeFcose(this.cytoscape);
+        window._cytoscapeFcoseRegistered = true;
+      }
+      // Only initialize immediately if the container is visible and has
+      // dimensions.  After a live layout reload the panel may be in a
+      // background tab; onPanelShow will handle deferred initialization.
+      const rect = this.graphContainer?.getBoundingClientRect();
+      if (rect && rect.width > 0 && rect.height > 0) {
+        this.initializeGraph();
+      } else {
+        logger.debug('Graph container not visible yet, deferring to onPanelShow');
+      }
     } else {
       logger.debug('Loading libraries dynamically');
       // Load Cytoscape.js first
@@ -888,7 +899,10 @@ export class RegionGraphUI {
         logger.debug('Libraries are loaded, initializing now...');
         this.cytoscape = window.cytoscape;
         this.cytoscapeFcose = window.cytoscapeFcose;
-        this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
+        if (!window._cytoscapeFcoseRegistered) {
+          this.cytoscapeFcose(this.cytoscape);
+          window._cytoscapeFcoseRegistered = true;
+        }
         this.initializeGraph();
       } else {
         logger.debug('Some libraries not loaded, waiting...');

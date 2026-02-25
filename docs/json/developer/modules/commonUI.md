@@ -1,6 +1,6 @@
 ### Module: `CommonUI`
 
-- **ID:** `commonUI` (Note: This is a utility module and does not have an entry in `modules.json` as it's directly imported by other modules).
+- **ID:** `commonUI` (Note: This is a utility module and does not have an entry in `module-configs/modules.json` as it's directly imported by other modules).
 - **Purpose:** Provides shared, reusable UI utility functions that can be used by any UI panel module to maintain a consistent look and feel and avoid code duplication.
 
 ---

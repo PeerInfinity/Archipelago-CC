@@ -36,12 +36,17 @@ on:
       clean_existing:
         description: 'Delete existing frontend presets and worldgen worlds before generating'
         type: boolean
-        default: false
+        default: true
 
       update_preset_files:
         description: 'Run update-preset-files.py to refresh preset_files.json before committing'
         type: boolean
-        default: false
+        default: true
+
+      generate_script:
+        description: 'Generate scripts/utils/generated_commands.sh with the current settings'
+        type: boolean
+        default: true
 
       filter_presets:
         description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
@@ -159,6 +164,20 @@ jobs:
           source .venv/bin/activate
           chmod +x scripts/utils/generate_all_templates.sh
           scripts/utils/generate_all_templates.sh
+
+      - name: Generate commands script
+        if: inputs.generate_script
+        env:
+          GENERATE_MULTIWORLD: ${{ inputs.generate_multiworld }}
+          GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
+          GENERATE_VANILLA_SEEDS: ${{ inputs.generate_vanilla_seeds }}
+          GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
+          WORLDGEN_CANONICAL_SEED: ${{ inputs.worldgen_canonical_seed }}
+          GENERATE_WORLDGEN2: ${{ inputs.generate_worldgen2 }}
+          CLEAN_EXISTING: ${{ inputs.clean_existing }}
+        run: |
+          source .venv/bin/activate
+          scripts/utils/generate_all_templates.sh --script scripts/utils/generated_commands.sh
 
       - name: Update preset files index
         if: inputs.update_preset_files

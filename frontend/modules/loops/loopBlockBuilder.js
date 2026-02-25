@@ -418,8 +418,8 @@ export class LoopBlockBuilder {
     locationEl.className = 'location-item clickable';
 
     // Check if location is accessible
-    const isAccessible = location.requires ?
-      evaluateRule(location.requires, snapshotInterface) : true;
+    const isAccessible = location.access_rule ?
+      evaluateRule(location.access_rule, snapshotInterface) : true;
 
     // Check if location has been checked
     const isChecked = snapshot?.checked_locations?.includes(location.name) || false;

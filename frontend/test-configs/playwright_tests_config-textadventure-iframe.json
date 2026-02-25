@@ -1,0 +1,36 @@
+{
+  "autoStartTestsOnLoad": true,
+  "hideDisabledTests": true,
+  "randomizeOrder": false,
+  "defaultEnabledState": false,
+  "tests": [
+    {
+      "id": "test_textadventure_iframe_connection",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_iframe_basic_initialization",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_iframe_custom_data_loading",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_iframe_movement_command",
+      "enabled": true
+    },
+    {
+      "id": "test_textadventure_iframe_location_check_command",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_iframe_link_click",
+      "enabled": false
+    },
+    {
+      "id": "test_textadventure_iframe_manager_ui",
+      "enabled": false
+    }
+  ]
+}

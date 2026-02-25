@@ -8,7 +8,6 @@ import connection from '../core/connection.js';
 import {
   setMainContentUIInstance,
   getClientModuleDispatcher,
-  getClientModuleEventBus,
 } from '../index.js'; // ADDED getClientModuleDispatcher
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
 
@@ -1083,19 +1082,6 @@ class MainContentUI {
   dispose() {
     log('info', '[MainContentUI] Disposing...');
     setMainContentUIInstance(null); // Clear instance on dispose
-
-    // ADDED: Notify that this panel was manually closed
-    const bus = getClientModuleEventBus();
-    if (bus && typeof bus.publish === 'function') {
-      log('info', 
-        '[MainContentUI] Panel disposed, publishing ui:panelManuallyClosed.'
-      );
-      bus.publish('ui:panelManuallyClosed', { moduleId: CLIENT_MODULE_ID }, CLIENT_MODULE_ID);
-    } else {
-      log('warn', 
-        '[MainContentUI] Could not get eventBus or publish function to send ui:panelManuallyClosed.'
-      );
-    }
 
     // Unsubscribe from eventBus events to prevent memory leaks
     // (Assuming eventBus.unsubscribe requires the original handler reference,
