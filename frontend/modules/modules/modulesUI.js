@@ -325,6 +325,7 @@ export class ModulesPanel {
         const addInstanceButton = document.createElement('button');
         addInstanceButton.textContent = '+';
         addInstanceButton.title = 'Open another instance of this panel';
+        addInstanceButton.dataset.action = 'addInstance';
         addInstanceButton.addEventListener('click', () => {
           this._handleCreateInstance(moduleId);
         });
@@ -429,16 +430,23 @@ export class ModulesPanel {
 
   // Example handler for external state changes
   _handleModuleStateChange({ moduleId, enabled }) {
-    log('info', 
+    log('info',
       `ModulesPanel received external state change for ${moduleId}: ${enabled}`
     );
     // Update local state if the module exists
     if (this.moduleStates[moduleId]) {
       this.moduleStates[moduleId].enabled = enabled;
     }
-    // Update the visual state of the checkbox regardless
-    // (Handles cases where state might have been out of sync)
+    // Update the visual state of the checkbox
     this._updateCheckboxVisualState(moduleId, enabled);
+    // Also update "+" button visibility for multi-instance modules
+    const entry = this.rootElement?.querySelector(`.module-entry[data-module-id="${moduleId}"]`);
+    if (entry) {
+      const addBtn = entry.querySelector('[data-action="addInstance"]');
+      if (addBtn) {
+        addBtn.style.display = enabled ? '' : 'none';
+      }
+    }
   }
 
   // Example handler for panel closing events

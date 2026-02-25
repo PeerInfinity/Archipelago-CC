@@ -421,10 +421,11 @@ export async function initializeApplication(dependencies) {
 
       logger.debug(
         'init',
-        `Panel closed by user for ${moduleId}. Updating module state to disabled.`
+        `Panel closed by user for ${moduleId}. Disabling module.`
       );
-      moduleState.enabled = false;
-      eventBus.publish('module:stateChanged', { moduleId, enabled: false }, 'core');
+      // Call disableModule so all side-effects run (module:stateChanged, system:rehomeTimerUI).
+      // disableModule will try to destroy the panel but it's already gone — that's a safe no-op.
+      moduleManagerApi.disableModule(moduleId);
     }
   }, 'core');
 
