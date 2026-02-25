@@ -424,9 +424,9 @@ export async function initializeApplication(dependencies) {
         `Panel closed by user for ${moduleId}. Disabling module.`
       );
       // Defer disableModule to the next event loop tick so GL can finish removing the panel from
-      // its tree first. This prevents destroyPanelByComponentType from finding and re-removing
-      // a panel that is already mid-removal, which would throw a GL internal error.
-      setTimeout(() => moduleManagerApi.disableModule(moduleId), 0);
+      // its tree first. Pass skipPanelDestroy since the panel is already gone — no need to find
+      // and remove it, which would just produce a spurious "no panel found" warning.
+      setTimeout(() => moduleManagerApi.disableModule(moduleId, { skipPanelDestroy: true }), 0);
     }
   }, 'core');
 
@@ -924,7 +924,7 @@ function createModuleManagerApi(options) {
    *
    * Note: Does NOT uninitialize the module or remove it from memory
    */
-  api.disableModule = async (moduleId) => {
+  api.disableModule = async (moduleId, { skipPanelDestroy = false } = {}) => {
     logger.info('init', `Attempted to disable ${moduleId}`);
     const moduleState = runtimeModuleStates.get(moduleId);
     if (moduleState) {
@@ -939,7 +939,7 @@ function createModuleManagerApi(options) {
       const moduleInstance = importedModules.get(moduleId);
       const allowsMultiple = moduleInstance?.moduleInfo?.allowMultipleInstances;
       let panelActionTaken = false;
-      if (componentType) {
+      if (componentType && !skipPanelDestroy) {
         logger.debug(
           'init',
           `Closing panel(s) for disabled module ${moduleId} (Component Type: ${componentType}, multiple: ${!!allowsMultiple})`
