@@ -46,20 +46,20 @@ class SettingsManager {
 
   async _loadSettingsFromServer() {
     try {
-      const response = await fetch('/frontend/settings/settings.json');
+      const response = await fetch('./settings/settings.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.settings = await response.json();
       this._defaultSettings = JSON.parse(JSON.stringify(this.settings)); // Store defaults for merging
       log('info',
-        'Settings loaded successfully from /frontend/settings/settings.json:',
+        'Settings loaded successfully from ./settings/settings.json:',
         this.settings
       );
       // Add validation against schema maybe?
     } catch (error) {
-      log('error', 
-        'Error loading settings from /frontend/settings/settings.json:',
+      log('error',
+        'Error loading settings from ./settings/settings.json:',
         error
       );
       // Fallback to some default or handle error state
