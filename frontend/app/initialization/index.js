@@ -939,7 +939,9 @@ function createModuleManagerApi(options) {
       const moduleInstance = importedModules.get(moduleId);
       const allowsMultiple = moduleInstance?.moduleInfo?.allowMultipleInstances;
       let panelActionTaken = false;
-      if (componentType && !skipPanelDestroy) {
+      if (skipPanelDestroy) {
+        // Panel already closed by the user — no need to destroy it programmatically.
+      } else if (componentType) {
         logger.debug(
           'init',
           `Closing panel(s) for disabled module ${moduleId} (Component Type: ${componentType}, multiple: ${!!allowsMultiple})`
