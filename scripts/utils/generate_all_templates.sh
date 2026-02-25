@@ -278,6 +278,7 @@ VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
 VANILLA_PRESET_DIR["Math Adventure"]="mathadventure"
 VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
 VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
+VANILLA_PRESET_DIR["Metamath"]="metamath"
 
 # WorldGen2 templates (game name -> preset directory name for source WorldGen presets)
 declare -A WORLDGEN2_PRESET_DIR
@@ -295,6 +296,7 @@ WORLDGEN2_TEMPLATES=(
   "Baking Adventure"
   "Coding Adventure"
   "Math Adventure"
+  "Metamath"
 )
 
 # ============================================================
