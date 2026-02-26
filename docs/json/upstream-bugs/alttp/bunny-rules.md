@@ -6,7 +6,7 @@
 
 **Commits:** df514f431, ed21a7f79
 
-**Diff:** `docs/json/developer/diffs/alttp-bunny-rules.diff`
+**Diff:** `docs/json/developer/diffs/diff-files/alttp-bunny-rules.diff`
 
 ---
 
@@ -216,6 +216,6 @@ These bugs exist in upstream Archipelago. The fixes have not been submitted upst
 |---------|------|
 | Bug report (for upstream) | [bunny-rules-bug-report.md](./bunny-rules-bug-report.md) |
 | ALttP bunny rules | `worlds/alttp/Rules.py:1653-1783` |
-| Combined diff | [alttp-bunny-rules.diff](../../developer/diffs/alttp-bunny-rules.diff) |
+| Combined diff | [alttp-bunny-rules.diff](../../developer/diffs/diff-files/alttp-bunny-rules.diff) |
 | Investigation notes | `CC/docs/plans/alttp-bunny-rules-investigation.md` |
 | ALttP game handler | `exporter/games/official/alttp.py` |

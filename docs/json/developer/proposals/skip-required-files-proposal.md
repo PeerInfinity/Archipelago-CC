@@ -264,4 +264,4 @@ This fork has a fully working implementation covering 11 worlds (9 ROM-based + 2
 - **Module-level global sync:** The fork syncs via early extraction from raw YAML in `Settings.__init__()`, before `self.update()` triggers any `Path` resolution.
 - **Helper location:** The fork places `check_rom_available()` in `worlds/RomlessUtils.py` rather than `Utils.py`, to avoid modifying a core upstream file. For upstream, `Utils.py` is the more natural home.
 
-See [core-files.diff](../diffs/core-files.diff) for the exact `settings.py` changes and [world-init-files.diff](../diffs/world-init-files.diff) for the world-level changes.
+See [core-files.diff](../diffs/diff-files/core-files.diff) for the exact `settings.py` changes and [world-init-files.diff](../diffs/diff-files/world-init-files.diff) for the world-level changes.

@@ -4,13 +4,13 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (41 lines)
+### 1. `diff-files/core-files.diff` (41 lines)
 Changes to the main Archipelago core files:
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section
 
 This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `config-files.diff` (405 lines)
+### 2. `diff-files/config-files.diff` (405 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/pyright-config.json** - Removed 3 entries from exclude list (`rule_builder/cached_world.py`, `rule_builder/options.py`, `test/general/test_rule_builder.py`) because the fork consolidates `cached_world.py` into `rules.py`
@@ -20,18 +20,18 @@ Changes to configuration and repository setup files:
 
 These files configure the development environment and CI/CD pipeline. Note: `pytest.ini` and `requirements.txt` now match upstream exactly.
 
-### 3. `alttp-bunny-rules.diff` (25 lines)
+### 3. `diff-files/alttp-bunny-rules.diff` (25 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
 - **worlds/alttp/Rules.py** - Fixed Python late binding bug in superbunny path lambdas (pre-compute `path_rule` outside lambda, use default argument binding)
 
 These bugs caused superbunny access rules to capture the wrong loop variable in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `world-minor-fixes.diff` (22 lines)
+### 4. `diff-files/world-minor-fixes.diff` (22 lines)
 Minor fixes to upstream world files that improve output consistency without changing game behavior:
 - **worlds/lufia2ac/Options.py** - Changed `Boss.extra_options` from `set(random_groups)` to `list(random_groups)` so that `enumerate()` in `AssembleCustomizableChoices.__new__` assigns stable integer keys to the random group names. Without this, set iteration order is non-deterministic, causing the `boss` option's `name_lookup` to map different integers to different group names on each run, producing inconsistent JSON export output.
 - **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
 
-### 5. `world-init-files.diff` (424 lines)
+### 5. `diff-files/world-init-files.diff` (424 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -63,20 +63,20 @@ Note: `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodif
 ### Viewing Changes
 ```bash
 # View a diff file
-less docs/json/developer/diffs/core-files.diff
+less docs/json/developer/diffs/diff-files/core-files.diff
 
 # Or with syntax highlighting
-git diff --no-index /dev/null docs/json/developer/diffs/core-files.diff
+git diff --no-index /dev/null docs/json/developer/diffs/diff-files/core-files.diff
 ```
 
 ### Applying Changes
 To apply these changes to a fresh upstream checkout:
 ```bash
 # From repository root
-git apply docs/json/developer/diffs/core-files.diff
-git apply docs/json/developer/diffs/config-files.diff
-git apply docs/json/developer/diffs/world-minor-fixes.diff
-git apply docs/json/developer/diffs/world-init-files.diff
+git apply docs/json/developer/diffs/diff-files/core-files.diff
+git apply docs/json/developer/diffs/diff-files/config-files.diff
+git apply docs/json/developer/diffs/diff-files/world-minor-fixes.diff
+git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 # Also copy worlds/RomlessUtils.py (needed by world-init-files patches)
 ```
 
@@ -87,7 +87,13 @@ git apply docs/json/developer/diffs/world-init-files.diff
 - Additionally, 3 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py, .github/pyright-config.json)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
-- For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
+- For categorized file lists, see [file-lists/](./file-lists/):
+  - [New Directories](./file-lists/new-directories.md) — directories in fork but not upstream
+  - [New Files in Existing Dirs](./file-lists/new-files-in-existing-dirs.md) — files added to dirs that exist upstream
+  - [Changed Files](./file-lists/changed-files.md) — files modified from upstream versions
+  - [Deleted Files](./file-lists/deleted-files.md) — files removed from upstream dirs
+  - [Deleted Directories](./file-lists/deleted-directories.md) — directories entirely removed
+- For a complete overview of all changes, see [repository-changes.md](./repository-changes.md)
 
 ## When to Use These Diffs
 
@@ -156,13 +162,23 @@ python -m worlds.json_tools_installer status
 
 For full documentation, see [worlds/json_tools_installer/README.md](../../../../worlds/json_tools_installer/README.md).
 
-## Diff Generation Command
+## Generation Commands
 
-These diffs were created using:
+### Diff Files
+
+The `.diff` files in `diff-files/` were created using:
 ```bash
 diff -u --label a/[file] --label b/[file] ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
 ```
 Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09cd7`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
+
+### File Lists
+
+The file lists in `file-lists/` were generated using:
+```bash
+python scripts/docs/generate-file-diff-lists.py
+```
+This compares the current fork against the `upstream` remote's `main` branch using git diff. Run with `--help` for options.
 
 ## Related Documentation
 
