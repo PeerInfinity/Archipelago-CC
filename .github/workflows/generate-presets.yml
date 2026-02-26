@@ -207,6 +207,11 @@ jobs:
           source .venv/bin/activate
           python scripts/docs/update-preset-files.py
 
+      - name: Rebuild world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
       - name: Commit and push generated presets
         env:
           FILTER_PRESETS: ${{ inputs.filter_presets }}
