@@ -400,221 +400,121 @@
         "name": "2cn: |- 2 e. CC",
         "id": 234790000,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "2cn: |  2 e. CC"
       },
-      "Statement 1": {
-        "name": "Statement 1",
-        "id": 234790000,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "ax-1cn: |- 1 e. CC": {
         "name": "ax-1cn: |- 1 e. CC",
         "id": 234790001,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "ax 1cn: |  1 e. CC"
       },
-      "Statement 2": {
-        "name": "Statement 2",
-        "id": 234790001,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": {
         "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
         "id": 234790002,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "addassi: |  ( ( A + B ) + C ) = ( A + ( B + C ) )"
       },
-      "Statement 3": {
-        "name": "Statement 3",
-        "id": 234790002,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "df-2: |- 2 = ( 1 + 1 )": {
         "name": "df-2: |- 2 = ( 1 + 1 )",
         "id": 234790003,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "df 2: |  2 = ( 1 + 1 )"
       },
-      "Statement 4": {
-        "name": "Statement 4",
-        "id": 234790003,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "df-3: |- 3 = ( 2 + 1 )": {
         "name": "df-3: |- 3 = ( 2 + 1 )",
         "id": 234790004,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "df 3: |  3 = ( 2 + 1 )"
       },
-      "Statement 5": {
-        "name": "Statement 5",
-        "id": 234790004,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "df-4: |- 4 = ( 3 + 1 )": {
         "name": "df-4: |- 4 = ( 3 + 1 )",
         "id": 234790005,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "df 4: |  4 = ( 3 + 1 )"
       },
-      "Statement 6": {
-        "name": "Statement 6",
-        "id": 234790005,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "oveq1i: |- ( A F C ) = ( B F C )": {
         "name": "oveq1i: |- ( A F C ) = ( B F C )",
         "id": 234790006,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "oveq1i: |  ( A F C ) = ( B F C )"
       },
-      "Statement 7": {
-        "name": "Statement 7",
-        "id": 234790006,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "3eqtri: |- A = D": {
         "name": "3eqtri: |- A = D",
         "id": 234790007,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "3eqtri: |  A = D"
       },
-      "Statement 8": {
-        "name": "Statement 8",
-        "id": 234790007,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "oveq2i: |- ( C F A ) = ( C F B )": {
         "name": "oveq2i: |- ( C F A ) = ( C F B )",
         "id": 234790008,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "oveq2i: |  ( C F A ) = ( C F B )"
       },
-      "Statement 9": {
-        "name": "Statement 9",
-        "id": 234790008,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
       "eqtr4i: |- A = C": {
         "name": "eqtr4i: |- A = C",
         "id": 234790009,
         "groups": [
-          "Everything"
+          "Everything",
+          "Statements"
         ],
         "classification": "progression",
         "type": null,
         "max_count": 1,
         "hint_text": "eqtr4i: |  A = C"
-      },
-      "Statement 10": {
-        "name": "Statement 10",
-        "id": 234790009,
-        "groups": [
-          "Everything",
-          "Statements"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
       },
       "Statement 11": {
         "name": "Statement 11",

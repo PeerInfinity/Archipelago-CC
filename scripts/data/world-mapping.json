@@ -942,7 +942,7 @@
     "game_name": "Metamath Vanilla WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": null,
+    "template_file": "Metamath Vanilla WorldGen.yaml",
     "world_directory": "metamath_vanilla_worldgen"
   },
   "Metamath WorldGen": {
