@@ -109,7 +109,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
                 if (adapterCore) {
                     adapterCore.handleEventBusEvent(eventName, eventData);
                 }
-            }, moduleId);
+            });
             log('debug', 'Subscribed to all EventBus events for iframe forwarding');
 
             // Subscribe to logger configuration updates to sync with iframes

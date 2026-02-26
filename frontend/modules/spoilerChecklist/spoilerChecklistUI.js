@@ -4,7 +4,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import commonUI, { debounce } from '../commonUI/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 
 // Helper function for logging
@@ -30,6 +30,7 @@ export class SpoilerChecklistUI {
     this.sphereState = null; // Will be injected via public function
     this.dispatcher = null; // Will get from locations module
     this.currentPlayerId = null; // Current player ID for multiworld support
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     // Create and append root element
     this.getRootElement();
@@ -41,9 +42,9 @@ export class SpoilerChecklistUI {
     const readyHandler = (eventPayload) => {
       log('info', '[SpoilerChecklistUI] Received app:readyForUiDataLoad. Initializing checklist.');
       this.initialize();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'spoilerChecklist');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.dispose();
@@ -267,19 +268,19 @@ export class SpoilerChecklistUI {
     this._updateCurrentPlayerId();
 
     // Subscribe to events
-    eventBus.subscribe('stateManager:snapshotUpdated', debounce(() => this.updateDisplay(), 50), 'spoilerChecklist');
-    eventBus.subscribe('sphereState:dataLoaded', () => this.updateDisplay(), 'spoilerChecklist');
-    eventBus.subscribe('sphereState:currentSphereChanged', () => this.updateDisplay(), 'spoilerChecklist');
-    eventBus.subscribe('stateManager:rulesLoaded', () => {
+    this.eventBus.subscribe('stateManager:snapshotUpdated', debounce(() => this.updateDisplay(), 50));
+    this.eventBus.subscribe('sphereState:dataLoaded', () => this.updateDisplay());
+    this.eventBus.subscribe('sphereState:currentSphereChanged', () => this.updateDisplay());
+    this.eventBus.subscribe('stateManager:rulesLoaded', () => {
       this._updateCurrentPlayerId();
       this.updateDisplay();
-    }, 'spoilerChecklist');
-    eventBus.subscribe('settings:changed', async ({ key }) => {
+    });
+    this.eventBus.subscribe('settings:changed', async ({ key }) => {
       if (key === '*' || key.startsWith('moduleSettings.commonUI.showLocationItems')) {
         this.showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
         this.updateDisplay();
       }
-    }, 'spoilerChecklist');
+    });
 
     this.isInitialized = true;
     log('info', '[SpoilerChecklistUI] Initialization complete.');

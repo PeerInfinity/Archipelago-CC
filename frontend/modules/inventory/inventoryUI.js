@@ -1,8 +1,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import connection from '../client/core/connection.js';
 import messageHandler from '../client/core/messageHandler.js';
-import eventBus from '../../app/core/eventBus.js';
-import { getDispatcher } from './index.js';
+import { getDispatcher, getModuleEventBus } from './index.js';
 
 
 // Helper function for logging with fallback
@@ -24,6 +23,7 @@ export class InventoryUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.itemData = null;
     this.groupNames = [];
     this.hideUnowned = true;
@@ -50,9 +50,9 @@ export class InventoryUI {
       log('info', 
         '[InventoryUI app:readyForUiDataLoad] Base setup complete. Awaiting StateManager readiness.'
       );
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'inventory');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     // If the app is already initialized (e.g., this panel was created after a layout reload
     // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
@@ -62,7 +62,7 @@ export class InventoryUI {
       this.attachEventBusListeners();
       this.dispatcher = getDispatcher();
       this.isInitialized = true;
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
       this.itemData = existingStaticData.items;
       this.groupNames = Array.isArray(existingStaticData.groups)
         ? existingStaticData.groups
@@ -421,7 +421,7 @@ export class InventoryUI {
 
     const subscribe = (eventName, handler) => {
       log('info', `[InventoryUI] Subscribing to ${eventName}`);
-      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this), 'inventory');
+      const unsubscribe = this.eventBus.subscribe(eventName, handler.bind(this));
       this.unsubscribeHandles.push(unsubscribe);
     };
 

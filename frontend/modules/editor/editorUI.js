@@ -5,7 +5,7 @@
  * Data management is handled by EditorDataService from editorCore module.
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { applyLoadedData } from '../../utils/dataApplicator.js';
@@ -29,6 +29,7 @@ function log(level, message, ...data) {
 class EditorUI {
   constructor(container, componentState) {
     log('info', 'EditorUI instance created with Textarea');
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.container = container;
     this.componentState = componentState;
 
@@ -57,16 +58,16 @@ class EditorUI {
     const readyHandler = () => {
       log('info', '[EditorUI] Received app:readyForUiDataLoad. Initializing editor.');
       this.initialize();
-      eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
+      this.eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
     };
-    eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler, 'editor');
+    this.eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler);
 
     // If the app is already initialized (e.g., this panel was created after a layout reload
     // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
     // In that case, initialize immediately.
     if (stateManager.getStaticData()) {
       this.initialize();
-      eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
+      this.eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
     }
 
     this.container.on('destroy', () => {
@@ -322,11 +323,11 @@ class EditorUI {
     log('info', '[EditorUI] Applying edited rules...');
 
     // Publish the files:jsonLoaded event to trigger rules loading
-    eventBus.publish('files:jsonLoaded', {
+    this.eventBus.publish('files:jsonLoaded', {
       jsonData: rulesData,
       selectedPlayerId: '1',
       sourceName: 'editorApply'
-    }, 'editor');
+    });
   }
 
   async _applyLocalStorageMode(jsonText) {
@@ -379,10 +380,10 @@ class EditorUI {
         const evalConfig = new Function(`return ${configStr}`)();
 
         // Publish event for metaGame to update its configuration
-        eventBus.publish('editor:metaGameConfigApply', {
+        this.eventBus.publish('editor:metaGameConfigApply', {
           configuration: evalConfig,
           sourceName: 'editorApply'
-        }, 'editor');
+        });
 
         log('info', '[EditorUI] MetaGame configuration extracted and applied');
       } catch (evalError) {
@@ -400,10 +401,10 @@ class EditorUI {
     log('info', '[EditorUI] Applying edited snapshot...');
 
     // Publish event for state manager to apply the snapshot
-    eventBus.publish('editor:snapshotApply', {
+    this.eventBus.publish('editor:snapshotApply', {
       snapshot: snapshotData,
       sourceName: 'editorApply'
-    }, 'editor');
+    });
   }
 
   _updateApplyButtonVisibility() {

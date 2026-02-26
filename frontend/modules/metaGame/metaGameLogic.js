@@ -21,14 +21,14 @@ export class MetaGameLogic {
     try {
       // Get access to other modules we need
       this.progressBarAPI = {
-        create: (config) => this.eventBus.publish('progressBar:create', config, 'metaGame'),
-        show: (id) => this.eventBus.publish('progressBar:show', { id }, 'metaGame'),
-        hide: (id) => this.eventBus.publish('progressBar:hide', { id }, 'metaGame'),
-        destroy: (id) => this.eventBus.publish('progressBar:destroy', { id }, 'metaGame')
+        create: (config) => this.eventBus.publish('progressBar:create', config),
+        show: (id) => this.eventBus.publish('progressBar:show', { id }),
+        hide: (id) => this.eventBus.publish('progressBar:hide', { id }),
+        destroy: (id) => this.eventBus.publish('progressBar:destroy', { id })
       };
       
       this.isReady = true;
-      this.eventBus.publish('metaGame:ready', { status: 'ready' }, 'metaGame');
+      this.eventBus.publish('metaGame:ready', { status: 'ready' });
       this.logger.info('metaGame', 'MetaGameLogic ready');
       
     } catch (error) {
@@ -83,10 +83,10 @@ export class MetaGameLogic {
       
       console.log('About to publish metaGame:configurationLoaded event');
       this.logger.info('metaGame', 'Publishing metaGame:configurationLoaded event');
-      this.eventBus.publish('metaGame:configurationLoaded', { 
+      this.eventBus.publish('metaGame:configurationLoaded', {
         filePath,
-        configuration: this.configuration 
-      }, 'metaGame');
+        configuration: this.configuration
+      });
       console.log('metaGame:configurationLoaded event published successfully');
       this.logger.info('metaGame', 'metaGame:configurationLoaded event published');
       
@@ -97,10 +97,10 @@ export class MetaGameLogic {
       console.error('MetaGameLogic.loadConfiguration error:', error);
       console.error('Error stack:', error.stack);
       this.logger.error('metaGame', `Failed to load configuration from ${filePath}:`, error);
-      this.eventBus.publish('metaGame:error', { 
+      this.eventBus.publish('metaGame:error', {
         error: `Configuration loading failed: ${error.message}`,
-        filePath 
-      }, 'metaGame');
+        filePath
+      });
       throw error;
     }
   }
@@ -171,7 +171,7 @@ export class MetaGameLogic {
           // Set up event bus subscriber if needed
           this.eventBus.subscribe(eventName, (data) => {
             this.executeActions(eventConfig.actions, data, eventName);
-          }, 'metaGame');
+          });
         }
       }
     }
@@ -289,7 +289,7 @@ export class MetaGameLogic {
     this.progressBars.set(progressBarId, progressBarConfig);
     
     // Start the progress bar immediately
-    this.eventBus.publish(`metaGame:${progressBarId}Start`, {}, 'metaGame');
+    this.eventBus.publish(`metaGame:${progressBarId}Start`, {});
     
     // Set up completion handler
     const completionHandler = (completionData) => {
@@ -304,7 +304,7 @@ export class MetaGameLogic {
       this.eventBus.unsubscribe(`metaGame:${progressBarId}Complete`, completionHandler);
     };
     
-    this.eventBus.subscribe(`metaGame:${progressBarId}Complete`, completionHandler, 'metaGame');
+    this.eventBus.subscribe(`metaGame:${progressBarId}Complete`, completionHandler);
   }
   
   async handleForwardEvent(action, eventData, originalEventName) {
@@ -434,18 +434,18 @@ export class MetaGameLogic {
       await this.processConfiguration();
       
       // Publish update event
-      this.eventBus.publish('metaGame:configurationUpdated', { 
-        configuration: this.configuration 
-      }, 'metaGame');
+      this.eventBus.publish('metaGame:configurationUpdated', {
+        configuration: this.configuration
+      });
       
       this.logger.info('metaGame', 'JSON configuration updated successfully');
       return { success: true, configuration: this.configuration };
       
     } catch (error) {
       this.logger.error('metaGame', 'Failed to update JSON configuration:', error);
-      this.eventBus.publish('metaGame:error', { 
+      this.eventBus.publish('metaGame:error', {
         error: `Configuration update failed: ${error.message}`
-      }, 'metaGame');
+      });
       throw error;
     }
   }

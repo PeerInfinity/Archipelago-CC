@@ -278,7 +278,7 @@ export class StateManager {
     // Also emit to eventBus for ProgressUI
     try {
       if (this.eventBus) {
-        this.eventBus.publish(`stateManager:${eventType}`, {}, 'stateManager');
+        this.eventBus.publish(`stateManager:${eventType}`, {});
       }
     } catch (e) {
       log('warn', 'Could not publish to eventBus:', e);
@@ -648,7 +648,7 @@ export class StateManager {
     } else if (this.eventBus) {
       // Main thread mode - publish directly to eventBus
       try {
-        this.eventBus.publish(`stateManager:${eventType}`, eventData, 'stateManager');
+        this.eventBus.publish(`stateManager:${eventType}`, eventData);
         this._logDebug(
           `[StateManager Class] Published ${eventType} event via EventBus.`
         );
@@ -806,7 +806,7 @@ export class StateManager {
   }
 
   async loadRules(source) {
-    this.eventBus.publish('stateManager:loadingRules', { source }, 'stateManager');
+    this.eventBus.publish('stateManager:loadingRules', { source });
     log('info', `[StateManager] Attempting to load rules from source:`, source);
 
     if (
@@ -835,7 +835,7 @@ export class StateManager {
         this.eventBus.publish('stateManager:rulesLoadFailed', {
           source,
           error,
-        }, 'stateManager');
+        });
         this.rules = null; // Ensure rules are null on failure
         return; // Exit early
       }
@@ -854,7 +854,7 @@ export class StateManager {
         this.eventBus.publish('stateManager:rulesLoadFailed', {
           source: 'directData',
           error: 'Malformed direct rules data',
-        }, 'stateManager');
+        });
         this.rules = null; // Ensure rules are null on failure
         return; // Exit early
       }
@@ -871,7 +871,7 @@ export class StateManager {
       this.eventBus.publish('stateManager:rulesLoadFailed', {
         source,
         error: 'Invalid rules source type',
-      }, 'stateManager');
+      });
       this.rules = null;
       return; // Exit early
     }

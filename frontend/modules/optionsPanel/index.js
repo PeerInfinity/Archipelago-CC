@@ -1,5 +1,6 @@
 // optionsPanel module entry point
 import { OptionsPanelUI } from './optionsPanelUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -57,7 +58,17 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
 // Export getters for use by UI components
 export function getModuleEventBus() {
-  return moduleEventBus;
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'optionsPanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'optionsPanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'optionsPanel'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }
 
 export function getModuleDispatcher() {

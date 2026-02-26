@@ -1,5 +1,5 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 
@@ -17,6 +17,7 @@ export class PresetUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     this.presets = null;
     this.currentPlayer = null;
@@ -38,9 +39,9 @@ export class PresetUI {
         '[PresetUI] Received app:readyForUiDataLoad. Initializing presets.'
       );
       this.initialize();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'presets');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -517,18 +518,18 @@ export class PresetUI {
                 this.displayLoadedJsonFileDetails(jsonData, file.name);
               } catch (err) {
                 log('error', 'Error parsing JSON file:', err);
-                eventBus.publish('ui:notification', {
+                this.eventBus.publish('ui:notification', {
                   type: 'error',
                   message: `Error parsing ${file.name}: ${err.message}`,
-                }, 'presets');
+                });
               }
             };
             reader.onerror = (err) => {
               log('error', 'Error reading file:', err);
-              eventBus.publish('ui:notification', {
+              this.eventBus.publish('ui:notification', {
                 type: 'error',
                 message: `Error reading ${file.name}.`,
-              }, 'presets');
+              });
             };
             reader.readAsText(file);
           }
@@ -635,16 +636,16 @@ export class PresetUI {
           rulesData.game || 'unknown_game'
         }, player ${playerId}. Publishing files:jsonLoaded.`
       );
-      eventBus.publish('files:jsonLoaded', {
+      this.eventBus.publish('files:jsonLoaded', {
         jsonData: rulesData,
         selectedPlayerId: playerId,
         sourceName: `userLoaded:${fileName}` // Prefix to indicate manually loaded file
-      }, 'presets');
+      });
 
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'success',
         message: `Loaded ${fileName} for Player ${playerId}`,
-      }, 'presets');
+      });
 
       const statusElement = document.getElementById('preset-status');
       if (statusElement) {
@@ -658,7 +659,7 @@ export class PresetUI {
         `;
       }
 
-      eventBus.publish('rules:loaded', {}, 'presets');
+      this.eventBus.publish('rules:loaded', {});
     } catch (error) {
       log('error', 'Error processing manually loaded rules file:', error);
       const statusElement = document.getElementById('preset-status');
@@ -751,10 +752,10 @@ export class PresetUI {
 
     } catch (err) {
       log('error', 'Error loading .archipelago file:', err);
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'error',
         message: `Error loading ${file.name}: ${err.message}`,
-      }, 'presets');
+      });
     }
   }
 
@@ -952,17 +953,17 @@ export class PresetUI {
       log('info',
         `Rules loaded for ${gameDirectory}, player ${playerId}. Publishing files:jsonLoaded.`
       );
-      eventBus.publish('files:jsonLoaded', {
+      this.eventBus.publish('files:jsonLoaded', {
         jsonData: rulesData,
         selectedPlayerId: playerId,
         sourceName: fullPath
-      }, 'presets');
+      });
 
       // Publish success notification
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'success',
         message: `Loaded ${rulesFile} for Player ${playerId}`,
-      }, 'presets');
+      });
 
       // Temporarily comment out direct calls to stateManager, as the new flow
       // via files:jsonLoaded -> proxy.loadRules -> worker.loadRules (which calls loadFromJSON & initializeInventory)
@@ -1055,7 +1056,7 @@ export class PresetUI {
       }
 
       // Trigger rules:loaded event to enable offline play
-      eventBus.publish('rules:loaded', {}, 'presets');
+      this.eventBus.publish('rules:loaded', {});
 
       // Re-enable control buttons if needed (though rules:loaded might handle this elsewhere)
       // This is likely a remnant of an older architecture and this.gameUI is not defined here.

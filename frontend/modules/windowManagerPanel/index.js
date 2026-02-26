@@ -1,5 +1,6 @@
 // windowManagerPanel module entry point
 import { WindowManagerUI } from './windowManagerUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -82,5 +83,17 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     log('info', `[${moduleId} Module] Initialization complete.`);
 }
 
-// Export eventBus for use by UI components
-export { moduleEventBus };
+// Export eventBus getter for use by UI components
+export function getModuleEventBus() {
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'windowManagerPanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'windowManagerPanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'windowManagerPanel'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}

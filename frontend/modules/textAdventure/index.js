@@ -1,5 +1,6 @@
 // textAdventure module entry point
 import { TextAdventureUI } from './textAdventureUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -121,3 +122,17 @@ function handleLocationCheck(data, propagationOptions) {
 
 // Export dispatcher for use by UI components
 export { moduleDispatcher };
+
+export function getModuleEventBus() {
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'textAdventure'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'textAdventure'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'textAdventure'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}

@@ -1,5 +1,6 @@
 // windowPanel module entry point
 import { WindowPanelUI } from './windowPanelUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -70,16 +71,28 @@ export async function initialize(mId, priorityIndex, initializationApi) {
         moduleEventBus.subscribe('window:loadUrl', (data) => {
             // This will be handled by the active windowPanel instance
             log('debug', 'Received window:loadUrl event', data);
-        }, moduleId);
+        });
 
         moduleEventBus.subscribe('window:close', (data) => {
             // This will be handled by the active windowPanel instance
             log('debug', 'Received window:close event', data);
-        }, moduleId);
+        });
     }
     
     log('info', `[${moduleId} Module] Initialization complete.`);
 }
 
-// Export eventBus for use by UI components
-export { moduleEventBus };
+// Export eventBus getter for use by UI components
+export function getModuleEventBus() {
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'windowPanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'windowPanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'windowPanel'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}

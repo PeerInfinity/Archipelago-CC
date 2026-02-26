@@ -25,12 +25,9 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
     testController.log(`[${testRunId}] Starting colorblind mode toggle test...`);
     testController.reportCondition('Test started', true);
 
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-
     // Step 1: Activate the Settings panel first
     testController.log(`[${testRunId}] Activating Settings panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
 
     // Wait for the settings panel to appear in DOM
     let settingsPanelElement = null;
@@ -107,7 +104,7 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
 
     // Step 3: Test Regions panel colorblind mode
     testController.log(`[${testRunId}] Testing Regions panel colorblind mode...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
 
     let regionsPanelElement = null;
     if (!(await testController.pollForCondition(
@@ -145,7 +142,7 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
 
     // Step 4: Disable colorblind mode for regions
     testController.log(`[${testRunId}] Disabling colorblind mode for regions...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
 
     // Parse the settings again to ensure we're working with current state
     try {
@@ -177,7 +174,7 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
 
     // Step 5: Verify colorblind mode is disabled in Regions panel
     testController.log(`[${testRunId}] Verifying colorblind mode disabled in Regions panel...`);
-    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
 
     if (!(await testController.pollForCondition(
       () => {
@@ -223,9 +220,7 @@ export async function testSettingsPanelLoadsCurrentSettings(testController) {
 
     // Activate the Settings panel
     testController.log(`[${testRunId}] Activating Settings panel...`);
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
     // Wait for the settings panel to appear in DOM

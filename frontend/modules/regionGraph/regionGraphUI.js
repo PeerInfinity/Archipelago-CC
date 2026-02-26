@@ -1,4 +1,4 @@
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -19,6 +19,7 @@ export class RegionGraphUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.cy = null;
     this.cytoscape = null;
     this.cytoscapeFcose = null;
@@ -122,9 +123,9 @@ export class RegionGraphUI {
     const readyHandler = () => {
       logger.info('Received app:readyForUiDataLoad, starting initialization');
       this.loadCytoscape();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'regionGraph');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
     
     logger.debug('Constructor complete, waiting for app:readyForUiDataLoad event');
   }
@@ -753,43 +754,43 @@ export class RegionGraphUI {
     if (this.unsubscribeDiscoveryChanged) this.unsubscribeDiscoveryChanged();
 
     // Subscribe to state updates
-    this.unsubscribeStateUpdate = eventBus.subscribe('stateManager:snapshotUpdated',
-      (data) => this.onStateUpdate(data), 'regionGraph');
+    this.unsubscribeStateUpdate = this.eventBus.subscribe('stateManager:snapshotUpdated',
+      (data) => this.onStateUpdate(data));
 
-    this.unsubscribeRegionChange = eventBus.subscribe('playerState:regionChanged',
-      (data) => this.updatePlayerLocation(data.newRegion), 'regionGraph');
+    this.unsubscribeRegionChange = this.eventBus.subscribe('playerState:regionChanged',
+      (data) => this.updatePlayerLocation(data.newRegion));
 
     // Subscribe to path updates to track the full path
-    this.unsubscribePathUpdate = eventBus.subscribe('playerState:pathUpdated',
-      (data) => this.onPathUpdate(data), 'regionGraph');
+    this.unsubscribePathUpdate = this.eventBus.subscribe('playerState:pathUpdated',
+      (data) => this.onPathUpdate(data));
 
     // Subscribe to rules loaded event (like Regions module)
-    this.unsubscribeRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded',
+    this.unsubscribeRulesLoaded = this.eventBus.subscribe('stateManager:rulesLoaded',
       (event) => {
         logger.info('Received stateManager:rulesLoaded, initializing graph data');
         if (this.cy) {
           this.loadGraphData();
         }
-      }, 'regionGraph');
+      });
 
     // Subscribe to state ready event
-    this.unsubscribeStateReady = eventBus.subscribe('stateManager:ready',
+    this.unsubscribeStateReady = this.eventBus.subscribe('stateManager:ready',
       () => {
         logger.info('Received stateManager:ready, ensuring graph is loaded');
         if (this.cy && !this.graphInitialized) {
           this.loadGraphData();
         }
-      }, 'regionGraph');
+      });
 
     // Subscribe to discovery mode events
-    this.unsubscribeDiscoveryMode = eventBus.subscribe('discovery:modeChanged',
-      (data) => this.onDiscoveryModeChanged(data), 'regionGraph');
+    this.unsubscribeDiscoveryMode = this.eventBus.subscribe('discovery:modeChanged',
+      (data) => this.onDiscoveryModeChanged(data));
 
-    this.unsubscribeDiscoverySettings = eventBus.subscribe('discovery:settingsChanged',
-      (data) => this.onDiscoverySettingsChanged(data), 'regionGraph');
+    this.unsubscribeDiscoverySettings = this.eventBus.subscribe('discovery:settingsChanged',
+      (data) => this.onDiscoverySettingsChanged(data));
 
-    this.unsubscribeDiscoveryChanged = eventBus.subscribe('discovery:changed',
-      () => this.onDiscoveryChanged(), 'regionGraph');
+    this.unsubscribeDiscoveryChanged = this.eventBus.subscribe('discovery:changed',
+      () => this.onDiscoveryChanged());
   }
 
   async loadGraphData() {

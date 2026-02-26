@@ -8,6 +8,7 @@
 import { LoopStatsUI } from './loopStatsUI.js';
 import { queueAnalyzer } from './queueAnalyzer.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -142,7 +143,17 @@ export function getModuleDispatcher() {
 
 // Helper function to get the module's event bus instance
 export function getModuleEventBus() {
-  return moduleEventBus;
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'loopStats'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'loopStats'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'loopStats'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }
 
 // Helper function to get the queue analyzer

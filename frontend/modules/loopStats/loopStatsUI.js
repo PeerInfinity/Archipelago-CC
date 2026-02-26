@@ -5,7 +5,7 @@
  * and predicted remaining mana for each action.
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { queueAnalyzer } from './queueAnalyzer.js';
 import loopStateSingleton from '../loops/loopStateSingleton.js';
 
@@ -27,6 +27,7 @@ export class LoopStatsUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     // Display settings
     this.showManaCost = false;
@@ -170,7 +171,7 @@ export class LoopStatsUI {
    */
   _subscribeToEvents() {
     const subscribe = (eventName, handler) => {
-      const unsubscribe = eventBus.subscribe(eventName, handler.bind(this), 'loopStats');
+      const unsubscribe = this.eventBus.subscribe(eventName, handler.bind(this));
       this.subscriptions.push(unsubscribe);
     };
 

@@ -33,7 +33,7 @@ export function initializeLoopEvents(eventBus) {
       isLoopModeActive = data.active;
       log('info', '[LoopEvents] Loop mode changed:', isLoopModeActive);
     }
-  }, 'loops');
+  });
 
   // Note: user:exitClicked is now handled via dispatcher (handleUserExitClickedForLoops)
 }

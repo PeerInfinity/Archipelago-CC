@@ -190,15 +190,14 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
           '[Discovery Module] Cannot clear discovery: Singleton not available.'
         );
       }
-    }, 'discovery');
+    });
     _unsubscribeHandles.push(unsubscribe);
 
     // Subscribe to stateManager:rulesLoaded to reinitialize when rules change
     log('info', '[Discovery Module] Subscribing to stateManager:rulesLoaded');
     const rulesLoadedUnsubscribe = _moduleEventBus.subscribe(
       'stateManager:rulesLoaded',
-      handleRulesLoaded,
-      'discovery'
+      handleRulesLoaded
     );
     _unsubscribeHandles.push(rulesLoadedUnsubscribe);
 
@@ -206,19 +205,18 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     log('info', '[Discovery Module] Subscribing to settings:changed');
     const settingsChangedUnsubscribe = _moduleEventBus.subscribe(
       'settings:changed',
-      handleSettingsChanged,
-      'discovery'
+      handleSettingsChanged
     );
     _unsubscribeHandles.push(settingsChangedUnsubscribe);
 
     // Subscribe to UI click events for discovery handling
     log('info', '[Discovery Module] Subscribing to UI click events');
     _unsubscribeHandles.push(
-      _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked, 'discovery'),
-      _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked, 'discovery'),
-      _moduleEventBus.subscribe('ui:locationClicked', handleLocationClicked, 'discovery'),
-      _moduleEventBus.subscribe('ui:exitClicked', handleExitClicked, 'discovery'),
-      _moduleEventBus.subscribe('playerState:regionChanged', handlePlayerRegionChanged, 'discovery')
+      _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked),
+      _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked),
+      _moduleEventBus.subscribe('ui:locationClicked', handleLocationClicked),
+      _moduleEventBus.subscribe('ui:exitClicked', handleExitClicked),
+      _moduleEventBus.subscribe('playerState:regionChanged', handlePlayerRegionChanged)
     );
   } else {
     log('error',
@@ -529,14 +527,14 @@ async function handleSettingsChanged({ key }) {
     if (_settings.enableDiscoveryMode !== previousEnableMode && _moduleEventBus) {
       _moduleEventBus.publish('discovery:modeChanged', {
         active: _settings.enableDiscoveryMode
-      }, 'discovery');
+      });
     }
 
     // Always publish settingsChanged with current settings so other modules can react
     if (_moduleEventBus) {
       _moduleEventBus.publish('discovery:settingsChanged', {
         settings: { ..._settings }
-      }, 'discovery');
+      });
     }
   }
 }

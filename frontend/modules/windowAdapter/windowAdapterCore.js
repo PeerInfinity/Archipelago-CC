@@ -142,7 +142,7 @@ export class WindowAdapterCore {
 
         // Publish connection event
         if (this.eventBus) {
-            this.eventBus.publish('window:connected', { windowId }, 'windowAdapter');
+            this.eventBus.publish('window:connected', { windowId });
 
             // Send current region to newly connected window so it can initialize its state
             // Use setTimeout to ensure window has finished setting up its event subscriptions
@@ -155,7 +155,7 @@ export class WindowAdapterCore {
                     this.eventBus.publish('playerState:regionChanged', {
                         oldRegion: null,
                         newRegion: currentRegion
-                    }, 'windowAdapter');
+                    });
                 } else {
                     log('debug', 'No current region to send to window');
                 }
@@ -177,7 +177,7 @@ export class WindowAdapterCore {
             
             // Publish disconnection event
             if (this.eventBus) {
-                this.eventBus.publish('window:disconnected', { windowId }, 'windowAdapter');
+                this.eventBus.publish('window:disconnected', { windowId });
             }
         }
     }
@@ -285,7 +285,7 @@ export class WindowAdapterCore {
             // Subscribe to the event and forward to interested windows
             this.eventBus.subscribe(eventName, (eventData) => {
                 this.handleEventBusEvent(eventName, eventData);
-            }, 'windowAdapter');
+            });
 
             this._adapterEventBusSubscriptions.add(eventName);
             log('debug', `WindowAdapter subscribed to eventBus event: ${eventName}`);
@@ -367,7 +367,7 @@ export class WindowAdapterCore {
         
         // Publish to main app's event bus
         if (this.eventBus) {
-            this.eventBus.publish(eventName, eventData, `window_${windowId}`);
+            this.eventBus.publishAs(eventName, eventData, `window_${windowId}`);
             log('debug', `Published eventBus event from window ${windowId}: ${eventName}`);
         }
     }

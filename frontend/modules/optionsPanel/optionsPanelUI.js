@@ -1,6 +1,6 @@
 // optionsPanelUI.js - Hub panel combining Options, Settings (JSON), and Discovery
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
 
@@ -38,6 +38,7 @@ export class OptionsPanelUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.rootElement = null;
     this.isInitialized = false;
     this.unsubscribeHandles = [];
@@ -87,9 +88,9 @@ export class OptionsPanelUI {
     const readyHandler = () => {
       log('info', '[OptionsPanelUI] Received app:readyForUiDataLoad. Initializing panel.');
       this.initialize();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'optionsPanel');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.dispose();
@@ -336,7 +337,7 @@ export class OptionsPanelUI {
       jsonBtn.className = 'options-home-btn';
       jsonBtn.textContent = 'JSON Data';
       jsonBtn.addEventListener('click', () => {
-        eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'optionsPanel');
+        this.eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' });
       });
       this.actionBar.appendChild(jsonBtn);
 
@@ -415,7 +416,7 @@ export class OptionsPanelUI {
       }
     };
     this.unsubscribeHandles.push(
-      eventBus.subscribe('settings:changed', settingsChangedHandler, 'optionsPanel')
+      this.eventBus.subscribe('settings:changed', settingsChangedHandler)
     );
   }
 

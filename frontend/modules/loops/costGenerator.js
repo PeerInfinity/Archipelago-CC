@@ -123,7 +123,7 @@ export class CostGenerator {
           processed: this.processedEntries,
           total: this.totalEntries,
           percent: Math.floor((this.processedEntries / this.totalEntries) * 100),
-        }, 'loops');
+        });
       }
 
       // Assign default costs to unvisited regions/locations
@@ -319,16 +319,16 @@ export class CostGenerator {
 
         if (isNowChecked) {
           clearTimeout(timeout);
-          this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+          this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
           resolve(true);
         }
       };
 
-      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+      this.eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
       // Safety timeout (5 seconds per location in instant mode should be plenty)
       timeout = setTimeout(() => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
         logger.warn(`Timeout waiting for ${locationName} to be checked`);
         resolve(false);
       }, 5000);

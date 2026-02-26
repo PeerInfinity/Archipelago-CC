@@ -82,7 +82,7 @@ export class SphereState {
     // Don't reset currentPlayerId as it comes from static data
 
     if (this.eventBus) {
-      this.eventBus.publish('sphereState:dataCleared', {}, 'sphereState');
+      this.eventBus.publish('sphereState:dataCleared', {});
     }
   }
 
@@ -117,7 +117,7 @@ export class SphereState {
         this.eventBus.publish('sphereState:dataLoaded', {
           sphereCount: this.sphereData.length,
           filePath
-        }, 'sphereState');
+        });
       }
 
       // Calculate initial current sphere
@@ -454,7 +454,7 @@ export class SphereState {
 
         if (changed && this.eventBus) {
           log('info', `Current sphere changed to: ${newCurrent.sphereIndex}`);
-          this.eventBus.publish('sphereState:currentSphereChanged', newCurrent, 'sphereState');
+          this.eventBus.publish('sphereState:currentSphereChanged', newCurrent);
         }
 
         return;
@@ -474,7 +474,7 @@ export class SphereState {
       log('info', 'All spheres complete');
 
       if (this.eventBus) {
-        this.eventBus.publish('sphereState:allSpheresComplete', this.currentSphere, 'sphereState');
+        this.eventBus.publish('sphereState:allSpheresComplete', this.currentSphere);
       }
     }
   }

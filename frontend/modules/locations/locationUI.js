@@ -12,13 +12,12 @@ import commonUI, {
 } from '../commonUI/index.js';
 // Discovery mode tracking will be done via event listener
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus, getDispatcher } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
 } from '../commonUI/index.js';
-import { getDispatcher } from './index.js'; // Added import for dispatcher
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -35,6 +34,7 @@ export class LocationUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.columns = 2; // Default number of columns
     this.rootElement = this.createRootElement(); // Create the root element on instantiation
     this.locationsGrid = this.rootElement.querySelector('#locations-grid'); // Cache grid element
@@ -92,9 +92,9 @@ export class LocationUI {
         '[LocationUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'locations');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -108,7 +108,7 @@ export class LocationUI {
       this.initialize();
       this.dispatcher = getDispatcher();
       this.isInitialized = true;
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
       this.originalLocationOrder = stateManager.getOriginalLocationOrder() || [];
       this.updateLocationDisplay();
     }
@@ -140,7 +140,7 @@ export class LocationUI {
       this.showLabel2 = false;
     }
 
-    this.settingsUnsubscribe = eventBus.subscribe(
+    this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       async ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2')) {
@@ -163,7 +163,7 @@ export class LocationUI {
           this.updateLocationDisplay(); // Trigger redraw
         }
       }
-      , 'locations');
+    );
   }
 
   onPanelDestroy() {
@@ -208,14 +208,14 @@ export class LocationUI {
       this.unsubscribeFromStateEvents();
 
       log('info', '[LocationUI] Subscribing to state and loop events...');
-      if (!eventBus) {
-        log('error', '[LocationUI] Imported EventBus is not available!');
+      if (!this.eventBus) {
+        log('error', '[LocationUI] EventBus is not available!');
         return;
       }
 
       const subscribe = (eventName, handler) => {
         log('info', `[LocationUI] Subscribing to ${eventName}`);
-        const unsubscribe = eventBus.subscribe(eventName, handler, 'locations');
+        const unsubscribe = this.eventBus.subscribe(eventName, handler);
         this.stateUnsubscribeHandles.push(unsubscribe);
       };
 
@@ -624,10 +624,10 @@ export class LocationUI {
     const regionName = locationData.region || locationData.parent_region;
 
     // Publish click event for Discovery module to handle
-    eventBus.publish('ui:locationClicked', {
+    this.eventBus.publish('ui:locationClicked', {
       locationName,
       regionName
-    }, 'locations');
+    });
 
     // Discovery mode: if location checks are disabled, don't perform the check
     if (this.isDiscoveryModeActive && this.discoverySettings.disableLocationCheckUI) {
@@ -1681,14 +1681,14 @@ export class LocationUI {
       log('info', `[LocationUI] Dungeon link clicked for: ${dungeonName}`);
 
       // Publish panel activation first
-      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'locations');
+      this.eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
       log('info', `[LocationUI] Published ui:activatePanel for dungeonsPanel.`);
 
       // Then publish navigation
-      eventBus.publish('ui:navigateToDungeon', {
+      this.eventBus.publish('ui:navigateToDungeon', {
         dungeonName: dungeonName,
         sourcePanel: 'locations',
-      }, 'locations');
+      });
       log(
         'info',
         `[LocationUI] Published ui:navigateToDungeon for ${dungeonName}.`

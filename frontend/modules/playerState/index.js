@@ -155,12 +155,12 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     
     // Subscribe to stateManager:rulesLoaded via eventBus (not dispatcher)
     if (eventBus) {
-        eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleId);
+        eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
         log('info', `[${moduleId} Module] Subscribed to stateManager:rulesLoaded via eventBus`);
 
         // Subscribe to iframe/window app ready events to send initial state
-        eventBus.subscribe('iframe:appReady', handleRemoteAppReady, moduleId);
-        eventBus.subscribe('window:appReady', handleRemoteAppReady, moduleId);
+        eventBus.subscribe('iframe:appReady', handleRemoteAppReady);
+        eventBus.subscribe('window:appReady', handleRemoteAppReady);
         log('info', `[${moduleId} Module] Subscribed to remote app ready events`);
     }
 
@@ -182,7 +182,7 @@ function handleRemoteAppReady(data, propagationOptions) {
                 newRegion: currentRegion,
                 oldRegion: null,
                 source: 'playerState-init'
-            }, moduleId);
+            });
             log('info', `[${moduleId} Module] Published initial region: ${currentRegion}`);
         }
     }

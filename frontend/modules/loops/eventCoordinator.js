@@ -41,8 +41,7 @@ export class EventCoordinator {
     const subscribe = (eventName, handler) => {
       const unsubscribe = this.eventBus.subscribe(
         eventName,
-        handler.bind(this),
-        'loops'
+        handler.bind(this)
       );
       this.eventSubscriptions.push(unsubscribe);
     };

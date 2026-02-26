@@ -274,8 +274,7 @@ export class ProgressBar {
     if (this.config.startEvent) {
       const startUnsubscriber = this.eventBus.subscribe(
         this.config.startEvent,
-        this._handleStartEvent.bind(this),
-        'progressBar'
+        this._handleStartEvent.bind(this)
       );
       this.eventUnsubscribers.push(startUnsubscriber);
     }
@@ -284,8 +283,7 @@ export class ProgressBar {
     if (this.config.mode === 'event' && this.config.updateEvent) {
       const updateUnsubscriber = this.eventBus.subscribe(
         this.config.updateEvent,
-        this._handleUpdateEvent.bind(this),
-        'progressBar'
+        this._handleUpdateEvent.bind(this)
       );
       this.eventUnsubscribers.push(updateUnsubscriber);
     }
@@ -522,7 +520,7 @@ export class ProgressBar {
     const eventSource = this.config.eventSource || 'eventBus';
     
     if (eventSource === 'eventBus' || eventSource === 'both') {
-      this.eventBus.publish(eventName, data, 'progressBar');
+      this.eventBus.publish(eventName, data);
     }
     
     if (eventSource === 'eventDispatcher' || eventSource === 'both') {

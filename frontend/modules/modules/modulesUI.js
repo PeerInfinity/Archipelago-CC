@@ -1,6 +1,5 @@
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import eventBus from '../../app/core/eventBus.js';
-import { getInitializationApi } from './index.js';
+import { getInitializationApi, getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -106,6 +105,7 @@ export class ModulesPanel {
     this.moduleFailHandler = this._handleModuleLoadFailed.bind(this);
     this.moduleId = 'modules'; // Assume module ID is known or passed differently if needed
     this.initApi = getInitializationApi(); // Get the API object
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     // GoldenLayout specifics
     // this.container.setTitle('Modules'); // Title is usually set by GL config or PanelManager
@@ -162,10 +162,10 @@ export class ModulesPanel {
 
     // Listen for app ready event before fetching data
     // Use the bound named handler
-    this.appReadyListener = eventBus.subscribe(
+    this.appReadyListener = this.eventBus.subscribe(
       'app:readyForUiDataLoad', // MODIFIED: Listen to app:ready
       this.appReadyHandler
-    , 'modules');
+    );
     // NOW register the subscription with the registry
     centralRegistry.registerEventBusSubscriberIntent(
       this.moduleId,
@@ -173,19 +173,19 @@ export class ModulesPanel {
     );
 
     // Subscribe to external events using bound handlers
-    eventBus.subscribe('module:stateChanged', this.moduleStateHandler, 'modules');
+    this.eventBus.subscribe('module:stateChanged', this.moduleStateHandler);
     centralRegistry.registerEventBusSubscriberIntent(
       this.moduleId,
       'module:stateChanged'
     );
 
-    // eventBus.subscribe('panel:closed', this._handlePanelClosed.bind(this), 'modules'); // Keep commented for now
-    eventBus.subscribe('module:loaded', this.moduleLoadHandler, 'modules'); // Listen for newly loaded modules
+    // this.eventBus.subscribe('panel:closed', this._handlePanelClosed.bind(this)); // Keep commented for now
+    this.eventBus.subscribe('module:loaded', this.moduleLoadHandler); // Listen for newly loaded modules
     // No need to register 'module:loaded' or 'failed' unless we add UI toggles for them
-    eventBus.subscribe(
+    this.eventBus.subscribe(
       'module:loadFailed',
       this.moduleFailHandler // Listen for load failures
-    , 'modules');
+    );
   }
 
   async _requestModuleData(moduleManager) {
@@ -527,7 +527,7 @@ export class ModulesPanel {
     log('info', 
       `Requesting load for external module: ${moduleId} from ${modulePath}`
     );
-    eventBus.publish('module:loadExternalRequest', { moduleId, modulePath }, 'modules');
+    this.eventBus.publish('module:loadExternalRequest', { moduleId, modulePath });
   }
 
   // MODIFIED: Renamed from _handleInitComplete to _handleAppReady
@@ -564,13 +564,13 @@ export class ModulesPanel {
   destroy() {
     log('info', 'Destroying ModulesPanel');
     // Remove event listeners using the stored bound handlers
-    eventBus.unsubscribe('module:stateChanged', this.moduleStateHandler);
-    eventBus.unsubscribe('module:loaded', this.moduleLoadHandler);
-    eventBus.unsubscribe('module:loadFailed', this.moduleFailHandler);
+    this.eventBus.unsubscribe('module:stateChanged', this.moduleStateHandler);
+    this.eventBus.unsubscribe('module:loaded', this.moduleLoadHandler);
+    this.eventBus.unsubscribe('module:loadFailed', this.moduleFailHandler);
     // Unsubscribe from app:ready if listener exists
     // Use the named handler for unsubscribe
     if (this.appReadyListener) {
-      eventBus.unsubscribe('app:readyForUiDataLoad', this.appReadyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', this.appReadyHandler);
       this.appReadyListener = null;
     }
 
