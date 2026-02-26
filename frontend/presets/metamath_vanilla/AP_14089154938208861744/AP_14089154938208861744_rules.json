@@ -3,8 +3,8 @@
   "game_name": "Metamath",
   "game_directory": "metamath",
   "archipelago_version": "0.6.7",
-  "generation_seed": 2,
-  "seed_name": "01043188731678011336",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
   "player_names": {
     "1": "Player1"
   },
@@ -95,12 +95,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "oveq1i: |- ( A F C ) = ( B F C )",
+              "name": "ax-1cn: |- 1 e. CC",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -141,7 +141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -167,12 +167,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "oveq2i: |- ( C F A ) = ( C F B )",
+              "name": "df-2: |- 2 = ( 1 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -198,12 +198,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "3eqtri: |- A = D",
+              "name": "df-3: |- 3 = ( 2 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -233,12 +233,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-2: |- 2 = ( 1 + 1 )",
+              "name": "df-4: |- 4 = ( 3 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -271,12 +271,12 @@
               }
             },
             "item": {
-              "name": "ax-1cn: |- 1 e. CC",
+              "name": "oveq1i: |- ( A F C ) = ( B F C )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -312,12 +312,12 @@
               }
             },
             "item": {
-              "name": "eqtr4i: |- A = C",
+              "name": "3eqtri: |- A = D",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -349,12 +349,12 @@
               }
             },
             "item": {
-              "name": "df-3: |- 3 = ( 2 + 1 )",
+              "name": "oveq2i: |- ( C F A ) = ( C F B )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -375,12 +375,12 @@
               }
             },
             "item": {
-              "name": "df-4: |- 4 = ( 3 + 1 )",
+              "name": "eqtr4i: |- A = C",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       }
@@ -1733,13 +1733,13 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": true,
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "starting_statements": 0,
         "theorem": 1,
-        "vanilla_placement": false
+        "vanilla_placement": true
       },
       "option_definitions": {
         "accessibility": {
@@ -1835,6 +1835,7 @@
         }
       },
       "num_statements": 10,
+      "is_vanilla": true,
       "canonical_placements": {
         "Prove ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
         "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
@@ -2027,8 +2028,8 @@
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": 1,
-        "vanilla_placement": 0
+        "randomize_items": false,
+        "vanilla_placement": 1
       },
       "web": {
         "theme": "grass",
@@ -2057,5 +2058,6 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {},
+  "is_vanilla": true
 }

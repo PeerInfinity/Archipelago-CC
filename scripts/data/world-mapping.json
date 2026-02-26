@@ -934,6 +934,17 @@
     "template_file": "Metamath.yaml",
     "world_directory": "metamath"
   },
+  "Metamath Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Metamath Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": null,
+    "world_directory": "metamath_vanilla_worldgen"
+  },
   "Metamath WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
