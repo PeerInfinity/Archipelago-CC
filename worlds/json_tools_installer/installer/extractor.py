@@ -135,7 +135,6 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=[
             "worlds/bakingadventure",
             "worlds/codingadventure",
-            "worlds/mathadventure",
             "worlds/metamath",
             "worlds/toem_original",
             "worlds/toem_rule_builder",
