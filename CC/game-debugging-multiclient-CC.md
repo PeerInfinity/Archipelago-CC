@@ -93,7 +93,7 @@ python scripts/test/test-all-templates.py --include-list "Adventure.yaml" --mult
 === Testing Adventure.yaml ===
 Running Generate.py for Adventure.yaml...
 Running multiclient timer test (single-client mode)...
-  Command: npx playwright test tests/e2e/multiclient.spec.js -g single client timer test
+  Command: npx playwright test test_json/e2e/multiclient.spec.js -g single client timer test
   Environment: TEST_GAME=adventure TEST_SEED=1
 Completed Adventure.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Locations Checked=25/24
 ```
@@ -292,7 +292,7 @@ cat test_results/multiclient/client1-timer-single-*.json | jq '.testDetails[0].l
 
 | File | Purpose |
 |------|---------|
-| `tests/e2e/multiclient.spec.js` | Playwright test specification |
+| `test_json/e2e/multiclient.spec.js` | Playwright test specification |
 | `frontend/modules/tests/testCases/multiclientTests.js` | Client-side test logic |
 | `scripts/test/test-all-templates.py` | Test runner script |
 | `test_results/multiclient/client1-timer-single-*.json` | Single-client results |

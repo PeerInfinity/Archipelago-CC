@@ -92,7 +92,7 @@ async function checkFrontendFiles() {
 
 async function checkTestConfiguration() {
   const configExists = fs.existsSync('playwright.config.js');
-  const testExists = fs.existsSync('tests/e2e/app.spec.js');
+  const testExists = fs.existsSync('test_json/e2e/app.spec.js');
   
   let testConfig = null;
   if (configExists) {

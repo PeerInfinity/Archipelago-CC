@@ -30,7 +30,7 @@ The following directories are new in this repository and did not exist in the up
 3. `exporter` - Python rule export functionality
 4. `frontend` - Web client application
 5. `scripts` - Build, test, and utility scripts
-6. `tests` - Test files
+6. `test_json` - Test files for fork-specific modules
 7. `apworlds` - AP world packages
 
 ### New Systems
@@ -74,8 +74,7 @@ These files were added to directories that already existed in the upstream commi
 .github/workflows/test-world-generator.yml
 .github/workflows/test-world-generator-single.yml
 .github/workflows/test-world-generator-stability.yml
-.github/workflows/unit-tests.yml
-.github/workflows/unittests.yml.disabled (renamed from unittests.yml)
+.github/workflows/unittests_json.yml
 ```
 
 ### Project Configuration (new)
@@ -104,12 +103,12 @@ Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placi
 
 The following 24 files have been modified from the upstream version:
 
-### Core Files (see core-files.diff)
+### Core Files (see diff-files/core-files.diff)
 ```
 settings.py
 ```
 
-### Configuration Files (see config-files.diff)
+### Configuration Files (see diff-files/config-files.diff)
 ```
 .gitattributes
 .github/pyright-config.json
@@ -126,7 +125,7 @@ rule_builder/rules.py
 
 Note: `rule_builder/` exists in upstream (merged from PR #5048). The fork extends it with AST format support, additional rule types, pathfinding tools, and JSON serialization. `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodified** from upstream.
 
-### World Bug/Determinism Fixes (see world-minor-fixes.diff, alttp-bunny-rules.diff)
+### World Bug/Determinism Fixes (see diff-files/world-minor-fixes.diff, diff-files/alttp-bunny-rules.diff)
 ```
 worlds/alttp/Rules.py
 worlds/landstalker/Hints.py
@@ -144,7 +143,7 @@ test/general/test_reachability.py
 worlds/RomlessUtils.py
 ```
 
-### World Init Files (see world-init-files.diff)
+### World Init Files (see diff-files/world-init-files.diff)
 ```
 worlds/alttp/__init__.py
 worlds/apsudoku/__init__.py
