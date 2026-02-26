@@ -14,7 +14,7 @@ The fixtures provide a **single source of truth** for how rule types should be e
 ## File Structure
 
 ```
-tests/fixtures/
+test_json/fixtures/
 ├── README.md                    # This file
 └── rule_type_tests.json         # Test cases for all rule types
 ```
@@ -61,10 +61,10 @@ The optional `context` object can include:
 
 ```bash
 # All fixture tests
-python -m pytest tests/test_rule_fixtures.py -v
+python -m pytest test_json/test_rule_fixtures.py -v
 
 # Specific rule type
-python -m pytest tests/test_rule_fixtures.py -k "negate" -v
+python -m pytest test_json/test_rule_fixtures.py -k "negate" -v
 
 # With unittest
 python -m unittest tests.test_rule_fixtures -v
@@ -139,7 +139,7 @@ Add a new suite for a new rule type:
 After adding test cases, run the tests to verify:
 
 ```bash
-python -m pytest tests/test_rule_fixtures.py -v --tb=short
+python -m pytest test_json/test_rule_fixtures.py -v --tb=short
 ```
 
 ## Currently Covered Rule Types
@@ -185,7 +185,7 @@ When implementing a new rule type:
 
 1. Add test cases to `rule_type_tests.json`
 2. Update the Python evaluator in `test_rule_fixtures.py` if needed
-3. Run Python tests: `python -m pytest tests/test_rule_fixtures.py -v`
+3. Run Python tests: `python -m pytest test_json/test_rule_fixtures.py -v`
 4. Implement the rule type in `ruleEngine.js`
 5. Run JavaScript tests: `npm run test:unit`
 6. If a test uses unsupported features, add it to `SKIP_TESTS` in `ruleEngine.test.js`

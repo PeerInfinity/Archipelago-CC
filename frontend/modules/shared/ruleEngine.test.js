@@ -5,8 +5,8 @@
  * the same results as the Python evaluator, ensuring consistency
  * between the frontend and analyzer.
  *
- * @see tests/fixtures/rule_type_tests.json - Shared test fixtures
- * @see tests/test_rule_fixtures.py - Python test runner
+ * @see test_json/fixtures/rule_type_tests.json - Shared test fixtures
+ * @see test_json/test_rule_fixtures.py - Python test runner
  */
 
 import { describe, it, expect } from 'vitest';
@@ -15,7 +15,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // Path to shared fixtures (relative to project root where tests are run)
-const FIXTURES_PATH = join(process.cwd(), 'tests/fixtures/rule_type_tests.json');
+const FIXTURES_PATH = join(process.cwd(), 'test_json/fixtures/rule_type_tests.json');
 
 // Load fixtures synchronously
 const fixtureContent = readFileSync(FIXTURES_PATH, 'utf-8');

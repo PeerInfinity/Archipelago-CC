@@ -1,7 +1,7 @@
 """
 Test runner for shared rule type fixtures.
 
-This module loads test cases from tests/fixtures/rule_type_tests.json
+This module loads test cases from test_json/fixtures/rule_type_tests.json
 and validates that the frontend rule engine produces expected results.
 
 The fixtures provide a single source of truth for rule evaluation behavior
@@ -12,13 +12,13 @@ Requirements:
 
 Running tests:
     # From the Archipelago-CC root directory with virtual environment active:
-    python -m pytest tests/test_rule_fixtures.py -v
+    python -m pytest test_json/test_rule_fixtures.py -v
 
     # Or with unittest:
-    python -m unittest tests.test_rule_fixtures -v
+    python -m unittest test_json.test_rule_fixtures -v
 
     # Run specific test suite:
-    python -m pytest tests/test_rule_fixtures.py -k "negate" -v
+    python -m pytest test_json/test_rule_fixtures.py -k "negate" -v
 """
 
 import json

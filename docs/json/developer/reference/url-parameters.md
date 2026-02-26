@@ -367,7 +367,7 @@ URL parameters are processed in multiple locations during initialization:
 
 URL parameters are used extensively in the automated testing system:
 
-- **Playwright Tests:** The `tests/e2e/app.spec.js` file constructs URLs with appropriate parameters
+- **Playwright Tests:** The `test_json/e2e/app.spec.js` file constructs URLs with appropriate parameters
 - **npm Scripts:** Test scripts in `package.json` use environment variables that map to URL parameters
 - **Test Modes:** Special modes like `test-spoilers` are designed specifically for automated testing
 

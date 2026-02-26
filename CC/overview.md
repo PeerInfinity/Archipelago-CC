@@ -50,7 +50,7 @@ The project includes extensive automated testing capabilities using both an in-b
 #### Playwright End-to-End Testing
 
 -   **`playwright.config.js`**: Configuration file for Playwright, defining test directories, timeouts, and browser settings.
--   **`tests/e2e/app.spec.js`**: The main Playwright test file. It launches the application in test mode and validates the results of the in-app test suite by monitoring flags written to `localStorage`.
+-   **`test_json/e2e/app.spec.js`**: The main Playwright test file. It launches the application in test mode and validates the results of the in-app test suite by monitoring flags written to `localStorage`.
 
 #### Running Playwright Tests
 

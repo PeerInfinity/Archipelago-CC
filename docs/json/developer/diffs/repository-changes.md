@@ -30,7 +30,7 @@ The following directories are new in this repository and did not exist in the up
 3. `exporter` - Python rule export functionality
 4. `frontend` - Web client application
 5. `scripts` - Build, test, and utility scripts
-6. `tests` - Test files
+6. `test_json` - Test files for fork-specific modules
 7. `apworlds` - AP world packages
 
 ### New Systems
@@ -74,8 +74,7 @@ These files were added to directories that already existed in the upstream commi
 .github/workflows/test-world-generator.yml
 .github/workflows/test-world-generator-single.yml
 .github/workflows/test-world-generator-stability.yml
-.github/workflows/unit-tests.yml
-.github/workflows/unittests.yml.disabled (renamed from unittests.yml)
+.github/workflows/unittests_json.yml
 ```
 
 ### Project Configuration (new)

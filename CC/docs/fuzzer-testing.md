@@ -152,12 +152,12 @@ rm -rf frontend/presets/*/AP_*
 
 ## Analyzing Failures with the Exporter Test Suite
 
-The `tests/exporter/` directory contains a comprehensive test suite for debugging fuzzer failures. When the fuzzer reports a logic mismatch, these tests help isolate whether the issue is in rule analysis, conversion, or game-specific handling.
+The `test_json/exporter/` directory contains a comprehensive test suite for debugging fuzzer failures. When the fuzzer reports a logic mismatch, these tests help isolate whether the issue is in rule analysis, conversion, or game-specific handling.
 
 ### Test Suite Structure
 
 ```
-tests/exporter/
+test_json/exporter/
 ├── analyzer/               # Rule analysis tests
 │   ├── test_analysis.py           # Main analyze_rule() entry point
 │   ├── test_alttp_bunny_rules.py  # ALttP bunny rule patterns
@@ -179,16 +179,16 @@ tests/exporter/
 
 ```bash
 # Run all exporter tests
-pytest tests/exporter/ -v
+pytest test_json/exporter/ -v
 
 # Run specific test file with output
-pytest tests/exporter/analyzer/test_alttp_bunny_rules.py -v -s
+pytest test_json/exporter/analyzer/test_alttp_bunny_rules.py -v -s
 
 # Run a specific test class
-pytest tests/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern -v -s
+pytest test_json/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern -v -s
 
 # Run a specific test method
-pytest tests/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern::test_nested_call_in_options -v -s
+pytest test_json/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern::test_nested_call_in_options -v -s
 ```
 
 ### Debugging a Fuzzer Failure

@@ -9,7 +9,7 @@ on:
       - 'Players/Templates/*.yaml'
       - 'scripts/test/**'
       - 'frontend/**'
-      - 'tests/**'
+      - 'test_json/**'
       - '.github/workflows/test-templates.yml'
 
   # Run on pull requests
@@ -18,7 +18,7 @@ on:
       - 'Players/Templates/*.yaml'
       - 'scripts/test/**'
       - 'frontend/**'
-      - 'tests/**'
+      - 'test_json/**'
       - '.github/workflows/test-templates.yml'
 
   # Allow manual triggering

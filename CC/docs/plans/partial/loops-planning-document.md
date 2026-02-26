@@ -16,9 +16,9 @@ This document outlines the remaining work for the Loops module, an incremental g
 |------|--------|-------|
 | Phase 1: loopStats module | ✅ Complete | `frontend/modules/loopStats/` with queueAnalyzer, UI, tests |
 | loopStats public API | ✅ Complete | getQueueAnalyzer, getAnalysis, analyzeQueue exposed via centralRegistry |
-| loopStats e2e tests | ✅ Complete | `tests/e2e/loopStats.spec.js` |
+| loopStats e2e tests | ✅ Complete | `test_json/e2e/loopStats.spec.js` |
 | Timer test integration | ✅ Complete | loops queue test uses loopStats, has maxLoops limit |
-| Bug investigation tests | ✅ Complete | `tests/e2e/loopBugs.spec.js` |
+| Bug investigation tests | ✅ Complete | `test_json/e2e/loopBugs.spec.js` |
 | Bug 1: Mana 100/110 | ✅ Fixed | Was ALTTP-specific (event item awarded at start) - mana now initializes correctly |
 | Bug 5: Unpause mana | ✅ Fixed | Added `_shouldResetOnResume()` to refill mana when queue is complete |
 | Bug 8: mode=loop URL | ✅ Clarified | Not a bug - mode is named `loops` (plural), use `?mode=loops` |
