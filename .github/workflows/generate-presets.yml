@@ -48,6 +48,14 @@ on:
         type: boolean
         default: true
 
+      sync_mode:
+        description: 'How to sync with main: "merge" advances merge base (preserves deletion tracking), "reset" replaces with exact copy of main (removes zombie files)'
+        type: choice
+        options:
+          - merge
+          - reset
+        default: merge
+
       filter_presets:
         description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
         type: boolean
@@ -72,6 +80,8 @@ jobs:
           check-latest: true
 
       - name: Create or switch to generated-presets branch
+        env:
+          SYNC_MODE: ${{ inputs.sync_mode }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -80,35 +90,47 @@ jobs:
           if git ls-remote --exit-code --heads origin generated-presets; then
             git checkout generated-presets
             git pull origin generated-presets
-            # Merge main into generated-presets to advance the merge base.
-            # This ensures file deletions on generated-presets correctly propagate
-            # when the branch is later merged back into main.
-            # Use -X theirs to resolve content conflicts in favor of main.
-            if ! git merge origin/main -X theirs --no-edit --allow-unrelated-histories; then
-              # Handle remaining conflicts (e.g. delete/modify) in favor of main
-              mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
-              for file in "${conflict_files[@]}"; do
-                git checkout --theirs "$file" 2>/dev/null || git rm -f "$file" 2>/dev/null || true
-              done
-              git add -A
-              git commit --no-edit
-            fi
-            git push origin generated-presets
 
-            # Remove files that exist on generated-presets but not on main.
-            # The merge advances the merge base but can't remove files whose
-            # deletion predates the common ancestor. Exclude paths that the
-            # generate script intentionally creates.
-            git diff --name-only origin/main HEAD --diff-filter=A -- . \
-              ':(exclude)frontend/presets/' \
-              ':(exclude)worlds/*_worldgen*/' \
-              ':(exclude)frontend/modules/textAdventure-remote/shared/' \
-              ':(exclude)scripts/data/world-mapping.json' \
-              ':(exclude)scripts/output/' \
-            | xargs -r git rm -f
-            if ! git diff --staged --quiet; then
-              git commit -m "Remove files deleted on main"
+            if [ "$SYNC_MODE" = "reset" ]; then
+              # Reset mode: nuke and replace with exact copy of main.
+              # Eliminates zombie files but doesn't advance the merge base,
+              # so workflow-only deletions won't propagate back to main.
+              git rm -rf .
+              git checkout origin/main -- .
+              if ! git diff --staged --quiet; then
+                git commit -m "Sync generated-presets with main"
+                git push origin generated-presets
+              fi
+            else
+              # Merge mode: advance the merge base so file deletions on
+              # generated-presets correctly propagate when merging back to main.
+              # Use -X theirs to resolve content conflicts in favor of main.
+              if ! git merge origin/main -X theirs --no-edit --allow-unrelated-histories; then
+                # Handle remaining conflicts (e.g. delete/modify) in favor of main
+                mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                for file in "${conflict_files[@]}"; do
+                  git checkout --theirs "$file" 2>/dev/null || git rm -f "$file" 2>/dev/null || true
+                done
+                git add -A
+                git commit --no-edit
+              fi
               git push origin generated-presets
+
+              # Remove files that exist on generated-presets but not on main.
+              # The merge advances the merge base but can't remove files whose
+              # deletion predates the common ancestor. Exclude paths that the
+              # generate script intentionally creates.
+              git diff --name-only origin/main HEAD --diff-filter=A -- . \
+                ':(exclude)frontend/presets/' \
+                ':(exclude)worlds/*_worldgen*/' \
+                ':(exclude)frontend/modules/textAdventure-remote/shared/' \
+                ':(exclude)scripts/data/world-mapping.json' \
+                ':(exclude)scripts/output/' \
+              | xargs -r git rm -f
+              if ! git diff --staged --quiet; then
+                git commit -m "Remove files deleted on main"
+                git push origin generated-presets
+              fi
             fi
           else
             git checkout -b generated-presets origin/main
