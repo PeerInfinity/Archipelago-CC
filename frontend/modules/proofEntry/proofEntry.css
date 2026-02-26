@@ -1,0 +1,424 @@
+/* ═══════════════════════════════════════════════════════════
+   Proof Entry Panel — MetaMath Hard Mode
+   Type statements to discover proof steps
+   ═══════════════════════════════════════════════════════════ */
+
+.proof-entry-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  color: #e0e0e0;
+  background: #1e1e2e;
+}
+
+/* ─── Header ────────────────────────────────────────────── */
+
+.pe-header {
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #cdd6f4;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+/* ─── Toolbar ───────────────────────────────────────────── */
+
+.pe-toolbar {
+  display: flex;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #1e1e2e;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+.pe-btn {
+  padding: 4px 10px;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pe-btn:hover {
+  background: #45475a;
+  border-color: #585b70;
+}
+
+.pe-btn:active {
+  background: #585b70;
+}
+
+.pe-btn-check {
+  margin-left: auto;
+  background: #1e6640;
+  border-color: #2b8a54;
+}
+
+.pe-btn-check:hover {
+  background: #2b8a54;
+}
+
+.pe-btn-add {
+  background: #1e4066;
+  border-color: #2b6a8a;
+  flex-shrink: 0;
+}
+
+.pe-btn-add:hover {
+  background: #2b6a8a;
+}
+
+/* ─── Input Section ─────────────────────────────────────── */
+
+.pe-input-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.pe-input-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.pe-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  background: #11111b;
+  color: #cdd6f4;
+  font-size: 13px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.pe-input:focus {
+  border-color: #89b4fa;
+}
+
+.pe-input::placeholder {
+  color: #585b70;
+}
+
+/* ─── Hint Dropdown ─────────────────────────────────────── */
+
+.pe-hints {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  z-index: 100;
+  background: #313244;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  margin-top: 2px;
+  max-height: 140px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.pe-hint-item {
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  border-bottom: 1px solid #3b3b52;
+  transition: background 0.1s;
+}
+
+.pe-hint-item:last-child {
+  border-bottom: none;
+}
+
+.pe-hint-item:hover {
+  background: #45475a;
+}
+
+.pe-hint-item strong {
+  color: #89b4fa;
+}
+
+.pe-hint-expr {
+  color: #a6adc8;
+  margin-left: 6px;
+  font-size: 11px;
+}
+
+/* ─── Feedback ──────────────────────────────────────────── */
+
+.pe-feedback {
+  margin-top: 6px;
+  font-size: 11px;
+  min-height: 16px;
+  transition: color 0.2s;
+}
+
+.pe-feedback-info {
+  color: #6c7086;
+}
+
+.pe-feedback-waiting {
+  color: #585b70;
+  font-style: italic;
+}
+
+.pe-feedback-complete {
+  color: #a6e3a1;
+  font-weight: 600;
+}
+
+.pe-feedback-success {
+  color: #a6e3a1;
+}
+
+.pe-feedback-reject {
+  color: #f38ba8;
+}
+
+/* ─── Shake Animation ───────────────────────────────────── */
+
+@keyframes pe-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.pe-shake {
+  animation: pe-shake 0.3s ease-in-out;
+}
+
+/* ─── Sections ──────────────────────────────────────────── */
+
+.pe-section {
+  flex-shrink: 0;
+  border-bottom: 1px solid #313244;
+}
+
+.pe-queue-section {
+  flex: 1;
+  overflow-y: auto;
+  border-bottom: none;
+}
+
+.pe-section-label {
+  padding: 6px 12px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c7086;
+}
+
+/* ─── Removed Steps Pool ────────────────────────────────── */
+
+.pe-removed-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 12px 10px;
+  min-height: 32px;
+}
+
+.pe-pool-chip {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 4px 8px;
+  border: 1px solid #45475a;
+  border-radius: 6px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  max-width: 200px;
+}
+
+.pe-pool-chip:hover {
+  background: #45475a;
+  border-color: #89b4fa;
+  transform: translateY(-1px);
+}
+
+.pe-chip-label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.pe-chip-expr {
+  font-size: 10px;
+  color: #a6adc8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Queue Rows ────────────────────────────────────────── */
+
+.pe-queue {
+  padding: 4px 0;
+}
+
+.pe-queue-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #11111b;
+  cursor: grab;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.pe-queue-row:hover {
+  background: #262637;
+}
+
+/* Status variants */
+.pe-queue-row.pe-checked {
+  opacity: 0.6;
+  cursor: default;
+  border-left: 3px solid #6c7086;
+}
+
+.pe-queue-row.pe-checkable {
+  background: #1a3328;
+  border-left: 3px solid #a6e3a1;
+}
+
+.pe-queue-row.pe-valid {
+  border-left: 3px solid #89b4fa;
+}
+
+.pe-queue-row.pe-invalid {
+  border-left: 3px solid #f38ba8;
+  background: #2a1a22;
+}
+
+/* Row parts */
+.pe-row-num {
+  flex-shrink: 0;
+  width: 24px;
+  text-align: right;
+  color: #6c7086;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pe-row-icon {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.pe-checked .pe-row-icon { color: #6c7086; }
+.pe-checkable .pe-row-icon { color: #a6e3a1; }
+.pe-valid .pe-row-icon { color: #89b4fa; }
+.pe-invalid .pe-row-icon { color: #f38ba8; }
+
+.pe-row-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.pe-row-text strong {
+  color: #cdd6f4;
+}
+
+.pe-checked .pe-row-text {
+  text-decoration: line-through;
+  color: #6c7086;
+}
+
+.pe-row-remove {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #6c7086;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.pe-queue-row:hover .pe-row-remove {
+  opacity: 1;
+}
+
+.pe-row-remove:hover {
+  background: #45475a;
+  color: #f38ba8;
+}
+
+/* Dependency hint */
+.pe-row-deps {
+  position: absolute;
+  bottom: -1px;
+  left: 56px;
+  right: 12px;
+  font-size: 10px;
+  color: #f38ba8;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* ─── Drag and Drop ─────────────────────────────────────── */
+
+.pe-queue-row.pe-dragging {
+  opacity: 0.4;
+  background: #313244;
+}
+
+.pe-queue-row.pe-drag-over {
+  border-top: 2px solid #89b4fa;
+}
+
+/* ─── Status Bar ────────────────────────────────────────── */
+
+.pe-status {
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #6c7086;
+  background: #181825;
+  border-top: 1px solid #313244;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.pe-status.pe-status-complete {
+  color: #a6e3a1;
+  font-weight: 600;
+}
+
+/* ─── Empty State ───────────────────────────────────────── */
+
+.pe-empty {
+  padding: 8px 0;
+  text-align: center;
+  color: #585b70;
+  font-style: italic;
+  font-size: 12px;
+}

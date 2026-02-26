@@ -209,6 +209,11 @@
       "path": "./modules/proofGraph/index.js",
       "enabled": true,
       "requires": ["stateManager"]
+    },
+    "proofEntry": {
+      "path": "./modules/proofEntry/index.js",
+      "enabled": true,
+      "requires": ["stateManager"]
     }
   },
   "loadPriority": [
@@ -258,6 +263,7 @@
     "windowManagerPanel",
     "ruleConverter",
     "proofQueue",
-    "proofGraph"
+    "proofGraph",
+    "proofEntry"
   ]
 }
