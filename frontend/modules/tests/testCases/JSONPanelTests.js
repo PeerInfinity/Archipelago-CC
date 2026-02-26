@@ -13,6 +13,68 @@ function log(level, message, ...data) {
 }
 
 /**
+ * Helper: Activate the Options panel and navigate to the Settings (JSON) sub-view.
+ * Returns { optionsPanelElement, textAreaElement, applyButton }.
+ * Handles the case where the panel may already be showing the settings sub-view.
+ */
+async function activateSettingsJsonView(testController) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'optionsPanel' });
+
+  let optionsPanelElement = null;
+  if (!(await testController.pollForCondition(
+    () => {
+      optionsPanelElement = document.querySelector('.options-panel-root');
+      return optionsPanelElement !== null;
+    },
+    'Options panel DOM element',
+    5000,
+    250
+  ))) {
+    throw new Error('Options panel not found in DOM');
+  }
+
+  // If the textarea is already visible (panel still on settings sub-view), skip nav card click
+  let textAreaElement = optionsPanelElement.querySelector('.options-json-textarea');
+  if (!textAreaElement) {
+    // Navigate from home view: wait for nav card, then click it
+    let settingsCard = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        settingsCard = Array.from(optionsPanelElement.querySelectorAll('.options-nav-card'))
+          .find(el => el.textContent.includes('Settings (JSON)'));
+        return !!settingsCard;
+      },
+      'Settings (JSON) nav card',
+      5000,
+      250
+    ))) {
+      throw new Error('Settings (JSON) nav card not found in Options panel');
+    }
+    settingsCard.click();
+
+    // Wait for the textarea to appear after clicking the card
+    if (!(await testController.pollForCondition(
+      () => {
+        textAreaElement = optionsPanelElement.querySelector('.options-json-textarea');
+        return textAreaElement !== null;
+      },
+      'Settings textarea to initialize',
+      3000,
+      250
+    ))) {
+      throw new Error('Settings textarea not found');
+    }
+  }
+
+  const applyButton = optionsPanelElement.querySelector('.options-json-apply-btn');
+  if (!applyButton) {
+    throw new Error('Apply button not found in Settings panel');
+  }
+
+  return { optionsPanelElement, textAreaElement, applyButton };
+}
+
+/**
  * Test that verifies the JSON panel's Import from Text functionality works correctly.
  * This test:
  * 1. Enables colorblind mode via Settings panel
@@ -32,38 +94,9 @@ export async function testJSONPanelImportFromText(testController) {
     testController.reportCondition('Test started', true);
 
 
-    // Step 1: Activate the Settings panel
-    testController.log(`[${testRunId}] Step 1: Activating Settings panel...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
-
-    // Wait for the settings panel to appear in DOM
-    let settingsPanelElement = null;
-    if (!(await testController.pollForCondition(
-      () => {
-        settingsPanelElement = document.querySelector('.settings-panel-content');
-        return settingsPanelElement !== null;
-      },
-      'Settings panel DOM element',
-      5000,
-      250
-    ))) {
-      throw new Error('Settings panel not found in DOM');
-    }
-    testController.reportCondition('Settings panel found in DOM', true);
-    
-    // Wait for settings textarea to initialize
-    let textAreaElement = null;
-    if (!(await testController.pollForCondition(
-      () => {
-        textAreaElement = settingsPanelElement.querySelector('.settings-textarea');
-        return textAreaElement !== null;
-      },
-      'Settings textarea to initialize',
-      3000,
-      250
-    ))) {
-      throw new Error('Settings textarea not found');
-    }
+    // Step 1: Activate the Options panel and navigate to Settings (JSON) sub-view
+    testController.log(`[${testRunId}] Step 1: Activating Options panel...`);
+    let { optionsPanelElement, textAreaElement, applyButton } = await activateSettingsJsonView(testController);
     testController.reportCondition('Settings textarea found', true);
 
     // Step 2: Enable colorblind mode for regions
@@ -83,12 +116,6 @@ export async function testJSONPanelImportFromText(testController) {
     
     textAreaElement.value = updatedSettings;
     testController.reportCondition('Colorblind regions setting updated to true', true);
-    
-    // Apply the settings
-    const applyButton = settingsPanelElement.querySelector('button');
-    if (!applyButton) {
-      throw new Error('Apply button not found in Settings panel');
-    }
     
     applyButton.click();
     
@@ -238,7 +265,7 @@ export async function testJSONPanelImportFromText(testController) {
 
     // Step 8: Disable colorblind mode via Settings panel
     testController.log(`[${testRunId}] Step 8: Disabling colorblind mode via Settings panel...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'optionsPanel' });
 
     const disabledSettings = textAreaElement.value.replace(/"regions":\s*true/g, '"regions": false');
     
@@ -425,23 +452,33 @@ export async function testJSONPanelImportFromText(testController) {
     if (settingsApplied) {
       try {
         testController.log(`[${testRunId}] Finally block: Ensuring colorblind mode is disabled...`);
-        testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'optionsPanel' });
 
         // Wait a moment for panel to be ready
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        const settingsPanelElement = document.querySelector('.settings-panel');
-        if (settingsPanelElement) {
-          const textAreaElement = settingsPanelElement.querySelector('textarea');
-          const applyButton = settingsPanelElement.querySelector('button');
+        const cleanupPanelElement = document.querySelector('.options-panel-root');
+        if (cleanupPanelElement) {
+          // Navigate to settings sub-view if not already there
+          let cleanupTextArea = cleanupPanelElement.querySelector('.options-json-textarea');
+          if (!cleanupTextArea) {
+            const card = Array.from(cleanupPanelElement.querySelectorAll('.options-nav-card'))
+              .find(el => el.textContent.includes('Settings (JSON)'));
+            if (card) {
+              card.click();
+              await new Promise(resolve => setTimeout(resolve, 200));
+              cleanupTextArea = cleanupPanelElement.querySelector('.options-json-textarea');
+            }
+          }
+          const cleanupApplyBtn = cleanupPanelElement.querySelector('.options-json-apply-btn');
 
-          if (textAreaElement && applyButton) {
-            const currentSettings = textAreaElement.value;
+          if (cleanupTextArea && cleanupApplyBtn) {
+            const currentSettings = cleanupTextArea.value;
             const disabledSettings = currentSettings.replace(/"regions":\s*true/g, '"regions": false');
 
             if (disabledSettings !== currentSettings) {
-              textAreaElement.value = disabledSettings;
-              applyButton.click();
+              cleanupTextArea.value = disabledSettings;
+              cleanupApplyBtn.click();
               testController.log(`[${testRunId}] Finally block: Colorblind mode disabled`);
               // Wait for settings to be applied
               await new Promise(resolve => setTimeout(resolve, 100));
