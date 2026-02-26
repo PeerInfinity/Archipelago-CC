@@ -199,6 +199,11 @@
     "ruleConverter": {
       "path": "./modules/ruleConverter/index.js",
       "enabled": true
+    },
+    "proofQueue": {
+      "path": "./modules/proofQueue/index.js",
+      "enabled": true,
+      "requires": ["stateManager"]
     }
   },
   "loadPriority": [
@@ -246,6 +251,7 @@
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",
-    "ruleConverter"
+    "ruleConverter",
+    "proofQueue"
   ]
 }
