@@ -21,17 +21,6 @@
     "template_file": "A Hat in Time WorldGen.yaml",
     "world_directory": "ahit_worldgen"
   },
-  "A Hat in Time WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "A Hat in Time WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "A Hat in Time WorldGen2.yaml",
-    "world_directory": "ahit_worldgen2"
-  },
   "A Link to the Past": {
     "exporter_path": "exporter/games/official/alttp.py",
     "exporter_size": 14313,
@@ -54,17 +43,6 @@
     "template_file": "A Link to the Past Vanilla WorldGen.yaml",
     "world_directory": "alttp_vanilla_worldgen"
   },
-  "A Link to the Past Vanilla WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "A Link to the Past Vanilla WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "A Link to the Past Vanilla WorldGen2.yaml",
-    "world_directory": "alttp_vanilla_worldgen2"
-  },
   "A Link to the Past WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -75,17 +53,6 @@
     "has_custom_game_logic": false,
     "template_file": "A Link to the Past WorldGen.yaml",
     "world_directory": "alttp_worldgen"
-  },
-  "A Link to the Past WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "A Link to the Past WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "A Link to the Past WorldGen2.yaml",
-    "world_directory": "alttp_worldgen2"
   },
   "A Short Hike": {
     "exporter_path": null,
@@ -108,17 +75,6 @@
     "has_custom_game_logic": false,
     "template_file": "A Short Hike WorldGen.yaml",
     "world_directory": "shorthike_worldgen"
-  },
-  "A Short Hike WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "A Short Hike WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "A Short Hike WorldGen2.yaml",
-    "world_directory": "shorthike_worldgen2"
   },
   "APQuest": {
     "exporter_path": null,
@@ -175,17 +131,6 @@
     "template_file": "Adventure WorldGen.yaml",
     "world_directory": "adventure_worldgen"
   },
-  "Adventure WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Adventure WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Adventure WorldGen2.yaml",
-    "world_directory": "adventure_worldgen2"
-  },
   "Aquaria": {
     "exporter_path": "exporter/games/official/aquaria.py",
     "exporter_size": 1889,
@@ -240,17 +185,6 @@
     "has_custom_game_logic": false,
     "template_file": "Baking Adventure Vanilla WorldGen.yaml",
     "world_directory": "bakingadventure_vanilla_worldgen"
-  },
-  "Baking Adventure Vanilla WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Baking Adventure Vanilla WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Baking Adventure Vanilla WorldGen2.yaml",
-    "world_directory": "bakingadventure_vanilla_worldgen2"
   },
   "Baking Adventure WorldGen": {
     "exporter_path": null,
@@ -471,17 +405,6 @@
     "has_custom_game_logic": false,
     "template_file": "Coding Adventure Vanilla WorldGen.yaml",
     "world_directory": "codingadventure_vanilla_worldgen"
-  },
-  "Coding Adventure Vanilla WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Coding Adventure Vanilla WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Coding Adventure Vanilla WorldGen2.yaml",
-    "world_directory": "codingadventure_vanilla_worldgen2"
   },
   "Coding Adventure WorldGen": {
     "exporter_path": null,
@@ -988,17 +911,6 @@
     "has_custom_game_logic": false,
     "template_file": "Metamath Vanilla WorldGen.yaml",
     "world_directory": "metamath_vanilla_worldgen"
-  },
-  "Metamath Vanilla WorldGen2": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Metamath Vanilla WorldGen2",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Metamath Vanilla WorldGen2.yaml",
-    "world_directory": "metamath_vanilla_worldgen2"
   },
   "Metamath WorldGen": {
     "exporter_path": null,
@@ -1714,16 +1626,5 @@
     "has_custom_game_logic": false,
     "template_file": "shapez.yaml",
     "world_directory": "shapez"
-  },
-  "shapez WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "shapez WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "shapez WorldGen.yaml",
-    "world_directory": "shapez_worldgen"
   }
 }
