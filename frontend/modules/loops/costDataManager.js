@@ -74,7 +74,7 @@ export class CostDataManager {
         source: url,
         regionCount: Object.keys(data.regions || {}).length,
         locationCount: Object.keys(data.locations || {}).length,
-      }, 'loops');
+      });
 
       return data;
     } catch (error) {
@@ -84,7 +84,7 @@ export class CostDataManager {
       this.eventBus?.publish('costDataManager:loadError', {
         source: url,
         error: error.message,
-      }, 'loops');
+      });
 
       return null;
     } finally {
@@ -127,7 +127,7 @@ export class CostDataManager {
         source: file.name,
         regionCount: Object.keys(data.regions || {}).length,
         locationCount: Object.keys(data.locations || {}).length,
-      }, 'loops');
+      });
 
       return data;
     } catch (error) {
@@ -137,7 +137,7 @@ export class CostDataManager {
       this.eventBus?.publish('costDataManager:loadError', {
         source: file.name,
         error: error.message,
-      }, 'loops');
+      });
 
       return null;
     } finally {
@@ -166,7 +166,7 @@ export class CostDataManager {
       source,
       regionCount: Object.keys(data.regions || {}).length,
       locationCount: Object.keys(data.locations || {}).length,
-    }, 'loops');
+    });
 
     return true;
   }
@@ -291,7 +291,7 @@ export class CostDataManager {
 
     logger.info('Cost data cleared');
 
-    this.eventBus?.publish('costDataManager:cleared', {}, 'loops');
+    this.eventBus?.publish('costDataManager:cleared', {});
   }
 
   /**
@@ -370,7 +370,7 @@ export class CostDataManager {
             regionCount: Object.keys(data.regions || {}).length,
             locationCount: Object.keys(data.locations || {}).length,
             fromExisting: true,
-          }, 'loops');
+          });
 
           return data;
         }

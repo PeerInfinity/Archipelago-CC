@@ -1,5 +1,5 @@
 // UI component for iframe manager panel module
-import { moduleEventBus } from './index.js';
+import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -15,7 +15,8 @@ export class IframeManagerUI {
     constructor(container, componentState) {
         this.container = container;
         this.componentState = componentState;
-        
+        Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
+
         // UI elements
         this.rootElement = null;
         this.urlInput = null;
@@ -257,32 +258,32 @@ export class IframeManagerUI {
     }
 
     setupEventSubscriptions() {
-        if (moduleEventBus) {
+        if (this.eventBus) {
             // Subscribe to iframe panel events
-            const loadedUnsubscribe = moduleEventBus.subscribe('iframePanel:loaded', (data) => {
+            const loadedUnsubscribe = this.eventBus.subscribe('iframePanel:loaded', (data) => {
                 this.handleIframeLoaded(data);
-            }, 'iframeManagerUI');
+            });
             this.unsubscribeHandles.push(loadedUnsubscribe);
 
-            const unloadedUnsubscribe = moduleEventBus.subscribe('iframePanel:unloaded', (data) => {
+            const unloadedUnsubscribe = this.eventBus.subscribe('iframePanel:unloaded', (data) => {
                 this.handleIframeUnloaded(data);
-            }, 'iframeManagerUI');
+            });
             this.unsubscribeHandles.push(unloadedUnsubscribe);
 
-            const errorUnsubscribe = moduleEventBus.subscribe('iframePanel:error', (data) => {
+            const errorUnsubscribe = this.eventBus.subscribe('iframePanel:error', (data) => {
                 this.handleIframeError(data);
-            }, 'iframeManagerUI');
+            });
             this.unsubscribeHandles.push(errorUnsubscribe);
 
             // Subscribe to iframe adapter events
-            const connectedUnsubscribe = moduleEventBus.subscribe('iframe:connected', (data) => {
+            const connectedUnsubscribe = this.eventBus.subscribe('iframe:connected', (data) => {
                 this.handleIframeConnected(data);
-            }, 'iframeManagerUI');
+            });
             this.unsubscribeHandles.push(connectedUnsubscribe);
 
-            const disconnectedUnsubscribe = moduleEventBus.subscribe('iframe:disconnected', (data) => {
+            const disconnectedUnsubscribe = this.eventBus.subscribe('iframe:disconnected', (data) => {
                 this.handleIframeDisconnected(data);
-            }, 'iframeManagerUI');
+            });
             this.unsubscribeHandles.push(disconnectedUnsubscribe);
         }
     }
@@ -377,11 +378,11 @@ export class IframeManagerUI {
         log('info', `Loading iframe with URL: ${url}`);
         
         // Publish load event
-        if (moduleEventBus) {
-            moduleEventBus.publish('iframe:loadUrl', { 
+        if (this.eventBus) {
+            this.eventBus.publish('iframe:loadUrl', {
                 url: url,
                 // Don't specify panelId to load in any available iframe panel
-            }, 'iframeManagerPanel');
+            });
         }
 
         this.updateStatus(`Loading: ${url}`);
@@ -394,10 +395,10 @@ export class IframeManagerUI {
         log('info', 'Unloading all iframes');
         
         // Publish unload event
-        if (moduleEventBus) {
-            moduleEventBus.publish('iframe:unload', {
+        if (this.eventBus) {
+            this.eventBus.publish('iframe:unload', {
                 // Don't specify panelId to unload all iframe panels
-            }, 'iframeManagerUI');
+            });
         }
 
         this.updateStatus('Unloading all iframes...');

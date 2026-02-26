@@ -1,9 +1,9 @@
-import eventBus from '../../app/core/eventBus.js';
 import { PathAnalyzerUI } from '../pathAnalyzer/pathAnalyzerUI.js';
 import {
   getPathAnalyzerPanelModuleId,
   setPathAnalyzerPanelUIInstance,
   getModuleDispatcher,
+  getModuleEventBus,
 } from './index.js';
 
 // Helper function for logging with fallback
@@ -19,6 +19,7 @@ function log(level, message, ...data) {
 
 export class PathAnalyzerPanelUI {
   constructor(container, componentState, componentType) {
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.moduleId = componentType || getPathAnalyzerPanelModuleId();
     log(
       'info',
@@ -54,7 +55,7 @@ export class PathAnalyzerPanelUI {
     this.container.on('hide', this._handlePanelHide.bind(this));
     this.container.on('destroy', this._handlePanelDestroy.bind(this));
 
-    eventBus.subscribe('module:stateChanged', this.moduleStateChangeHandler, 'pathAnalyzerPanel');
+    this.eventBus.subscribe('module:stateChanged', this.moduleStateChangeHandler);
 
     this._createUI();
 
@@ -190,7 +191,7 @@ export class PathAnalyzerPanelUI {
     setPathAnalyzerPanelUIInstance(null);
 
     if (this.moduleStateChangeHandler) {
-      eventBus.unsubscribe(
+      this.eventBus.unsubscribe(
         'module:stateChanged',
         this.moduleStateChangeHandler
       );

@@ -6,7 +6,7 @@ import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -25,6 +25,7 @@ function log(level, message, ...data) {
 export class RegionBlockBuilder {
   constructor(regionUI) {
     this.regionUI = regionUI;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
   }
 
   /**
@@ -624,13 +625,11 @@ export class RegionBlockBuilder {
             
             if (showAllEnabled) {
               // In "Show All" mode, navigate to the source region
-              import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-                eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
-                eventBus.publish('ui:navigateToRegion', {
-                  regionName: entrance.sourceRegion
-                }, 'regions');
-                log('info', `[Entrance Block] Navigating to region: ${entrance.sourceRegion} (Show All mode)`);
+              this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
+              this.eventBus.publish('ui:navigateToRegion', {
+                regionName: entrance.sourceRegion
               });
+              log('info', `[Entrance Block] Navigating to region: ${entrance.sourceRegion} (Show All mode)`);
             } else {
               // Normal mode - execute region move to source region
               // We need to get the UID for this region block
@@ -849,17 +848,15 @@ export class RegionBlockBuilder {
               
               if (showAllEnabled) {
                 // In "Show All" mode, navigate to the region instead of moving
-                import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-                  // First activate the regions panel if not already active
-                  eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
-                  
-                  // Then navigate to the target region
-                  eventBus.publish('ui:navigateToRegion', {
-                    regionName: connectedRegionName
-                  }, 'regions');
-                  
-                  log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
+                // First activate the regions panel if not already active
+                this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
+
+                // Then navigate to the target region
+                this.eventBus.publish('ui:navigateToRegion', {
+                  regionName: connectedRegionName
                 });
+
+                log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
               } else {
                 // Normal mode - execute region move
                 // Import playerState to get current region instead of assuming regionName is current
@@ -1268,7 +1265,7 @@ export class RegionBlockBuilder {
     // Header click listener - entire header is clickable to toggle expand/collapse
     headerEl.addEventListener('click', () => {
       // Publish click event for Discovery module to handle
-      eventBus.publish('ui:regionHeaderClicked', { regionName }, 'regions');
+      this.eventBus.publish('ui:regionHeaderClicked', { regionName });
 
       this.regionUI.toggleRegionByUID(uid);
     });
@@ -1375,20 +1372,17 @@ export class RegionBlockBuilder {
 
       log('info', `Dungeon link clicked for: ${dungeonName}`);
 
-      // Import eventBus dynamically to avoid circular dependencies
-      import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-        eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'regions');
-        log('info', `Published ui:activatePanel for dungeonsPanel.`);
+      this.eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+      log('info', `Published ui:activatePanel for dungeonsPanel.`);
 
-        eventBus.publish('ui:navigateToDungeon', {
-          dungeonName: dungeonName,
-          sourcePanel: 'regions',
-        }, 'regions');
-        log(
-          'info',
-          `Published ui:navigateToDungeon for ${dungeonName}.`
-        );
+      this.eventBus.publish('ui:navigateToDungeon', {
+        dungeonName: dungeonName,
+        sourcePanel: 'regions',
       });
+      log(
+        'info',
+        `Published ui:navigateToDungeon for ${dungeonName}.`
+      );
     });
 
     // Add hover effect

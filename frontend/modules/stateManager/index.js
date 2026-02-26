@@ -84,7 +84,6 @@
 // Import the singleton proxy instance
 import stateManagerProxySingleton from './stateManagerProxySingleton.js';
 // REMOVE: import { createSnapshotInterface } from './stateManagerProxy.js';
-import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
@@ -228,11 +227,11 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
   // Subscribe to settings changes to update worker logging configuration
   const eventBus = initializationApi.getEventBus();
   if (eventBus) {
-    eventBus.subscribe('settings:changed', handleSettingsChanged, moduleId);
+    eventBus.subscribe('settings:changed', handleSettingsChanged);
     log('info', '[StateManager Module] Subscribed to settings:changed events');
 
     // Subscribe to editor snapshot Apply events
-    eventBus.subscribe('editor:snapshotApply', handleEditorSnapshotApply, moduleId);
+    eventBus.subscribe('editor:snapshotApply', handleEditorSnapshotApply);
     log('info', '[StateManager Module] Subscribed to editor:snapshotApply events');
   }
 
@@ -433,7 +432,7 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
         source: sourceNameForTheseRules, // MODIFIED: Use the same accurately determined source
         rawJsonData: rulesConfigToUse,
         selectedPlayerInfo: playerInfo,
-      }, 'stateManager');
+      });
       logger.info(
         moduleInfo.name,
         '[StateManager Module] Published stateManager:rawJsonDataLoaded.'
@@ -454,7 +453,7 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
       eventBus.publish('stateManager:error', {
         message: `Failed to initialize proxy or load rules: ${error.message}`,
         isCritical: true,
-      }, 'stateManager');
+      });
     } else {
       logger.error(
         moduleInfo.name,

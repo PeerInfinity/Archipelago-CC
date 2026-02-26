@@ -1,4 +1,4 @@
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -14,6 +14,7 @@ const logger = createUniversalLogger('regionGraph');
 export class GraphInteractionManager {
   constructor(ui) {
     this.ui = ui;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
   }
 
   setupEventHandlers() {
@@ -303,10 +304,10 @@ export class GraphInteractionManager {
     node.addClass('selected');
 
     // Publish the custom regionGraph event for any other listeners
-    eventBus.publish('regionGraph:nodeSelected', {
+    this.eventBus.publish('regionGraph:nodeSelected', {
       nodeId: regionName,
       data: node.data()
-    }, 'regionGraph');
+    });
 
     // Check which actions are enabled via checkboxes
     const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
@@ -340,11 +341,11 @@ export class GraphInteractionManager {
       this.ui.setShowAllRegions(shouldShowAll);
 
       // Activate the regions panel
-      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regionGraph');
+      this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
       logger.debug('Published ui:activatePanel for regionsPanel');
 
       // Navigate to the region
-      eventBus.publish('ui:navigateToRegion', { regionName: regionName }, 'regionGraph');
+      this.eventBus.publish('ui:navigateToRegion', { regionName: regionName });
       logger.debug(`Published ui:navigateToRegion for ${regionName}`);
     }
 

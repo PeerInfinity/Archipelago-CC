@@ -1,13 +1,10 @@
-import math
-from typing import Any, ClassVar, Dict, List, Set
-from BaseClasses import CollectionState, Entrance, Item, ItemClassification, Region, Tutorial
+from typing import Any, Dict, Set
+from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import (MetamathItem, item_table, item_groups, generate_item_table,
-                    generate_item_table_from_proof, statement_item_name, FILLER_ITEMS)
-from .Locations import (MetamathLocation, location_table, generate_location_table,
-                        generate_location_table_from_proof, statement_location_name)
+from .Items import MetamathItem, item_table, item_groups, FILLER_ITEMS, statement_item_name
+from .Locations import MetamathLocation, location_table, statement_location_name
 from .Options import MetamathOptions, metamath_option_groups
-from .Rules import ProofStructure, ProofStatement, set_metamath_rules, parse_metamath_proof
+from .Rules import ProofStructure, set_metamath_rules, parse_metamath_proof
 
 class MetamathWeb(WebWorld):
     game_info_languages = ['en']
@@ -43,29 +40,25 @@ class MetamathWorld(World):
         self.proof_structure: ProofStructure = None
         self.num_statements: int = 0
         self.starting_statements: Set[int] = set()
-        # Name mappings: statement index -> meaningful name
-        self._item_names: Dict[int, str] = {}
-        self._location_names: Dict[int, str] = {}
         self._entrance_labels: Dict[int, str] = {}
         # Reverse lookup: region/location name -> statement index
         self._region_name_to_index: Dict[str, int] = {}
 
     def _build_name_maps(self):
-        """Build meaningful name mappings from proof structure."""
+        """Build name mappings from proof structure."""
         for index, stmt in self.proof_structure.statements.items():
-            self._item_names[index] = statement_item_name(stmt.label, stmt.expression)
-            self._location_names[index] = statement_location_name(stmt.label, stmt.expression)
             self._entrance_labels[index] = stmt.label if stmt.label else f"Statement {index}"
-        # Build reverse lookup
-        self._region_name_to_index = {name: idx for idx, name in self._location_names.items()}
+        # Build reverse lookup from generic region names
+        for i in range(1, self.num_statements + 1):
+            self._region_name_to_index[f"Prove Statement {i}"] = i
 
     def get_item_name(self, index: int) -> str:
-        """Get the meaningful item name for a statement index."""
-        return self._item_names.get(index, f"Statement {index}")
+        """Get the generic item name for a statement index (matches datapackage)."""
+        return f"Statement {index}"
 
     def get_location_name(self, index: int) -> str:
-        """Get the meaningful location/region name for a statement index."""
-        return self._location_names.get(index, f"Prove Statement {index}")
+        """Get the generic location/region name for a statement index (matches datapackage)."""
+        return f"Prove Statement {index}"
 
     def get_entrance_label(self, index: int) -> str:
         """Get a short label for entrance names."""
@@ -105,13 +98,22 @@ class MetamathWorld(World):
         # Build meaningful name mappings from proof structure
         self._build_name_maps()
 
-        # Regenerate item and location tables with meaningful names
-        self.item_table = generate_item_table_from_proof(self.proof_structure)
-        self.location_table = generate_location_table_from_proof(self.proof_structure)
+        # Build name substitutions for the world generator to apply
+        # Maps generic names -> meaningful names so WorldGen worlds use readable names
+        self.name_substitutions = {"items": {}, "locations": {}, "regions": {}}
+        for i, stmt in self.proof_structure.statements.items():
+            generic_item = f"Statement {i}"
+            generic_loc = f"Prove Statement {i}"
+            meaningful_item = statement_item_name(stmt.label, stmt.expression)
+            meaningful_loc = statement_location_name(stmt.label, stmt.expression)
+            if generic_item != meaningful_item:
+                self.name_substitutions["items"][generic_item] = meaningful_item
+            if generic_loc != meaningful_loc:
+                self.name_substitutions["locations"][generic_loc] = meaningful_loc
+                self.name_substitutions["regions"][generic_loc] = meaningful_loc
 
-        # Update name to id mappings
-        self.item_name_to_id = {name: data.code for name, data in self.item_table.items()}
-        self.location_name_to_id = {name: data.id for name, data in self.location_table.items()}
+        # Use the class-level generic item/location tables (Statement N / Prove Statement N)
+        # Meaningful names (theorem labels) are sent in slot_data for client display
 
         # Determine starting statements
         num_starting = max(1, int(self.num_statements * self.options.starting_statements.value / 100))
@@ -298,22 +300,12 @@ class MetamathWorld(World):
 
     def create_item(self, name: str) -> Item:
         """Create a single item."""
-        # Check instance-level table first (rebuilt in generate_early for actual proof size)
-        item_data = getattr(self, 'item_table', item_table).get(name)
+        item_data = item_table.get(name)
         if item_data:
             return MetamathItem(
                 name,
                 item_data.classification,
                 item_data.code,
-                self.player
-            )
-        # Fall back to class-level table (default 100-statement table)
-        class_item_data = item_table.get(name)
-        if class_item_data:
-            return MetamathItem(
-                name,
-                class_item_data.classification,
-                class_item_data.code,
                 self.player
             )
         # Last resort: create as filler with the requested name

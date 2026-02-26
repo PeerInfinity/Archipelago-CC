@@ -11,7 +11,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 
-from .extractors import extract_all, ExtractedData, sanitize_identifier
+from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
     generate_items_py,
     generate_locations_py,
@@ -82,6 +82,9 @@ class WorldGenerator:
 
         with open(self.json_path, 'r') as f:
             json_data = json.load(f)
+
+        # Apply name substitutions if present (e.g. Metamath generic → meaningful names)
+        apply_name_substitutions(json_data, player_id=self.player_id)
 
         self.data = extract_all(json_data, player_id=self.player_id)
 

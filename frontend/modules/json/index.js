@@ -1,5 +1,21 @@
 import { JsonUI } from './jsonUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'json'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'json'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'json'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -47,9 +63,11 @@ export function register(registrationApi) {
  * Initialization function for the JSON module.
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
-  log('info', 
+  log('info',
     `[JSON Module] Initializing with ID ${moduleId} and priority ${priorityIndex}...`
   );
+
+  _moduleEventBus = initializationApi.getEventBus();
 
   // Logic for this module to interact with the main application components
   // For example, getting the active mode, accessing localStorage, etc.

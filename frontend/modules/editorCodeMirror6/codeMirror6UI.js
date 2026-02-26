@@ -5,7 +5,7 @@
  * Data management is handled by EditorDataService from editorCore module.
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
 import { applyLoadedData } from '../../utils/dataApplicator.js';
 
@@ -53,6 +53,7 @@ const themeCompartment = new Compartment();
 class CodeMirror6UI {
   constructor(container, componentState) {
     log('info', 'CodeMirror6UI instance created');
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.container = container;
     this.componentState = componentState;
 
@@ -83,9 +84,9 @@ class CodeMirror6UI {
     const readyHandler = () => {
       log('info', '[CodeMirror6UI] Received app:readyForUiDataLoad. Initializing editor.');
       this.initialize();
-      eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
+      this.eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
     };
-    eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler, 'editorCM6');
+    this.eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -437,11 +438,11 @@ class CodeMirror6UI {
     log('info', '[CodeMirror6UI] Applying edited rules...');
 
     // Publish the files:jsonLoaded event to trigger rules loading
-    eventBus.publish('files:jsonLoaded', {
+    this.eventBus.publish('files:jsonLoaded', {
       jsonData: rulesData,
       selectedPlayerId: '1',
       sourceName: 'editorApply'
-    }, 'editorCodeMirror6');
+    });
   }
 
   async _applyLocalStorageMode(jsonText) {
@@ -494,10 +495,10 @@ class CodeMirror6UI {
         const evalConfig = new Function(`return ${configStr}`)();
 
         // Publish event for metaGame to update its configuration
-        eventBus.publish('editor:metaGameConfigApply', {
+        this.eventBus.publish('editor:metaGameConfigApply', {
           configuration: evalConfig,
           sourceName: 'editorApply'
-        }, 'editorCodeMirror6');
+        });
 
         log('info', '[CodeMirror6UI] MetaGame configuration extracted and applied');
       } catch (evalError) {
@@ -515,10 +516,10 @@ class CodeMirror6UI {
     log('info', '[CodeMirror6UI] Applying edited snapshot...');
 
     // Publish event for state manager to apply the snapshot
-    eventBus.publish('editor:snapshotApply', {
+    this.eventBus.publish('editor:snapshotApply', {
       snapshot: snapshotData,
       sourceName: 'editorApply'
-    }, 'editorCodeMirror6');
+    });
   }
 
   _updateApplyButtonVisibility() {

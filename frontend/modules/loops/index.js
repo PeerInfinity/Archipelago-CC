@@ -57,10 +57,25 @@ export function getPathFinder() {
   return _pathFinder;
 }
 
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'loops'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'loops'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'loops'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
+
 let loopUnsubscribeHandles = [];
 
 // --- Import the actual singletons needed for injection ---
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -458,7 +473,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     const subscribe = (eventName, handler) => {
       log('info', `[Loops Module] Subscribing to ${eventName}`);
       try {
-        const unsubscribe = _moduleEventBus.subscribe(eventName, handler, 'loops');
+        const unsubscribe = _moduleEventBus.subscribe(eventName, handler);
         loopUnsubscribeHandles.push(unsubscribe);
       } catch (e) {
         log('error', `[Loops Module] Failed to subscribe to ${eventName}:`, e);
@@ -485,7 +500,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     // Subscribe to stateManager:rulesLoaded to reset loop state when rules change
     loopUnsubscribeHandles.push(
-      eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleInfo.name)
+      _moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded)
     );
   } else {
     log('error',

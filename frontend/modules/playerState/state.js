@@ -84,7 +84,7 @@ export class PlayerState {
                 this.eventBus.publish('playerState:regionChanged', {
                     oldRegion,
                     newRegion: regionName
-                }, 'playerState');
+                });
             }
         }
     }
@@ -564,7 +564,7 @@ export class PlayerState {
                 this.eventBus.publish('playerState:regionChanged', {
                     oldRegion: removedEntries[removedEntries.length - 1].region,
                     newRegion: this.currentRegion
-                }, 'playerState');
+                });
             }
         }
         
@@ -581,7 +581,7 @@ export class PlayerState {
                 path: [...this.path], // Send a copy
                 currentRegion: this.currentRegion,
                 regionCounts: new Map(this.regionInstanceCounts)
-            }, 'playerState');
+            });
         }
     }
     
@@ -634,7 +634,7 @@ export class PlayerState {
             this.eventBus.publish('playerState:regionChanged', {
                 oldRegion: null,
                 newRegion: firstStartRegion
-            }, 'playerState');
+            });
         }
         this.emitPathUpdated();
     }

@@ -1107,6 +1107,200 @@ def extract_dungeons(json_data: Dict[str, Any], player_id: str = '1') -> Dict[st
     return dungeons
 
 
+def apply_name_substitutions(json_data: Dict[str, Any], player_id: str = '1') -> None:
+    """
+    Apply name substitutions to raw JSON data before extraction.
+
+    If the world section contains a ``name_substitutions`` dict (with sub-dicts
+    ``items``, ``locations``, ``regions``), every occurrence of each generic name
+    is replaced with its meaningful counterpart throughout the JSON.  This lets
+    worlds that must use generic class-level names (e.g. "Statement 1") publish
+    readable names for use in WorldGen worlds.
+
+    Mutates *json_data* in place.
+    """
+    world_section = json_data.get('world', {}).get(player_id, {})
+    subs = world_section.get('name_substitutions')
+    if not subs:
+        return
+
+    item_map: Dict[str, str] = subs.get('items', {})
+    loc_map: Dict[str, str] = subs.get('locations', {})
+    region_map: Dict[str, str] = subs.get('regions', {})
+
+    if not item_map and not loc_map and not region_map:
+        return
+
+    logger.info(
+        f"Applying name substitutions: {len(item_map)} items, "
+        f"{len(loc_map)} locations, {len(region_map)} regions"
+    )
+
+    # --- helper: rename dict keys in place -----------------------------------
+    def _rename_keys(d: Dict[str, Any], mapping: Dict[str, str]) -> None:
+        for old, new in mapping.items():
+            if old in d:
+                d[new] = d.pop(old)
+
+    # --- helper: rename dict values in place ---------------------------------
+    def _rename_values(d: Dict[str, Any], mapping: Dict[str, str]) -> None:
+        for key, val in d.items():
+            if isinstance(val, str) and val in mapping:
+                d[key] = mapping[val]
+
+    # --- helper: rename strings in a list in place ---------------------------
+    def _rename_list(lst: List[Any], mapping: Dict[str, str]) -> None:
+        for i, val in enumerate(lst):
+            if isinstance(val, str) and val in mapping:
+                lst[i] = mapping[val]
+
+    # --- helper: recursively substitute item names inside an access rule -----
+    def _sub_rule(rule: Any) -> None:
+        if not isinstance(rule, dict):
+            return
+        args = rule.get('args', {})
+        if not isinstance(args, dict):
+            return
+        # Has / CountItem use "item_name"
+        if 'item_name' in args and args['item_name'] in item_map:
+            args['item_name'] = item_map[args['item_name']]
+        # HasAll / HasAny use "items" list
+        if 'items' in args and isinstance(args['items'], list):
+            _rename_list(args['items'], item_map)
+        # HasGroup / CountGroup use "group" — groups aren't renamed here
+        # CountFromList uses "items" list (already covered above)
+        # item field (used in some rules)
+        if 'item' in args and isinstance(args['item'], str) and args['item'] in item_map:
+            args['item'] = item_map[args['item']]
+        # Recurse into compound rules (And, Or, Not, Compare)
+        for key in ('rules', 'left', 'right', 'rule'):
+            child = args.get(key)
+            if isinstance(child, list):
+                for sub in child:
+                    _sub_rule(sub)
+            elif isinstance(child, dict):
+                _sub_rule(child)
+
+    # =========================================================================
+    # 1. items.{player_id} — dict keys
+    # =========================================================================
+    items_section = json_data.get('items', {}).get(player_id, {})
+    if items_section:
+        _rename_keys(items_section, item_map)
+
+    # =========================================================================
+    # 2. regions.{player_id} — region keys, location names/items, exit targets,
+    #    and access rules
+    # =========================================================================
+    regions_section = json_data.get('regions', {}).get(player_id, {})
+    if regions_section:
+        # Rename region keys
+        _rename_keys(regions_section, region_map)
+
+        for region_data in regions_section.values():
+            # Region name field
+            if isinstance(region_data.get('name'), str) and region_data['name'] in region_map:
+                region_data['name'] = region_map[region_data['name']]
+
+            # Locations
+            for loc in region_data.get('locations', []):
+                # Location name
+                if isinstance(loc.get('name'), str) and loc['name'] in loc_map:
+                    loc['name'] = loc_map[loc['name']]
+                # Placed item name
+                item_info = loc.get('item')
+                if isinstance(item_info, dict):
+                    if isinstance(item_info.get('name'), str) and item_info['name'] in item_map:
+                        item_info['name'] = item_map[item_info['name']]
+                # Location access rule
+                _sub_rule(loc.get('access_rule'))
+
+            # Exits
+            for ex in region_data.get('exits', []):
+                # Connected region
+                if isinstance(ex.get('connected_region'), str) and ex['connected_region'] in region_map:
+                    ex['connected_region'] = region_map[ex['connected_region']]
+                # Exit access rule
+                _sub_rule(ex.get('access_rule'))
+
+    # =========================================================================
+    # 3. canonical_placements.{player_id} — keys are locations, values are items
+    # =========================================================================
+    cp = json_data.get('canonical_placements', {}).get(player_id)
+    if cp and isinstance(cp, dict):
+        _rename_keys(cp, loc_map)
+        _rename_values(cp, item_map)
+
+    # =========================================================================
+    # 4. starting_items.{player_id} — list of item names
+    # =========================================================================
+    si = json_data.get('starting_items', {}).get(player_id)
+    if si and isinstance(si, list):
+        _rename_list(si, item_map)
+
+    # =========================================================================
+    # 5. itempool_counts.{player_id} — dict keys are item names
+    # =========================================================================
+    ic = json_data.get('itempool_counts', {}).get(player_id)
+    if ic and isinstance(ic, dict):
+        _rename_keys(ic, item_map)
+
+    # =========================================================================
+    # 6. game_info.{player_id}.completion_condition.item
+    # =========================================================================
+    gi = json_data.get('game_info', {}).get(player_id, {})
+    cc = gi.get('completion_condition', {})
+    if isinstance(cc, dict) and isinstance(cc.get('item'), str) and cc['item'] in item_map:
+        cc['item'] = item_map[cc['item']]
+
+    # =========================================================================
+    # 7. progression_mapping.{player_id} — keys and values
+    # =========================================================================
+    pm = json_data.get('progression_mapping', {}).get(player_id)
+    if pm and isinstance(pm, dict):
+        _rename_keys(pm, item_map)
+        _rename_values(pm, item_map)
+
+    # =========================================================================
+    # 8. world.{player_id} sub-sections
+    # =========================================================================
+    ws = json_data.get('world', {}).get(player_id, {})
+
+    # canonical_placements — keys are locations, values are items
+    wcp = ws.get('canonical_placements')
+    if wcp and isinstance(wcp, dict):
+        _rename_keys(wcp, loc_map)
+        _rename_values(wcp, item_map)
+
+    # location_dependencies — keys are locations, values are item name lists
+    ld = ws.get('location_dependencies')
+    if ld and isinstance(ld, dict):
+        _rename_keys(ld, loc_map)
+        for dep_list in ld.values():
+            if isinstance(dep_list, list):
+                _rename_list(dep_list, item_map)
+
+    # entrance_dependencies — values are item name lists
+    ed = ws.get('entrance_dependencies')
+    if ed and isinstance(ed, dict):
+        for dep_list in ed.values():
+            if isinstance(dep_list, list):
+                _rename_list(dep_list, item_map)
+
+    # exit_dependencies — values are item name lists
+    exd = ws.get('exit_dependencies')
+    if exd and isinstance(exd, dict):
+        for dep_list in exd.values():
+            if isinstance(dep_list, list):
+                _rename_list(dep_list, item_map)
+
+    # Remove name_substitutions from world section so it doesn't get exported
+    # as a world attribute in the generated code
+    ws.pop('name_substitutions', None)
+
+    logger.info("Name substitutions applied successfully")
+
+
 def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedData:
     """
     Extract all data from a JSON rules file.

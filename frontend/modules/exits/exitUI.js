@@ -11,7 +11,7 @@ import {
 } from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 // loopStateSingleton import removed - exit click handling moved to Loops module
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 
 
@@ -29,6 +29,7 @@ export class ExitUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.columns = 2; // Default number of columns
     this.rootElement = this.createRootElement();
     this.exitsGrid = this.rootElement.querySelector('#exits-grid');
@@ -68,9 +69,9 @@ export class ExitUI {
         '[ExitUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'exits');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       // ADDED: Ensure cleanup
@@ -96,7 +97,7 @@ export class ExitUI {
       this.colorblindSettings = false;
     }
 
-    this.settingsUnsubscribe = eventBus.subscribe(
+    this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       async ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode.exits')) {
@@ -111,7 +112,7 @@ export class ExitUI {
           this.updateExitDisplay();
         }
       }
-    , 'exits');
+    );
   }
 
   onPanelDestroy() {
@@ -130,14 +131,14 @@ export class ExitUI {
     this.unsubscribeFromStateEvents();
     log('info', '[ExitUI] Subscribing to state and loop events...');
 
-    if (!eventBus) {
+    if (!this.eventBus) {
       log('error', '[ExitUI] EventBus not available!');
       return;
     }
 
     const subscribe = (eventName, handler) => {
       log('info', `[ExitUI] Subscribing to ${eventName}`);
-      const unsubscribe = eventBus.subscribe(eventName, handler, 'exits');
+      const unsubscribe = this.eventBus.subscribe(eventName, handler);
       this.stateUnsubscribeHandles.push(unsubscribe);
     };
 
@@ -348,11 +349,11 @@ export class ExitUI {
     log('info', `[ExitUI] Exit clicked: ${exit.name} in ${sourceRegion} -> ${connectedRegion}`);
 
     // Publish click event for Discovery module to handle
-    eventBus.publish('ui:exitClicked', {
+    this.eventBus.publish('ui:exitClicked', {
       exitName: exit.name,
       sourceRegion,
       destinationRegion: connectedRegion
-    }, 'exits');
+    });
 
     // Publish via dispatcher - handlers can intercept or let it propagate to the default handler
     import('./index.js').then(({ getExitsModuleDispatcher }) => {

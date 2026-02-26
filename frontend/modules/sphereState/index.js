@@ -22,7 +22,7 @@ export const moduleInfo = {
 
 // Store module-level references
 let moduleEventBus = null;
-const moduleId = 'sphereState';
+let moduleId = 'sphereState';
 
 /**
  * Registration function for the sphereState module.
@@ -138,6 +138,7 @@ export async function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(mId, priorityIndex, initializationApi) {
+  moduleId = mId;
   log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
 
   // Store the event bus reference
@@ -148,10 +149,10 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
   // Subscribe to stateManager:rulesLoaded via eventBus
   if (moduleEventBus) {
-    moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleId);
+    moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
     log('info', `[${moduleId} Module] Subscribed to stateManager:rulesLoaded via eventBus`);
 
-    moduleEventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated, moduleId);
+    moduleEventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated);
     log('info', `[${moduleId} Module] Subscribed to stateManager:snapshotUpdated via eventBus`);
   }
 

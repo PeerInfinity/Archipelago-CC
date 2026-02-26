@@ -1,6 +1,7 @@
 // frontend/modules/spoilerChecklist/index.js
 
 import { SpoilerChecklistUI } from './spoilerChecklistUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -10,6 +11,23 @@ function log(level, message, ...data) {
     const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[spoilerChecklistModule] ${message}`, ...data);
   }
+}
+
+// --- Module Scope Variables ---
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'spoilerChecklist'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'spoilerChecklist'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'spoilerChecklist'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }
 
 // --- Module Info ---
@@ -47,7 +65,7 @@ export function register(registrationApi) {
 export async function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
 
-  // No specific initialization needed beyond panel registration
+  _moduleEventBus = initializationApi.getEventBus();
 
   log('info', `[${moduleId} Module] Initialization complete.`);
 }

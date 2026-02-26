@@ -1,7 +1,6 @@
 // loopUI.js - UI for the Loop mode
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // <<< Re-added import
 import loopState from './loopStateSingleton.js';
-import eventBus from '../../app/core/eventBus.js';
 import commonUI from '../commonUI/index.js';
 import panelManagerInstance from '../../app/core/panelManager.js'; // Changed from panelManagerSingleton.js
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -18,7 +17,7 @@ import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
 import { LoopBlockBuilder } from './loopBlockBuilder.js';
-import { getPlayerStateAPI, getLoopsModuleDispatcher, getCostGenerator, getCostDataManager } from './index.js';
+import { getPlayerStateAPI, getLoopsModuleDispatcher, getCostGenerator, getCostDataManager, getModuleEventBus } from './index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
@@ -39,6 +38,8 @@ export class LoopUI {
     // MODIFIED: GL constructor
     this.container = container; // ADDED
     this.componentState = componentState; // ADDED
+
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     // UI state
     this.regionsInQueue = new Set(); // Track which regions have actions in the queue
@@ -88,7 +89,7 @@ export class LoopUI {
     );
 
     // Initialize EventCoordinator
-    this.eventCoordinator = new EventCoordinator(eventBus, this);
+    this.eventCoordinator = new EventCoordinator(this.eventBus, this);
 
     // --- Moved Listener Attachment ---
     // Event listener attachment is now deferred to attachInternalListeners()
@@ -107,9 +108,9 @@ export class LoopUI {
         '[LoopUI] Received app:readyForUiDataLoad. Initializing panel.'
       );
       this.initialize(); // This will call buildInitialStructure and attachInternalListeners
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'loops');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       // ADDED: Ensure cleanup
@@ -122,7 +123,7 @@ export class LoopUI {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
-    this.settingsUnsubscribe = eventBus.subscribe(
+    this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       ({ key, value }) => {
         // Delegate to DisplaySettingsManager
@@ -132,7 +133,7 @@ export class LoopUI {
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
-    , 'loops');
+    );
   }
 
   createRootElement() {
@@ -224,7 +225,7 @@ export class LoopUI {
     // --- Attach Listeners using NEW IDs ---
     attachButtonHandler('loop-ui-toggle-loop-mode', () => {
       // Always use the event for consistency
-      eventBus.publish('loops:setLoopMode', { action: 'toggle' }, 'loops');
+      this.eventBus.publish('loops:setLoopMode', { action: 'toggle' });
     });
 
     attachButtonHandler('loop-ui-toggle-pause', function () {
@@ -382,9 +383,9 @@ export class LoopUI {
     if (actionContainer)
       actionContainer.innerHTML = `<div class="no-action-message">No action in progress</div>`;
     this._updateManaDisplay(loopState.currentMana, loopState.maxMana);
-    eventBus.publish('loopState:queueUpdated', {
+    this.eventBus.publish('loopState:queueUpdated', {
       queue: this.getActionQueue(),
-    }, 'loops');
+    });
     this.renderLoopPanel();
   }
 
@@ -607,7 +608,7 @@ export class LoopUI {
     log('info', `[LoopUI] loopModeEnabled setting value: ${loopModeEnabled}, isLoopModeActive: ${this.isLoopModeActive}`);
     if (loopModeEnabled && !this.isLoopModeActive) {
       log('info', '[LoopUI] Auto-entering loop mode based on loopModeEnabled setting');
-      eventBus.publish('loops:setLoopMode', { action: 'enable' }, 'loops');
+      this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
     }
   }
 
@@ -1784,7 +1785,7 @@ export class LoopUI {
     this.renderLoopPanel(); // Re-render to show/hide appropriate content
 
     // --- Emit event for other components ---
-    eventBus.publish('loopUI:modeChanged', { active: this.isLoopModeActive }, 'loops');
+    this.eventBus.publish('loopUI:modeChanged', { active: this.isLoopModeActive });
 
     log('info', `LoopUI: Loop mode toggled. Active: ${this.isLoopModeActive}`);
   }

@@ -519,8 +519,9 @@ export class StateManagerProxy {
         // console.debug('[stateManagerProxy] Progress update received:', message.detail); // Debug level
         this.eventBus.publish(
           'stateManager:computationProgress',
-          message.detail
-        , 'stateManager');
+          message.detail,
+          'stateManager'
+        );
         break;
       case 'event': // For granular events forwarded from worker
         log(
@@ -639,8 +640,9 @@ export class StateManagerProxy {
       case 'computationProgress':
         this.eventBus.publish(
           'stateManager:computationProgress',
-          message.detail
-        , 'stateManager');
+          message.detail,
+          'stateManager'
+        );
         break;
       case 'eventPublish': // New case for event republishing from worker
         this._handleEventPublish(message);
@@ -901,7 +903,7 @@ export class StateManagerProxy {
         message.payload
       );
       // Potentially publish an event if generic pongs are useful
-      // this.eventBus.publish('stateManager:pongReceived', { payload: message.payload }, 'stateManager');
+      // this.eventBus.publish('stateManager:pongReceived', { payload: message.payload });
     }
   }
 

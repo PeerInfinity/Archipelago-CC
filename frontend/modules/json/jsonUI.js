@@ -1,4 +1,4 @@
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 // Corrected import for settingsManager (default import)
 import settingsManager from '../../app/core/settingsManager.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
@@ -20,6 +20,7 @@ export class JsonUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.rootElement = null;
     this.currentModeDisplay = null;
     this.modeNameInput = null;
@@ -37,34 +38,34 @@ export class JsonUI {
     });
 
     // Listen for the actual active mode determined by init.js
-    eventBus.subscribe('app:activeModeDetermined', (data) => {
+    this.eventBus.subscribe('app:activeModeDetermined', (data) => {
       if (data && data.activeMode) {
-        log('info', 
+        log('info',
           `[JsonUI] Received app:activeModeDetermined, updating display to: ${data.activeMode}`
         );
         this.updateCurrentModeDisplay(data.activeMode);
       } else {
-        log('warn', 
+        log('warn',
           '[JsonUI] Received app:activeModeDetermined but no activeMode in payload.',
           data
         );
       }
-    }, 'json');
+    });
 
     // Listen for modes.json being loaded
-    eventBus.subscribe('app:modesJsonLoaded', (data) => {
+    this.eventBus.subscribe('app:modesJsonLoaded', (data) => {
       if (data && data.modesConfig) {
-        log('info', 
+        log('info',
           '[JsonUI] Received app:modesJsonLoaded event, populating modes.json list.'
         );
         this._populateModesJsonList(data.modesConfig);
       } else {
-        log('warn', 
+        log('warn',
           '[JsonUI] Received app:modesJsonLoaded event but no modesConfig in payload.',
           data
         );
       }
-    }, 'json');
+    });
 
     // Check if modes.json was already loaded and the event missed
     if (window.G_modesConfig) {
@@ -627,11 +628,11 @@ export class JsonUI {
 
     // Send the data to the Editor panel via eventBus
     log('info', '[JsonUI] About to publish json:exportToEditor event...');
-    eventBus.publish('json:exportToEditor', {
+    this.eventBus.publish('json:exportToEditor', {
       data: combinedData,
       modeName: modeName,
       activatePanel: true
-    }, 'json');
+    });
     log('info', '[JsonUI] json:exportToEditor event published successfully');
   }
 
@@ -657,11 +658,11 @@ export class JsonUI {
       );
 
       // Send the section data to the Editor panel via eventBus
-      eventBus.publish('json:exportToEditor', {
+      this.eventBus.publish('json:exportToEditor', {
         data: exportData,
         modeName: `${configKey} Section`,
         activatePanel: true
-      }, 'json');
+      });
 
     } catch (error) {
       log('error', `[JsonUI] Error exporting section ${configKey}:`, error);
@@ -712,11 +713,11 @@ export class JsonUI {
       log('info', '[JsonUI] Live layout data gathered:', liveLayoutData);
 
       // Send the data to the Editor panel via eventBus
-      eventBus.publish('json:exportToEditor', {
+      this.eventBus.publish('json:exportToEditor', {
         data: liveLayoutData,
         modeName: 'Live Layout Data',
         activatePanel: true
-      }, 'json');
+      });
 
     } catch (error) {
       log('error', '[JsonUI] Error exporting live layout:', error);
@@ -777,7 +778,7 @@ export class JsonUI {
     log('info', '[JsonUI] Import from Text button clicked');
 
     // First, activate the Editor panel without overwriting content
-    eventBus.publish('ui:activatePanel', { panelId: 'editorPanel' }, 'json');
+    this.eventBus.publish('ui:activatePanel', { panelId: 'editorPanel' });
 
     // Wait a moment for the panel to activate
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -857,24 +858,24 @@ export class JsonUI {
 
         log('info', '[JsonUI] Received editor content response:', eventData);
         clearTimeout(timeoutId); // Clear the timeout since we got a response
-        eventBus.unsubscribe('editor:contentResponse', responseHandler);
+        this.eventBus.unsubscribe('editor:contentResponse', responseHandler);
         resolve(eventData);
       };
 
-      eventBus.subscribe('editor:contentResponse', responseHandler, 'json');
+      this.eventBus.subscribe('editor:contentResponse', responseHandler);
 
       // Request content from the editor
-      eventBus.publish('editor:requestContent', {
+      this.eventBus.publish('editor:requestContent', {
         requestId: 'json-import-request',
         requestedSource: 'dataForExport'
-      }, 'json');
+      });
 
       // Set a timeout in case no response comes
       timeoutId = setTimeout(() => {
         if (responseReceived) return; // Response already received, don't log warning
         responseReceived = true;
 
-        eventBus.unsubscribe('editor:contentResponse', responseHandler);
+        this.eventBus.unsubscribe('editor:contentResponse', responseHandler);
         log('warn', '[JsonUI] Timeout waiting for editor content response');
         resolve({ text: '', source: 'timeout' });
       }, 5000);
