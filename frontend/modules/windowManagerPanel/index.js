@@ -25,7 +25,7 @@ function log(level, message, ...data) {
 
 // Store module-level references
 let moduleEventBus = null;
-const moduleId = 'windowManagerPanel';
+let moduleId = 'windowManagerPanel';
 
 export async function register(registrationApi) {
     log('info', `[${moduleId} Module] Registering...`);
@@ -75,8 +75,9 @@ export async function register(registrationApi) {
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+    moduleId = mId;
     log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
-    
+
     // Store API references
     moduleEventBus = initializationApi.getEventBus();
     

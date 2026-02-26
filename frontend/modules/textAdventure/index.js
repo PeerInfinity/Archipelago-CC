@@ -26,7 +26,7 @@ function log(level, message, ...data) {
 // Store module-level references
 let moduleDispatcher = null;
 let moduleEventBus = null;
-const moduleId = 'textAdventure';
+let moduleId = 'textAdventure';
 
 // Module instances are now managed directly by their classes
 
@@ -81,8 +81,10 @@ export async function register(registrationApi) {
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+    // Use the system-assigned module ID (may differ from 'textAdventure' when loaded externally)
+    moduleId = mId;
     log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
-    
+
     // Store API references
     moduleDispatcher = initializationApi.getDispatcher();
     moduleEventBus = initializationApi.getEventBus();

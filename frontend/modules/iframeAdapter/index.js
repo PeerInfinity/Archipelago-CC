@@ -23,7 +23,7 @@ let moduleEventBus = null;
 let moduleDispatcher = null;
 let adapterCore = null;
 let moduleRegistrationApi = null;
-const moduleId = 'iframeAdapter';
+let moduleId = 'iframeAdapter';
 
 export async function register(registrationApi) {
     log('info', `[${moduleId} Module] Registering...`);
@@ -91,8 +91,9 @@ function registerDynamicPublisher(publisherId, eventName) {
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+    moduleId = mId;
     log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
-    
+
     // Store API references
     moduleEventBus = initializationApi.getEventBus();
     moduleDispatcher = initializationApi.getDispatcher();

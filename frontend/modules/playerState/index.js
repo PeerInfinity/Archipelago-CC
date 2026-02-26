@@ -20,7 +20,7 @@ function log(level, message, ...data) {
 
 // Store module-level references
 let moduleDispatcher = null;
-const moduleId = 'playerState';
+let moduleId = 'playerState';
 
 export async function register(registrationApi) {
     // Register dispatcher receivers for events
@@ -144,8 +144,9 @@ export async function register(registrationApi) {
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+    moduleId = mId;
     log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
-    
+
     // Store the dispatcher reference
     moduleDispatcher = initializationApi.getDispatcher();
     
