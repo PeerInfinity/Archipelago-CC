@@ -13,6 +13,68 @@ function log(level, message, ...data) {
 }
 
 /**
+ * Helper: Activate the Options panel and navigate to the Settings (JSON) sub-view.
+ * Returns { optionsPanelElement, textAreaElement, applyButton }.
+ * Handles the case where the panel may already be showing the settings sub-view.
+ */
+async function activateSettingsJsonView(testController) {
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'optionsPanel' });
+
+  let optionsPanelElement = null;
+  if (!(await testController.pollForCondition(
+    () => {
+      optionsPanelElement = document.querySelector('.options-panel-root');
+      return optionsPanelElement !== null;
+    },
+    'Options panel DOM element',
+    5000,
+    250
+  ))) {
+    throw new Error('Options panel not found in DOM');
+  }
+
+  // If the textarea is already visible (panel still on settings sub-view), skip nav card click
+  let textAreaElement = optionsPanelElement.querySelector('.options-json-textarea');
+  if (!textAreaElement) {
+    // Navigate from home view: wait for nav card, then click it
+    let settingsCard = null;
+    if (!(await testController.pollForCondition(
+      () => {
+        settingsCard = Array.from(optionsPanelElement.querySelectorAll('.options-nav-card'))
+          .find(el => el.textContent.includes('Settings (JSON)'));
+        return !!settingsCard;
+      },
+      'Settings (JSON) nav card',
+      5000,
+      250
+    ))) {
+      throw new Error('Settings (JSON) nav card not found in Options panel');
+    }
+    settingsCard.click();
+
+    // Wait for the textarea to appear after clicking the card
+    if (!(await testController.pollForCondition(
+      () => {
+        textAreaElement = optionsPanelElement.querySelector('.options-json-textarea');
+        return textAreaElement !== null;
+      },
+      'Settings textarea to initialize',
+      3000,
+      250
+    ))) {
+      throw new Error('Settings textarea not found');
+    }
+  }
+
+  const applyButton = optionsPanelElement.querySelector('.options-json-apply-btn');
+  if (!applyButton) {
+    throw new Error('Apply button not found in Settings panel');
+  }
+
+  return { optionsPanelElement, textAreaElement, applyButton };
+}
+
+/**
  * Test that verifies the Settings panel can be used to enable and disable
  * colorblind mode for the Regions panel, and that the changes are reflected
  * in the Regions panel display.
@@ -25,38 +87,9 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
     testController.log(`[${testRunId}] Starting colorblind mode toggle test...`);
     testController.reportCondition('Test started', true);
 
-    // Step 1: Activate the Settings panel first
-    testController.log(`[${testRunId}] Activating Settings panel...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
-
-    // Wait for the settings panel to appear in DOM
-    let settingsPanelElement = null;
-    if (!(await testController.pollForCondition(
-      () => {
-        settingsPanelElement = document.querySelector('.settings-panel-content');
-        return settingsPanelElement !== null;
-      },
-      'Settings panel DOM element',
-      5000,
-      250
-    ))) {
-      throw new Error('Settings panel not found in DOM');
-    }
-    testController.reportCondition('Settings panel found in DOM', true);
-    
-    // Wait for settings textarea to initialize
-    let textAreaElement = null;
-    if (!(await testController.pollForCondition(
-      () => {
-        textAreaElement = settingsPanelElement.querySelector('.settings-textarea');
-        return textAreaElement !== null;
-      },
-      'Settings textarea to initialize',
-      3000,
-      250
-    ))) {
-      throw new Error('Settings textarea not found');
-    }
+    // Step 1: Activate the Options panel and navigate to the Settings (JSON) sub-view
+    testController.log(`[${testRunId}] Activating Options panel...`);
+    const { optionsPanelElement, textAreaElement, applyButton } = await activateSettingsJsonView(testController);
     testController.reportCondition('Settings textarea found', true);
 
     // Step 2: Enable colorblind mode for regions
@@ -80,12 +113,6 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
 
     textAreaElement.value = JSON.stringify(settingsObj, null, 2);
     testController.reportCondition('Colorblind regions setting updated to true', true);
-    
-    // Apply the settings
-    const applyButton = settingsPanelElement.querySelector('button');
-    if (!applyButton) {
-      throw new Error('Apply button not found in Settings panel');
-    }
     
     applyButton.click();
     
@@ -142,7 +169,7 @@ export async function testColorblindModeToggleInRegionsViaSettings(testControlle
 
     // Step 4: Disable colorblind mode for regions
     testController.log(`[${testRunId}] Disabling colorblind mode for regions...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'optionsPanel' });
 
     // Parse the settings again to ensure we're working with current state
     try {
@@ -218,38 +245,18 @@ export async function testSettingsPanelLoadsCurrentSettings(testController) {
     testController.log(`[${testRunId}] Starting Settings panel load test...`);
     testController.reportCondition('Test started', true);
 
-    // Activate the Settings panel
-    testController.log(`[${testRunId}] Activating Settings panel...`);
-    testController.eventBus.publish('ui:activatePanel', { panelId: 'settingsPanel' });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // Wait for the settings panel to appear in DOM
-    let settingsPanelElement = null;
+    // Activate the Options panel and navigate to Settings (JSON) sub-view
+    testController.log(`[${testRunId}] Activating Options panel...`);
+    const { textAreaElement } = await activateSettingsJsonView(testController);
+
+    // Wait for textarea to have content
     if (!(await testController.pollForCondition(
-      () => {
-        settingsPanelElement = document.querySelector('.settings-panel-content');
-        return settingsPanelElement !== null;
-      },
-      'Settings panel DOM element',
-      5000,
-      250
-    ))) {
-      throw new Error('Settings panel not found in DOM');
-    }
-    testController.reportCondition('Settings panel found in DOM', true);
-    
-    // Wait for settings textarea to initialize
-    let textAreaElement = null;
-    if (!(await testController.pollForCondition(
-      () => {
-        textAreaElement = settingsPanelElement.querySelector('.settings-textarea');
-        return textAreaElement !== null && textAreaElement.value.length > 0;
-      },
-      'Settings textarea to initialize with content',
+      () => textAreaElement.value.length > 0,
+      'Settings textarea to have content',
       3000,
       250
     ))) {
-      throw new Error('Settings textarea not found or empty');
+      throw new Error('Settings textarea is empty');
     }
     testController.reportCondition('Settings textarea found with content', true);
     

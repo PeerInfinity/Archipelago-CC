@@ -13,9 +13,6 @@ python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 -
 python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 2
 python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 3
 
-#python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 3
 #python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 2
 python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 3
@@ -38,7 +35,6 @@ python Generate.py --player_files_path "Players/presets/Multiworld" --seed 2
 python Generate.py --player_files_path "Players/presets/Multiworld" --seed 3
 
 #python scripts/build/pack_apworld.py metamath
-#python scripts/build/pack_apworld.py mathadventure
 #python scripts/build/pack_apworld.py bakingadventure
 #python scripts/build/pack_apworld.py codingadventure
 
