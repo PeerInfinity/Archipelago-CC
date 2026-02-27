@@ -157,10 +157,13 @@ gen_worldgen_world() {
 }
 
 # Run world_generator to create a world package from rules.json
+# Usage: run_world_generator RULES_JSON OUTPUT_DIR GAME_NAME [EXTRA_ARGS...]
 run_world_generator() {
   local rules_json="$1" output_dir="$2" game_name="$3"
+  shift 3
   local args=(python -m world_generator "$rules_json" -o "$output_dir" --game-name "$game_name" --force)
   [ -n "$WORLDGEN_CANONICAL_SEED" ] && args+=(--canonical-seed "$WORLDGEN_CANONICAL_SEED")
+  args+=("$@")
   run_cmd "${args[@]}"
 }
 
@@ -445,24 +448,24 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     gen_worldgen_world "$template"
   done
 
-  # MetaMath theorem variant WorldGen worlds
+  # MetaMath theorem variant WorldGen worlds (--apply-name-substitutions for readable names)
   gen_worldgen_world "Metamath"                    # 2p2e4 from seed 1
   run_world_generator \
     "frontend/presets/metamath/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
-    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen"
+    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen" --apply-name-substitutions
   run_world_generator \
     "frontend/presets/metamath/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
-    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen"
+    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen" --apply-name-substitutions
   if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
     run_world_generator \
       "frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen"
+      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen" --apply-name-substitutions
     run_world_generator \
       "frontend/presets/metamath_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
-      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen"
+      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen" --apply-name-substitutions
     run_world_generator \
       "frontend/presets/metamath_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
-      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen"
+      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen" --apply-name-substitutions
   fi
 
   section "Regenerating templates (for WorldGen)"
@@ -512,7 +515,7 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
     run_world_generator \
       "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2"
+      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2" --apply-name-substitutions
   fi
 
   section "Regenerating templates (for WorldGen2)"
