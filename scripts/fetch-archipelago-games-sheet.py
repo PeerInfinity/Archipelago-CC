@@ -114,8 +114,8 @@ def main():
     parser.add_argument(
         "--output-dir", "-o",
         type=Path,
-        default=Path("docs/archipelago-games-sheet"),
-        help="Output directory for downloaded files (default: docs/archipelago-games-sheet)",
+        default=Path("docs/json/archipelago-games-sheet"),
+        help="Output directory for downloaded files (default: docs/json/archipelago-games-sheet)",
     )
     args = parser.parse_args()
 
