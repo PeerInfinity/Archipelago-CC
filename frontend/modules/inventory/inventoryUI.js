@@ -26,8 +26,8 @@ export class InventoryUI {
     Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.itemData = null;
     this.groupNames = [];
-    this.hideUnowned = true;
-    this.hideCategories = false;
+    this.showUnowned = false;
+    this.showCategories = false;
     this.sortAlphabetically = false;
     this.rootElement = null;
     this.groupedContainer = null;
@@ -99,12 +99,12 @@ export class InventoryUI {
         </div>
         <div class="inventory-controls" style="flex-shrink: 0;">
           <div class="checkbox-container">
-            <input type="checkbox" id="hide-unowned" checked />
-            <label for="hide-unowned">Hide unowned items</label>
+            <input type="checkbox" id="show-unowned" />
+            <label for="show-unowned">Show unowned items</label>
           </div>
           <div class="checkbox-container">
-            <input type="checkbox" id="hide-categories" />
-            <label for="hide-categories">Hide categories</label>
+            <input type="checkbox" id="show-categories" />
+            <label for="show-categories">Show categories</label>
           </div>
           <div class="checkbox-container">
             <input type="checkbox" id="sort-alphabetically" />
@@ -155,6 +155,9 @@ export class InventoryUI {
     });
 
     sortedGroupNames.forEach((groupName) => {
+      // Skip "Everything" in the grouped view — the flat view already serves this purpose
+      if (groupName === 'Everything') return;
+
       const groupItems = Object.entries(this.itemData).filter(
         ([_, data]) =>
           data.groups && data.groups.includes(groupName) && !data.event
@@ -252,14 +255,14 @@ export class InventoryUI {
     const groupedContainer = this.groupedContainer;
     const flatContainer = this.flatContainer;
 
-    if (this.hideCategories) {
-      groupedContainer.style.display = 'none';
-      flatContainer.style.display = '';
-      this.updateVisibility(flatContainer);
-    } else {
+    if (this.showCategories) {
       flatContainer.style.display = 'none';
       groupedContainer.style.display = '';
       this.updateVisibility(groupedContainer);
+    } else {
+      groupedContainer.style.display = 'none';
+      flatContainer.style.display = '';
+      this.updateVisibility(flatContainer);
     }
   }
 
@@ -274,7 +277,7 @@ export class InventoryUI {
         if (!button) return;
         const isOwned = button.classList.contains('active');
 
-        if (this.hideUnowned && !isOwned) {
+        if (!this.showUnowned && !isOwned) {
           itemContainer.style.display = 'none';
         } else {
           itemContainer.style.display = '';
@@ -282,7 +285,7 @@ export class InventoryUI {
         }
       });
 
-      if (!this.hideCategories) {
+      if (this.showCategories) {
         group.style.display = visibleItems > 0 ? '' : 'none';
       }
     });
@@ -343,20 +346,20 @@ export class InventoryUI {
   }
 
   attachControlEventListeners() {
-    const hideUnownedCheckbox = this.rootElement.querySelector('#hide-unowned');
-    const hideCategoriesCheckbox =
-      this.rootElement.querySelector('#hide-categories');
+    const showUnownedCheckbox = this.rootElement.querySelector('#show-unowned');
+    const showCategoriesCheckbox =
+      this.rootElement.querySelector('#show-categories');
     const sortAlphabeticallyCheckbox = this.rootElement.querySelector(
       '#sort-alphabetically'
     );
 
-    hideUnownedCheckbox.addEventListener('change', (event) => {
-      this.hideUnowned = event.target.checked;
+    showUnownedCheckbox.addEventListener('change', (event) => {
+      this.showUnowned = event.target.checked;
       this.updateDisplay();
     });
 
-    hideCategoriesCheckbox.addEventListener('change', (event) => {
-      this.hideCategories = event.target.checked;
+    showCategoriesCheckbox.addEventListener('change', (event) => {
+      this.showCategories = event.target.checked;
       this.updateDisplay();
     });
 
