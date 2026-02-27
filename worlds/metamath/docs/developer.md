@@ -116,8 +116,7 @@ Main world class that orchestrates generation:
 ```python
 class MetamathWorld(World):
     def generate_early(self):
-        # Handle vanilla_placement (forces randomize_items=False)
-        # Handle seed=1 special case (disables randomization)
+        # Handle vanilla_placement (forces randomize_items=False, marks world as vanilla)
         # Parse theorem from config (supports URL extraction)
         # Extract proof structure
         # Build name mappings and name_substitutions
@@ -136,7 +135,7 @@ class MetamathWorld(World):
 ```
 
 **Key Methods**:
-- `generate_early()`: Parse theorem and build proof structure, handle vanilla placement and seed=1 special case, build name substitutions
+- `generate_early()`: Parse theorem and build proof structure, handle vanilla placement, build name substitutions
 - `create_regions()`: Create proof locations with complex connection logic
 - `create_items()`: Generate statement items (only if randomization enabled; skipped entirely when disabled)
 - `generate_basic()`: Pre-collect starting statements so they are available from the start
@@ -218,7 +217,7 @@ class ProofStructure:
 
 ### 6. Non-Randomized Item Placement
 
-When randomization is disabled (via `vanilla_placement`, direct `randomize_items=false`, or seed=1), items are placed at their canonical locations:
+When randomization is disabled (via `vanilla_placement` or direct `randomize_items=false`), items are placed at their canonical locations:
 
 ```python
 def pre_fill(self):

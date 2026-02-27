@@ -32,8 +32,6 @@ randomize_items: false  # Items stay in original locations
 
 When set to `false`, each statement item will be found at its own prove location, creating a linear proof progression.
 
-**Special Seed Behavior**: When using seed 1, randomization is automatically disabled to provide canonical item placements for testing and speedrunning purposes.
-
 **Note**: If `vanilla_placement` is enabled, `randomize_items` is forced to `false` regardless of this setting.
 
 ---

@@ -95,12 +95,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 2",
+              "name": "Statement 8",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -136,12 +136,12 @@
               }
             },
             "item": {
-              "name": "Statement 3",
+              "name": "Statement 9",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -167,12 +167,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 4",
+              "name": "Statement 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -198,12 +198,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "Statement 6",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -233,12 +233,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 6",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -271,12 +271,12 @@
               }
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -312,12 +312,12 @@
               }
             },
             "item": {
-              "name": "Statement 8",
+              "name": "Statement 10",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -349,12 +349,12 @@
               }
             },
             "item": {
-              "name": "Statement 9",
+              "name": "Statement 2",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -375,12 +375,12 @@
               }
             },
             "item": {
-              "name": "Statement 10",
+              "name": "Statement 3",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }
@@ -1554,7 +1554,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
@@ -1886,7 +1886,7 @@
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": false,
+        "randomize_items": 1,
         "vanilla_placement": 0
       },
       "web": {

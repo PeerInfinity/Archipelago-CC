@@ -71,10 +71,6 @@ class MetamathWorld(World):
             self.options.randomize_items.value = False
             self.is_vanilla = True
 
-        # If seed is 1, disable randomization to use canonical item placements
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
-
         # Get the theorem name from options (use current_key for string representation)
         theorem_name = self.options.theorem.current_key
 
