@@ -1656,6 +1656,7 @@
         }
       },
       "num_statements": 10,
+      "preset_label": "2p2e4 s1",
       "name_substitutions": {
         "items": {
           "Statement 1": "2cn: |- 2 e. CC",
@@ -1916,5 +1917,6 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {},
+  "preset_label": "2p2e4 s1"
 }
