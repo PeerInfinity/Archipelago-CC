@@ -100,20 +100,19 @@ You can also enter any theorem name from the Metamath database beyond the preset
 
 ---
 
-### complexity
-**Type**: Choice
-**Default**: `moderate`
-**Options**: `simple`, `moderate`, `complex`
+### randomize_starting_statements
+**Type**: Toggle
+**Default**: `true`
 
-Controls how starting statements are selected when you begin the game.
+Controls how starting statements are selected when `starting_statements` is above 0%.
+Has no effect when `starting_statements` is 0%.
 
 ```yaml
-complexity: moderate
+randomize_starting_statements: true
 ```
 
-- **simple**: Starting statements are the first N statements in sequential order
-- **moderate**: Starting statements are randomly selected from throughout the proof
-- **complex**: Starting statements are randomly selected from throughout the proof (same as moderate)
+- **false**: Starting statements are the first N statements in proof order (easier)
+- **true**: Starting statements are randomly selected from throughout the proof (harder)
 
 ---
 
@@ -159,7 +158,7 @@ auto_download_database: false  # Never download, use fallbacks only
 Metamath:
   randomize_items: true       # Normal randomization
   theorem: 1p1e2              # Simple 2-step proof
-  complexity: simple          # Sequential starting statements
+  randomize_starting_statements: false  # Sequential starting statements
   starting_statements: 30     # Start with 30% unlocked
 ```
 
@@ -168,7 +167,7 @@ Metamath:
 Metamath:
   randomize_items: true       # Normal randomization
   theorem: 2p2e4              # Classic 10-step proof
-  complexity: moderate        # Random starting statements
+  randomize_starting_statements: true   # Random starting statements
   starting_statements: 10     # Start with 10%
 ```
 
@@ -177,7 +176,7 @@ Metamath:
 Metamath:
   randomize_items: true       # Normal randomization
   theorem: pm5.32             # Complex logic proof
-  complexity: complex         # Random starting statements
+  randomize_starting_statements: true   # Random starting statements
   starting_statements: 0      # Start with nothing (default)
 ```
 
@@ -186,7 +185,7 @@ Metamath:
 Metamath:
   vanilla_placement: true    # Items stay at their proof locations, world marked vanilla
   theorem: 2p2e4
-  complexity: simple
+  randomize_starting_statements: false
   starting_statements: 20   # Start with 20% to avoid being stuck
 ```
 
@@ -195,13 +194,13 @@ Metamath:
 Metamath:
   randomize_items: false     # Items stay at their proof locations
   theorem: 2p2e4
-  complexity: simple
+  randomize_starting_statements: false
   starting_statements: 20   # Start with 20% to avoid being stuck
 ```
 
 ## Tips for Settings
 
-1. **New Players**: Start with `simple` complexity and higher `starting_statements`
+1. **New Players**: Set `randomize_starting_statements: false` and higher `starting_statements`
 2. **Database**: Keep `auto_download_database: true` unless you have bandwidth concerns
 3. **Linear Progression**: Set `randomize_items: false` for a more predictable experience
 
@@ -209,8 +208,8 @@ Metamath:
 
 **"Not enough locations"**: Lower `starting_statements` or choose a theorem with more steps
 
-**"Too difficult"**: Increase `starting_statements` or choose `simple` complexity
+**"Too difficult"**: Increase `starting_statements` or set `randomize_starting_statements: false`
 
-**"Too easy"**: Decrease `starting_statements`, increase `complexity`, or choose a harder theorem
+**"Too easy"**: Decrease `starting_statements`, enable `randomize_starting_statements`, or choose a harder theorem
 
 **"Takes too long to generate"**: The first generation with a new theorem needs to parse the database (5-10 seconds). This is normal.
