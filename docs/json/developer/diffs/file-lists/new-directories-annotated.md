@@ -1,34 +1,126 @@
-# New Directories
+# New Directories (Annotated)
 
 Directories in this fork that do not exist in upstream commit `0de09cd7`.
 
 ## Project Directories (25)
 
 - **`CC/`** (67 files)
+
+  Claude Code scripts, plans, and utilities for AI-assisted development.
+
+  [CC README](../../../../../CC/README.md)
+
 - **`apworlds/`** (4 files)
+
+  Pre-built APWorld packages (.apworld files) for distribution.
+
 - **`docs/json/`** (247 files)
+
+  Documentation portal for the JSON Export Tools project: user guides, developer docs, architecture, and test results.
+
+  [Documentation Portal](../../../README.md)
+
 - **`exporter/`** (133 files)
+
+  Python module that exports game logic (items, locations, regions, rules) to JSON format after seed generation.
+
+  [Exporter README](../../../../../exporter/README.md)
+
 - **`frontend/`** (982 files)
+
+  Web client application for browsing exported game data, viewing rules, and running spoiler tests.
+
+  [Frontend README](../../../../../frontend/README.md)
+
 - **`json_tools_patches/`** (14 files)
+
+  Versioned patches for ROM-less generation and other core file modifications, organized by Archipelago version.
+
 - **`scripts/`** (184 files)
+
+  Build, test, setup, and documentation generation scripts.
+
+  [Scripts README](../../../../../scripts/README.md)
+
 - **`test_json/`** (35 files)
+
+  Test suite for fork-specific modules: exporter, rule builder, world generator, and E2E spoiler tests.
+
 - **`world_generator/`** (23 files)
+
+  Converts JSON rules files back into functional Archipelago world packages (Python code).
+
+  [World Generator README](../../../../../world_generator/README.md) | [World Generator Guide](../../guides/world-generator.md)
+
 - **`worlds/adventure_worldgen2/`** (11 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/ahit_worldgen2/`** (10 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/alttp_vanilla_worldgen2/`** (19 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/alttp_worldgen2/`** (19 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/apworld_manager/`** (1 files)
+
+  Third-party meta-world (hidden) for installing and managing APWorlds from repositories. Unmodified from upstream source.
+
+  [Repository Changes](../repository-changes.md)
+
 - **`worlds/bakingadventure/`** (9 files)
+
+  Original demo world: a baking-themed game with progression-based locations.
+
 - **`worlds/bakingadventure_vanilla_worldgen2/`** (10 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/codingadventure/`** (9 files)
+
+  Original demo world: an educational web development game with progression items.
+
 - **`worlds/codingadventure_vanilla_worldgen2/`** (10 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/json_tools_installer/`** (25 files)
+
+  Utility APWorld (hidden) that downloads and installs JSON Tools components on vanilla Archipelago.
+
+  [Installer README](../../../../../worlds/json_tools_installer/README.md)
+
 - **`worlds/metamath/`** (16 files)
+
+  Original demo world that turns MetaMath formal proofs into playable Archipelago worlds.
+
 - **`worlds/metamath_vanilla_worldgen2/`** (10 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/shorthike_worldgen2/`** (10 files)
+
+  Second-generation world: generated from a worldgen world to test cross-generation compatibility.
+
 - **`worlds/toem_original/`** (10 files)
+
+  Original TOEM world implementation (non-Rule Builder version, used as a comparison benchmark).
+
 - **`worlds/toem_rule_builder/`** (10 files)
+
+  TOEM world implemented using Rule Builder syntax (benchmark for comparing against the original implementation).
+
 - **`worlds/tracker/`** (19 files)
+
+  Universal Tracker meta-world (hidden) for in-game location tracking and logic visualization. Modified from FarisTheAncient's version.
+
+  [UT Modifications](../universal-tracker-modifications.md)
 
 ## Auto-Generated World Directories (59)
 

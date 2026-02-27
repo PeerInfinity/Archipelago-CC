@@ -198,7 +198,22 @@
     },
     "ruleConverter": {
       "path": "./modules/ruleConverter/index.js",
-      "enabled": true
+      "enabled": false
+    },
+    "proofQueue": {
+      "path": "./modules/proofQueue/index.js",
+      "enabled": true,
+      "requires": ["stateManager"]
+    },
+    "proofGraph": {
+      "path": "./modules/proofGraph/index.js",
+      "enabled": true,
+      "requires": ["stateManager"]
+    },
+    "proofEntry": {
+      "path": "./modules/proofEntry/index.js",
+      "enabled": true,
+      "requires": ["stateManager"]
     }
   },
   "loadPriority": [
@@ -246,6 +261,9 @@
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",
-    "ruleConverter"
+    "ruleConverter",
+    "proofQueue",
+    "proofGraph",
+    "proofEntry"
   ]
 }

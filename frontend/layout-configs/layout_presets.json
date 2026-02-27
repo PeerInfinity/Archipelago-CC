@@ -19,11 +19,6 @@
             },
             {
               "type": "component",
-              "componentType": "spoilerChecklistPanel",
-              "title": "Spoiler Checklist"
-            },
-            {
-              "type": "component",
               "componentType": "jsonPanel",
               "title": "JSON"
             },
@@ -31,6 +26,11 @@
               "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
+            },
+            {
+              "type": "component",
+              "componentType": "spoilerChecklistPanel",
+              "title": "Spoiler Checklist"
             },
             {
               "type": "component",
@@ -175,6 +175,26 @@
               "type": "component",
               "componentType": "windowPanel",
               "title": "Window Panel"
+            },
+            {
+              "type": "component",
+              "componentType": "proofGraphPanel",
+              "title": "Proof Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "proofQueuePanel",
+              "title": "Proof Queue"
+            },
+            {
+              "type": "component",
+              "componentType": "proofEntryPanel",
+              "title": "Proof Entry"
+            },
+            {
+              "type": "component",
+              "componentType": "loopStatsPanel",
+              "title": "Loop Stats"
             }
           ]
         }

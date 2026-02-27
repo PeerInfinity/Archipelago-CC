@@ -1,0 +1,293 @@
+/* ═══════════════════════════════════════════════════════════
+   Proof Queue Panel — MetaMath Easy Mode
+   ═══════════════════════════════════════════════════════════ */
+
+.proof-queue-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  color: #e0e0e0;
+  background: #1e1e2e;
+}
+
+/* ─── Header ────────────────────────────────────────────── */
+
+.pq-header {
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #cdd6f4;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+/* ─── Toolbar ───────────────────────────────────────────── */
+
+.pq-toolbar {
+  display: flex;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #1e1e2e;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+.pq-btn {
+  padding: 4px 10px;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pq-btn:hover {
+  background: #45475a;
+  border-color: #585b70;
+}
+
+.pq-btn:active {
+  background: #585b70;
+}
+
+.pq-btn-check {
+  margin-left: auto;
+  background: #1e6640;
+  border-color: #2b8a54;
+}
+
+.pq-btn-check:hover {
+  background: #2b8a54;
+}
+
+/* ─── Sections ──────────────────────────────────────────── */
+
+.pq-section {
+  flex-shrink: 0;
+  border-bottom: 1px solid #313244;
+}
+
+.pq-queue-section {
+  flex: 1;
+  overflow-y: auto;
+  border-bottom: none;
+}
+
+.pq-section-label {
+  padding: 6px 12px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c7086;
+}
+
+/* ─── Available Pool ────────────────────────────────────── */
+
+.pq-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 12px 10px;
+  min-height: 32px;
+}
+
+.pq-pool-chip {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 4px 8px;
+  border: 1px solid #45475a;
+  border-radius: 6px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  max-width: 200px;
+}
+
+.pq-pool-chip:hover {
+  background: #45475a;
+  border-color: #89b4fa;
+  transform: translateY(-1px);
+}
+
+.pq-chip-label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.pq-chip-expr {
+  font-size: 10px;
+  color: #a6adc8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Queue Rows ────────────────────────────────────────── */
+
+.pq-queue {
+  padding: 4px 0;
+}
+
+.pq-queue-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #11111b;
+  cursor: grab;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.pq-queue-row:hover {
+  background: #262637;
+}
+
+/* Status variants */
+.pq-queue-row.pq-checked {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.pq-queue-row.pq-checkable {
+  background: #1a3328;
+  border-left: 3px solid #a6e3a1;
+}
+
+.pq-queue-row.pq-valid {
+  border-left: 3px solid #89b4fa;
+}
+
+.pq-queue-row.pq-invalid {
+  border-left: 3px solid #f38ba8;
+  background: #2a1a22;
+}
+
+.pq-queue-row.pq-checked {
+  border-left: 3px solid #6c7086;
+}
+
+/* Row parts */
+.pq-row-num {
+  flex-shrink: 0;
+  width: 24px;
+  text-align: right;
+  color: #6c7086;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-row-icon {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.pq-checked .pq-row-icon { color: #6c7086; }
+.pq-checkable .pq-row-icon { color: #a6e3a1; }
+.pq-valid .pq-row-icon { color: #89b4fa; }
+.pq-invalid .pq-row-icon { color: #f38ba8; }
+
+.pq-row-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.pq-row-text strong {
+  color: #cdd6f4;
+}
+
+.pq-checked .pq-row-text {
+  text-decoration: line-through;
+  color: #6c7086;
+}
+
+.pq-row-remove {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #6c7086;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.pq-queue-row:hover .pq-row-remove {
+  opacity: 1;
+}
+
+.pq-row-remove:hover {
+  background: #45475a;
+  color: #f38ba8;
+}
+
+/* Dependency hint (shown below invalid rows) */
+.pq-row-deps {
+  position: absolute;
+  bottom: -1px;
+  left: 56px;
+  right: 12px;
+  font-size: 10px;
+  color: #f38ba8;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+/* ─── Drag and Drop ─────────────────────────────────────── */
+
+.pq-queue-row.pq-dragging {
+  opacity: 0.4;
+  background: #313244;
+}
+
+.pq-queue-row.pq-drag-over {
+  border-top: 2px solid #89b4fa;
+}
+
+/* ─── Status Bar ────────────────────────────────────────── */
+
+.pq-status {
+  padding: 6px 12px;
+  font-size: 11px;
+  color: #6c7086;
+  background: #181825;
+  border-top: 1px solid #313244;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.pq-status.pq-status-complete {
+  color: #a6e3a1;
+  font-weight: 600;
+}
+
+/* ─── Empty State ───────────────────────────────────────── */
+
+.pq-empty {
+  padding: 8px 0;
+  text-align: center;
+  color: #585b70;
+  font-style: italic;
+  font-size: 12px;
+}

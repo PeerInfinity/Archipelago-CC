@@ -10,6 +10,9 @@ and upstream Archipelago, organized into five categories:
   - deleted-files.md           — files removed from upstream dirs that still exist
   - deleted-directories.md     — directories entirely removed from upstream
 
+Also generates annotated versions (*-annotated.md) with descriptions and links
+from file-annotations.json.
+
 Usage:
     python scripts/docs/generate-file-diff-lists.py
     python scripts/docs/generate-file-diff-lists.py --upstream-commit 0de09cd7
@@ -18,6 +21,8 @@ Usage:
 """
 
 import argparse
+import json
+import os
 import subprocess
 import sys
 from collections import defaultdict
@@ -25,6 +30,7 @@ from pathlib import Path
 
 UPSTREAM_URL = "https://github.com/ArchipelagoMW/Archipelago.git"
 DEFAULT_OUTPUT_DIR = "docs/json/developer/diffs/file-lists"
+DEFAULT_ANNOTATIONS_FILE = "docs/json/developer/diffs/file-annotations.json"
 UPSTREAM_REMOTE = "upstream"
 
 
@@ -213,6 +219,85 @@ def format_worldgen_summary(dirs_files: dict[str, list[str]]) -> tuple[list[str]
     return worldgen_dirs, remaining
 
 
+# ---------------------------------------------------------------------------
+# Annotations
+# ---------------------------------------------------------------------------
+
+def load_annotations(annotations_path: Path) -> dict:
+    """Load file annotations from JSON, returning the entries dict.
+
+    Returns an empty dict if the file doesn't exist or is invalid.
+    """
+    if not annotations_path.exists():
+        print(f"  Annotations file not found: {annotations_path}", file=sys.stderr)
+        return {}
+    try:
+        with open(annotations_path) as f:
+            data = json.load(f)
+        return data.get("entries", {})
+    except (json.JSONDecodeError, KeyError) as e:
+        print(f"  Warning: could not load annotations: {e}", file=sys.stderr)
+        return {}
+
+
+def get_annotation(annotations: dict, key: str) -> dict | None:
+    """Look up an annotation entry by key.
+
+    Tries the key as-is, then with/without trailing slash for directories.
+    Returns None if not found.
+    """
+    if key in annotations:
+        return annotations[key]
+    # Try with trailing slash (directory convention)
+    if not key.endswith("/") and key + "/" in annotations:
+        return annotations[key + "/"]
+    # Try without trailing slash
+    if key.endswith("/") and key.rstrip("/") in annotations:
+        return annotations[key.rstrip("/")]
+    return None
+
+
+def format_annotation_lines(
+    annotation: dict | None, output_dir: Path, indent: str = "  "
+) -> list[str]:
+    """Format an annotation entry into markdown lines.
+
+    Returns empty list if annotation is None or has no content.
+    Each content line is preceded by a blank line so that markdown
+    renderers treat them as separate paragraphs within the list item.
+    """
+    if not annotation:
+        return []
+
+    lines = []
+    desc = annotation.get("description", "")
+    links = annotation.get("links", [])
+
+    if desc:
+        lines.append("")
+        lines.append(f"{indent}{desc}")
+
+    if links:
+        project_root = get_project_root()
+        link_parts = []
+        for link in links:
+            title = link.get("title", "")
+            path = link.get("path", "")
+            if title and path:
+                # Compute relative path from output directory to the target
+                rel_path = os.path.relpath(project_root / path, output_dir)
+                link_parts.append(f"[{title}]({rel_path})")
+        if link_parts:
+            lines.append("")
+            lines.append(f"{indent}{' | '.join(link_parts)}")
+
+    return lines
+
+
+# ---------------------------------------------------------------------------
+# Plain output writers (unchanged from original)
+# ---------------------------------------------------------------------------
+
 def write_new_directories(
     output_dir: Path,
     dirs_files: dict[str, list[str]],
@@ -263,107 +348,19 @@ def write_new_directories(
     return content
 
 
-def write_new_files_in_existing_dirs(
+def write_file_list_plain(
     output_dir: Path,
+    filename: str,
+    title: str,
+    subtitle: str,
     files: list[str],
-    upstream_commit_short: str,
+    empty_message: str | None = None,
 ) -> str:
-    """Write new-files-in-existing-dirs.md."""
-    lines = [
-        "# New Files in Existing Directories",
-        "",
-        f"Files added to directories that already existed in upstream commit `{upstream_commit_short}`.",
-        "",
-    ]
+    """Write a plain file list grouped by directory using code blocks."""
+    lines = [f"# {title}", "", subtitle, ""]
 
-    # Group by directory
-    by_dir: dict[str, list[str]] = defaultdict(list)
-    for filepath in sorted(files):
-        dir_path = str(Path(filepath).parent) if "/" in filepath else "(root)"
-        by_dir[dir_path].append(filepath)
-
-    for dir_path in sorted(by_dir.keys()):
-        dir_files = by_dir[dir_path]
-        if dir_path == "(root)":
-            lines.append(f"## Root Directory ({len(dir_files)} files)")
-        else:
-            lines.append(f"## `{dir_path}/` ({len(dir_files)} files)")
-        lines.append("")
-        lines.append("```")
-        for f in sorted(dir_files):
-            lines.append(f)
-        lines.append("```")
-        lines.append("")
-
-    lines.append("---")
-    lines.append("")
-    lines.append(f"**Total:** {len(files)} new files in existing directories")
-    lines.append("")
-
-    content = "\n".join(lines)
-    filepath = output_dir / "new-files-in-existing-dirs.md"
-    filepath.write_text(content)
-    return content
-
-
-def write_changed_files(
-    output_dir: Path,
-    files: list[str],
-    upstream_commit_short: str,
-) -> str:
-    """Write changed-files.md."""
-    lines = [
-        "# Changed Files",
-        "",
-        f"Files modified from their upstream versions (commit `{upstream_commit_short}`).",
-        "",
-    ]
-
-    # Group by directory
-    by_dir: dict[str, list[str]] = defaultdict(list)
-    for filepath in sorted(files):
-        dir_path = str(Path(filepath).parent) if "/" in filepath else "(root)"
-        by_dir[dir_path].append(filepath)
-
-    for dir_path in sorted(by_dir.keys()):
-        dir_files = by_dir[dir_path]
-        if dir_path == "(root)":
-            lines.append(f"## Root Directory ({len(dir_files)} files)")
-        else:
-            lines.append(f"## `{dir_path}/` ({len(dir_files)} files)")
-        lines.append("")
-        lines.append("```")
-        for f in sorted(dir_files):
-            lines.append(f)
-        lines.append("```")
-        lines.append("")
-
-    lines.append("---")
-    lines.append("")
-    lines.append(f"**Total:** {len(files)} changed files")
-    lines.append("")
-
-    content = "\n".join(lines)
-    filepath = output_dir / "changed-files.md"
-    filepath.write_text(content)
-    return content
-
-
-def write_deleted_files(
-    output_dir: Path,
-    files: list[str],
-    upstream_commit_short: str,
-) -> str:
-    """Write deleted-files.md."""
-    lines = [
-        "# Deleted Files",
-        "",
-        f"Files removed from directories that still exist (upstream commit `{upstream_commit_short}`).",
-        "",
-    ]
-
-    if not files:
-        lines.append("No individual files have been deleted from existing directories.")
+    if not files and empty_message:
+        lines.append(empty_message)
         lines.append("")
     else:
         by_dir: dict[str, list[str]] = defaultdict(list)
@@ -386,11 +383,11 @@ def write_deleted_files(
 
     lines.append("---")
     lines.append("")
-    lines.append(f"**Total:** {len(files)} deleted files")
+    lines.append(f"**Total:** {len(files)} {title.lower()}")
     lines.append("")
 
     content = "\n".join(lines)
-    filepath = output_dir / "deleted-files.md"
+    filepath = output_dir / filename
     filepath.write_text(content)
     return content
 
@@ -429,6 +426,153 @@ def write_deleted_directories(
     return content
 
 
+# ---------------------------------------------------------------------------
+# Annotated output writers
+# ---------------------------------------------------------------------------
+
+def write_new_directories_annotated(
+    output_dir: Path,
+    dirs_files: dict[str, list[str]],
+    upstream_commit_short: str,
+    annotations: dict,
+) -> str:
+    """Write new-directories-annotated.md with descriptions and links."""
+    worldgen_dirs, remaining = format_worldgen_summary(dirs_files)
+
+    lines = [
+        "# New Directories (Annotated)",
+        "",
+        f"Directories in this fork that do not exist in upstream commit `{upstream_commit_short}`.",
+        "",
+    ]
+
+    if remaining:
+        lines.append(f"## Project Directories ({len(remaining)})")
+        for dir_path in sorted(remaining.keys()):
+            files = remaining[dir_path]
+            lines.append("")
+            lines.append(f"- **`{dir_path}/`** ({len(files)} files)")
+            ann = get_annotation(annotations, dir_path)
+            for ann_line in format_annotation_lines(ann, output_dir):
+                lines.append(ann_line)
+        lines.append("")
+
+    if worldgen_dirs:
+        lines.append(f"## Auto-Generated World Directories ({len(worldgen_dirs)})")
+        lines.append("")
+        lines.append("These directories are generated by the World Generator from JSON rules files.")
+        lines.append("")
+        lines.append("<details>")
+        lines.append(f"<summary>Show {len(worldgen_dirs)} worldgen directories</summary>")
+        lines.append("")
+        for dir_path, count in sorted(worldgen_dirs):
+            lines.append(f"- `{dir_path}/` ({count} files)")
+        lines.append("")
+        lines.append("</details>")
+        lines.append("")
+
+    total_dirs = len(remaining) + len(worldgen_dirs)
+    total_files = sum(len(f) for f in dirs_files.values())
+    lines.append("---")
+    lines.append("")
+    lines.append(f"**Total:** {total_dirs} new directories containing {total_files} files")
+    lines.append("")
+
+    content = "\n".join(lines)
+    filepath = output_dir / "new-directories-annotated.md"
+    filepath.write_text(content)
+    return content
+
+
+def write_file_list_annotated(
+    output_dir: Path,
+    filename: str,
+    title: str,
+    subtitle: str,
+    files: list[str],
+    annotations: dict,
+    empty_message: str | None = None,
+) -> str:
+    """Write an annotated file list using bullet points with descriptions and links."""
+    lines = [f"# {title} (Annotated)", "", subtitle, ""]
+
+    if not files and empty_message:
+        lines.append(empty_message)
+        lines.append("")
+    else:
+        by_dir: dict[str, list[str]] = defaultdict(list)
+        for filepath in sorted(files):
+            dir_path = str(Path(filepath).parent) if "/" in filepath else "(root)"
+            by_dir[dir_path].append(filepath)
+
+        for dir_path in sorted(by_dir.keys()):
+            dir_files = by_dir[dir_path]
+            if dir_path == "(root)":
+                lines.append(f"## Root Directory ({len(dir_files)} files)")
+            else:
+                lines.append(f"## `{dir_path}/` ({len(dir_files)} files)")
+            for f in sorted(dir_files):
+                ann = get_annotation(annotations, f)
+                lines.append("")
+                lines.append(f"- `{f}`")
+                for ann_line in format_annotation_lines(ann, output_dir):
+                    lines.append(ann_line)
+            lines.append("")
+
+    lines.append("---")
+    lines.append("")
+    lines.append(f"**Total:** {len(files)} {title.lower()}")
+    lines.append("")
+
+    content = "\n".join(lines)
+    filepath = output_dir / filename
+    filepath.write_text(content)
+    return content
+
+
+def write_deleted_directories_annotated(
+    output_dir: Path,
+    dirs_files: dict[str, list[str]],
+    upstream_commit_short: str,
+    annotations: dict,
+) -> str:
+    """Write deleted-directories-annotated.md with descriptions and links."""
+    lines = [
+        "# Deleted Directories (Annotated)",
+        "",
+        f"Directories that existed in upstream commit `{upstream_commit_short}` but have been entirely removed.",
+        "",
+    ]
+
+    if not dirs_files:
+        lines.append("No upstream directories have been entirely removed.")
+        lines.append("")
+    else:
+        for dir_path in sorted(dirs_files.keys()):
+            files = dirs_files[dir_path]
+            lines.append("")
+            lines.append(f"- **`{dir_path}/`** ({len(files)} files removed)")
+            ann = get_annotation(annotations, dir_path)
+            for ann_line in format_annotation_lines(ann, output_dir):
+                lines.append(ann_line)
+        lines.append("")
+
+    lines.append("---")
+    lines.append("")
+    total_files = sum(len(f) for f in dirs_files.values())
+    lines.append(f"**Total:** {len(dirs_files)} deleted directories ({total_files} files)")
+    lines.append("")
+
+    content = "\n".join(lines)
+    filepath = output_dir / "deleted-directories-annotated.md"
+    filepath.write_text(content)
+    return content
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate categorized file diff lists comparing fork against upstream Archipelago."
@@ -443,6 +587,11 @@ def main():
         help=f"Output directory for generated files (default: {DEFAULT_OUTPUT_DIR})",
     )
     parser.add_argument(
+        "--annotations-file",
+        default=DEFAULT_ANNOTATIONS_FILE,
+        help=f"Path to annotations JSON file (default: {DEFAULT_ANNOTATIONS_FILE})",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Show what would be generated without writing files",
@@ -451,6 +600,7 @@ def main():
 
     project_root = get_project_root()
     output_dir = project_root / args.output_dir
+    annotations_path = project_root / args.annotations_file
 
     # Resolve upstream commit
     commit = resolve_upstream_commit(args.upstream_commit)
@@ -480,6 +630,13 @@ def main():
     print(f"  Deleted files (individual):   {len(deleted_individual)}")
     print(f"  Deleted directories:          {len(deleted_dirs_files)}")
 
+    # Load annotations
+    annotations = load_annotations(annotations_path)
+    if annotations:
+        print(f"\nLoaded {len(annotations)} annotation entries from {args.annotations_file}")
+    else:
+        print(f"\nNo annotations loaded (annotated files will have no extra information)")
+
     if args.dry_run:
         print("\nDry run - no files written.")
         return
@@ -487,19 +644,82 @@ def main():
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Generate files
+    # --- Plain output (unchanged from original) ---
+
     write_new_directories(output_dir, new_dirs_files, commit_short)
-    write_new_files_in_existing_dirs(output_dir, new_files_in_existing, commit_short)
-    write_changed_files(output_dir, modified_files, commit_short)
-    write_deleted_files(output_dir, deleted_individual, commit_short)
+
+    write_file_list_plain(
+        output_dir, "new-files-in-existing-dirs.md",
+        "New Files in Existing Directories",
+        f"Files added to directories that already existed in upstream commit `{commit_short}`.",
+        new_files_in_existing,
+    )
+    write_file_list_plain(
+        output_dir, "changed-files.md",
+        "Changed Files",
+        f"Files modified from their upstream versions (commit `{commit_short}`).",
+        modified_files,
+    )
+    write_file_list_plain(
+        output_dir, "deleted-files.md",
+        "Deleted Files",
+        f"Files removed from directories that still exist (upstream commit `{commit_short}`).",
+        deleted_individual,
+        empty_message="No individual files have been deleted from existing directories.",
+    )
     write_deleted_directories(output_dir, deleted_dirs_files, commit_short)
 
-    print(f"\nGenerated 5 files in {output_dir}/")
-    for name in ["new-directories.md", "new-files-in-existing-dirs.md", "changed-files.md",
-                  "deleted-files.md", "deleted-directories.md"]:
+    # --- Annotated output ---
+
+    write_new_directories_annotated(output_dir, new_dirs_files, commit_short, annotations)
+
+    write_file_list_annotated(
+        output_dir, "new-files-in-existing-dirs-annotated.md",
+        "New Files in Existing Directories",
+        f"Files added to directories that already existed in upstream commit `{commit_short}`.",
+        new_files_in_existing,
+        annotations,
+    )
+    write_file_list_annotated(
+        output_dir, "changed-files-annotated.md",
+        "Changed Files",
+        f"Files modified from their upstream versions (commit `{commit_short}`).",
+        modified_files,
+        annotations,
+    )
+    write_file_list_annotated(
+        output_dir, "deleted-files-annotated.md",
+        "Deleted Files",
+        f"Files removed from directories that still exist (upstream commit `{commit_short}`).",
+        deleted_individual,
+        annotations,
+        empty_message="No individual files have been deleted from existing directories.",
+    )
+    write_deleted_directories_annotated(output_dir, deleted_dirs_files, commit_short, annotations)
+
+    # --- Summary ---
+
+    plain_files = [
+        "new-directories.md", "new-files-in-existing-dirs.md", "changed-files.md",
+        "deleted-files.md", "deleted-directories.md",
+    ]
+    annotated_files = [
+        "new-directories-annotated.md", "new-files-in-existing-dirs-annotated.md",
+        "changed-files-annotated.md", "deleted-files-annotated.md",
+        "deleted-directories-annotated.md",
+    ]
+
+    print(f"\nGenerated 10 files in {output_dir}/")
+    print(f"\n  Plain:")
+    for name in plain_files:
         filepath = output_dir / name
         line_count = len(filepath.read_text().splitlines())
-        print(f"  {name} ({line_count} lines)")
+        print(f"    {name} ({line_count} lines)")
+    print(f"\n  Annotated:")
+    for name in annotated_files:
+        filepath = output_dir / name
+        line_count = len(filepath.read_text().splitlines())
+        print(f"    {name} ({line_count} lines)")
 
 
 if __name__ == "__main__":

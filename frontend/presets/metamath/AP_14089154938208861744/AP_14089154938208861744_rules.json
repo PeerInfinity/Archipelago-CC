@@ -95,12 +95,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 2",
+              "name": "Statement 8",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -136,12 +136,12 @@
               }
             },
             "item": {
-              "name": "Statement 3",
+              "name": "Statement 9",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -167,12 +167,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 4",
+              "name": "Statement 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -198,12 +198,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "Statement 6",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -233,12 +233,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 6",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -271,12 +271,12 @@
               }
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -312,12 +312,12 @@
               }
             },
             "item": {
-              "name": "Statement 8",
+              "name": "Statement 10",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -349,12 +349,12 @@
               }
             },
             "item": {
-              "name": "Statement 9",
+              "name": "Statement 2",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -375,12 +375,12 @@
               }
             },
             "item": {
-              "name": "Statement 10",
+              "name": "Statement 3",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }
@@ -1495,101 +1495,12 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
-      },
-      "QED Moment": {
-        "name": "QED Moment",
-        "id": 234791992,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Inference Help": {
-        "name": "Inference Help",
-        "id": 234791993,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Deduction Tip": {
-        "name": "Deduction Tip",
-        "id": 234791994,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Theorem Insight": {
-        "name": "Theorem Insight",
-        "id": 234791995,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Lemma Note": {
-        "name": "Lemma Note",
-        "id": 234791996,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Axiom Reference": {
-        "name": "Axiom Reference",
-        "id": 234791997,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Logic Guide": {
-        "name": "Logic Guide",
-        "id": 234791998,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Proof Hint": {
-        "name": "Proof Hint",
-        "id": 234791999,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
       }
     }
   },
   "item_groups": {
     "1": [
       "Everything",
-      "Hints",
       "Statements"
     ]
   },
@@ -1643,7 +1554,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
@@ -1975,7 +1886,7 @@
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": false,
+        "randomize_items": 1,
         "vanilla_placement": 0
       },
       "web": {

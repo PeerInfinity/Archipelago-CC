@@ -34,12 +34,6 @@ vitest.config.js
 .github/workflows/unittests_json.yml
 ```
 
-## `.run/` (1 files)
-
-```
-.run/Build APWorld.run.xml
-```
-
 ## `rule_builder/` (5 files)
 
 ```
@@ -62,43 +56,6 @@ test/general/test_schema_validation.py
 worlds/RomlessUtils.py
 ```
 
-## `worlds/kh2/` (1 files)
-
-```
-worlds/kh2/WorldLocations.py
-```
-
-## `worlds/stardew_valley/` (1 files)
-
-```
-worlds/stardew_valley/early_items.py
-```
-
-## `worlds/stardew_valley/data/` (1 files)
-
-```
-worlds/stardew_valley/data/bundle_data.py
-```
-
-## `worlds/stardew_valley/mods/logic/` (1 files)
-
-```
-worlds/stardew_valley/mods/logic/mod_skills_levels.py
-```
-
-## `worlds/stardew_valley/scripts/` (1 files)
-
-```
-worlds/stardew_valley/scripts/update_data.py
-```
-
-## `worlds/stardew_valley/test/` (2 files)
-
-```
-worlds/stardew_valley/test/TestOptionFlags.py
-worlds/stardew_valley/test/TestOptionsPairs.py
-```
-
 ---
 
-**Total:** 37 new files in existing directories
+**Total:** 29 new files in existing directories

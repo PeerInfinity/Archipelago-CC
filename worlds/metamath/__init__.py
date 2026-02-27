@@ -1,7 +1,7 @@
 from typing import Any, Dict, Set
 from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import MetamathItem, item_table, item_groups, FILLER_ITEMS, statement_item_name
+from .Items import MetamathItem, item_table, item_groups, statement_item_name
 from .Locations import MetamathLocation, location_table, statement_location_name
 from .Options import MetamathOptions, metamath_option_groups
 from .Rules import ProofStructure, set_metamath_rules, parse_metamath_proof
@@ -71,10 +71,6 @@ class MetamathWorld(World):
             self.options.randomize_items.value = False
             self.is_vanilla = True
 
-        # If seed is 1, disable randomization to use canonical item placements
-        if self.multiworld.seed == 1:
-            self.options.randomize_items.value = False
-
         # Get the theorem name from options (use current_key for string representation)
         theorem_name = self.options.theorem.current_key
 
@@ -97,6 +93,12 @@ class MetamathWorld(World):
 
         # Build meaningful name mappings from proof structure
         self._build_name_maps()
+
+        # Set preset label for the frontend (e.g., "canth s4" or "2p2e4 v")
+        if self.options.vanilla_placement.value:
+            self.preset_label = f"{theorem_name} v"
+        else:
+            self.preset_label = f"{theorem_name} s{self.multiworld.seed}"
 
         # Build name substitutions for the world generator to apply
         # Maps generic names -> meaningful names so WorldGen worlds use readable names
@@ -254,23 +256,6 @@ class MetamathWorld(World):
                     )
                     items.append(item)
 
-        # Add filler items to match the number of locations
-        num_locations = self.num_statements - len(self.starting_statements)
-        num_items = len(items)
-        num_fillers_needed = max(0, num_locations - num_items)
-
-        if num_fillers_needed > 0:
-            for _ in range(num_fillers_needed):
-                hint = self.random.choice(FILLER_ITEMS)
-                if hint in self.item_name_to_id:
-                    item = MetamathItem(
-                        hint,
-                        ItemClassification.filler,
-                        self.item_name_to_id[hint],
-                        self.player
-                    )
-                    items.append(item)
-
         # Add items to multiworld
         self.multiworld.itempool += items
 
@@ -308,11 +293,11 @@ class MetamathWorld(World):
                 item_data.code,
                 self.player
             )
-        # Last resort: create as filler with the requested name
+        # Last resort: create as progression with the requested name
         return MetamathItem(
             name,
-            ItemClassification.filler,
-            self.item_name_to_id.get(name, self.item_name_to_id.get("Proof Hint", 234791999)),
+            ItemClassification.progression,
+            self.item_name_to_id.get(name, 234790000),
             self.player
         )
 

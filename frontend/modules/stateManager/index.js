@@ -477,7 +477,11 @@ async function handleUserLocationCheckForStateManager(eventData) {
   if (eventData.locationName) {
     // Pass addItems parameter from event data (defaults to true for backward compatibility)
     const addItems = eventData.addItems !== undefined ? eventData.addItems : true;
-    await stateManagerProxySingleton.checkLocation(eventData.locationName, addItems); // Command worker
+    try {
+      await stateManagerProxySingleton.checkLocation(eventData.locationName, addItems); // Command worker
+    } catch (err) {
+      log('warn', `[StateManagerModule] checkLocation failed for "${eventData.locationName}": ${err.message}`);
+    }
   } else {
     // Handle "check next available" locally.
     // This requires StateManagerProxySingleton to expose a method that commands the worker

@@ -88,11 +88,11 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For categorized file lists, see [file-lists/](./file-lists/):
-  - [New Directories](./file-lists/new-directories.md) — directories in fork but not upstream
-  - [New Files in Existing Dirs](./file-lists/new-files-in-existing-dirs.md) — files added to dirs that exist upstream
-  - [Changed Files](./file-lists/changed-files.md) — files modified from upstream versions
-  - [Deleted Files](./file-lists/deleted-files.md) — files removed from upstream dirs
-  - [Deleted Directories](./file-lists/deleted-directories.md) — directories entirely removed
+  - [New Directories](./file-lists/new-directories.md) ([annotated](./file-lists/new-directories-annotated.md)) — directories in fork but not upstream
+  - [New Files in Existing Dirs](./file-lists/new-files-in-existing-dirs.md) ([annotated](./file-lists/new-files-in-existing-dirs-annotated.md)) — files added to dirs that exist upstream
+  - [Changed Files](./file-lists/changed-files.md) ([annotated](./file-lists/changed-files-annotated.md)) — files modified from upstream versions
+  - [Deleted Files](./file-lists/deleted-files.md) ([annotated](./file-lists/deleted-files-annotated.md)) — files removed from upstream dirs
+  - [Deleted Directories](./file-lists/deleted-directories.md) ([annotated](./file-lists/deleted-directories-annotated.md)) — directories entirely removed
 - For a complete overview of all changes, see [repository-changes.md](./repository-changes.md)
 
 ## When to Use These Diffs
