@@ -199,6 +199,40 @@ YAMLEOF
   fi
 }
 
+# Generate a MetaMath seed with a specific theorem (and optional extra options)
+generate_metamath_seed() {
+  local theorem="$1" seed_num="$2" extra_opts="${3:-}"
+  local temp_yaml="Players/Templates/Metamath ${theorem}.yaml"
+
+  if [ "$SCRIPT_MODE" = true ]; then
+    {
+      echo "mkdir -p \"Players/Templates\""
+      echo "cat > \"${temp_yaml}\" << 'YAMLEOF'"
+      echo "name: Player{number}"
+      echo "game: \"Metamath\""
+      echo "Metamath:"
+      echo "  theorem: ${theorem}"
+      if [ -n "$extra_opts" ]; then
+        echo "$extra_opts"
+      fi
+      echo "YAMLEOF"
+      _fmt python Generate.py --weights_file_path "Templates/Metamath ${theorem}.yaml" --multi 1 --seed "$seed_num"
+      echo "rm -f \"${temp_yaml}\""
+    } >> "$OUTPUT_SCRIPT"
+  else
+    mkdir -p "Players/Templates"
+    cat > "$temp_yaml" << YAMLEOF
+name: Player{number}
+game: "Metamath"
+Metamath:
+  theorem: ${theorem}
+$([ -n "$extra_opts" ] && echo "$extra_opts")
+YAMLEOF
+    python Generate.py --weights_file_path "Templates/Metamath ${theorem}.yaml" --multi 1 --seed "$seed_num"
+    rm -f "$temp_yaml"
+  fi
+}
+
 # Check if a game has vanilla seeds
 has_vanilla() {
   [ -n "${VANILLA_PRESET_DIR[$1]+x}" ]
@@ -252,6 +286,7 @@ gen_worldgen2_world() {
 # ============================================================
 
 # Templates that generate seeds 1, 2, 3
+# Note: Metamath is handled in its own dedicated section (theorem variants)
 EXTRA_SEED_TEMPLATES=(
   "A Link to the Past"
   "Adventure"
@@ -259,7 +294,6 @@ EXTRA_SEED_TEMPLATES=(
   "A Hat in Time"
   "Baking Adventure"
   "Coding Adventure"
-  "Metamath"
 )
 
 # Templates included in the multiworld preset
@@ -276,7 +310,7 @@ declare -A VANILLA_PRESET_DIR
 VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
 VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
 VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
-VANILLA_PRESET_DIR["Metamath"]="metamath"
+# Note: Metamath vanilla is handled in its own dedicated section (theorem variants)
 
 # WorldGen2 templates (game name -> preset directory name for source WorldGen presets)
 declare -A WORLDGEN2_PRESET_DIR
@@ -286,6 +320,7 @@ WORLDGEN2_PRESET_DIR["A Short Hike"]="shorthike"
 WORLDGEN2_PRESET_DIR["Adventure"]="adventure"
 
 # All WorldGen2 games (union of vanilla and normal WorldGen2)
+# Note: Metamath WorldGen2 is handled in its own dedicated section (theorem variants)
 WORLDGEN2_TEMPLATES=(
   "A Hat in Time"
   "A Link to the Past"
@@ -293,7 +328,6 @@ WORLDGEN2_TEMPLATES=(
   "Adventure"
   "Baking Adventure"
   "Coding Adventure"
-  "Metamath"
 )
 
 # ============================================================
@@ -345,6 +379,92 @@ for template in "${EXTRA_SEED_TEMPLATES[@]}"; do
   fi
   gen_seeds "$template"
 done
+
+# --- MetaMath theorem variants ---
+
+section "Generating MetaMath theorem variant presets"
+
+# --- Main seeds ---
+# 2p2e4 (easy): seeds 1-3 via default template
+gen_seeds "Metamath"
+# canth (medium): seeds 4-6
+generate_metamath_seed "canth" 4
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_metamath_seed "canth" 5
+  generate_metamath_seed "canth" 6
+fi
+# wilth (hard): seeds 7-9
+generate_metamath_seed "wilth" 7
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_metamath_seed "wilth" 8
+  generate_metamath_seed "wilth" 9
+fi
+
+# --- Vanilla seeds ---
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Metamath"                                    # 2p2e4, seed 1
+  generate_metamath_seed "canth" 2 "  vanilla_placement: true"        # canth, seed 2
+  generate_metamath_seed "wilth" 3 "  vanilla_placement: true"        # wilth, seed 3
+fi
+
+# --- WorldGen ---
+if [ "$GENERATE_WORLDGEN" = "true" ]; then
+  # Create WorldGen worlds from representative main seeds
+  gen_worldgen_world "Metamath"                    # 2p2e4 from seed 1
+  run_world_generator \
+    "frontend/presets/metamath/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
+    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen"
+  run_world_generator \
+    "frontend/presets/metamath/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
+    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen"
+
+  # Create Vanilla WorldGen worlds from vanilla seeds
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
+      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
+      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen"
+  fi
+
+  # Regen templates so WorldGen templates are available for seed generation
+  regen_templates
+
+  # WorldGen seeds: same pattern as main
+  gen_seeds "Metamath WorldGen"
+  gen_seed "Metamath Canth WorldGen" 4
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Canth WorldGen" 5
+    gen_seed "Metamath Canth WorldGen" 6
+  fi
+  gen_seed "Metamath Wilth WorldGen" 7
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Wilth WorldGen" 8
+    gen_seed "Metamath Wilth WorldGen" 9
+  fi
+
+  # Vanilla WorldGen seeds
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Vanilla WorldGen" 1
+    gen_seed "Metamath Canth Vanilla WorldGen" 2
+    gen_seed "Metamath Wilth Vanilla WorldGen" 3
+  fi
+fi
+
+# --- WorldGen2 (2p2e4 only) ---
+if [ "$GENERATE_WORLDGEN2" = "true" ]; then
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2"
+    regen_templates
+    gen_seed "Metamath Vanilla WorldGen2" 1
+  fi
+fi
 
 # --- Multiworld ---
 

@@ -245,9 +245,9 @@ export class PresetUI {
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.description || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
+                      folderData.label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.seed)}${vanillaBadge}
+              ${this.escapeHtml(folderData.label || folderData.seed)}${folderData.label ? '' : vanillaBadge}
             </button>
           `;
         });

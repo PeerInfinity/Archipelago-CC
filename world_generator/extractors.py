@@ -188,6 +188,7 @@ class ExtractedData:
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     canonical_placement_advancements: Dict[str, bool] = field(default_factory=dict)  # location -> is_advancement (for mixed-class items)
     is_vanilla: bool = False  # Whether placements match the original non-randomized game
+    preset_label: str = ''  # Frontend label for preset buttons (e.g., "canth s4")
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
@@ -1329,6 +1330,9 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Check if placements are vanilla (match original non-randomized game)
     is_vanilla = json_data.get('is_vanilla', False)
 
+    # Get preset label for frontend display (e.g., "canth s4")
+    preset_label = json_data.get('preset_label', '')
+
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data, player_id=player_id)
 
@@ -1424,6 +1428,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         canonical_placements=canonical_placements,
         canonical_placement_advancements=canonical_placement_advancements,
         is_vanilla=is_vanilla,
+        preset_label=preset_label,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
         dungeons=dungeons,

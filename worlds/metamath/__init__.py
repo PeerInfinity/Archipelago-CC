@@ -94,6 +94,12 @@ class MetamathWorld(World):
         # Build meaningful name mappings from proof structure
         self._build_name_maps()
 
+        # Set preset label for the frontend (e.g., "canth s4" or "2p2e4 v")
+        if self.options.vanilla_placement.value:
+            self.preset_label = f"{theorem_name} v"
+        else:
+            self.preset_label = f"{theorem_name} s{self.multiworld.seed}"
+
         # Build name substitutions for the world generator to apply
         # Maps generic names -> meaningful names so WorldGen worlds use readable names
         self.name_substitutions = {"items": {}, "locations": {}, "regions": {}}

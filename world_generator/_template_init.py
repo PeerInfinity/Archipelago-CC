@@ -311,6 +311,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{{base}} v" if is_vanilla else f"{{base}} s{{self.multiworld.seed}}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -462,6 +468,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     def generate_early(self) -> None:
         """Push starting items as precollected."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
 '''
         create_items_section = '''
     def create_items(self) -> None:
@@ -655,6 +667,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             placement_type_section = '''
     # Placements are deterministically reproduced by world generator
     is_canonical: ClassVar[bool] = True
+'''
+
+    # Generate preset_label class attribute (for frontend display in preset buttons)
+    preset_label_section = ''
+    if data.preset_label:
+        escaped_label = data.preset_label.replace('\\', '\\\\').replace('"', '\\"')
+        preset_label_section = f'''
+    # Frontend preset button label (e.g., "canth s4")
+    preset_label: ClassVar[str] = "{escaped_label}"
 '''
 
     # Generate canonical_placements class attribute (for exporter to read)
@@ -1134,7 +1155,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{preset_label_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
