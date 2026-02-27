@@ -978,6 +978,28 @@
     "template_file": "Metamath.yaml",
     "world_directory": "metamath"
   },
+  "Metamath Canth Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Metamath Canth Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Metamath Canth Vanilla WorldGen.yaml",
+    "world_directory": "metamath_canth_vanilla_worldgen"
+  },
+  "Metamath Canth WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Metamath Canth WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Metamath Canth WorldGen.yaml",
+    "world_directory": "metamath_canth_worldgen"
+  },
   "Metamath Vanilla WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -999,6 +1021,28 @@
     "has_custom_game_logic": false,
     "template_file": "Metamath Vanilla WorldGen2.yaml",
     "world_directory": "metamath_vanilla_worldgen2"
+  },
+  "Metamath Wilth Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Metamath Wilth Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Metamath Wilth Vanilla WorldGen.yaml",
+    "world_directory": "metamath_wilth_vanilla_worldgen"
+  },
+  "Metamath Wilth WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Metamath Wilth WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Metamath Wilth WorldGen.yaml",
+    "world_directory": "metamath_wilth_worldgen"
   },
   "Metamath WorldGen": {
     "exporter_path": null,

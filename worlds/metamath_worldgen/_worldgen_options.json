@@ -9,7 +9,7 @@
   "plando_items": [],
   "priority_locations": [],
   "progression_balancing": 50,
-  "randomize_items": false,
+  "randomize_items": true,
   "start_hints": [],
   "start_inventory": {},
   "start_location_hints": [],

@@ -247,7 +247,7 @@ export class PresetUI {
                     title="${this.escapeHtml(
                       folderData.label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.label || folderData.seed)}${folderData.label ? '' : vanillaBadge}
+              ${this.escapeHtml(folderData.label || folderData.seed)}${vanillaBadge}
             </button>
           `;
         });

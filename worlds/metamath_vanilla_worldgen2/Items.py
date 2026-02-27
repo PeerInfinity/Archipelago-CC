@@ -123,12 +123,4 @@ item_table: Dict[str, ItemData] = {
     "Statement 98": ItemData(234790097, ItemClassification.filler, None),
     "Statement 99": ItemData(234790098, ItemClassification.filler, None),
     "Statement 100": ItemData(234790099, ItemClassification.filler, None),
-    "QED Moment": ItemData(234791992, ItemClassification.filler, None),
-    "Inference Help": ItemData(234791993, ItemClassification.filler, None),
-    "Deduction Tip": ItemData(234791994, ItemClassification.filler, None),
-    "Theorem Insight": ItemData(234791995, ItemClassification.filler, None),
-    "Lemma Note": ItemData(234791996, ItemClassification.filler, None),
-    "Axiom Reference": ItemData(234791997, ItemClassification.filler, None),
-    "Logic Guide": ItemData(234791998, ItemClassification.filler, None),
-    "Proof Hint": ItemData(234791999, ItemClassification.filler, None),
 }

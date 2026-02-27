@@ -95,7 +95,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "ax-1cn: |- 1 e. CC",
+              "name": "oveq1i: |- ( A F C ) = ( B F C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -136,7 +136,7 @@
               }
             },
             "item": {
-              "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+              "name": "oveq2i: |- ( C F A ) = ( C F B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -167,7 +167,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-2: |- 2 = ( 1 + 1 )",
+              "name": "df-3: |- 3 = ( 2 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -198,7 +198,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-3: |- 3 = ( 2 + 1 )",
+              "name": "df-4: |- 4 = ( 3 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -233,7 +233,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-4: |- 4 = ( 3 + 1 )",
+              "name": "3eqtri: |- A = D",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -271,7 +271,7 @@
               }
             },
             "item": {
-              "name": "oveq1i: |- ( A F C ) = ( B F C )",
+              "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -312,7 +312,7 @@
               }
             },
             "item": {
-              "name": "3eqtri: |- A = D",
+              "name": "ax-1cn: |- 1 e. CC",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -349,7 +349,7 @@
               }
             },
             "item": {
-              "name": "oveq2i: |- ( C F A ) = ( C F B )",
+              "name": "eqtr4i: |- A = C",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -375,7 +375,7 @@
               }
             },
             "item": {
-              "name": "eqtr4i: |- A = C",
+              "name": "df-2: |- 2 = ( 1 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1505,101 +1505,12 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
-      },
-      "QED Moment": {
-        "name": "QED Moment",
-        "id": 234791992,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Inference Help": {
-        "name": "Inference Help",
-        "id": 234791993,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Deduction Tip": {
-        "name": "Deduction Tip",
-        "id": 234791994,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Theorem Insight": {
-        "name": "Theorem Insight",
-        "id": 234791995,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Lemma Note": {
-        "name": "Lemma Note",
-        "id": 234791996,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Axiom Reference": {
-        "name": "Axiom Reference",
-        "id": 234791997,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Logic Guide": {
-        "name": "Logic Guide",
-        "id": 234791998,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Proof Hint": {
-        "name": "Proof Hint",
-        "id": 234791999,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
       }
     }
   },
   "item_groups": {
     "1": [
       "Everything",
-      "Hints",
       "Statements"
     ]
   },
@@ -1654,7 +1565,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
@@ -1762,6 +1673,7 @@
         }
       },
       "num_statements": 10,
+      "preset_label": "2p2e4 s1",
       "canonical_placements": {
         "Prove ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
         "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
@@ -1954,7 +1866,7 @@
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": false,
+        "randomize_items": true,
         "vanilla_placement": 0
       },
       "web": {
@@ -1985,5 +1897,6 @@
     }
   },
   "helpers": {},
-  "is_canonical": true
+  "is_canonical": true,
+  "preset_label": "2p2e4 s1"
 }

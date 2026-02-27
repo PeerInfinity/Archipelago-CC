@@ -1505,101 +1505,12 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
-      },
-      "QED Moment": {
-        "name": "QED Moment",
-        "id": 234791992,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Inference Help": {
-        "name": "Inference Help",
-        "id": 234791993,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Deduction Tip": {
-        "name": "Deduction Tip",
-        "id": 234791994,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Theorem Insight": {
-        "name": "Theorem Insight",
-        "id": 234791995,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Lemma Note": {
-        "name": "Lemma Note",
-        "id": 234791996,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Axiom Reference": {
-        "name": "Axiom Reference",
-        "id": 234791997,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Logic Guide": {
-        "name": "Logic Guide",
-        "id": 234791998,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Proof Hint": {
-        "name": "Proof Hint",
-        "id": 234791999,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
       }
     }
   },
   "item_groups": {
     "1": [
       "Everything",
-      "Hints",
       "Statements"
     ]
   },
@@ -1763,6 +1674,7 @@
       },
       "num_statements": 10,
       "is_vanilla": true,
+      "preset_label": "2p2e4 v",
       "canonical_placements": {
         "Prove ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
         "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
@@ -1987,5 +1899,6 @@
   },
   "helpers": {},
   "is_vanilla": true,
-  "is_canonical": true
+  "is_canonical": true,
+  "preset_label": "2p2e4 v"
 }
