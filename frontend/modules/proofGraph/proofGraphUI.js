@@ -108,6 +108,7 @@ export class ProofGraphUI {
 
     this._attachListeners();
     this.container.on('destroy', () => this.destroy());
+    this.container.on('show', () => this._onPanelShow());
 
     // Late-initialization: if proof data is already loaded (e.g. component
     // created after stateManager:rulesLoaded already fired), start immediately.
@@ -155,6 +156,14 @@ export class ProofGraphUI {
     if (this.cy) {
       this.cy.destroy();
       this.cy = null;
+    }
+  }
+
+  _onPanelShow() {
+    if (this.cy) {
+      this.cy.resize();
+    } else if (this.cytoscape && proofGraphState.isLoaded) {
+      this._initializeGraph();
     }
   }
 
@@ -250,38 +259,8 @@ export class ProofGraphUI {
 
     const rect = this._graphContainer.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
-      log('info', 'Container not visible, deferring graph init');
+      log('info', 'Container not visible, deferring to tab show event');
       this._statusEl.textContent = 'Waiting for panel to become visible...';
-
-      // Use both ResizeObserver and a polling fallback for robustness.
-      let resolved = false;
-      const tryInit = () => {
-        if (resolved || this.cy) return;
-        const r = this._graphContainer.getBoundingClientRect();
-        if (r.width > 0 && r.height > 0) {
-          resolved = true;
-          if (observer) observer.disconnect();
-          if (pollId) clearInterval(pollId);
-          this._initializeGraph();
-        }
-      };
-
-      const observer = new ResizeObserver(tryInit);
-      observer.observe(this._graphContainer);
-
-      // Polling fallback: check periodically in case ResizeObserver doesn't fire
-      const pollId = setInterval(tryInit, 200);
-
-      // Give up after 15s
-      setTimeout(() => {
-        if (!resolved && !this.cy) {
-          observer.disconnect();
-          clearInterval(pollId);
-          log('warn', 'Container never became visible after 15s');
-          this._statusEl.textContent = 'Graph container not visible. Try resizing the panel.';
-        }
-      }, 15000);
-
       return;
     }
 
