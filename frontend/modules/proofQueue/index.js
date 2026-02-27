@@ -152,6 +152,15 @@ function _initializeProofFromStaticData(staticData) {
     return;
   }
 
+  // If already loaded (UI handler may have loaded it first), just wire up
+  // event bus publishing without re-loading or overwriting existing callbacks.
+  if (proofQueueState.isLoaded) {
+    log('info', 'Proof structure already loaded, wiring event bus publishing');
+    _wireEventBusPublishing();
+    _syncStateFromSnapshot();
+    return;
+  }
+
   log('info', 'Found MetaMath proof structure, initializing...');
 
   const success = proofQueueState.loadFromSlotData(
@@ -172,7 +181,14 @@ function _initializeProofFromStaticData(staticData) {
   _syncStateFromSnapshot();
 
   // Wire queue change notifications to event bus
+  _wireEventBusPublishing();
+}
+
+function _wireEventBusPublishing() {
+  // Chain onto any existing callback (e.g. UI render) rather than overwriting
+  const existingCb = proofQueueState.onQueueChanged;
   proofQueueState.onQueueChanged = () => {
+    if (existingCb) existingCb();
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofQueue:queueChanged', {
         queue: [...proofQueueState.queue],
@@ -184,7 +200,8 @@ function _initializeProofFromStaticData(staticData) {
 
 function _syncStateFromSnapshot(snapshotData) {
   if (!proofQueueState) return;
-  const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+  // Event data is wrapped as { snapshot: ... }, unwrap if needed
+  const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
   if (!snapshot) return;
 
   if (snapshot.inventory) {

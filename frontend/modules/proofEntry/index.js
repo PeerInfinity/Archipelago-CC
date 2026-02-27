@@ -147,6 +147,15 @@ function _initializeProofFromStaticData(staticData) {
     return;
   }
 
+  // If already loaded (UI handler may have loaded it first), just wire up
+  // event bus publishing without re-loading or overwriting existing callbacks.
+  if (proofEntryState.isLoaded) {
+    log('info', 'Proof structure already loaded, wiring event bus publishing');
+    _wireEventBusPublishing();
+    _syncStateFromSnapshot();
+    return;
+  }
+
   log('info', 'Found MetaMath proof structure, initializing...');
 
   const success = proofEntryState.loadFromSlotData(
@@ -164,21 +173,30 @@ function _initializeProofFromStaticData(staticData) {
   );
 
   _syncStateFromSnapshot();
+  _wireEventBusPublishing();
+}
 
-  // Wire event bus notifications
+function _wireEventBusPublishing() {
+  // Chain onto any existing callbacks (e.g. UI render) rather than overwriting
+  const existingStepDiscovered = proofEntryState.onStepDiscovered;
   proofEntryState.onStepDiscovered = (stepIndex, matchType) => {
+    if (existingStepDiscovered) existingStepDiscovered(stepIndex, matchType);
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofEntry:stepDiscovered', { stepIndex, matchType });
     }
   };
 
+  const existingMatchFailed = proofEntryState.onMatchFailed;
   proofEntryState.onMatchFailed = (input) => {
+    if (existingMatchFailed) existingMatchFailed(input);
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofEntry:matchFailed', { input });
     }
   };
 
+  const existingQueueChanged = proofEntryState.onQueueChanged;
   proofEntryState.onQueueChanged = () => {
+    if (existingQueueChanged) existingQueueChanged();
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofEntry:queueChanged', {
         queue: [...proofEntryState.queue],
@@ -190,7 +208,8 @@ function _initializeProofFromStaticData(staticData) {
 
 function _syncStateFromSnapshot(snapshotData) {
   if (!proofEntryState) return;
-  const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+  // Event data is wrapped as { snapshot: ... }, unwrap if needed
+  const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
   if (!snapshot) return;
 
   if (snapshot.inventory) {

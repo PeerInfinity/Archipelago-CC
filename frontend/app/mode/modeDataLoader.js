@@ -254,7 +254,6 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
   const gameParam = urlParams.get('game');
   const seedParam = urlParams.get('seed') || '1'; // Default seed is 1
   const playerParam = urlParams.get('player'); // Player number or name for multiworld
-  const placementParam = urlParams.get('placement'); // Placement variant: "vanilla", "canonical", "vanilla-canonical"
 
   // If game parameter is provided and no rules parameter, look up the rules file
   if (gameParam && !rulesOverride) {
@@ -266,14 +265,13 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
       );
 
       if (presetFiles) {
-        const rulesFile = findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger, placementParam);
+        const rulesFile = findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger);
         if (rulesFile) {
           rulesOverride = rulesFile;
           const playerInfo = playerParam ? ` player="${playerParam}"` : '';
-          const placementInfo = placementParam ? ` placement="${placementParam}"` : '';
           logger.info(
             'init',
-            `Rules file determined from game="${gameParam}" seed="${seedParam}"${playerInfo}${placementInfo}: ${rulesFile}`
+            `Rules file determined from game="${gameParam}" seed="${seedParam}"${playerInfo}: ${rulesFile}`
           );
         }
       }
@@ -313,13 +311,8 @@ async function resolveRulesOverride(urlParams, fetchJson, logger) {
  *   - Returns the standard rules file (e.g., AP_seed_rules.json)
  *   - playerParam is ignored for non-multiworld games
  *
- * Placement variants (placementParam):
- *   - null/undefined: prefers the randomized version (no is_vanilla/is_canonical flags)
- *   - "vanilla": selects the folder with is_vanilla=true
- *   - "canonical": selects the folder with is_canonical=true
- *   - "vanilla-canonical": selects the folder with both is_vanilla=true and is_canonical=true
  */
-function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger, placementParam) {
+function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerParam, logger) {
   let gameEntry = null;
   let gameKey = null;
 
@@ -363,33 +356,10 @@ function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerPara
       }
     }
 
-    // Select the best matching folder based on placement parameter
+    // Select the matching folder (use first match for the seed)
     let selectedFolder = null;
     if (matchingFolders.length > 0) {
-      if (placementParam) {
-        // Match based on placement parameter
-        const wantVanilla = placementParam.includes('vanilla');
-        const wantCanonical = placementParam.includes('canonical');
-        selectedFolder = matchingFolders.find(({ folderData }) =>
-          !!folderData.is_vanilla === wantVanilla && !!folderData.is_canonical === wantCanonical
-        );
-        if (!selectedFolder) {
-          logger.warn(
-            'init',
-            `No "${placementParam}" placement variant found for game="${gameParam}" seed="${seedParam}", ` +
-            `available: ${matchingFolders.map(f => f.folderName).join(', ')}`
-          );
-        }
-      } else {
-        // No placement specified: prefer the randomized version (no flags)
-        selectedFolder = matchingFolders.find(({ folderData }) =>
-          !folderData.is_vanilla && !folderData.is_canonical
-        );
-        // Fall back to first match if no randomized version exists
-        if (!selectedFolder) {
-          selectedFolder = matchingFolders[0];
-        }
-      }
+      selectedFolder = matchingFolders[0];
     }
 
     if (selectedFolder) {
@@ -445,10 +415,9 @@ function findRulesFileFromGameSeed(presetFiles, gameParam, seedParam, playerPara
     }
 
     const playerInfo = playerParam ? ` player="${playerParam}"` : '';
-    const placementInfo = placementParam ? ` placement="${placementParam}"` : '';
     logger.warn(
       'init',
-      `No rules file found for game="${gameParam}" with seed="${seedParam}"${playerInfo}${placementInfo}`
+      `No rules file found for game="${gameParam}" with seed="${seedParam}"${playerInfo}`
     );
   } else {
     logger.warn(

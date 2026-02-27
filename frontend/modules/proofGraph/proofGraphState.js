@@ -90,24 +90,33 @@ export class ProofGraphState {
       }
     }
 
+    // Detect naming scheme: if name_substitutions has item entries, the game
+    // uses generic "Statement N" / "Prove Statement N" names with substitutions.
+    // Otherwise (worldgen), items/locations use "label: expression" directly.
+    const useGenericNames = this.nameSubstitutions.size > 0;
+
     // Parse statements and build edge map
     let maxIndex = 0;
     for (const [indexStr, stmt] of Object.entries(proofStructure)) {
       const index = parseInt(indexStr, 10);
       if (isNaN(index)) continue;
 
-      const itemName = `Statement ${index}`;
-      const locationName = `Prove Statement ${index}`;
+      const label = stmt.label || `stmt_${index}`;
+      const expression = stmt.expression || '';
+      const directName = `${label}: ${expression}`;
+
+      const itemName = useGenericNames ? `Statement ${index}` : directName;
+      const locationName = useGenericNames ? `Prove Statement ${index}` : `Prove ${directName}`;
 
       this.steps.set(index, {
         index,
-        label: stmt.label || `stmt_${index}`,
-        expression: stmt.expression || '',
+        label,
+        expression,
         dependencies: Array.isArray(stmt.dependencies) ? [...stmt.dependencies] : [],
         fullText: stmt.full_text || null,
         itemName,
         locationName,
-        displayName: this.nameSubstitutions.get(itemName) || `${stmt.label}: ${stmt.expression}`,
+        displayName: this.nameSubstitutions.get(itemName) || directName,
       });
 
       // Build correct edges: dependency -> this step
@@ -126,7 +135,10 @@ export class ProofGraphState {
     // Starting statements
     if (Array.isArray(slotData.starting_statements)) {
       for (const idx of slotData.starting_statements) {
-        this.receivedItems.add(`Statement ${idx}`);
+        const startStep = this.steps.get(idx);
+        if (startStep) {
+          this.receivedItems.add(startStep.itemName);
+        }
       }
     }
 

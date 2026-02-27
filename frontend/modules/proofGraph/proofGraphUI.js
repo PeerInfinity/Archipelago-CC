@@ -7,6 +7,7 @@
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import eventBus from '../../app/core/eventBus.js';
 import proofGraphState from './proofGraphStateSingleton.js';
 
 // Module-level references set by index.js
@@ -15,6 +16,16 @@ let _dispatcher = null;
 
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
+
+function getEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'proofGraph'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofGraph'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofGraph'),
+  };
+}
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -96,39 +107,42 @@ export class ProofGraphUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
+    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
-      get: () => _moduleEventBus,
+      get: () => getEventBus(),
       configurable: true,
     });
 
-    const readyHandler = () => {
-      this._attachListeners();
-      this.isInitialized = true;
-      if (_moduleEventBus) {
-        _moduleEventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
-      }
-    };
-
-    if (_moduleEventBus) {
-      _moduleEventBus.subscribe('app:readyForUiDataLoad', readyHandler);
-    }
-
-    // Fallback: already initialized
-    if (this._hasProofStructure()) {
-      this._attachListeners();
-      this.isInitialized = true;
-      this._loadCytoscape();
-    }
+    // Subscribe directly — the fallback eventBus ensures this works even
+    // before index.js initialize() sets _moduleEventBus (Phase 9).
+    this._attachListeners();
 
     this.container.on('destroy', () => this.destroy());
+
+    // Late-initialization: if proof data is already loaded (e.g. component
+    // created after stateManager:rulesLoaded already fired), start immediately.
+    if (proofGraphState.isLoaded && !this.cy) {
+      log('info', 'State already loaded at construction time — starting Cytoscape load');
+      this._syncFromSnapshot();
+      this._loadCytoscape();
+    } else if (this._hasProofStructure() && !proofGraphState.isLoaded) {
+      log('info', 'Proof structure available but state not loaded — loading from static data');
+      const staticData = stateManager.getStaticData();
+      const playerId = staticData.playerId || '1';
+      const playerWorld = staticData.world[playerId];
+      if (playerWorld?.slot_data?.proof_structure) {
+        proofGraphState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
+        this._syncFromSnapshot();
+        this._loadCytoscape();
+      }
+    }
   }
 
   _attachListeners() {
     this.destroy();
 
     const subscribe = (eventName, handler) => {
-      if (!_moduleEventBus) return;
-      const unsub = _moduleEventBus.subscribe(eventName, handler.bind(this));
+      const unsub = this.eventBus.subscribe(eventName, handler.bind(this));
       this.unsubscribeHandles.push(unsub);
     };
 
@@ -143,6 +157,10 @@ export class ProofGraphUI {
     });
     this.unsubscribeHandles = [];
 
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
+    }
     if (this.eh) {
       this.eh.destroy();
       this.eh = null;
@@ -164,62 +182,82 @@ export class ProofGraphUI {
   // ─── Cytoscape Loading ────────────────────────────────────
 
   _loadCytoscape() {
+    // Prevent duplicate load attempts
+    if (this._cytoscapeLoading || this.cy) return;
+
     log('info', 'Loading Cytoscape libraries...');
+    this._statusEl.textContent = 'Loading graph libraries...';
 
-    // Check if already loaded
-    if (window.cytoscape && window.cytoscapeEdgehandles) {
-      log('info', 'Libraries already loaded');
-      this.cytoscape = window.cytoscape;
-      this._initializeGraph();
-      return;
-    }
+    this._cytoscapeLoading = true;
 
-    // Load in sequence: cytoscape core → lodash shim → edgehandles
-    this._loadScript('./libs/cytoscape/cytoscape.min.js', () => {
-      this.cytoscape = window.cytoscape;
-      log('info', 'Cytoscape core loaded');
+    // Load scripts then initialize. Use window globals as source of truth
+    // for whether each script is already loaded (avoids DOM query race conditions).
+    const scripts = [
+      { src: './libs/cytoscape/cytoscape.min.js', check: () => window.cytoscape, label: 'Cytoscape core' },
+      { src: './libs/cytoscape/lodash-shim.js', check: () => window._, label: 'Lodash shim' },
+      { src: './libs/cytoscape/cytoscape-edgehandles.js', check: () => window.cytoscapeEdgehandles, label: 'Edgehandles' },
+    ];
 
-      // Load lodash shim (needed by edgehandles)
-      this._loadScript('./libs/cytoscape/lodash-shim.js', () => {
-        log('info', 'Lodash shim loaded');
+    const loadNext = (idx) => {
+      if (idx >= scripts.length) {
+        // All loaded — register and initialize
+        this.cytoscape = window.cytoscape;
+        if (window.cytoscapeEdgehandles && !this.cytoscape.prototype.edgehandles) {
+          this.cytoscape.use(window.cytoscapeEdgehandles);
+          log('info', 'Edgehandles registered');
+        }
+        this._cytoscapeLoading = false;
+        this._statusEl.textContent = 'Initializing graph...';
+        this._initializeGraph();
+        return;
+      }
 
-        // Load edgehandles
-        this._loadScript('./libs/cytoscape/cytoscape-edgehandles.js', () => {
-          log('info', 'Edgehandles loaded');
+      const { src, check, label } = scripts[idx];
+      this._statusEl.textContent = `Loading ${label}...`;
 
-          // Register edgehandles extension
-          if (window.cytoscapeEdgehandles && this.cytoscape) {
-            this.cytoscape.use(window.cytoscapeEdgehandles);
-            log('info', 'Edgehandles registered');
-          }
+      // Already available via window global? Skip loading.
+      if (check()) {
+        log('info', `${label} already available`);
+        loadNext(idx + 1);
+        return;
+      }
 
-          this._initializeGraph();
-        });
+      this._loadScript(src, () => {
+        log('info', `${label} loaded`);
+        loadNext(idx + 1);
       });
-    });
+    };
+
+    loadNext(0);
   }
 
   _loadScript(src, onload) {
+    // Check for an existing script element (may have been inserted by another code path)
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) {
-      // Already loaded or loading
-      if (existing.dataset.loaded === 'true') {
+      // Script tag exists — it may be still loading. Wait for it.
+      if (existing.complete || existing.readyState === 'complete') {
         onload();
-      } else {
-        existing.addEventListener('load', onload);
+        return;
       }
+      let handled = false;
+      const done = () => {
+        if (handled) return;
+        handled = true;
+        onload();
+      };
+      existing.addEventListener('load', done);
+      setTimeout(() => { if (!handled) done(); }, 5000); // Safety fallback
       return;
     }
 
     const script = document.createElement('script');
     script.src = src;
-    script.onload = () => {
-      script.dataset.loaded = 'true';
-      onload();
-    };
+    script.onload = () => onload();
     script.onerror = (err) => {
       log('error', `Failed to load ${src}`, err);
       this._statusEl.textContent = `Error loading library: ${src}`;
+      this._cytoscapeLoading = false;
     };
     document.head.appendChild(script);
   }
@@ -227,6 +265,8 @@ export class ProofGraphUI {
   // ─── Graph Initialization ─────────────────────────────────
 
   _initializeGraph() {
+    if (this.cy) return; // Already initialized
+
     if (!this.cytoscape || !proofGraphState.isLoaded) {
       log('info', 'Waiting for Cytoscape or proof data...');
       return;
@@ -235,15 +275,39 @@ export class ProofGraphUI {
     const rect = this._graphContainer.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
       log('info', 'Container not visible, deferring graph init');
-      // Try again when container becomes visible
-      const observer = new ResizeObserver(() => {
+      this._statusEl.textContent = 'Waiting for panel to become visible...';
+
+      // Use both ResizeObserver and a polling fallback for robustness.
+      // ResizeObserver can miss the initial size if the element is already
+      // laid out by the time we observe it.
+      let resolved = false;
+      const tryInit = () => {
+        if (resolved || this.cy) return;
         const r = this._graphContainer.getBoundingClientRect();
         if (r.width > 0 && r.height > 0) {
-          observer.disconnect();
+          resolved = true;
+          if (observer) observer.disconnect();
+          if (pollId) clearInterval(pollId);
           this._initializeGraph();
         }
-      });
+      };
+
+      const observer = new ResizeObserver(tryInit);
       observer.observe(this._graphContainer);
+
+      // Polling fallback: check periodically in case ResizeObserver doesn't fire
+      const pollId = setInterval(tryInit, 200);
+
+      // Give up after 15s
+      setTimeout(() => {
+        if (!resolved && !this.cy) {
+          observer.disconnect();
+          clearInterval(pollId);
+          log('warn', 'Container never became visible after 15s');
+          this._statusEl.textContent = 'Graph container not visible. Try resizing the panel.';
+        }
+      }, 15000);
+
       return;
     }
 
@@ -263,9 +327,6 @@ export class ProofGraphUI {
       wheelSensitivity: 0.3,
     });
 
-    // Run hierarchical layout
-    this._runLayout();
-
     // Initialize edgehandles
     this._initEdgehandles();
 
@@ -283,6 +344,31 @@ export class ProofGraphUI {
 
     // Wire state callbacks
     this._wireStateCallbacks();
+
+    // Resize handler: keep Cytoscape in sync with container size changes.
+    // Track container width to detect when GoldenLayout finishes sizing.
+    let lastWidth = 0;
+    let layoutScheduled = false;
+    this._resizeObserver = new ResizeObserver((entries) => {
+      if (!this.cy) return;
+      this.cy.resize();
+
+      const entry = entries[0];
+      const newWidth = entry.contentRect.width;
+
+      // If the container width changed significantly, schedule a layout re-run.
+      // This handles GoldenLayout's multi-phase sizing where the container
+      // may start small and grow to its final size.
+      if (Math.abs(newWidth - lastWidth) > 10) {
+        lastWidth = newWidth;
+        if (layoutScheduled) clearTimeout(layoutScheduled);
+        layoutScheduled = setTimeout(() => {
+          layoutScheduled = false;
+          if (this.cy) this._runLayout();
+        }, 200);
+      }
+    });
+    this._resizeObserver.observe(this._graphContainer);
 
     // Update status
     this._updateStatus();
@@ -633,6 +719,11 @@ export class ProofGraphUI {
       fit: true,
       padding: 40,
       avoidOverlap: true,
+      stop: () => {
+        // Re-fit after layout animation completes, in case the container
+        // resized during the animation (GoldenLayout timing)
+        if (this.cy) this.cy.fit(undefined, 40);
+      },
     }).run();
   }
 
@@ -671,12 +762,25 @@ export class ProofGraphUI {
   // ─── Event Handlers ───────────────────────────────────────
 
   _handleRulesLoaded() {
-    log('info', 'Rules loaded');
+    log('info', 'Rules loaded, checking for proof structure');
 
     if (!this._hasProofStructure()) {
+      log('info', 'Not a MetaMath game — hiding proof graph');
       this._statusEl.textContent = 'This game has no proof structure.';
       this._toolbarEl.style.display = 'none';
       return;
+    }
+
+    // If state isn't loaded yet (UI handler can fire before index.js handler),
+    // load the proof structure directly from static data.
+    if (!proofGraphState.isLoaded) {
+      log('info', 'Proof structure found but state not loaded yet — loading from static data');
+      const staticData = stateManager.getStaticData();
+      const playerId = staticData.playerId || '1';
+      const playerWorld = staticData.world[playerId];
+      if (playerWorld?.slot_data?.proof_structure) {
+        proofGraphState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
+      }
     }
 
     if (proofGraphState.isLoaded) {
@@ -700,7 +804,8 @@ export class ProofGraphUI {
   }
 
   _syncFromSnapshot(snapshotData) {
-    const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+    // Event data is wrapped as { snapshot: ... }, unwrap if needed
+    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
     if (!snapshot) return;
 
     if (snapshot.inventory) {

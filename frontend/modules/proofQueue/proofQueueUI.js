@@ -21,6 +21,7 @@
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import eventBus from '../../app/core/eventBus.js';
 import proofQueueState from './proofQueueStateSingleton.js';
 
 // Module-level references set by index.js
@@ -29,6 +30,16 @@ let _dispatcher = null;
 
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
+
+function getEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'proofQueue'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofQueue'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofQueue'),
+  };
+}
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -61,6 +72,9 @@ export class ProofQueueUI {
     // Drag state
     this._draggedIndex = null;
     this._dragOverIndex = null;
+
+    // Track in-flight check to prevent double-clicks
+    this._checkingStep = null;
 
     this._createBaseUI();
     this._setupLifecycle();
@@ -140,32 +154,15 @@ export class ProofQueueUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
-    // Dynamic event bus getter
+    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
-      get: () => _moduleEventBus,
+      get: () => getEventBus(),
       configurable: true,
     });
 
-    // Subscribe to ready event
-    const readyHandler = () => {
-      this._attachListeners();
-      this.isInitialized = true;
-      if (_moduleEventBus) {
-        _moduleEventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
-      }
-    };
-
-    if (_moduleEventBus) {
-      _moduleEventBus.subscribe('app:readyForUiDataLoad', readyHandler);
-    }
-
-    // Fallback: if already initialized
-    if (this._hasProofStructure()) {
-      this._attachListeners();
-      this.isInitialized = true;
-      this._wireStateCallbacks();
-      this.render();
-    }
+    // Subscribe directly — the fallback eventBus ensures this works even
+    // before index.js initialize() sets _moduleEventBus (Phase 9).
+    this._attachListeners();
 
     // GoldenLayout destroy
     this.container.on('destroy', () => this.destroy());
@@ -175,8 +172,7 @@ export class ProofQueueUI {
     this.destroy(); // Clear old
 
     const subscribe = (eventName, handler) => {
-      if (!_moduleEventBus) return;
-      const unsub = _moduleEventBus.subscribe(eventName, handler.bind(this));
+      const unsub = this.eventBus.subscribe(eventName, handler.bind(this));
       this.unsubscribeHandles.push(unsub);
     };
 
@@ -230,7 +226,18 @@ export class ProofQueueUI {
       return;
     }
 
-    // State initialization is handled by index.js; wire callbacks and render
+    // If state isn't loaded yet (UI handler can fire before index.js handler),
+    // load the proof structure directly from static data.
+    if (!proofQueueState.isLoaded) {
+      log('info', 'Proof structure found but state not loaded yet — loading from static data');
+      const staticData = stateManager.getStaticData();
+      const playerId = staticData.playerId || '1';
+      const playerWorld = staticData.world[playerId];
+      if (playerWorld?.slot_data?.proof_structure) {
+        proofQueueState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
+      }
+    }
+
     if (proofQueueState && proofQueueState.isLoaded) {
       this._wireStateCallbacks();
       this._syncFromSnapshot();
@@ -241,18 +248,21 @@ export class ProofQueueUI {
   _handleSnapshotUpdated(snapshotData) {
     if (!proofQueueState?.isLoaded) return;
     this._syncFromSnapshot(snapshotData);
+    this._checkingStep = null; // Clear in-flight guard after snapshot sync
     this.render();
   }
 
   _handleInventoryChanged() {
     if (!proofQueueState?.isLoaded) return;
     this._syncFromSnapshot();
+    this._checkingStep = null;
     this.render();
   }
 
   _syncFromSnapshot(snapshotData) {
     if (!proofQueueState) return;
-    const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+    // Event data is wrapped as { snapshot: ... }, unwrap if needed
+    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
     if (!snapshot) return;
 
     if (snapshot.inventory) {
@@ -499,6 +509,12 @@ export class ProofQueueUI {
   _onCheckNext() {
     if (!proofQueueState || !_dispatcher) return;
 
+    // Prevent double-clicks while a check is in-flight
+    if (this._checkingStep !== null) {
+      log('info', 'Check already in progress, ignoring');
+      return;
+    }
+
     const nextStep = proofQueueState.getNextCheckableStep();
     if (nextStep === null) {
       log('info', 'No checkable step available');
@@ -508,8 +524,16 @@ export class ProofQueueUI {
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
 
-    // Find region name for this location
+    // Verify the location actually exists before trying to check it
     const staticData = stateManager.getStaticData();
+    if (staticData?.locations && !staticData.locations.has(step.locationName)) {
+      log('warn', `Location "${step.locationName}" not found — marking as pre-checked`);
+      proofQueueState.checkedLocations.add(step.locationName);
+      this.render();
+      return;
+    }
+
+    // Find region name for this location
     let regionName = step.locationName; // fallback
     if (staticData?.regions) {
       // Search for the region containing this location
@@ -520,6 +544,9 @@ export class ProofQueueUI {
         }
       }
     }
+
+    // Mark step as in-flight; cleared when snapshot sync updates checked locations
+    this._checkingStep = nextStep;
 
     const payload = {
       locationName: step.locationName,

@@ -144,6 +144,15 @@ function _initializeFromStaticData(staticData) {
     return;
   }
 
+  // If already loaded (UI handler may have loaded it first), just wire up
+  // event bus publishing without re-loading or overwriting existing callbacks.
+  if (proofGraphState.isLoaded) {
+    log('info', 'Proof structure already loaded, wiring event bus publishing');
+    _wireEventBusPublishing();
+    _syncFromSnapshot();
+    return;
+  }
+
   log('info', 'Found MetaMath proof structure, initializing...');
 
   const success = proofGraphState.loadFromSlotData(
@@ -161,21 +170,30 @@ function _initializeFromStaticData(staticData) {
   );
 
   _syncFromSnapshot();
+  _wireEventBusPublishing();
+}
 
-  // Wire event bus notifications
+function _wireEventBusPublishing() {
+  // Chain onto any existing callbacks (e.g. UI render) rather than overwriting
+  const existingEdgeDrawn = proofGraphState.onEdgeDrawn;
   proofGraphState.onEdgeDrawn = (source, target) => {
+    if (existingEdgeDrawn) existingEdgeDrawn(source, target);
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofGraph:edgeDrawn', { source, target });
     }
   };
 
+  const existingEdgeRejected = proofGraphState.onEdgeRejected;
   proofGraphState.onEdgeRejected = (source, target) => {
+    if (existingEdgeRejected) existingEdgeRejected(source, target);
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofGraph:edgeRejected', { source, target });
     }
   };
 
+  const existingStepCompleted = proofGraphState.onStepCompleted;
   proofGraphState.onStepCompleted = (stepIndex) => {
+    if (existingStepCompleted) existingStepCompleted(stepIndex);
     if (_moduleEventBus) {
       _moduleEventBus.publish('proofGraph:stepCompleted', { stepIndex });
     }
@@ -184,7 +202,8 @@ function _initializeFromStaticData(staticData) {
 
 function _syncFromSnapshot(snapshotData) {
   if (!proofGraphState) return;
-  const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+  // Event data is wrapped as { snapshot: ... }, unwrap if needed
+  const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
   if (!snapshot) return;
 
   if (snapshot.inventory) {

@@ -26,6 +26,7 @@
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import eventBus from '../../app/core/eventBus.js';
 import proofEntryState from './proofEntryStateSingleton.js';
 
 // Module-level references set by index.js
@@ -34,6 +35,16 @@ let _dispatcher = null;
 
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
+
+function getEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'proofEntry'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofEntry'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofEntry'),
+  };
+}
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -208,29 +219,15 @@ export class ProofEntryUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
+    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
-      get: () => _moduleEventBus,
+      get: () => getEventBus(),
       configurable: true,
     });
 
-    const readyHandler = () => {
-      this._attachListeners();
-      this.isInitialized = true;
-      if (_moduleEventBus) {
-        _moduleEventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
-      }
-    };
-
-    if (_moduleEventBus) {
-      _moduleEventBus.subscribe('app:readyForUiDataLoad', readyHandler);
-    }
-
-    if (this._hasProofStructure()) {
-      this._attachListeners();
-      this.isInitialized = true;
-      this._wireStateCallbacks();
-      this.render();
-    }
+    // Subscribe directly — the fallback eventBus ensures this works even
+    // before index.js initialize() sets _moduleEventBus (Phase 9).
+    this._attachListeners();
 
     this.container.on('destroy', () => this.destroy());
   }
@@ -239,8 +236,7 @@ export class ProofEntryUI {
     this.destroy();
 
     const subscribe = (eventName, handler) => {
-      if (!_moduleEventBus) return;
-      const unsub = _moduleEventBus.subscribe(eventName, handler.bind(this));
+      const unsub = this.eventBus.subscribe(eventName, handler.bind(this));
       this.unsubscribeHandles.push(unsub);
     };
 
@@ -288,6 +284,18 @@ export class ProofEntryUI {
       return;
     }
 
+    // If state isn't loaded yet (UI handler can fire before index.js handler),
+    // load the proof structure directly from static data.
+    if (!proofEntryState.isLoaded) {
+      log('info', 'Proof structure found but state not loaded yet — loading from static data');
+      const staticData = stateManager.getStaticData();
+      const playerId = staticData.playerId || '1';
+      const playerWorld = staticData.world[playerId];
+      if (playerWorld?.slot_data?.proof_structure) {
+        proofEntryState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
+      }
+    }
+
     if (proofEntryState && proofEntryState.isLoaded) {
       this._wireStateCallbacks();
       this._syncFromSnapshot();
@@ -309,7 +317,8 @@ export class ProofEntryUI {
 
   _syncFromSnapshot(snapshotData) {
     if (!proofEntryState) return;
-    const snapshot = snapshotData || stateManager.getLatestStateSnapshot();
+    // Event data is wrapped as { snapshot: ... }, unwrap if needed
+    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
     if (!snapshot) return;
 
     if (snapshot.inventory) {

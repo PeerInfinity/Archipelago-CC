@@ -116,26 +116,34 @@ export class ProofEntryState {
       }
     }
 
+    // Detect naming scheme: if name_substitutions has item entries, the game
+    // uses generic "Statement N" / "Prove Statement N" names with substitutions.
+    // Otherwise (worldgen), items/locations use "label: expression" directly.
+    const useGenericNames = this.nameSubstitutions.size > 0;
+
     // Parse each statement
     let maxIndex = 0;
     for (const [indexStr, stmt] of Object.entries(proofStructure)) {
       const index = parseInt(indexStr, 10);
       if (isNaN(index)) continue;
 
-      const itemName = `Statement ${index}`;
-      const locationName = `Prove Statement ${index}`;
+      const label = stmt.label || `stmt_${index}`;
       const expression = stmt.expression || '';
+      const directName = `${label}: ${expression}`;
       const exprTokens = this._tokenize(expression);
+
+      const itemName = useGenericNames ? `Statement ${index}` : directName;
+      const locationName = useGenericNames ? `Prove Statement ${index}` : `Prove ${directName}`;
 
       const step = {
         index,
-        label: stmt.label || `stmt_${index}`,
+        label,
         expression,
         dependencies: Array.isArray(stmt.dependencies) ? [...stmt.dependencies] : [],
         fullText: stmt.full_text || null,
         itemName,
         locationName,
-        displayName: this.nameSubstitutions.get(itemName) || `${stmt.label}: ${expression}`,
+        displayName: this.nameSubstitutions.get(itemName) || directName,
         exprTokens,
       };
 
@@ -152,7 +160,10 @@ export class ProofEntryState {
     // Starting statements
     if (Array.isArray(slotData.starting_statements)) {
       for (const idx of slotData.starting_statements) {
-        this.receivedItems.add(`Statement ${idx}`);
+        const startStep = this.steps.get(idx);
+        if (startStep) {
+          this.receivedItems.add(startStep.itemName);
+        }
       }
     }
 
@@ -537,7 +548,8 @@ export class ProofEntryState {
         this.availableSteps.add(index);
       } else {
         const allDepsReceived = step.dependencies.every(depIdx => {
-          return this.receivedItems.has(`Statement ${depIdx}`);
+          const depStep = this.steps.get(depIdx);
+          return depStep && this.receivedItems.has(depStep.itemName);
         });
         if (allDepsReceived) {
           this.availableSteps.add(index);

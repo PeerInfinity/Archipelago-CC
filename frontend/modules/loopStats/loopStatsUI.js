@@ -57,6 +57,10 @@ export class LoopStatsUI {
     log('info', 'LoopStatsUI initialized');
   }
 
+  getRootElement() {
+    return this.rootElement;
+  }
+
   /**
    * Set the loopState reference
    * @param {Object} loopState - The loopState singleton
