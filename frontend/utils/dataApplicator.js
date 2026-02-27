@@ -61,21 +61,29 @@ export async function applyLoadedData(loadedData, sourceName) {
         log('error', 'Error applying layoutConfig live:', e);
       }
     } else if (dataKey === 'moduleConfig' && loadedData.moduleConfig) {
-      log('info', 'Found moduleConfig, applying live...');
-      try {
-        const result = await applyModuleConfig(loadedData.moduleConfig);
-        if (result.liveChanges.length > 0) {
-          log('info', 'moduleConfig live changes:', result.liveChanges);
+      if (loadedData.layoutConfig) {
+        // Layout is also being applied — it handles panel creation/destruction.
+        // Live enable/disable would race with the layout reload, so just store
+        // the config for persistence and future saves.
+        log('info', 'Found moduleConfig alongside layoutConfig — storing config only (layout handles panels)');
+        window.G_combinedModeData.moduleConfig = loadedData.moduleConfig;
+      } else {
+        log('info', 'Found moduleConfig, applying live...');
+        try {
+          const result = await applyModuleConfig(loadedData.moduleConfig);
+          if (result.liveChanges.length > 0) {
+            log('info', 'moduleConfig live changes:', result.liveChanges);
+          }
+          if (result.deferredChanges.length > 0) {
+            requiresReload = true;
+            log('info', 'moduleConfig deferred changes (reload needed):', result.deferredChanges);
+          }
+          if (result.errors.length > 0) {
+            log('error', 'moduleConfig errors:', result.errors);
+          }
+        } catch (e) {
+          log('error', 'Error applying moduleConfig:', e);
         }
-        if (result.deferredChanges.length > 0) {
-          requiresReload = true;
-          log('info', 'moduleConfig deferred changes (reload needed):', result.deferredChanges);
-        }
-        if (result.errors.length > 0) {
-          log('error', 'moduleConfig errors:', result.errors);
-        }
-      } catch (e) {
-        log('error', 'Error applying moduleConfig:', e);
       }
     } else if (handlers.has(dataKey)) {
       const handler = handlers.get(dataKey);

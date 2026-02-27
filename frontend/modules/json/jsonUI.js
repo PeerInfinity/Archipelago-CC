@@ -179,43 +179,36 @@ export class JsonUI {
 
         <div class="json-section">
           <h4>Registered Module Data:</h4>
-          <ul id="json-module-data-list">
+          <div id="json-module-data-list">
             <!-- Checkboxes will be populated here by JS -->
-            <li><span>No modules registered custom data handlers.</span></li>
-          </ul>
+            <span>No modules registered custom data handlers.</span>
+          </div>
         </div>
 
-        <div class="json-section button-group">
-          <div style="margin-top: 15px;">
+        <div class="json-section button-group" style="display: flex; flex-direction: column; gap: 8px;">
             <button id="json-btn-export-text" class="button">Export to Text</button>
             <button id="json-btn-import-text" class="button">Import from Text</button>
-          </div>
-          <div style="margin-top: 15px;">
             <button id="json-btn-save-file" class="button">Save Combined to File</button>
             <label class="file-input-button-label">
               Load Combined from File
               <input type="file" id="json-btn-load-file" accept=".json" style="display: none;" />
             </label>
-          </div>
-          <div style="margin-top: 15px;">
-            <button id="json-btn-export-live-layout" class="button">Export Live Layout</button>
-          </div>
         </div>
 
         <div class="json-section">
           <h4>Known Modes in LocalStorage:</h4>
-          <ul id="json-known-modes-list">
+          <div id="json-known-modes-list">
             <!-- Modes will be populated here by JS -->
-            <li><span>No modes found in LocalStorage.</span></li>
-          </ul>
+            <span>No modes found in LocalStorage.</span>
+          </div>
         </div>
 
         <div class="json-section">
           <h4>Known Modes in modes.json:</h4>
-          <ul id="json-modes-json-list">
+          <div id="json-modes-json-list">
             <!-- Modes from modes.json will be populated here -->
-            <li><span>Loading modes from modes.json...</span></li>
-          </ul>
+            <span>Loading modes from modes.json...</span>
+          </div>
         </div>
       </div>
     `;
@@ -257,7 +250,6 @@ export class JsonUI {
   _attachEventListeners(contextElement) {
     const exportTextButton = contextElement.querySelector('#json-btn-export-text');
     const importTextButton = contextElement.querySelector('#json-btn-import-text');
-    const exportLiveLayoutButton = contextElement.querySelector('#json-btn-export-live-layout');
     const saveFileButton = contextElement.querySelector('#json-btn-save-file');
     const loadFileLabel = contextElement.querySelector(
       '.file-input-button-label'
@@ -277,9 +269,6 @@ export class JsonUI {
     }
     if (importTextButton) {
       importTextButton.addEventListener('click', () => this._handleImportFromText());
-    }
-    if (exportLiveLayoutButton) {
-      exportLiveLayoutButton.addEventListener('click', () => this._handleExportLiveLayout());
     }
     if (saveFileButton) {
       saveFileButton.addEventListener('click', () => this._handleSaveToFile());
@@ -700,110 +689,6 @@ export class JsonUI {
     }
   }
 
-  async _handleExportLiveLayout() {
-    log('info', '[JsonUI] Export Live Layout button clicked');
-
-    try {
-      // Get access to the Golden Layout instance
-      const goldenLayoutInstance = window.goldenLayoutInstance || window.panelManager?.goldenLayout;
-      
-      if (!goldenLayoutInstance) {
-        alert('No Golden Layout instance available. Cannot read live layout data.');
-        return;
-      }
-
-      // Create an object to hold both the live layout data and analysis
-      const liveLayoutData = {
-        timestamp: new Date().toISOString(),
-        description: "Live Golden Layout instance data - traversed from goldenLayoutInstance.root",
-        liveLayoutRoot: this._traverseLiveLayout(goldenLayoutInstance.root),
-        savedLayoutConfig: null,
-        analysis: {}
-      };
-
-      // Also get the saved layout config for comparison
-      try {
-        const savedConfig = goldenLayoutInstance.saveLayout();
-        liveLayoutData.savedLayoutConfig = savedConfig;
-      } catch (e) {
-        log('warn', '[JsonUI] Could not get saved layout config for comparison:', e);
-        liveLayoutData.savedLayoutConfig = { error: 'Could not retrieve saved config' };
-      }
-
-      // Add some analysis comparing the two
-      liveLayoutData.analysis = {
-        liveRootType: liveLayoutData.liveLayoutRoot?.type || 'unknown',
-        savedRootType: liveLayoutData.savedLayoutConfig?.root?.type || 'unknown',
-        typesMatch: (liveLayoutData.liveLayoutRoot?.type === liveLayoutData.savedLayoutConfig?.root?.type),
-        liveHasConfig: !!liveLayoutData.liveLayoutRoot?.config,
-        liveConfigKeys: liveLayoutData.liveLayoutRoot?.config ? Object.keys(liveLayoutData.liveLayoutRoot.config) : [],
-        message: "This shows the difference between goldenLayoutInstance.root (live) and goldenLayoutInstance.saveLayout() (saved)"
-      };
-
-      log('info', '[JsonUI] Live layout data gathered:', liveLayoutData);
-
-      // Send the data to the Editor panel via eventBus
-      this.eventBus.publish('json:exportToEditor', {
-        data: liveLayoutData,
-        modeName: 'Live Layout Data',
-        activatePanel: true
-      });
-
-    } catch (error) {
-      log('error', '[JsonUI] Error exporting live layout:', error);
-      alert('Error exporting live layout data. See console for details.');
-    }
-  }
-
-  /**
-   * Recursively traverses the live Golden Layout structure to extract all data
-   */
-  _traverseLiveLayout(item, depth = 0) {
-    if (!item) {
-      return null;
-    }
-
-    const result = {
-      type: item.type,
-      depth: depth,
-    };
-
-    // Add config if it exists
-    if (item.config) {
-      result.config = { ...item.config };
-      result.configKeys = Object.keys(item.config);
-    }
-
-    // Add other interesting properties
-    if (item.id !== undefined) result.id = item.id;
-    if (item.title !== undefined) result.title = item.title;
-    if (item.isInitialised !== undefined) result.isInitialised = item.isInitialised;
-    if (item.isMaximised !== undefined) result.isMaximised = item.isMaximised;
-    if (item.isHidden !== undefined) result.isHidden = item.isHidden;
-
-    // Add size information if available
-    if (item.width !== undefined) result.width = item.width;
-    if (item.height !== undefined) result.height = item.height;
-
-    // Add any other potentially useful properties
-    const interestingProps = ['componentName', 'componentType', 'reorderEnabled', 'size'];
-    interestingProps.forEach(prop => {
-      if (item[prop] !== undefined) {
-        result[prop] = item[prop];
-      }
-    });
-
-    // Recursively process children
-    if (item.contentItems && Array.isArray(item.contentItems)) {
-      result.contentItems = item.contentItems.map(child => 
-        this._traverseLiveLayout(child, depth + 1)
-      );
-      result.childCount = item.contentItems.length;
-    }
-
-    return result;
-  }
-
   async _handleImportFromText() {
     log('info', '[JsonUI] Import from Text button clicked');
 
@@ -1153,7 +1038,7 @@ export class JsonUI {
       );
       // Display error in the list itself or just log
       this.knownModesList.innerHTML =
-        '<li><span style="color: red;">Error fetching modes.</span></li>';
+        '<span style="color: red;">Error fetching modes.</span>';
       return;
     }
 
@@ -1162,32 +1047,30 @@ export class JsonUI {
 
     if (knownModes.length === 0) {
       this.knownModesList.innerHTML =
-        '<li><span>No modes found in LocalStorage.</span></li>';
+        '<span>No modes found in LocalStorage.</span>';
     } else {
       knownModes.sort(); // Sort alphabetically for consistent display
       knownModes.forEach((modeName) => {
-        const listItem = document.createElement('li');
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = modeName;
-        listItem.appendChild(nameSpan);
+        const row = document.createElement('div');
+        row.classList.add('checkbox-container');
 
-        // TODO: Add Load button
         const loadButton = document.createElement('button');
         loadButton.textContent = 'Load';
-        loadButton.classList.add('button', 'button-small'); // Add appropriate classes
-        loadButton.style.marginLeft = '10px';
+        loadButton.classList.add('button', 'button-small');
         loadButton.onclick = () => this._handleLoadModeFromList(modeName);
-        listItem.appendChild(loadButton);
+        row.appendChild(loadButton);
 
-        // TODO: Add Delete button
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.classList.add('button', 'button-danger', 'button-small');
-        deleteButton.style.marginLeft = '5px';
         deleteButton.onclick = () => this._handleDeleteModeFromList(modeName);
-        listItem.appendChild(deleteButton);
+        row.appendChild(deleteButton);
 
-        this.knownModesList.appendChild(listItem);
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = modeName;
+        row.appendChild(nameSpan);
+
+        this.knownModesList.appendChild(row);
       });
     }
   }
@@ -1257,26 +1140,27 @@ export class JsonUI {
 
     if (!modesConfig || Object.keys(modesConfig).length === 0) {
       this.modesJsonList.innerHTML =
-        '<li><span>No modes defined in modes.json.</span></li>';
+        '<span>No modes defined in modes.json.</span>';
       return;
     }
 
     const modeNames = Object.keys(modesConfig).sort();
 
     modeNames.forEach((modeName) => {
-      const listItem = document.createElement('li');
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = modeName;
-      listItem.appendChild(nameSpan);
+      const row = document.createElement('div');
+      row.classList.add('checkbox-container');
 
       const loadButton = document.createElement('button');
       loadButton.textContent = 'Load';
       loadButton.classList.add('button', 'button-small');
-      loadButton.style.marginLeft = '10px';
       loadButton.onclick = () => this._handleLoadModeFromModesJson(modeName);
-      listItem.appendChild(loadButton);
+      row.appendChild(loadButton);
 
-      this.modesJsonList.appendChild(listItem);
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = modeName;
+      row.appendChild(nameSpan);
+
+      this.modesJsonList.appendChild(row);
     });
   }
 
@@ -1308,7 +1192,7 @@ export class JsonUI {
 
     if (handlers.size === 0) {
       this.moduleDataList.innerHTML =
-        '<li><span>No modules registered custom data handlers.</span></li>';
+        '<span>No modules registered custom data handlers.</span>';
       return;
     }
 
@@ -1322,7 +1206,6 @@ export class JsonUI {
     );
 
     sortedHandlers.forEach(([dataKey, handler]) => {
-      const listItem = document.createElement('li');
       const div = document.createElement('div');
       div.classList.add('checkbox-container');
 
@@ -1352,8 +1235,7 @@ export class JsonUI {
       div.appendChild(textButton);
       div.appendChild(checkbox);
       div.appendChild(label);
-      listItem.appendChild(div);
-      this.moduleDataList.appendChild(listItem);
+      this.moduleDataList.appendChild(div);
 
       // Store the checkbox reference using its dataKey
       this.checkboxes[dataKey] = checkbox;
