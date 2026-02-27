@@ -185,6 +185,9 @@
 
         "_section: Changed Files - Tests": "",
 
+        "test/general/test_implemented.py": {
+            "description": "Added 'The Messenger' to excluded_games in test_slot_data to prevent flaky fill failures caused by the original world's tight access rules with certain random seeds."
+        },
         "test/general/test_items.py": {
             "description": "Added DLCQuest coin exclusion and logic to propagate item exclusions from base games to WorldGen variant worlds."
         },

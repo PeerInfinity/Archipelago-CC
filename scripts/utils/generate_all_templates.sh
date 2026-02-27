@@ -407,65 +407,6 @@ if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
   generate_metamath_seed "wilth" 3 "  vanilla_placement: true"        # wilth, seed 3
 fi
 
-# --- WorldGen ---
-if [ "$GENERATE_WORLDGEN" = "true" ]; then
-  # Create WorldGen worlds from representative main seeds
-  gen_worldgen_world "Metamath"                    # 2p2e4 from seed 1
-  run_world_generator \
-    "frontend/presets/metamath/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
-    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen"
-  run_world_generator \
-    "frontend/presets/metamath/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
-    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen"
-
-  # Create Vanilla WorldGen worlds from vanilla seeds
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen"
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
-      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen"
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
-      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen"
-  fi
-
-  # Regen templates so WorldGen templates are available for seed generation
-  regen_templates
-
-  # WorldGen seeds: same pattern as main
-  gen_seeds "Metamath WorldGen"
-  gen_seed "Metamath Canth WorldGen" 4
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Canth WorldGen" 5
-    gen_seed "Metamath Canth WorldGen" 6
-  fi
-  gen_seed "Metamath Wilth WorldGen" 7
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Wilth WorldGen" 8
-    gen_seed "Metamath Wilth WorldGen" 9
-  fi
-
-  # Vanilla WorldGen seeds
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Vanilla WorldGen" 1
-    gen_seed "Metamath Canth Vanilla WorldGen" 2
-    gen_seed "Metamath Wilth Vanilla WorldGen" 3
-  fi
-fi
-
-# --- WorldGen2 (2p2e4 only) ---
-if [ "$GENERATE_WORLDGEN2" = "true" ]; then
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2"
-    regen_templates
-    gen_seed "Metamath Vanilla WorldGen2" 1
-  fi
-fi
-
 # --- Multiworld ---
 
 if [ "$GENERATE_MULTIWORLD" = "true" ]; then
@@ -504,6 +445,26 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     gen_worldgen_world "$template"
   done
 
+  # MetaMath theorem variant WorldGen worlds
+  gen_worldgen_world "Metamath"                    # 2p2e4 from seed 1
+  run_world_generator \
+    "frontend/presets/metamath/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
+    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen"
+  run_world_generator \
+    "frontend/presets/metamath/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
+    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen"
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
+      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/metamath_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
+      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen"
+  fi
+
   section "Regenerating templates (for WorldGen)"
   regen_templates
 
@@ -514,6 +475,24 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     fi
     gen_seed "${template} WorldGen" 1
   done
+
+  # MetaMath theorem variant WorldGen seeds
+  gen_seeds "Metamath WorldGen"
+  gen_seed "Metamath Canth WorldGen" 4
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Canth WorldGen" 5
+    gen_seed "Metamath Canth WorldGen" 6
+  fi
+  gen_seed "Metamath Wilth WorldGen" 7
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Wilth WorldGen" 8
+    gen_seed "Metamath Wilth WorldGen" 9
+  fi
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Vanilla WorldGen" 1
+    gen_seed "Metamath Canth Vanilla WorldGen" 2
+    gen_seed "Metamath Wilth Vanilla WorldGen" 3
+  fi
 fi
 
 # --- WorldGen2 ---
@@ -529,6 +508,13 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
     fi
   done
 
+  # MetaMath WorldGen2 (2p2e4 vanilla only)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2"
+  fi
+
   section "Regenerating templates (for WorldGen2)"
   regen_templates
 
@@ -541,6 +527,11 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
       gen_seed "${template} WorldGen2" 1
     fi
   done
+
+  # MetaMath WorldGen2 seed
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    gen_seed "Metamath Vanilla WorldGen2" 1
+  fi
 fi
 
 # --- Cleanup ---

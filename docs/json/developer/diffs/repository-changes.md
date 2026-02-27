@@ -9,7 +9,7 @@ This document tracks the differences between this repository and the upstream Ar
 
 ## Summary
 
-- **Modified upstream files:** 24
+- **Modified upstream files:** 25
 - **New top-level directories:** 15
 - **New files in existing directories:** ~36
 - **Auto-generated world directories:** 76
@@ -91,6 +91,7 @@ vitest.config.js     - Vitest unit test configuration
 
 ### Test Files (modified)
 ```
+test/general/test_implemented.py
 test/general/test_items.py
 test/general/test_reachability.py
 ```
@@ -101,7 +102,7 @@ Note: The `scripts/vanilla-alttp/` directory contains data and scripts for placi
 
 ## Modified Files
 
-The following 24 files have been modified from the upstream version:
+The following 25 files have been modified from the upstream version:
 
 ### Core Files (see diff-files/core-files.diff)
 ```
@@ -134,6 +135,7 @@ worlds/lufia2ac/Options.py
 
 ### Test Files (modified)
 ```
+test/general/test_implemented.py
 test/general/test_items.py
 test/general/test_reachability.py
 ```
@@ -182,6 +184,7 @@ Modified world implementations to support generation without ROM files:
 - Yoshi's Island (yoshisisland)
 
 ### Test Files
+- **test/general/test_implemented.py** - Added "The Messenger" to `excluded_games` in `test_slot_data` to prevent flaky fill failures. The original Messenger world has tight access rules that cause `FillError` with certain random seeds when the fill algorithm's item ordering creates an unresolvable deadlock.
 - **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variants (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions)
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic
 
@@ -286,7 +289,7 @@ The following major components were developed specifically for this project:
 
 - The latest sync from upstream was performed on February 21, 2026, bringing the fork up to Archipelago 0.6.7 (commit `0de09cd7`)
 
-- Most changes are additions rather than modifications, with only 24 files modified from upstream
+- Most changes are additions rather than modifications, with only 25 files modified from upstream
 
 - The majority of the ~2,000 new files are contained within:
   - `frontend/` - Web client (~400 files)
