@@ -40,7 +40,7 @@ Let's walk through the famous proof that 2 + 2 = 4:
 
 ### Gameplay Flow
 
-1. **Start**: You begin with 10% of statements (typically Statement 1)
+1. **Start**: You begin with at least 1 starting statement (configurable via `starting_statements` percentage)
 2. **Early Game**: Find basic definitions and axioms (Statements 2-5)
 3. **Mid Game**: Build intermediate results (Statements 6-8)
 4. **End Game**: Combine everything to reach the final theorem (Statements 9-10)
@@ -67,8 +67,8 @@ Tell your multiworld partners what you need:
 - "I need Statement 3 (df-4) to unlock 2 locations"
 - "Statement 8 (addassi) is blocking my progression"
 
-### 4. Filler Items
-Items like "Proof Hint" and "Logic Guide" are filler items that don't affect progression but fill remaining item slots.
+### 4. Vanilla Placement
+If you want a non-randomized experience, enable `vanilla_placement` in your YAML. Items will stay at their original proof locations, creating a linear proof progression.
 
 ## Common Theorems and Their Difficulty
 

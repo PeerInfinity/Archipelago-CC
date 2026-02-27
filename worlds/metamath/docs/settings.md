@@ -6,6 +6,19 @@ All available options for configuring your Metamath experience.
 
 ## Core Settings
 
+### vanilla_placement
+**Type**: Toggle
+**Default**: `false`
+
+If enabled, items will be placed in their original locations (proof statements will be at their corresponding theorem locations) without any randomization. Enabling this also forces `randomize_items` to `false`.
+
+```yaml
+vanilla_placement: true   # Items stay in original locations, world marked as vanilla
+vanilla_placement: false  # Normal behavior (randomization controlled by randomize_items)
+```
+
+---
+
 ### randomize_items
 **Type**: Toggle
 **Default**: `true`
@@ -20,6 +33,8 @@ randomize_items: false  # Items stay in original locations
 When set to `false`, each statement item will be found at its own prove location, creating a linear proof progression.
 
 **Special Seed Behavior**: When using seed 1, randomization is automatically disabled to provide canonical item placements for testing and speedrunning purposes.
+
+**Note**: If `vanilla_placement` is enabled, `randomize_items` is forced to `false` regardless of this setting.
 
 ---
 
@@ -45,12 +60,45 @@ theorem:
   3p3e6: 20      # Weight 20 (20% chance in this example)
 ```
 
-**Common Theorems**:
-- `2p2e4` - 2 + 2 = 4 (10 steps)
-- `1p1e2` - 1 + 1 = 2 (2 steps)
-- `3p3e6` - 3 + 3 = 6 (12 steps)
-- `pm2.21` - Logical theorem (2 steps)
-- `pm5.32` - Complex logic (9 steps)
+**Available Theorems**:
+
+*Arithmetic (Easy):*
+- `1p1e2` - 1 + 1 = 2 (~2 steps)
+- `2p2e4` - 2 + 2 = 4 (~10 steps) *(default)*
+- `3p3e6` - 3 + 3 = 6 (~12 steps)
+- `4p4e8` - 4 + 4 = 8 (~12 steps)
+- `5p5e10` - 5 + 5 = 10 (~12 steps)
+- `2m1e1` - 2 - 1 = 1 (~4 steps)
+
+*Logic (Easy):*
+- `pm2.21` - ¬φ → (φ → ψ) (~2 steps)
+- `pm2.43` - ((φ → (φ → ψ)) → (φ → ψ)) (~2 steps)
+- `pm5.32` - Complex biconditional (~9 steps)
+- `con3i` - Contraposition (~3 steps)
+- `syl` - Syllogism (~3 steps)
+
+*Set Theory (Easy to Medium):*
+- `uneq12i` - Union equality (~3 steps)
+- `ineq12i` - Intersection equality (~3 steps)
+- `pwfi` - Power set finiteness (~15 steps)
+- `canth` - Cantor's theorem (~20 steps)
+
+*Algebra (Medium):*
+- `grplid` - Group left identity (~6 steps)
+- `grpinveu` - Group inverse uniqueness (~17 steps)
+
+*Analysis (Easy to Medium):*
+- `cos0` - cos(0) = 1 (~12 steps)
+- `sin0` - sin(0) = 0 (~10 steps)
+
+*Number Theory (Medium to Hard):*
+- `euclemma` - Euclid's lemma for primes (~16 steps)
+- `wilth` - Wilson's theorem (~40 steps)
+
+*Very Hard:*
+- `dfac5` - Axiom of choice equivalence (~65 steps)
+
+You can also enter any theorem name from the Metamath database beyond the preset list.
 
 ---
 
@@ -132,10 +180,19 @@ Metamath:
   randomize_items: true       # Normal randomization
   theorem: pm5.32             # Complex logic proof
   complexity: complex         # Random starting statements
-  starting_statements: 0      # Start with nothing
+  starting_statements: 0      # Start with nothing (default)
 ```
 
-### Linear Proof Mode
+### Vanilla Proof Mode
+```yaml
+Metamath:
+  vanilla_placement: true    # Items stay at their proof locations, world marked vanilla
+  theorem: 2p2e4
+  complexity: simple
+  starting_statements: 20   # Start with 20% to avoid being stuck
+```
+
+### Linear (Non-Randomized) Mode
 ```yaml
 Metamath:
   randomize_items: false     # Items stay at their proof locations

@@ -35,7 +35,7 @@ Archipelago/
 The required Python libraries will be installed automatically when you first generate a game. If you want to install them manually:
 
 ```bash
-pip install metamath-py
+pip install metamath-py numpy
 ```
 
 ### 3. Metamath Database Setup
@@ -68,10 +68,11 @@ requires:
 
 Metamath:
   # Core Settings
+  vanilla_placement: false  # Set true to keep items in original locations
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # Which theorem to prove
   complexity: moderate  # Random starting statements
-  starting_statements: 10  # Percentage to start with
+  starting_statements: 0  # Percentage to start with (0-50)
 
   # Database Settings
   auto_download_database: true
