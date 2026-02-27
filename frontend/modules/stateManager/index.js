@@ -189,7 +189,7 @@ function register(registrationApi) {
     'stateManagerSnapshot', // Data Key
     {
       displayName: 'Snapshot (Full State)', // Checkbox Label
-      defaultChecked: true, // Superset of Game State (Inv/Checks)
+      defaultChecked: false, // Superset of Game State (Inv/Checks)
       requiresReload: false,
       getSaveDataFunction: () => {
         return stateManagerProxySingleton.getLatestStateSnapshot();

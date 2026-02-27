@@ -88,7 +88,7 @@ export function register(registrationApi) {
 
   registrationApi.registerJsonDataHandler('testsConfig', {
     displayName: 'Tests Configuration',
-    defaultChecked: true,
+    defaultChecked: false,
     requiresReload: false, // Test list, enabled states can be updated live. Auto-start applies on next load.
     getSaveDataFunction: async () => {
       log('info', '[Tests Module] getSaveDataFunction called for testsConfig');
