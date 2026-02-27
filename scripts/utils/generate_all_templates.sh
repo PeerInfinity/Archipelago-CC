@@ -384,6 +384,13 @@ done
 
 section "Generating MetaMath theorem variant presets"
 
+# --- Vanilla seeds ---
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Metamath"                                    # 2p2e4, seed 1
+  generate_metamath_seed "canth" 2 "  vanilla_placement: true"        # canth, seed 2
+  generate_metamath_seed "wilth" 3 "  vanilla_placement: true"        # wilth, seed 3
+fi
+
 # --- Main seeds ---
 # 2p2e4 (easy): seeds 1-3 via default template
 gen_seeds "Metamath"
@@ -398,13 +405,6 @@ generate_metamath_seed "wilth" 7
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   generate_metamath_seed "wilth" 8
   generate_metamath_seed "wilth" 9
-fi
-
-# --- Vanilla seeds ---
-if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-  generate_vanilla_seed "Metamath"                                    # 2p2e4, seed 1
-  generate_metamath_seed "canth" 2 "  vanilla_placement: true"        # canth, seed 2
-  generate_metamath_seed "wilth" 3 "  vanilla_placement: true"        # wilth, seed 3
 fi
 
 # --- Multiworld ---
