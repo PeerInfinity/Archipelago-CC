@@ -44,10 +44,11 @@ name: MathPlayer
 game: Metamath
 
 Metamath:
+  vanilla_placement: false  # Set true to keep items in original locations
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # The theorem to prove
   complexity: moderate  # Random starting statements
-  starting_statements: 10  # Percentage of statements pre-unlocked
+  starting_statements: 0  # Percentage of statements pre-unlocked (0-50)
   auto_download_database: true
 ```
 
