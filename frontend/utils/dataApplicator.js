@@ -60,6 +60,23 @@ export async function applyLoadedData(loadedData, sourceName) {
       } catch (e) {
         log('error', 'Error applying layoutConfig live:', e);
       }
+    } else if (dataKey === 'moduleConfig' && loadedData.moduleConfig) {
+      log('info', 'Found moduleConfig, applying live...');
+      try {
+        const result = await applyModuleConfig(loadedData.moduleConfig);
+        if (result.liveChanges.length > 0) {
+          log('info', 'moduleConfig live changes:', result.liveChanges);
+        }
+        if (result.deferredChanges.length > 0) {
+          requiresReload = true;
+          log('info', 'moduleConfig deferred changes (reload needed):', result.deferredChanges);
+        }
+        if (result.errors.length > 0) {
+          log('error', 'moduleConfig errors:', result.errors);
+        }
+      } catch (e) {
+        log('error', 'Error applying moduleConfig:', e);
+      }
     } else if (handlers.has(dataKey)) {
       const handler = handlers.get(dataKey);
       if (!handler.requiresReload) {
@@ -227,4 +244,128 @@ function convertSizeAttributes(config, parentType = null) {
   }
 
   return converted;
+}
+
+/**
+ * Apply a moduleConfig object live: enable/disable modules and update
+ * G_combinedModeData.moduleConfig for persistence.
+ *
+ * @param {object} newModuleConfig - A moduleConfig with loadPriority and moduleDefinitions.
+ * @returns {Promise<{liveChanges: string[], deferredChanges: string[], errors: string[]}>}
+ */
+async function applyModuleConfig(newModuleConfig) {
+  const liveChanges = [];
+  const deferredChanges = [];
+  const errors = [];
+
+  const moduleManager = window.moduleManagerApi;
+  if (!moduleManager || typeof moduleManager.getAllModuleStates !== 'function') {
+    errors.push('moduleManagerApi not available');
+    return { liveChanges, deferredChanges, errors };
+  }
+
+  const currentConfig = window.G_combinedModeData?.moduleConfig;
+  if (!currentConfig) {
+    errors.push('G_combinedModeData.moduleConfig not available');
+    return { liveChanges, deferredChanges, errors };
+  }
+
+  const newDefs = newModuleConfig.moduleDefinitions || {};
+  const currentDefs = currentConfig.moduleDefinitions || {};
+  const runtimeStates = moduleManager.getAllModuleStates();
+
+  // --- Detect deferred (non-live) changes ---
+
+  // loadPriority order change
+  const currentPriority = currentConfig.loadPriority || [];
+  const newPriority = newModuleConfig.loadPriority || [];
+  if (JSON.stringify(currentPriority) !== JSON.stringify(newPriority)) {
+    deferredChanges.push('loadPriority order changed');
+  }
+
+  // Check for new module definitions, path changes, and requires changes
+  for (const [moduleId, newDef] of Object.entries(newDefs)) {
+    const currentDef = currentDefs[moduleId];
+    if (!currentDef) {
+      deferredChanges.push(`new module definition: ${moduleId}`);
+      continue;
+    }
+    if (newDef.path !== currentDef.path) {
+      deferredChanges.push(`path changed for ${moduleId}`);
+    }
+    if (JSON.stringify(newDef.requires || []) !== JSON.stringify(currentDef.requires || [])) {
+      deferredChanges.push(`requires changed for ${moduleId}`);
+    }
+  }
+
+  // --- Diff enabled flags ---
+  const toEnable = [];
+  const toDisable = [];
+
+  for (const [moduleId, newDef] of Object.entries(newDefs)) {
+    const runtimeState = runtimeStates[moduleId];
+    if (!runtimeState) continue; // new module — already flagged as deferred
+
+    const currentlyEnabled = runtimeState.enabled;
+    const wantEnabled = newDef.enabled !== false; // default to true if not explicitly false
+
+    if (currentlyEnabled && !wantEnabled) {
+      toDisable.push(moduleId);
+    } else if (!currentlyEnabled && wantEnabled) {
+      toEnable.push(moduleId);
+    }
+  }
+
+  // --- Disable modules (reverse loadPriority order: dependents before dependencies) ---
+  const priorityOrder = newPriority.length > 0 ? newPriority : currentPriority;
+  const disableOrder = toDisable.sort((a, b) => {
+    const idxA = priorityOrder.indexOf(a);
+    const idxB = priorityOrder.indexOf(b);
+    // Reverse order: higher index (later loaded / dependents) first
+    return (idxB === -1 ? Infinity : idxB) - (idxA === -1 ? Infinity : idxA);
+  });
+
+  for (const moduleId of disableOrder) {
+    try {
+      await moduleManager.disableModule(moduleId);
+      liveChanges.push(`disabled ${moduleId}`);
+    } catch (e) {
+      errors.push(`failed to disable ${moduleId}: ${e.message}`);
+    }
+  }
+
+  // --- Enable modules (loadPriority order: dependencies before dependents) ---
+  const enableOrder = toEnable.sort((a, b) => {
+    const idxA = priorityOrder.indexOf(a);
+    const idxB = priorityOrder.indexOf(b);
+    return (idxA === -1 ? Infinity : idxA) - (idxB === -1 ? Infinity : idxB);
+  });
+
+  for (const moduleId of enableOrder) {
+    // Check that required modules are enabled (or being enabled)
+    const requires = newDefs[moduleId]?.requires || currentDefs[moduleId]?.requires || [];
+    const allStates = moduleManager.getAllModuleStates();
+    const missingReqs = requires.filter(reqId => {
+      // OK if already enabled or in our toEnable list
+      const reqState = allStates[reqId];
+      return !(reqState && reqState.enabled) && !toEnable.includes(reqId);
+    });
+
+    if (missingReqs.length > 0) {
+      errors.push(`skipped enabling ${moduleId}: required modules disabled: ${missingReqs.join(', ')}`);
+      continue;
+    }
+
+    try {
+      await moduleManager.enableModule(moduleId);
+      liveChanges.push(`enabled ${moduleId}`);
+    } catch (e) {
+      errors.push(`failed to enable ${moduleId}: ${e.message}`);
+    }
+  }
+
+  // --- Update G_combinedModeData.moduleConfig with full new config for persistence ---
+  window.G_combinedModeData.moduleConfig = newModuleConfig;
+
+  return { liveChanges, deferredChanges, errors };
 }
