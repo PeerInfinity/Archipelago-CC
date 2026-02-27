@@ -48,6 +48,7 @@ export class ProofGraphUI {
     this.cy = null;
     this.cytoscape = null;
     this.eh = null; // edgehandles instance
+    this.nodeRows = new Map(); // Row assignment per node for hierarchical layout
 
     // DOM references
     this._headerEl = null;
@@ -638,6 +639,9 @@ export class ProofGraphUI {
         addedEdge.data('id', `edge-${sourceIdx}-${targetIdx}`);
         addedEdge.addClass('drawn-edge');
         this._flashNode(targetNode, 'success-flash');
+        // Move target node to the row below its source nodes
+        this._updateRowAfterEdge(targetIdx);
+        this._layoutFromRows(true);
         log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx}`);
       } else {
         // Remove the edge that edgehandles added
@@ -706,49 +710,116 @@ export class ProofGraphUI {
     // Force Cytoscape to re-read the container dimensions
     this.cy.resize();
 
-    // If edges have been drawn, use breadthfirst (hierarchical) layout
-    // which properly shows the dependency structure.
-    if (proofGraphState.drawnEdges.size > 0) {
-      this.cy.layout({
-        name: 'breadthfirst',
-        directed: true,
-        roots: this.cy.nodes('.axiom').map(n => n.id()),
-        spacingFactor: 1.5,
-        animate: false,
-        fit: true,
-        padding: 40,
-        avoidOverlap: true,
-      }).run();
-      return;
+    this._recalculateAllRows();
+    this._layoutFromRows(false);
+  }
+
+  // ─── Row-based Layout Helpers ──────────────────────────────
+
+  /**
+   * Recalculate all node rows from scratch based on drawn edges.
+   * Axioms start at row 0, all others at row 1, then drawn edges
+   * push targets to max(source rows) + 1.
+   */
+  _recalculateAllRows() {
+    this.nodeRows.clear();
+    for (const [index, step] of proofGraphState.steps) {
+      this.nodeRows.set(String(index), step.dependencies.length === 0 ? 0 : 1);
     }
 
-    // No edges drawn yet — arrange nodes in a grid with axioms on top
-    // and derived steps below, using the actual container dimensions.
-    const axiomIds = [];
-    const derivedIds = [];
-    for (const [index, step] of proofGraphState.steps) {
-      if (step.dependencies.length === 0) {
-        axiomIds.push(String(index));
-      } else {
-        derivedIds.push(String(index));
+    // Recompute rows based on drawn edges in topological order
+    const visited = new Set();
+    const visit = (idx) => {
+      const id = String(idx);
+      if (visited.has(id)) return;
+      visited.add(id);
+
+      const drawnSources = proofGraphState.getDrawnDependenciesFor(idx);
+      if (drawnSources.length === 0) return;
+
+      // Ensure all sources are visited first
+      for (const srcIdx of drawnSources) {
+        visit(srcIdx);
+      }
+
+      let maxSourceRow = 0;
+      for (const srcIdx of drawnSources) {
+        const srcRow = this.nodeRows.get(String(srcIdx)) || 0;
+        if (srcRow > maxSourceRow) maxSourceRow = srcRow;
+      }
+
+      const newRow = maxSourceRow + 1;
+      if (newRow > (this.nodeRows.get(id) || 0)) {
+        this.nodeRows.set(id, newRow);
+      }
+    };
+
+    for (const [index] of proofGraphState.steps) {
+      visit(index);
+    }
+  }
+
+  /**
+   * Update row assignment for a target node after a new edge is drawn.
+   * If the target's row increases, cascades to any downstream nodes
+   * that already have drawn edges from this target.
+   */
+  _updateRowAfterEdge(targetIdx) {
+    const targetId = String(targetIdx);
+    const drawnSources = proofGraphState.getDrawnDependenciesFor(targetIdx);
+    if (drawnSources.length === 0) return;
+
+    let maxSourceRow = 0;
+    for (const srcIdx of drawnSources) {
+      const srcRow = this.nodeRows.get(String(srcIdx)) || 0;
+      if (srcRow > maxSourceRow) maxSourceRow = srcRow;
+    }
+
+    const newRow = maxSourceRow + 1;
+    const currentRow = this.nodeRows.get(targetId) || 0;
+
+    if (newRow > currentRow) {
+      this.nodeRows.set(targetId, newRow);
+
+      // Cascade: update targets of outgoing drawn edges
+      for (const edgeKey of proofGraphState.drawnEdges) {
+        const parts = edgeKey.split('->');
+        if (parseInt(parts[0], 10) === targetIdx) {
+          this._updateRowAfterEdge(parseInt(parts[1], 10));
+        }
       }
     }
-    axiomIds.sort((a, b) => Number(a) - Number(b));
-    derivedIds.sort((a, b) => Number(a) - Number(b));
+  }
 
-    // Calculate positions using the container's rendered dimensions
+  /**
+   * Position all nodes based on their current row assignments.
+   * @param {boolean} animate - Whether to animate the transition
+   */
+  _layoutFromRows(animate = false) {
+    if (!this.cy) return;
+
+    // Group nodes by row
+    const rowGroups = new Map();
+    for (const [id, row] of this.nodeRows) {
+      if (!rowGroups.has(row)) rowGroups.set(row, []);
+      rowGroups.get(row).push(id);
+    }
+
+    const sortedRows = [...rowGroups.keys()].sort((a, b) => a - b);
+    if (sortedRows.length === 0) return;
+
     const rect = this._graphContainer.getBoundingClientRect();
     const w = rect.width || 800;
     const h = rect.height || 600;
     const pad = 60;
+    const rowCount = sortedRows.length;
+    const rowHeight = (h - pad * 2) / Math.max(rowCount, 1);
 
-    // Place axioms in the top portion, derived in the bottom
-    const groups = [axiomIds, derivedIds].filter(g => g.length > 0);
-    const rowHeight = (h - pad * 2) / Math.max(groups.length, 1);
     const positions = new Map();
-
-    groups.forEach((ids, groupIdx) => {
-      const y = pad + rowHeight * groupIdx + rowHeight / 2;
+    sortedRows.forEach((row, rowVisualIdx) => {
+      const ids = rowGroups.get(row);
+      ids.sort((a, b) => Number(a) - Number(b));
+      const y = pad + rowHeight * rowVisualIdx + rowHeight / 2;
       const colWidth = (w - pad * 2) / (ids.length + 1);
       ids.forEach((id, colIdx) => {
         positions.set(id, {
@@ -758,16 +829,23 @@ export class ProofGraphUI {
       });
     });
 
-    // Use preset layout with zoom=1 and pan centered, bypassing
-    // Cytoscape's internal fit which may use stale dimensions.
-    this.cy.batch(() => {
+    if (animate) {
       for (const [id, pos] of positions) {
         const node = this.cy.getElementById(id);
-        if (node.length) node.position(pos);
+        if (node.length) {
+          node.animate({ position: pos }, { duration: 300 });
+        }
       }
-    });
-    this.cy.zoom(1);
-    this.cy.pan({ x: 0, y: 0 });
+    } else {
+      this.cy.batch(() => {
+        for (const [id, pos] of positions) {
+          const node = this.cy.getElementById(id);
+          if (node.length) node.position(pos);
+        }
+      });
+      this.cy.zoom(1);
+      this.cy.pan({ x: 0, y: 0 });
+    }
   }
 
   _fitGraph() {
