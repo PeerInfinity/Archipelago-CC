@@ -405,23 +405,24 @@ class CodeMirror6UI {
       this._showApplyFeedback(true);
       log('info', `[CodeMirror6UI] ${currentSourceKey} applied successfully`);
     } catch (error) {
+      if (error && error._handled) return; // feedback already shown
       log('error', `[CodeMirror6UI] Error applying ${currentSourceKey}:`, error);
       this._showApplyFeedback(false);
       alert(`Error applying: ${error.message}`);
     }
   }
 
-  _showApplyFeedback(success) {
+  _showApplyFeedback(success, message) {
     if (!this.applyButton) return;
 
     const originalText = this.applyButton.textContent;
     const originalBg = this.applyButton.style.backgroundColor;
 
     if (success) {
-      this.applyButton.textContent = 'Applied!';
+      this.applyButton.textContent = message || 'Applied!';
       this.applyButton.style.backgroundColor = '#4CAF50';
     } else {
-      this.applyButton.textContent = 'Error!';
+      this.applyButton.textContent = message || 'Error!';
       this.applyButton.style.backgroundColor = '#f44336';
     }
 
@@ -476,7 +477,11 @@ class CodeMirror6UI {
   async _applyDataForExport(jsonText) {
     const loadedData = JSON.parse(jsonText);
     log('info', '[CodeMirror6UI] Applying data for export...');
-    await applyLoadedData(loadedData, 'editorCodeMirror6');
+    const result = await applyLoadedData(loadedData, 'editorCodeMirror6');
+    if (result.requiresReload) {
+      this._showApplyFeedback(true, 'Applied! (reload needed)');
+      throw { _handled: true }; // skip default feedback
+    }
   }
 
   async _applyMetaGameJsFile(jsText) {

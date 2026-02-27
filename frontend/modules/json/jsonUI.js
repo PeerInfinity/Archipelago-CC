@@ -16,6 +16,36 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * Builds a moduleConfig reflecting the current runtime enabled/disabled state
+ * rather than the stale initial data from G_combinedModeData.
+ */
+function getCurrentModuleConfig() {
+  const baseConfig = window.G_combinedModeData?.moduleConfig;
+  if (!baseConfig) return null;
+
+  const moduleManager = window.moduleManagerApi;
+  if (!moduleManager || typeof moduleManager.getAllModuleStates !== 'function') {
+    // Fallback to original if runtime states aren't available
+    return baseConfig;
+  }
+
+  const runtimeStates = moduleManager.getAllModuleStates();
+  const updatedDefinitions = {};
+
+  for (const [moduleId, def] of Object.entries(baseConfig.moduleDefinitions || {})) {
+    updatedDefinitions[moduleId] = { ...def };
+    if (runtimeStates[moduleId] !== undefined) {
+      updatedDefinitions[moduleId].enabled = runtimeStates[moduleId].enabled;
+    }
+  }
+
+  return {
+    ...baseConfig,
+    moduleDefinitions: updatedDefinitions,
+  };
+}
+
 export class JsonUI {
   constructor(container, componentState) {
     this.container = container;
@@ -126,7 +156,7 @@ export class JsonUI {
           <h4>Core Data:</h4>
           <div class="checkbox-container">
             <button class="button button-small text-export-btn" data-config-key="rulesConfig">Edit</button>
-            <input type="checkbox" id="json-chk-rules" data-config-key="rulesConfig" checked />
+            <input type="checkbox" id="json-chk-rules" data-config-key="rulesConfig" />
             <label for="json-chk-rules">Rules Config (rules.json)</label>
           </div>
           <div class="checkbox-container">
@@ -345,8 +375,8 @@ export class JsonUI {
       );
     }
     if (selectedDataKeys.includes('moduleConfig')) {
-      dataToSave.moduleConfig = window.G_combinedModeData?.moduleConfig;
-      log('info', 
+      dataToSave.moduleConfig = getCurrentModuleConfig();
+      log('info',
         '[JsonUI] Included moduleConfig:',
         dataToSave.moduleConfig ? 'Exists' : 'MISSING'
       );
@@ -517,7 +547,7 @@ export class JsonUI {
       return window.G_combinedModeData?.rulesConfig;
     }
     if (configKey === 'moduleConfig') {
-      return window.G_combinedModeData?.moduleConfig;
+      return getCurrentModuleConfig();
     }
     if (configKey === 'layoutConfig') {
       // Get the current live layout state using Golden Layout 2.x API

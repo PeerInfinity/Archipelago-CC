@@ -1,6 +1,7 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -310,26 +311,145 @@ export class LayoutControlsManager {
     this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
 
-    // Use the same COSE settings as the preset in layoutEditor
-    const layoutOptions = {
-      name: 'cose',
-      randomize: false,
-      animate: true,
-      animationDuration: 1000,
-      fit: true,
-      padding: 50,
-      nodeRepulsion: 400000,
-      nodeOverlap: 10,
-      idealEdgeLength: 100,
-      edgeElasticity: 100,
-      nestingFactor: 5,
-      gravity: 80,
-      numIter: 1000,
-      componentSpacing: 100
-    };
+    // Auto-detect DAG structure for hierarchical layout
+    const dagResult = this.detectDAGStructure();
+    let layoutOptions;
+    let selectedPreset = 'cose';
+
+    if (dagResult.isDAG) {
+      // Use hierarchical layout for DAG graphs
+      const startRegions = stateManager.getStartRegions?.() || [];
+      const rootId = startRegions.length > 0 ? startRegions[0] : null;
+      const rootNode = rootId ? this.ui.cy.getElementById(rootId) : null;
+
+      layoutOptions = {
+        name: 'breadthfirst',
+        directed: false,
+        padding: 50,
+        spacingFactor: 1.5,
+        avoidOverlap: true,
+        nodeDimensionsIncludeLabels: true,
+        animate: true,
+        animationDuration: 1000,
+        maximal: false,
+        grid: false,
+        circle: false,
+        fit: true
+      };
+
+      if (rootNode && rootNode.length > 0) {
+        layoutOptions.roots = rootNode;
+      }
+
+      selectedPreset = 'hierarchical-auto';
+      logger.debug(`DAG detected, using hierarchical layout (root: ${rootId || 'auto'})`);
+    } else {
+      // Use COSE for non-DAG graphs
+      layoutOptions = {
+        name: 'cose',
+        randomize: false,
+        animate: true,
+        animationDuration: 1000,
+        fit: true,
+        padding: 50,
+        nodeRepulsion: 400000,
+        nodeOverlap: 10,
+        idealEdgeLength: 100,
+        edgeElasticity: 100,
+        nestingFactor: 5,
+        gravity: 80,
+        numIter: 1000,
+        componentSpacing: 100
+      };
+    }
+
+    // Sync layout editor dropdown to reflect the selected layout
+    const layoutPresetSelect = this.ui.controlPanel?.querySelector('#layoutPreset');
+    if (layoutPresetSelect) {
+      layoutPresetSelect.value = selectedPreset;
+    }
 
     this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
     this.ui.currentLayout.run();
+  }
+
+  /**
+   * Detect whether the graph has DAG (directed acyclic graph) structure
+   * by analyzing hasForwardExit/hasReverseExit on edges and running Kahn's algorithm.
+   * @returns {{ isDAG: boolean }}
+   */
+  detectDAGStructure() {
+    const edges = this.ui.cy.edges().filter(e => !e.hasClass('hidden'));
+    if (edges.length === 0) return { isDAG: false };
+
+    // Count truly bidirectional edges (both directions have actual exits)
+    let bidirectionalCount = 0;
+    for (let i = 0; i < edges.length; i++) {
+      const data = edges[i].data();
+      if (data.hasForwardExit && data.hasReverseExit) {
+        bidirectionalCount++;
+      }
+    }
+
+    // If >10% of edges are truly bidirectional, not a DAG
+    if (bidirectionalCount / edges.length > 0.1) {
+      return { isDAG: false };
+    }
+
+    // Build directed adjacency from hasForwardExit/hasReverseExit
+    // Edges are lexicographically normalized: source < target alphabetically
+    const inDegree = new Map();
+    const adjList = new Map();
+
+    // Initialize all nodes
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+      const id = node.id();
+      inDegree.set(id, 0);
+      adjList.set(id, []);
+    });
+
+    // Add directed edges based on which direction has an actual exit
+    for (let i = 0; i < edges.length; i++) {
+      const data = edges[i].data();
+      const source = data.source; // lexicographically smaller
+      const target = data.target; // lexicographically larger
+      if (!inDegree.has(source) || !inDegree.has(target)) continue;
+
+      if (data.hasForwardExit && !data.hasReverseExit) {
+        // Forward only: source -> target
+        adjList.get(source).push(target);
+        inDegree.set(target, inDegree.get(target) + 1);
+      } else if (data.hasReverseExit && !data.hasForwardExit) {
+        // Reverse only: target -> source
+        adjList.get(target).push(source);
+        inDegree.set(source, inDegree.get(source) + 1);
+      }
+      // If both, skip — already counted as bidirectional and under threshold
+    }
+
+    // Kahn's algorithm for topological sort / cycle detection
+    const queue = [];
+    for (const [nodeId, deg] of inDegree) {
+      if (deg === 0) queue.push(nodeId);
+    }
+
+    let processed = 0;
+    while (queue.length > 0) {
+      const node = queue.shift();
+      processed++;
+      for (const neighbor of adjList.get(node) || []) {
+        const newDeg = inDegree.get(neighbor) - 1;
+        inDegree.set(neighbor, newDeg);
+        if (newDeg === 0) queue.push(neighbor);
+      }
+    }
+
+    const totalNodes = inDegree.size;
+    const isDAG = processed === totalNodes && totalNodes > 0;
+
+    logger.debug(`DAG detection: ${processed}/${totalNodes} nodes processed, bidirectional=${bidirectionalCount}/${edges.length}, isDAG=${isDAG}`);
+
+    return { isDAG };
   }
 
   saveNodePositions() {
