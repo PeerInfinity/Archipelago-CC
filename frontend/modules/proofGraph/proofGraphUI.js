@@ -6,8 +6,14 @@
  * When all incoming edges for a step are drawn, the step becomes checkable.
  */
 
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import {
+  createEventBusGetter,
+  createLogger,
+  hasProofStructure,
+  syncStateFromSnapshot,
+  ensureStateLoaded,
+  dispatchLocationCheck,
+} from '../proofShared/proofUIHelpers.js';
 import proofGraphState from './proofGraphStateSingleton.js';
 
 // Module-level references set by index.js
@@ -17,24 +23,8 @@ let _dispatcher = null;
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
 
-function getEventBus() {
-  if (_moduleEventBus) return _moduleEventBus;
-  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
-  return {
-    publish: (event, data) => eventBus.publish(event, data, 'proofGraph'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofGraph'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofGraph'),
-  };
-}
-
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('proofGraphUI', message, ...data);
-  } else {
-    const method = console[level === 'info' ? 'log' : level] || console.log;
-    method(`[proofGraphUI] ${message}`, ...data);
-  }
-}
+const getEventBus = createEventBusGetter('proofGraph', () => _moduleEventBus);
+const log = createLogger('proofGraphUI');
 
 export class ProofGraphUI {
   constructor(container, componentState) {
@@ -55,6 +45,9 @@ export class ProofGraphUI {
     this._toolbarEl = null;
     this._graphContainer = null;
     this._statusEl = null;
+
+    // Track in-flight check to prevent double-clicks
+    this._checkingStep = null;
 
     this._createBaseUI();
     this._setupLifecycle();
@@ -108,32 +101,25 @@ export class ProofGraphUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
-    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
       get: () => getEventBus(),
       configurable: true,
     });
 
-    // Subscribe directly — the fallback eventBus ensures this works even
-    // before index.js initialize() sets _moduleEventBus (Phase 9).
     this._attachListeners();
-
     this.container.on('destroy', () => this.destroy());
 
     // Late-initialization: if proof data is already loaded (e.g. component
     // created after stateManager:rulesLoaded already fired), start immediately.
     if (proofGraphState.isLoaded && !this.cy) {
       log('info', 'State already loaded at construction time — starting Cytoscape load');
-      this._syncFromSnapshot();
+      syncStateFromSnapshot(proofGraphState);
       this._loadCytoscape();
-    } else if (this._hasProofStructure() && !proofGraphState.isLoaded) {
+    } else if (hasProofStructure() && !proofGraphState.isLoaded) {
       log('info', 'Proof structure available but state not loaded — loading from static data');
-      const staticData = stateManager.getStaticData();
-      const playerId = staticData.playerId || '1';
-      const playerWorld = staticData.world[playerId];
-      if (playerWorld?.slot_data?.proof_structure) {
-        proofGraphState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
-        this._syncFromSnapshot();
+      ensureStateLoaded(proofGraphState);
+      if (proofGraphState.isLoaded) {
+        syncStateFromSnapshot(proofGraphState);
         this._loadCytoscape();
       }
     }
@@ -172,14 +158,6 @@ export class ProofGraphUI {
     }
   }
 
-  _hasProofStructure() {
-    const staticData = stateManager.getStaticData();
-    if (!staticData?.world) return false;
-    const playerId = staticData.playerId || '1';
-    const playerWorld = staticData.world[playerId];
-    return !!playerWorld?.slot_data?.proof_structure;
-  }
-
   // ─── Cytoscape Loading ────────────────────────────────────
 
   _loadCytoscape() {
@@ -203,8 +181,6 @@ export class ProofGraphUI {
       if (idx >= scripts.length) {
         // All loaded — register and initialize
         this.cytoscape = window.cytoscape;
-        // Edgehandles self-registers when it detects window.cytoscape,
-        // so we only register manually if that auto-registration didn't happen.
         log('info', 'Cytoscape libraries loaded');
         this._cytoscapeLoading = false;
         this._statusEl.textContent = 'Initializing graph...';
@@ -278,8 +254,6 @@ export class ProofGraphUI {
       this._statusEl.textContent = 'Waiting for panel to become visible...';
 
       // Use both ResizeObserver and a polling fallback for robustness.
-      // ResizeObserver can miss the initial size if the element is already
-      // laid out by the time we observe it.
       let resolved = false;
       const tryInit = () => {
         if (resolved || this.cy) return;
@@ -324,8 +298,6 @@ export class ProofGraphUI {
       layout: { name: 'preset' }, // We'll run layout after adding elements
       minZoom: 0.3,
       maxZoom: 3,
-      // Use default wheelSensitivity (1) — custom values cause warnings
-      // and behave inconsistently across hardware/OS configurations.
     });
 
     // Initialize edgehandles
@@ -354,7 +326,6 @@ export class ProofGraphUI {
 
     // Schedule the initial layout using rAF chaining to ensure the browser
     // has painted the Cytoscape canvas at its final container size.
-    // Two rAF frames gives GoldenLayout time to finish sizing.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (this.cy) {
@@ -602,15 +573,15 @@ export class ProofGraphUI {
       preview: true,
       ghostEdgePairs: true,
 
-      // Can this edge be created?
+      // Can this edge be created? Allow any non-self-loop, non-duplicate edge
+      // so the player can attempt incorrect edges (which get rejected with feedback).
       canConnect: (sourceNode, targetNode) => {
         const sourceIdx = parseInt(sourceNode.id(), 10);
         const targetIdx = parseInt(targetNode.id(), 10);
         if (sourceIdx === targetIdx) return false;
-        // Only allow if it's a correct, undrawn edge
+        // Don't allow edges that are already drawn
         const edgeKey = `${sourceIdx}->${targetIdx}`;
-        return proofGraphState.correctEdges.has(edgeKey) &&
-               !proofGraphState.drawnEdges.has(edgeKey);
+        return !proofGraphState.drawnEdges.has(edgeKey);
       },
 
       // Edge parameters for the created edge
@@ -626,8 +597,6 @@ export class ProofGraphUI {
     });
 
     // Handle edge completion via Cytoscape event.
-    // This version of edgehandles emits 'ehcomplete' on cy rather than
-    // calling a `complete` option callback.
     this.cy.on('ehcomplete', (event, sourceNode, targetNode, addedEdge) => {
       const sourceIdx = parseInt(sourceNode.id(), 10);
       const targetIdx = parseInt(targetNode.id(), 10);
@@ -761,8 +730,6 @@ export class ProofGraphUI {
 
   /**
    * Update row assignment for a target node after a new edge is drawn.
-   * If the target's row increases, cascades to any downstream nodes
-   * that already have drawn edges from this target.
    */
   _updateRowAfterEdge(targetIdx) {
     const targetId = String(targetIdx);
@@ -885,62 +852,47 @@ export class ProofGraphUI {
   _handleRulesLoaded() {
     log('info', 'Rules loaded, checking for proof structure');
 
-    if (!this._hasProofStructure()) {
+    if (!hasProofStructure()) {
       log('info', 'Not a MetaMath game — hiding proof graph');
       this._statusEl.textContent = 'This game has no proof structure.';
       this._toolbarEl.style.display = 'none';
       return;
     }
 
-    // If state isn't loaded yet (UI handler can fire before index.js handler),
-    // load the proof structure directly from static data.
-    if (!proofGraphState.isLoaded) {
-      log('info', 'Proof structure found but state not loaded yet — loading from static data');
-      const staticData = stateManager.getStaticData();
-      const playerId = staticData.playerId || '1';
-      const playerWorld = staticData.world[playerId];
-      if (playerWorld?.slot_data?.proof_structure) {
-        proofGraphState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
-      }
-    }
+    ensureStateLoaded(proofGraphState);
 
     if (proofGraphState.isLoaded) {
-      this._syncFromSnapshot();
+      syncStateFromSnapshot(proofGraphState);
       this._loadCytoscape();
     }
   }
 
   _handleSnapshotUpdated(snapshotData) {
     if (!proofGraphState.isLoaded) return;
-    this._syncFromSnapshot(snapshotData);
+    syncStateFromSnapshot(proofGraphState, snapshotData);
+    this._checkingStep = null; // Clear in-flight guard after snapshot sync
     this._updateNodeClasses();
     this._updateStatus();
   }
 
   _handleInventoryChanged() {
     if (!proofGraphState.isLoaded) return;
-    this._syncFromSnapshot();
+    syncStateFromSnapshot(proofGraphState);
+    this._checkingStep = null;
     this._updateNodeClasses();
     this._updateStatus();
-  }
-
-  _syncFromSnapshot(snapshotData) {
-    // Event data is wrapped as { snapshot: ... }, unwrap if needed
-    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
-    if (!snapshot) return;
-
-    if (snapshot.inventory) {
-      proofGraphState.syncInventory(snapshot.inventory);
-    }
-    if (snapshot.checkedLocations) {
-      proofGraphState.syncLocations(snapshot.checkedLocations);
-    }
   }
 
   // ─── Actions ──────────────────────────────────────────────
 
   _onCheckNext() {
     if (!proofGraphState.isLoaded || !_dispatcher) return;
+
+    // Prevent double-clicks while a check is in-flight
+    if (this._checkingStep !== null) {
+      log('info', 'Check already in progress, ignoring');
+      return;
+    }
 
     // Find first checkable step
     for (const [index] of proofGraphState.steps) {
@@ -957,37 +909,18 @@ export class ProofGraphUI {
     const step = proofGraphState.steps.get(stepIndex);
     if (!step || !_dispatcher) return;
 
-    // Verify the location actually exists before trying to check it
-    const staticData = stateManager.getStaticData();
-    if (staticData?.locations && !staticData.locations.has(step.locationName)) {
-      log('warn', `Location "${step.locationName}" not found — marking as pre-checked`);
-      proofGraphState.checkedLocations.add(step.locationName);
-      this._updateNodeClasses();
-      this._updateStatus();
+    // Prevent double-clicks while a check is in-flight
+    if (this._checkingStep !== null) {
+      log('info', 'Check already in progress, ignoring');
       return;
     }
 
-    // Find region name for this location
-    let regionName = step.locationName; // fallback
-    if (staticData?.regions) {
-      for (const [rName, rData] of Object.entries(staticData.regions)) {
-        if (rData.locations && rData.locations.some(loc => loc.name === step.locationName)) {
-          regionName = rName;
-          break;
-        }
-      }
-    }
+    this._checkingStep = stepIndex;
 
-    const payload = {
-      locationName: step.locationName,
-      regionName: regionName,
-      originator: 'ProofGraphCheck',
-      originalDOMEvent: true,
-    };
-
-    log('info', `Checking step: ${step.label} (${step.locationName})`);
-    _dispatcher.publish('user:locationCheck', payload, {
-      initialTarget: 'bottom',
+    dispatchLocationCheck(step, proofGraphState, _dispatcher, 'ProofGraphCheck', log, () => {
+      this._checkingStep = null;
+      this._updateNodeClasses();
+      this._updateStatus();
     });
   }
 

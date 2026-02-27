@@ -1,61 +1,25 @@
 /**
  * ProofEntryState — manages the proof entry puzzle for MetaMath Hard mode.
  *
- * Like ProofQueueState (Easy mode), but steps are NOT shown upfront.
- * The player must type a theorem label or expression to "discover" each step.
- * Matching uses multiple strategies:
- *   1. Exact label match (case-insensitive)
- *   2. Token-normalized expression match
- *   3. Structural unification — metavariable template matching
- *      e.g. "|- ( ( A + B ) + C ) = ( A + ( B + C ) )" matches
- *           "|- ( ( 2 + 2 ) + 1 ) = ( 2 + ( 2 + 1 ) )"
- *      with consistent binding A=2, B=2, C=1
+ * Extends ProofQueueBaseState with step discovery via text matching:
+ *   - Steps are NOT shown upfront; the player must type to "discover" each step
+ *   - Matching uses multiple strategies:
+ *     1. Exact label match (case-insensitive)
+ *     2. Token-normalized expression match
+ *     3. Structural unification — metavariable template matching
+ *        e.g. "|- ( ( A + B ) + C ) = ( A + ( B + C ) )" matches
+ *             "|- ( ( 2 + 2 ) + 1 ) = ( 2 + ( 2 + 1 ) )"
+ *        with consistent binding A=2, B=2, C=1
  */
 
-/**
- * @typedef {Object} ProofStep
- *   @property {number}   index        - 1-based statement index
- *   @property {string}   label        - Short theorem/axiom name (e.g. "2cn")
- *   @property {string}   expression   - Mathematical expression (e.g. "|- 2 e. CC")
- *   @property {number[]} dependencies - Indices of statements this depends on
- *   @property {string}   [fullText]   - Full description text
- *   @property {string}   itemName     - Archipelago item name ("Statement 1")
- *   @property {string}   locationName - Archipelago location name ("Prove Statement 1")
- *   @property {string}   displayName  - Human-readable display name
- *   @property {string[]} exprTokens   - Tokenized expression for matching
- */
+import { ProofQueueBaseState } from '../proofShared/proofQueueBaseState.js';
 
-export class ProofEntryState {
+export class ProofEntryState extends ProofQueueBaseState {
   constructor() {
-    /** @type {Map<number, ProofStep>} All proof steps keyed by index */
-    this.steps = new Map();
-
-    /** @type {number[]} Ordered queue of step indices */
-    this.queue = [];
+    super();
 
     /** @type {Set<number>} Steps that have been discovered (typed correctly) */
     this.discoveredSteps = new Set();
-
-    /** @type {Set<number>} Steps available (item received or axiom) */
-    this.availableSteps = new Set();
-
-    /** @type {Set<string>} Item names currently in inventory */
-    this.receivedItems = new Set();
-
-    /** @type {Set<string>} Location names already checked */
-    this.checkedLocations = new Set();
-
-    /** @type {Map<string, string>} Generic name -> display name */
-    this.nameSubstitutions = new Map();
-
-    /** @type {string|null} */
-    this.theoremName = null;
-
-    /** @type {number|null} */
-    this.goalStepIndex = null;
-
-    /** @type {boolean} */
-    this.isLoaded = false;
 
     /** @type {number} Total failed match attempts */
     this.failedAttempts = 0;
@@ -67,14 +31,10 @@ export class ProofEntryState {
     this._exprIndex = new Map();
 
     // ─── Callbacks ────────────────────────────────────────
-    /** @type {Function|null} Called when queue changes */
-    this.onQueueChanged = null;
     /** @type {Function|null} Called when a step is discovered */
     this.onStepDiscovered = null;
     /** @type {Function|null} Called when a match attempt fails */
     this.onMatchFailed = null;
-    /** @type {Function|null} Called when available steps change */
-    this.onAvailableChanged = null;
   }
 
   // ─── Data Loading ──────────────────────────────────────────
@@ -85,87 +45,20 @@ export class ProofEntryState {
    * @param {Object} [nameSubstitutions]
    */
   loadFromSlotData(slotData, nameSubstitutions) {
-    this.steps.clear();
     this.queue = [];
-    this.discoveredSteps.clear();
     this.availableSteps.clear();
-    this.receivedItems.clear();
-    this.checkedLocations.clear();
-    this.nameSubstitutions.clear();
+    this.discoveredSteps.clear();
     this._labelIndex.clear();
     this._exprIndex.clear();
     this.failedAttempts = 0;
 
-    if (!slotData?.proof_structure) {
-      this.isLoaded = false;
-      return false;
-    }
+    const success = this._parseProofStructure(slotData, nameSubstitutions);
+    if (!success) return false;
 
-    const proofStructure = slotData.proof_structure;
-    this.theoremName = slotData.theorem || null;
-
-    // Build name substitution map
-    if (nameSubstitutions?.items) {
-      for (const [generic, display] of Object.entries(nameSubstitutions.items)) {
-        this.nameSubstitutions.set(generic, display);
-      }
-    }
-    if (nameSubstitutions?.locations) {
-      for (const [generic, display] of Object.entries(nameSubstitutions.locations)) {
-        this.nameSubstitutions.set(generic, display);
-      }
-    }
-
-    // Detect naming scheme: if name_substitutions has item entries, the game
-    // uses generic "Statement N" / "Prove Statement N" names with substitutions.
-    // Otherwise (worldgen), items/locations use "label: expression" directly.
-    const useGenericNames = this.nameSubstitutions.size > 0;
-
-    // Parse each statement
-    let maxIndex = 0;
-    for (const [indexStr, stmt] of Object.entries(proofStructure)) {
-      const index = parseInt(indexStr, 10);
-      if (isNaN(index)) continue;
-
-      const label = stmt.label || `stmt_${index}`;
-      const expression = stmt.expression || '';
-      const directName = `${label}: ${expression}`;
-      const exprTokens = this._tokenize(expression);
-
-      const itemName = useGenericNames ? `Statement ${index}` : directName;
-      const locationName = useGenericNames ? `Prove Statement ${index}` : `Prove ${directName}`;
-
-      const step = {
-        index,
-        label,
-        expression,
-        dependencies: Array.isArray(stmt.dependencies) ? [...stmt.dependencies] : [],
-        fullText: stmt.full_text || null,
-        itemName,
-        locationName,
-        displayName: this.nameSubstitutions.get(itemName) || directName,
-        exprTokens,
-      };
-
-      this.steps.set(index, step);
-      if (index > maxIndex) maxIndex = index;
-
-      // Build lookup indices
+    // Build lookup indices from parsed steps
+    for (const [index, step] of this.steps) {
       this._labelIndex.set(step.label.toLowerCase(), index);
-      this._exprIndex.set(exprTokens.join(' '), index);
-    }
-
-    this.goalStepIndex = maxIndex;
-
-    // Starting statements — these are already received and checked
-    if (Array.isArray(slotData.starting_statements)) {
-      for (const idx of slotData.starting_statements) {
-        const startStep = this.steps.get(idx);
-        if (startStep) {
-          this.receivedItems.add(startStep.itemName);
-          this.checkedLocations.add(startStep.locationName);
-        }
-      }
+      this._exprIndex.set(step.exprTokens.join(' '), index);
     }
 
     this._updateAvailableSteps();
@@ -173,11 +66,16 @@ export class ProofEntryState {
     return true;
   }
 
+  /** @override - Add tokenized expression to each step */
+  _augmentStep(step, _rawStmt) {
+    step.exprTokens = this._tokenize(step.expression);
+  }
+
   // ─── Expression Matching ──────────────────────────────────
 
   /**
    * Tokenize a MetaMath expression into normalized tokens.
-   * Splits on whitespace, lowercases everything.
+   * Splits on whitespace.
    * @param {string} expr
    * @returns {string[]}
    */
@@ -362,25 +260,6 @@ export class ProofEntryState {
   }
 
   /**
-   * Remove a step from the queue (but keep it discovered).
-   * Only allowed if the step's location hasn't been checked.
-   * @param {number} stepIndex
-   * @returns {boolean}
-   */
-  removeFromQueue(stepIndex) {
-    const step = this.steps.get(stepIndex);
-    if (!step) return false;
-    if (this.checkedLocations.has(step.locationName)) return false;
-
-    const idx = this.queue.indexOf(stepIndex);
-    if (idx === -1) return false;
-
-    this.queue.splice(idx, 1);
-    this._notifyQueueChanged();
-    return true;
-  }
-
-  /**
    * Re-add a discovered (but removed) step to the end of the queue.
    * @param {number} stepIndex
    * @returns {boolean}
@@ -394,90 +273,7 @@ export class ProofEntryState {
     return true;
   }
 
-  /**
-   * Move a step within the queue.
-   * @param {number} fromIdx - Queue array index
-   * @param {number} toIdx - Queue array index
-   * @returns {boolean}
-   */
-  moveInQueue(fromIdx, toIdx) {
-    if (fromIdx < 0 || fromIdx >= this.queue.length) return false;
-    if (toIdx < 0 || toIdx >= this.queue.length) return false;
-    if (fromIdx === toIdx) return false;
-
-    const stepIndex = this.queue[fromIdx];
-    const step = this.steps.get(stepIndex);
-    if (!step) return false;
-    if (this.checkedLocations.has(step.locationName)) return false;
-
-    this.queue.splice(fromIdx, 1);
-    this.queue.splice(toIdx, 0, stepIndex);
-    this._notifyQueueChanged();
-    return true;
-  }
-
-  // ─── Validation ───────────────────────────────────────────
-
-  /**
-   * Validate the queue — same logic as ProofQueueState.
-   * A step is "valid" if all its dependencies appear earlier in the queue.
-   * @returns {Array<{stepIndex: number, valid: boolean, checkable: boolean, missingDeps: number[], alreadyChecked: boolean}>}
-   */
-  validateQueue() {
-    const result = [];
-    const seenInQueue = new Set();
-
-    for (let i = 0; i < this.queue.length; i++) {
-      const stepIndex = this.queue[i];
-      const step = this.steps.get(stepIndex);
-      if (!step) continue;
-
-      const missingDeps = step.dependencies.filter(dep => !seenInQueue.has(dep));
-      const valid = missingDeps.length === 0;
-      const alreadyChecked = this.checkedLocations.has(step.locationName);
-      const checkable = valid && !alreadyChecked;
-
-      result.push({ stepIndex, valid, checkable, missingDeps, alreadyChecked });
-      seenInQueue.add(stepIndex);
-    }
-
-    return result;
-  }
-
-  /**
-   * Get the next checkable step in the queue.
-   * @returns {number|null}
-   */
-  getNextCheckableStep() {
-    const validation = this.validateQueue();
-    for (const entry of validation) {
-      if (entry.checkable) return entry.stepIndex;
-    }
-    return null;
-  }
-
-  /**
-   * Check if the proof is complete.
-   * @returns {boolean}
-   */
-  isProofComplete() {
-    if (!this.goalStepIndex) return false;
-    const goalStep = this.steps.get(this.goalStepIndex);
-    if (!goalStep) return false;
-    return this.checkedLocations.has(goalStep.locationName);
-  }
-
-  /**
-   * Get queue with validation status.
-   * @returns {Array<{step: ProofStep, valid: boolean, checkable: boolean, missingDeps: number[], alreadyChecked: boolean}>}
-   */
-  getQueueWithStatus() {
-    const validation = this.validateQueue();
-    return validation.map(entry => ({
-      step: this.steps.get(entry.stepIndex),
-      ...entry,
-    }));
-  }
+  // ─── Query Helpers ──────────────────────────────────────────
 
   /**
    * Get discovered steps not currently in queue (removed ones).
@@ -501,71 +297,5 @@ export class ProofEntryState {
       if (!this.discoveredSteps.has(idx)) count++;
     }
     return count;
-  }
-
-  // ─── Inventory / Location State ────────────────────────────
-
-  receiveItem(itemName) {
-    if (this.receivedItems.has(itemName)) return;
-    this.receivedItems.add(itemName);
-    this._updateAvailableSteps();
-  }
-
-  checkLocation(locationName) {
-    this.checkedLocations.add(locationName);
-  }
-
-  syncInventory(inventoryMap) {
-    if (!inventoryMap) return;
-    let changed = false;
-    for (const [itemName, count] of Object.entries(inventoryMap)) {
-      if (count > 0 && !this.receivedItems.has(itemName)) {
-        this.receivedItems.add(itemName);
-        changed = true;
-      }
-    }
-    if (changed) {
-      this._updateAvailableSteps();
-    }
-  }
-
-  syncLocations(locationsMap) {
-    if (!locationsMap) return;
-    for (const [locName, checked] of Object.entries(locationsMap)) {
-      if (checked) {
-        this.checkedLocations.add(locName);
-      }
-    }
-  }
-
-  // ─── Private ──────────────────────────────────────────────
-
-  _updateAvailableSteps() {
-    const prev = new Set(this.availableSteps);
-    this.availableSteps.clear();
-
-    for (const [index, step] of this.steps) {
-      if (step.dependencies.length === 0) {
-        this.availableSteps.add(index);
-      } else {
-        const allDepsReceived = step.dependencies.every(depIdx => {
-          const depStep = this.steps.get(depIdx);
-          return depStep && this.receivedItems.has(depStep.itemName);
-        });
-        if (allDepsReceived) {
-          this.availableSteps.add(index);
-        }
-      }
-    }
-
-    const changed = this.availableSteps.size !== prev.size ||
-      [...this.availableSteps].some(idx => !prev.has(idx));
-    if (changed && this.onAvailableChanged) {
-      this.onAvailableChanged();
-    }
-  }
-
-  _notifyQueueChanged() {
-    if (this.onQueueChanged) this.onQueueChanged();
   }
 }

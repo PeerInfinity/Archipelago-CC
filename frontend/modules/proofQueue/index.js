@@ -8,6 +8,12 @@
 import proofQueueState from './proofQueueStateSingleton.js';
 import { ProofQueueUI, setModuleEventBus, setDispatcher } from './proofQueueUI.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import {
+  getPlayerWorld,
+  syncStateFromSnapshot,
+  createLogger,
+  initializeProofState,
+} from '../proofShared/proofModuleHelpers.js';
 
 // ─── Module Info ────────────────────────────────────────────
 
@@ -26,14 +32,7 @@ let _moduleEventBus = null;
 let _dispatcher = null;
 let _unsubscribeHandles = [];
 
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('proofQueue', message, ...data);
-  } else {
-    const method = console[level === 'info' ? 'log' : level] || console.log;
-    method(`[proofQueue] ${message}`, ...data);
-  }
-}
+const log = createLogger('proofQueue');
 
 // ─── Registration ───────────────────────────────────────────
 
@@ -81,7 +80,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   setModuleEventBus(_moduleEventBus);
   setDispatcher(_dispatcher);
 
-  // Subscribe to rules loaded to initialize proof data
+  // Subscribe to events
   if (_moduleEventBus) {
     const subscribe = (eventName, handler) => {
       const unsub = _moduleEventBus.subscribe(eventName, handler);
@@ -95,8 +94,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Check if rules are already loaded (late initialization)
   const staticData = stateManager.getStaticData();
-  if (_getPlayerWorld(staticData)?.slot_data?.proof_structure) {
-    _initializeProofFromStaticData(staticData);
+  if (getPlayerWorld(staticData)?.slot_data?.proof_structure) {
+    initializeProofState(proofQueueState, staticData, log, _wireEventBusPublishing);
   }
 
   log('info', 'Initialization complete.');
@@ -115,74 +114,22 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
 function handleRulesLoaded() {
   log('info', 'Received stateManager:rulesLoaded');
-
   const staticData = stateManager.getStaticData();
   if (!staticData) return;
-
-  _initializeProofFromStaticData(staticData);
+  initializeProofState(proofQueueState, staticData, log, _wireEventBusPublishing);
 }
 
 function handleSnapshotUpdated(snapshotData) {
   if (!proofQueueState?.isLoaded) return;
-  _syncStateFromSnapshot(snapshotData);
+  syncStateFromSnapshot(proofQueueState, snapshotData);
 }
 
 function handleInventoryChanged() {
   if (!proofQueueState?.isLoaded) return;
-  _syncStateFromSnapshot();
+  syncStateFromSnapshot(proofQueueState);
 }
 
-// ─── Internal Helpers ───────────────────────────────────────
-
-/**
- * Get the player-specific world data from static data.
- * @param {Object} staticData
- * @returns {Object|null}
- */
-function _getPlayerWorld(staticData) {
-  if (!staticData?.world) return null;
-  const playerId = staticData.playerId || '1';
-  return staticData.world[playerId] || null;
-}
-
-function _initializeProofFromStaticData(staticData) {
-  const playerWorld = _getPlayerWorld(staticData);
-  if (!playerWorld?.slot_data?.proof_structure) {
-    log('info', 'No proof_structure in slot data — not a MetaMath game');
-    return;
-  }
-
-  // If already loaded (UI handler may have loaded it first), just wire up
-  // event bus publishing without re-loading or overwriting existing callbacks.
-  if (proofQueueState.isLoaded) {
-    log('info', 'Proof structure already loaded, wiring event bus publishing');
-    _wireEventBusPublishing();
-    _syncStateFromSnapshot();
-    return;
-  }
-
-  log('info', 'Found MetaMath proof structure, initializing...');
-
-  const success = proofQueueState.loadFromSlotData(
-    playerWorld.slot_data,
-    playerWorld.name_substitutions
-  );
-
-  if (!success) {
-    log('warn', 'Failed to load proof structure from slot data');
-    return;
-  }
-
-  log('info',
-    `Loaded proof for "${proofQueueState.theoremName}" with ${proofQueueState.steps.size} steps`
-  );
-
-  // Sync current inventory/location state
-  _syncStateFromSnapshot();
-
-  // Wire queue change notifications to event bus
-  _wireEventBusPublishing();
-}
+// ─── Internal ───────────────────────────────────────────────
 
 function _wireEventBusPublishing() {
   // Chain onto any existing callback (e.g. UI render) rather than overwriting
@@ -196,22 +143,4 @@ function _wireEventBusPublishing() {
       });
     }
   };
-}
-
-function _syncStateFromSnapshot(snapshotData) {
-  if (!proofQueueState) return;
-  // Event data is wrapped as { snapshot: ... }, unwrap if needed
-  const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
-  if (!snapshot) return;
-
-  if (snapshot.inventory) {
-    proofQueueState.syncInventory(snapshot.inventory);
-  }
-  if (snapshot.checkedLocations) {
-    const locMap = {};
-    for (const loc of snapshot.checkedLocations) {
-      locMap[loc] = true;
-    }
-    proofQueueState.syncLocations(locMap);
-  }
 }

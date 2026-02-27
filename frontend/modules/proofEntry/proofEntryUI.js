@@ -25,8 +25,14 @@
  *   └──────────────────────────────────────┘
  */
 
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import {
+  createEventBusGetter,
+  createLogger,
+  hasProofStructure,
+  syncStateFromSnapshot,
+  ensureStateLoaded,
+  dispatchLocationCheck,
+} from '../proofShared/proofUIHelpers.js';
 import proofEntryState from './proofEntryStateSingleton.js';
 
 // Module-level references set by index.js
@@ -36,24 +42,8 @@ let _dispatcher = null;
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
 
-function getEventBus() {
-  if (_moduleEventBus) return _moduleEventBus;
-  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
-  return {
-    publish: (event, data) => eventBus.publish(event, data, 'proofEntry'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofEntry'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofEntry'),
-  };
-}
-
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('proofEntryUI', message, ...data);
-  } else {
-    const method = console[level === 'info' ? 'log' : level] || console.log;
-    method(`[proofEntryUI] ${message}`, ...data);
-  }
-}
+const getEventBus = createEventBusGetter('proofEntry', () => _moduleEventBus);
+const log = createLogger('proofEntryUI');
 
 export class ProofEntryUI {
   /**
@@ -219,16 +209,12 @@ export class ProofEntryUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
-    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
       get: () => getEventBus(),
       configurable: true,
     });
 
-    // Subscribe directly — the fallback eventBus ensures this works even
-    // before index.js initialize() sets _moduleEventBus (Phase 9).
     this._attachListeners();
-
     this.container.on('destroy', () => this.destroy());
   }
 
@@ -267,70 +253,35 @@ export class ProofEntryUI {
 
   // ─── Event Handlers ───────────────────────────────────────
 
-  _hasProofStructure() {
-    const staticData = stateManager.getStaticData();
-    if (!staticData?.world) return false;
-    const playerId = staticData.playerId || '1';
-    const playerWorld = staticData.world[playerId];
-    return !!playerWorld?.slot_data?.proof_structure;
-  }
-
   _handleRulesLoaded() {
     log('info', 'Rules loaded, checking for proof structure');
-    if (!this._hasProofStructure()) {
+
+    if (!hasProofStructure()) {
       log('info', 'Not a MetaMath game — hiding proof entry');
       this._showEmptyState();
       this._statusEl.textContent = 'This game has no proof structure.';
       return;
     }
 
-    // If state isn't loaded yet (UI handler can fire before index.js handler),
-    // load the proof structure directly from static data.
-    if (!proofEntryState.isLoaded) {
-      log('info', 'Proof structure found but state not loaded yet — loading from static data');
-      const staticData = stateManager.getStaticData();
-      const playerId = staticData.playerId || '1';
-      const playerWorld = staticData.world[playerId];
-      if (playerWorld?.slot_data?.proof_structure) {
-        proofEntryState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
-      }
-    }
+    ensureStateLoaded(proofEntryState);
 
     if (proofEntryState && proofEntryState.isLoaded) {
       this._wireStateCallbacks();
-      this._syncFromSnapshot();
+      syncStateFromSnapshot(proofEntryState);
       this.render();
     }
   }
 
   _handleSnapshotUpdated(snapshotData) {
     if (!proofEntryState?.isLoaded) return;
-    this._syncFromSnapshot(snapshotData);
+    syncStateFromSnapshot(proofEntryState, snapshotData);
     this.render();
   }
 
   _handleInventoryChanged() {
     if (!proofEntryState?.isLoaded) return;
-    this._syncFromSnapshot();
+    syncStateFromSnapshot(proofEntryState);
     this.render();
-  }
-
-  _syncFromSnapshot(snapshotData) {
-    if (!proofEntryState) return;
-    // Event data is wrapped as { snapshot: ... }, unwrap if needed
-    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
-    if (!snapshot) return;
-
-    if (snapshot.inventory) {
-      proofEntryState.syncInventory(snapshot.inventory);
-    }
-    if (snapshot.checkedLocations) {
-      const locMap = {};
-      for (const loc of snapshot.checkedLocations) {
-        locMap[loc] = true;
-      }
-      proofEntryState.syncLocations(locMap);
-    }
   }
 
   // ─── Rendering ────────────────────────────────────────────
@@ -584,7 +535,16 @@ export class ProofEntryUI {
       for (const hint of hints) {
         const item = document.createElement('div');
         item.className = 'pe-hint-item';
-        item.innerHTML = `<strong>${hint.label}</strong> <span class="pe-hint-expr">${hint.hint}</span>`;
+
+        const labelEl = document.createElement('strong');
+        labelEl.textContent = hint.label;
+        item.appendChild(labelEl);
+
+        const exprEl = document.createElement('span');
+        exprEl.className = 'pe-hint-expr';
+        exprEl.textContent = ' ' + hint.hint;
+        item.appendChild(exprEl);
+
         item.addEventListener('mousedown', (e) => {
           e.preventDefault();
           this._inputEl.value = hint.label;
@@ -642,12 +602,7 @@ export class ProofEntryUI {
 
   _onClear() {
     if (!proofEntryState) return;
-    // Remove unchecked steps from queue (they stay discovered)
-    proofEntryState.queue = proofEntryState.queue.filter(idx => {
-      const step = proofEntryState.steps.get(idx);
-      return step && proofEntryState.checkedLocations.has(step.locationName);
-    });
-    proofEntryState._notifyQueueChanged();
+    proofEntryState.clearUncheckedFromQueue();
   }
 
   _onCheckNext() {
@@ -662,28 +617,6 @@ export class ProofEntryUI {
     const step = proofEntryState.steps.get(nextStep);
     if (!step) return;
 
-    // Find region name for this location
-    const staticData = stateManager.getStaticData();
-    let regionName = step.locationName;
-    if (staticData?.regions) {
-      for (const [rName, rData] of Object.entries(staticData.regions)) {
-        if (rData.locations && rData.locations.some(loc => loc.name === step.locationName)) {
-          regionName = rName;
-          break;
-        }
-      }
-    }
-
-    const payload = {
-      locationName: step.locationName,
-      regionName: regionName,
-      originator: 'ProofEntryCheck',
-      originalDOMEvent: true,
-    };
-
-    log('info', `Checking location: ${step.locationName}`, payload);
-    _dispatcher.publish('user:locationCheck', payload, {
-      initialTarget: 'bottom',
-    });
+    dispatchLocationCheck(step, proofEntryState, _dispatcher, 'ProofEntryCheck', log);
   }
 }

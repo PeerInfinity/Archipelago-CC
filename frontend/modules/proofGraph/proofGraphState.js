@@ -1,16 +1,19 @@
 /**
  * ProofGraphState — manages the graph construction puzzle for MetaMath Medium mode.
  *
- * The player sees all proof step nodes but no edges. They must draw edges
- * between nodes to reconstruct the dependency graph. Correct edges stick;
- * incorrect edges are rejected. When all incoming dependency edges for a
- * step are correctly drawn, the step's location check becomes available.
+ * Extends ProofBaseState with edge-drawing mechanics:
+ *   - The player sees all proof step nodes but no edges
+ *   - They must draw edges between nodes to reconstruct the dependency graph
+ *   - Correct edges stick; incorrect edges are rejected
+ *   - When all incoming dependency edges for a step are correctly drawn,
+ *     the step's location check becomes available
  */
 
-export class ProofGraphState {
+import { ProofBaseState } from '../proofShared/proofBaseState.js';
+
+export class ProofGraphState extends ProofBaseState {
   constructor() {
-    /** @type {Map<number, ProofStep>} All proof steps keyed by index */
-    this.steps = new Map();
+    super();
 
     /**
      * Correct dependency edges in the proof.
@@ -26,24 +29,6 @@ export class ProofGraphState {
      * @type {Set<string>}
      */
     this.drawnEdges = new Set();
-
-    /** @type {Set<string>} Item names currently in inventory */
-    this.receivedItems = new Set();
-
-    /** @type {Set<string>} Location names already checked */
-    this.checkedLocations = new Set();
-
-    /** @type {Map<string, string>} Generic name → display name */
-    this.nameSubstitutions = new Map();
-
-    /** @type {string|null} */
-    this.theoremName = null;
-
-    /** @type {number|null} */
-    this.goalStepIndex = null;
-
-    /** @type {boolean} */
-    this.isLoaded = false;
 
     /** @type {number} Total number of incorrect edge attempts */
     this.incorrectAttempts = 0;
@@ -67,79 +52,18 @@ export class ProofGraphState {
    * @param {Object} [nameSubstitutions]
    */
   loadFromSlotData(slotData, nameSubstitutions) {
-    this.steps.clear();
     this.correctEdges.clear();
     this.drawnEdges.clear();
-    this.receivedItems.clear();
-    this.checkedLocations.clear();
-    this.nameSubstitutions.clear();
     this.incorrectAttempts = 0;
 
-    if (!slotData?.proof_structure) {
-      this.isLoaded = false;
-      return false;
-    }
+    const success = this._parseProofStructure(slotData, nameSubstitutions);
+    if (!success) return false;
 
-    const proofStructure = slotData.proof_structure;
-    this.theoremName = slotData.theorem || null;
-
-    // Build name substitution map
-    if (nameSubstitutions?.items) {
-      for (const [generic, display] of Object.entries(nameSubstitutions.items)) {
-        this.nameSubstitutions.set(generic, display);
-      }
-    }
-
-    // Detect naming scheme: if name_substitutions has item entries, the game
-    // uses generic "Statement N" / "Prove Statement N" names with substitutions.
-    // Otherwise (worldgen), items/locations use "label: expression" directly.
-    const useGenericNames = this.nameSubstitutions.size > 0;
-
-    // Parse statements and build edge map
-    let maxIndex = 0;
-    for (const [indexStr, stmt] of Object.entries(proofStructure)) {
-      const index = parseInt(indexStr, 10);
-      if (isNaN(index)) continue;
-
-      const label = stmt.label || `stmt_${index}`;
-      const expression = stmt.expression || '';
-      const directName = `${label}: ${expression}`;
-
-      const itemName = useGenericNames ? `Statement ${index}` : directName;
-      const locationName = useGenericNames ? `Prove Statement ${index}` : `Prove ${directName}`;
-
-      this.steps.set(index, {
-        index,
-        label,
-        expression,
-        dependencies: Array.isArray(stmt.dependencies) ? [...stmt.dependencies] : [],
-        fullText: stmt.full_text || null,
-        itemName,
-        locationName,
-        displayName: this.nameSubstitutions.get(itemName) || directName,
-      });
-
-      // Build correct edges: dependency -> this step
-      if (Array.isArray(stmt.dependencies)) {
-        for (const dep of stmt.dependencies) {
-          const edgeKey = `${dep}->${index}`;
-          this.correctEdges.set(edgeKey, { source: dep, target: index });
-        }
-      }
-
-      if (index > maxIndex) maxIndex = index;
-    }
-
-    this.goalStepIndex = maxIndex;
-
-    // Starting statements — these are already received and checked
-    if (Array.isArray(slotData.starting_statements)) {
-      for (const idx of slotData.starting_statements) {
-        const startStep = this.steps.get(idx);
-        if (startStep) {
-          this.receivedItems.add(startStep.itemName);
-          this.checkedLocations.add(startStep.locationName);
-        }
+    // Build correct edges from parsed step dependencies
+    for (const [index, step] of this.steps) {
+      for (const dep of step.dependencies) {
+        const edgeKey = `${dep}->${index}`;
+        this.correctEdges.set(edgeKey, { source: dep, target: index });
       }
     }
 
@@ -262,16 +186,6 @@ export class ProofGraphState {
   }
 
   /**
-   * Check if the proof is complete (goal location checked).
-   */
-  isProofComplete() {
-    if (!this.goalStepIndex) return false;
-    const goalStep = this.steps.get(this.goalStepIndex);
-    if (!goalStep) return false;
-    return this.checkedLocations.has(goalStep.locationName);
-  }
-
-  /**
    * Get edges already drawn for a specific target step.
    * @returns {number[]} Source indices of drawn incoming edges
    */
@@ -290,33 +204,5 @@ export class ProofGraphState {
     const step = this.steps.get(stepIndex);
     if (!step) return 0;
     return step.dependencies.length - this.getDrawnDependenciesFor(stepIndex).length;
-  }
-
-  // ─── Inventory / Location State ────────────────────────────
-
-  /** Mark an item as received. */
-  receiveItem(itemName) {
-    this.receivedItems.add(itemName);
-  }
-
-  /** Mark a location as checked. */
-  checkLocation(locationName) {
-    this.checkedLocations.add(locationName);
-  }
-
-  /** Sync full inventory. */
-  syncInventory(inventoryMap) {
-    if (!inventoryMap) return;
-    for (const [itemName, count] of Object.entries(inventoryMap)) {
-      if (count > 0) this.receivedItems.add(itemName);
-    }
-  }
-
-  /** Sync checked locations. */
-  syncLocations(checkedArray) {
-    if (!checkedArray) return;
-    for (const loc of checkedArray) {
-      this.checkedLocations.add(loc);
-    }
   }
 }

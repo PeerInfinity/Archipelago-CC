@@ -20,8 +20,14 @@
  *   └──────────────────────────────────────┘
  */
 
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import {
+  createEventBusGetter,
+  createLogger,
+  hasProofStructure,
+  syncStateFromSnapshot,
+  ensureStateLoaded,
+  dispatchLocationCheck,
+} from '../proofShared/proofUIHelpers.js';
 import proofQueueState from './proofQueueStateSingleton.js';
 
 // Module-level references set by index.js
@@ -31,24 +37,8 @@ let _dispatcher = null;
 export function setModuleEventBus(bus) { _moduleEventBus = bus; }
 export function setDispatcher(dispatcher) { _dispatcher = dispatcher; }
 
-function getEventBus() {
-  if (_moduleEventBus) return _moduleEventBus;
-  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
-  return {
-    publish: (event, data) => eventBus.publish(event, data, 'proofQueue'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'proofQueue'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'proofQueue'),
-  };
-}
-
-function log(level, message, ...data) {
-  if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('proofQueueUI', message, ...data);
-  } else {
-    const method = console[level === 'info' ? 'log' : level] || console.log;
-    method(`[proofQueueUI] ${message}`, ...data);
-  }
-}
+const getEventBus = createEventBusGetter('proofQueue', () => _moduleEventBus);
+const log = createLogger('proofQueueUI');
 
 export class ProofQueueUI {
   /**
@@ -154,17 +144,12 @@ export class ProofQueueUI {
   // ─── Lifecycle ────────────────────────────────────────────
 
   _setupLifecycle() {
-    // Dynamic event bus getter with fallback to global eventBus
     Object.defineProperty(this, 'eventBus', {
       get: () => getEventBus(),
       configurable: true,
     });
 
-    // Subscribe directly — the fallback eventBus ensures this works even
-    // before index.js initialize() sets _moduleEventBus (Phase 9).
     this._attachListeners();
-
-    // GoldenLayout destroy
     this.container.on('destroy', () => this.destroy());
   }
 
@@ -204,77 +189,37 @@ export class ProofQueueUI {
 
   // ─── Event Handlers ───────────────────────────────────────
 
-  /**
-   * Check if the current game has a MetaMath proof structure.
-   */
-  _hasProofStructure() {
-    const staticData = stateManager.getStaticData();
-    if (!staticData?.world) return false;
-    const playerId = staticData.playerId || '1';
-    const playerWorld = staticData.world[playerId];
-    return !!playerWorld?.slot_data?.proof_structure;
-  }
-
   _handleRulesLoaded() {
     log('info', 'Rules loaded, checking for proof structure');
 
-    // Check if this is a MetaMath game
-    if (!this._hasProofStructure()) {
+    if (!hasProofStructure()) {
       log('info', 'Not a MetaMath game — hiding proof queue');
       this._showEmptyState();
       this._statusEl.textContent = 'This game has no proof structure.';
       return;
     }
 
-    // If state isn't loaded yet (UI handler can fire before index.js handler),
-    // load the proof structure directly from static data.
-    if (!proofQueueState.isLoaded) {
-      log('info', 'Proof structure found but state not loaded yet — loading from static data');
-      const staticData = stateManager.getStaticData();
-      const playerId = staticData.playerId || '1';
-      const playerWorld = staticData.world[playerId];
-      if (playerWorld?.slot_data?.proof_structure) {
-        proofQueueState.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
-      }
-    }
+    ensureStateLoaded(proofQueueState);
 
     if (proofQueueState && proofQueueState.isLoaded) {
       this._wireStateCallbacks();
-      this._syncFromSnapshot();
+      syncStateFromSnapshot(proofQueueState);
       this.render();
     }
   }
 
   _handleSnapshotUpdated(snapshotData) {
     if (!proofQueueState?.isLoaded) return;
-    this._syncFromSnapshot(snapshotData);
+    syncStateFromSnapshot(proofQueueState, snapshotData);
     this._checkingStep = null; // Clear in-flight guard after snapshot sync
     this.render();
   }
 
   _handleInventoryChanged() {
     if (!proofQueueState?.isLoaded) return;
-    this._syncFromSnapshot();
+    syncStateFromSnapshot(proofQueueState);
     this._checkingStep = null;
     this.render();
-  }
-
-  _syncFromSnapshot(snapshotData) {
-    if (!proofQueueState) return;
-    // Event data is wrapped as { snapshot: ... }, unwrap if needed
-    const snapshot = snapshotData?.snapshot || snapshotData || stateManager.getLatestStateSnapshot();
-    if (!snapshot) return;
-
-    if (snapshot.inventory) {
-      proofQueueState.syncInventory(snapshot.inventory);
-    }
-    if (snapshot.checkedLocations) {
-      const locMap = {};
-      for (const loc of snapshot.checkedLocations) {
-        locMap[loc] = true;
-      }
-      proofQueueState.syncLocations(locMap);
-    }
   }
 
   // ─── Rendering ────────────────────────────────────────────
@@ -524,40 +469,12 @@ export class ProofQueueUI {
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
 
-    // Verify the location actually exists before trying to check it
-    const staticData = stateManager.getStaticData();
-    if (staticData?.locations && !staticData.locations.has(step.locationName)) {
-      log('warn', `Location "${step.locationName}" not found — marking as pre-checked`);
-      proofQueueState.checkedLocations.add(step.locationName);
-      this.render();
-      return;
-    }
-
-    // Find region name for this location
-    let regionName = step.locationName; // fallback
-    if (staticData?.regions) {
-      // Search for the region containing this location
-      for (const [rName, rData] of Object.entries(staticData.regions)) {
-        if (rData.locations && rData.locations.some(loc => loc.name === step.locationName)) {
-          regionName = rName;
-          break;
-        }
-      }
-    }
-
     // Mark step as in-flight; cleared when snapshot sync updates checked locations
     this._checkingStep = nextStep;
 
-    const payload = {
-      locationName: step.locationName,
-      regionName: regionName,
-      originator: 'ProofQueueCheck',
-      originalDOMEvent: true,
-    };
-
-    log('info', `Checking location: ${step.locationName}`, payload);
-    _dispatcher.publish('user:locationCheck', payload, {
-      initialTarget: 'bottom',
+    dispatchLocationCheck(step, proofQueueState, _dispatcher, 'ProofQueueCheck', log, () => {
+      this._checkingStep = null;
+      this.render();
     });
   }
 }
