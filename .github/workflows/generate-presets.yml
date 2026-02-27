@@ -120,13 +120,13 @@ jobs:
               # The merge advances the merge base but can't remove files whose
               # deletion predates the common ancestor. Exclude paths that the
               # generate script intentionally creates.
-              git diff --name-only origin/main HEAD --diff-filter=A -- . \
+              git diff --name-only -z origin/main HEAD --diff-filter=A -- . \
                 ':(exclude)frontend/presets/' \
                 ':(exclude)worlds/*_worldgen*/' \
                 ':(exclude)frontend/modules/textAdventure-remote/shared/' \
                 ':(exclude)scripts/data/world-mapping.json' \
                 ':(exclude)scripts/output/' \
-              | xargs -r git rm -f
+              | xargs -r -0 git rm -f
               if ! git diff --staged --quiet; then
                 git commit -m "Remove files deleted on main"
                 git push origin generated-presets
