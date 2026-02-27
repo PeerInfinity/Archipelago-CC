@@ -313,7 +313,7 @@ Configuration options:
 - `vanilla_placement`: If enabled, forces `randomize_items=false` and marks world as vanilla
 - `randomize_items`: Enable/disable item randomization
 - `theorem`: Which theorem to prove (22 preset choices plus free-text entry)
-- `complexity`: Controls how starting statements are selected (simple=sequential, moderate/complex=random)
+- `randomize_starting_statements`: Controls how starting statements are selected (false=sequential, true=random)
 - `starting_statements`: Percentage pre-unlocked (default 0, range 0-50)
 - `auto_download_database`: Auto-download set.mm
 
@@ -392,12 +392,12 @@ The system builds three representations:
 ### Starting Statement Selection
 
 ```python
-# Simple mode: First N statements in order
-if self.options.complexity.value == 0:  # Simple
+# Ordered mode: First N statements in proof order
+if not self.options.randomize_starting_statements.value:
     self.starting_statements = set(range(1, num_starting + 1))
 
-# Moderate/Complex mode: Random selection (always includes first statement)
-else:  # Moderate or Complex
+# Randomized mode: Random selection (always includes first statement)
+else:
     self.starting_statements = {1}  # Always start with first axiom
     remaining = num_starting - 1
     if remaining > 0:

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
-from typing import Dict
+from Options import Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
 
 class VanillaPlacement(Toggle):
     """
@@ -66,18 +65,15 @@ class TheoremSelection(TextChoice):
 
     default = 1  # 2p2e4
 
-class ProofComplexity(Choice):
+class RandomizeStartingStatements(Toggle):
     """
-    Controls how starting statements are selected.
-    Simple: Starting statements are the first N statements in order
-    Moderate: Starting statements are randomized from throughout the proof
-    Complex: Starting statements are randomized from throughout the proof
+    Controls how starting statements are selected when starting_statements is above 0%.
+    Off: Starting statements are the first N statements in proof order (easier)
+    On: Starting statements are randomly selected from throughout the proof (harder)
+    Has no effect when starting_statements is 0%.
     """
-    display_name = "Proof Complexity"
-    option_simple = 0
-    option_moderate = 1
-    option_complex = 2
-    default = 1
+    display_name = "Randomize Starting Statements"
+    default = True
 
 class StartingStatements(Range):
     """
@@ -102,7 +98,7 @@ class MetamathOptions(PerGameCommonOptions):
     vanilla_placement: VanillaPlacement
     randomize_items: RandomizeItems
     theorem: TheoremSelection
-    complexity: ProofComplexity
+    randomize_starting_statements: RandomizeStartingStatements
     starting_statements: StartingStatements
     auto_download_database: AutoDownloadDatabase
 
@@ -111,7 +107,7 @@ metamath_option_groups = [
         VanillaPlacement,
         RandomizeItems,
         TheoremSelection,
-        ProofComplexity,
+        RandomizeStartingStatements,
         StartingStatements,
         AutoDownloadDatabase
     ])

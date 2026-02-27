@@ -18,7 +18,7 @@ Metamath is a unique Archipelago world that transforms mathematical proofs into 
 - 🔗 **Logical Dependencies**: Items unlock locations based on mathematical logic
 - 🎯 **Multiple Theorems**: Choose from various theorems like `2p2e4` (2+2=4), `1p1e2` (1+1=2), and more
 - 🌐 **Multiworld Compatible**: Your proof steps can be scattered across other players' worlds
-- ⚙️ **Customizable Difficulty**: Adjust complexity and starting statements
+- ⚙️ **Customizable Difficulty**: Adjust starting statements and randomization
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ Metamath:
   vanilla_placement: false  # Set true to keep items in original locations
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # The theorem to prove
-  complexity: moderate  # Random starting statements
+  randomize_starting_statements: true  # Random starting statements
   starting_statements: 0  # Percentage of statements pre-unlocked (0-50)
   auto_download_database: true
 ```
@@ -60,7 +60,7 @@ Metamath:
 - [Gameplay Guide](gameplay.md) - How to play and strategies
 
 ### Resources
-- [Database Overview](database.md) - Statistics, theorem catalog, and complexity analysis
+- [Database Overview](database.md) - Statistics, theorem catalog, and difficulty analysis
 - [Examples](examples.md) - Sample configurations and walkthroughs
 
 ### Development

@@ -119,12 +119,11 @@ class MetamathWorld(World):
 
         # Determine starting statements
         num_starting = max(1, int(self.num_statements * self.options.starting_statements.value / 100))
-        # For simple complexity, give the first N statements in order
-        # For moderate/complex, randomize which statements are given
-        if self.options.complexity.value == 0:  # Simple
+        if not self.options.randomize_starting_statements.value:
+            # Ordered: give the first N statements in proof order
             self.starting_statements = set(range(1, num_starting + 1))
-        else:  # Moderate or Complex
-            # Give some early statements plus some random ones
+        else:
+            # Randomized: pick from throughout the proof
             self.starting_statements = {1}  # Always start with first axiom
             remaining = num_starting - 1
             if remaining > 0:

@@ -71,7 +71,7 @@ Metamath:
   vanilla_placement: false  # Set true to keep items in original locations
   randomize_items: true  # Enable item randomization
   theorem: 2p2e4  # Which theorem to prove
-  complexity: moderate  # Random starting statements
+  randomize_starting_statements: true  # Random starting statements
   starting_statements: 0  # Percentage to start with (0-50)
 
   # Database Settings
@@ -102,11 +102,11 @@ Control the challenge level:
 
 ```yaml
 # Easier settings
-complexity: simple  # Sequential starting statements
+randomize_starting_statements: false  # Sequential starting statements
 starting_statements: 30  # Start with 30% of proof unlocked
 
 # Harder settings
-complexity: complex  # Random starting statements
+randomize_starting_statements: true   # Random starting statements
 starting_statements: 0  # Start with nothing unlocked
 ```
 

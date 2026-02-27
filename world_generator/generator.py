@@ -41,6 +41,7 @@ class WorldGenerator:
         force: bool = False,
         canonical_seed: Optional[int] = None,
         player_id: str = '1',
+        apply_name_substitutions: bool = False,
     ):
         """
         Initialize the generator.
@@ -52,12 +53,14 @@ class WorldGenerator:
             force: If True, overwrite existing files
             canonical_seed: If set, generated world will place items in original locations when seed matches this value
             player_id: Player ID to extract from multiworld rules file (default: '1')
+            apply_name_substitutions: If True, apply name_substitutions from the rules file (default: False)
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
         self.force = force
         self.canonical_seed = canonical_seed
         self.player_id = player_id
+        self.apply_name_substitutions = apply_name_substitutions
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -84,7 +87,8 @@ class WorldGenerator:
             json_data = json.load(f)
 
         # Apply name substitutions if present (e.g. Metamath generic → meaningful names)
-        apply_name_substitutions(json_data, player_id=self.player_id)
+        if self.apply_name_substitutions:
+            apply_name_substitutions(json_data, player_id=self.player_id)
 
         self.data = extract_all(json_data, player_id=self.player_id)
 
