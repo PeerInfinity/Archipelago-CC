@@ -157,12 +157,13 @@ export class ProofEntryState {
 
     this.goalStepIndex = maxIndex;
 
-    // Starting statements
+    // Starting statements — these are already received and checked
     if (Array.isArray(slotData.starting_statements)) {
       for (const idx of slotData.starting_statements) {
         const startStep = this.steps.get(idx);
         if (startStep) {
           this.receivedItems.add(startStep.itemName);
+          this.checkedLocations.add(startStep.locationName);
         }
       }
     }

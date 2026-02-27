@@ -202,10 +202,9 @@ export class ProofGraphUI {
       if (idx >= scripts.length) {
         // All loaded — register and initialize
         this.cytoscape = window.cytoscape;
-        if (window.cytoscapeEdgehandles && !this.cytoscape.prototype.edgehandles) {
-          this.cytoscape.use(window.cytoscapeEdgehandles);
-          log('info', 'Edgehandles registered');
-        }
+        // Edgehandles self-registers when it detects window.cytoscape,
+        // so we only register manually if that auto-registration didn't happen.
+        log('info', 'Cytoscape libraries loaded');
         this._cytoscapeLoading = false;
         this._statusEl.textContent = 'Initializing graph...';
         this._initializeGraph();
@@ -324,7 +323,8 @@ export class ProofGraphUI {
       layout: { name: 'preset' }, // We'll run layout after adding elements
       minZoom: 0.3,
       maxZoom: 3,
-      wheelSensitivity: 0.3,
+      // Use default wheelSensitivity (1) — custom values cause warnings
+      // and behave inconsistently across hardware/OS configurations.
     });
 
     // Initialize edgehandles
@@ -346,29 +346,22 @@ export class ProofGraphUI {
     this._wireStateCallbacks();
 
     // Resize handler: keep Cytoscape in sync with container size changes.
-    // Track container width to detect when GoldenLayout finishes sizing.
-    let lastWidth = 0;
-    let layoutScheduled = false;
-    this._resizeObserver = new ResizeObserver((entries) => {
-      if (!this.cy) return;
-      this.cy.resize();
-
-      const entry = entries[0];
-      const newWidth = entry.contentRect.width;
-
-      // If the container width changed significantly, schedule a layout re-run.
-      // This handles GoldenLayout's multi-phase sizing where the container
-      // may start small and grow to its final size.
-      if (Math.abs(newWidth - lastWidth) > 10) {
-        lastWidth = newWidth;
-        if (layoutScheduled) clearTimeout(layoutScheduled);
-        layoutScheduled = setTimeout(() => {
-          layoutScheduled = false;
-          if (this.cy) this._runLayout();
-        }, 200);
-      }
+    this._resizeObserver = new ResizeObserver(() => {
+      if (this.cy) this.cy.resize();
     });
     this._resizeObserver.observe(this._graphContainer);
+
+    // Schedule the initial layout using rAF chaining to ensure the browser
+    // has painted the Cytoscape canvas at its final container size.
+    // Two rAF frames gives GoldenLayout time to finish sizing.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (this.cy) {
+          this.cy.resize();
+          this._runLayout();
+        }
+      });
+    });
 
     // Update status
     this._updateStatus();
@@ -475,7 +468,6 @@ export class ProofGraphUI {
           'background-color': '#1a3328',
           'border-color': '#a6e3a1',
           'border-width': '4px',
-          'cursor': 'pointer',
         },
       },
       // ─── Checked (location complete) ────────────
@@ -630,33 +622,36 @@ export class ProofGraphUI {
           classes: 'drawn-edge',
         };
       },
+    });
 
-      // Called when edge creation completes
-      complete: (sourceNode, targetNode, addedEdge) => {
-        const sourceIdx = parseInt(sourceNode.id(), 10);
-        const targetIdx = parseInt(targetNode.id(), 10);
+    // Handle edge completion via Cytoscape event.
+    // This version of edgehandles emits 'ehcomplete' on cy rather than
+    // calling a `complete` option callback.
+    this.cy.on('ehcomplete', (event, sourceNode, targetNode, addedEdge) => {
+      const sourceIdx = parseInt(sourceNode.id(), 10);
+      const targetIdx = parseInt(targetNode.id(), 10);
 
-        const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
+      const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
 
-        if (result.success) {
-          // Edge already added by edgehandles — set proper ID
-          addedEdge.data('id', `edge-${sourceIdx}-${targetIdx}`);
-          this._flashNode(targetNode, 'success-flash');
-          log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx}`);
-        } else {
-          // Remove the edge that edgehandles added
-          addedEdge.remove();
+      if (result.success) {
+        // Edge already added by edgehandles — set proper ID and class
+        addedEdge.data('id', `edge-${sourceIdx}-${targetIdx}`);
+        addedEdge.addClass('drawn-edge');
+        this._flashNode(targetNode, 'success-flash');
+        log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx}`);
+      } else {
+        // Remove the edge that edgehandles added
+        addedEdge.remove();
 
-          if (result.reason === 'incorrect') {
-            this._flashNode(targetNode, 'reject-flash');
-            this._flashNode(sourceNode, 'reject-flash');
-            log('info', `Edge rejected: ${sourceIdx} -> ${targetIdx}`);
-          }
+        if (result.reason === 'incorrect') {
+          this._flashNode(targetNode, 'reject-flash');
+          this._flashNode(sourceNode, 'reject-flash');
+          log('info', `Edge rejected: ${sourceIdx} -> ${targetIdx}`);
         }
+      }
 
-        this._updateNodeClasses();
-        this._updateStatus();
-      },
+      this._updateNodeClasses();
+      this._updateStatus();
     });
 
     // Enable drawing mode
@@ -708,23 +703,71 @@ export class ProofGraphUI {
   _runLayout() {
     if (!this.cy) return;
 
-    // Use breadthfirst (hierarchical) layout — good for DAGs
-    this.cy.layout({
-      name: 'breadthfirst',
-      directed: true,
-      roots: this.cy.nodes('.axiom').map(n => n.id()),
-      spacingFactor: 1.5,
-      animate: true,
-      animationDuration: 800,
-      fit: true,
-      padding: 40,
-      avoidOverlap: true,
-      stop: () => {
-        // Re-fit after layout animation completes, in case the container
-        // resized during the animation (GoldenLayout timing)
-        if (this.cy) this.cy.fit(undefined, 40);
-      },
-    }).run();
+    // Force Cytoscape to re-read the container dimensions
+    this.cy.resize();
+
+    // If edges have been drawn, use breadthfirst (hierarchical) layout
+    // which properly shows the dependency structure.
+    if (proofGraphState.drawnEdges.size > 0) {
+      this.cy.layout({
+        name: 'breadthfirst',
+        directed: true,
+        roots: this.cy.nodes('.axiom').map(n => n.id()),
+        spacingFactor: 1.5,
+        animate: false,
+        fit: true,
+        padding: 40,
+        avoidOverlap: true,
+      }).run();
+      return;
+    }
+
+    // No edges drawn yet — arrange nodes in a grid with axioms on top
+    // and derived steps below, using the actual container dimensions.
+    const axiomIds = [];
+    const derivedIds = [];
+    for (const [index, step] of proofGraphState.steps) {
+      if (step.dependencies.length === 0) {
+        axiomIds.push(String(index));
+      } else {
+        derivedIds.push(String(index));
+      }
+    }
+    axiomIds.sort((a, b) => Number(a) - Number(b));
+    derivedIds.sort((a, b) => Number(a) - Number(b));
+
+    // Calculate positions using the container's rendered dimensions
+    const rect = this._graphContainer.getBoundingClientRect();
+    const w = rect.width || 800;
+    const h = rect.height || 600;
+    const pad = 60;
+
+    // Place axioms in the top portion, derived in the bottom
+    const groups = [axiomIds, derivedIds].filter(g => g.length > 0);
+    const rowHeight = (h - pad * 2) / Math.max(groups.length, 1);
+    const positions = new Map();
+
+    groups.forEach((ids, groupIdx) => {
+      const y = pad + rowHeight * groupIdx + rowHeight / 2;
+      const colWidth = (w - pad * 2) / (ids.length + 1);
+      ids.forEach((id, colIdx) => {
+        positions.set(id, {
+          x: pad + colWidth * (colIdx + 1),
+          y: y,
+        });
+      });
+    });
+
+    // Use preset layout with zoom=1 and pan centered, bypassing
+    // Cytoscape's internal fit which may use stale dimensions.
+    this.cy.batch(() => {
+      for (const [id, pos] of positions) {
+        const node = this.cy.getElementById(id);
+        if (node.length) node.position(pos);
+      }
+    });
+    this.cy.zoom(1);
+    this.cy.pan({ x: 0, y: 0 });
   }
 
   _fitGraph() {
@@ -836,15 +879,21 @@ export class ProofGraphUI {
     const step = proofGraphState.steps.get(stepIndex);
     if (!step || !_dispatcher) return;
 
-    // Find region name
+    // Verify the location actually exists before trying to check it
     const staticData = stateManager.getStaticData();
-    let regionName = step.locationName;
+    if (staticData?.locations && !staticData.locations.has(step.locationName)) {
+      log('warn', `Location "${step.locationName}" not found — marking as pre-checked`);
+      proofGraphState.checkedLocations.add(step.locationName);
+      this._updateNodeClasses();
+      this._updateStatus();
+      return;
+    }
+
+    // Find region name for this location
+    let regionName = step.locationName; // fallback
     if (staticData?.regions) {
-      for (const [rName, rData] of Object.entries(
-        staticData.regions instanceof Map ? Object.fromEntries(staticData.regions) : staticData.regions
-      )) {
-        const locs = rData.locations || (rData instanceof Map ? [] : rData.locations);
-        if (Array.isArray(locs) && locs.some(loc => loc.name === step.locationName)) {
+      for (const [rName, rData] of Object.entries(staticData.regions)) {
+        if (rData.locations && rData.locations.some(loc => loc.name === step.locationName)) {
           regionName = rName;
           break;
         }
