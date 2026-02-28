@@ -32,13 +32,10 @@ class AutoDownloadDatabase(Toggle):
     display_name = "Auto-Download Database"
     default = True
 
-class Complexity(Choice):
-    """Option for Proof Complexity."""
-    display_name = "Proof Complexity"
-    option_simple = 0
-    option_moderate = 1
-    option_complex = 2
-    default = 1
+class RandomizeStartingStatements(Toggle):
+    """Option for Randomize Starting Statements."""
+    display_name = "Randomize Starting Statements"
+    default = True
 
 class StartingStatements(Range):
     """Option for Starting Statements %."""
@@ -86,7 +83,7 @@ class MetamathCanthVanillaWorldGenOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
     auto_download_database: AutoDownloadDatabase
-    complexity: Complexity
+    randomize_starting_statements: RandomizeStartingStatements
     starting_statements: StartingStatements
     theorem: Theorem
     vanilla_placement: VanillaPlacement
