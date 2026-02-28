@@ -125,6 +125,7 @@ export class LocationUI {
       this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
       this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
       this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+      this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
       // Load discovery settings
       this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting('moduleSettings.discovery.undiscoveredDisplay', 'hidden');
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting('moduleSettings.discovery.clickDiscoversLocation', true);
@@ -138,12 +139,13 @@ export class LocationUI {
       this.showName = true;
       this.showLabel1 = false;
       this.showLabel2 = false;
+      this.useSubstitutedNames = true;
     }
 
     this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       async ({ key, value }) => {
-        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2')) {
+        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2') || key.startsWith('generalSettings.useSubstitutedNames')) {
           log('info', 'LocationUI reacting to settings change:', key);
           // Update cache
           try {
@@ -152,6 +154,7 @@ export class LocationUI {
             this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
             this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
             this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+            this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
           } catch (error) {
             log('error', 'Error loading settings during update:', error);
             this.colorblindSettings = false;
@@ -159,6 +162,7 @@ export class LocationUI {
             this.showName = true;
             this.showLabel1 = false;
             this.showLabel2 = false;
+            this.useSubstitutedNames = true;
           }
           this.updateLocationDisplay(); // Trigger redraw
         }
@@ -182,8 +186,10 @@ export class LocationUI {
     // Build array of display elements based on enabled settings
     const elements = [];
 
-    if (this.showName && location.name) {
-      elements.push({ type: 'name', text: location.name });
+    const name = (this.useSubstitutedNames && location.displayName) ? location.displayName : location.name;
+
+    if (this.showName && name) {
+      elements.push({ type: 'name', text: name });
     }
 
     if (this.showLabel1 && location.label1) {
@@ -1388,7 +1394,8 @@ export class LocationUI {
               const itemDiv = document.createElement('div');
               itemDiv.className = 'text-sm location-item-name';
               itemDiv.style.fontStyle = 'italic';
-              itemDiv.textContent = `Item: ${itemAtLocation.name}`;
+              const itemDisplayName = (this.useSubstitutedNames && itemAtLocation.displayName) ? itemAtLocation.displayName : itemAtLocation.name;
+              itemDiv.textContent = `Item: ${itemDisplayName}`;
               if (itemAtLocation.player) {
                 itemDiv.textContent += ` (Player ${itemAtLocation.player})`;
               }

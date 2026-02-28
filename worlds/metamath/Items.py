@@ -27,6 +27,16 @@ def statement_item_name(label, expression, max_expr_length=60):
     return expression
 
 
+def proved_item_name(label, expression, prefix="Proved", max_expr_length=50):
+    """Build a meaningful name for a 'Proved Statement N' event item."""
+    if label:
+        expr = expression
+        if len(expr) > max_expr_length:
+            expr = expr[:max_expr_length - 3] + "..."
+        return f"{prefix} {label}: {expr}"
+    return f"{prefix} {expression}"
+
+
 def generate_item_table(max_statements: int = 1000):
     """Generate a generic item table with numbered names (for class-level registration)."""
     item_table = {}

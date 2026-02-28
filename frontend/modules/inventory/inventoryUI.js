@@ -381,12 +381,14 @@ export class InventoryUI {
       this.showName = await settingsManager.getSetting('moduleSettings.inventory.showName', true);
       this.showLabel1 = await settingsManager.getSetting('moduleSettings.inventory.showLabel1', false);
       this.showLabel2 = await settingsManager.getSetting('moduleSettings.inventory.showLabel2', false);
-      log('debug', `[InventoryUI] Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}`);
+      this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
+      log('debug', `[InventoryUI] Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {
       log('error', '[InventoryUI] Failed to load display settings:', error);
       this.showName = true;
       this.showLabel1 = false;
       this.showLabel2 = false;
+      this.useSubstitutedNames = true;
     }
   }
 
@@ -394,7 +396,8 @@ export class InventoryUI {
     // Build array of display elements based on enabled settings
     const elements = [];
 
-    const name = typeof itemData === 'string' ? itemData : (itemData.name || itemData);
+    const rawName = typeof itemData === 'string' ? itemData : (itemData.name || itemData);
+    const name = (this.useSubstitutedNames && itemData && itemData.displayName) ? itemData.displayName : rawName;
 
     if (this.showName && name) {
       elements.push({ type: 'name', text: name });
@@ -483,7 +486,8 @@ export class InventoryUI {
     subscribe('settings:changed', async ({ key, value }) => {
       if (key === '*' || key.startsWith('moduleSettings.inventory.showName') ||
           key.startsWith('moduleSettings.inventory.showLabel1') ||
-          key.startsWith('moduleSettings.inventory.showLabel2')) {
+          key.startsWith('moduleSettings.inventory.showLabel2') ||
+          key.startsWith('generalSettings.useSubstitutedNames')) {
         log('info', `[InventoryUI] Display settings changed (${key}), reloading...`);
         await this.loadDisplaySettings();
         // Re-render the inventory with new display settings
