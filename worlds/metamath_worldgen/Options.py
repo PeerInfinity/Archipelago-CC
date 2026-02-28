@@ -69,6 +69,8 @@ class Theorem(Choice):
     option_euclemma = 19
     option_wilth = 20
     option_dfac5 = 21
+    option_prmunb = 22
+    option_cncmp = 23
     default = 1
 
 class VanillaPlacement(Toggle):
