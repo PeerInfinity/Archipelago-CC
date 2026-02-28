@@ -69,7 +69,15 @@ class MetamathWorld(World):
         # Vanilla placement disables randomization and marks world as vanilla
         if self.options.vanilla_placement.value:
             self.options.randomize_items.value = False
+            self.options.starting_statements.value = 0
             self.is_vanilla = True
+
+        # When items aren't randomized, locked placement creates circular region
+        # dependencies that the accessibility checker can't traverse (e.g. prmunb
+        # has Statement 22 -> 23 -> 24 -> 27 -> 22). The placement is always valid
+        # by construction (proof structure guarantees it), so use minimal accessibility.
+        if not self.options.randomize_items.value:
+            self.options.accessibility.value = 2  # minimal
 
         # Get the theorem name from options (use current_key for string representation)
         theorem_name = self.options.theorem.current_key

@@ -1,7 +1,6 @@
 {
   "accessibility": 0,
   "auto_download_database": true,
-  "complexity": 1,
   "exclude_locations": [],
   "item_links": [],
   "local_items": [],
@@ -10,6 +9,7 @@
   "priority_locations": [],
   "progression_balancing": 50,
   "randomize_items": true,
+  "randomize_starting_statements": true,
   "start_hints": [],
   "start_inventory": {},
   "start_location_hints": [],

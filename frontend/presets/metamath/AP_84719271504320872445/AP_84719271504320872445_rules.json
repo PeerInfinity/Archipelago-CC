@@ -1546,7 +1546,6 @@
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
-        "complexity": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1555,6 +1554,7 @@
         "priority_locations": [],
         "progression_balancing": 50,
         "randomize_items": true,
+        "randomize_starting_statements": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
@@ -1577,16 +1577,6 @@
           "default": true,
           "display_name": "Auto-Download Database"
         },
-        "complexity": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "simple",
-            "1": "moderate",
-            "2": "complex"
-          },
-          "default": 1,
-          "display_name": "Proof Complexity"
-        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -1598,6 +1588,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "randomize_starting_statements": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Starting Statements"
         },
         "starting_statements": {
           "type": "range",

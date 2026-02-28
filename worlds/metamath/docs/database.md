@@ -233,6 +233,6 @@ When selecting a theorem for your Archipelago world, consider:
 ### For Extreme Challenge
 - `dfac5` (~65 steps): Axiom of choice with deep dependencies
 
-**Note**: Some theorems listed in the tables above (e.g., `cncmp`, `prmunb`, Fourier lemmas) are not available as preset options due to compatibility issues, but may be entered as custom theorem names if the database is available.
+**Note**: Some theorems listed in the tables above (e.g., Fourier lemmas) are not available as preset options, but may be entered as custom theorem names if the database is available.
 
 Remember that the difficulty isn't just about the number of steps, but also how the dependencies are structured. Some shorter proofs may have more complex dependency graphs than longer ones!

@@ -620,6 +620,65 @@
       }
     }
   },
+  "metamath_vanilla": {
+    "name": "Metamath",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "label": "2p2e4 v"
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "label": "canth v"
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_sphere_log.jsonl"
+        ],
+        "is_vanilla": true,
+        "label": "wilth v"
+      }
+    }
+  },
   "metamath": {
     "name": "Metamath",
     "folders": {
@@ -814,65 +873,6 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
-      }
-    }
-  },
-  "metamath_vanilla": {
-    "name": "Metamath",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Metamath"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "2p2e4 v"
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Metamath"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "canth v"
-      },
-      "AP_84719271504320872445": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Metamath"
-          }
-        ],
-        "files": [
-          "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json",
-          "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "is_vanilla": true,
-        "label": "wilth v"
       }
     }
   },
@@ -2633,7 +2633,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-27Feb2026-200244_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-27Feb2026-235330_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -9351,7 +9351,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-02-27T20:19:14.026665+00:00",
+    "test_data_updated": "2026-02-28T00:10:36.663459+00:00",
     "games_with_test_data": 151,
     "total_games": 161,
     "games_without_test_data": 10,
