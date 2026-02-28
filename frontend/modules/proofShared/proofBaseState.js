@@ -165,7 +165,9 @@ export class ProofBaseState {
    * @param {string} locationName - e.g. "Prove Statement 3"
    */
   checkLocation(locationName) {
+    if (this.checkedLocations.has(locationName)) return;
     this.checkedLocations.add(locationName);
+    this._onLocationChecked();
   }
 
   /**
@@ -192,8 +194,15 @@ export class ProofBaseState {
    */
   syncLocations(checkedArray) {
     if (!checkedArray) return;
+    let changed = false;
     for (const loc of checkedArray) {
-      this.checkedLocations.add(loc);
+      if (!this.checkedLocations.has(loc)) {
+        this.checkedLocations.add(loc);
+        changed = true;
+      }
+    }
+    if (changed) {
+      this._onLocationChecked();
     }
   }
 
@@ -202,6 +211,14 @@ export class ProofBaseState {
    * @protected
    */
   _onInventoryChanged() {
+    // Default: no-op. ProofQueueBaseState overrides to update available steps.
+  }
+
+  /**
+   * Hook called when a location is checked. Override in subclasses.
+   * @protected
+   */
+  _onLocationChecked() {
     // Default: no-op. ProofQueueBaseState overrides to update available steps.
   }
 

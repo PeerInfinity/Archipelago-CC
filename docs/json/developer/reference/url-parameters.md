@@ -25,7 +25,7 @@ Parameters are processed during application initialization and can override conf
 | `server` | Server WebSocket URL | `?server=ws://localhost:38281` |
 | `playerName` | Player name for connection | `?playerName=Player1` |
 | `reset` | Reset to defaults | `?reset=true` |
-| `panel` | Focus specific panel | `?panel=inventory` |
+| `panel` | Focus specific panel(s) | `?panel=inventoryPanel,regionsPanel` |
 
 ## Supported Parameters
 
@@ -217,11 +217,11 @@ These parameters control automatic connection to an Archipelago server.
 
 #### `panel`
 
-**Purpose:** Focus a specific panel on application load.
+**Purpose:** Focus one or more panels on application load. Supports comma-separated values to activate a panel in each stack simultaneously.
 
-**Usage:** `?panel=<componentType>`
+**Usage:** `?panel=<componentType>` or `?panel=<type1>,<type2>,<type3>`
 
-**Valid Values:** The `componentType` value from any panel module. See the [Module Info Status Report](../guides/module_info_status.md) for a complete list of available panels - use the value from the `componentType` column.
+**Valid Values:** The `componentType` value from any panel module. See the [Module Info Status Report](../guides/module_info_status.md) for a complete list of available panels - use the value from the `componentType` column. Multiple values are separated by commas.
 
 **Common Panel Values:**
 - `clientPanel` - Archipelago server connection
@@ -234,11 +234,14 @@ These parameters control automatic connection to an Archipelago server.
 **Examples:**
 - `?panel=inventoryPanel` - Focus the inventory panel on load
 - `?panel=clientPanel` - Focus the client/console panel on load
+- `?panel=inventoryPanel,regionsPanel` - Focus inventory and regions panels, each in its own stack
+- `?panel=loopsPanel,regionPanel,proofGraph` - Focus one panel in each of the three stacks
 
 **Details:**
-- The panel must be loaded in the current mode's layout to be activated
+- The panels must be loaded in the current mode's layout to be activated
 - Activation occurs after a 1.5 second delay to allow Golden Layout to initialize
-- If the panel is in a tabbed stack, it will be brought to the front
+- If a panel is in a tabbed stack, it will be brought to the front
+- Each panel is activated in whichever stack contains it (order in the URL does not matter)
 
 ---
 

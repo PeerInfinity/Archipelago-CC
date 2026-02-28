@@ -516,18 +516,21 @@ export async function initializeApplication(dependencies) {
     activeMode: validatedMode,
   }, 'core');
 
-  // Handle panel URL parameter
+  // Handle panel URL parameter (comma-separated to activate one panel per stack)
   const panelParam = urlParams.get('panel');
   if (panelParam) {
+    const panelIds = panelParam.split(',').map(s => s.trim()).filter(Boolean);
     setTimeout(() => {
-      logger.info('init', `Activating panel from URL parameter: ${panelParam}`);
+      logger.info('init', `Activating panels from URL parameter: ${panelIds.join(', ')}`);
 
-      if (panelManagerInstance && typeof panelManagerInstance.activatePanel === 'function') {
-        panelManagerInstance.activatePanel(panelParam);
-        logger.info('init', `Panel activation request sent for: ${panelParam}`);
-      } else {
-        logger.info('init', `Using event bus to activate panel: ${panelParam}`);
-        eventBus.publish('ui:activatePanel', { panelId: panelParam }, 'core');
+      for (const panelId of panelIds) {
+        if (panelManagerInstance && typeof panelManagerInstance.activatePanel === 'function') {
+          panelManagerInstance.activatePanel(panelId);
+          logger.info('init', `Panel activation request sent for: ${panelId}`);
+        } else {
+          logger.info('init', `Using event bus to activate panel: ${panelId}`);
+          eventBus.publish('ui:activatePanel', { panelId }, 'core');
+        }
       }
     }, 1500);
   }

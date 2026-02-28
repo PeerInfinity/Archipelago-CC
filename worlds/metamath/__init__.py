@@ -69,7 +69,15 @@ class MetamathWorld(World):
         # Vanilla placement disables randomization and marks world as vanilla
         if self.options.vanilla_placement.value:
             self.options.randomize_items.value = False
+            self.options.starting_statements.value = 0
             self.is_vanilla = True
+
+        # When items aren't randomized, locked placement creates circular region
+        # dependencies that the accessibility checker can't traverse (e.g. prmunb
+        # has Statement 22 -> 23 -> 24 -> 27 -> 22). The placement is always valid
+        # by construction (proof structure guarantees it), so use minimal accessibility.
+        if not self.options.randomize_items.value:
+            self.options.accessibility.value = 2  # minimal
 
         # Get the theorem name from options (use current_key for string representation)
         theorem_name = self.options.theorem.current_key
@@ -134,9 +142,10 @@ class MetamathWorld(World):
 
         # Build canonical placements dict (location -> item for vanilla placement)
         # Must be after starting_statements is computed since starting items don't have locations
+        # Exclude the final statement — its item is always locked at its location
         self.canonical_placements: Dict[str, str] = {}
         for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements:
+            if i not in self.starting_statements and i != self.num_statements:
                 self.canonical_placements[self.get_location_name(i)] = self.get_item_name(i)
 
 
@@ -164,6 +173,23 @@ class MetamathWorld(World):
                         region
                     )
                     region.locations.append(location)
+
+                # Add event location: "Proved Statement N" fires when region is reachable
+                event_loc = MetamathLocation(
+                    self.player,
+                    f"Proved Statement {i}",
+                    None,  # Event locations have no address
+                    [],
+                    region
+                )
+                event_item = MetamathItem(
+                    f"Proved Statement {i}",
+                    ItemClassification.progression,
+                    None,  # Event items have no code
+                    self.player
+                )
+                event_loc.place_locked_item(event_item)
+                region.locations.append(event_loc)
 
         # Connect Menu to statement regions that have NO dependencies (axioms/base statements)
         for i in sorted(statement_regions.keys()):
@@ -194,12 +220,13 @@ class MetamathWorld(World):
         """Set access rules based on proof dependencies."""
         set_metamath_rules(self, self.proof_structure)
 
-        # Set completion condition - the goal is to prove the final theorem
-        final_item_name = self.get_item_name(self.num_statements)
+        # Set completion condition - require the "Proved" event for the final theorem
+        final_proved = f"Proved Statement {self.num_statements}"
         self.multiworld.completion_condition[self.player] = \
-            lambda state, name=final_item_name: state.has(name, self.player)
+            lambda state, name=final_proved: state.has(name, self.player)
 
         # Save dependency mappings for the exporter to use
+        # Each dependency requires both the item AND the proved event
         location_dependencies = {}
         entrance_dependencies = {}
         exit_dependencies = {}
@@ -210,13 +237,16 @@ class MetamathWorld(World):
             if stmt_num is not None and stmt_num in self.proof_structure.dependency_graph:
                 dependencies = self.proof_structure.dependency_graph[stmt_num]
                 if dependencies:
-                    item_names = [self.get_item_name(d) for d in sorted(dependencies)]
+                    dep_names = []
+                    for d in sorted(dependencies):
+                        dep_names.append(self.get_item_name(d))       # "Statement K"
+                        dep_names.append(f"Proved Statement {d}")     # "Proved Statement K"
 
                     for location in region.locations:
-                        location_dependencies[location.name] = item_names
+                        location_dependencies[location.name] = dep_names
 
                     for entrance in region.entrances:
-                        entrance_dependencies[entrance.name] = item_names
+                        entrance_dependencies[entrance.name] = dep_names
 
             # Also store exit dependencies - exits lead TO regions with dependencies
             for exit in region.exits:
@@ -225,8 +255,11 @@ class MetamathWorld(World):
                     if target_stmt_num is not None and target_stmt_num in self.proof_structure.dependency_graph:
                         target_dependencies = self.proof_structure.dependency_graph[target_stmt_num]
                         if target_dependencies:
-                            target_item_names = [self.get_item_name(d) for d in sorted(target_dependencies)]
-                            exit_dependencies[exit.name] = target_item_names
+                            target_dep_names = []
+                            for d in sorted(target_dependencies):
+                                target_dep_names.append(self.get_item_name(d))
+                                target_dep_names.append(f"Proved Statement {d}")
+                            exit_dependencies[exit.name] = target_dep_names
 
         self.location_dependencies = location_dependencies
         self.entrance_dependencies = entrance_dependencies
@@ -242,9 +275,10 @@ class MetamathWorld(World):
         # Create items for all statements
         items = []
 
-        # Add statement items (only for non-starting statements)
+        # Add statement items (skip starting statements and the final statement)
+        # The final statement's item is always locked at its location (victory item)
         for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements:
+            if i not in self.starting_statements and i != self.num_statements:
                 item_name = self.get_item_name(i)
                 if item_name in self.item_name_to_id:
                     item = MetamathItem(
@@ -259,14 +293,21 @@ class MetamathWorld(World):
         self.multiworld.itempool += items
 
     def pre_fill(self):
-        """Pre-fill items if not randomizing."""
+        """Pre-fill items: always lock the final statement, and all others if not randomizing."""
+        # Always lock the final statement's item at its location (victory item)
+        final_item_name = self.get_item_name(self.num_statements)
+        final_location_name = self.get_location_name(self.num_statements)
+        final_location = self.multiworld.get_location(final_location_name, self.player)
+        final_location.place_locked_item(self.create_item(final_item_name))
+
         if not self.options.randomize_items.value:
             self._place_original_items()
 
     def _place_original_items(self):
-        """Place statement items in their corresponding prove locations when randomization is disabled."""
+        """Place statement items in their corresponding prove locations when randomization is disabled.
+        Skips the final statement (already locked in pre_fill)."""
         for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements:
+            if i not in self.starting_statements and i != self.num_statements:
                 item_name = self.get_item_name(i)
                 location_name = self.get_location_name(i)
 
@@ -277,10 +318,18 @@ class MetamathWorld(World):
 
     def generate_basic(self):
         """Generate the basic world structure."""
-        # Pre-collect starting statements
+        # Pre-collect starting statements (both the item and the "proved" event)
         for stmt_index in self.starting_statements:
             item_name = self.get_item_name(stmt_index)
             self.multiworld.push_precollected(self.create_item(item_name))
+            # Also pre-collect the "Proved" event so downstream entrance rules are satisfied
+            proved_item = MetamathItem(
+                f"Proved Statement {stmt_index}",
+                ItemClassification.progression,
+                None,  # Event items have no code
+                self.player
+            )
+            self.multiworld.push_precollected(proved_item)
 
     def create_item(self, name: str) -> Item:
         """Create a single item."""

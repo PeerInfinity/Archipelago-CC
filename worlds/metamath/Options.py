@@ -58,10 +58,12 @@ class TheoremSelection(TextChoice):
     option_euclemma = 19 # Euclid's lemma for primes (~16 steps)
     option_wilth = 20    # Wilson's theorem (~40 steps)
 
+    # Hard
+    option_prmunb = 22   # Prime numbers unbounded (~35 steps)
+    option_cncmp = 23    # Continuous image of compact is compact (~55 steps)
+
     # Very Hard
     option_dfac5 = 21    # Axiom of choice equivalence (~65 steps)
-
-    # Note: prmunb and cncmp excluded due to UT compatibility issues
 
     default = 1  # 2p2e4
 
