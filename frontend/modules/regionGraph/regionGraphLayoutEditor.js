@@ -43,7 +43,7 @@ export class RegionGraphLayoutEditor {
       },
       'hierarchical': {
         name: 'breadthfirst',
-        directed: false,
+        directed: true,
         padding: 50,
         spacingFactor: 1.5,
         avoidOverlap: true,
@@ -113,7 +113,7 @@ export class RegionGraphLayoutEditor {
       },
       'hierarchical-auto': {
         name: 'breadthfirst',
-        directed: false,
+        directed: true,
         padding: 50,
         spacingFactor: 1.5,
         avoidOverlap: true,
@@ -540,9 +540,27 @@ export class RegionGraphLayoutEditor {
 
       this.processLayoutFunctions(layoutOptions);
 
+      // For directed breadthfirst, use custom hierarchy layout if nodes have
+      // pre-computed depths (Cytoscape's BFS ignores our longest-path depths)
+      if (layoutOptions.name === 'breadthfirst' && layoutOptions.directed) {
+        const hasDepths = this.cy.nodes().some(
+          n => !n.hasClass('player') && n.data('hierarchyDepth') !== undefined
+        );
+        if (hasDepths && regionGraphUI.layoutControlsManager) {
+          const customLayout = regionGraphUI.layoutControlsManager.buildHierarchyLayout();
+          this.isLayoutRunning = true;
+          regionGraphUI.updateStatus('Running hierarchical layout...');
+          this.currentLayout = this.cy.layout(customLayout);
+          this.currentLayout.run();
+          this.showJsonSuccess('Layout applied successfully!');
+          this.layoutPresets['custom'] = layoutOptions;
+          return;
+        }
+      }
+
       this.isLayoutRunning = true;
       regionGraphUI.updateStatus('Running custom layout...');
-      
+
       this.currentLayout = this.cy.layout(layoutOptions);
       this.currentLayout.run();
       

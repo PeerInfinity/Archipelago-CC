@@ -317,32 +317,14 @@ export class LayoutControlsManager {
     let selectedPreset = 'cose';
 
     if (dagResult.isDAG) {
-      // Use hierarchical layout for DAG graphs
-      const startRegions = stateManager.getStartRegions?.() || [];
-      const rootId = startRegions.length > 0 ? startRegions[0] : null;
-      const rootNode = rootId ? this.ui.cy.getElementById(rootId) : null;
-
-      layoutOptions = {
-        name: 'breadthfirst',
-        directed: false,
-        padding: 50,
-        spacingFactor: 1.5,
-        avoidOverlap: true,
-        nodeDimensionsIncludeLabels: true,
-        animate: true,
-        animationDuration: 1000,
-        maximal: false,
-        grid: false,
-        circle: false,
-        fit: true
-      };
-
-      if (rootNode && rootNode.length > 0) {
-        layoutOptions.roots = rootNode;
-      }
+      // Check if nodes have pre-computed hierarchy depths from graphDataManager.
+      // If so, use a custom hierarchical layout that respects those depths
+      // (Cytoscape's breadthfirst BFS ignores our longest-path computation).
+      layoutOptions = this.buildHierarchyLayout();
+      logger.debug(`Using custom hierarchy layout with ${layoutOptions._depthCount} depth levels`);
 
       selectedPreset = 'hierarchical-auto';
-      logger.debug(`DAG detected, using hierarchical layout (root: ${rootId || 'auto'})`);
+      logger.debug(`DAG detected, using hierarchical layout`);
     } else {
       // Use COSE for non-DAG graphs
       layoutOptions = {
@@ -374,6 +356,70 @@ export class LayoutControlsManager {
   }
 
   /**
+   * Build a hierarchical layout using pre-computed longest-path depths stored
+   * on node data (hierarchyDepth). Returns a Cytoscape 'preset' layout config
+   * with computed positions that guarantee no edge connects same-row nodes.
+   */
+  buildHierarchyLayout() {
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+
+    // Group nodes by depth
+    const depthGroups = new Map();
+    nodes.forEach(node => {
+      const depth = node.data('hierarchyDepth') ?? 0;
+      if (!depthGroups.has(depth)) depthGroups.set(depth, []);
+      depthGroups.get(depth).push(node);
+    });
+
+    // Sort depth levels
+    const sortedDepths = [...depthGroups.keys()].sort((a, b) => a - b);
+    const numLevels = sortedDepths.length;
+
+    // Log depth distribution for debugging
+    const depthInfo = sortedDepths.map(d => `${d}:${depthGroups.get(d).length}`).join(', ');
+    logger.debug(`Hierarchy layout: ${numLevels} levels, distribution: [${depthInfo}]`);
+
+    // Compute node dimensions for spacing
+    const avgNodeWidth = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.w;
+    }, 0) / Math.max(nodes.length, 1);
+    const avgNodeHeight = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.h;
+    }, 0) / Math.max(nodes.length, 1);
+
+    const spacingFactor = 1.5;
+    const rowSpacing = Math.max(avgNodeHeight * spacingFactor, 80);
+    const colSpacing = Math.max(avgNodeWidth * spacingFactor, 120);
+
+    // Compute positions: center each row horizontally
+    const positions = new Map();
+    sortedDepths.forEach((depth, levelIndex) => {
+      const nodesAtDepth = depthGroups.get(depth);
+      const rowWidth = (nodesAtDepth.length - 1) * colSpacing;
+      const startX = -rowWidth / 2;
+
+      nodesAtDepth.forEach((node, colIndex) => {
+        positions.set(node.id(), {
+          x: startX + colIndex * colSpacing,
+          y: levelIndex * rowSpacing
+        });
+      });
+    });
+
+    return {
+      name: 'preset',
+      _depthCount: numLevels,
+      positions: (node) => positions.get(node.id()) || { x: 0, y: 0 },
+      animate: true,
+      animationDuration: 1000,
+      fit: true,
+      padding: 50
+    };
+  }
+
+  /**
    * Detect whether the graph has DAG (directed acyclic graph) structure
    * by analyzing hasForwardExit/hasReverseExit on edges and running Kahn's algorithm.
    * @returns {{ isDAG: boolean }}
@@ -397,7 +443,7 @@ export class LayoutControlsManager {
     }
 
     // Build directed adjacency from hasForwardExit/hasReverseExit
-    // Edges are lexicographically normalized: source < target alphabetically
+    // Edges are oriented parent→child by BFS depth from starting region
     const inDegree = new Map();
     const adjList = new Map();
 
@@ -411,8 +457,8 @@ export class LayoutControlsManager {
     // Add directed edges based on which direction has an actual exit
     for (let i = 0; i < edges.length; i++) {
       const data = edges[i].data();
-      const source = data.source; // lexicographically smaller
-      const target = data.target; // lexicographically larger
+      const source = data.source; // parent (shallower in BFS)
+      const target = data.target; // child (deeper in BFS)
       if (!inDegree.has(source) || !inDegree.has(target)) continue;
 
       if (data.hasForwardExit && !data.hasReverseExit) {
