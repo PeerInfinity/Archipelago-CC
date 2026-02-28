@@ -71,6 +71,7 @@ export class OptionsPanelUI {
       inventoryShowName: true,
       inventoryShowLabel1: true,
       inventoryShowLabel2: true,
+      useSubstitutedNames: true,
     };
 
     // Section collapse state for options sub-view
@@ -394,6 +395,7 @@ export class OptionsPanelUI {
       this.settings.inventoryShowName = await settingsManager.getSetting('moduleSettings.inventory.showName', true);
       this.settings.inventoryShowLabel1 = await settingsManager.getSetting('moduleSettings.inventory.showLabel1', true);
       this.settings.inventoryShowLabel2 = await settingsManager.getSetting('moduleSettings.inventory.showLabel2', true);
+      this.settings.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
     } catch (error) {
       log('error', '[OptionsPanelUI] Error loading settings:', error);
     }
@@ -536,6 +538,8 @@ export class OptionsPanelUI {
     ));
     content.appendChild(this.createBooleanSetting('showLocationItems',
       'Show Location Items', 'Show item names alongside locations'));
+    content.appendChild(this.createBooleanSetting('useSubstitutedNames',
+      'Use Substituted Names', 'Show meaningful display names instead of generic internal names (e.g. MetaMath)'));
 
     section.appendChild(content);
     this.contentContainer.appendChild(section);
@@ -950,6 +954,7 @@ export class OptionsPanelUI {
       inventoryShowName: 'moduleSettings.inventory.showName',
       inventoryShowLabel1: 'moduleSettings.inventory.showLabel1',
       inventoryShowLabel2: 'moduleSettings.inventory.showLabel2',
+      useSubstitutedNames: 'generalSettings.useSubstitutedNames',
     };
     return pathMap[settingKey];
   }

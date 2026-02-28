@@ -16,14 +16,14 @@ class MetamathLocation(Location):
         self.dependencies = dependencies  # List of statement indices this proof step depends on
 
 
-def statement_location_name(label, expression, max_expr_length=50):
+def statement_location_name(label, expression, prefix="Prove", max_expr_length=50):
     """Build a meaningful location name from a proof statement's label and expression."""
     if label:
         expr = expression
         if len(expr) > max_expr_length:
             expr = expr[:max_expr_length - 3] + "..."
-        return f"Prove {label}: {expr}"
-    return f"Prove {expression}"
+        return f"{prefix} {label}: {expr}"
+    return f"{prefix} {expression}"
 
 
 def generate_location_table(max_statements: int = 1000):

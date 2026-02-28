@@ -994,7 +994,9 @@ export class RegionBlockBuilder {
         li.classList.add('location-item');
         li.dataset.locationName = locationDef.name; // Add data attribute for easy targeting
         const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
-        const locationNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : locationDef.name;
+        const useSubNames = this.regionUI?.displaySettings?.getSetting('useSubstitutedNames') ?? true;
+        const locationDisplayName = (useSubNames && locationDef.displayName) ? locationDef.displayName : locationDef.name;
+        const locationNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : locationDisplayName;
         
         // Create a wrapper div for the entire clickable area
         const locationWrapper = document.createElement('div');
@@ -1024,7 +1026,9 @@ export class RegionBlockBuilder {
               itemSpan.style.fontStyle = 'italic';
               itemSpan.style.fontSize = '0.9em';
               itemSpan.style.color = '#888';
-              itemSpan.textContent = `(${itemAtLocation.name}`;
+              const useSubNamesForItem = this.regionUI?.displaySettings?.getSetting('useSubstitutedNames') ?? true;
+              const itemDisplayName = (useSubNamesForItem && itemAtLocation.displayName) ? itemAtLocation.displayName : itemAtLocation.name;
+              itemSpan.textContent = `(${itemDisplayName}`;
               if (itemAtLocation.player) {
                 itemSpan.textContent += ` - P${itemAtLocation.player}`;
               }

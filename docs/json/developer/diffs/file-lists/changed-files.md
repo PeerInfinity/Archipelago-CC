@@ -31,9 +31,10 @@ rule_builder/__init__.py
 rule_builder/rules.py
 ```
 
-## `test/general/` (3 files)
+## `test/general/` (4 files)
 
 ```
+test/general/test_implemented.py
 test/general/test_items.py
 test/general/test_reachability.py
 test/general/test_rule_builder.py
@@ -115,4 +116,4 @@ worlds/yoshisisland/__init__.py
 
 ---
 
-**Total:** 26 changed files
+**Total:** 27 changed files

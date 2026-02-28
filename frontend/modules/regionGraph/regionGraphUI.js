@@ -139,18 +139,21 @@ export class RegionGraphUI {
       this.showName = await settingsManager.getSetting('moduleSettings.regionGraph.showName', true);
       this.showLabel1 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel1', false);
       this.showLabel2 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel2', false);
-      logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}`);
+      this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
+      logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {
       logger.error('Failed to load display settings:', error);
       this.showName = true;
       this.showLabel1 = false;
       this.showLabel2 = false;
+      this.useSubstitutedNames = true;
     }
   }
 
   getRegionDisplayText(regionData, regionName) {
     const parts = [];
-    const name = regionName || (typeof regionData === 'string' ? regionData : regionData?.name);
+    const rawName = regionName || (typeof regionData === 'string' ? regionData : regionData?.name);
+    const name = (this.useSubstitutedNames && regionData?.displayName) ? regionData.displayName : rawName;
 
     if (this.showName && name) {
       parts.push(name.replace(/_/g, ' '));
@@ -175,8 +178,10 @@ export class RegionGraphUI {
   getLocationDisplayText(locationData) {
     const parts = [];
 
-    if (this.showName && locationData?.name) {
-      parts.push(locationData.name);
+    const name = (this.useSubstitutedNames && locationData?.displayName) ? locationData.displayName : locationData?.name;
+
+    if (this.showName && name) {
+      parts.push(name);
     }
 
     if (this.showLabel1 && locationData?.label1) {
@@ -752,6 +757,7 @@ export class RegionGraphUI {
     if (this.unsubscribeDiscoveryMode) this.unsubscribeDiscoveryMode();
     if (this.unsubscribeDiscoverySettings) this.unsubscribeDiscoverySettings();
     if (this.unsubscribeDiscoveryChanged) this.unsubscribeDiscoveryChanged();
+    if (this.unsubscribeSettingsChanged) this.unsubscribeSettingsChanged();
 
     // Subscribe to state updates
     this.unsubscribeStateUpdate = this.eventBus.subscribe('stateManager:snapshotUpdated',
@@ -791,6 +797,18 @@ export class RegionGraphUI {
 
     this.unsubscribeDiscoveryChanged = this.eventBus.subscribe('discovery:changed',
       () => this.onDiscoveryChanged());
+
+    // Subscribe to settings changes for display name toggle
+    this.unsubscribeSettingsChanged = this.eventBus.subscribe('settings:changed',
+      async ({ key }) => {
+        if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
+            key.startsWith('moduleSettings.regionGraph')) {
+          await this.loadDisplaySettings();
+          if (this.cy && this.graphInitialized) {
+            this.loadGraphData();
+          }
+        }
+      });
   }
 
   async loadGraphData() {
@@ -1065,6 +1083,9 @@ export class RegionGraphUI {
     }
     if (this.unsubscribeDiscoveryChanged) {
       this.unsubscribeDiscoveryChanged();
+    }
+    if (this.unsubscribeSettingsChanged) {
+      this.unsubscribeSettingsChanged();
     }
     if (this.cy) {
       this.cy.destroy();

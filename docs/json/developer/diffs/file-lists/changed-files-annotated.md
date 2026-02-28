@@ -62,7 +62,11 @@ Files modified from their upstream versions (commit `0de09cd7`).
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md) | [Fork vs Upstream Comparison](../rule-builder/fork-vs-upstream-rule-builder.md)
 
-## `test/general/` (3 files)
+## `test/general/` (4 files)
+
+- `test/general/test_implemented.py`
+
+  Added 'The Messenger' and 'Overcooked! 2' to excluded_games in test_slot_data to prevent flaky fill failures caused by upstream worlds with tight access rules at certain random seeds.
 
 - `test/general/test_items.py`
 
@@ -188,4 +192,4 @@ Files modified from their upstream versions (commit `0de09cd7`).
 
 ---
 
-**Total:** 26 changed files
+**Total:** 27 changed files

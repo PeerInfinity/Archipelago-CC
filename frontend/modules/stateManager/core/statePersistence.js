@@ -72,6 +72,7 @@
 
 import { initializeGameLogic, getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';
 import { DEFAULT_PLAYER_ID } from '../../shared/playerIdUtils.js';
+import { buildSubstitutionMaps, getDisplayName } from '../../shared/nameSubstitutions.js';
 
 // Module-level helper for logging
 function log(level, message, ...data) {
@@ -928,6 +929,46 @@ export function getStaticGameData(sm) {
     }
   }
 
+  // Build name substitution maps and enrich objects with displayName
+  const nameSubstitutions = sm.rules?.world?.[sm.playerId]?.name_substitutions;
+  const subMaps = buildSubstitutionMaps(nameSubstitutions);
+
+  // Add .displayName to each location object
+  if (sm.locations) {
+    for (const loc of sm.locations.values()) {
+      loc.displayName = getDisplayName(subMaps.locations, loc.name);
+    }
+  }
+
+  // Add .displayName to each item object
+  if (sm.itemData) {
+    for (const [itemName, itemObj] of Object.entries(sm.itemData)) {
+      if (itemObj && typeof itemObj === 'object') {
+        itemObj.displayName = getDisplayName(subMaps.items, itemName);
+      }
+    }
+  }
+
+  // Add .displayName to each region object and its embedded location objects
+  if (sm.regions) {
+    for (const region of sm.regions.values()) {
+      region.displayName = getDisplayName(subMaps.regions, region.name);
+      // Region.locations is a separate array of location objects (not the same refs as sm.locations)
+      if (region.locations) {
+        for (const loc of region.locations) {
+          loc.displayName = getDisplayName(subMaps.locations, loc.name);
+        }
+      }
+    }
+  }
+
+  // Add .displayName to locationItemsMap entries
+  for (const [locName, itemInfo] of locationItemsMap) {
+    if (itemInfo) {
+      itemInfo.displayName = getDisplayName(subMaps.items, itemInfo.name);
+    }
+  }
+
   // Phase 3.2: Return Maps directly instead of converting to arrays
   // Helper functions (like location_item_name) are already designed to handle Maps
   return {
@@ -968,7 +1009,9 @@ export function getStaticGameData(sm) {
     // Event locations
     eventLocations: Object.fromEntries(sm.eventLocations || new Map()),
     // Location items mapping (Phase 3.2: Keep as Map)
-    locationItems: locationItemsMap
+    locationItems: locationItemsMap,
+    // Name substitution maps (items, locations, regions)
+    nameSubstitutionMaps: subMaps
   };
 }
 

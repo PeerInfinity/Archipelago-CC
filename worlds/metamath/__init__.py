@@ -1,7 +1,7 @@
 from typing import Any, Dict, Set
 from BaseClasses import Item, ItemClassification, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import MetamathItem, item_table, item_groups, statement_item_name
+from .Items import MetamathItem, item_table, item_groups, statement_item_name, proved_item_name
 from .Locations import MetamathLocation, location_table, statement_location_name
 from .Options import MetamathOptions, metamath_option_groups
 from .Rules import ProofStructure, set_metamath_rules, parse_metamath_proof
@@ -112,12 +112,33 @@ class MetamathWorld(World):
         # Maps generic names -> meaningful names so WorldGen worlds use readable names
         self.name_substitutions = {"items": {}, "locations": {}, "regions": {}}
         for i, stmt in self.proof_structure.statements.items():
+            dependencies = self.proof_structure.dependency_graph.get(i, set())
+            has_deps = len(dependencies) > 0
+
+            # Determine prefix based on label convention and dependency status
+            if has_deps:
+                loc_prefix = "Prove"
+                proved_prefix = "Proved"
+            elif stmt.label and stmt.label.startswith("ax-"):
+                loc_prefix = "Axiom"
+                proved_prefix = "Axiom"
+            elif stmt.label and stmt.label.startswith("df-"):
+                loc_prefix = "Definition"
+                proved_prefix = "Definition"
+            else:
+                loc_prefix = "Given"
+                proved_prefix = "Given"
+
             generic_item = f"Statement {i}"
             generic_loc = f"Prove Statement {i}"
+            generic_proved = f"Proved Statement {i}"
             meaningful_item = statement_item_name(stmt.label, stmt.expression)
-            meaningful_loc = statement_location_name(stmt.label, stmt.expression)
+            meaningful_loc = statement_location_name(stmt.label, stmt.expression, prefix=loc_prefix)
+            meaningful_proved = proved_item_name(stmt.label, stmt.expression, prefix=proved_prefix)
             if generic_item != meaningful_item:
                 self.name_substitutions["items"][generic_item] = meaningful_item
+            if generic_proved != meaningful_proved:
+                self.name_substitutions["items"][generic_proved] = meaningful_proved
             if generic_loc != meaningful_loc:
                 self.name_substitutions["locations"][generic_loc] = meaningful_loc
                 self.name_substitutions["regions"][generic_loc] = meaningful_loc

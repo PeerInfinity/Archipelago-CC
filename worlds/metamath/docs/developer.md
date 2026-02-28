@@ -121,27 +121,29 @@ class MetamathWorld(World):
         # Extract proof structure
         # Build name mappings and name_substitutions
         # Determine starting statements
-        # Build canonical_placements dict
+        # Build canonical_placements dict (excludes final statement — always locked)
 
     def create_regions(self):
-        # Create locations for each proof step
-        # Skip pre-given starting statements
+        # Create locations for each proof step (skip starting statements)
+        # Add "Proved Statement N" event locations for non-starting statements
+        # Event items fire when a region is reachable, tracking proof completion
 
     def create_items(self):
-        # Create statement items for non-starting statements (only if randomization enabled)
+        # Create statement items for non-starting, non-final statements
+        # (only if randomization enabled; final statement is always locked at its location)
 
     def generate_basic(self):
-        # Pre-collect starting statements into multiworld
+        # Pre-collect starting statement items AND "Proved Statement K" events
 ```
 
 **Key Methods**:
-- `generate_early()`: Parse theorem and build proof structure, handle vanilla placement, build name substitutions
-- `create_regions()`: Create proof locations with complex connection logic
-- `create_items()`: Generate statement items (only if randomization enabled; skipped entirely when disabled)
-- `generate_basic()`: Pre-collect starting statements so they are available from the start
-- `pre_fill()`: Place items in original locations if randomization disabled
-- `_place_original_items()`: Helper to place each statement at its corresponding location
-- `set_rules()`: Apply logical dependencies as access rules and store dependency mappings
+- `generate_early()`: Parse theorem and build proof structure, handle vanilla placement, build name substitutions. Excludes the final statement from `canonical_placements` (it's always locked).
+- `create_regions()`: Create proof locations with connection logic. Each non-starting statement gets an event location "Proved Statement N" with a locked event item that fires when the region is reachable.
+- `create_items()`: Generate statement items (only if randomization enabled; skipped entirely when disabled). Excludes the final statement — its item is always locked at its location.
+- `generate_basic()`: Pre-collect starting statement items AND their "Proved Statement K" events so downstream entrance rules are satisfied from the start.
+- `pre_fill()`: Always lock the final statement's item at its location. Also place all other items at original locations if randomization is disabled.
+- `_place_original_items()`: Helper to place each non-starting, non-final statement at its corresponding location
+- `set_rules()`: Apply logical dependencies as access rules, set completion condition to require the final "Proved" event, and store dependency mappings (item names only, not events) for the exporter
 - `fill_slot_data()`: Export proof structure data, options, and vanilla_placement flag
 
 ### 4. Region Connections
@@ -168,30 +170,20 @@ def create_regions(self):
                 location = MetamathLocation(...)
                 region.locations.append(location)
 
-    # Connect Menu to statement regions that have NO dependencies (axioms/base statements)
-    for i in sorted(statement_regions.keys()):
-        region = statement_regions[i]
-        dependencies = self.proof_structure.dependency_graph.get(i, [])
-        if not dependencies:
-            menu_region.connect(region, f"To {self.get_entrance_label(i)}")
+            # Add event location: "Proved Statement N" fires when region is reachable
+            event_loc = MetamathLocation(self.player, f"Proved Statement {i}", None, [], region)
+            event_item = MetamathItem(f"Proved Statement {i}", ItemClassification.progression, None, self.player)
+            event_loc.place_locked_item(event_item)
+            region.locations.append(event_loc)
 
-    # Connect regions based on dependency graph
-    # Create exits from each statement to statements that depend on it
-    for i in sorted(self.proof_structure.reverse_dependencies.keys()):
-        dependents = self.proof_structure.reverse_dependencies[i]
-        if i in statement_regions:
-            source_region = statement_regions[i]
-            for dependent in sorted(dependents):
-                if dependent in statement_regions:
-                    target_region = statement_regions[dependent]
-                    source_region.connect(
-                        target_region,
-                        f"From {self.get_entrance_label(i)} to {self.get_entrance_label(dependent)}")
+    # Connect Menu to axioms, connect regions based on dependency graph
+    # ...
 ```
 
 This creates a directed graph where:
 - The Menu connects to all axioms (statements with no dependencies)
 - Each statement region connects to regions of statements that depend on it
+- Each non-starting region contains a "Proved Statement N" event that fires when the region is reached
 - The connections form the logical flow of the proof
 
 ### 5. Data Structures
@@ -215,33 +207,33 @@ class ProofStructure:
     label_to_index: Dict[str, int]
 ```
 
-### 6. Non-Randomized Item Placement
+### 6. Item Placement and the Final Statement
 
-When randomization is disabled (via `vanilla_placement` or direct `randomize_items=false`), items are placed at their canonical locations:
+The final statement's item is **always locked** at its own location — it is never placed in the multiworld item pool. This acts as the victory item: you can only obtain it by reaching and checking the final proof location.
 
 ```python
 def pre_fill(self):
-    """Pre-fill items if not randomizing."""
+    """Pre-fill items: always lock the final statement, and all others if not randomizing."""
+    # Always lock the final statement's item at its location (victory item)
+    final_item_name = self.get_item_name(self.num_statements)
+    final_location_name = self.get_location_name(self.num_statements)
+    final_location = self.multiworld.get_location(final_location_name, self.player)
+    final_location.place_locked_item(self.create_item(final_item_name))
+
     if not self.options.randomize_items.value:
         self._place_original_items()
 
 def _place_original_items(self):
-    """Place statement items in their corresponding prove locations when randomization is disabled."""
+    """Place non-starting, non-final statement items at their locations (non-randomized mode)."""
     for i in range(1, self.num_statements + 1):
-        if i not in self.starting_statements:
-            item_name = self.get_item_name(i)       # "Statement {i}"
-            location_name = self.get_location_name(i) # "Prove Statement {i}"
-
-            location = self.multiworld.get_location(location_name, self.player)
-            item = self.create_item(item_name)
-
-            location.place_locked_item(item)
+        if i not in self.starting_statements and i != self.num_statements:
+            # ... place_locked_item at corresponding location
 ```
 
-This ensures that:
-- Statement 1 is found at "Prove Statement 1"
-- Statement 2 is found at "Prove Statement 2"
-- And so on, creating a linear proof progression
+In randomized mode, `create_items()` also excludes the final statement from the pool:
+- Starting statements: pre-collected (no location, no pool item)
+- Final statement: locked at its location (not in pool)
+- All other statements: added to the multiworld item pool for randomization
 
 ### 7. Items and Locations
 
@@ -257,55 +249,25 @@ This ensures that:
 - Each location requires specific statement items
 - Helper: `statement_location_name(label, expression)` builds display names from proof data
 
-### 8. Dependency Export for Spoilers
+### 8. Dependency Export and Completion
 
-The world stores dependency mappings for the JSON exporter to use:
+The completion condition checks for the "Proved" event of the final statement, not just the item:
 
 ```python
-def set_rules(self):
-    """Set access rules based on proof dependencies."""
-    set_metamath_rules(self, self.proof_structure)
-
-    # Set completion condition - the goal is to prove the final theorem
-    final_item_name = self.get_item_name(self.num_statements)
-    self.multiworld.completion_condition[self.player] = \
-        lambda state, name=final_item_name: state.has(name, self.player)
-
-    # Save dependency mappings for the exporter to use
-    location_dependencies = {}
-    entrance_dependencies = {}
-    exit_dependencies = {}
-
-    for region in self.multiworld.get_regions(self.player):
-        stmt_num = self._region_name_to_index.get(region.name)
-
-        if stmt_num is not None and stmt_num in self.proof_structure.dependency_graph:
-            dependencies = self.proof_structure.dependency_graph[stmt_num]
-            if dependencies:
-                item_names = [self.get_item_name(d) for d in sorted(dependencies)]
-
-                for location in region.locations:
-                    location_dependencies[location.name] = item_names
-
-                for entrance in region.entrances:
-                    entrance_dependencies[entrance.name] = item_names
-
-        # Also store exit dependencies - exits lead TO regions with dependencies
-        for exit in region.exits:
-            if exit.connected_region:
-                target_stmt_num = self._region_name_to_index.get(exit.connected_region.name)
-                if target_stmt_num is not None and target_stmt_num in self.proof_structure.dependency_graph:
-                    target_dependencies = self.proof_structure.dependency_graph[target_stmt_num]
-                    if target_dependencies:
-                        target_item_names = [self.get_item_name(d) for d in sorted(target_dependencies)]
-                        exit_dependencies[exit.name] = target_item_names
-
-    self.location_dependencies = location_dependencies
-    self.entrance_dependencies = entrance_dependencies
-    self.exit_dependencies = exit_dependencies
+# Completion requires proving (not just receiving) the final theorem
+final_proved = f"Proved Statement {self.num_statements}"
+self.multiworld.completion_condition[self.player] = \
+    lambda state, name=final_proved: state.has(name, self.player)
 ```
 
-This allows the JSON exporter to include accurate dependency information in spoiler files without needing to parse the access rule lambdas.
+The world also stores dependency mappings for the JSON exporter. These export **only real item names** ("Statement K"), not event names ("Proved Statement K"). The backend uses events for access rules, but the frontend handles proof-completion gating separately via `checkedLocations` tracking.
+
+```python
+# Export only item names for the frontend stateManager
+item_names = [self.get_item_name(d) for d in sorted(dependencies)]
+```
+
+This separation exists because the frontend stateManager cannot track backend-only event items in its inventory. The frontend proof modules enforce proof-completion requirements through their own `_updateAvailableSteps` logic.
 
 ### 9. Options (`Options.py`)
 
@@ -408,25 +370,25 @@ else:
 
 ### Access Rule Generation
 
-Each location gets a rule based on its dependencies:
+Entrance rules require both **"Proved Statement K"** events (proof step completed) and **"Statement K"** items (item received from randomizer) for each dependency K. This separates item possession from proof completion — having an item doesn't mean you've proved the corresponding step.
 
 ```python
 # In set_metamath_rules function
 if dependencies:  # Only set rule if there are dependencies
-    # Create a set of item names for this statement's dependencies
-    item_names = {world.get_item_name(d) for d in dependencies}
+    # Require both the proof events AND the dependency items
+    required_names = set()
+    for d in dependencies:
+        required_names.add(world.get_item_name(d))      # "Statement K"
+        required_names.add(f"Proved Statement {d}")       # "Proved Statement K"
 
-    # Create the access rule lambda
-    access_rule = lambda state, p=player, items=item_names: state.has_all(items, p)
+    access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
 
-    # Set access rules on all locations in this region
-    for location in region.locations:
-        add_rule(location, access_rule)
-
-    # Also set the same access rules on all entrances to this region
+    # Set access rules on entrances only (locations are accessible once you enter the region)
     for entrance in region.entrances:
         add_rule(entrance, access_rule)
 ```
+
+Per-location rules are not needed — entrance rules gate the entire region. "Proved Statement K" events fire automatically when a region is reachable (the event location has no access rule of its own).
 
 ## Performance Considerations
 
