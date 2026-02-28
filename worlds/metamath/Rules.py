@@ -60,13 +60,19 @@ class ProofStructure:
         return provable
 
 def set_metamath_rules(world, proof_structure: ProofStructure):
-    """Set access rules for metamath regions based on proof dependencies."""
+    """Set access rules for metamath regions based on proof dependencies.
+
+    Entrance rules require both:
+    - "Proved Statement K" events (proof step was actually completed)
+    - "Statement K" items (item was received from the randomizer)
+    for each dependency K. This separates item possession from proof completion.
+    """
     player = world.player
 
     # Use the world's reverse lookup to map region names back to statement indices
     region_name_to_index = getattr(world, '_region_name_to_index', {})
 
-    # Set access rules on locations and entrances based on dependencies
+    # Set access rules on entrances based on dependencies
     for region in world.multiworld.get_regions(player):
         stmt_num = region_name_to_index.get(region.name)
         if stmt_num is None:
@@ -76,18 +82,17 @@ def set_metamath_rules(world, proof_structure: ProofStructure):
             dependencies = proof_structure.dependency_graph[stmt_num]
 
             if dependencies:  # Only set rule if there are dependencies
-                # Create a set of item names for this statement's dependencies
-                item_names = {world.get_item_name(d) for d in dependencies}
+                # Require both the proof events AND the dependency items
+                required_names = set()
+                for d in dependencies:
+                    required_names.add(world.get_item_name(d))          # "Statement K"
+                    required_names.add(f"Proved Statement {d}")         # "Proved Statement K"
 
                 # Create the access rule lambda
-                access_rule = lambda state, p=player, items=item_names: state.has_all(items, p)
+                access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
 
-                # Set access rules on all locations in this region
-                for location in region.locations:
-                    add_rule(location, access_rule)
-
-                # Also set the same access rules on all entrances to this region
-                # This ensures you can't even enter the region without the required items
+                # Set access rules on all entrances to this region
+                # Locations are accessible once you can enter the region
                 for entrance in region.entrances:
                     add_rule(entrance, access_rule)
 

@@ -147,7 +147,7 @@ export class ProofQueueBaseState extends ProofBaseState {
    * Recalculate which steps are available to place.
    * A step is available if:
    *   - It has no dependencies (axiom/definition), OR
-   *   - All its dependency items have been received
+   *   - All its dependency items have been received AND all dependency locations checked
    * @protected
    */
   _updateAvailableSteps() {
@@ -159,12 +159,14 @@ export class ProofQueueBaseState extends ProofBaseState {
         // Axioms/definitions are always available
         this.availableSteps.add(index);
       } else {
-        // Check if all dependency items have been received
-        const allDepsReceived = step.dependencies.every(depIdx => {
+        // Check if all dependency items received AND all dependency locations checked
+        const allDepsSatisfied = step.dependencies.every(depIdx => {
           const depStep = this.steps.get(depIdx);
-          return depStep && this.receivedItems.has(depStep.itemName);
+          return depStep &&
+            this.receivedItems.has(depStep.itemName) &&
+            this.checkedLocations.has(depStep.locationName);
         });
-        if (allDepsReceived) {
+        if (allDepsSatisfied) {
           this.availableSteps.add(index);
         }
       }
@@ -180,6 +182,11 @@ export class ProofQueueBaseState extends ProofBaseState {
 
   /** @override */
   _onInventoryChanged() {
+    this._updateAvailableSteps();
+  }
+
+  /** @override */
+  _onLocationChecked() {
     this._updateAvailableSteps();
   }
 
