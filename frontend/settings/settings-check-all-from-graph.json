@@ -6,7 +6,8 @@
       "overwritePath": false,
       "addLocationsToPath": false,
       "movePlayerOneStep": false,
-      "movePlayerDirectly": false
+      "movePlayerDirectly": false,
+      "showRegionInPanel": false
     }
   }
 }

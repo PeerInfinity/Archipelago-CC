@@ -147,13 +147,23 @@ export class ProofGraphState extends ProofBaseState {
    * Check if a step's location is checkable.
    * A step is checkable if:
    *   - All its dependency edges have been correctly drawn
+   *   - All dependency items have been received
+   *   - All dependency locations have been checked (proved)
    *   - Its location hasn't been checked yet
    */
   isStepCheckable(stepIndex) {
     const step = this.steps.get(stepIndex);
     if (!step) return false;
     if (this.checkedLocations.has(step.locationName)) return false;
-    return this._isStepFullyConnected(stepIndex);
+    if (!this._isStepFullyConnected(stepIndex)) return false;
+
+    // Also require all dependency items received and locations checked
+    return step.dependencies.every(depIdx => {
+      const depStep = this.steps.get(depIdx);
+      return depStep &&
+        this.receivedItems.has(depStep.itemName) &&
+        this.checkedLocations.has(depStep.locationName);
+    });
   }
 
   /**

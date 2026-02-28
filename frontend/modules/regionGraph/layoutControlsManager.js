@@ -17,7 +17,7 @@ export class LayoutControlsManager {
         <button id="toggleControls" style="background: none; border: 1px solid #555; color: white; padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 2px; margin-right: 8px; pointer-events: none;">+</button>
         <span style="font-weight: bold; pointer-events: none;">Controls</span>
       </div>
-      <div id="controlsContent" style="display: none;">
+      <div id="controlsContent" style="display: none; max-height: calc(100vh - 100px); overflow-y: auto; padding-right: 15px;">
         <div style="margin-bottom: 10px;">
           <button id="resetView" style="margin: 2px; padding: 4px 8px;">Reset View</button>
           <button id="relayout" style="margin: 2px; padding: 4px 8px;">Re-layout</button>

@@ -403,12 +403,12 @@ export class ProofGraphUI {
           'border-style': 'dashed',
         },
       },
-      // ─── Fully connected (all edges drawn) ──────
+      // ─── Fully connected (all edges drawn, waiting on items/proofs) ──
       {
         selector: 'node.connected',
         style: {
-          'background-color': '#1a3328',
-          'border-color': '#a6e3a1',
+          'background-color': '#2a2520',
+          'border-color': '#f9e2af',
           'border-width': '3px',
         },
       },
