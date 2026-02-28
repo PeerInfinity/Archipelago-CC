@@ -152,6 +152,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 1",
+                  "Proved Statement 23",
+                  "Proved Statement 4",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -173,12 +176,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "ralrimiva: |- ( ph -> A. x e. A ps )",
+              "name": "vx: setvar x",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -189,9 +207,12 @@
             "name": "From elfzuz to adantl",
             "connected_region": "Prove adantl: |- ( ( ch /\\ ph ) -> ps )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
+                "items": [
+                  "Proved Statement 3",
+                  "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
+                ]
               }
             }
           }
@@ -204,12 +225,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "syl2anc: |- ( ph -> th )",
+              "name": "syl: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -223,6 +259,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 4",
+                  "Proved Statement 7",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
                 ]
@@ -236,6 +274,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 1",
+                  "Proved Statement 23",
+                  "Proved Statement 4",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -249,18 +290,30 @@
             "name": "Prove adantl: |- ( ( ch /\\ ph ) -> ps )",
             "id": 234790004,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+              "name": "syl2anc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -281,6 +334,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -301,6 +369,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 6",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -311,9 +394,12 @@
             "name": "From eluz2nn to ad2antrr",
             "connected_region": "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+                "items": [
+                  "Proved Statement 7",
+                  "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+                ]
               }
             }
           },
@@ -324,6 +410,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 4",
+                  "Proved Statement 7",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
                 ]
@@ -345,6 +433,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 7",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -358,6 +461,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 10",
+                  "Proved Statement 12",
+                  "Proved Statement 8",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -371,18 +477,30 @@
             "name": "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
             "id": 234790008,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+              "name": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 8",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -403,6 +521,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 9",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -416,6 +549,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 10",
+                  "Proved Statement 12",
+                  "Proved Statement 8",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -432,12 +568,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "vx: setvar x",
+              "name": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 10",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 10",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -451,6 +602,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 11",
+                  "Proved Statement 14",
+                  "Proved Statement 23",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -473,6 +627,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 11",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 11",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -486,6 +655,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 10",
+                  "Proved Statement 12",
+                  "Proved Statement 8",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -502,12 +674,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "jca: |- ( ph -> ( ps /\\ ch ) )",
+              "name": "eqid: |- A = A",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 12",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 12",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -518,9 +705,12 @@
             "name": "From 3syl to nnzd",
             "connected_region": "Prove nnzd: |- ( ph -> A e. ZZ )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "3syl: |- ( ph -> th )"
+                "items": [
+                  "3syl: |- ( ph -> th )",
+                  "Proved Statement 13"
+                ]
               }
             }
           }
@@ -530,22 +720,30 @@
             "name": "Prove 3syl: |- ( ph -> th )",
             "id": 234790013,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-                  "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-                  "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "simpl: |- ( ( ph /\\ ps ) -> ph )",
+              "name": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 13",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 13",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -556,9 +754,12 @@
             "name": "From nnzd to peano2zd",
             "connected_region": "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "nnzd: |- ( ph -> A e. ZZ )"
+                "items": [
+                  "Proved Statement 14",
+                  "nnzd: |- ( ph -> A e. ZZ )"
+                ]
               }
             }
           },
@@ -569,6 +770,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 11",
+                  "Proved Statement 14",
+                  "Proved Statement 23",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -582,18 +786,30 @@
             "name": "Prove nnzd: |- ( ph -> A e. ZZ )",
             "id": 234790014,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "3syl: |- ( ph -> th )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+              "name": "sylanbrc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 14",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 14",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -604,9 +820,12 @@
             "name": "From oveq1 to oveq1d",
             "connected_region": "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
+                "items": [
+                  "Proved Statement 15",
+                  "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
+                ]
               }
             }
           }
@@ -619,12 +838,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "mtod: |- ( ph -> -. ps )",
+              "name": "vz: setvar z",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 15",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 15",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -635,9 +869,12 @@
             "name": "From oveq1d to eleq1d",
             "connected_region": "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
+                "items": [
+                  "Proved Statement 16",
+                  "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
+                ]
               }
             }
           }
@@ -647,18 +884,30 @@
             "name": "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
             "id": 234790016,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+              "name": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 16",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 16",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -670,18 +919,30 @@
             "name": "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
             "id": 234790017,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "3syl: |- ( ph -> th )",
+              "name": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 17",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 17",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -693,10 +954,7 @@
             "name": "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
             "id": 234790018,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "nnzd: |- ( ph -> A e. ZZ )"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "impbii: |- ( ph <-> ps )",
@@ -705,6 +963,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 18",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 18",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -715,9 +988,12 @@
             "name": "From prmuz2 to jca",
             "connected_region": "Prove jca: |- ( ph -> ( ps /\\ ch ) )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
+                "items": [
+                  "Proved Statement 19",
+                  "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
+                ]
               }
             }
           }
@@ -736,6 +1012,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 19",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 19",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -749,6 +1040,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 20",
+                  "Proved Statement 32",
                   "jca: |- ( ph -> ( ps /\\ ch ) )",
                   "sylanbrc: |- ( ph -> th )"
                 ]
@@ -761,18 +1054,30 @@
             "name": "Prove jca: |- ( ph -> ( ps /\\ ch ) )",
             "id": 234790020,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "syl3anc: |- ( ph -> ta )",
+              "name": "bitrid: |- ( ch -> ( ph <-> th ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 20",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 20",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -786,6 +1091,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 21",
+                  "Proved Statement 30",
+                  "Proved Statement 31",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -808,6 +1116,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 21",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 21",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -821,6 +1144,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 22",
+                  "Proved Statement 25",
                   "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -836,12 +1161,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+              "name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 22",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 22",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -855,6 +1195,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 1",
+                  "Proved Statement 23",
+                  "Proved Statement 4",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -869,6 +1212,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 11",
+                  "Proved Statement 14",
+                  "Proved Statement 23",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -882,21 +1228,30 @@
             "name": "Prove syl: |- ( ph -> ch )",
             "id": 234790023,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "adantl: |- ( ( ch /\\ ph ) -> ps )",
-                  "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+              "name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 23",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 23",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -910,6 +1265,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 24",
+                  "Proved Statement 25",
                   "syl2anc: |- ( ph -> th )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -922,22 +1279,30 @@
             "name": "Prove syl2anc: |- ( ph -> th )",
             "id": 234790024,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "adantl: |- ( ( ch /\\ ph ) -> ps )",
-                  "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-                  "syl: |- ( ph -> ch )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "eqid: |- A = A",
+              "name": "jca: |- ( ph -> ( ps /\\ ch ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 24",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 24",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -951,6 +1316,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 22",
+                  "Proved Statement 25",
                   "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -964,6 +1331,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 24",
+                  "Proved Statement 25",
                   "syl2anc: |- ( ph -> th )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -976,14 +1345,7 @@
             "name": "Prove syl3anc: |- ( ph -> ta )",
             "id": 234790025,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-                  "nnzd: |- ( ph -> A e. ZZ )",
-                  "syl: |- ( ph -> ch )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K || M /\\ M...",
@@ -992,6 +1354,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 25",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 25",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1005,6 +1382,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 26",
+                  "Proved Statement 27",
                   "mpan2d: |- ( ph -> ( ps -> th ) )",
                   "mpd: |- ( ph -> ch )"
                 ]
@@ -1017,21 +1396,30 @@
             "name": "Prove mpan2d: |- ( ph -> ( ps -> th ) )",
             "id": 234790026,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-                  "syl3anc: |- ( ph -> ta )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "sylanbrc: |- ( ph -> th )",
+              "name": "simpl: |- ( ( ph /\\ ps ) -> ph )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 26",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 26",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1045,6 +1433,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 26",
+                  "Proved Statement 27",
                   "mpan2d: |- ( ph -> ( ps -> th ) )",
                   "mpd: |- ( ph -> ch )"
                 ]
@@ -1057,21 +1447,30 @@
             "name": "Prove mpd: |- ( ph -> ch )",
             "id": 234790027,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "syl2anc: |- ( ph -> th )",
-                  "syl3anc: |- ( ph -> ta )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
+              "name": "vn: setvar n",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 27",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 27",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1085,6 +1484,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 28",
+                  "Proved Statement 29",
                   "mtod: |- ( ph -> -. ps )",
                   "vn: setvar n"
                 ]
@@ -1097,21 +1498,30 @@
             "name": "Prove mtod: |- ( ph -> -. ps )",
             "id": 234790028,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "mpan2d: |- ( ph -> ( ps -> th ) )",
-                  "mpd: |- ( ph -> ch )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+              "name": "ralrimiva: |- ( ph -> A. x e. A ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 28",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 28",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1122,9 +1532,12 @@
             "name": "From vn to isprm3",
             "connected_region": "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "vn: setvar n"
+                "items": [
+                  "Proved Statement 29",
+                  "vn: setvar n"
+                ]
               }
             }
           },
@@ -1135,6 +1548,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 28",
+                  "Proved Statement 29",
                   "mtod: |- ( ph -> -. ps )",
                   "vn: setvar n"
                 ]
@@ -1150,12 +1565,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "vz: setvar z",
+              "name": "syl3anc: |- ( ph -> ta )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 29",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 29",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1169,6 +1599,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 21",
+                  "Proved Statement 30",
+                  "Proved Statement 31",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -1182,10 +1615,7 @@
             "name": "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
             "id": 234790030,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "vn: setvar n"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
@@ -1194,6 +1624,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 30",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 30",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1207,6 +1652,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 21",
+                  "Proved Statement 30",
+                  "Proved Statement 31",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -1220,21 +1668,30 @@
             "name": "Prove ralrimiva: |- ( ph -> A. x e. A ps )",
             "id": 234790031,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "mtod: |- ( ph -> -. ps )",
-                  "vn: setvar n"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "adantl: |- ( ( ch /\\ ph ) -> ps )",
+              "name": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 31",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 31",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1248,6 +1705,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 20",
+                  "Proved Statement 32",
                   "jca: |- ( ph -> ( ps /\\ ch ) )",
                   "sylanbrc: |- ( ph -> th )"
                 ]
@@ -1260,14 +1719,7 @@
             "name": "Prove sylanbrc: |- ( ph -> th )",
             "id": 234790032,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-                  "ralrimiva: |- ( ph -> A. x e. A ps )",
-                  "simpl: |- ( ( ph /\\ ps ) -> ph )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
@@ -1276,6 +1728,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 32",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 32",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1287,21 +1754,30 @@
             "name": "Prove impbii: |- ( ph <-> ps )",
             "id": 234790033,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "jca: |- ( ph -> ( ps /\\ ch ) )",
-                  "sylanbrc: |- ( ph -> th )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "vn: setvar n",
+              "name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 33",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 33",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1315,6 +1791,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 34",
+                  "Proved Statement 36",
                   "vx: setvar x",
                   "vz: setvar z"
                 ]
@@ -1330,12 +1808,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "syl: |- ( ph -> ch )",
+              "name": "adantl: |- ( ( ch /\\ ph ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 34",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 34",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1349,6 +1842,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 35",
+                  "Proved Statement 37",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "vy: setvar y"
                 ]
@@ -1370,6 +1865,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 35",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 35",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1383,6 +1893,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 34",
+                  "Proved Statement 36",
                   "vx: setvar x",
                   "vz: setvar z"
                 ]
@@ -1404,6 +1916,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 36",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 36",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1417,6 +1944,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 35",
+                  "Proved Statement 37",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "vy: setvar y"
                 ]
@@ -1430,6 +1959,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 37",
+                  "Proved Statement 39",
                   "bitrid: |- ( ch -> ( ph <-> th ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
                 ]
@@ -1442,21 +1973,30 @@
             "name": "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
             "id": 234790037,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "vx: setvar x",
-                  "vz: setvar z"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "bitrid: |- ( ch -> ( ph <-> th ) )",
+              "name": "3syl: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 37",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 37",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1467,9 +2007,12 @@
             "name": "From raleqbi1dv to bitrid",
             "connected_region": "Prove bitrid: |- ( ch -> ( ph <-> th ) )",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
+                "items": [
+                  "Proved Statement 38",
+                  "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
+                ]
               }
             }
           }
@@ -1479,21 +2022,30 @@
             "name": "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
             "id": 234790038,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-                  "vy: setvar y"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+              "name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 38",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 38",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1507,6 +2059,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Proved Statement 37",
+                  "Proved Statement 39",
                   "bitrid: |- ( ch -> ( ph <-> th ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
                 ]
@@ -1519,18 +2073,30 @@
             "name": "Prove bitrid: |- ( ch -> ( ph <-> th ) )",
             "id": 234790039,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
+              "name": "mtod: |- ( ph -> -. ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 39",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 39",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1542,13 +2108,7 @@
             "name": "Prove anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
             "id": 234790040,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "bitrid: |- ( ch -> ( ph <-> th ) )",
-                  "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
@@ -1557,6 +2117,21 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Proved Statement 40",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 40",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -2707,6 +3282,444 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
+      },
+      "Proved Statement 2": {
+        "name": "Proved Statement 2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 3": {
+        "name": "Proved Statement 3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 4": {
+        "name": "Proved Statement 4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 5": {
+        "name": "Proved Statement 5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 6": {
+        "name": "Proved Statement 6",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 7": {
+        "name": "Proved Statement 7",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 8": {
+        "name": "Proved Statement 8",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 9": {
+        "name": "Proved Statement 9",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 10": {
+        "name": "Proved Statement 10",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 11": {
+        "name": "Proved Statement 11",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 12": {
+        "name": "Proved Statement 12",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 13": {
+        "name": "Proved Statement 13",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 14": {
+        "name": "Proved Statement 14",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 15": {
+        "name": "Proved Statement 15",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 16": {
+        "name": "Proved Statement 16",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 17": {
+        "name": "Proved Statement 17",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 18": {
+        "name": "Proved Statement 18",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 19": {
+        "name": "Proved Statement 19",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 20": {
+        "name": "Proved Statement 20",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 21": {
+        "name": "Proved Statement 21",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 22": {
+        "name": "Proved Statement 22",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 23": {
+        "name": "Proved Statement 23",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 24": {
+        "name": "Proved Statement 24",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 25": {
+        "name": "Proved Statement 25",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 26": {
+        "name": "Proved Statement 26",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 27": {
+        "name": "Proved Statement 27",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 28": {
+        "name": "Proved Statement 28",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 29": {
+        "name": "Proved Statement 29",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 30": {
+        "name": "Proved Statement 30",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 31": {
+        "name": "Proved Statement 31",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 32": {
+        "name": "Proved Statement 32",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 33": {
+        "name": "Proved Statement 33",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 34": {
+        "name": "Proved Statement 34",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 35": {
+        "name": "Proved Statement 35",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 36": {
+        "name": "Proved Statement 36",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 37": {
+        "name": "Proved Statement 37",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 38": {
+        "name": "Proved Statement 38",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 39": {
+        "name": "Proved Statement 39",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 40": {
+        "name": "Proved Statement 40",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 1": {
+        "name": "Proved Statement 1",
+        "id": null,
+        "groups": [],
+        "classification": "progression",
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -2719,6 +3732,46 @@
   "itempool_counts": {
     "1": {
       "3syl: |- ( ph -> th )": 1,
+      "Proved Statement 1": 1,
+      "Proved Statement 10": 1,
+      "Proved Statement 11": 1,
+      "Proved Statement 12": 1,
+      "Proved Statement 13": 1,
+      "Proved Statement 14": 1,
+      "Proved Statement 15": 1,
+      "Proved Statement 16": 1,
+      "Proved Statement 17": 1,
+      "Proved Statement 18": 1,
+      "Proved Statement 19": 1,
+      "Proved Statement 2": 1,
+      "Proved Statement 20": 1,
+      "Proved Statement 21": 1,
+      "Proved Statement 22": 1,
+      "Proved Statement 23": 1,
+      "Proved Statement 24": 1,
+      "Proved Statement 25": 1,
+      "Proved Statement 26": 1,
+      "Proved Statement 27": 1,
+      "Proved Statement 28": 1,
+      "Proved Statement 29": 1,
+      "Proved Statement 3": 1,
+      "Proved Statement 30": 1,
+      "Proved Statement 31": 1,
+      "Proved Statement 32": 1,
+      "Proved Statement 33": 1,
+      "Proved Statement 34": 1,
+      "Proved Statement 35": 1,
+      "Proved Statement 36": 1,
+      "Proved Statement 37": 1,
+      "Proved Statement 38": 1,
+      "Proved Statement 39": 1,
+      "Proved Statement 4": 1,
+      "Proved Statement 40": 1,
+      "Proved Statement 5": 1,
+      "Proved Statement 6": 1,
+      "Proved Statement 7": 1,
+      "Proved Statement 8": 1,
+      "Proved Statement 9": 1,
       "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": 1,
       "adantl: |- ( ( ch /\\ ph ) -> ps )": 1,
       "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": 1,
@@ -2799,8 +3852,7 @@
       "Prove vz: setvar z": "vz: setvar z",
       "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
       "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-      "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )",
-      "Prove anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )"
+      "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )"
     }
   },
   "progression_mapping": {
@@ -2808,7 +3860,8 @@
   },
   "starting_items": {
     "1": [
-      "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )"
+      "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+      "Proved Statement 1"
     ]
   },
   "world": {
@@ -2899,7 +3952,9 @@
             "18": "sin0",
             "19": "euclemma",
             "20": "wilth",
-            "21": "dfac5"
+            "21": "dfac5",
+            "22": "prmunb",
+            "23": "cncmp"
           },
           "default": 1,
           "display_name": "Theorem to Prove"
@@ -3000,414 +4055,736 @@
         "Prove vz: setvar z": "vz: setvar z",
         "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
         "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-        "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )",
-        "Prove anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )"
+        "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )"
       },
       "location_dependencies": {
+        "Proved Statement 4": [
+          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+          "Proved Statement 3"
+        ],
+        "Proved Statement 8": [
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
+        ],
+        "Proved Statement 13": [
+          "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
+          "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
+        ],
+        "Proved Statement 14": [
+          "3syl: |- ( ph -> th )",
+          "Proved Statement 13"
+        ],
+        "Proved Statement 16": [
+          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 15"
+        ],
+        "Proved Statement 17": [
+          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 16"
+        ],
+        "Proved Statement 18": [
+          "nnzd: |- ( ph -> A e. ZZ )",
+          "Proved Statement 14"
+        ],
+        "Proved Statement 20": [
+          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+          "Proved Statement 19"
+        ],
+        "Proved Statement 23": [
+          "adantl: |- ( ( ch /\\ ph ) -> ps )",
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
+        ],
+        "Proved Statement 24": [
+          "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
+          "adantl: |- ( ( ch /\\ ph ) -> ps )",
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
+        ],
+        "Proved Statement 25": [
+          "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
+          "nnzd: |- ( ph -> A e. ZZ )",
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
+        ],
+        "Proved Statement 26": [
+          "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
+        ],
+        "Proved Statement 27": [
+          "syl2anc: |- ( ph -> th )",
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
+        ],
+        "Proved Statement 28": [
+          "mpan2d: |- ( ph -> ( ps -> th ) )",
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
+        ],
+        "Proved Statement 30": [
+          "vn: setvar n",
+          "Proved Statement 29"
+        ],
+        "Proved Statement 31": [
+          "mtod: |- ( ph -> -. ps )",
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
+        ],
+        "Proved Statement 32": [
+          "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
+          "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
+        ],
+        "Proved Statement 33": [
+          "jca: |- ( ph -> ( ps /\\ ch ) )",
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
+        ],
+        "Proved Statement 37": [
+          "vx: setvar x",
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
+        ],
+        "Proved Statement 38": [
+          "vy: setvar y",
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
+        ],
+        "Proved Statement 39": [
+          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+          "Proved Statement 38"
+        ],
+        "Proved Statement 40": [
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
+        ],
         "Prove adantl: |- ( ( ch /\\ ph ) -> ps )": [
-          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
+          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+          "Proved Statement 3"
         ],
         "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": [
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "Prove 3syl: |- ( ph -> th )": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "Prove nnzd: |- ( ph -> A e. ZZ )": [
-          "3syl: |- ( ph -> th )"
+          "3syl: |- ( ph -> th )",
+          "Proved Statement 13"
         ],
         "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": [
-          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
+          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 15"
         ],
         "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": [
-          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
+          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 16"
         ],
         "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": [
-          "nnzd: |- ( ph -> A e. ZZ )"
+          "nnzd: |- ( ph -> A e. ZZ )",
+          "Proved Statement 14"
         ],
         "Prove jca: |- ( ph -> ( ps /\\ ch ) )": [
-          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
+          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+          "Proved Statement 19"
         ],
         "Prove syl: |- ( ph -> ch )": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "Prove syl2anc: |- ( ph -> th )": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "Prove syl3anc: |- ( ph -> ta )": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "Prove mpan2d: |- ( ph -> ( ps -> th ) )": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "Prove mpd: |- ( ph -> ch )": [
           "syl2anc: |- ( ph -> th )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "Prove mtod: |- ( ph -> -. ps )": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "mpd: |- ( ph -> ch )"
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
         ],
         "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": [
-          "vn: setvar n"
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "Prove ralrimiva: |- ( ph -> A. x e. A ps )": [
           "mtod: |- ( ph -> -. ps )",
-          "vn: setvar n"
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "Prove sylanbrc: |- ( ph -> th )": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "Prove impbii: |- ( ph <-> ps )": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "sylanbrc: |- ( ph -> th )"
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
         ],
         "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": [
           "vx: setvar x",
-          "vz: setvar z"
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
         ],
         "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": [
           "vy: setvar y",
-          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
         ],
         "Prove bitrid: |- ( ch -> ( ph <-> th ) )": [
-          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
+          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+          "Proved Statement 38"
         ],
         "Prove anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "bitrid: |- ( ch -> ( ph <-> th ) )"
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
         ]
       },
       "entrance_dependencies": {
         "From elfzuz to adantl": [
-          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
+          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+          "Proved Statement 3"
         ],
         "From eluz2nn to ad2antrr": [
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From ad2antrr to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From faccl to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From nnm1nn0 to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From 3syl to nnzd": [
-          "3syl: |- ( ph -> th )"
+          "3syl: |- ( ph -> th )",
+          "Proved Statement 13"
         ],
         "From oveq1 to oveq1d": [
-          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
+          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 15"
         ],
         "From oveq1d to eleq1d": [
-          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
+          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 16"
         ],
         "From nnzd to peano2zd": [
-          "nnzd: |- ( ph -> A e. ZZ )"
+          "nnzd: |- ( ph -> A e. ZZ )",
+          "Proved Statement 14"
         ],
         "From prmuz2 to jca": [
-          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
+          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+          "Proved Statement 19"
         ],
         "From adantl to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From eluz2nn to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From dvdsfac to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From adantl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From syl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From ndvdsp1 to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From nnzd to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From syl to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From simplr to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl3anc to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl2anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl3anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From mpan2d to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "mpd: |- ( ph -> ch )"
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
         ],
         "From mpd to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "mpd: |- ( ph -> ch )"
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
         ],
         "From vn to isprm3": [
-          "vn: setvar n"
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From mtod to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "vn: setvar n"
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From vn to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "vn: setvar n"
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From simpl to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From isprm3 to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From ralrimiva to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From jca to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "sylanbrc: |- ( ph -> th )"
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
         ],
         "From sylanbrc to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "sylanbrc: |- ( ph -> th )"
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
         ],
         "From vx to eleq2w": [
           "vx: setvar x",
-          "vz: setvar z"
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
         ],
         "From vz to eleq2w": [
           "vx: setvar x",
-          "vz: setvar z"
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
         ],
         "From vy to raleqbi1dv": [
           "vy: setvar y",
-          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
         ],
         "From eleq2w to raleqbi1dv": [
           "vy: setvar y",
-          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
         ],
         "From raleqbi1dv to bitrid": [
-          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
+          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+          "Proved Statement 38"
         ],
         "From eleq2w to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "bitrid: |- ( ch -> ( ph <-> th ) )"
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
         ],
         "From bitrid to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "bitrid: |- ( ch -> ( ph <-> th ) )"
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
         ]
       },
       "exit_dependencies": {
         "From dvdsfac to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From elfzuz to adantl": [
-          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
+          "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+          "Proved Statement 3"
         ],
         "From adantl to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From adantl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From eluz2nn to ad2antrr": [
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From eluz2nn to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
+          "Proved Statement 4",
+          "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+          "Proved Statement 7"
         ],
         "From ad2antrr to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From faccl to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From ndvdsp1 to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From nnm1nn0 to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+          "Proved Statement 8",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
+          "Proved Statement 10",
+          "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+          "Proved Statement 12"
         ],
         "From 3syl to nnzd": [
-          "3syl: |- ( ph -> th )"
+          "3syl: |- ( ph -> th )",
+          "Proved Statement 13"
         ],
         "From nnzd to peano2zd": [
-          "nnzd: |- ( ph -> A e. ZZ )"
+          "nnzd: |- ( ph -> A e. ZZ )",
+          "Proved Statement 14"
         ],
         "From nnzd to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From oveq1 to oveq1d": [
-          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
+          "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 15"
         ],
         "From oveq1d to eleq1d": [
-          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
+          "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+          "Proved Statement 16"
         ],
         "From prmuz2 to jca": [
-          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
+          "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+          "Proved Statement 19"
         ],
         "From jca to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "sylanbrc: |- ( ph -> th )"
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
         ],
         "From simpl to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From simplr to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
+          "Proved Statement 1",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 4",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From syl to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+          "Proved Statement 11",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "syl: |- ( ph -> ch )"
+          "Proved Statement 14",
+          "syl: |- ( ph -> ch )",
+          "Proved Statement 23"
         ],
         "From syl2anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl3anc to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 22",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From syl3anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "syl3anc: |- ( ph -> ta )"
+          "Proved Statement 24",
+          "syl3anc: |- ( ph -> ta )",
+          "Proved Statement 25"
         ],
         "From mpan2d to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "mpd: |- ( ph -> ch )"
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
         ],
         "From mpd to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "mpd: |- ( ph -> ch )"
+          "Proved Statement 26",
+          "mpd: |- ( ph -> ch )",
+          "Proved Statement 27"
         ],
         "From mtod to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "vn: setvar n"
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From vn to isprm3": [
-          "vn: setvar n"
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From vn to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "vn: setvar n"
+          "Proved Statement 28",
+          "vn: setvar n",
+          "Proved Statement 29"
         ],
         "From isprm3 to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From ralrimiva to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
+          "Proved Statement 21",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "ralrimiva: |- ( ph -> A. x e. A ps )"
+          "Proved Statement 30",
+          "ralrimiva: |- ( ph -> A. x e. A ps )",
+          "Proved Statement 31"
         ],
         "From sylanbrc to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "sylanbrc: |- ( ph -> th )"
+          "Proved Statement 20",
+          "sylanbrc: |- ( ph -> th )",
+          "Proved Statement 32"
         ],
         "From vx to eleq2w": [
           "vx: setvar x",
-          "vz: setvar z"
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
         ],
         "From vy to raleqbi1dv": [
           "vy: setvar y",
-          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
         ],
         "From vz to eleq2w": [
           "vx: setvar x",
-          "vz: setvar z"
+          "Proved Statement 34",
+          "vz: setvar z",
+          "Proved Statement 36"
         ],
         "From eleq2w to raleqbi1dv": [
           "vy: setvar y",
-          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
+          "Proved Statement 35",
+          "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+          "Proved Statement 37"
         ],
         "From eleq2w to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "bitrid: |- ( ch -> ( ph <-> th ) )"
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
         ],
         "From raleqbi1dv to bitrid": [
-          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
+          "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+          "Proved Statement 38"
         ],
         "From bitrid to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "bitrid: |- ( ch -> ( ph <-> th ) )"
+          "Proved Statement 37",
+          "bitrid: |- ( ch -> ( ph <-> th ) )",
+          "Proved Statement 39"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
@@ -3745,7 +5122,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )"
+        "item": "Proved Statement 40"
       }
     }
   },

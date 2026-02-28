@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-02-28T00:04:22.862218+00:00",
+    "timestamp": "2026-02-28T21:48:46.636396+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -18,7 +18,7 @@
     "Metamath": {
       "template": "Metamath.yaml",
       "game_name": "Metamath",
-      "timestamp": "2026-02-28T00:04:25.840891+00:00",
+      "timestamp": "2026-02-28T21:48:49.948059+00:00",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 10.61
+          "processing_time_seconds": 10.29
         },
         "spoiler_test": {
           "success": false,
@@ -40,7 +40,7 @@
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/metamath_worldgen",
           "error": null,
-          "processing_time_seconds": 0.47
+          "processing_time_seconds": 0.55
         },
         "seed_generation": {
           "success": false

@@ -31,12 +31,21 @@ class LocationData:
 
 location_table: Dict[str, LocationData] = {
     "Prove ax-1cn: |- 1 e. CC": LocationData("Prove ax-1cn: |- 1 e. CC", "Prove ax-1cn: |- 1 e. CC", 234790002, False),
+    "Proved Statement 2": LocationData("Prove ax-1cn: |- 1 e. CC", "Proved Statement 2", None, True),
     "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": LocationData("Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )", "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )", 234790003, False),
+    "Proved Statement 3": LocationData("Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )", "Proved Statement 3", None, True),
     "Prove df-2: |- 2 = ( 1 + 1 )": LocationData("Prove df-2: |- 2 = ( 1 + 1 )", "Prove df-2: |- 2 = ( 1 + 1 )", 234790004, False),
+    "Proved Statement 4": LocationData("Prove df-2: |- 2 = ( 1 + 1 )", "Proved Statement 4", None, True),
     "Prove df-3: |- 3 = ( 2 + 1 )": LocationData("Prove df-3: |- 3 = ( 2 + 1 )", "Prove df-3: |- 3 = ( 2 + 1 )", 234790005, False),
+    "Proved Statement 5": LocationData("Prove df-3: |- 3 = ( 2 + 1 )", "Proved Statement 5", None, True),
     "Prove df-4: |- 4 = ( 3 + 1 )": LocationData("Prove df-4: |- 4 = ( 3 + 1 )", "Prove df-4: |- 4 = ( 3 + 1 )", 234790006, False),
+    "Proved Statement 6": LocationData("Prove df-4: |- 4 = ( 3 + 1 )", "Proved Statement 6", None, True),
     "Prove oveq1i: |- ( A F C ) = ( B F C )": LocationData("Prove oveq1i: |- ( A F C ) = ( B F C )", "Prove oveq1i: |- ( A F C ) = ( B F C )", 234790007, False),
+    "Proved Statement 7": LocationData("Prove oveq1i: |- ( A F C ) = ( B F C )", "Proved Statement 7", None, True),
     "Prove 3eqtri: |- A = D": LocationData("Prove 3eqtri: |- A = D", "Prove 3eqtri: |- A = D", 234790008, False),
+    "Proved Statement 8": LocationData("Prove 3eqtri: |- A = D", "Proved Statement 8", None, True),
     "Prove oveq2i: |- ( C F A ) = ( C F B )": LocationData("Prove oveq2i: |- ( C F A ) = ( C F B )", "Prove oveq2i: |- ( C F A ) = ( C F B )", 234790009, False),
+    "Proved Statement 9": LocationData("Prove oveq2i: |- ( C F A ) = ( C F B )", "Proved Statement 9", None, True),
     "Prove eqtr4i: |- A = C": LocationData("Prove eqtr4i: |- A = C", "Prove eqtr4i: |- A = C", 234790010, False),
+    "Proved Statement 10": LocationData("Prove eqtr4i: |- A = C", "Proved Statement 10", None, True),
 }
