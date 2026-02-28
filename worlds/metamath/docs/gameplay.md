@@ -18,7 +18,11 @@ Each statement that needs to be proven is a location. To "check" a location, you
 - `Prove Statement 10` might require Statements 6 and 9
 
 ### Dependencies = Access Rules
-Mathematical logic determines access! You can only prove a statement if you have all its logical prerequisites.
+Mathematical logic determines access! To prove a statement, you need two things for each dependency:
+1. **The item** — you must have received the dependency's item (e.g., "Statement 3")
+2. **The proof** — you must have already proved (checked) the dependency's location
+
+This means having an item isn't enough — you must also have established the proof step. This prevents the tracker from showing locations as accessible just because items were received from unrelated checks.
 
 ## Example: Playing "2 + 2 = 4"
 
@@ -104,10 +108,9 @@ Don't worry if you don't understand the math! The game is about logical dependen
 
 ## Completion
 
-You win when you prove your target theorem! This happens when you:
-1. Collect all required statement items
-2. Check the final proof location
-3. The complete proof validates
+You win when you prove your target theorem! The final statement's item is always locked at its own location (it's never randomized into the multiworld pool). To reach it, you must:
+1. Prove all dependency statements (receive their items AND check their locations)
+2. Check the final proof location, which grants the locked item and fires the completion event
 
 ## Tips for New Players
 
