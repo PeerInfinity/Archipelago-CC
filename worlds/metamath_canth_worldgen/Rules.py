@@ -22,115 +22,115 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From eleq2 to nsyl", player),
-        HasAll('Proved Statement 1', 'Proved Statement 15', 'eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'sylib: |- ( ph -> ch )')
+        HasAll('Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'Proved sylib: |- ( ph -> ch )', 'eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'sylib: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fofn to syl", player),
-        HasAll('Proved Statement 18', 'Proved Statement 2', 'fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )', 'fofn: |- ( F : A -onto-> B -> F Fn A )')
+        HasAll('Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...', 'Given fofn: |- ( F : A -onto-> B -> F Fn A )', 'fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )', 'fofn: |- ( F : A -onto-> B -> F Fn A )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From forn to eleqtrrid", player),
-        HasAll('Proved Statement 13', 'Proved Statement 3', 'elpwi2: |- A e. ~P B', 'forn: |- ( F : A -onto-> B -> ran F = B )')
+        HasAll('Proved elpwi2: |- A e. ~P B', 'Given forn: |- ( F : A -onto-> B -> ran F = B )', 'elpwi2: |- A e. ~P B', 'forn: |- ( F : A -onto-> B -> ran F = B )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fveq2 to eleq12d", player),
-        HasAll('Proved Statement 4', 'Proved Statement 5', 'fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'id: |- ( ph -> ph )')
+        HasAll('Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'Given id: |- ( ph -> ph )', 'fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'id: |- ( ph -> ph )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From id to eleq12d", player),
-        HasAll('Proved Statement 4', 'Proved Statement 5', 'fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'id: |- ( ph -> ph )')
+        HasAll('Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'Given id: |- ( ph -> ph )', 'fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )', 'id: |- ( ph -> ph )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eleq12d to notbid", player),
-        HasAll('Proved Statement 6', 'eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )')
+        HasAll('Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )', 'eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nbbn to sylib", player),
-        HasAll('Proved Statement 11', 'Proved Statement 7', 'baibr: |- ( ps -> ( ch <-> ph ) )', 'nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )')
+        HasAll('Proved baibr: |- ( ps -> ( ch <-> ph ) )', 'Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )', 'baibr: |- ( ps -> ( ch <-> ph ) )', 'nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From notbid to elrab", player),
-        HasAll('Proved Statement 8', 'Proved Statement 9', 'notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'vx: setvar x')
+        HasAll('Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'Given vx: setvar x', 'notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'vx: setvar x')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vx to elrab", player),
-        HasAll('Proved Statement 8', 'Proved Statement 9', 'notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'vx: setvar x')
+        HasAll('Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'Given vx: setvar x', 'notbid: |- ( ph -> ( -. ps <-> -. ch ) )', 'vx: setvar x')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vx to ssrab2", player),
-        HasAll('Proved Statement 9', 'vx: setvar x')
+        HasAll('Given vx: setvar x', 'vx: setvar x')
     )
 
     world.set_rule(
         multiworld.get_entrance("From elrab to baibr", player),
-        HasAll('Proved Statement 10', 'elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )')
+        HasAll('Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )', 'elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From baibr to sylib", player),
-        HasAll('Proved Statement 11', 'Proved Statement 7', 'baibr: |- ( ps -> ( ch <-> ph ) )', 'nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )')
+        HasAll('Proved baibr: |- ( ps -> ( ch <-> ph ) )', 'Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )', 'baibr: |- ( ps -> ( ch <-> ph ) )', 'nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ssrab2 to elpwi2", player),
-        HasAll('Proved Statement 12', 'ssrab2: |- { x e. A | ph } C_ A')
+        HasAll('Proved ssrab2: |- { x e. A | ph } C_ A', 'ssrab2: |- { x e. A | ph } C_ A')
     )
 
     world.set_rule(
         multiworld.get_entrance("From elpwi2 to eleqtrrid", player),
-        HasAll('Proved Statement 13', 'Proved Statement 3', 'elpwi2: |- A e. ~P B', 'forn: |- ( F : A -onto-> B -> ran F = B )')
+        HasAll('Proved elpwi2: |- A e. ~P B', 'Given forn: |- ( F : A -onto-> B -> ran F = B )', 'elpwi2: |- A e. ~P B', 'forn: |- ( F : A -onto-> B -> ran F = B )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eleqtrrid to pm2.65i", player),
-        HasAll('Proved Statement 14', 'Proved Statement 21', 'eleqtrrid: |- ( ph -> A e. C )', 'mtbiri: |- ( ph -> -. ps )')
+        HasAll('Proved eleqtrrid: |- ( ph -> A e. C )', 'Proved mtbiri: |- ( ph -> -. ps )', 'eleqtrrid: |- ( ph -> A e. C )', 'mtbiri: |- ( ph -> -. ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sylib to nsyl", player),
-        HasAll('Proved Statement 1', 'Proved Statement 15', 'eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'sylib: |- ( ph -> ch )')
+        HasAll('Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'Proved sylib: |- ( ph -> ch )', 'eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )', 'sylib: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nsyl to nrex", player),
-        HasAll('Proved Statement 16', 'Proved Statement 17', 'nsyl: |- ( ph -> -. ch )', 'vy: setvar y')
+        HasAll('Proved nsyl: |- ( ph -> -. ch )', 'Given vy: setvar y', 'nsyl: |- ( ph -> -. ch )', 'vy: setvar y')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vy to fvelrnb", player),
-        HasAll('Proved Statement 17', 'vy: setvar y')
+        HasAll('Given vy: setvar y', 'vy: setvar y')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vy to nrex", player),
-        HasAll('Proved Statement 16', 'Proved Statement 17', 'nsyl: |- ( ph -> -. ch )', 'vy: setvar y')
+        HasAll('Proved nsyl: |- ( ph -> -. ch )', 'Given vy: setvar y', 'nsyl: |- ( ph -> -. ch )', 'vy: setvar y')
     )
 
     world.set_rule(
         multiworld.get_entrance("From fvelrnb to syl", player),
-        HasAll('Proved Statement 18', 'Proved Statement 2', 'fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )', 'fofn: |- ( F : A -onto-> B -> F Fn A )')
+        HasAll('Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...', 'Given fofn: |- ( F : A -onto-> B -> F Fn A )', 'fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )', 'fofn: |- ( F : A -onto-> B -> F Fn A )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nrex to mtbiri", player),
-        HasAll('Proved Statement 19', 'Proved Statement 20', 'nrex: |- -. E. x e. A ps', 'syl: |- ( ph -> ch )')
+        HasAll('Proved nrex: |- -. E. x e. A ps', 'Proved syl: |- ( ph -> ch )', 'nrex: |- -. E. x e. A ps', 'syl: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl to mtbiri", player),
-        HasAll('Proved Statement 19', 'Proved Statement 20', 'nrex: |- -. E. x e. A ps', 'syl: |- ( ph -> ch )')
+        HasAll('Proved nrex: |- -. E. x e. A ps', 'Proved syl: |- ( ph -> ch )', 'nrex: |- -. E. x e. A ps', 'syl: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mtbiri to pm2.65i", player),
-        HasAll('Proved Statement 14', 'Proved Statement 21', 'eleqtrrid: |- ( ph -> A e. C )', 'mtbiri: |- ( ph -> -. ps )')
+        HasAll('Proved eleqtrrid: |- ( ph -> A e. C )', 'Proved mtbiri: |- ( ph -> -. ps )', 'eleqtrrid: |- ( ph -> A e. C )', 'mtbiri: |- ( ph -> -. ps )')
     )

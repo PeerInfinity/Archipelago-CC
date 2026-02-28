@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )", "Prove fofn: |- ( F : A -onto-> B -> F Fn A )", "Prove forn: |- ( F : A -onto-> B -> ran F = B )", "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )", "Prove id: |- ( ph -> ph )", "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )", "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )", "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )", "Prove vx: setvar x", "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )", "Prove baibr: |- ( ps -> ( ch <-> ph ) )", "Prove ssrab2: |- { x e. A | ph } C_ A", "Prove elpwi2: |- A e. ~P B", "Prove eleqtrrid: |- ( ph -> A e. C )", "Prove sylib: |- ( ph -> ch )", "Prove nsyl: |- ( ph -> -. ch )", "Prove vy: setvar y", "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...", "Prove nrex: |- -. E. x e. A ps", "Prove syl: |- ( ph -> ch )", "Prove mtbiri: |- ( ph -> -. ps )", "Prove pm2.65i: |- -. ph"]
+    region_names = ["Menu", "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )", "Given fofn: |- ( F : A -onto-> B -> F Fn A )", "Given forn: |- ( F : A -onto-> B -> ran F = B )", "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )", "Given id: |- ( ph -> ph )", "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )", "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )", "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )", "Given vx: setvar x", "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )", "Prove baibr: |- ( ps -> ( ch <-> ph ) )", "Prove ssrab2: |- { x e. A | ph } C_ A", "Prove elpwi2: |- A e. ~P B", "Prove eleqtrrid: |- ( ph -> A e. C )", "Prove sylib: |- ( ph -> ch )", "Prove nsyl: |- ( ph -> -. ch )", "Given vy: setvar y", "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...", "Prove nrex: |- -. E. x e. A ps", "Prove syl: |- ( ph -> ch )", "Prove mtbiri: |- ( ph -> -. ps )", "Prove pm2.65i: |- -. ph"]
 
     regions = {}
     for region_name in region_names:
@@ -51,24 +51,24 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )"], "To eleq2")
-    _create_entrance(regions["Menu"], regions["Prove fofn: |- ( F : A -onto-> B -> F Fn A )"], "To fofn")
-    _create_entrance(regions["Menu"], regions["Prove forn: |- ( F : A -onto-> B -> ran F = B )"], "To forn")
-    _create_entrance(regions["Menu"], regions["Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )"], "To fveq2")
-    _create_entrance(regions["Menu"], regions["Prove id: |- ( ph -> ph )"], "To id")
-    _create_entrance(regions["Menu"], regions["Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"], "To nbbn")
-    _create_entrance(regions["Menu"], regions["Prove vx: setvar x"], "To vx")
-    _create_entrance(regions["Menu"], regions["Prove vy: setvar y"], "To vy")
-    _create_entrance(regions["Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )"], regions["Prove nsyl: |- ( ph -> -. ch )"], "From eleq2 to nsyl")
-    _create_entrance(regions["Prove fofn: |- ( F : A -onto-> B -> F Fn A )"], regions["Prove syl: |- ( ph -> ch )"], "From fofn to syl")
-    _create_entrance(regions["Prove forn: |- ( F : A -onto-> B -> ran F = B )"], regions["Prove eleqtrrid: |- ( ph -> A e. C )"], "From forn to eleqtrrid")
-    _create_entrance(regions["Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )"], regions["Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"], "From fveq2 to eleq12d")
-    _create_entrance(regions["Prove id: |- ( ph -> ph )"], regions["Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"], "From id to eleq12d")
+    _create_entrance(regions["Menu"], regions["Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )"], "To eleq2")
+    _create_entrance(regions["Menu"], regions["Given fofn: |- ( F : A -onto-> B -> F Fn A )"], "To fofn")
+    _create_entrance(regions["Menu"], regions["Given forn: |- ( F : A -onto-> B -> ran F = B )"], "To forn")
+    _create_entrance(regions["Menu"], regions["Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )"], "To fveq2")
+    _create_entrance(regions["Menu"], regions["Given id: |- ( ph -> ph )"], "To id")
+    _create_entrance(regions["Menu"], regions["Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"], "To nbbn")
+    _create_entrance(regions["Menu"], regions["Given vx: setvar x"], "To vx")
+    _create_entrance(regions["Menu"], regions["Given vy: setvar y"], "To vy")
+    _create_entrance(regions["Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )"], regions["Prove nsyl: |- ( ph -> -. ch )"], "From eleq2 to nsyl")
+    _create_entrance(regions["Given fofn: |- ( F : A -onto-> B -> F Fn A )"], regions["Prove syl: |- ( ph -> ch )"], "From fofn to syl")
+    _create_entrance(regions["Given forn: |- ( F : A -onto-> B -> ran F = B )"], regions["Prove eleqtrrid: |- ( ph -> A e. C )"], "From forn to eleqtrrid")
+    _create_entrance(regions["Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )"], regions["Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"], "From fveq2 to eleq12d")
+    _create_entrance(regions["Given id: |- ( ph -> ph )"], regions["Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"], "From id to eleq12d")
     _create_entrance(regions["Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"], regions["Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )"], "From eleq12d to notbid")
-    _create_entrance(regions["Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"], regions["Prove sylib: |- ( ph -> ch )"], "From nbbn to sylib")
+    _create_entrance(regions["Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"], regions["Prove sylib: |- ( ph -> ch )"], "From nbbn to sylib")
     _create_entrance(regions["Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )"], regions["Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )"], "From notbid to elrab")
-    _create_entrance(regions["Prove vx: setvar x"], regions["Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )"], "From vx to elrab")
-    _create_entrance(regions["Prove vx: setvar x"], regions["Prove ssrab2: |- { x e. A | ph } C_ A"], "From vx to ssrab2")
+    _create_entrance(regions["Given vx: setvar x"], regions["Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )"], "From vx to elrab")
+    _create_entrance(regions["Given vx: setvar x"], regions["Prove ssrab2: |- { x e. A | ph } C_ A"], "From vx to ssrab2")
     _create_entrance(regions["Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\ ps ) )"], regions["Prove baibr: |- ( ps -> ( ch <-> ph ) )"], "From elrab to baibr")
     _create_entrance(regions["Prove baibr: |- ( ps -> ( ch <-> ph ) )"], regions["Prove sylib: |- ( ph -> ch )"], "From baibr to sylib")
     _create_entrance(regions["Prove ssrab2: |- { x e. A | ph } C_ A"], regions["Prove elpwi2: |- A e. ~P B"], "From ssrab2 to elpwi2")
@@ -76,8 +76,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Prove eleqtrrid: |- ( ph -> A e. C )"], regions["Prove pm2.65i: |- -. ph"], "From eleqtrrid to pm2.65i")
     _create_entrance(regions["Prove sylib: |- ( ph -> ch )"], regions["Prove nsyl: |- ( ph -> -. ch )"], "From sylib to nsyl")
     _create_entrance(regions["Prove nsyl: |- ( ph -> -. ch )"], regions["Prove nrex: |- -. E. x e. A ps"], "From nsyl to nrex")
-    _create_entrance(regions["Prove vy: setvar y"], regions["Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."], "From vy to fvelrnb")
-    _create_entrance(regions["Prove vy: setvar y"], regions["Prove nrex: |- -. E. x e. A ps"], "From vy to nrex")
+    _create_entrance(regions["Given vy: setvar y"], regions["Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."], "From vy to fvelrnb")
+    _create_entrance(regions["Given vy: setvar y"], regions["Prove nrex: |- -. E. x e. A ps"], "From vy to nrex")
     _create_entrance(regions["Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."], regions["Prove syl: |- ( ph -> ch )"], "From fvelrnb to syl")
     _create_entrance(regions["Prove nrex: |- -. E. x e. A ps"], regions["Prove mtbiri: |- ( ph -> -. ps )"], "From nrex to mtbiri")
     _create_entrance(regions["Prove syl: |- ( ph -> ch )"], regions["Prove mtbiri: |- ( ph -> -. ps )"], "From syl to mtbiri")

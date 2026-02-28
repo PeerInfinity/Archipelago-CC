@@ -22,195 +22,195 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From dvdsfac to syl2anc", player),
-        HasAll('Proved Statement 1', 'Proved Statement 23', 'Proved Statement 4', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
+        HasAll('Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...', 'Proved syl: |- ( ph -> ch )', 'Proved adantl: |- ( ( ch /\\ ph ) -> ps )', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From elfzuz to adantl", player),
-        HasAll('Proved Statement 3', 'elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )')
+        HasAll('Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )', 'elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From adantl to syl", player),
-        HasAll('Proved Statement 4', 'Proved Statement 7', 'adantl: |- ( ( ch /\\ ph ) -> ps )', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
+        HasAll('Proved adantl: |- ( ( ch /\\ ph ) -> ps )', 'Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )', 'adantl: |- ( ( ch /\\ ph ) -> ps )', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From adantl to syl2anc", player),
-        HasAll('Proved Statement 1', 'Proved Statement 23', 'Proved Statement 4', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
+        HasAll('Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...', 'Proved syl: |- ( ph -> ch )', 'Proved adantl: |- ( ( ch /\\ ph ) -> ps )', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eluz2nn to ad2antrr", player),
-        HasAll('Proved Statement 7', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
+        HasAll('Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eluz2nn to syl", player),
-        HasAll('Proved Statement 4', 'Proved Statement 7', 'adantl: |- ( ( ch /\\ ph ) -> ps )', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
+        HasAll('Proved adantl: |- ( ( ch /\\ ph ) -> ps )', 'Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )', 'adantl: |- ( ( ch /\\ ph ) -> ps )', 'eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ad2antrr to 3syl", player),
-        HasAll('Proved Statement 10', 'Proved Statement 12', 'Proved Statement 8', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
+        HasAll('Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From faccl to 3syl", player),
-        HasAll('Proved Statement 10', 'Proved Statement 12', 'Proved Statement 8', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
+        HasAll('Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ndvdsp1 to syl3anc", player),
-        HasAll('Proved Statement 11', 'Proved Statement 14', 'Proved Statement 23', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
+        HasAll('Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...', 'Proved nnzd: |- ( ph -> A e. ZZ )', 'Proved syl: |- ( ph -> ch )', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nnm1nn0 to 3syl", player),
-        HasAll('Proved Statement 10', 'Proved Statement 12', 'Proved Statement 8', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
+        HasAll('Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )', 'faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )', 'nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )', 'ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From 3syl to nnzd", player),
-        HasAll('Proved Statement 13', '3syl: |- ( ph -> th )')
+        HasAll('Proved 3syl: |- ( ph -> th )', '3syl: |- ( ph -> th )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nnzd to peano2zd", player),
-        HasAll('Proved Statement 14', 'nnzd: |- ( ph -> A e. ZZ )')
+        HasAll('Proved nnzd: |- ( ph -> A e. ZZ )', 'nnzd: |- ( ph -> A e. ZZ )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From nnzd to syl3anc", player),
-        HasAll('Proved Statement 11', 'Proved Statement 14', 'Proved Statement 23', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
+        HasAll('Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...', 'Proved nnzd: |- ( ph -> A e. ZZ )', 'Proved syl: |- ( ph -> ch )', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From oveq1 to oveq1d", player),
-        HasAll('Proved Statement 15', 'oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )')
+        HasAll('Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )', 'oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From oveq1d to eleq1d", player),
-        HasAll('Proved Statement 16', 'oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )')
+        HasAll('Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )', 'oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From prmuz2 to jca", player),
-        HasAll('Proved Statement 19', 'prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )')
+        HasAll('Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )', 'prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From jca to impbii", player),
-        HasAll('Proved Statement 20', 'Proved Statement 32', 'jca: |- ( ph -> ( ps /\\ ch ) )', 'sylanbrc: |- ( ph -> th )')
+        HasAll('Proved jca: |- ( ph -> ( ps /\\ ch ) )', 'Proved sylanbrc: |- ( ph -> th )', 'jca: |- ( ph -> ( ps /\\ ch ) )', 'sylanbrc: |- ( ph -> th )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From simpl to sylanbrc", player),
-        HasAll('Proved Statement 21', 'Proved Statement 30', 'Proved Statement 31', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
+        HasAll('Given simpl: |- ( ( ph /\\ ps ) -> ph )', 'Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...', 'Proved ralrimiva: |- ( ph -> A. x e. A ps )', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From simplr to mpan2d", player),
-        HasAll('Proved Statement 22', 'Proved Statement 25', 'simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'syl3anc: |- ( ph -> ta )')
+        HasAll('Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'Proved syl3anc: |- ( ph -> ta )', 'simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'syl3anc: |- ( ph -> ta )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl to syl2anc", player),
-        HasAll('Proved Statement 1', 'Proved Statement 23', 'Proved Statement 4', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
+        HasAll('Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...', 'Proved syl: |- ( ph -> ch )', 'Proved adantl: |- ( ( ch /\\ ph ) -> ps )', 'dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )', 'syl: |- ( ph -> ch )', 'adantl: |- ( ( ch /\\ ph ) -> ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl to syl3anc", player),
-        HasAll('Proved Statement 11', 'Proved Statement 14', 'Proved Statement 23', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
+        HasAll('Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...', 'Proved nnzd: |- ( ph -> A e. ZZ )', 'Proved syl: |- ( ph -> ch )', 'ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...', 'nnzd: |- ( ph -> A e. ZZ )', 'syl: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl2anc to mpd", player),
-        HasAll('Proved Statement 24', 'Proved Statement 25', 'syl2anc: |- ( ph -> th )', 'syl3anc: |- ( ph -> ta )')
+        HasAll('Proved syl2anc: |- ( ph -> th )', 'Proved syl3anc: |- ( ph -> ta )', 'syl2anc: |- ( ph -> th )', 'syl3anc: |- ( ph -> ta )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl3anc to mpan2d", player),
-        HasAll('Proved Statement 22', 'Proved Statement 25', 'simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'syl3anc: |- ( ph -> ta )')
+        HasAll('Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'Proved syl3anc: |- ( ph -> ta )', 'simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )', 'syl3anc: |- ( ph -> ta )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From syl3anc to mpd", player),
-        HasAll('Proved Statement 24', 'Proved Statement 25', 'syl2anc: |- ( ph -> th )', 'syl3anc: |- ( ph -> ta )')
+        HasAll('Proved syl2anc: |- ( ph -> th )', 'Proved syl3anc: |- ( ph -> ta )', 'syl2anc: |- ( ph -> th )', 'syl3anc: |- ( ph -> ta )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mpan2d to mtod", player),
-        HasAll('Proved Statement 26', 'Proved Statement 27', 'mpan2d: |- ( ph -> ( ps -> th ) )', 'mpd: |- ( ph -> ch )')
+        HasAll('Proved mpan2d: |- ( ph -> ( ps -> th ) )', 'Proved mpd: |- ( ph -> ch )', 'mpan2d: |- ( ph -> ( ps -> th ) )', 'mpd: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mpd to mtod", player),
-        HasAll('Proved Statement 26', 'Proved Statement 27', 'mpan2d: |- ( ph -> ( ps -> th ) )', 'mpd: |- ( ph -> ch )')
+        HasAll('Proved mpan2d: |- ( ph -> ( ps -> th ) )', 'Proved mpd: |- ( ph -> ch )', 'mpan2d: |- ( ph -> ( ps -> th ) )', 'mpd: |- ( ph -> ch )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mtod to ralrimiva", player),
-        HasAll('Proved Statement 28', 'Proved Statement 29', 'mtod: |- ( ph -> -. ps )', 'vn: setvar n')
+        HasAll('Proved mtod: |- ( ph -> -. ps )', 'Given vn: setvar n', 'mtod: |- ( ph -> -. ps )', 'vn: setvar n')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vn to isprm3", player),
-        HasAll('Proved Statement 29', 'vn: setvar n')
+        HasAll('Given vn: setvar n', 'vn: setvar n')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vn to ralrimiva", player),
-        HasAll('Proved Statement 28', 'Proved Statement 29', 'mtod: |- ( ph -> -. ps )', 'vn: setvar n')
+        HasAll('Proved mtod: |- ( ph -> -. ps )', 'Given vn: setvar n', 'mtod: |- ( ph -> -. ps )', 'vn: setvar n')
     )
 
     world.set_rule(
         multiworld.get_entrance("From isprm3 to sylanbrc", player),
-        HasAll('Proved Statement 21', 'Proved Statement 30', 'Proved Statement 31', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
+        HasAll('Given simpl: |- ( ( ph /\\ ps ) -> ph )', 'Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...', 'Proved ralrimiva: |- ( ph -> A. x e. A ps )', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ralrimiva to sylanbrc", player),
-        HasAll('Proved Statement 21', 'Proved Statement 30', 'Proved Statement 31', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
+        HasAll('Given simpl: |- ( ( ph /\\ ps ) -> ph )', 'Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...', 'Proved ralrimiva: |- ( ph -> A. x e. A ps )', 'simpl: |- ( ( ph /\\ ps ) -> ph )', 'isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....', 'ralrimiva: |- ( ph -> A. x e. A ps )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sylanbrc to impbii", player),
-        HasAll('Proved Statement 20', 'Proved Statement 32', 'jca: |- ( ph -> ( ps /\\ ch ) )', 'sylanbrc: |- ( ph -> th )')
+        HasAll('Proved jca: |- ( ph -> ( ps /\\ ch ) )', 'Proved sylanbrc: |- ( ph -> th )', 'jca: |- ( ph -> ( ps /\\ ch ) )', 'sylanbrc: |- ( ph -> th )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vx to eleq2w", player),
-        HasAll('Proved Statement 34', 'Proved Statement 36', 'vx: setvar x', 'vz: setvar z')
+        HasAll('Given vx: setvar x', 'Given vz: setvar z', 'vx: setvar x', 'vz: setvar z')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vy to raleqbi1dv", player),
-        HasAll('Proved Statement 35', 'Proved Statement 37', 'vy: setvar y', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )')
+        HasAll('Given vy: setvar y', 'Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'vy: setvar y', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From vz to eleq2w", player),
-        HasAll('Proved Statement 34', 'Proved Statement 36', 'vx: setvar x', 'vz: setvar z')
+        HasAll('Given vx: setvar x', 'Given vz: setvar z', 'vx: setvar x', 'vz: setvar z')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eleq2w to raleqbi1dv", player),
-        HasAll('Proved Statement 35', 'Proved Statement 37', 'vy: setvar y', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )')
+        HasAll('Given vy: setvar y', 'Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'vy: setvar y', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From eleq2w to anbi12d", player),
-        HasAll('Proved Statement 37', 'Proved Statement 39', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'bitrid: |- ( ch -> ( ph <-> th ) )')
+        HasAll('Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'Proved bitrid: |- ( ch -> ( ph <-> th ) )', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'bitrid: |- ( ch -> ( ph <-> th ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From raleqbi1dv to bitrid", player),
-        HasAll('Proved Statement 38', 'raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )')
+        HasAll('Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )', 'raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From bitrid to anbi12d", player),
-        HasAll('Proved Statement 37', 'Proved Statement 39', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'bitrid: |- ( ch -> ( ph <-> th ) )')
+        HasAll('Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'Proved bitrid: |- ( ch -> ( ph <-> th ) )', 'eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )', 'bitrid: |- ( ch -> ( ph <-> th ) )')
     )

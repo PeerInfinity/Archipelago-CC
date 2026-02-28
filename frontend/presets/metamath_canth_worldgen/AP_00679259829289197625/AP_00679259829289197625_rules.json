@@ -15,56 +15,56 @@
         "exits": [
           {
             "name": "To eleq2",
-            "connected_region": "Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+            "connected_region": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To fofn",
-            "connected_region": "Prove fofn: |- ( F : A -onto-> B -> F Fn A )",
+            "connected_region": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To forn",
-            "connected_region": "Prove forn: |- ( F : A -onto-> B -> ran F = B )",
+            "connected_region": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To fveq2",
-            "connected_region": "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+            "connected_region": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To id",
-            "connected_region": "Prove id: |- ( ph -> ph )",
+            "connected_region": "Given id: |- ( ph -> ph )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To nbbn",
-            "connected_region": "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+            "connected_region": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vx",
-            "connected_region": "Prove vx: setvar x",
+            "connected_region": "Given vx: setvar x",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vy",
-            "connected_region": "Prove vy: setvar y",
+            "connected_region": "Given vy: setvar y",
             "access_rule": {
               "rule": "True_"
             }
@@ -72,8 +72,8 @@
         ],
         "locations": []
       },
-      "Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )": {
-        "name": "Prove eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+      "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )": {
+        "name": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
         "exits": [
           {
             "name": "From eleq2 to nsyl",
@@ -82,8 +82,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 15",
+                  "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+                  "Proved sylib: |- ( ph -> ch )",
                   "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
                   "sylib: |- ( ph -> ch )"
                 ]
@@ -93,8 +93,8 @@
         ],
         "locations": []
       },
-      "Prove fofn: |- ( F : A -onto-> B -> F Fn A )": {
-        "name": "Prove fofn: |- ( F : A -onto-> B -> F Fn A )",
+      "Given fofn: |- ( F : A -onto-> B -> F Fn A )": {
+        "name": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
         "exits": [
           {
             "name": "From fofn to syl",
@@ -103,8 +103,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 18",
-                  "Proved Statement 2",
+                  "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+                  "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
                   "fofn: |- ( F : A -onto-> B -> F Fn A )",
                   "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )"
                 ]
@@ -114,13 +114,13 @@
         ],
         "locations": [
           {
-            "name": "Prove fofn: |- ( F : A -onto-> B -> F Fn A )",
+            "name": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
             "id": 234790002,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "mtbiri: |- ( ph -> -. ps )",
+              "name": "sylib: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -134,7 +134,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 2",
+              "name": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -144,8 +144,8 @@
           }
         ]
       },
-      "Prove forn: |- ( F : A -onto-> B -> ran F = B )": {
-        "name": "Prove forn: |- ( F : A -onto-> B -> ran F = B )",
+      "Given forn: |- ( F : A -onto-> B -> ran F = B )": {
+        "name": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
         "exits": [
           {
             "name": "From forn to eleqtrrid",
@@ -154,8 +154,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 13",
-                  "Proved Statement 3",
+                  "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+                  "Proved elpwi2: |- A e. ~P B",
                   "elpwi2: |- A e. ~P B",
                   "forn: |- ( F : A -onto-> B -> ran F = B )"
                 ]
@@ -165,13 +165,13 @@
         ],
         "locations": [
           {
-            "name": "Prove forn: |- ( F : A -onto-> B -> ran F = B )",
+            "name": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
             "id": 234790003,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+              "name": "id: |- ( ph -> ph )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -185,7 +185,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 3",
+              "name": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -195,8 +195,8 @@
           }
         ]
       },
-      "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": {
-        "name": "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+      "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": {
+        "name": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
         "exits": [
           {
             "name": "From fveq2 to eleq12d",
@@ -205,8 +205,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
-                  "Proved Statement 5",
+                  "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+                  "Given id: |- ( ph -> ph )",
                   "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
                   "id: |- ( ph -> ph )"
                 ]
@@ -216,13 +216,13 @@
         ],
         "locations": [
           {
-            "name": "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+            "name": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
             "id": 234790004,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "id: |- ( ph -> ph )",
+              "name": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -236,7 +236,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 4",
+              "name": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -246,8 +246,8 @@
           }
         ]
       },
-      "Prove id: |- ( ph -> ph )": {
-        "name": "Prove id: |- ( ph -> ph )",
+      "Given id: |- ( ph -> ph )": {
+        "name": "Given id: |- ( ph -> ph )",
         "exits": [
           {
             "name": "From id to eleq12d",
@@ -256,8 +256,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
-                  "Proved Statement 5",
+                  "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+                  "Given id: |- ( ph -> ph )",
                   "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
                   "id: |- ( ph -> ph )"
                 ]
@@ -267,13 +267,13 @@
         ],
         "locations": [
           {
-            "name": "Prove id: |- ( ph -> ph )",
+            "name": "Given id: |- ( ph -> ph )",
             "id": 234790005,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+              "name": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -287,7 +287,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 5",
+              "name": "Given id: |- ( ph -> ph )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -307,7 +307,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 6",
+                  "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
                   "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"
                 ]
               }
@@ -322,7 +322,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "syl: |- ( ph -> ch )",
+              "name": "ssrab2: |- { x e. A | ph } C_ A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -336,7 +336,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 6",
+              "name": "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -346,8 +346,8 @@
           }
         ]
       },
-      "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": {
-        "name": "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+      "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": {
+        "name": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
         "exits": [
           {
             "name": "From nbbn to sylib",
@@ -356,8 +356,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
-                  "Proved Statement 7",
+                  "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+                  "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
                   "baibr: |- ( ps -> ( ch <-> ph ) )",
                   "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"
                 ]
@@ -367,13 +367,13 @@
         ],
         "locations": [
           {
-            "name": "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+            "name": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
             "id": 234790007,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+              "name": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -387,7 +387,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 7",
+              "name": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -407,8 +407,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 8",
-                  "Proved Statement 9",
+                  "Given vx: setvar x",
+                  "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
                   "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
                   "vx: setvar x"
                 ]
@@ -424,7 +424,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "fofn: |- ( F : A -onto-> B -> F Fn A )",
+              "name": "nsyl: |- ( ph -> -. ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -438,7 +438,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 8",
+              "name": "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -448,8 +448,8 @@
           }
         ]
       },
-      "Prove vx: setvar x": {
-        "name": "Prove vx: setvar x",
+      "Given vx: setvar x": {
+        "name": "Given vx: setvar x",
         "exits": [
           {
             "name": "From vx to elrab",
@@ -458,8 +458,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 8",
-                  "Proved Statement 9",
+                  "Given vx: setvar x",
+                  "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
                   "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
                   "vx: setvar x"
                 ]
@@ -473,7 +473,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 9",
+                  "Given vx: setvar x",
                   "vx: setvar x"
                 ]
               }
@@ -482,13 +482,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vx: setvar x",
+            "name": "Given vx: setvar x",
             "id": 234790009,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "vy: setvar y",
+              "name": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -502,7 +502,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 9",
+              "name": "Given vx: setvar x",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -522,7 +522,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 10",
+                  "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
                   "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )"
                 ]
               }
@@ -537,7 +537,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "baibr: |- ( ps -> ( ch <-> ph ) )",
+              "name": "elpwi2: |- A e. ~P B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -551,7 +551,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 10",
+              "name": "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -571,8 +571,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
-                  "Proved Statement 7",
+                  "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+                  "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
                   "baibr: |- ( ps -> ( ch <-> ph ) )",
                   "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )"
                 ]
@@ -588,7 +588,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "sylib: |- ( ph -> ch )",
+              "name": "baibr: |- ( ps -> ( ch <-> ph ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -602,7 +602,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 11",
+              "name": "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -622,7 +622,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 12",
+                  "Proved ssrab2: |- { x e. A | ph } C_ A",
                   "ssrab2: |- { x e. A | ph } C_ A"
                 ]
               }
@@ -637,7 +637,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+              "name": "vy: setvar y",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -651,7 +651,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 12",
+              "name": "Proved ssrab2: |- { x e. A | ph } C_ A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -671,8 +671,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 13",
-                  "Proved Statement 3",
+                  "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+                  "Proved elpwi2: |- A e. ~P B",
                   "elpwi2: |- A e. ~P B",
                   "forn: |- ( F : A -onto-> B -> ran F = B )"
                 ]
@@ -688,7 +688,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+              "name": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -702,7 +702,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 13",
+              "name": "Proved elpwi2: |- A e. ~P B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -722,8 +722,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 14",
-                  "Proved Statement 21",
+                  "Proved eleqtrrid: |- ( ph -> A e. C )",
+                  "Proved mtbiri: |- ( ph -> -. ps )",
                   "eleqtrrid: |- ( ph -> A e. C )",
                   "mtbiri: |- ( ph -> -. ps )"
                 ]
@@ -739,7 +739,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "nrex: |- -. E. x e. A ps",
+              "name": "syl: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -753,7 +753,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 14",
+              "name": "Proved eleqtrrid: |- ( ph -> A e. C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -773,8 +773,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 15",
+                  "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+                  "Proved sylib: |- ( ph -> ch )",
                   "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
                   "sylib: |- ( ph -> ch )"
                 ]
@@ -790,7 +790,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "nsyl: |- ( ph -> -. ch )",
+              "name": "eleqtrrid: |- ( ph -> A e. C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -804,7 +804,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 15",
+              "name": "Proved sylib: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -824,8 +824,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 16",
-                  "Proved Statement 17",
+                  "Given vy: setvar y",
+                  "Proved nsyl: |- ( ph -> -. ch )",
                   "nsyl: |- ( ph -> -. ch )",
                   "vy: setvar y"
                 ]
@@ -841,7 +841,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "elpwi2: |- A e. ~P B",
+              "name": "forn: |- ( F : A -onto-> B -> ran F = B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -855,7 +855,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 16",
+              "name": "Proved nsyl: |- ( ph -> -. ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -865,8 +865,8 @@
           }
         ]
       },
-      "Prove vy: setvar y": {
-        "name": "Prove vy: setvar y",
+      "Given vy: setvar y": {
+        "name": "Given vy: setvar y",
         "exits": [
           {
             "name": "From vy to fvelrnb",
@@ -875,7 +875,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 17",
+                  "Given vy: setvar y",
                   "vy: setvar y"
                 ]
               }
@@ -888,8 +888,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 16",
-                  "Proved Statement 17",
+                  "Given vy: setvar y",
+                  "Proved nsyl: |- ( ph -> -. ch )",
                   "nsyl: |- ( ph -> -. ch )",
                   "vy: setvar y"
                 ]
@@ -899,13 +899,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vy: setvar y",
+            "name": "Given vy: setvar y",
             "id": 234790017,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "ssrab2: |- { x e. A | ph } C_ A",
+              "name": "vx: setvar x",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -919,7 +919,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 17",
+              "name": "Given vy: setvar y",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -939,8 +939,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 18",
-                  "Proved Statement 2",
+                  "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+                  "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
                   "fofn: |- ( F : A -onto-> B -> F Fn A )",
                   "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )"
                 ]
@@ -956,7 +956,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
+              "name": "fofn: |- ( F : A -onto-> B -> F Fn A )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -970,7 +970,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 18",
+              "name": "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -990,8 +990,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 19",
-                  "Proved Statement 20",
+                  "Proved nrex: |- -. E. x e. A ps",
+                  "Proved syl: |- ( ph -> ch )",
                   "nrex: |- -. E. x e. A ps",
                   "syl: |- ( ph -> ch )"
                 ]
@@ -1007,7 +1007,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "forn: |- ( F : A -onto-> B -> ran F = B )",
+              "name": "nrex: |- -. E. x e. A ps",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1021,7 +1021,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 19",
+              "name": "Proved nrex: |- -. E. x e. A ps",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1041,8 +1041,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 19",
-                  "Proved Statement 20",
+                  "Proved nrex: |- -. E. x e. A ps",
+                  "Proved syl: |- ( ph -> ch )",
                   "nrex: |- -. E. x e. A ps",
                   "syl: |- ( ph -> ch )"
                 ]
@@ -1058,7 +1058,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "vx: setvar x",
+              "name": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1072,7 +1072,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 20",
+              "name": "Proved syl: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1092,8 +1092,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 14",
-                  "Proved Statement 21",
+                  "Proved eleqtrrid: |- ( ph -> A e. C )",
+                  "Proved mtbiri: |- ( ph -> -. ps )",
                   "eleqtrrid: |- ( ph -> A e. C )",
                   "mtbiri: |- ( ph -> -. ps )"
                 ]
@@ -1109,7 +1109,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "eleqtrrid: |- ( ph -> A e. C )",
+              "name": "mtbiri: |- ( ph -> -. ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1123,7 +1123,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 21",
+              "name": "Proved mtbiri: |- ( ph -> -. ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1158,7 +1158,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 22",
+              "name": "Proved pm2.65i: |- -. ph",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2300,8 +2300,9 @@
         "type": null,
         "max_count": 1
       },
-      "Proved Statement 2": {
-        "name": "Proved Statement 2",
+      "Given fofn: |- ( F : A -onto-> B -> F Fn A )": {
+        "name": "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
+        "hint_text": "Given fofn: |  ( F : A  onto > B  > F Fn A )",
         "id": null,
         "groups": [
           "Event"
@@ -2311,8 +2312,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 3": {
-        "name": "Proved Statement 3",
+      "Given forn: |- ( F : A -onto-> B -> ran F = B )": {
+        "name": "Given forn: |- ( F : A -onto-> B -> ran F = B )",
+        "hint_text": "Given forn: |  ( F : A  onto > B  > ran F = B )",
         "id": null,
         "groups": [
           "Event"
@@ -2322,8 +2324,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 4": {
-        "name": "Proved Statement 4",
+      "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": {
+        "name": "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+        "hint_text": "Given fveq2: |  ( A = B  > ( F ` A ) = ( F ` B ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2333,8 +2336,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 5": {
-        "name": "Proved Statement 5",
+      "Given id: |- ( ph -> ph )": {
+        "name": "Given id: |- ( ph -> ph )",
+        "hint_text": "Given id: |  ( ph  > ph )",
         "id": null,
         "groups": [
           "Event"
@@ -2344,8 +2348,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 6": {
-        "name": "Proved Statement 6",
+      "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": {
+        "name": "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
+        "hint_text": "Proved eleq12d: |  ( ph  > ( A e. C < > B e. D ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2355,8 +2360,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 7": {
-        "name": "Proved Statement 7",
+      "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": {
+        "name": "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+        "hint_text": "Given nbbn: |  ( (  . ph < > ps ) < >  . ( ph < > ps ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2366,8 +2372,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 8": {
-        "name": "Proved Statement 8",
+      "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )": {
+        "name": "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
+        "hint_text": "Proved notbid: |  ( ph  > (  . ps < >  . ch ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2377,8 +2384,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 9": {
-        "name": "Proved Statement 9",
+      "Given vx: setvar x": {
+        "name": "Given vx: setvar x",
         "id": null,
         "groups": [
           "Event"
@@ -2388,8 +2395,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 10": {
-        "name": "Proved Statement 10",
+      "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )": {
+        "name": "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
+        "hint_text": "Proved elrab: |  ( A e. { x e. B | ph } < > ( A e. B /\\ ps ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2399,8 +2407,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 11": {
-        "name": "Proved Statement 11",
+      "Proved baibr: |- ( ps -> ( ch <-> ph ) )": {
+        "name": "Proved baibr: |- ( ps -> ( ch <-> ph ) )",
+        "hint_text": "Proved baibr: |  ( ps  > ( ch < > ph ) )",
         "id": null,
         "groups": [
           "Event"
@@ -2410,8 +2419,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 12": {
-        "name": "Proved Statement 12",
+      "Proved ssrab2: |- { x e. A | ph } C_ A": {
+        "name": "Proved ssrab2: |- { x e. A | ph } C_ A",
+        "hint_text": "Proved ssrab2: |  { x e. A | ph } C  A",
         "id": null,
         "groups": [
           "Event"
@@ -2421,8 +2431,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 13": {
-        "name": "Proved Statement 13",
+      "Proved elpwi2: |- A e. ~P B": {
+        "name": "Proved elpwi2: |- A e. ~P B",
+        "hint_text": "Proved elpwi2: |  A e. ~P B",
         "id": null,
         "groups": [
           "Event"
@@ -2432,8 +2443,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 14": {
-        "name": "Proved Statement 14",
+      "Proved eleqtrrid: |- ( ph -> A e. C )": {
+        "name": "Proved eleqtrrid: |- ( ph -> A e. C )",
+        "hint_text": "Proved eleqtrrid: |  ( ph  > A e. C )",
         "id": null,
         "groups": [
           "Event"
@@ -2443,8 +2455,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 15": {
-        "name": "Proved Statement 15",
+      "Proved sylib: |- ( ph -> ch )": {
+        "name": "Proved sylib: |- ( ph -> ch )",
+        "hint_text": "Proved sylib: |  ( ph  > ch )",
         "id": null,
         "groups": [
           "Event"
@@ -2454,8 +2467,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 16": {
-        "name": "Proved Statement 16",
+      "Proved nsyl: |- ( ph -> -. ch )": {
+        "name": "Proved nsyl: |- ( ph -> -. ch )",
+        "hint_text": "Proved nsyl: |  ( ph  >  . ch )",
         "id": null,
         "groups": [
           "Event"
@@ -2465,8 +2479,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 17": {
-        "name": "Proved Statement 17",
+      "Given vy: setvar y": {
+        "name": "Given vy: setvar y",
         "id": null,
         "groups": [
           "Event"
@@ -2476,8 +2490,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 18": {
-        "name": "Proved Statement 18",
+      "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...": {
+        "name": "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...",
+        "hint_text": "Proved fvelrnb: |  ( F Fn A  > ( B e. ran F < > E. x e. A ( F `...",
         "id": null,
         "groups": [
           "Event"
@@ -2487,8 +2502,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 19": {
-        "name": "Proved Statement 19",
+      "Proved nrex: |- -. E. x e. A ps": {
+        "name": "Proved nrex: |- -. E. x e. A ps",
+        "hint_text": "Proved nrex: |   . E. x e. A ps",
         "id": null,
         "groups": [
           "Event"
@@ -2498,8 +2514,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 20": {
-        "name": "Proved Statement 20",
+      "Proved syl: |- ( ph -> ch )": {
+        "name": "Proved syl: |- ( ph -> ch )",
+        "hint_text": "Proved syl: |  ( ph  > ch )",
         "id": null,
         "groups": [
           "Event"
@@ -2509,8 +2526,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 21": {
-        "name": "Proved Statement 21",
+      "Proved mtbiri: |- ( ph -> -. ps )": {
+        "name": "Proved mtbiri: |- ( ph -> -. ps )",
+        "hint_text": "Proved mtbiri: |  ( ph  >  . ps )",
         "id": null,
         "groups": [
           "Event"
@@ -2520,8 +2538,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 22": {
-        "name": "Proved Statement 22",
+      "Proved pm2.65i: |- -. ph": {
+        "name": "Proved pm2.65i: |- -. ph",
+        "hint_text": "Proved pm2.65i: |   . ph",
         "id": null,
         "groups": [
           "Event"
@@ -2531,8 +2550,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 1": {
-        "name": "Proved Statement 1",
+      "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )": {
+        "name": "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
+        "hint_text": "Given eleq2: |  ( A = B  > ( C e. A < > C e. B ) )",
         "id": null,
         "groups": [],
         "classification": "progression",
@@ -2550,28 +2570,28 @@
   },
   "itempool_counts": {
     "1": {
-      "Proved Statement 1": 1,
-      "Proved Statement 10": 1,
-      "Proved Statement 11": 1,
-      "Proved Statement 12": 1,
-      "Proved Statement 13": 1,
-      "Proved Statement 14": 1,
-      "Proved Statement 15": 1,
-      "Proved Statement 16": 1,
-      "Proved Statement 17": 1,
-      "Proved Statement 18": 1,
-      "Proved Statement 19": 1,
-      "Proved Statement 2": 1,
-      "Proved Statement 20": 1,
-      "Proved Statement 21": 1,
-      "Proved Statement 22": 1,
-      "Proved Statement 3": 1,
-      "Proved Statement 4": 1,
-      "Proved Statement 5": 1,
-      "Proved Statement 6": 1,
-      "Proved Statement 7": 1,
-      "Proved Statement 8": 1,
-      "Proved Statement 9": 1,
+      "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )": 1,
+      "Given fofn: |- ( F : A -onto-> B -> F Fn A )": 1,
+      "Given forn: |- ( F : A -onto-> B -> ran F = B )": 1,
+      "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": 1,
+      "Given id: |- ( ph -> ph )": 1,
+      "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": 1,
+      "Given vx: setvar x": 1,
+      "Given vy: setvar y": 1,
+      "Proved baibr: |- ( ps -> ( ch <-> ph ) )": 1,
+      "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": 1,
+      "Proved eleqtrrid: |- ( ph -> A e. C )": 1,
+      "Proved elpwi2: |- A e. ~P B": 1,
+      "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )": 1,
+      "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...": 1,
+      "Proved mtbiri: |- ( ph -> -. ps )": 1,
+      "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )": 1,
+      "Proved nrex: |- -. E. x e. A ps": 1,
+      "Proved nsyl: |- ( ph -> -. ch )": 1,
+      "Proved pm2.65i: |- -. ph": 1,
+      "Proved ssrab2: |- { x e. A | ph } C_ A": 1,
+      "Proved syl: |- ( ph -> ch )": 1,
+      "Proved sylib: |- ( ph -> ch )": 1,
       "baibr: |- ( ps -> ( ch <-> ph ) )": 1,
       "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": 1,
       "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )": 1,
@@ -2598,14 +2618,14 @@
   },
   "canonical_placements": {
     "1": {
-      "Prove fofn: |- ( F : A -onto-> B -> F Fn A )": "fofn: |- ( F : A -onto-> B -> F Fn A )",
-      "Prove forn: |- ( F : A -onto-> B -> ran F = B )": "forn: |- ( F : A -onto-> B -> ran F = B )",
-      "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-      "Prove id: |- ( ph -> ph )": "id: |- ( ph -> ph )",
+      "Given fofn: |- ( F : A -onto-> B -> F Fn A )": "fofn: |- ( F : A -onto-> B -> F Fn A )",
+      "Given forn: |- ( F : A -onto-> B -> ran F = B )": "forn: |- ( F : A -onto-> B -> ran F = B )",
+      "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+      "Given id: |- ( ph -> ph )": "id: |- ( ph -> ph )",
       "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-      "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+      "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
       "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-      "Prove vx: setvar x": "vx: setvar x",
+      "Given vx: setvar x": "vx: setvar x",
       "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
       "Prove baibr: |- ( ps -> ( ch <-> ph ) )": "baibr: |- ( ps -> ( ch <-> ph ) )",
       "Prove ssrab2: |- { x e. A | ph } C_ A": "ssrab2: |- { x e. A | ph } C_ A",
@@ -2613,7 +2633,7 @@
       "Prove eleqtrrid: |- ( ph -> A e. C )": "eleqtrrid: |- ( ph -> A e. C )",
       "Prove sylib: |- ( ph -> ch )": "sylib: |- ( ph -> ch )",
       "Prove nsyl: |- ( ph -> -. ch )": "nsyl: |- ( ph -> -. ch )",
-      "Prove vy: setvar y": "vy: setvar y",
+      "Given vy: setvar y": "vy: setvar y",
       "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
       "Prove nrex: |- -. E. x e. A ps": "nrex: |- -. E. x e. A ps",
       "Prove syl: |- ( ph -> ch )": "syl: |- ( ph -> ch )",
@@ -2626,7 +2646,7 @@
   "starting_items": {
     "1": [
       "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-      "Proved Statement 1"
+      "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )"
     ]
   },
   "world": {
@@ -2764,14 +2784,14 @@
       "num_statements": 22,
       "preset_label": "canth s6",
       "canonical_placements": {
-        "Prove fofn: |- ( F : A -onto-> B -> F Fn A )": "fofn: |- ( F : A -onto-> B -> F Fn A )",
-        "Prove forn: |- ( F : A -onto-> B -> ran F = B )": "forn: |- ( F : A -onto-> B -> ran F = B )",
-        "Prove fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-        "Prove id: |- ( ph -> ph )": "id: |- ( ph -> ph )",
+        "Given fofn: |- ( F : A -onto-> B -> F Fn A )": "fofn: |- ( F : A -onto-> B -> F Fn A )",
+        "Given forn: |- ( F : A -onto-> B -> ran F = B )": "forn: |- ( F : A -onto-> B -> ran F = B )",
+        "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )": "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
+        "Given id: |- ( ph -> ph )": "id: |- ( ph -> ph )",
         "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-        "Prove nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
+        "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )": "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
         "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )": "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-        "Prove vx: setvar x": "vx: setvar x",
+        "Given vx: setvar x": "vx: setvar x",
         "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )": "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
         "Prove baibr: |- ( ps -> ( ch <-> ph ) )": "baibr: |- ( ps -> ( ch <-> ph ) )",
         "Prove ssrab2: |- { x e. A | ph } C_ A": "ssrab2: |- { x e. A | ph } C_ A",
@@ -2779,7 +2799,7 @@
         "Prove eleqtrrid: |- ( ph -> A e. C )": "eleqtrrid: |- ( ph -> A e. C )",
         "Prove sylib: |- ( ph -> ch )": "sylib: |- ( ph -> ch )",
         "Prove nsyl: |- ( ph -> -. ch )": "nsyl: |- ( ph -> -. ch )",
-        "Prove vy: setvar y": "vy: setvar y",
+        "Given vy: setvar y": "vy: setvar y",
         "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...": "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
         "Prove nrex: |- -. E. x e. A ps": "nrex: |- -. E. x e. A ps",
         "Prove syl: |- ( ph -> ch )": "syl: |- ( ph -> ch )",
@@ -2788,411 +2808,411 @@
       "location_dependencies": {
         "Proved Statement 6": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "Proved Statement 8": [
           "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Proved Statement 6"
+          "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"
         ],
         "Proved Statement 10": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "Proved Statement 11": [
           "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Proved Statement 10"
+          "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )"
         ],
         "Proved Statement 12": [
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "Proved Statement 13": [
           "ssrab2: |- { x e. A | ph } C_ A",
-          "Proved Statement 12"
+          "Proved ssrab2: |- { x e. A | ph } C_ A"
         ],
         "Proved Statement 14": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "Proved Statement 15": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "Proved Statement 16": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "Proved Statement 18": [
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "Proved Statement 19": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "Proved Statement 20": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "Proved Statement 21": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Proved Statement 22": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ],
         "Prove eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "Prove notbid: |- ( ph -> ( -. ps <-> -. ch ) )": [
           "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Proved Statement 6"
+          "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"
         ],
         "Prove elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "Prove baibr: |- ( ps -> ( ch <-> ph ) )": [
           "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Proved Statement 10"
+          "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )"
         ],
         "Prove ssrab2: |- { x e. A | ph } C_ A": [
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "Prove elpwi2: |- A e. ~P B": [
           "ssrab2: |- { x e. A | ph } C_ A",
-          "Proved Statement 12"
+          "Proved ssrab2: |- { x e. A | ph } C_ A"
         ],
         "Prove eleqtrrid: |- ( ph -> A e. C )": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "Prove sylib: |- ( ph -> ch )": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "Prove nsyl: |- ( ph -> -. ch )": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "Prove fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `...": [
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "Prove nrex: |- -. E. x e. A ps": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "Prove syl: |- ( ph -> ch )": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "Prove mtbiri: |- ( ph -> -. ps )": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Prove pm2.65i: |- -. ph": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ]
       },
       "entrance_dependencies": {
         "From fveq2 to eleq12d": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "From id to eleq12d": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "From eleq12d to notbid": [
           "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Proved Statement 6"
+          "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"
         ],
         "From notbid to elrab": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From vx to elrab": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From elrab to baibr": [
           "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Proved Statement 10"
+          "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )"
         ],
         "From vx to ssrab2": [
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From ssrab2 to elpwi2": [
           "ssrab2: |- { x e. A | ph } C_ A",
-          "Proved Statement 12"
+          "Proved ssrab2: |- { x e. A | ph } C_ A"
         ],
         "From forn to eleqtrrid": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "From elpwi2 to eleqtrrid": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "From nbbn to sylib": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "From baibr to sylib": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "From eleq2 to nsyl": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "From sylib to nsyl": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "From vy to fvelrnb": [
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From nsyl to nrex": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From vy to nrex": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From fofn to syl": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "From fvelrnb to syl": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "From nrex to mtbiri": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl to mtbiri": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From eleqtrrid to pm2.65i": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ],
         "From mtbiri to pm2.65i": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ]
       },
       "exit_dependencies": {
         "From eleq2 to nsyl": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "From fofn to syl": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "From forn to eleqtrrid": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "From fveq2 to eleq12d": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "From id to eleq12d": [
           "fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
-          "Proved Statement 4",
+          "Given fveq2: |- ( A = B -> ( F ` A ) = ( F ` B ) )",
           "id: |- ( ph -> ph )",
-          "Proved Statement 5"
+          "Given id: |- ( ph -> ph )"
         ],
         "From eleq12d to notbid": [
           "eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )",
-          "Proved Statement 6"
+          "Proved eleq12d: |- ( ph -> ( A e. C <-> B e. D ) )"
         ],
         "From nbbn to sylib": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "From notbid to elrab": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From vx to elrab": [
           "notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
-          "Proved Statement 8",
+          "Proved notbid: |- ( ph -> ( -. ps <-> -. ch ) )",
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From vx to ssrab2": [
           "vx: setvar x",
-          "Proved Statement 9"
+          "Given vx: setvar x"
         ],
         "From elrab to baibr": [
           "elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
-          "Proved Statement 10"
+          "Proved elrab: |- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )"
         ],
         "From baibr to sylib": [
           "nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
-          "Proved Statement 7",
+          "Given nbbn: |- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
           "baibr: |- ( ps -> ( ch <-> ph ) )",
-          "Proved Statement 11"
+          "Proved baibr: |- ( ps -> ( ch <-> ph ) )"
         ],
         "From ssrab2 to elpwi2": [
           "ssrab2: |- { x e. A | ph } C_ A",
-          "Proved Statement 12"
+          "Proved ssrab2: |- { x e. A | ph } C_ A"
         ],
         "From elpwi2 to eleqtrrid": [
           "forn: |- ( F : A -onto-> B -> ran F = B )",
-          "Proved Statement 3",
+          "Given forn: |- ( F : A -onto-> B -> ran F = B )",
           "elpwi2: |- A e. ~P B",
-          "Proved Statement 13"
+          "Proved elpwi2: |- A e. ~P B"
         ],
         "From eleqtrrid to pm2.65i": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ],
         "From sylib to nsyl": [
           "eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
-          "Proved Statement 1",
+          "Given eleq2: |- ( A = B -> ( C e. A <-> C e. B ) )",
           "sylib: |- ( ph -> ch )",
-          "Proved Statement 15"
+          "Proved sylib: |- ( ph -> ch )"
         ],
         "From nsyl to nrex": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From vy to fvelrnb": [
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From vy to nrex": [
           "nsyl: |- ( ph -> -. ch )",
-          "Proved Statement 16",
+          "Proved nsyl: |- ( ph -> -. ch )",
           "vy: setvar y",
-          "Proved Statement 17"
+          "Given vy: setvar y"
         ],
         "From fvelrnb to syl": [
           "fofn: |- ( F : A -onto-> B -> F Fn A )",
-          "Proved Statement 2",
+          "Given fofn: |- ( F : A -onto-> B -> F Fn A )",
           "fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) )",
-          "Proved Statement 18"
+          "Proved fvelrnb: |- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F `..."
         ],
         "From nrex to mtbiri": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl to mtbiri": [
           "nrex: |- -. E. x e. A ps",
-          "Proved Statement 19",
+          "Proved nrex: |- -. E. x e. A ps",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 20"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From mtbiri to pm2.65i": [
           "eleqtrrid: |- ( ph -> A e. C )",
-          "Proved Statement 14",
+          "Proved eleqtrrid: |- ( ph -> A e. C )",
           "mtbiri: |- ( ph -> -. ps )",
-          "Proved Statement 21"
+          "Proved mtbiri: |- ( ph -> -. ps )"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
@@ -3398,7 +3418,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Proved Statement 22"
+        "item": "Proved pm2.65i: |- -. ph"
       }
     }
   },

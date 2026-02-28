@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Prove 2cn: |- 2 e. CC", "Prove ax-1cn: |- 1 e. CC", "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )", "Prove df-2: |- 2 = ( 1 + 1 )", "Prove df-3: |- 3 = ( 2 + 1 )", "Prove df-4: |- 4 = ( 3 + 1 )", "Prove oveq1i: |- ( A F C ) = ( B F C )", "Prove 3eqtri: |- A = D", "Prove oveq2i: |- ( C F A ) = ( C F B )", "Prove eqtr4i: |- A = C"]
+    region_names = ["Menu", "Given 2cn: |- 2 e. CC", "Axiom ax-1cn: |- 1 e. CC", "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )", "Definition df-2: |- 2 = ( 1 + 1 )", "Definition df-3: |- 3 = ( 2 + 1 )", "Definition df-4: |- 4 = ( 3 + 1 )", "Prove oveq1i: |- ( A F C ) = ( B F C )", "Prove 3eqtri: |- A = D", "Prove oveq2i: |- ( C F A ) = ( C F B )", "Prove eqtr4i: |- A = C"]
 
     regions = {}
     for region_name in region_names:
@@ -51,17 +51,17 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Prove 2cn: |- 2 e. CC"], "To 2cn")
-    _create_entrance(regions["Menu"], regions["Prove ax-1cn: |- 1 e. CC"], "To ax-1cn")
-    _create_entrance(regions["Menu"], regions["Prove df-2: |- 2 = ( 1 + 1 )"], "To df-2")
-    _create_entrance(regions["Menu"], regions["Prove df-3: |- 3 = ( 2 + 1 )"], "To df-3")
-    _create_entrance(regions["Menu"], regions["Prove df-4: |- 4 = ( 3 + 1 )"], "To df-4")
-    _create_entrance(regions["Prove 2cn: |- 2 e. CC"], regions["Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"], "From 2cn to addassi")
-    _create_entrance(regions["Prove ax-1cn: |- 1 e. CC"], regions["Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"], "From ax-1cn to addassi")
+    _create_entrance(regions["Menu"], regions["Given 2cn: |- 2 e. CC"], "To 2cn")
+    _create_entrance(regions["Menu"], regions["Axiom ax-1cn: |- 1 e. CC"], "To ax-1cn")
+    _create_entrance(regions["Menu"], regions["Definition df-2: |- 2 = ( 1 + 1 )"], "To df-2")
+    _create_entrance(regions["Menu"], regions["Definition df-3: |- 3 = ( 2 + 1 )"], "To df-3")
+    _create_entrance(regions["Menu"], regions["Definition df-4: |- 4 = ( 3 + 1 )"], "To df-4")
+    _create_entrance(regions["Given 2cn: |- 2 e. CC"], regions["Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"], "From 2cn to addassi")
+    _create_entrance(regions["Axiom ax-1cn: |- 1 e. CC"], regions["Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"], "From ax-1cn to addassi")
     _create_entrance(regions["Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"], regions["Prove 3eqtri: |- A = D"], "From addassi to 3eqtri")
-    _create_entrance(regions["Prove df-2: |- 2 = ( 1 + 1 )"], regions["Prove oveq2i: |- ( C F A ) = ( C F B )"], "From df-2 to oveq2i")
-    _create_entrance(regions["Prove df-3: |- 3 = ( 2 + 1 )"], regions["Prove oveq1i: |- ( A F C ) = ( B F C )"], "From df-3 to oveq1i")
-    _create_entrance(regions["Prove df-4: |- 4 = ( 3 + 1 )"], regions["Prove 3eqtri: |- A = D"], "From df-4 to 3eqtri")
+    _create_entrance(regions["Definition df-2: |- 2 = ( 1 + 1 )"], regions["Prove oveq2i: |- ( C F A ) = ( C F B )"], "From df-2 to oveq2i")
+    _create_entrance(regions["Definition df-3: |- 3 = ( 2 + 1 )"], regions["Prove oveq1i: |- ( A F C ) = ( B F C )"], "From df-3 to oveq1i")
+    _create_entrance(regions["Definition df-4: |- 4 = ( 3 + 1 )"], regions["Prove 3eqtri: |- A = D"], "From df-4 to 3eqtri")
     _create_entrance(regions["Prove oveq1i: |- ( A F C ) = ( B F C )"], regions["Prove 3eqtri: |- A = D"], "From oveq1i to 3eqtri")
     _create_entrance(regions["Prove 3eqtri: |- A = D"], regions["Prove eqtr4i: |- A = C"], "From 3eqtri to eqtr4i")
     _create_entrance(regions["Prove oveq2i: |- ( C F A ) = ( C F B )"], regions["Prove eqtr4i: |- A = C"], "From oveq2i to eqtr4i")

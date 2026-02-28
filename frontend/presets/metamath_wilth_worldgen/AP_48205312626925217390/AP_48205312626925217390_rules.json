@@ -15,126 +15,126 @@
         "exits": [
           {
             "name": "To dvdsfac",
-            "connected_region": "Prove dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+            "connected_region": "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To dvdstr",
-            "connected_region": "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
+            "connected_region": "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To elfzuz",
-            "connected_region": "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+            "connected_region": "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To elfzuz3",
-            "connected_region": "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+            "connected_region": "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To eluz2gt1",
-            "connected_region": "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+            "connected_region": "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To eluz2nn",
-            "connected_region": "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+            "connected_region": "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To eqid",
-            "connected_region": "Prove eqid: |- A = A",
+            "connected_region": "Given eqid: |- A = A",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To faccl",
-            "connected_region": "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+            "connected_region": "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To ndvdsp1",
-            "connected_region": "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+            "connected_region": "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To nnm1nn0",
-            "connected_region": "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+            "connected_region": "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To oveq1",
-            "connected_region": "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+            "connected_region": "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To prmuz2",
-            "connected_region": "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+            "connected_region": "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To simpl",
-            "connected_region": "Prove simpl: |- ( ( ph /\\ ps ) -> ph )",
+            "connected_region": "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To simplr",
-            "connected_region": "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+            "connected_region": "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vn",
-            "connected_region": "Prove vn: setvar n",
+            "connected_region": "Given vn: setvar n",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vx",
-            "connected_region": "Prove vx: setvar x",
+            "connected_region": "Given vx: setvar x",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vy",
-            "connected_region": "Prove vy: setvar y",
+            "connected_region": "Given vy: setvar y",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To vz",
-            "connected_region": "Prove vz: setvar z",
+            "connected_region": "Given vz: setvar z",
             "access_rule": {
               "rule": "True_"
             }
@@ -142,8 +142,8 @@
         ],
         "locations": []
       },
-      "Prove dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...": {
-        "name": "Prove dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+      "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...": {
+        "name": "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
         "exits": [
           {
             "name": "From dvdsfac to syl2anc",
@@ -152,9 +152,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 23",
-                  "Proved Statement 4",
+                  "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+                  "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
+                  "Proved syl: |- ( ph -> ch )",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -165,18 +165,18 @@
         ],
         "locations": []
       },
-      "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": {
-        "name": "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
+      "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": {
+        "name": "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
         "exits": [],
         "locations": [
           {
-            "name": "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
+            "name": "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
             "id": 234790002,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "vn: setvar n",
+              "name": "vy: setvar y",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -190,7 +190,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 2",
+              "name": "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -200,8 +200,8 @@
           }
         ]
       },
-      "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": {
-        "name": "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+      "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": {
+        "name": "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
         "exits": [
           {
             "name": "From elfzuz to adantl",
@@ -210,7 +210,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 3",
+                  "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
                   "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
                 ]
               }
@@ -219,13 +219,13 @@
         ],
         "locations": [
           {
-            "name": "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+            "name": "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
             "id": 234790003,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+              "name": "impbii: |- ( ph <-> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -239,7 +239,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 3",
+              "name": "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -259,8 +259,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
-                  "Proved Statement 7",
+                  "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+                  "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
                 ]
@@ -274,9 +274,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 23",
-                  "Proved Statement 4",
+                  "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+                  "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
+                  "Proved syl: |- ( ph -> ch )",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -293,7 +293,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "impbii: |- ( ph <-> ps )",
+              "name": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -307,7 +307,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 4",
+              "name": "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -317,18 +317,18 @@
           }
         ]
       },
-      "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": {
-        "name": "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+      "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": {
+        "name": "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
         "exits": [],
         "locations": [
           {
-            "name": "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+            "name": "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
             "id": 234790005,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+              "name": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -342,7 +342,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 5",
+              "name": "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -352,18 +352,18 @@
           }
         ]
       },
-      "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": {
-        "name": "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+      "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": {
+        "name": "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
         "exits": [],
         "locations": [
           {
-            "name": "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+            "name": "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
             "id": 234790006,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+              "name": "mpan2d: |- ( ph -> ( ps -> th ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -377,7 +377,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 6",
+              "name": "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -387,8 +387,8 @@
           }
         ]
       },
-      "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": {
-        "name": "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+      "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": {
+        "name": "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
         "exits": [
           {
             "name": "From eluz2nn to ad2antrr",
@@ -397,7 +397,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 7",
+                  "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
                   "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
                 ]
               }
@@ -410,8 +410,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
-                  "Proved Statement 7",
+                  "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+                  "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
                 ]
@@ -421,13 +421,13 @@
         ],
         "locations": [
           {
-            "name": "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+            "name": "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
             "id": 234790007,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "vy: setvar y",
+              "name": "3syl: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -441,7 +441,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 7",
+              "name": "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -461,9 +461,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 10",
-                  "Proved Statement 12",
-                  "Proved Statement 8",
+                  "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+                  "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+                  "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -480,7 +480,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+              "name": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -494,7 +494,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 8",
+              "name": "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -504,18 +504,18 @@
           }
         ]
       },
-      "Prove eqid: |- A = A": {
-        "name": "Prove eqid: |- A = A",
+      "Given eqid: |- A = A": {
+        "name": "Given eqid: |- A = A",
         "exits": [],
         "locations": [
           {
-            "name": "Prove eqid: |- A = A",
+            "name": "Given eqid: |- A = A",
             "id": 234790009,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "vx: setvar x",
+              "name": "eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -529,7 +529,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 9",
+              "name": "Given eqid: |- A = A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -539,8 +539,8 @@
           }
         ]
       },
-      "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": {
-        "name": "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+      "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": {
+        "name": "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
         "exits": [
           {
             "name": "From faccl to 3syl",
@@ -549,9 +549,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 10",
-                  "Proved Statement 12",
-                  "Proved Statement 8",
+                  "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+                  "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+                  "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -562,13 +562,13 @@
         ],
         "locations": [
           {
-            "name": "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+            "name": "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
             "id": 234790010,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+              "name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -582,7 +582,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 10",
+              "name": "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -592,8 +592,8 @@
           }
         ]
       },
-      "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": {
-        "name": "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+      "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": {
+        "name": "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
         "exits": [
           {
             "name": "From ndvdsp1 to syl3anc",
@@ -602,9 +602,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
-                  "Proved Statement 14",
-                  "Proved Statement 23",
+                  "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+                  "Proved nnzd: |- ( ph -> A e. ZZ )",
+                  "Proved syl: |- ( ph -> ch )",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -615,13 +615,13 @@
         ],
         "locations": [
           {
-            "name": "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+            "name": "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
             "id": 234790011,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "syl: |- ( ph -> ch )",
+              "name": "bitrid: |- ( ch -> ( ph <-> th ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -635,7 +635,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 11",
+              "name": "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -645,8 +645,8 @@
           }
         ]
       },
-      "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": {
-        "name": "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+      "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": {
+        "name": "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
         "exits": [
           {
             "name": "From nnm1nn0 to 3syl",
@@ -655,9 +655,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 10",
-                  "Proved Statement 12",
-                  "Proved Statement 8",
+                  "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+                  "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+                  "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
                   "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
                   "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
@@ -668,13 +668,13 @@
         ],
         "locations": [
           {
-            "name": "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+            "name": "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
             "id": 234790012,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "nnzd: |- ( ph -> A e. ZZ )",
+              "name": "syl2anc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -688,7 +688,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 12",
+              "name": "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -709,7 +709,7 @@
               "args": {
                 "items": [
                   "3syl: |- ( ph -> th )",
-                  "Proved Statement 13"
+                  "Proved 3syl: |- ( ph -> th )"
                 ]
               }
             }
@@ -723,7 +723,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+              "name": "jca: |- ( ph -> ( ps /\\ ch ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -737,7 +737,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 13",
+              "name": "Proved 3syl: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -757,7 +757,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 14",
+                  "Proved nnzd: |- ( ph -> A e. ZZ )",
                   "nnzd: |- ( ph -> A e. ZZ )"
                 ]
               }
@@ -770,9 +770,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
-                  "Proved Statement 14",
-                  "Proved Statement 23",
+                  "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+                  "Proved nnzd: |- ( ph -> A e. ZZ )",
+                  "Proved syl: |- ( ph -> ch )",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -789,7 +789,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+              "name": "syl3anc: |- ( ph -> ta )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -803,7 +803,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 14",
+              "name": "Proved nnzd: |- ( ph -> A e. ZZ )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -813,8 +813,8 @@
           }
         ]
       },
-      "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": {
-        "name": "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+      "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": {
+        "name": "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
         "exits": [
           {
             "name": "From oveq1 to oveq1d",
@@ -823,7 +823,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 15",
+                  "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
                   "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
                 ]
               }
@@ -832,13 +832,13 @@
         ],
         "locations": [
           {
-            "name": "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+            "name": "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
             "id": 234790015,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "simpl: |- ( ( ph /\\ ps ) -> ph )",
+              "name": "syl: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -852,7 +852,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 15",
+              "name": "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -872,7 +872,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 16",
+                  "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
                   "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
                 ]
               }
@@ -887,7 +887,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "3syl: |- ( ph -> th )",
+              "name": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -901,7 +901,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 16",
+              "name": "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -922,7 +922,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "ralrimiva: |- ( ph -> A. x e. A ps )",
+              "name": "sylanbrc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -936,7 +936,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 17",
+              "name": "Proved eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -957,7 +957,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
+              "name": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -971,7 +971,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 18",
+              "name": "Proved peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -981,8 +981,8 @@
           }
         ]
       },
-      "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": {
-        "name": "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+      "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": {
+        "name": "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
         "exits": [
           {
             "name": "From prmuz2 to jca",
@@ -991,7 +991,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 19",
+                  "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
                   "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
                 ]
               }
@@ -1000,13 +1000,13 @@
         ],
         "locations": [
           {
-            "name": "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+            "name": "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
             "id": 234790019,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "adantl: |- ( ( ch /\\ ph ) -> ps )",
+              "name": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1020,7 +1020,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 19",
+              "name": "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1040,8 +1040,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 20",
-                  "Proved Statement 32",
+                  "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
+                  "Proved sylanbrc: |- ( ph -> th )",
                   "jca: |- ( ph -> ( ps /\\ ch ) )",
                   "sylanbrc: |- ( ph -> th )"
                 ]
@@ -1057,7 +1057,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+              "name": "adantl: |- ( ( ch /\\ ph ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1071,7 +1071,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 20",
+              "name": "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1081,8 +1081,8 @@
           }
         ]
       },
-      "Prove simpl: |- ( ( ph /\\ ps ) -> ph )": {
-        "name": "Prove simpl: |- ( ( ph /\\ ps ) -> ph )",
+      "Given simpl: |- ( ( ph /\\ ps ) -> ph )": {
+        "name": "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
         "exits": [
           {
             "name": "From simpl to sylanbrc",
@@ -1091,9 +1091,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 21",
-                  "Proved Statement 30",
-                  "Proved Statement 31",
+                  "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
+                  "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
+                  "Proved ralrimiva: |- ( ph -> A. x e. A ps )",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -1104,13 +1104,13 @@
         ],
         "locations": [
           {
-            "name": "Prove simpl: |- ( ( ph /\\ ps ) -> ph )",
+            "name": "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
             "id": 234790021,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+              "name": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1124,7 +1124,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 21",
+              "name": "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1134,8 +1134,8 @@
           }
         ]
       },
-      "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": {
-        "name": "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+      "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": {
+        "name": "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
         "exits": [
           {
             "name": "From simplr to mpan2d",
@@ -1144,8 +1144,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 22",
-                  "Proved Statement 25",
+                  "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+                  "Proved syl3anc: |- ( ph -> ta )",
                   "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -1155,13 +1155,13 @@
         ],
         "locations": [
           {
-            "name": "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+            "name": "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
             "id": 234790022,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "bitrid: |- ( ch -> ( ph <-> th ) )",
+              "name": "vx: setvar x",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1175,7 +1175,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 22",
+              "name": "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1195,9 +1195,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 23",
-                  "Proved Statement 4",
+                  "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+                  "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
+                  "Proved syl: |- ( ph -> ch )",
                   "adantl: |- ( ( ch /\\ ph ) -> ps )",
                   "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
                   "syl: |- ( ph -> ch )"
@@ -1212,9 +1212,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 11",
-                  "Proved Statement 14",
-                  "Proved Statement 23",
+                  "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+                  "Proved nnzd: |- ( ph -> A e. ZZ )",
+                  "Proved syl: |- ( ph -> ch )",
                   "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
                   "nnzd: |- ( ph -> A e. ZZ )",
                   "syl: |- ( ph -> ch )"
@@ -1231,7 +1231,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "vz: setvar z",
+              "name": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1245,7 +1245,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 23",
+              "name": "Proved syl: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1265,8 +1265,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 24",
-                  "Proved Statement 25",
+                  "Proved syl2anc: |- ( ph -> th )",
+                  "Proved syl3anc: |- ( ph -> ta )",
                   "syl2anc: |- ( ph -> th )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -1282,7 +1282,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+              "name": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1296,7 +1296,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 24",
+              "name": "Proved syl2anc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1316,8 +1316,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 22",
-                  "Proved Statement 25",
+                  "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+                  "Proved syl3anc: |- ( ph -> ta )",
                   "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -1331,8 +1331,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 24",
-                  "Proved Statement 25",
+                  "Proved syl2anc: |- ( ph -> th )",
+                  "Proved syl3anc: |- ( ph -> ta )",
                   "syl2anc: |- ( ph -> th )",
                   "syl3anc: |- ( ph -> ta )"
                 ]
@@ -1348,7 +1348,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "mpd: |- ( ph -> ch )",
+              "name": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1362,7 +1362,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 25",
+              "name": "Proved syl3anc: |- ( ph -> ta )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1382,8 +1382,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 26",
-                  "Proved Statement 27",
+                  "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
+                  "Proved mpd: |- ( ph -> ch )",
                   "mpan2d: |- ( ph -> ( ps -> th ) )",
                   "mpd: |- ( ph -> ch )"
                 ]
@@ -1399,7 +1399,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "syl2anc: |- ( ph -> th )",
+              "name": "ralrimiva: |- ( ph -> A. x e. A ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1413,7 +1413,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 26",
+              "name": "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1433,8 +1433,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 26",
-                  "Proved Statement 27",
+                  "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
+                  "Proved mpd: |- ( ph -> ch )",
                   "mpan2d: |- ( ph -> ( ps -> th ) )",
                   "mpd: |- ( ph -> ch )"
                 ]
@@ -1450,7 +1450,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "mtod: |- ( ph -> -. ps )",
+              "name": "mpd: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1464,7 +1464,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 27",
+              "name": "Proved mpd: |- ( ph -> ch )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1484,8 +1484,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 28",
-                  "Proved Statement 29",
+                  "Given vn: setvar n",
+                  "Proved mtod: |- ( ph -> -. ps )",
                   "mtod: |- ( ph -> -. ps )",
                   "vn: setvar n"
                 ]
@@ -1515,7 +1515,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 28",
+              "name": "Proved mtod: |- ( ph -> -. ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1525,8 +1525,8 @@
           }
         ]
       },
-      "Prove vn: setvar n": {
-        "name": "Prove vn: setvar n",
+      "Given vn: setvar n": {
+        "name": "Given vn: setvar n",
         "exits": [
           {
             "name": "From vn to isprm3",
@@ -1535,7 +1535,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 29",
+                  "Given vn: setvar n",
                   "vn: setvar n"
                 ]
               }
@@ -1548,8 +1548,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 28",
-                  "Proved Statement 29",
+                  "Given vn: setvar n",
+                  "Proved mtod: |- ( ph -> -. ps )",
                   "mtod: |- ( ph -> -. ps )",
                   "vn: setvar n"
                 ]
@@ -1559,13 +1559,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vn: setvar n",
+            "name": "Given vn: setvar n",
             "id": 234790029,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+              "name": "vz: setvar z",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1579,7 +1579,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 29",
+              "name": "Given vn: setvar n",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1599,9 +1599,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 21",
-                  "Proved Statement 30",
-                  "Proved Statement 31",
+                  "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
+                  "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
+                  "Proved ralrimiva: |- ( ph -> A. x e. A ps )",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -1618,7 +1618,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "syl3anc: |- ( ph -> ta )",
+              "name": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1632,7 +1632,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 30",
+              "name": "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1652,9 +1652,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 21",
-                  "Proved Statement 30",
-                  "Proved Statement 31",
+                  "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
+                  "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
+                  "Proved ralrimiva: |- ( ph -> A. x e. A ps )",
                   "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
                   "ralrimiva: |- ( ph -> A. x e. A ps )",
                   "simpl: |- ( ( ph /\\ ps ) -> ph )"
@@ -1671,7 +1671,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "jca: |- ( ph -> ( ps /\\ ch ) )",
+              "name": "eqid: |- A = A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1685,7 +1685,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 31",
+              "name": "Proved ralrimiva: |- ( ph -> A. x e. A ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1705,8 +1705,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 20",
-                  "Proved Statement 32",
+                  "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
+                  "Proved sylanbrc: |- ( ph -> th )",
                   "jca: |- ( ph -> ( ps /\\ ch ) )",
                   "sylanbrc: |- ( ph -> th )"
                 ]
@@ -1722,7 +1722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "eqid: |- A = A",
+              "name": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1736,7 +1736,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 32",
+              "name": "Proved sylanbrc: |- ( ph -> th )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1757,7 +1757,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
+              "name": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1771,7 +1771,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 33",
+              "name": "Proved impbii: |- ( ph <-> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1781,8 +1781,8 @@
           }
         ]
       },
-      "Prove vx: setvar x": {
-        "name": "Prove vx: setvar x",
+      "Given vx: setvar x": {
+        "name": "Given vx: setvar x",
         "exits": [
           {
             "name": "From vx to eleq2w",
@@ -1791,8 +1791,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 34",
-                  "Proved Statement 36",
+                  "Given vx: setvar x",
+                  "Given vz: setvar z",
                   "vx: setvar x",
                   "vz: setvar z"
                 ]
@@ -1802,13 +1802,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vx: setvar x",
+            "name": "Given vx: setvar x",
             "id": 234790034,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
+              "name": "vn: setvar n",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1822,7 +1822,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 34",
+              "name": "Given vx: setvar x",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1832,8 +1832,8 @@
           }
         ]
       },
-      "Prove vy: setvar y": {
-        "name": "Prove vy: setvar y",
+      "Given vy: setvar y": {
+        "name": "Given vy: setvar y",
         "exits": [
           {
             "name": "From vy to raleqbi1dv",
@@ -1842,8 +1842,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 35",
-                  "Proved Statement 37",
+                  "Given vy: setvar y",
+                  "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "vy: setvar y"
                 ]
@@ -1853,13 +1853,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vy: setvar y",
+            "name": "Given vy: setvar y",
             "id": 234790035,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "sylanbrc: |- ( ph -> th )",
+              "name": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1873,7 +1873,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 35",
+              "name": "Given vy: setvar y",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1883,8 +1883,8 @@
           }
         ]
       },
-      "Prove vz: setvar z": {
-        "name": "Prove vz: setvar z",
+      "Given vz: setvar z": {
+        "name": "Given vz: setvar z",
         "exits": [
           {
             "name": "From vz to eleq2w",
@@ -1893,8 +1893,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 34",
-                  "Proved Statement 36",
+                  "Given vx: setvar x",
+                  "Given vz: setvar z",
                   "vx: setvar x",
                   "vz: setvar z"
                 ]
@@ -1904,13 +1904,13 @@
         ],
         "locations": [
           {
-            "name": "Prove vz: setvar z",
+            "name": "Given vz: setvar z",
             "id": 234790036,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+              "name": "peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1924,7 +1924,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 36",
+              "name": "Given vz: setvar z",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1944,8 +1944,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 35",
-                  "Proved Statement 37",
+                  "Given vy: setvar y",
+                  "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "vy: setvar y"
                 ]
@@ -1959,8 +1959,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 37",
-                  "Proved Statement 39",
+                  "Proved bitrid: |- ( ch -> ( ph <-> th ) )",
+                  "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "bitrid: |- ( ch -> ( ph <-> th ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
                 ]
@@ -1976,7 +1976,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
+              "name": "simpl: |- ( ( ph /\\ ps ) -> ph )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1990,7 +1990,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 37",
+              "name": "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2010,7 +2010,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 38",
+                  "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
                   "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
                 ]
               }
@@ -2025,7 +2025,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+              "name": "mtod: |- ( ph -> -. ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2039,7 +2039,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 38",
+              "name": "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2059,8 +2059,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 37",
-                  "Proved Statement 39",
+                  "Proved bitrid: |- ( ch -> ( ph <-> th ) )",
+                  "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
                   "bitrid: |- ( ch -> ( ph <-> th ) )",
                   "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
                 ]
@@ -2076,7 +2076,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+              "name": "nnzd: |- ( ph -> A e. ZZ )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2090,7 +2090,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 39",
+              "name": "Proved bitrid: |- ( ch -> ( ph <-> th ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2111,7 +2111,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "mpan2d: |- ( ph -> ( ps -> th ) )",
+              "name": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2125,7 +2125,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 40",
+              "name": "Proved anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3283,8 +3283,9 @@
         "type": null,
         "max_count": 1
       },
-      "Proved Statement 2": {
-        "name": "Proved Statement 2",
+      "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": {
+        "name": "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...",
+        "hint_text": "Given dvdstr: |  ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ )  > ( ( K...",
         "id": null,
         "groups": [
           "Event"
@@ -3294,8 +3295,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 3": {
-        "name": "Proved Statement 3",
+      "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": {
+        "name": "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+        "hint_text": "Given elfzuz: |  ( K e. ( M ... N )  > K e. ( ZZ>= ` M ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3305,8 +3307,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 4": {
-        "name": "Proved Statement 4",
+      "Proved adantl: |- ( ( ch /\\ ph ) -> ps )": {
+        "name": "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
+        "hint_text": "Proved adantl: |  ( ( ch /\\ ph )  > ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3316,8 +3319,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 5": {
-        "name": "Proved Statement 5",
+      "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": {
+        "name": "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+        "hint_text": "Given elfzuz3: |  ( K e. ( M ... N )  > N e. ( ZZ>= ` K ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3327,8 +3331,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 6": {
-        "name": "Proved Statement 6",
+      "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": {
+        "name": "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+        "hint_text": "Given eluz2gt1: |  ( N e. ( ZZ>= ` 2 )  > 1 < N )",
         "id": null,
         "groups": [
           "Event"
@@ -3338,8 +3343,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 7": {
-        "name": "Proved Statement 7",
+      "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": {
+        "name": "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+        "hint_text": "Given eluz2nn: |  ( A e. ( ZZ>= ` 2 )  > A e. NN )",
         "id": null,
         "groups": [
           "Event"
@@ -3349,8 +3355,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 8": {
-        "name": "Proved Statement 8",
+      "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": {
+        "name": "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
+        "hint_text": "Proved ad2antrr: |  ( ( ( ph /\\ ch ) /\\ th )  > ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3360,8 +3367,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 9": {
-        "name": "Proved Statement 9",
+      "Given eqid: |- A = A": {
+        "name": "Given eqid: |- A = A",
+        "hint_text": "Given eqid: |  A = A",
         "id": null,
         "groups": [
           "Event"
@@ -3371,8 +3379,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 10": {
-        "name": "Proved Statement 10",
+      "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": {
+        "name": "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+        "hint_text": "Given faccl: |  ( N e. NN0  > ( ! ` N ) e. NN )",
         "id": null,
         "groups": [
           "Event"
@@ -3382,8 +3391,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 11": {
-        "name": "Proved Statement 11",
+      "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": {
+        "name": "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
+        "hint_text": "Given ndvdsp1: |  ( ( N e. ZZ /\\ D e. NN /\\ 1 < D )  > ( D || ...",
         "id": null,
         "groups": [
           "Event"
@@ -3393,8 +3403,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 12": {
-        "name": "Proved Statement 12",
+      "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": {
+        "name": "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+        "hint_text": "Given nnm1nn0: |  ( N e. NN  > ( N   1 ) e. NN0 )",
         "id": null,
         "groups": [
           "Event"
@@ -3404,8 +3415,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 13": {
-        "name": "Proved Statement 13",
+      "Proved 3syl: |- ( ph -> th )": {
+        "name": "Proved 3syl: |- ( ph -> th )",
+        "hint_text": "Proved 3syl: |  ( ph  > th )",
         "id": null,
         "groups": [
           "Event"
@@ -3415,8 +3427,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 14": {
-        "name": "Proved Statement 14",
+      "Proved nnzd: |- ( ph -> A e. ZZ )": {
+        "name": "Proved nnzd: |- ( ph -> A e. ZZ )",
+        "hint_text": "Proved nnzd: |  ( ph  > A e. ZZ )",
         "id": null,
         "groups": [
           "Event"
@@ -3426,8 +3439,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 15": {
-        "name": "Proved Statement 15",
+      "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": {
+        "name": "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+        "hint_text": "Given oveq1: |  ( A = B  > ( A F C ) = ( B F C ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3437,8 +3451,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 16": {
-        "name": "Proved Statement 16",
+      "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": {
+        "name": "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
+        "hint_text": "Proved oveq1d: |  ( ph  > ( A F C ) = ( B F C ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3448,8 +3463,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 17": {
-        "name": "Proved Statement 17",
+      "Proved eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": {
+        "name": "Proved eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
+        "hint_text": "Proved eleq1d: |  ( ph  > ( A e. C < > B e. C ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3459,8 +3475,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 18": {
-        "name": "Proved Statement 18",
+      "Proved peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": {
+        "name": "Proved peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
+        "hint_text": "Proved peano2zd: |  ( ph  > ( A + 1 ) e. ZZ )",
         "id": null,
         "groups": [
           "Event"
@@ -3470,8 +3487,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 19": {
-        "name": "Proved Statement 19",
+      "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": {
+        "name": "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+        "hint_text": "Given prmuz2: |  ( P e. Prime  > P e. ( ZZ>= ` 2 ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3481,8 +3499,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 20": {
-        "name": "Proved Statement 20",
+      "Proved jca: |- ( ph -> ( ps /\\ ch ) )": {
+        "name": "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
+        "hint_text": "Proved jca: |  ( ph  > ( ps /\\ ch ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3492,8 +3511,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 21": {
-        "name": "Proved Statement 21",
+      "Given simpl: |- ( ( ph /\\ ps ) -> ph )": {
+        "name": "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
+        "hint_text": "Given simpl: |  ( ( ph /\\ ps )  > ph )",
         "id": null,
         "groups": [
           "Event"
@@ -3503,8 +3523,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 22": {
-        "name": "Proved Statement 22",
+      "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": {
+        "name": "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+        "hint_text": "Given simplr: |  ( ( ( ph /\\ ps ) /\\ ch )  > ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3514,8 +3535,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 23": {
-        "name": "Proved Statement 23",
+      "Proved syl: |- ( ph -> ch )": {
+        "name": "Proved syl: |- ( ph -> ch )",
+        "hint_text": "Proved syl: |  ( ph  > ch )",
         "id": null,
         "groups": [
           "Event"
@@ -3525,8 +3547,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 24": {
-        "name": "Proved Statement 24",
+      "Proved syl2anc: |- ( ph -> th )": {
+        "name": "Proved syl2anc: |- ( ph -> th )",
+        "hint_text": "Proved syl2anc: |  ( ph  > th )",
         "id": null,
         "groups": [
           "Event"
@@ -3536,8 +3559,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 25": {
-        "name": "Proved Statement 25",
+      "Proved syl3anc: |- ( ph -> ta )": {
+        "name": "Proved syl3anc: |- ( ph -> ta )",
+        "hint_text": "Proved syl3anc: |  ( ph  > ta )",
         "id": null,
         "groups": [
           "Event"
@@ -3547,8 +3571,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 26": {
-        "name": "Proved Statement 26",
+      "Proved mpan2d: |- ( ph -> ( ps -> th ) )": {
+        "name": "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
+        "hint_text": "Proved mpan2d: |  ( ph  > ( ps  > th ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3558,8 +3583,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 27": {
-        "name": "Proved Statement 27",
+      "Proved mpd: |- ( ph -> ch )": {
+        "name": "Proved mpd: |- ( ph -> ch )",
+        "hint_text": "Proved mpd: |  ( ph  > ch )",
         "id": null,
         "groups": [
           "Event"
@@ -3569,8 +3595,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 28": {
-        "name": "Proved Statement 28",
+      "Proved mtod: |- ( ph -> -. ps )": {
+        "name": "Proved mtod: |- ( ph -> -. ps )",
+        "hint_text": "Proved mtod: |  ( ph  >  . ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3580,8 +3607,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 29": {
-        "name": "Proved Statement 29",
+      "Given vn: setvar n": {
+        "name": "Given vn: setvar n",
         "id": null,
         "groups": [
           "Event"
@@ -3591,8 +3618,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 30": {
-        "name": "Proved Statement 30",
+      "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": {
+        "name": "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
+        "hint_text": "Proved isprm3: |  ( P e. Prime < > ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
         "id": null,
         "groups": [
           "Event"
@@ -3602,8 +3630,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 31": {
-        "name": "Proved Statement 31",
+      "Proved ralrimiva: |- ( ph -> A. x e. A ps )": {
+        "name": "Proved ralrimiva: |- ( ph -> A. x e. A ps )",
+        "hint_text": "Proved ralrimiva: |  ( ph  > A. x e. A ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3613,8 +3642,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 32": {
-        "name": "Proved Statement 32",
+      "Proved sylanbrc: |- ( ph -> th )": {
+        "name": "Proved sylanbrc: |- ( ph -> th )",
+        "hint_text": "Proved sylanbrc: |  ( ph  > th )",
         "id": null,
         "groups": [
           "Event"
@@ -3624,8 +3654,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 33": {
-        "name": "Proved Statement 33",
+      "Proved impbii: |- ( ph <-> ps )": {
+        "name": "Proved impbii: |- ( ph <-> ps )",
+        "hint_text": "Proved impbii: |  ( ph < > ps )",
         "id": null,
         "groups": [
           "Event"
@@ -3635,8 +3666,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 34": {
-        "name": "Proved Statement 34",
+      "Given vx: setvar x": {
+        "name": "Given vx: setvar x",
         "id": null,
         "groups": [
           "Event"
@@ -3646,8 +3677,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 35": {
-        "name": "Proved Statement 35",
+      "Given vy: setvar y": {
+        "name": "Given vy: setvar y",
         "id": null,
         "groups": [
           "Event"
@@ -3657,8 +3688,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 36": {
-        "name": "Proved Statement 36",
+      "Given vz: setvar z": {
+        "name": "Given vz: setvar z",
         "id": null,
         "groups": [
           "Event"
@@ -3668,8 +3699,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 37": {
-        "name": "Proved Statement 37",
+      "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": {
+        "name": "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
+        "hint_text": "Proved eleq2w: |  ( x = y  > ( A e. x < > A e. y ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3679,8 +3711,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 38": {
-        "name": "Proved Statement 38",
+      "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": {
+        "name": "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
+        "hint_text": "Proved raleqbi1dv: |  ( A = B  > ( A. x e. A ph < > A. x e. B ps ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3690,8 +3723,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 39": {
-        "name": "Proved Statement 39",
+      "Proved bitrid: |- ( ch -> ( ph <-> th ) )": {
+        "name": "Proved bitrid: |- ( ch -> ( ph <-> th ) )",
+        "hint_text": "Proved bitrid: |  ( ch  > ( ph < > th ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3701,8 +3735,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 40": {
-        "name": "Proved Statement 40",
+      "Proved anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": {
+        "name": "Proved anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )",
+        "hint_text": "Proved anbi12d: |  ( ph  > ( ( ps /\\ th ) < > ( ch /\\ ta ) ) )",
         "id": null,
         "groups": [
           "Event"
@@ -3712,8 +3747,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 1": {
-        "name": "Proved Statement 1",
+      "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...": {
+        "name": "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
+        "hint_text": "Given dvdsfac: |  ( ( K e. NN /\\ N e. ( ZZ>= ` K ) )  > K || (...",
         "id": null,
         "groups": [],
         "classification": "progression",
@@ -3732,46 +3768,46 @@
   "itempool_counts": {
     "1": {
       "3syl: |- ( ph -> th )": 1,
-      "Proved Statement 1": 1,
-      "Proved Statement 10": 1,
-      "Proved Statement 11": 1,
-      "Proved Statement 12": 1,
-      "Proved Statement 13": 1,
-      "Proved Statement 14": 1,
-      "Proved Statement 15": 1,
-      "Proved Statement 16": 1,
-      "Proved Statement 17": 1,
-      "Proved Statement 18": 1,
-      "Proved Statement 19": 1,
-      "Proved Statement 2": 1,
-      "Proved Statement 20": 1,
-      "Proved Statement 21": 1,
-      "Proved Statement 22": 1,
-      "Proved Statement 23": 1,
-      "Proved Statement 24": 1,
-      "Proved Statement 25": 1,
-      "Proved Statement 26": 1,
-      "Proved Statement 27": 1,
-      "Proved Statement 28": 1,
-      "Proved Statement 29": 1,
-      "Proved Statement 3": 1,
-      "Proved Statement 30": 1,
-      "Proved Statement 31": 1,
-      "Proved Statement 32": 1,
-      "Proved Statement 33": 1,
-      "Proved Statement 34": 1,
-      "Proved Statement 35": 1,
-      "Proved Statement 36": 1,
-      "Proved Statement 37": 1,
-      "Proved Statement 38": 1,
-      "Proved Statement 39": 1,
-      "Proved Statement 4": 1,
-      "Proved Statement 40": 1,
-      "Proved Statement 5": 1,
-      "Proved Statement 6": 1,
-      "Proved Statement 7": 1,
-      "Proved Statement 8": 1,
-      "Proved Statement 9": 1,
+      "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...": 1,
+      "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": 1,
+      "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": 1,
+      "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": 1,
+      "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": 1,
+      "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": 1,
+      "Given eqid: |- A = A": 1,
+      "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": 1,
+      "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": 1,
+      "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": 1,
+      "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": 1,
+      "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": 1,
+      "Given simpl: |- ( ( ph /\\ ps ) -> ph )": 1,
+      "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": 1,
+      "Given vn: setvar n": 1,
+      "Given vx: setvar x": 1,
+      "Given vy: setvar y": 1,
+      "Given vz: setvar z": 1,
+      "Proved 3syl: |- ( ph -> th )": 1,
+      "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": 1,
+      "Proved adantl: |- ( ( ch /\\ ph ) -> ps )": 1,
+      "Proved anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": 1,
+      "Proved bitrid: |- ( ch -> ( ph <-> th ) )": 1,
+      "Proved eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": 1,
+      "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": 1,
+      "Proved impbii: |- ( ph <-> ps )": 1,
+      "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": 1,
+      "Proved jca: |- ( ph -> ( ps /\\ ch ) )": 1,
+      "Proved mpan2d: |- ( ph -> ( ps -> th ) )": 1,
+      "Proved mpd: |- ( ph -> ch )": 1,
+      "Proved mtod: |- ( ph -> -. ps )": 1,
+      "Proved nnzd: |- ( ph -> A e. ZZ )": 1,
+      "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": 1,
+      "Proved peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": 1,
+      "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": 1,
+      "Proved ralrimiva: |- ( ph -> A. x e. A ps )": 1,
+      "Proved syl2anc: |- ( ph -> th )": 1,
+      "Proved syl3anc: |- ( ph -> ta )": 1,
+      "Proved syl: |- ( ph -> ch )": 1,
+      "Proved sylanbrc: |- ( ph -> th )": 1,
       "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": 1,
       "adantl: |- ( ( ch /\\ ph ) -> ps )": 1,
       "anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": 1,
@@ -3815,41 +3851,41 @@
   },
   "canonical_placements": {
     "1": {
-      "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": "dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K || M /\\ M...",
-      "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+      "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": "dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K || M /\\ M...",
+      "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
       "Prove adantl: |- ( ( ch /\\ ph ) -> ps )": "adantl: |- ( ( ch /\\ ph ) -> ps )",
-      "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
-      "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
-      "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+      "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+      "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+      "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
       "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-      "Prove eqid: |- A = A": "eqid: |- A = A",
-      "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-      "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-      "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+      "Given eqid: |- A = A": "eqid: |- A = A",
+      "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+      "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+      "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
       "Prove 3syl: |- ( ph -> th )": "3syl: |- ( ph -> th )",
       "Prove nnzd: |- ( ph -> A e. ZZ )": "nnzd: |- ( ph -> A e. ZZ )",
-      "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+      "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
       "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
       "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": "eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
       "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": "peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
-      "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+      "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
       "Prove jca: |- ( ph -> ( ps /\\ ch ) )": "jca: |- ( ph -> ( ps /\\ ch ) )",
-      "Prove simpl: |- ( ( ph /\\ ps ) -> ph )": "simpl: |- ( ( ph /\\ ps ) -> ph )",
-      "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+      "Given simpl: |- ( ( ph /\\ ps ) -> ph )": "simpl: |- ( ( ph /\\ ps ) -> ph )",
+      "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
       "Prove syl: |- ( ph -> ch )": "syl: |- ( ph -> ch )",
       "Prove syl2anc: |- ( ph -> th )": "syl2anc: |- ( ph -> th )",
       "Prove syl3anc: |- ( ph -> ta )": "syl3anc: |- ( ph -> ta )",
       "Prove mpan2d: |- ( ph -> ( ps -> th ) )": "mpan2d: |- ( ph -> ( ps -> th ) )",
       "Prove mpd: |- ( ph -> ch )": "mpd: |- ( ph -> ch )",
       "Prove mtod: |- ( ph -> -. ps )": "mtod: |- ( ph -> -. ps )",
-      "Prove vn: setvar n": "vn: setvar n",
+      "Given vn: setvar n": "vn: setvar n",
       "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
       "Prove ralrimiva: |- ( ph -> A. x e. A ps )": "ralrimiva: |- ( ph -> A. x e. A ps )",
       "Prove sylanbrc: |- ( ph -> th )": "sylanbrc: |- ( ph -> th )",
       "Prove impbii: |- ( ph <-> ps )": "impbii: |- ( ph <-> ps )",
-      "Prove vx: setvar x": "vx: setvar x",
-      "Prove vy: setvar y": "vy: setvar y",
-      "Prove vz: setvar z": "vz: setvar z",
+      "Given vx: setvar x": "vx: setvar x",
+      "Given vy: setvar y": "vy: setvar y",
+      "Given vz: setvar z": "vz: setvar z",
       "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
       "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
       "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )"
@@ -3861,7 +3897,7 @@
   "starting_items": {
     "1": [
       "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-      "Proved Statement 1"
+      "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (..."
     ]
   },
   "world": {
@@ -4017,41 +4053,41 @@
       "num_statements": 40,
       "preset_label": "wilth s9",
       "canonical_placements": {
-        "Prove dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": "dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K || M /\\ M...",
-        "Prove elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
+        "Given dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K...": "dvdstr: |- ( ( K e. ZZ /\\ M e. ZZ /\\ N e. ZZ ) -> ( ( K || M /\\ M...",
+        "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )": "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
         "Prove adantl: |- ( ( ch /\\ ph ) -> ps )": "adantl: |- ( ( ch /\\ ph ) -> ps )",
-        "Prove elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
-        "Prove eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
-        "Prove eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
+        "Given elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )": "elfzuz3: |- ( K e. ( M ... N ) -> N e. ( ZZ>= ` K ) )",
+        "Given eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )": "eluz2gt1: |- ( N e. ( ZZ>= ` 2 ) -> 1 < N )",
+        "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )": "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
         "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-        "Prove eqid: |- A = A": "eqid: |- A = A",
-        "Prove faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-        "Prove ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-        "Prove nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
+        "Given eqid: |- A = A": "eqid: |- A = A",
+        "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )": "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
+        "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...": "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
+        "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )": "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
         "Prove 3syl: |- ( ph -> th )": "3syl: |- ( ph -> th )",
         "Prove nnzd: |- ( ph -> A e. ZZ )": "nnzd: |- ( ph -> A e. ZZ )",
-        "Prove oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
+        "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )": "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
         "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
         "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": "eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )",
         "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": "peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )",
-        "Prove prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
+        "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )": "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
         "Prove jca: |- ( ph -> ( ps /\\ ch ) )": "jca: |- ( ph -> ( ps /\\ ch ) )",
-        "Prove simpl: |- ( ( ph /\\ ps ) -> ph )": "simpl: |- ( ( ph /\\ ps ) -> ph )",
-        "Prove simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
+        "Given simpl: |- ( ( ph /\\ ps ) -> ph )": "simpl: |- ( ( ph /\\ ps ) -> ph )",
+        "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )": "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
         "Prove syl: |- ( ph -> ch )": "syl: |- ( ph -> ch )",
         "Prove syl2anc: |- ( ph -> th )": "syl2anc: |- ( ph -> th )",
         "Prove syl3anc: |- ( ph -> ta )": "syl3anc: |- ( ph -> ta )",
         "Prove mpan2d: |- ( ph -> ( ps -> th ) )": "mpan2d: |- ( ph -> ( ps -> th ) )",
         "Prove mpd: |- ( ph -> ch )": "mpd: |- ( ph -> ch )",
         "Prove mtod: |- ( ph -> -. ps )": "mtod: |- ( ph -> -. ps )",
-        "Prove vn: setvar n": "vn: setvar n",
+        "Given vn: setvar n": "vn: setvar n",
         "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
         "Prove ralrimiva: |- ( ph -> A. x e. A ps )": "ralrimiva: |- ( ph -> A. x e. A ps )",
         "Prove sylanbrc: |- ( ph -> th )": "sylanbrc: |- ( ph -> th )",
         "Prove impbii: |- ( ph <-> ps )": "impbii: |- ( ph <-> ps )",
-        "Prove vx: setvar x": "vx: setvar x",
-        "Prove vy: setvar y": "vy: setvar y",
-        "Prove vz: setvar z": "vz: setvar z",
+        "Given vx: setvar x": "vx: setvar x",
+        "Given vy: setvar y": "vy: setvar y",
+        "Given vz: setvar z": "vz: setvar z",
         "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
         "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
         "Prove bitrid: |- ( ch -> ( ph <-> th ) )": "bitrid: |- ( ch -> ( ph <-> th ) )"
@@ -4059,731 +4095,731 @@
       "location_dependencies": {
         "Proved Statement 4": [
           "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
-          "Proved Statement 3"
+          "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
         ],
         "Proved Statement 8": [
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "Proved Statement 13": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "Proved Statement 14": [
           "3syl: |- ( ph -> th )",
-          "Proved Statement 13"
+          "Proved 3syl: |- ( ph -> th )"
         ],
         "Proved Statement 16": [
           "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 15"
+          "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
         ],
         "Proved Statement 17": [
           "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 16"
+          "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
         ],
         "Proved Statement 18": [
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14"
+          "Proved nnzd: |- ( ph -> A e. ZZ )"
         ],
         "Proved Statement 20": [
           "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
-          "Proved Statement 19"
+          "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
         ],
         "Proved Statement 23": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "Proved Statement 24": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Proved Statement 25": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Proved Statement 26": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "Proved Statement 27": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "Proved Statement 28": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "Proved Statement 30": [
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "Proved Statement 31": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "Proved Statement 32": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "Proved Statement 33": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "Proved Statement 37": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "Proved Statement 38": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "Proved Statement 39": [
           "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-          "Proved Statement 38"
+          "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
         ],
         "Proved Statement 40": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ],
         "Prove adantl: |- ( ( ch /\\ ph ) -> ps )": [
           "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
-          "Proved Statement 3"
+          "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
         ],
         "Prove ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )": [
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "Prove 3syl: |- ( ph -> th )": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "Prove nnzd: |- ( ph -> A e. ZZ )": [
           "3syl: |- ( ph -> th )",
-          "Proved Statement 13"
+          "Proved 3syl: |- ( ph -> th )"
         ],
         "Prove oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )": [
           "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 15"
+          "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
         ],
         "Prove eleq1d: |- ( ph -> ( A e. C <-> B e. C ) )": [
           "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 16"
+          "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
         ],
         "Prove peano2zd: |- ( ph -> ( A + 1 ) e. ZZ )": [
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14"
+          "Proved nnzd: |- ( ph -> A e. ZZ )"
         ],
         "Prove jca: |- ( ph -> ( ps /\\ ch ) )": [
           "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
-          "Proved Statement 19"
+          "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
         ],
         "Prove syl: |- ( ph -> ch )": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "Prove syl2anc: |- ( ph -> th )": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Prove syl3anc: |- ( ph -> ta )": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "Prove mpan2d: |- ( ph -> ( ps -> th ) )": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "Prove mpd: |- ( ph -> ch )": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "Prove mtod: |- ( ph -> -. ps )": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "Prove isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...": [
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "Prove ralrimiva: |- ( ph -> A. x e. A ps )": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "Prove sylanbrc: |- ( ph -> th )": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "Prove impbii: |- ( ph <-> ps )": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "Prove eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "Prove raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "Prove bitrid: |- ( ch -> ( ph <-> th ) )": [
           "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-          "Proved Statement 38"
+          "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
         ],
         "Prove anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ]
       },
       "entrance_dependencies": {
         "From elfzuz to adantl": [
           "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
-          "Proved Statement 3"
+          "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
         ],
         "From eluz2nn to ad2antrr": [
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From ad2antrr to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From faccl to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From nnm1nn0 to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From 3syl to nnzd": [
           "3syl: |- ( ph -> th )",
-          "Proved Statement 13"
+          "Proved 3syl: |- ( ph -> th )"
         ],
         "From oveq1 to oveq1d": [
           "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 15"
+          "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
         ],
         "From oveq1d to eleq1d": [
           "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 16"
+          "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
         ],
         "From nnzd to peano2zd": [
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14"
+          "Proved nnzd: |- ( ph -> A e. ZZ )"
         ],
         "From prmuz2 to jca": [
           "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
-          "Proved Statement 19"
+          "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
         ],
         "From adantl to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From eluz2nn to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From dvdsfac to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From adantl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From ndvdsp1 to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From nnzd to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From simplr to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl3anc to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl2anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl3anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From mpan2d to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "From mpd to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "From vn to isprm3": [
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From mtod to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From vn to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From simpl to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From isprm3 to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From ralrimiva to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From jca to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "From sylanbrc to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "From vx to eleq2w": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "From vz to eleq2w": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "From vy to raleqbi1dv": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "From eleq2w to raleqbi1dv": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "From raleqbi1dv to bitrid": [
           "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-          "Proved Statement 38"
+          "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
         ],
         "From eleq2w to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ],
         "From bitrid to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ]
       },
       "exit_dependencies": {
         "From dvdsfac to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From elfzuz to adantl": [
           "elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )",
-          "Proved Statement 3"
+          "Given elfzuz: |- ( K e. ( M ... N ) -> K e. ( ZZ>= ` M ) )"
         ],
         "From adantl to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From adantl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From eluz2nn to ad2antrr": [
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From eluz2nn to syl": [
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )",
-          "Proved Statement 7"
+          "Given eluz2nn: |- ( A e. ( ZZ>= ` 2 ) -> A e. NN )"
         ],
         "From ad2antrr to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From faccl to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From ndvdsp1 to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From nnm1nn0 to 3syl": [
           "ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
-          "Proved Statement 8",
+          "Proved ad2antrr: |- ( ( ( ph /\\ ch ) /\\ th ) -> ps )",
           "faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
-          "Proved Statement 10",
+          "Given faccl: |- ( N e. NN0 -> ( ! ` N ) e. NN )",
           "nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )",
-          "Proved Statement 12"
+          "Given nnm1nn0: |- ( N e. NN -> ( N - 1 ) e. NN0 )"
         ],
         "From 3syl to nnzd": [
           "3syl: |- ( ph -> th )",
-          "Proved Statement 13"
+          "Proved 3syl: |- ( ph -> th )"
         ],
         "From nnzd to peano2zd": [
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14"
+          "Proved nnzd: |- ( ph -> A e. ZZ )"
         ],
         "From nnzd to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From oveq1 to oveq1d": [
           "oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 15"
+          "Given oveq1: |- ( A = B -> ( A F C ) = ( B F C ) )"
         ],
         "From oveq1d to eleq1d": [
           "oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )",
-          "Proved Statement 16"
+          "Proved oveq1d: |- ( ph -> ( A F C ) = ( B F C ) )"
         ],
         "From prmuz2 to jca": [
           "prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )",
-          "Proved Statement 19"
+          "Given prmuz2: |- ( P e. Prime -> P e. ( ZZ>= ` 2 ) )"
         ],
         "From jca to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "From simpl to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From simplr to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl to syl2anc": [
           "dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || ( ! ` N ) )",
-          "Proved Statement 1",
+          "Given dvdsfac: |- ( ( K e. NN /\\ N e. ( ZZ>= ` K ) ) -> K || (...",
           "adantl: |- ( ( ch /\\ ph ) -> ps )",
-          "Proved Statement 4",
+          "Proved adantl: |- ( ( ch /\\ ph ) -> ps )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl to syl3anc": [
           "ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || N -> -. D ...",
-          "Proved Statement 11",
+          "Given ndvdsp1: |- ( ( N e. ZZ /\\ D e. NN /\\ 1 < D ) -> ( D || ...",
           "nnzd: |- ( ph -> A e. ZZ )",
-          "Proved Statement 14",
+          "Proved nnzd: |- ( ph -> A e. ZZ )",
           "syl: |- ( ph -> ch )",
-          "Proved Statement 23"
+          "Proved syl: |- ( ph -> ch )"
         ],
         "From syl2anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl3anc to mpan2d": [
           "simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
-          "Proved Statement 22",
+          "Given simplr: |- ( ( ( ph /\\ ps ) /\\ ch ) -> ps )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From syl3anc to mpd": [
           "syl2anc: |- ( ph -> th )",
-          "Proved Statement 24",
+          "Proved syl2anc: |- ( ph -> th )",
           "syl3anc: |- ( ph -> ta )",
-          "Proved Statement 25"
+          "Proved syl3anc: |- ( ph -> ta )"
         ],
         "From mpan2d to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "From mpd to mtod": [
           "mpan2d: |- ( ph -> ( ps -> th ) )",
-          "Proved Statement 26",
+          "Proved mpan2d: |- ( ph -> ( ps -> th ) )",
           "mpd: |- ( ph -> ch )",
-          "Proved Statement 27"
+          "Proved mpd: |- ( ph -> ch )"
         ],
         "From mtod to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From vn to isprm3": [
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From vn to ralrimiva": [
           "mtod: |- ( ph -> -. ps )",
-          "Proved Statement 28",
+          "Proved mtod: |- ( ph -> -. ps )",
           "vn: setvar n",
-          "Proved Statement 29"
+          "Given vn: setvar n"
         ],
         "From isprm3 to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From ralrimiva to sylanbrc": [
           "simpl: |- ( ( ph /\\ ps ) -> ph )",
-          "Proved Statement 21",
+          "Given simpl: |- ( ( ph /\\ ps ) -> ph )",
           "isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z e. ( 2 .....",
-          "Proved Statement 30",
+          "Proved isprm3: |- ( P e. Prime <-> ( P e. ( ZZ>= ` 2 ) /\\ A. z...",
           "ralrimiva: |- ( ph -> A. x e. A ps )",
-          "Proved Statement 31"
+          "Proved ralrimiva: |- ( ph -> A. x e. A ps )"
         ],
         "From sylanbrc to impbii": [
           "jca: |- ( ph -> ( ps /\\ ch ) )",
-          "Proved Statement 20",
+          "Proved jca: |- ( ph -> ( ps /\\ ch ) )",
           "sylanbrc: |- ( ph -> th )",
-          "Proved Statement 32"
+          "Proved sylanbrc: |- ( ph -> th )"
         ],
         "From vx to eleq2w": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "From vy to raleqbi1dv": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "From vz to eleq2w": [
           "vx: setvar x",
-          "Proved Statement 34",
+          "Given vx: setvar x",
           "vz: setvar z",
-          "Proved Statement 36"
+          "Given vz: setvar z"
         ],
         "From eleq2w to raleqbi1dv": [
           "vy: setvar y",
-          "Proved Statement 35",
+          "Given vy: setvar y",
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37"
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )"
         ],
         "From eleq2w to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ],
         "From raleqbi1dv to bitrid": [
           "raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )",
-          "Proved Statement 38"
+          "Proved raleqbi1dv: |- ( A = B -> ( A. x e. A ph <-> A. x e. B ps ) )"
         ],
         "From bitrid to anbi12d": [
           "eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
-          "Proved Statement 37",
+          "Proved eleq2w: |- ( x = y -> ( A e. x <-> A e. y ) )",
           "bitrid: |- ( ch -> ( ph <-> th ) )",
-          "Proved Statement 39"
+          "Proved bitrid: |- ( ch -> ( ph <-> th ) )"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
@@ -5121,7 +5157,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Proved Statement 40"
+        "item": "Proved anbi12d: |- ( ph -> ( ( ps /\\ th ) <-> ( ch /\\ ta ) ) )"
       }
     }
   },
