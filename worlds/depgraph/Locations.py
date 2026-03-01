@@ -27,7 +27,7 @@ def generate_location_table(max_nodes: int = 100):
     """Generate a generic location table with numbered names (for class-level registration)."""
     location_table = {}
     for i in range(1, max_nodes + 1):
-        location_table[f"Prove Statement {i}"] = LocData(234800000 + i, "Graph")
+        location_table[f"Complete Node {i}"] = LocData(234800000 + i, "Graph")
     return location_table
 
 

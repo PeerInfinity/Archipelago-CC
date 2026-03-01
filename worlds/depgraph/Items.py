@@ -36,7 +36,7 @@ def generate_item_table(max_nodes: int = 100):
     item_table = {}
 
     for i in range(1, max_nodes + 1):
-        item_table[f"Statement {i}"] = ItemData(
+        item_table[f"Node {i}"] = ItemData(
             234800000 + (i - 1),
             ItemClassification.progression
         )
@@ -48,5 +48,5 @@ def generate_item_table(max_nodes: int = 100):
 item_table = generate_item_table(100)
 
 item_groups = {
-    "Statements": [f"Statement {i}" for i in range(1, 101)],
+    "Nodes": [f"Node {i}" for i in range(1, 101)],
 }

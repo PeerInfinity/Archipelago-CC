@@ -296,6 +296,50 @@ python worlds/depgraph/tasklist/tasklist_to_depgraph.py tasks.txt --dry-run
    python Generate.py --weights_file_path "Templates/DepGraph.yaml" --multi 1 --seed 1
    ```
 
+## How It Plays
+
+### Tasks aren't blocked — just the location checks
+
+Nothing stops you from doing a task early in the real world. If "Vacuum living
+room" shows up as locked in your tracker, you can still vacuum whenever you
+want. What you *won't* get is the Archipelago location check for that task
+until its randomized prerequisites are met. So you can work ahead, but the
+multiworld progression only advances once the logic catches up.
+
+### Completion is honor system
+
+There's no game client verifying that you actually did the dishes. When a task
+becomes available in the tracker, you mark it complete yourself. This is the
+same model the Manual APWorld uses — the difference is that DepGraph enforces
+the *order* through real access rules, while Manual presents everything at once.
+
+### Baking in task names with the world generator
+
+By default, DepGraph uses generic names ("Node 1", "Complete Node 1")
+and substitutes your task labels at runtime. If you want the actual task names
+to appear natively in other trackers and tools, you can run the output through
+the world generator:
+
+```bash
+# 1. Convert task list to DepGraph JSON
+python worlds/depgraph/tasklist/tasklist_to_depgraph.py my_tasks.txt -o my_day.json
+
+# 2. Generate a seed with the DepGraph world
+python Generate.py --weights_file_path "Templates/DepGraph.yaml" --multi 1 --seed 1
+
+# 3. Run the rules export through the world generator
+python -m world_generator frontend/presets/depgraph/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+    -o worlds/my_tasks_worldgen \
+    --game-name "My Tasks" \
+    --force \
+    --canonical-seed 1
+```
+
+This creates a standalone world package with your task names and configuration
+baked in. The generated world's items and locations use your real task names,
+so they display correctly in any Archipelago tracker — not just the DepGraph-
+aware ones.
+
 ## Design Notes
 
 ### Why a synthetic final node?
