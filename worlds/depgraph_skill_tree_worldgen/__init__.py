@@ -23,38 +23,38 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Statement 10": 1,
-    "Statement 11": 1,
-    "Statement 12": 1,
-    "Statement 2": 1,
-    "Statement 3": 1,
-    "Statement 4": 1,
-    "Statement 5": 1,
-    "Statement 6": 1,
-    "Statement 7": 1,
-    "Statement 8": 1,
-    "Statement 9": 1,
+    "Node 10": 1,
+    "Node 11": 1,
+    "Node 12": 1,
+    "Node 2": 1,
+    "Node 3": 1,
+    "Node 4": 1,
+    "Node 5": 1,
+    "Node 6": 1,
+    "Node 7": 1,
+    "Node 8": 1,
+    "Node 9": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Proved Statement 2": "Proved Statement 2",
-    "Proved Statement 3": "Proved Statement 3",
-    "Proved Statement 4": "Proved Statement 4",
-    "Proved Statement 5": "Proved Statement 5",
-    "Proved Statement 6": "Proved Statement 6",
-    "Proved Statement 7": "Proved Statement 7",
-    "Proved Statement 8": "Proved Statement 8",
-    "Proved Statement 9": "Proved Statement 9",
-    "Proved Statement 10": "Proved Statement 10",
-    "Proved Statement 11": "Proved Statement 11",
-    "Proved Statement 12": "Proved Statement 12",
+    "Completed Node 2": "Completed Node 2",
+    "Completed Node 3": "Completed Node 3",
+    "Completed Node 4": "Completed Node 4",
+    "Completed Node 5": "Completed Node 5",
+    "Completed Node 6": "Completed Node 6",
+    "Completed Node 7": "Completed Node 7",
+    "Completed Node 8": "Completed Node 8",
+    "Completed Node 9": "Completed Node 9",
+    "Completed Node 10": "Completed Node 10",
+    "Completed Node 11": "Completed Node 11",
+    "Completed Node 12": "Completed Node 12",
 }
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-    "Statement 1": 1,
-    "Proved Statement 1": 1,
+    "Node 1": 1,
+    "Completed Node 1": 1,
 }
 
 
@@ -104,8 +104,8 @@ class DepGraphWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
-        "Statements": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
+        "Everything": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
+        "Nodes": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -117,43 +117,43 @@ class DepGraphWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Prove Statement 2": "Statement 2",
-        "Prove Statement 3": "Statement 3",
-        "Prove Statement 4": "Statement 4",
-        "Prove Statement 5": "Statement 5",
-        "Prove Statement 6": "Statement 6",
-        "Prove Statement 7": "Statement 7",
-        "Prove Statement 8": "Statement 8",
-        "Prove Statement 9": "Statement 9",
-        "Prove Statement 10": "Statement 10",
-        "Prove Statement 11": "Statement 11",
+        "Complete Node 2": "Node 2",
+        "Complete Node 3": "Node 3",
+        "Complete Node 4": "Node 4",
+        "Complete Node 5": "Node 5",
+        "Complete Node 6": "Node 6",
+        "Complete Node 7": "Node 7",
+        "Complete Node 8": "Node 8",
+        "Complete Node 9": "Node 9",
+        "Complete Node 10": "Node 10",
+        "Complete Node 11": "Node 11",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Prove Statement 2": True,
-        "Proved Statement 2": True,
-        "Prove Statement 3": True,
-        "Proved Statement 3": True,
-        "Prove Statement 4": True,
-        "Proved Statement 4": True,
-        "Prove Statement 5": True,
-        "Proved Statement 5": True,
-        "Prove Statement 6": True,
-        "Proved Statement 6": True,
-        "Prove Statement 7": True,
-        "Proved Statement 7": True,
-        "Prove Statement 8": True,
-        "Proved Statement 8": True,
-        "Prove Statement 9": True,
-        "Proved Statement 9": True,
-        "Prove Statement 10": True,
-        "Proved Statement 10": True,
-        "Prove Statement 11": True,
-        "Proved Statement 11": True,
-        "Prove Statement 12": True,
-        "Proved Statement 12": True,
+        "Complete Node 2": True,
+        "Completed Node 2": True,
+        "Complete Node 3": True,
+        "Completed Node 3": True,
+        "Complete Node 4": True,
+        "Completed Node 4": True,
+        "Complete Node 5": True,
+        "Completed Node 5": True,
+        "Complete Node 6": True,
+        "Completed Node 6": True,
+        "Complete Node 7": True,
+        "Completed Node 7": True,
+        "Complete Node 8": True,
+        "Completed Node 8": True,
+        "Complete Node 9": True,
+        "Completed Node 9": True,
+        "Complete Node 10": True,
+        "Completed Node 10": True,
+        "Complete Node 11": True,
+        "Completed Node 11": True,
+        "Complete Node 12": True,
+        "Completed Node 12": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -161,15 +161,15 @@ class DepGraphWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'DepGraphWorld'
         self.graph_structure = {'label_to_index': {'basic_combat': 1, 'agility': 2, 'strength': 3, 'battle_cry': 4, 'shield_mastery': 5, 'parry': 6, 'counter': 7, 'sword_mastery': 8, 'dual_wield': 9, 'whirlwind': 10, 'warrior_stance': 11, 'legendary_hero': 12}, 'title': 'Skill Tree'}
-        self.num_statements = 12
+        self.num_nodes = 12
         self.preset_label = 'skill_tree s4'
-        self.name_substitutions = {'items': {'Statement 1': 'Basic Combat', 'Proved Statement 1': 'Event: Basic Combat', 'Statement 2': 'Agility', 'Proved Statement 2': 'Event: Agility', 'Statement 3': 'Strength', 'Proved Statement 3': 'Event: Strength', 'Statement 4': 'Battle Cry', 'Proved Statement 4': 'Event: Battle Cry', 'Statement 5': 'Shield Mastery', 'Proved Statement 5': 'Event: Shield Mastery', 'Statement 6': 'Parry', 'Proved Statement 6': 'Event: Parry', 'Statement 7': 'Counter', 'Proved Statement 7': 'Event: Counter', 'Statement 8': 'Sword Mastery', 'Proved Statement 8': 'Event: Sword Mastery', 'Statement 9': 'Dual Wield', 'Proved Statement 9': 'Event: Dual Wield', 'Statement 10': 'Whirlwind', 'Proved Statement 10': 'Event: Whirlwind', 'Statement 11': 'Warrior Stance', 'Proved Statement 11': 'Event: Warrior Stance', 'Statement 12': 'Legendary Hero', 'Proved Statement 12': 'Event: Legendary Hero'}, 'locations': {'Prove Statement 1': 'Basic Combat', 'Prove Statement 2': 'Agility', 'Prove Statement 3': 'Strength', 'Prove Statement 4': 'Battle Cry', 'Prove Statement 5': 'Shield Mastery', 'Prove Statement 6': 'Parry', 'Prove Statement 7': 'Counter', 'Prove Statement 8': 'Sword Mastery', 'Prove Statement 9': 'Dual Wield', 'Prove Statement 10': 'Whirlwind', 'Prove Statement 11': 'Warrior Stance', 'Prove Statement 12': 'Legendary Hero'}, 'regions': {'Prove Statement 1': 'Basic Combat', 'Prove Statement 2': 'Agility', 'Prove Statement 3': 'Strength', 'Prove Statement 4': 'Battle Cry', 'Prove Statement 5': 'Shield Mastery', 'Prove Statement 6': 'Parry', 'Prove Statement 7': 'Counter', 'Prove Statement 8': 'Sword Mastery', 'Prove Statement 9': 'Dual Wield', 'Prove Statement 10': 'Whirlwind', 'Prove Statement 11': 'Warrior Stance', 'Prove Statement 12': 'Legendary Hero'}}
-        self.canonical_placements = {'Prove Statement 2': 'Statement 2', 'Prove Statement 3': 'Statement 3', 'Prove Statement 4': 'Statement 4', 'Prove Statement 5': 'Statement 5', 'Prove Statement 6': 'Statement 6', 'Prove Statement 7': 'Statement 7', 'Prove Statement 8': 'Statement 8', 'Prove Statement 9': 'Statement 9', 'Prove Statement 10': 'Statement 10', 'Prove Statement 11': 'Statement 11'}
-        self.location_dependencies = {'Prove Statement 2': ['Statement 1', 'Proved Statement 1'], 'Proved Statement 2': ['Statement 1', 'Proved Statement 1'], 'Prove Statement 3': ['Statement 1', 'Proved Statement 1'], 'Proved Statement 3': ['Statement 1', 'Proved Statement 1'], 'Prove Statement 4': ['Statement 3', 'Proved Statement 3'], 'Proved Statement 4': ['Statement 3', 'Proved Statement 3'], 'Prove Statement 5': ['Statement 3', 'Proved Statement 3'], 'Proved Statement 5': ['Statement 3', 'Proved Statement 3'], 'Prove Statement 6': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'Proved Statement 6': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'Prove Statement 7': ['Statement 6', 'Proved Statement 6'], 'Proved Statement 7': ['Statement 6', 'Proved Statement 6'], 'Prove Statement 8': ['Statement 3', 'Proved Statement 3'], 'Proved Statement 8': ['Statement 3', 'Proved Statement 3'], 'Prove Statement 9': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'Proved Statement 9': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'Prove Statement 10': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'Proved Statement 10': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'Prove Statement 11': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'Proved Statement 11': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'Prove Statement 12': ['Statement 11', 'Proved Statement 11'], 'Proved Statement 12': ['Statement 11', 'Proved Statement 11']}
-        self.entrance_dependencies = {'From basic_combat to agility': ['Statement 1', 'Proved Statement 1'], 'From basic_combat to strength': ['Statement 1', 'Proved Statement 1'], 'From strength to battle_cry': ['Statement 3', 'Proved Statement 3'], 'From strength to shield_mastery': ['Statement 3', 'Proved Statement 3'], 'From agility to parry': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'From shield_mastery to parry': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'From parry to counter': ['Statement 6', 'Proved Statement 6'], 'From strength to sword_mastery': ['Statement 3', 'Proved Statement 3'], 'From agility to dual_wield': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'From sword_mastery to dual_wield': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'From battle_cry to whirlwind': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'From dual_wield to whirlwind': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'From counter to warrior_stance': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'From whirlwind to warrior_stance': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'From warrior_stance to legendary_hero': ['Statement 11', 'Proved Statement 11']}
-        self.exit_dependencies = {'From basic_combat to agility': ['Statement 1', 'Proved Statement 1'], 'From basic_combat to strength': ['Statement 1', 'Proved Statement 1'], 'From agility to parry': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'From agility to dual_wield': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'From strength to battle_cry': ['Statement 3', 'Proved Statement 3'], 'From strength to shield_mastery': ['Statement 3', 'Proved Statement 3'], 'From strength to sword_mastery': ['Statement 3', 'Proved Statement 3'], 'From battle_cry to whirlwind': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'From shield_mastery to parry': ['Statement 2', 'Proved Statement 2', 'Statement 5', 'Proved Statement 5'], 'From parry to counter': ['Statement 6', 'Proved Statement 6'], 'From counter to warrior_stance': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'From sword_mastery to dual_wield': ['Statement 2', 'Proved Statement 2', 'Statement 8', 'Proved Statement 8'], 'From dual_wield to whirlwind': ['Statement 4', 'Proved Statement 4', 'Statement 9', 'Proved Statement 9'], 'From whirlwind to warrior_stance': ['Statement 7', 'Proved Statement 7', 'Statement 10', 'Proved Statement 10'], 'From warrior_stance to legendary_hero': ['Statement 11', 'Proved Statement 11']}
+        self.name_substitutions = {'items': {'Node 1': 'Basic Combat', 'Completed Node 1': 'Event: Basic Combat', 'Node 2': 'Agility', 'Completed Node 2': 'Event: Agility', 'Node 3': 'Strength', 'Completed Node 3': 'Event: Strength', 'Node 4': 'Battle Cry', 'Completed Node 4': 'Event: Battle Cry', 'Node 5': 'Shield Mastery', 'Completed Node 5': 'Event: Shield Mastery', 'Node 6': 'Parry', 'Completed Node 6': 'Event: Parry', 'Node 7': 'Counter', 'Completed Node 7': 'Event: Counter', 'Node 8': 'Sword Mastery', 'Completed Node 8': 'Event: Sword Mastery', 'Node 9': 'Dual Wield', 'Completed Node 9': 'Event: Dual Wield', 'Node 10': 'Whirlwind', 'Completed Node 10': 'Event: Whirlwind', 'Node 11': 'Warrior Stance', 'Completed Node 11': 'Event: Warrior Stance', 'Node 12': 'Legendary Hero', 'Completed Node 12': 'Event: Legendary Hero'}, 'locations': {'Complete Node 1': 'Basic Combat', 'Complete Node 2': 'Agility', 'Complete Node 3': 'Strength', 'Complete Node 4': 'Battle Cry', 'Complete Node 5': 'Shield Mastery', 'Complete Node 6': 'Parry', 'Complete Node 7': 'Counter', 'Complete Node 8': 'Sword Mastery', 'Complete Node 9': 'Dual Wield', 'Complete Node 10': 'Whirlwind', 'Complete Node 11': 'Warrior Stance', 'Complete Node 12': 'Legendary Hero'}, 'regions': {'Complete Node 1': 'Basic Combat', 'Complete Node 2': 'Agility', 'Complete Node 3': 'Strength', 'Complete Node 4': 'Battle Cry', 'Complete Node 5': 'Shield Mastery', 'Complete Node 6': 'Parry', 'Complete Node 7': 'Counter', 'Complete Node 8': 'Sword Mastery', 'Complete Node 9': 'Dual Wield', 'Complete Node 10': 'Whirlwind', 'Complete Node 11': 'Warrior Stance', 'Complete Node 12': 'Legendary Hero'}}
+        self.canonical_placements = {'Complete Node 2': 'Node 2', 'Complete Node 3': 'Node 3', 'Complete Node 4': 'Node 4', 'Complete Node 5': 'Node 5', 'Complete Node 6': 'Node 6', 'Complete Node 7': 'Node 7', 'Complete Node 8': 'Node 8', 'Complete Node 9': 'Node 9', 'Complete Node 10': 'Node 10', 'Complete Node 11': 'Node 11'}
+        self.location_dependencies = {'Complete Node 2': ['Node 1', 'Completed Node 1'], 'Completed Node 2': ['Node 1', 'Completed Node 1'], 'Complete Node 3': ['Node 1', 'Completed Node 1'], 'Completed Node 3': ['Node 1', 'Completed Node 1'], 'Complete Node 4': ['Node 3', 'Completed Node 3'], 'Completed Node 4': ['Node 3', 'Completed Node 3'], 'Complete Node 5': ['Node 3', 'Completed Node 3'], 'Completed Node 5': ['Node 3', 'Completed Node 3'], 'Complete Node 6': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'Completed Node 6': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'Complete Node 7': ['Node 6', 'Completed Node 6'], 'Completed Node 7': ['Node 6', 'Completed Node 6'], 'Complete Node 8': ['Node 3', 'Completed Node 3'], 'Completed Node 8': ['Node 3', 'Completed Node 3'], 'Complete Node 9': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'Completed Node 9': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'Complete Node 10': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'Completed Node 10': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'Complete Node 11': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'Completed Node 11': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'Complete Node 12': ['Node 11', 'Completed Node 11'], 'Completed Node 12': ['Node 11', 'Completed Node 11']}
+        self.entrance_dependencies = {'From basic_combat to agility': ['Node 1', 'Completed Node 1'], 'From basic_combat to strength': ['Node 1', 'Completed Node 1'], 'From strength to battle_cry': ['Node 3', 'Completed Node 3'], 'From strength to shield_mastery': ['Node 3', 'Completed Node 3'], 'From agility to parry': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'From shield_mastery to parry': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'From parry to counter': ['Node 6', 'Completed Node 6'], 'From strength to sword_mastery': ['Node 3', 'Completed Node 3'], 'From agility to dual_wield': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'From sword_mastery to dual_wield': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'From battle_cry to whirlwind': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'From dual_wield to whirlwind': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'From counter to warrior_stance': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'From whirlwind to warrior_stance': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'From warrior_stance to legendary_hero': ['Node 11', 'Completed Node 11']}
+        self.exit_dependencies = {'From basic_combat to agility': ['Node 1', 'Completed Node 1'], 'From basic_combat to strength': ['Node 1', 'Completed Node 1'], 'From agility to parry': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'From agility to dual_wield': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'From strength to battle_cry': ['Node 3', 'Completed Node 3'], 'From strength to shield_mastery': ['Node 3', 'Completed Node 3'], 'From strength to sword_mastery': ['Node 3', 'Completed Node 3'], 'From battle_cry to whirlwind': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'From shield_mastery to parry': ['Node 2', 'Completed Node 2', 'Node 5', 'Completed Node 5'], 'From parry to counter': ['Node 6', 'Completed Node 6'], 'From counter to warrior_stance': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'From sword_mastery to dual_wield': ['Node 2', 'Completed Node 2', 'Node 8', 'Completed Node 8'], 'From dual_wield to whirlwind': ['Node 4', 'Completed Node 4', 'Node 9', 'Completed Node 9'], 'From whirlwind to warrior_stance': ['Node 7', 'Completed Node 7', 'Node 10', 'Completed Node 10'], 'From warrior_stance to legendary_hero': ['Node 11', 'Completed Node 11']}
         self.world_description = 'Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.'
-        self.slot_data = {'proof_structure': {1: {'label': 'basic_combat', 'expression': 'Basic Combat', 'dependencies': [], 'full_text': 'basic_combat: Basic Combat'}, 2: {'label': 'agility', 'expression': 'Agility', 'dependencies': [1], 'full_text': 'agility: Agility'}, 3: {'label': 'strength', 'expression': 'Strength', 'dependencies': [1], 'full_text': 'strength: Strength'}, 4: {'label': 'battle_cry', 'expression': 'Battle Cry', 'dependencies': [3], 'full_text': 'battle_cry: Battle Cry'}, 5: {'label': 'shield_mastery', 'expression': 'Shield Mastery', 'dependencies': [3], 'full_text': 'shield_mastery: Shield Mastery'}, 6: {'label': 'parry', 'expression': 'Parry', 'dependencies': [2, 5], 'full_text': 'parry: Parry'}, 7: {'label': 'counter', 'expression': 'Counter', 'dependencies': [6], 'full_text': 'counter: Counter'}, 8: {'label': 'sword_mastery', 'expression': 'Sword Mastery', 'dependencies': [3], 'full_text': 'sword_mastery: Sword Mastery'}, 9: {'label': 'dual_wield', 'expression': 'Dual Wield', 'dependencies': [2, 8], 'full_text': 'dual_wield: Dual Wield'}, 10: {'label': 'whirlwind', 'expression': 'Whirlwind', 'dependencies': [4, 9], 'full_text': 'whirlwind: Whirlwind'}, 11: {'label': 'warrior_stance', 'expression': 'Warrior Stance', 'dependencies': [7, 10], 'full_text': 'warrior_stance: Warrior Stance'}, 12: {'label': 'legendary_hero', 'expression': 'Legendary Hero', 'dependencies': [11], 'full_text': 'legendary_hero: Legendary Hero'}}, 'starting_statements': [1], 'theorem': 'Skill Tree', 'randomize_items': 1, 'vanilla_placement': 0}
+        self.slot_data = {'graph_structure': {1: {'label': 'basic_combat', 'expression': 'Basic Combat', 'dependencies': [], 'full_text': 'basic_combat: Basic Combat'}, 2: {'label': 'agility', 'expression': 'Agility', 'dependencies': [1], 'full_text': 'agility: Agility'}, 3: {'label': 'strength', 'expression': 'Strength', 'dependencies': [1], 'full_text': 'strength: Strength'}, 4: {'label': 'battle_cry', 'expression': 'Battle Cry', 'dependencies': [3], 'full_text': 'battle_cry: Battle Cry'}, 5: {'label': 'shield_mastery', 'expression': 'Shield Mastery', 'dependencies': [3], 'full_text': 'shield_mastery: Shield Mastery'}, 6: {'label': 'parry', 'expression': 'Parry', 'dependencies': [2, 5], 'full_text': 'parry: Parry'}, 7: {'label': 'counter', 'expression': 'Counter', 'dependencies': [6], 'full_text': 'counter: Counter'}, 8: {'label': 'sword_mastery', 'expression': 'Sword Mastery', 'dependencies': [3], 'full_text': 'sword_mastery: Sword Mastery'}, 9: {'label': 'dual_wield', 'expression': 'Dual Wield', 'dependencies': [2, 8], 'full_text': 'dual_wield: Dual Wield'}, 10: {'label': 'whirlwind', 'expression': 'Whirlwind', 'dependencies': [4, 9], 'full_text': 'whirlwind: Whirlwind'}, 11: {'label': 'warrior_stance', 'expression': 'Warrior Stance', 'dependencies': [7, 10], 'full_text': 'warrior_stance: Warrior Stance'}, 12: {'label': 'legendary_hero', 'expression': 'Legendary Hero', 'dependencies': [11], 'full_text': 'legendary_hero: Legendary Hero'}}, 'starting_nodes': [1], 'title': 'Skill Tree', 'randomize_items': 1, 'vanilla_placement': 0}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -325,7 +325,7 @@ class DepGraphWorld(RuleWorldMixin, World):
     def generate_basic(self) -> None:
         """Set completion condition."""
         self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("Proved Statement 12", self.player)
+            lambda state: state.has("Completed Node 12", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
@@ -419,9 +419,9 @@ class DepGraphWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "proof_structure": {1: {'label': 'basic_combat', 'expression': 'Basic Combat', 'dependencies': [], 'full_text': 'basic_combat: Basic Combat'}, 2: {'label': 'agility', 'expression': 'Agility', 'dependencies': [1], 'full_text': 'agility: Agility'}, 3: {'label': 'strength', 'expression': 'Strength', 'dependencies': [1], 'full_text': 'strength: Strength'}, 4: {'label': 'battle_cry', 'expression': 'Battle Cry', 'dependencies': [3], 'full_text': 'battle_cry: Battle Cry'}, 5: {'label': 'shield_mastery', 'expression': 'Shield Mastery', 'dependencies': [3], 'full_text': 'shield_mastery: Shield Mastery'}, 6: {'label': 'parry', 'expression': 'Parry', 'dependencies': [2, 5], 'full_text': 'parry: Parry'}, 7: {'label': 'counter', 'expression': 'Counter', 'dependencies': [6], 'full_text': 'counter: Counter'}, 8: {'label': 'sword_mastery', 'expression': 'Sword Mastery', 'dependencies': [3], 'full_text': 'sword_mastery: Sword Mastery'}, 9: {'label': 'dual_wield', 'expression': 'Dual Wield', 'dependencies': [2, 8], 'full_text': 'dual_wield: Dual Wield'}, 10: {'label': 'whirlwind', 'expression': 'Whirlwind', 'dependencies': [4, 9], 'full_text': 'whirlwind: Whirlwind'}, 11: {'label': 'warrior_stance', 'expression': 'Warrior Stance', 'dependencies': [7, 10], 'full_text': 'warrior_stance: Warrior Stance'}, 12: {'label': 'legendary_hero', 'expression': 'Legendary Hero', 'dependencies': [11], 'full_text': 'legendary_hero: Legendary Hero'}},
-            "starting_statements": [1],
-            "theorem": "Skill Tree",
+            "graph_structure": {1: {'label': 'basic_combat', 'expression': 'Basic Combat', 'dependencies': [], 'full_text': 'basic_combat: Basic Combat'}, 2: {'label': 'agility', 'expression': 'Agility', 'dependencies': [1], 'full_text': 'agility: Agility'}, 3: {'label': 'strength', 'expression': 'Strength', 'dependencies': [1], 'full_text': 'strength: Strength'}, 4: {'label': 'battle_cry', 'expression': 'Battle Cry', 'dependencies': [3], 'full_text': 'battle_cry: Battle Cry'}, 5: {'label': 'shield_mastery', 'expression': 'Shield Mastery', 'dependencies': [3], 'full_text': 'shield_mastery: Shield Mastery'}, 6: {'label': 'parry', 'expression': 'Parry', 'dependencies': [2, 5], 'full_text': 'parry: Parry'}, 7: {'label': 'counter', 'expression': 'Counter', 'dependencies': [6], 'full_text': 'counter: Counter'}, 8: {'label': 'sword_mastery', 'expression': 'Sword Mastery', 'dependencies': [3], 'full_text': 'sword_mastery: Sword Mastery'}, 9: {'label': 'dual_wield', 'expression': 'Dual Wield', 'dependencies': [2, 8], 'full_text': 'dual_wield: Dual Wield'}, 10: {'label': 'whirlwind', 'expression': 'Whirlwind', 'dependencies': [4, 9], 'full_text': 'whirlwind: Whirlwind'}, 11: {'label': 'warrior_stance', 'expression': 'Warrior Stance', 'dependencies': [7, 10], 'full_text': 'warrior_stance: Warrior Stance'}, 12: {'label': 'legendary_hero', 'expression': 'Legendary Hero', 'dependencies': [11], 'full_text': 'legendary_hero: Legendary Hero'}},
+            "starting_nodes": [1],
+            "title": "Skill Tree",
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": 0,
         }

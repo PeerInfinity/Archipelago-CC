@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-03-01T03:42:14.026543+00:00",
+    "timestamp": "2026-03-01T18:32:18.414654+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -18,7 +18,7 @@
     "DepGraph": {
       "template": "DepGraph.yaml",
       "game_name": "DepGraph",
-      "timestamp": "2026-03-01T03:42:17.463930+00:00",
+      "timestamp": "2026-03-01T18:32:21.809463+00:00",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/depgraph/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/depgraph/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 3.59
+          "processing_time_seconds": 3.54
         },
         "spoiler_test": {
           "success": false,
@@ -40,7 +40,7 @@
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/depgraph_worldgen",
           "error": null,
-          "processing_time_seconds": 0.55
+          "processing_time_seconds": 0.53
         },
         "seed_generation": {
           "success": false

@@ -22,75 +22,75 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From basic_combat to agility", player),
-        HasAll('Proved Statement 1', 'Statement 1')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From basic_combat to strength", player),
-        HasAll('Proved Statement 1', 'Statement 1')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From agility to parry", player),
-        HasAll('Proved Statement 2', 'Proved Statement 5', 'Statement 2', 'Statement 5')
+        HasAll('Completed Node 2', 'Completed Node 5', 'Node 2', 'Node 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From agility to dual_wield", player),
-        HasAll('Proved Statement 2', 'Proved Statement 8', 'Statement 2', 'Statement 8')
+        HasAll('Completed Node 2', 'Completed Node 8', 'Node 2', 'Node 8')
     )
 
     world.set_rule(
         multiworld.get_entrance("From strength to battle_cry", player),
-        HasAll('Proved Statement 3', 'Statement 3')
+        HasAll('Completed Node 3', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From strength to shield_mastery", player),
-        HasAll('Proved Statement 3', 'Statement 3')
+        HasAll('Completed Node 3', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From strength to sword_mastery", player),
-        HasAll('Proved Statement 3', 'Statement 3')
+        HasAll('Completed Node 3', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From battle_cry to whirlwind", player),
-        HasAll('Proved Statement 4', 'Proved Statement 9', 'Statement 4', 'Statement 9')
+        HasAll('Completed Node 4', 'Completed Node 9', 'Node 4', 'Node 9')
     )
 
     world.set_rule(
         multiworld.get_entrance("From shield_mastery to parry", player),
-        HasAll('Proved Statement 2', 'Proved Statement 5', 'Statement 2', 'Statement 5')
+        HasAll('Completed Node 2', 'Completed Node 5', 'Node 2', 'Node 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From parry to counter", player),
-        HasAll('Proved Statement 6', 'Statement 6')
+        HasAll('Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From counter to warrior_stance", player),
-        HasAll('Proved Statement 10', 'Proved Statement 7', 'Statement 10', 'Statement 7')
+        HasAll('Completed Node 10', 'Completed Node 7', 'Node 10', 'Node 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From sword_mastery to dual_wield", player),
-        HasAll('Proved Statement 2', 'Proved Statement 8', 'Statement 2', 'Statement 8')
+        HasAll('Completed Node 2', 'Completed Node 8', 'Node 2', 'Node 8')
     )
 
     world.set_rule(
         multiworld.get_entrance("From dual_wield to whirlwind", player),
-        HasAll('Proved Statement 4', 'Proved Statement 9', 'Statement 4', 'Statement 9')
+        HasAll('Completed Node 4', 'Completed Node 9', 'Node 4', 'Node 9')
     )
 
     world.set_rule(
         multiworld.get_entrance("From whirlwind to warrior_stance", player),
-        HasAll('Proved Statement 10', 'Proved Statement 7', 'Statement 10', 'Statement 7')
+        HasAll('Completed Node 10', 'Completed Node 7', 'Node 10', 'Node 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From warrior_stance to legendary_hero", player),
-        HasAll('Proved Statement 11', 'Statement 11')
+        HasAll('Completed Node 11', 'Node 11')
     )

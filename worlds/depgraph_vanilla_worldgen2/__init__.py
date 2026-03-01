@@ -23,34 +23,34 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Statement 10": 1,
-    "Statement 2": 1,
-    "Statement 3": 1,
-    "Statement 4": 1,
-    "Statement 5": 1,
-    "Statement 6": 1,
-    "Statement 7": 1,
-    "Statement 8": 1,
-    "Statement 9": 1,
+    "Node 10": 1,
+    "Node 2": 1,
+    "Node 3": 1,
+    "Node 4": 1,
+    "Node 5": 1,
+    "Node 6": 1,
+    "Node 7": 1,
+    "Node 8": 1,
+    "Node 9": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Proved Statement 2": "Proved Statement 2",
-    "Proved Statement 3": "Proved Statement 3",
-    "Proved Statement 4": "Proved Statement 4",
-    "Proved Statement 5": "Proved Statement 5",
-    "Proved Statement 6": "Proved Statement 6",
-    "Proved Statement 7": "Proved Statement 7",
-    "Proved Statement 8": "Proved Statement 8",
-    "Proved Statement 9": "Proved Statement 9",
-    "Proved Statement 10": "Proved Statement 10",
+    "Completed Node 2": "Completed Node 2",
+    "Completed Node 3": "Completed Node 3",
+    "Completed Node 4": "Completed Node 4",
+    "Completed Node 5": "Completed Node 5",
+    "Completed Node 6": "Completed Node 6",
+    "Completed Node 7": "Completed Node 7",
+    "Completed Node 8": "Completed Node 8",
+    "Completed Node 9": "Completed Node 9",
+    "Completed Node 10": "Completed Node 10",
 }
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-    "Statement 1": 1,
-    "Proved Statement 1": 1,
+    "Node 1": 1,
+    "Completed Node 1": 1,
 }
 
 
@@ -100,8 +100,8 @@ class DepGraphWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
-        "Statements": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
+        "Everything": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
+        "Nodes": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
     }
 
     # Placements match the original non-randomized game
@@ -115,37 +115,37 @@ class DepGraphWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Prove Statement 2": "Statement 2",
-        "Prove Statement 3": "Statement 3",
-        "Prove Statement 4": "Statement 4",
-        "Prove Statement 5": "Statement 5",
-        "Prove Statement 6": "Statement 6",
-        "Prove Statement 7": "Statement 7",
-        "Prove Statement 8": "Statement 8",
-        "Prove Statement 9": "Statement 9",
+        "Complete Node 2": "Node 2",
+        "Complete Node 3": "Node 3",
+        "Complete Node 4": "Node 4",
+        "Complete Node 5": "Node 5",
+        "Complete Node 6": "Node 6",
+        "Complete Node 7": "Node 7",
+        "Complete Node 8": "Node 8",
+        "Complete Node 9": "Node 9",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Prove Statement 2": True,
-        "Proved Statement 2": True,
-        "Prove Statement 3": True,
-        "Proved Statement 3": True,
-        "Prove Statement 4": True,
-        "Proved Statement 4": True,
-        "Prove Statement 5": True,
-        "Proved Statement 5": True,
-        "Prove Statement 6": True,
-        "Proved Statement 6": True,
-        "Prove Statement 7": True,
-        "Proved Statement 7": True,
-        "Prove Statement 8": True,
-        "Proved Statement 8": True,
-        "Prove Statement 9": True,
-        "Proved Statement 9": True,
-        "Prove Statement 10": True,
-        "Proved Statement 10": True,
+        "Complete Node 2": True,
+        "Completed Node 2": True,
+        "Complete Node 3": True,
+        "Completed Node 3": True,
+        "Complete Node 4": True,
+        "Completed Node 4": True,
+        "Complete Node 5": True,
+        "Completed Node 5": True,
+        "Complete Node 6": True,
+        "Completed Node 6": True,
+        "Complete Node 7": True,
+        "Completed Node 7": True,
+        "Complete Node 8": True,
+        "Completed Node 8": True,
+        "Complete Node 9": True,
+        "Completed Node 9": True,
+        "Complete Node 10": True,
+        "Completed Node 10": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -154,16 +154,16 @@ class DepGraphWorld(RuleWorldMixin, World):
         self.world_class_name = 'DepGraphWorld'
         self.count_non_advancement_items = True
         self.graph_structure = {'label_to_index': {'basic_tools': 1, 'logging': 2, 'carpentry': 3, 'mining': 4, 'smelting': 5, 'metalworking': 6, 'architecture': 7, 'engineering': 8, 'steam_power': 9, 'industrial_age': 10}, 'title': 'Tech Tree'}
-        self.num_statements = 10
+        self.num_nodes = 10
         self.is_vanilla = True
         self.preset_label = 'tech_tree v'
-        self.name_substitutions = {'items': {'Statement 1': 'Basic Tools', 'Proved Statement 1': 'Event: Basic Tools', 'Statement 2': 'Logging', 'Proved Statement 2': 'Event: Logging', 'Statement 3': 'Carpentry', 'Proved Statement 3': 'Event: Carpentry', 'Statement 4': 'Mining', 'Proved Statement 4': 'Event: Mining', 'Statement 5': 'Smelting', 'Proved Statement 5': 'Event: Smelting', 'Statement 6': 'Metalworking', 'Proved Statement 6': 'Event: Metalworking', 'Statement 7': 'Architecture', 'Proved Statement 7': 'Event: Architecture', 'Statement 8': 'Engineering', 'Proved Statement 8': 'Event: Engineering', 'Statement 9': 'Steam Power', 'Proved Statement 9': 'Event: Steam Power', 'Statement 10': 'Industrial Age', 'Proved Statement 10': 'Event: Industrial Age'}, 'locations': {'Prove Statement 1': 'Basic Tools', 'Prove Statement 2': 'Logging', 'Prove Statement 3': 'Carpentry', 'Prove Statement 4': 'Mining', 'Prove Statement 5': 'Smelting', 'Prove Statement 6': 'Metalworking', 'Prove Statement 7': 'Architecture', 'Prove Statement 8': 'Engineering', 'Prove Statement 9': 'Steam Power', 'Prove Statement 10': 'Industrial Age'}, 'regions': {'Prove Statement 1': 'Basic Tools', 'Prove Statement 2': 'Logging', 'Prove Statement 3': 'Carpentry', 'Prove Statement 4': 'Mining', 'Prove Statement 5': 'Smelting', 'Prove Statement 6': 'Metalworking', 'Prove Statement 7': 'Architecture', 'Prove Statement 8': 'Engineering', 'Prove Statement 9': 'Steam Power', 'Prove Statement 10': 'Industrial Age'}}
-        self.canonical_placements = {'Prove Statement 2': 'Statement 2', 'Prove Statement 3': 'Statement 3', 'Prove Statement 4': 'Statement 4', 'Prove Statement 5': 'Statement 5', 'Prove Statement 6': 'Statement 6', 'Prove Statement 7': 'Statement 7', 'Prove Statement 8': 'Statement 8', 'Prove Statement 9': 'Statement 9'}
-        self.location_dependencies = {'Prove Statement 2': ['Statement 1', 'Proved Statement 1'], 'Proved Statement 2': ['Statement 1', 'Proved Statement 1'], 'Prove Statement 3': ['Statement 2', 'Proved Statement 2'], 'Proved Statement 3': ['Statement 2', 'Proved Statement 2'], 'Prove Statement 4': ['Statement 1', 'Proved Statement 1'], 'Proved Statement 4': ['Statement 1', 'Proved Statement 1'], 'Prove Statement 5': ['Statement 4', 'Proved Statement 4'], 'Proved Statement 5': ['Statement 4', 'Proved Statement 4'], 'Prove Statement 6': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'Proved Statement 6': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'Prove Statement 7': ['Statement 6', 'Proved Statement 6'], 'Proved Statement 7': ['Statement 6', 'Proved Statement 6'], 'Prove Statement 8': ['Statement 6', 'Proved Statement 6'], 'Proved Statement 8': ['Statement 6', 'Proved Statement 6'], 'Prove Statement 9': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'Proved Statement 9': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'Prove Statement 10': ['Statement 9', 'Proved Statement 9'], 'Proved Statement 10': ['Statement 9', 'Proved Statement 9']}
-        self.entrance_dependencies = {'From basic_tools to logging': ['Statement 1', 'Proved Statement 1'], 'From logging to carpentry': ['Statement 2', 'Proved Statement 2'], 'From basic_tools to mining': ['Statement 1', 'Proved Statement 1'], 'From mining to smelting': ['Statement 4', 'Proved Statement 4'], 'From carpentry to metalworking': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'From smelting to metalworking': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'From metalworking to architecture': ['Statement 6', 'Proved Statement 6'], 'From metalworking to engineering': ['Statement 6', 'Proved Statement 6'], 'From architecture to steam_power': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'From engineering to steam_power': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'From steam_power to industrial_age': ['Statement 9', 'Proved Statement 9']}
-        self.exit_dependencies = {'From basic_tools to logging': ['Statement 1', 'Proved Statement 1'], 'From basic_tools to mining': ['Statement 1', 'Proved Statement 1'], 'From logging to carpentry': ['Statement 2', 'Proved Statement 2'], 'From carpentry to metalworking': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'From mining to smelting': ['Statement 4', 'Proved Statement 4'], 'From smelting to metalworking': ['Statement 3', 'Proved Statement 3', 'Statement 5', 'Proved Statement 5'], 'From metalworking to architecture': ['Statement 6', 'Proved Statement 6'], 'From metalworking to engineering': ['Statement 6', 'Proved Statement 6'], 'From architecture to steam_power': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'From engineering to steam_power': ['Statement 7', 'Proved Statement 7', 'Statement 8', 'Proved Statement 8'], 'From steam_power to industrial_age': ['Statement 9', 'Proved Statement 9']}
+        self.name_substitutions = {'items': {'Node 1': 'Basic Tools', 'Completed Node 1': 'Event: Basic Tools', 'Node 2': 'Logging', 'Completed Node 2': 'Event: Logging', 'Node 3': 'Carpentry', 'Completed Node 3': 'Event: Carpentry', 'Node 4': 'Mining', 'Completed Node 4': 'Event: Mining', 'Node 5': 'Smelting', 'Completed Node 5': 'Event: Smelting', 'Node 6': 'Metalworking', 'Completed Node 6': 'Event: Metalworking', 'Node 7': 'Architecture', 'Completed Node 7': 'Event: Architecture', 'Node 8': 'Engineering', 'Completed Node 8': 'Event: Engineering', 'Node 9': 'Steam Power', 'Completed Node 9': 'Event: Steam Power', 'Node 10': 'Industrial Age', 'Completed Node 10': 'Event: Industrial Age'}, 'locations': {'Complete Node 1': 'Basic Tools', 'Complete Node 2': 'Logging', 'Complete Node 3': 'Carpentry', 'Complete Node 4': 'Mining', 'Complete Node 5': 'Smelting', 'Complete Node 6': 'Metalworking', 'Complete Node 7': 'Architecture', 'Complete Node 8': 'Engineering', 'Complete Node 9': 'Steam Power', 'Complete Node 10': 'Industrial Age'}, 'regions': {'Complete Node 1': 'Basic Tools', 'Complete Node 2': 'Logging', 'Complete Node 3': 'Carpentry', 'Complete Node 4': 'Mining', 'Complete Node 5': 'Smelting', 'Complete Node 6': 'Metalworking', 'Complete Node 7': 'Architecture', 'Complete Node 8': 'Engineering', 'Complete Node 9': 'Steam Power', 'Complete Node 10': 'Industrial Age'}}
+        self.canonical_placements = {'Complete Node 2': 'Node 2', 'Complete Node 3': 'Node 3', 'Complete Node 4': 'Node 4', 'Complete Node 5': 'Node 5', 'Complete Node 6': 'Node 6', 'Complete Node 7': 'Node 7', 'Complete Node 8': 'Node 8', 'Complete Node 9': 'Node 9'}
+        self.location_dependencies = {'Complete Node 2': ['Node 1', 'Completed Node 1'], 'Completed Node 2': ['Node 1', 'Completed Node 1'], 'Complete Node 3': ['Node 2', 'Completed Node 2'], 'Completed Node 3': ['Node 2', 'Completed Node 2'], 'Complete Node 4': ['Node 1', 'Completed Node 1'], 'Completed Node 4': ['Node 1', 'Completed Node 1'], 'Complete Node 5': ['Node 4', 'Completed Node 4'], 'Completed Node 5': ['Node 4', 'Completed Node 4'], 'Complete Node 6': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'Completed Node 6': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'Complete Node 7': ['Node 6', 'Completed Node 6'], 'Completed Node 7': ['Node 6', 'Completed Node 6'], 'Complete Node 8': ['Node 6', 'Completed Node 6'], 'Completed Node 8': ['Node 6', 'Completed Node 6'], 'Complete Node 9': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'Completed Node 9': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'Complete Node 10': ['Node 9', 'Completed Node 9'], 'Completed Node 10': ['Node 9', 'Completed Node 9']}
+        self.entrance_dependencies = {'From basic_tools to logging': ['Node 1', 'Completed Node 1'], 'From logging to carpentry': ['Node 2', 'Completed Node 2'], 'From basic_tools to mining': ['Node 1', 'Completed Node 1'], 'From mining to smelting': ['Node 4', 'Completed Node 4'], 'From carpentry to metalworking': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'From smelting to metalworking': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'From metalworking to architecture': ['Node 6', 'Completed Node 6'], 'From metalworking to engineering': ['Node 6', 'Completed Node 6'], 'From architecture to steam_power': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'From engineering to steam_power': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'From steam_power to industrial_age': ['Node 9', 'Completed Node 9']}
+        self.exit_dependencies = {'From basic_tools to logging': ['Node 1', 'Completed Node 1'], 'From basic_tools to mining': ['Node 1', 'Completed Node 1'], 'From logging to carpentry': ['Node 2', 'Completed Node 2'], 'From carpentry to metalworking': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'From mining to smelting': ['Node 4', 'Completed Node 4'], 'From smelting to metalworking': ['Node 3', 'Completed Node 3', 'Node 5', 'Completed Node 5'], 'From metalworking to architecture': ['Node 6', 'Completed Node 6'], 'From metalworking to engineering': ['Node 6', 'Completed Node 6'], 'From architecture to steam_power': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'From engineering to steam_power': ['Node 7', 'Completed Node 7', 'Node 8', 'Completed Node 8'], 'From steam_power to industrial_age': ['Node 9', 'Completed Node 9']}
         self.world_description = 'Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.'
-        self.slot_data = {'proof_structure': {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}}, 'starting_statements': [1], 'theorem': 'Tech Tree', 'randomize_items': False, 'vanilla_placement': 1}
+        self.slot_data = {'graph_structure': {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}}, 'starting_nodes': [1], 'title': 'Tech Tree', 'randomize_items': False, 'vanilla_placement': 1}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -319,7 +319,7 @@ class DepGraphWorld(RuleWorldMixin, World):
     def generate_basic(self) -> None:
         """Set completion condition."""
         self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("Proved Statement 10", self.player)
+            lambda state: state.has("Completed Node 10", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
@@ -413,9 +413,9 @@ class DepGraphWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "proof_structure": {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}},
-            "starting_statements": [1],
-            "theorem": "Tech Tree",
+            "graph_structure": {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}},
+            "starting_nodes": [1],
+            "title": "Tech Tree",
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": 1,
         }

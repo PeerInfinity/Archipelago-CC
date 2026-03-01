@@ -36,15 +36,15 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Proved Statement 2": "Event: Logging",
-    "Proved Statement 3": "Event: Carpentry",
-    "Proved Statement 4": "Event: Mining",
-    "Proved Statement 5": "Event: Smelting",
-    "Proved Statement 6": "Event: Metalworking",
-    "Proved Statement 7": "Event: Architecture",
-    "Proved Statement 8": "Event: Engineering",
-    "Proved Statement 9": "Event: Steam Power",
-    "Proved Statement 10": "Event: Industrial Age",
+    "Completed Node 2": "Event: Logging",
+    "Completed Node 3": "Event: Carpentry",
+    "Completed Node 4": "Event: Mining",
+    "Completed Node 5": "Event: Smelting",
+    "Completed Node 6": "Event: Metalworking",
+    "Completed Node 7": "Event: Architecture",
+    "Completed Node 8": "Event: Engineering",
+    "Completed Node 9": "Event: Steam Power",
+    "Completed Node 10": "Event: Industrial Age",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -100,8 +100,8 @@ class DepGraphWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100", "Basic Tools", "Logging", "Carpentry", "Mining", "Smelting", "Metalworking", "Architecture", "Engineering", "Steam Power", "Industrial Age"]),
-        "Statements": frozenset(["Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100", "Basic Tools", "Logging", "Carpentry", "Mining", "Smelting", "Metalworking", "Architecture", "Engineering", "Steam Power", "Industrial Age"]),
+        "Everything": frozenset(["Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100", "Basic Tools", "Logging", "Carpentry", "Mining", "Smelting", "Metalworking", "Architecture", "Engineering", "Steam Power", "Industrial Age"]),
+        "Nodes": frozenset(["Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100", "Basic Tools", "Logging", "Carpentry", "Mining", "Smelting", "Metalworking", "Architecture", "Engineering", "Steam Power", "Industrial Age"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -127,23 +127,23 @@ class DepGraphWorld(RuleWorldMixin, World):
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
         "Logging": True,
-        "Proved Statement 2": True,
+        "Completed Node 2": True,
         "Carpentry": True,
-        "Proved Statement 3": True,
+        "Completed Node 3": True,
         "Mining": True,
-        "Proved Statement 4": True,
+        "Completed Node 4": True,
         "Smelting": True,
-        "Proved Statement 5": True,
+        "Completed Node 5": True,
         "Metalworking": True,
-        "Proved Statement 6": True,
+        "Completed Node 6": True,
         "Architecture": True,
-        "Proved Statement 7": True,
+        "Completed Node 7": True,
         "Engineering": True,
-        "Proved Statement 8": True,
+        "Completed Node 8": True,
         "Steam Power": True,
-        "Proved Statement 9": True,
+        "Completed Node 9": True,
         "Industrial Age": True,
-        "Proved Statement 10": True,
+        "Completed Node 10": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -151,14 +151,14 @@ class DepGraphWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'DepGraphWorld'
         self.graph_structure = {'label_to_index': {'basic_tools': 1, 'logging': 2, 'carpentry': 3, 'mining': 4, 'smelting': 5, 'metalworking': 6, 'architecture': 7, 'engineering': 8, 'steam_power': 9, 'industrial_age': 10}, 'title': 'Tech Tree'}
-        self.num_statements = 10
+        self.num_nodes = 10
         self.preset_label = 'tech_tree s1'
         self.canonical_placements = {'Logging': 'Logging', 'Carpentry': 'Carpentry', 'Mining': 'Mining', 'Smelting': 'Smelting', 'Metalworking': 'Metalworking', 'Architecture': 'Architecture', 'Engineering': 'Engineering', 'Steam Power': 'Steam Power'}
-        self.location_dependencies = {'Proved Statement 2': ['Basic Tools', 'Event: Basic Tools'], 'Proved Statement 3': ['Logging', 'Event: Logging'], 'Proved Statement 4': ['Basic Tools', 'Event: Basic Tools'], 'Proved Statement 5': ['Mining', 'Event: Mining'], 'Proved Statement 6': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'Proved Statement 7': ['Metalworking', 'Event: Metalworking'], 'Proved Statement 8': ['Metalworking', 'Event: Metalworking'], 'Proved Statement 9': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'Proved Statement 10': ['Steam Power', 'Event: Steam Power'], 'Logging': ['Basic Tools', 'Event: Basic Tools'], 'Carpentry': ['Logging', 'Event: Logging'], 'Mining': ['Basic Tools', 'Event: Basic Tools'], 'Smelting': ['Mining', 'Event: Mining'], 'Metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'Architecture': ['Metalworking', 'Event: Metalworking'], 'Engineering': ['Metalworking', 'Event: Metalworking'], 'Steam Power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'Industrial Age': ['Steam Power', 'Event: Steam Power']}
+        self.location_dependencies = {'Completed Node 2': ['Basic Tools', 'Event: Basic Tools'], 'Completed Node 3': ['Logging', 'Event: Logging'], 'Completed Node 4': ['Basic Tools', 'Event: Basic Tools'], 'Completed Node 5': ['Mining', 'Event: Mining'], 'Completed Node 6': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'Completed Node 7': ['Metalworking', 'Event: Metalworking'], 'Completed Node 8': ['Metalworking', 'Event: Metalworking'], 'Completed Node 9': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'Completed Node 10': ['Steam Power', 'Event: Steam Power'], 'Logging': ['Basic Tools', 'Event: Basic Tools'], 'Carpentry': ['Logging', 'Event: Logging'], 'Mining': ['Basic Tools', 'Event: Basic Tools'], 'Smelting': ['Mining', 'Event: Mining'], 'Metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'Architecture': ['Metalworking', 'Event: Metalworking'], 'Engineering': ['Metalworking', 'Event: Metalworking'], 'Steam Power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'Industrial Age': ['Steam Power', 'Event: Steam Power']}
         self.entrance_dependencies = {'From basic_tools to logging': ['Basic Tools', 'Event: Basic Tools'], 'From logging to carpentry': ['Logging', 'Event: Logging'], 'From basic_tools to mining': ['Basic Tools', 'Event: Basic Tools'], 'From mining to smelting': ['Mining', 'Event: Mining'], 'From carpentry to metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'From smelting to metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'From metalworking to architecture': ['Metalworking', 'Event: Metalworking'], 'From metalworking to engineering': ['Metalworking', 'Event: Metalworking'], 'From architecture to steam_power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'From engineering to steam_power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'From steam_power to industrial_age': ['Steam Power', 'Event: Steam Power']}
         self.exit_dependencies = {'From basic_tools to logging': ['Basic Tools', 'Event: Basic Tools'], 'From basic_tools to mining': ['Basic Tools', 'Event: Basic Tools'], 'From logging to carpentry': ['Logging', 'Event: Logging'], 'From carpentry to metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'From mining to smelting': ['Mining', 'Event: Mining'], 'From smelting to metalworking': ['Carpentry', 'Event: Carpentry', 'Smelting', 'Event: Smelting'], 'From metalworking to architecture': ['Metalworking', 'Event: Metalworking'], 'From metalworking to engineering': ['Metalworking', 'Event: Metalworking'], 'From architecture to steam_power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'From engineering to steam_power': ['Architecture', 'Event: Architecture', 'Engineering', 'Event: Engineering'], 'From steam_power to industrial_age': ['Steam Power', 'Event: Steam Power']}
         self.world_description = 'Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.'
-        self.slot_data = {'proof_structure': {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}}, 'starting_statements': [1], 'theorem': 'Tech Tree', 'randomize_items': 1, 'vanilla_placement': 0}
+        self.slot_data = {'graph_structure': {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}}, 'starting_nodes': [1], 'title': 'Tech Tree', 'randomize_items': 1, 'vanilla_placement': 0}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -408,9 +408,9 @@ class DepGraphWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "proof_structure": {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}},
-            "starting_statements": [1],
-            "theorem": "Tech Tree",
+            "graph_structure": {1: {'label': 'basic_tools', 'expression': 'Basic Tools', 'dependencies': [], 'full_text': 'basic_tools: Craft primitive tools from stone and wood'}, 2: {'label': 'logging', 'expression': 'Logging', 'dependencies': [1], 'full_text': 'logging: Harvest timber from forests'}, 3: {'label': 'carpentry', 'expression': 'Carpentry', 'dependencies': [2], 'full_text': 'carpentry: Shape wood into useful structures'}, 4: {'label': 'mining', 'expression': 'Mining', 'dependencies': [1], 'full_text': 'mining: Extract ores from the earth'}, 5: {'label': 'smelting', 'expression': 'Smelting', 'dependencies': [4], 'full_text': 'smelting: Smelt ores into metal ingots'}, 6: {'label': 'metalworking', 'expression': 'Metalworking', 'dependencies': [3, 5], 'full_text': 'metalworking: Forge metal into advanced components'}, 7: {'label': 'architecture', 'expression': 'Architecture', 'dependencies': [6], 'full_text': 'architecture: Design and construct buildings'}, 8: {'label': 'engineering', 'expression': 'Engineering', 'dependencies': [6], 'full_text': 'engineering: Apply scientific principles to construction'}, 9: {'label': 'steam_power', 'expression': 'Steam Power', 'dependencies': [7, 8], 'full_text': 'steam_power: Harness the power of steam engines'}, 10: {'label': 'industrial_age', 'expression': 'Industrial Age', 'dependencies': [9], 'full_text': 'industrial_age: Enter the era of mass production'}},
+            "starting_nodes": [1],
+            "title": "Tech Tree",
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": 0,
         }

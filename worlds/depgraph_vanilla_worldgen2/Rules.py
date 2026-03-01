@@ -22,55 +22,55 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From basic_tools to logging", player),
-        HasAll('Proved Statement 1', 'Statement 1')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From basic_tools to mining", player),
-        HasAll('Proved Statement 1', 'Statement 1')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From logging to carpentry", player),
-        HasAll('Proved Statement 2', 'Statement 2')
+        HasAll('Completed Node 2', 'Node 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From carpentry to metalworking", player),
-        HasAll('Proved Statement 3', 'Proved Statement 5', 'Statement 3', 'Statement 5')
+        HasAll('Completed Node 3', 'Completed Node 5', 'Node 3', 'Node 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From mining to smelting", player),
-        HasAll('Proved Statement 4', 'Statement 4')
+        HasAll('Completed Node 4', 'Node 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From smelting to metalworking", player),
-        HasAll('Proved Statement 3', 'Proved Statement 5', 'Statement 3', 'Statement 5')
+        HasAll('Completed Node 3', 'Completed Node 5', 'Node 3', 'Node 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From metalworking to architecture", player),
-        HasAll('Proved Statement 6', 'Statement 6')
+        HasAll('Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From metalworking to engineering", player),
-        HasAll('Proved Statement 6', 'Statement 6')
+        HasAll('Completed Node 6', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From architecture to steam_power", player),
-        HasAll('Proved Statement 7', 'Proved Statement 8', 'Statement 7', 'Statement 8')
+        HasAll('Completed Node 7', 'Completed Node 8', 'Node 7', 'Node 8')
     )
 
     world.set_rule(
         multiworld.get_entrance("From engineering to steam_power", player),
-        HasAll('Proved Statement 7', 'Proved Statement 8', 'Statement 7', 'Statement 8')
+        HasAll('Completed Node 7', 'Completed Node 8', 'Node 7', 'Node 8')
     )
 
     world.set_rule(
         multiworld.get_entrance("From steam_power to industrial_age", player),
-        HasAll('Proved Statement 9', 'Statement 9')
+        HasAll('Completed Node 9', 'Node 9')
     )

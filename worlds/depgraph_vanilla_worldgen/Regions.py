@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Prove Statement 1", "Prove Statement 2", "Prove Statement 3", "Prove Statement 4", "Prove Statement 5", "Prove Statement 6", "Prove Statement 7", "Prove Statement 8", "Prove Statement 9", "Prove Statement 10"]
+    region_names = ["Menu", "Complete Node 1", "Complete Node 2", "Complete Node 3", "Complete Node 4", "Complete Node 5", "Complete Node 6", "Complete Node 7", "Complete Node 8", "Complete Node 9", "Complete Node 10"]
 
     regions = {}
     for region_name in region_names:
@@ -51,18 +51,18 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Prove Statement 1"], "To basic_tools")
-    _create_entrance(regions["Prove Statement 1"], regions["Prove Statement 2"], "From basic_tools to logging")
-    _create_entrance(regions["Prove Statement 1"], regions["Prove Statement 4"], "From basic_tools to mining")
-    _create_entrance(regions["Prove Statement 2"], regions["Prove Statement 3"], "From logging to carpentry")
-    _create_entrance(regions["Prove Statement 3"], regions["Prove Statement 6"], "From carpentry to metalworking")
-    _create_entrance(regions["Prove Statement 4"], regions["Prove Statement 5"], "From mining to smelting")
-    _create_entrance(regions["Prove Statement 5"], regions["Prove Statement 6"], "From smelting to metalworking")
-    _create_entrance(regions["Prove Statement 6"], regions["Prove Statement 7"], "From metalworking to architecture")
-    _create_entrance(regions["Prove Statement 6"], regions["Prove Statement 8"], "From metalworking to engineering")
-    _create_entrance(regions["Prove Statement 7"], regions["Prove Statement 9"], "From architecture to steam_power")
-    _create_entrance(regions["Prove Statement 8"], regions["Prove Statement 9"], "From engineering to steam_power")
-    _create_entrance(regions["Prove Statement 9"], regions["Prove Statement 10"], "From steam_power to industrial_age")
+    _create_entrance(regions["Menu"], regions["Complete Node 1"], "To basic_tools")
+    _create_entrance(regions["Complete Node 1"], regions["Complete Node 2"], "From basic_tools to logging")
+    _create_entrance(regions["Complete Node 1"], regions["Complete Node 4"], "From basic_tools to mining")
+    _create_entrance(regions["Complete Node 2"], regions["Complete Node 3"], "From logging to carpentry")
+    _create_entrance(regions["Complete Node 3"], regions["Complete Node 6"], "From carpentry to metalworking")
+    _create_entrance(regions["Complete Node 4"], regions["Complete Node 5"], "From mining to smelting")
+    _create_entrance(regions["Complete Node 5"], regions["Complete Node 6"], "From smelting to metalworking")
+    _create_entrance(regions["Complete Node 6"], regions["Complete Node 7"], "From metalworking to architecture")
+    _create_entrance(regions["Complete Node 6"], regions["Complete Node 8"], "From metalworking to engineering")
+    _create_entrance(regions["Complete Node 7"], regions["Complete Node 9"], "From architecture to steam_power")
+    _create_entrance(regions["Complete Node 8"], regions["Complete Node 9"], "From engineering to steam_power")
+    _create_entrance(regions["Complete Node 9"], regions["Complete Node 10"], "From steam_power to industrial_age")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:
