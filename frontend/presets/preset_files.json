@@ -2850,7 +2850,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-01Mar2026-033048_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-01Mar2026-182057_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -6883,6 +6883,65 @@
       }
     }
   },
+  "depgraph_worldgen": {
+    "name": "DepGraph WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true,
+        "label": "tech_tree s1"
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph WorldGen"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_sphere_log.jsonl"
+        ],
+        "is_canonical": true,
+        "label": "tech_tree s2"
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph WorldGen"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_sphere_log.jsonl"
+        ],
+        "is_canonical": true,
+        "label": "tech_tree s3"
+      }
+    }
+  },
   "dkc3_worldgen": {
     "name": "Donkey Kong Country 3 WorldGen",
     "folders": {
@@ -9162,65 +9221,6 @@
       }
     }
   },
-  "depgraph_worldgen": {
-    "name": "DepGraph WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "DepGraph WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "label": "tech_tree s1"
-      },
-      "AP_01043188731678011336": {
-        "seed": 2,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "DepGraph WorldGen"
-          }
-        ],
-        "files": [
-          "AP_01043188731678011336.archipelago",
-          "AP_01043188731678011336_Spoiler.txt",
-          "AP_01043188731678011336_rules.json",
-          "AP_01043188731678011336_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "label": "tech_tree s2"
-      },
-      "AP_84719271504320872445": {
-        "seed": 3,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "DepGraph WorldGen"
-          }
-        ],
-        "files": [
-          "AP_84719271504320872445.archipelago",
-          "AP_84719271504320872445_Spoiler.txt",
-          "AP_84719271504320872445_rules.json",
-          "AP_84719271504320872445_sphere_log.jsonl"
-        ],
-        "is_canonical": true,
-        "label": "tech_tree s3"
-      }
-    }
-  },
   "depgraph_skill_tree_worldgen": {
     "name": "DepGraph Skill Tree WorldGen",
     "folders": {
@@ -9841,7 +9841,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-01T03:48:53.690124+00:00",
+    "test_data_updated": "2026-03-01T18:38:52.213621+00:00",
     "games_with_test_data": 151,
     "total_games": 170,
     "games_without_test_data": 19,

@@ -23,30 +23,30 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Statement 2": 1,
-    "Statement 3": 1,
-    "Statement 4": 1,
-    "Statement 5": 1,
-    "Statement 6": 1,
-    "Statement 7": 1,
-    "Statement 8": 1,
+    "Node 2": 1,
+    "Node 3": 1,
+    "Node 4": 1,
+    "Node 5": 1,
+    "Node 6": 1,
+    "Node 7": 1,
+    "Node 8": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Proved Statement 2": "Proved Statement 2",
-    "Proved Statement 3": "Proved Statement 3",
-    "Proved Statement 4": "Proved Statement 4",
-    "Proved Statement 5": "Proved Statement 5",
-    "Proved Statement 6": "Proved Statement 6",
-    "Proved Statement 7": "Proved Statement 7",
-    "Proved Statement 8": "Proved Statement 8",
+    "Completed Node 2": "Completed Node 2",
+    "Completed Node 3": "Completed Node 3",
+    "Completed Node 4": "Completed Node 4",
+    "Completed Node 5": "Completed Node 5",
+    "Completed Node 6": "Completed Node 6",
+    "Completed Node 7": "Completed Node 7",
+    "Completed Node 8": "Completed Node 8",
 }
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
-    "Statement 1": 1,
-    "Proved Statement 1": 1,
+    "Node 1": 1,
+    "Completed Node 1": 1,
 }
 
 
@@ -96,8 +96,8 @@ class DepGraphWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
-        "Statements": frozenset(["Statement 1", "Statement 2", "Statement 3", "Statement 4", "Statement 5", "Statement 6", "Statement 7", "Statement 8", "Statement 9", "Statement 10", "Statement 11", "Statement 12", "Statement 13", "Statement 14", "Statement 15", "Statement 16", "Statement 17", "Statement 18", "Statement 19", "Statement 20", "Statement 21", "Statement 22", "Statement 23", "Statement 24", "Statement 25", "Statement 26", "Statement 27", "Statement 28", "Statement 29", "Statement 30", "Statement 31", "Statement 32", "Statement 33", "Statement 34", "Statement 35", "Statement 36", "Statement 37", "Statement 38", "Statement 39", "Statement 40", "Statement 41", "Statement 42", "Statement 43", "Statement 44", "Statement 45", "Statement 46", "Statement 47", "Statement 48", "Statement 49", "Statement 50", "Statement 51", "Statement 52", "Statement 53", "Statement 54", "Statement 55", "Statement 56", "Statement 57", "Statement 58", "Statement 59", "Statement 60", "Statement 61", "Statement 62", "Statement 63", "Statement 64", "Statement 65", "Statement 66", "Statement 67", "Statement 68", "Statement 69", "Statement 70", "Statement 71", "Statement 72", "Statement 73", "Statement 74", "Statement 75", "Statement 76", "Statement 77", "Statement 78", "Statement 79", "Statement 80", "Statement 81", "Statement 82", "Statement 83", "Statement 84", "Statement 85", "Statement 86", "Statement 87", "Statement 88", "Statement 89", "Statement 90", "Statement 91", "Statement 92", "Statement 93", "Statement 94", "Statement 95", "Statement 96", "Statement 97", "Statement 98", "Statement 99", "Statement 100"]),
+        "Everything": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
+        "Nodes": frozenset(["Node 1", "Node 2", "Node 3", "Node 4", "Node 5", "Node 6", "Node 7", "Node 8", "Node 9", "Node 10", "Node 11", "Node 12", "Node 13", "Node 14", "Node 15", "Node 16", "Node 17", "Node 18", "Node 19", "Node 20", "Node 21", "Node 22", "Node 23", "Node 24", "Node 25", "Node 26", "Node 27", "Node 28", "Node 29", "Node 30", "Node 31", "Node 32", "Node 33", "Node 34", "Node 35", "Node 36", "Node 37", "Node 38", "Node 39", "Node 40", "Node 41", "Node 42", "Node 43", "Node 44", "Node 45", "Node 46", "Node 47", "Node 48", "Node 49", "Node 50", "Node 51", "Node 52", "Node 53", "Node 54", "Node 55", "Node 56", "Node 57", "Node 58", "Node 59", "Node 60", "Node 61", "Node 62", "Node 63", "Node 64", "Node 65", "Node 66", "Node 67", "Node 68", "Node 69", "Node 70", "Node 71", "Node 72", "Node 73", "Node 74", "Node 75", "Node 76", "Node 77", "Node 78", "Node 79", "Node 80", "Node 81", "Node 82", "Node 83", "Node 84", "Node 85", "Node 86", "Node 87", "Node 88", "Node 89", "Node 90", "Node 91", "Node 92", "Node 93", "Node 94", "Node 95", "Node 96", "Node 97", "Node 98", "Node 99", "Node 100"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -109,31 +109,31 @@ class DepGraphWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Prove Statement 2": "Statement 2",
-        "Prove Statement 3": "Statement 3",
-        "Prove Statement 4": "Statement 4",
-        "Prove Statement 5": "Statement 5",
-        "Prove Statement 6": "Statement 6",
-        "Prove Statement 7": "Statement 7",
+        "Complete Node 2": "Node 2",
+        "Complete Node 3": "Node 3",
+        "Complete Node 4": "Node 4",
+        "Complete Node 5": "Node 5",
+        "Complete Node 6": "Node 6",
+        "Complete Node 7": "Node 7",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Prove Statement 2": True,
-        "Proved Statement 2": True,
-        "Prove Statement 3": True,
-        "Proved Statement 3": True,
-        "Prove Statement 4": True,
-        "Proved Statement 4": True,
-        "Prove Statement 5": True,
-        "Proved Statement 5": True,
-        "Prove Statement 6": True,
-        "Proved Statement 6": True,
-        "Prove Statement 7": True,
-        "Proved Statement 7": True,
-        "Prove Statement 8": True,
-        "Proved Statement 8": True,
+        "Complete Node 2": True,
+        "Completed Node 2": True,
+        "Complete Node 3": True,
+        "Completed Node 3": True,
+        "Complete Node 4": True,
+        "Completed Node 4": True,
+        "Complete Node 5": True,
+        "Completed Node 5": True,
+        "Complete Node 6": True,
+        "Completed Node 6": True,
+        "Complete Node 7": True,
+        "Completed Node 7": True,
+        "Complete Node 8": True,
+        "Completed Node 8": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -141,15 +141,15 @@ class DepGraphWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'DepGraphWorld'
         self.graph_structure = {'label_to_index': {'gather_herbs': 1, 'herb_extract': 2, 'purify_water': 3, 'alchemical_base': 4, 'raw_tincture': 5, 'stabilizer': 6, 'refined_potion': 7, 'master_elixir': 8}, 'title': 'Recipe Chain'}
-        self.num_statements = 8
+        self.num_nodes = 8
         self.preset_label = 'recipe_chain s7'
-        self.name_substitutions = {'items': {'Statement 1': 'Gather Herbs', 'Proved Statement 1': 'Event: Gather Herbs', 'Statement 2': 'Herb Extract', 'Proved Statement 2': 'Event: Herb Extract', 'Statement 3': 'Purify Water', 'Proved Statement 3': 'Event: Purify Water', 'Statement 4': 'Alchemical Base', 'Proved Statement 4': 'Event: Alchemical Base', 'Statement 5': 'Raw Tincture', 'Proved Statement 5': 'Event: Raw Tincture', 'Statement 6': 'Stabilizer', 'Proved Statement 6': 'Event: Stabilizer', 'Statement 7': 'Refined Potion', 'Proved Statement 7': 'Event: Refined Potion', 'Statement 8': 'Master Elixir', 'Proved Statement 8': 'Event: Master Elixir'}, 'locations': {'Prove Statement 1': 'Gather Herbs', 'Prove Statement 2': 'Herb Extract', 'Prove Statement 3': 'Purify Water', 'Prove Statement 4': 'Alchemical Base', 'Prove Statement 5': 'Raw Tincture', 'Prove Statement 6': 'Stabilizer', 'Prove Statement 7': 'Refined Potion', 'Prove Statement 8': 'Master Elixir'}, 'regions': {'Prove Statement 1': 'Gather Herbs', 'Prove Statement 2': 'Herb Extract', 'Prove Statement 3': 'Purify Water', 'Prove Statement 4': 'Alchemical Base', 'Prove Statement 5': 'Raw Tincture', 'Prove Statement 6': 'Stabilizer', 'Prove Statement 7': 'Refined Potion', 'Prove Statement 8': 'Master Elixir'}}
-        self.canonical_placements = {'Prove Statement 2': 'Statement 2', 'Prove Statement 3': 'Statement 3', 'Prove Statement 4': 'Statement 4', 'Prove Statement 5': 'Statement 5', 'Prove Statement 6': 'Statement 6', 'Prove Statement 7': 'Statement 7'}
-        self.location_dependencies = {'Prove Statement 2': ['Statement 1', 'Proved Statement 1'], 'Proved Statement 2': ['Statement 1', 'Proved Statement 1'], 'Prove Statement 4': ['Statement 3', 'Proved Statement 3'], 'Proved Statement 4': ['Statement 3', 'Proved Statement 3'], 'Prove Statement 5': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'Proved Statement 5': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'Prove Statement 6': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'Proved Statement 6': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'Prove Statement 7': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'Proved Statement 7': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'Prove Statement 8': ['Statement 7', 'Proved Statement 7'], 'Proved Statement 8': ['Statement 7', 'Proved Statement 7']}
-        self.entrance_dependencies = {'From gather_herbs to herb_extract': ['Statement 1', 'Proved Statement 1'], 'From purify_water to alchemical_base': ['Statement 3', 'Proved Statement 3'], 'From herb_extract to raw_tincture': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'From alchemical_base to raw_tincture': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'From gather_herbs to stabilizer': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'From purify_water to stabilizer': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'From raw_tincture to refined_potion': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'From stabilizer to refined_potion': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'From refined_potion to master_elixir': ['Statement 7', 'Proved Statement 7']}
-        self.exit_dependencies = {'From gather_herbs to herb_extract': ['Statement 1', 'Proved Statement 1'], 'From gather_herbs to stabilizer': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'From herb_extract to raw_tincture': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'From purify_water to alchemical_base': ['Statement 3', 'Proved Statement 3'], 'From purify_water to stabilizer': ['Statement 1', 'Proved Statement 1', 'Statement 3', 'Proved Statement 3'], 'From alchemical_base to raw_tincture': ['Statement 2', 'Proved Statement 2', 'Statement 4', 'Proved Statement 4'], 'From raw_tincture to refined_potion': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'From stabilizer to refined_potion': ['Statement 5', 'Proved Statement 5', 'Statement 6', 'Proved Statement 6'], 'From refined_potion to master_elixir': ['Statement 7', 'Proved Statement 7']}
+        self.name_substitutions = {'items': {'Node 1': 'Gather Herbs', 'Completed Node 1': 'Event: Gather Herbs', 'Node 2': 'Herb Extract', 'Completed Node 2': 'Event: Herb Extract', 'Node 3': 'Purify Water', 'Completed Node 3': 'Event: Purify Water', 'Node 4': 'Alchemical Base', 'Completed Node 4': 'Event: Alchemical Base', 'Node 5': 'Raw Tincture', 'Completed Node 5': 'Event: Raw Tincture', 'Node 6': 'Stabilizer', 'Completed Node 6': 'Event: Stabilizer', 'Node 7': 'Refined Potion', 'Completed Node 7': 'Event: Refined Potion', 'Node 8': 'Master Elixir', 'Completed Node 8': 'Event: Master Elixir'}, 'locations': {'Complete Node 1': 'Gather Herbs', 'Complete Node 2': 'Herb Extract', 'Complete Node 3': 'Purify Water', 'Complete Node 4': 'Alchemical Base', 'Complete Node 5': 'Raw Tincture', 'Complete Node 6': 'Stabilizer', 'Complete Node 7': 'Refined Potion', 'Complete Node 8': 'Master Elixir'}, 'regions': {'Complete Node 1': 'Gather Herbs', 'Complete Node 2': 'Herb Extract', 'Complete Node 3': 'Purify Water', 'Complete Node 4': 'Alchemical Base', 'Complete Node 5': 'Raw Tincture', 'Complete Node 6': 'Stabilizer', 'Complete Node 7': 'Refined Potion', 'Complete Node 8': 'Master Elixir'}}
+        self.canonical_placements = {'Complete Node 2': 'Node 2', 'Complete Node 3': 'Node 3', 'Complete Node 4': 'Node 4', 'Complete Node 5': 'Node 5', 'Complete Node 6': 'Node 6', 'Complete Node 7': 'Node 7'}
+        self.location_dependencies = {'Complete Node 2': ['Node 1', 'Completed Node 1'], 'Completed Node 2': ['Node 1', 'Completed Node 1'], 'Complete Node 4': ['Node 3', 'Completed Node 3'], 'Completed Node 4': ['Node 3', 'Completed Node 3'], 'Complete Node 5': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'Completed Node 5': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'Complete Node 6': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'Completed Node 6': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'Complete Node 7': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'Completed Node 7': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'Complete Node 8': ['Node 7', 'Completed Node 7'], 'Completed Node 8': ['Node 7', 'Completed Node 7']}
+        self.entrance_dependencies = {'From gather_herbs to herb_extract': ['Node 1', 'Completed Node 1'], 'From purify_water to alchemical_base': ['Node 3', 'Completed Node 3'], 'From herb_extract to raw_tincture': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'From alchemical_base to raw_tincture': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'From gather_herbs to stabilizer': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'From purify_water to stabilizer': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'From raw_tincture to refined_potion': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'From stabilizer to refined_potion': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'From refined_potion to master_elixir': ['Node 7', 'Completed Node 7']}
+        self.exit_dependencies = {'From gather_herbs to herb_extract': ['Node 1', 'Completed Node 1'], 'From gather_herbs to stabilizer': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'From herb_extract to raw_tincture': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'From purify_water to alchemical_base': ['Node 3', 'Completed Node 3'], 'From purify_water to stabilizer': ['Node 1', 'Completed Node 1', 'Node 3', 'Completed Node 3'], 'From alchemical_base to raw_tincture': ['Node 2', 'Completed Node 2', 'Node 4', 'Completed Node 4'], 'From raw_tincture to refined_potion': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'From stabilizer to refined_potion': ['Node 5', 'Completed Node 5', 'Node 6', 'Completed Node 6'], 'From refined_potion to master_elixir': ['Node 7', 'Completed Node 7']}
         self.world_description = 'Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.'
-        self.slot_data = {'proof_structure': {1: {'label': 'gather_herbs', 'expression': 'Gather Herbs', 'dependencies': [], 'full_text': 'gather_herbs: Collect medicinal herbs from the wild'}, 2: {'label': 'herb_extract', 'expression': 'Herb Extract', 'dependencies': [1], 'full_text': 'herb_extract: Distill herbs into concentrated extract'}, 3: {'label': 'purify_water', 'expression': 'Purify Water', 'dependencies': [], 'full_text': 'purify_water: Create purified water for alchemy'}, 4: {'label': 'alchemical_base', 'expression': 'Alchemical Base', 'dependencies': [3], 'full_text': 'alchemical_base: Prepare the foundation for potions'}, 5: {'label': 'raw_tincture', 'expression': 'Raw Tincture', 'dependencies': [2, 4], 'full_text': 'raw_tincture: Combine extract and base into a crude tincture'}, 6: {'label': 'stabilizer', 'expression': 'Stabilizer', 'dependencies': [1, 3], 'full_text': 'stabilizer: Create a reagent that prevents potion decay'}, 7: {'label': 'refined_potion', 'expression': 'Refined Potion', 'dependencies': [5, 6], 'full_text': 'refined_potion: Stabilize the tincture into a usable potion'}, 8: {'label': 'master_elixir', 'expression': 'Master Elixir', 'dependencies': [7], 'full_text': 'master_elixir: The ultimate alchemical creation'}}, 'starting_statements': [1], 'theorem': 'Recipe Chain', 'randomize_items': 1, 'vanilla_placement': 0}
+        self.slot_data = {'graph_structure': {1: {'label': 'gather_herbs', 'expression': 'Gather Herbs', 'dependencies': [], 'full_text': 'gather_herbs: Collect medicinal herbs from the wild'}, 2: {'label': 'herb_extract', 'expression': 'Herb Extract', 'dependencies': [1], 'full_text': 'herb_extract: Distill herbs into concentrated extract'}, 3: {'label': 'purify_water', 'expression': 'Purify Water', 'dependencies': [], 'full_text': 'purify_water: Create purified water for alchemy'}, 4: {'label': 'alchemical_base', 'expression': 'Alchemical Base', 'dependencies': [3], 'full_text': 'alchemical_base: Prepare the foundation for potions'}, 5: {'label': 'raw_tincture', 'expression': 'Raw Tincture', 'dependencies': [2, 4], 'full_text': 'raw_tincture: Combine extract and base into a crude tincture'}, 6: {'label': 'stabilizer', 'expression': 'Stabilizer', 'dependencies': [1, 3], 'full_text': 'stabilizer: Create a reagent that prevents potion decay'}, 7: {'label': 'refined_potion', 'expression': 'Refined Potion', 'dependencies': [5, 6], 'full_text': 'refined_potion: Stabilize the tincture into a usable potion'}, 8: {'label': 'master_elixir', 'expression': 'Master Elixir', 'dependencies': [7], 'full_text': 'master_elixir: The ultimate alchemical creation'}}, 'starting_nodes': [1], 'title': 'Recipe Chain', 'randomize_items': 1, 'vanilla_placement': 0}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -305,7 +305,7 @@ class DepGraphWorld(RuleWorldMixin, World):
     def generate_basic(self) -> None:
         """Set completion condition."""
         self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("Proved Statement 8", self.player)
+            lambda state: state.has("Completed Node 8", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.
@@ -399,9 +399,9 @@ class DepGraphWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "proof_structure": {1: {'label': 'gather_herbs', 'expression': 'Gather Herbs', 'dependencies': [], 'full_text': 'gather_herbs: Collect medicinal herbs from the wild'}, 2: {'label': 'herb_extract', 'expression': 'Herb Extract', 'dependencies': [1], 'full_text': 'herb_extract: Distill herbs into concentrated extract'}, 3: {'label': 'purify_water', 'expression': 'Purify Water', 'dependencies': [], 'full_text': 'purify_water: Create purified water for alchemy'}, 4: {'label': 'alchemical_base', 'expression': 'Alchemical Base', 'dependencies': [3], 'full_text': 'alchemical_base: Prepare the foundation for potions'}, 5: {'label': 'raw_tincture', 'expression': 'Raw Tincture', 'dependencies': [2, 4], 'full_text': 'raw_tincture: Combine extract and base into a crude tincture'}, 6: {'label': 'stabilizer', 'expression': 'Stabilizer', 'dependencies': [1, 3], 'full_text': 'stabilizer: Create a reagent that prevents potion decay'}, 7: {'label': 'refined_potion', 'expression': 'Refined Potion', 'dependencies': [5, 6], 'full_text': 'refined_potion: Stabilize the tincture into a usable potion'}, 8: {'label': 'master_elixir', 'expression': 'Master Elixir', 'dependencies': [7], 'full_text': 'master_elixir: The ultimate alchemical creation'}},
-            "starting_statements": [1],
-            "theorem": "Recipe Chain",
+            "graph_structure": {1: {'label': 'gather_herbs', 'expression': 'Gather Herbs', 'dependencies': [], 'full_text': 'gather_herbs: Collect medicinal herbs from the wild'}, 2: {'label': 'herb_extract', 'expression': 'Herb Extract', 'dependencies': [1], 'full_text': 'herb_extract: Distill herbs into concentrated extract'}, 3: {'label': 'purify_water', 'expression': 'Purify Water', 'dependencies': [], 'full_text': 'purify_water: Create purified water for alchemy'}, 4: {'label': 'alchemical_base', 'expression': 'Alchemical Base', 'dependencies': [3], 'full_text': 'alchemical_base: Prepare the foundation for potions'}, 5: {'label': 'raw_tincture', 'expression': 'Raw Tincture', 'dependencies': [2, 4], 'full_text': 'raw_tincture: Combine extract and base into a crude tincture'}, 6: {'label': 'stabilizer', 'expression': 'Stabilizer', 'dependencies': [1, 3], 'full_text': 'stabilizer: Create a reagent that prevents potion decay'}, 7: {'label': 'refined_potion', 'expression': 'Refined Potion', 'dependencies': [5, 6], 'full_text': 'refined_potion: Stabilize the tincture into a usable potion'}, 8: {'label': 'master_elixir', 'expression': 'Master Elixir', 'dependencies': [7], 'full_text': 'master_elixir: The ultimate alchemical creation'}},
+            "starting_nodes": [1],
+            "title": "Recipe Chain",
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": 0,
         }

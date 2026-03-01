@@ -22,45 +22,45 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From gather_herbs to herb_extract", player),
-        HasAll('Proved Statement 1', 'Statement 1')
+        HasAll('Completed Node 1', 'Node 1')
     )
 
     world.set_rule(
         multiworld.get_entrance("From gather_herbs to stabilizer", player),
-        HasAll('Proved Statement 1', 'Proved Statement 3', 'Statement 1', 'Statement 3')
+        HasAll('Completed Node 1', 'Completed Node 3', 'Node 1', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From herb_extract to raw_tincture", player),
-        HasAll('Proved Statement 2', 'Proved Statement 4', 'Statement 2', 'Statement 4')
+        HasAll('Completed Node 2', 'Completed Node 4', 'Node 2', 'Node 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From purify_water to alchemical_base", player),
-        HasAll('Proved Statement 3', 'Statement 3')
+        HasAll('Completed Node 3', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From purify_water to stabilizer", player),
-        HasAll('Proved Statement 1', 'Proved Statement 3', 'Statement 1', 'Statement 3')
+        HasAll('Completed Node 1', 'Completed Node 3', 'Node 1', 'Node 3')
     )
 
     world.set_rule(
         multiworld.get_entrance("From alchemical_base to raw_tincture", player),
-        HasAll('Proved Statement 2', 'Proved Statement 4', 'Statement 2', 'Statement 4')
+        HasAll('Completed Node 2', 'Completed Node 4', 'Node 2', 'Node 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From raw_tincture to refined_potion", player),
-        HasAll('Proved Statement 5', 'Proved Statement 6', 'Statement 5', 'Statement 6')
+        HasAll('Completed Node 5', 'Completed Node 6', 'Node 5', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From stabilizer to refined_potion", player),
-        HasAll('Proved Statement 5', 'Proved Statement 6', 'Statement 5', 'Statement 6')
+        HasAll('Completed Node 5', 'Completed Node 6', 'Node 5', 'Node 6')
     )
 
     world.set_rule(
         multiworld.get_entrance("From refined_potion to master_elixir", player),
-        HasAll('Proved Statement 7', 'Statement 7')
+        HasAll('Completed Node 7', 'Node 7')
     )
