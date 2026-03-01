@@ -40,6 +40,23 @@ class ScriptAction:
 
 # Define script categories and actions
 SCRIPT_CATEGORIES = {
+    "Dev Server": [
+        ScriptAction(
+            "Start Dev Server",
+            "Start local HTTP server on port 8000 for the frontend",
+            command=[sys.executable, "-m", "http.server", "8000"]
+        ),
+        ScriptAction(
+            "Stop Dev Server",
+            "Stop any running HTTP server on port 8000",
+            command=[sys.executable, "-c",
+                     "import subprocess, sys; "
+                     "r = subprocess.run(['pkill', '-f', 'http.server 8000'] if sys.platform != 'win32' "
+                     "else ['taskkill', '/F', '/FI', 'WINDOWTITLE eq http.server*'], "
+                     "capture_output=True, text=True); "
+                     "print('Server stopped.' if r.returncode == 0 else 'No server running.')"]
+        ),
+    ],
     "Setup": [
         ScriptAction(
             "Setup Dev Environment (Full)",
@@ -259,7 +276,7 @@ class ScriptsApp(App):
 
         for category, actions in SCRIPT_CATEGORIES.items():
             # Skip scripts category if not installed (but keep patches)
-            if category not in ["Patches", "Update Host Settings"] and not scripts_available:
+            if category not in ["Dev Server", "Patches", "Update Host Settings"] and not scripts_available:
                 continue
 
             # Category header
