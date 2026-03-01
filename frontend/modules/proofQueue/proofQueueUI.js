@@ -469,10 +469,11 @@ export class ProofQueueUI {
 
     this._provenSectionEl.style.display = '';
 
-    // Show theorem header
+    // Show theorem header (prefer instantiated expression for concrete values)
     const goalStep = proofQueueState.steps.get(proofQueueState.goalStepIndex);
     if (goalStep) {
-      this._theoremHeaderEl.textContent = `Theorem ${proofQueueState.theoremName || goalStep.label}: ${goalStep.expression}`;
+      const goalExpr = goalStep.instantiatedExpression || goalStep.expression;
+      this._theoremHeaderEl.textContent = `Theorem ${proofQueueState.theoremName || goalStep.label}: ${goalExpr}`;
     }
 
     // Build stepIndex → row number map
@@ -527,10 +528,10 @@ export class ProofQueueUI {
       }
       tr.appendChild(tdRef);
 
-      // Expression column
+      // Expression column (prefer instantiated expression for concrete values)
       const tdExpr = document.createElement('td');
       tdExpr.className = 'pq-col-expr';
-      tdExpr.textContent = step.expression;
+      tdExpr.textContent = step.instantiatedExpression || step.expression;
       if (showDetails && step.fullText) {
         const detail = document.createElement('div');
         detail.className = 'pq-detail-text';
@@ -695,7 +696,7 @@ export class ProofQueueUI {
       }
       tr.appendChild(tdRef);
 
-      // Expression column
+      // Expression column (generic in working area)
       const tdExpr = document.createElement('td');
       tdExpr.className = 'pq-col-expr';
       tdExpr.textContent = step.expression;

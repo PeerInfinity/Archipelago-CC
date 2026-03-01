@@ -378,7 +378,10 @@ class MetamathWorld(World):
                     "label": stmt.label,
                     "expression": stmt.expression,
                     "dependencies": stmt.dependencies,
-                    "full_text": stmt.full_text
+                    "full_text": stmt.full_text,
+                    **({"instantiated_expression": stmt.instantiated_expression}
+                       if stmt.instantiated_expression and stmt.instantiated_expression != stmt.expression
+                       else {}),
                 }
                 for i, stmt in self.proof_structure.statements.items()
             },
