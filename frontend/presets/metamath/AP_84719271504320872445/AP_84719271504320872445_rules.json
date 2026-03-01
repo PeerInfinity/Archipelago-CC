@@ -2159,7 +2159,8 @@
               1,
               2
             ],
-            "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))"
+            "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))",
+            "instantiated_expression": "|- ( ( 2 + 1 ) + 1 ) = ( 2 + ( 1 + 1 ) )"
           },
           "4": {
             "label": "df-2",
@@ -2185,7 +2186,8 @@
             "dependencies": [
               5
             ],
-            "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))"
+            "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))",
+            "instantiated_expression": "|- ( 3 + 1 ) = ( ( 2 + 1 ) + 1 )"
           },
           "8": {
             "label": "3eqtri",
@@ -2195,7 +2197,8 @@
               6,
               7
             ],
-            "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
+            "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)",
+            "instantiated_expression": "|- 4 = ( 2 + ( 1 + 1 ) )"
           },
           "9": {
             "label": "oveq2i",
@@ -2203,7 +2206,8 @@
             "dependencies": [
               4
             ],
-            "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))"
+            "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))",
+            "instantiated_expression": "|- ( 2 + 2 ) = ( 2 + ( 1 + 1 ) )"
           },
           "10": {
             "label": "eqtr4i",
@@ -2212,7 +2216,8 @@
               8,
               9
             ],
-            "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)"
+            "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)",
+            "instantiated_expression": "|- ( 2 + 2 ) = 4"
           }
         },
         "starting_statements": [

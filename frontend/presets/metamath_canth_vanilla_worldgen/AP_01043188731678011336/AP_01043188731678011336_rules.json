@@ -3223,31 +3223,36 @@
             "label": "eleq2",
             "expression": "|- ( A = B -> ( C e. A <-> C e. B ) )",
             "dependencies": [],
-            "full_text": "eleq2: Equality implies equivalence of membership.  (Contributed by NM, 26-May-1993.)  (Proof shortened by Wolf Lammen, 20-Nov-2019.) (|- ( A = B -> ( C e. A <-> C e. B ) ))"
+            "full_text": "eleq2: Equality implies equivalence of membership.  (Contributed by NM, 26-May-1993.)  (Proof shortened by Wolf Lammen, 20-Nov-2019.) (|- ( A = B -> ( C e. A <-> C e. B ) ))",
+            "instantiated_expression": "|- ( ( F ` y ) = { x e. A | -. x e. ( F ` x ) } -> ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "2": {
             "label": "fofn",
             "expression": "|- ( F : A -onto-> B -> F Fn A )",
             "dependencies": [],
-            "full_text": "fofn: An onto mapping is a function on its domain.  (Contributed by NM, 16-Dec-2008.) (|- ( F : A -onto-> B -> F Fn A ))"
+            "full_text": "fofn: An onto mapping is a function on its domain.  (Contributed by NM, 16-Dec-2008.) (|- ( F : A -onto-> B -> F Fn A ))",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> F Fn A )"
           },
           "3": {
             "label": "forn",
             "expression": "|- ( F : A -onto-> B -> ran F = B )",
             "dependencies": [],
-            "full_text": "forn: The codomain of an onto function is its range.  (Contributed by NM, 3-Aug-1994.) (|- ( F : A -onto-> B -> ran F = B ))"
+            "full_text": "forn: The codomain of an onto function is its range.  (Contributed by NM, 3-Aug-1994.) (|- ( F : A -onto-> B -> ran F = B ))",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> ran F = ~P A )"
           },
           "4": {
             "label": "fveq2",
             "expression": "|- ( A = B -> ( F ` A ) = ( F ` B ) )",
             "dependencies": [],
-            "full_text": "fveq2: Equality theorem for function value.  (Contributed by NM, 29-Dec-1996.) (|- ( A = B -> ( F ` A ) = ( F ` B ) ))"
+            "full_text": "fveq2: Equality theorem for function value.  (Contributed by NM, 29-Dec-1996.) (|- ( A = B -> ( F ` A ) = ( F ` B ) ))",
+            "instantiated_expression": "|- ( x = y -> ( F ` x ) = ( F ` y ) )"
           },
           "5": {
             "label": "id",
             "expression": "|- ( ph -> ph )",
             "dependencies": [],
-            "full_text": "id: Principle of identity.  Theorem *2.08 of [WhiteheadRussell] p. 101.  For another version of the proof directly from axioms, see ~ idALT .  Its associated inference, ~ idi , requires no axioms for its proof, contrary to ~ id .  Note that the second occurrences of ` ph ` in Steps 1 and 2 may be simultaneously replaced by any wff ` ps ` , which may ease the understanding of the proof.  (Contributed by NM, 29-Dec-1992.)  (Proof shortened by Stefan Allan, 20-Mar-2006.) (|- ( ph -> ph ))"
+            "full_text": "id: Principle of identity.  Theorem *2.08 of [WhiteheadRussell] p. 101.  For another version of the proof directly from axioms, see ~ idALT .  Its associated inference, ~ idi , requires no axioms for its proof, contrary to ~ id .  Note that the second occurrences of ` ph ` in Steps 1 and 2 may be simultaneously replaced by any wff ` ps ` , which may ease the understanding of the proof.  (Contributed by NM, 29-Dec-1992.)  (Proof shortened by Stefan Allan, 20-Mar-2006.) (|- ( ph -> ph ))",
+            "instantiated_expression": "|- ( x = y -> x = y )"
           },
           "6": {
             "label": "eleq12d",
@@ -3256,13 +3261,15 @@
               4,
               5
             ],
-            "full_text": "eleq12d: Theorem eleq12i is the congruence law for elementhood. $) $( $j congruence 'eleq12i'; $) $} $} ${ eleq12d.1 $e |- ( ph -> A = B ) $. eleq12d.2 $e |- ( ph -> C = D ) $. $( Deduction from equality to equivalence of membership.  (Contributed by NM, 31-May-1994.) (|- ( ph -> ( A e. C <-> B e. D ) ))"
+            "full_text": "eleq12d: Theorem eleq12i is the congruence law for elementhood. $) $( $j congruence 'eleq12i'; $) $} $} ${ eleq12d.1 $e |- ( ph -> A = B ) $. eleq12d.2 $e |- ( ph -> C = D ) $. $( Deduction from equality to equivalence of membership.  (Contributed by NM, 31-May-1994.) (|- ( ph -> ( A e. C <-> B e. D ) ))",
+            "instantiated_expression": "|- ( x = y -> ( x e. ( F ` x ) <-> y e. ( F ` y ) ) )"
           },
           "7": {
             "label": "nbbn",
             "expression": "|- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) )",
             "dependencies": [],
-            "full_text": "nbbn: Move negation outside of biconditional.  Compare Theorem *5.18 of [WhiteheadRussell] p. 124.  (Contributed by NM, 27-Jun-2002.)  (Proof shortened by Wolf Lammen, 20-Sep-2013.) (|- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) ))"
+            "full_text": "nbbn: Move negation outside of biconditional.  Compare Theorem *5.18 of [WhiteheadRussell] p. 124.  (Contributed by NM, 27-Jun-2002.)  (Proof shortened by Wolf Lammen, 20-Sep-2013.) (|- ( ( -. ph <-> ps ) <-> -. ( ph <-> ps ) ))",
+            "instantiated_expression": "|- ( ( -. y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) <-> -. ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "8": {
             "label": "notbid",
@@ -3270,7 +3277,8 @@
             "dependencies": [
               6
             ],
-            "full_text": "notbid: Deduction negating both sides of a logical equivalence.  (Contributed by NM, 21-May-1994.) (|- ( ph -> ( -. ps <-> -. ch ) ))"
+            "full_text": "notbid: Deduction negating both sides of a logical equivalence.  (Contributed by NM, 21-May-1994.) (|- ( ph -> ( -. ps <-> -. ch ) ))",
+            "instantiated_expression": "|- ( x = y -> ( -. x e. ( F ` x ) <-> -. y e. ( F ` y ) ) )"
           },
           "9": {
             "label": "vx",
@@ -3285,7 +3293,8 @@
               8,
               9
             ],
-            "full_text": "elrab: Membership in a restricted class abstraction, using implicit substitution.  (Contributed by NM, 21-May-1999.)  Remove dependency on ~ ax-13 .  (Revised by Steven Nguyen, 23-Nov-2022.) (|- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) ))"
+            "full_text": "elrab: Membership in a restricted class abstraction, using implicit substitution.  (Contributed by NM, 21-May-1999.)  Remove dependency on ~ ax-13 .  (Revised by Steven Nguyen, 23-Nov-2022.) (|- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) ))",
+            "instantiated_expression": "|- ( y e. { x e. A | -. x e. ( F ` x ) } <-> ( y e. A /\\ -. y e. ( F ` y ) ) )"
           },
           "11": {
             "label": "baibr",
@@ -3293,7 +3302,8 @@
             "dependencies": [
               10
             ],
-            "full_text": "baibr: Move conjunction outside of biconditional.  (Contributed by NM, 11-Jul-1994.) (|- ( ps -> ( ch <-> ph ) ))"
+            "full_text": "baibr: Move conjunction outside of biconditional.  (Contributed by NM, 11-Jul-1994.) (|- ( ps -> ( ch <-> ph ) ))",
+            "instantiated_expression": "|- ( y e. A -> ( -. y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "12": {
             "label": "ssrab2",
@@ -3301,7 +3311,8 @@
             "dependencies": [
               9
             ],
-            "full_text": "ssrab2: Subclass relation for a restricted class.  (Contributed by NM, 19-Mar-1997.)  (Proof shortened by BJ and SN, 8-Aug-2024.) (|- { x e. A | ph } C_ A)"
+            "full_text": "ssrab2: Subclass relation for a restricted class.  (Contributed by NM, 19-Mar-1997.)  (Proof shortened by BJ and SN, 8-Aug-2024.) (|- { x e. A | ph } C_ A)",
+            "instantiated_expression": "|- { x e. A | -. x e. ( F ` x ) } C_ A"
           },
           "13": {
             "label": "elpwi2",
@@ -3309,7 +3320,8 @@
             "dependencies": [
               12
             ],
-            "full_text": "elpwi2: Membership in a power class.  (Contributed by Glauco Siliprandi, 3-Mar-2021.)  (Proof shortened by Wolf Lammen, 26-May-2024.) (|- A e. ~P B)"
+            "full_text": "elpwi2: Membership in a power class.  (Contributed by Glauco Siliprandi, 3-Mar-2021.)  (Proof shortened by Wolf Lammen, 26-May-2024.) (|- A e. ~P B)",
+            "instantiated_expression": "|- { x e. A | -. x e. ( F ` x ) } e. ~P A"
           },
           "14": {
             "label": "eleqtrrid",
@@ -3318,7 +3330,8 @@
               3,
               13
             ],
-            "full_text": "eleqtrrid: A membership and equality inference.  (Contributed by NM, 4-Jan-2006.) (|- ( ph -> A e. C ))"
+            "full_text": "eleqtrrid: A membership and equality inference.  (Contributed by NM, 4-Jan-2006.) (|- ( ph -> A e. C ))",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> { x e. A | -. x e. ( F ` x ) } e. ran F )"
           },
           "15": {
             "label": "sylib",
@@ -3327,7 +3340,8 @@
               7,
               11
             ],
-            "full_text": "sylib: A mixed syllogism inference from an implication and a biconditional. (|- ( ph -> ch ))"
+            "full_text": "sylib: A mixed syllogism inference from an implication and a biconditional. (|- ( ph -> ch ))",
+            "instantiated_expression": "|- ( y e. A -> -. ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "16": {
             "label": "nsyl",
@@ -3336,7 +3350,8 @@
               1,
               15
             ],
-            "full_text": "nsyl: A negated syllogism inference.  (Contributed by NM, 31-Dec-1993.) (Proof shortened by Wolf Lammen, 2-Mar-2013.) (|- ( ph -> -. ch ))"
+            "full_text": "nsyl: A negated syllogism inference.  (Contributed by NM, 31-Dec-1993.) (Proof shortened by Wolf Lammen, 2-Mar-2013.) (|- ( ph -> -. ch ))",
+            "instantiated_expression": "|- ( y e. A -> -. ( F ` y ) = { x e. A | -. x e. ( F ` x ) } )"
           },
           "17": {
             "label": "vy",
@@ -3350,7 +3365,8 @@
             "dependencies": [
               17
             ],
-            "full_text": "fvelrnb: A member of a function's range is a value of the function.  (Contributed by NM, 31-Oct-1995.) (|- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) ))"
+            "full_text": "fvelrnb: A member of a function's range is a value of the function.  (Contributed by NM, 31-Oct-1995.) (|- ( F Fn A -> ( B e. ran F <-> E. x e. A ( F ` x ) = B ) ))",
+            "instantiated_expression": "|- ( F Fn A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "19": {
             "label": "nrex",
@@ -3359,7 +3375,8 @@
               16,
               17
             ],
-            "full_text": "nrex: Inference adding restricted existential quantifier to negated wff. (|- -. E. x e. A ps)"
+            "full_text": "nrex: Inference adding restricted existential quantifier to negated wff. (|- -. E. x e. A ps)",
+            "instantiated_expression": "|- -. E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) }"
           },
           "20": {
             "label": "syl",
@@ -3368,7 +3385,8 @@
               2,
               18
             ],
-            "full_text": "syl: An inference version of the transitive laws for implication ~ imim2 and ~ imim1 (and ~ imim1i and ~ imim2i ), which Russell and Whitehead call \"the principle of the syllogism ... because ... the syllogism in Barbara is derived from [[ ~ syl ]\" (quote after Theorem *2.06 of [WhiteheadRussell] p. 101).  Some authors call this law a \"hypothetical syllogism\".  Its associated inference is ~ mp2b . (A bit of trivia: this is the most commonly referenced assertion in our database (13449 times as of 22-Jul-2021).  In second place is ~ eqid (9597 times), followed by ~ adantr (8861 times), ~ syl2anc (7421 times), ~ adantl (6403 times), and ~ simpr (5829 times).  The Metamath program command 'show usage' shows the number of references.) 20-Oct-2011.)  (Proof shortened by Wolf Lammen, 26-Jul-2012.) (|- ( ph -> ch ))"
+            "full_text": "syl: An inference version of the transitive laws for implication ~ imim2 and ~ imim1 (and ~ imim1i and ~ imim2i ), which Russell and Whitehead call \"the principle of the syllogism ... because ... the syllogism in Barbara is derived from [[ ~ syl ]\" (quote after Theorem *2.06 of [WhiteheadRussell] p. 101).  Some authors call this law a \"hypothetical syllogism\".  Its associated inference is ~ mp2b . (A bit of trivia: this is the most commonly referenced assertion in our database (13449 times as of 22-Jul-2021).  In second place is ~ eqid (9597 times), followed by ~ adantr (8861 times), ~ syl2anc (7421 times), ~ adantl (6403 times), and ~ simpr (5829 times).  The Metamath program command 'show usage' shows the number of references.) 20-Oct-2011.)  (Proof shortened by Wolf Lammen, 26-Jul-2012.) (|- ( ph -> ch ))",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> ( { x e. A | -. x e. ( F ` x ) } e. ran F <-> E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) } ) )"
           },
           "21": {
             "label": "mtbiri",
@@ -3377,7 +3395,8 @@
               19,
               20
             ],
-            "full_text": "mtbiri: An inference from a biconditional, similar to modus tollens. (|- ( ph -> -. ps ))"
+            "full_text": "mtbiri: An inference from a biconditional, similar to modus tollens. (|- ( ph -> -. ps ))",
+            "instantiated_expression": "|- ( F : A -onto-> ~P A -> -. { x e. A | -. x e. ( F ` x ) } e. ran F )"
           },
           "22": {
             "label": "pm2.65i",
@@ -3386,7 +3405,8 @@
               14,
               21
             ],
-            "full_text": "pm2.65i: Inference for proof by contradiction.  (Contributed by NM, 18-May-1994.) (Proof shortened by Wolf Lammen, 11-Sep-2013.) (|- -. ph)"
+            "full_text": "pm2.65i: Inference for proof by contradiction.  (Contributed by NM, 18-May-1994.) (Proof shortened by Wolf Lammen, 11-Sep-2013.) (|- -. ph)",
+            "instantiated_expression": "|- -. F : A -onto-> ~P A"
           }
         },
         "starting_statements": [

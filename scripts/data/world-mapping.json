@@ -560,6 +560,94 @@
     "template_file": "Dark Souls III WorldGen.yaml",
     "world_directory": "dark_souls_3_worldgen"
   },
+  "DepGraph": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph.yaml",
+    "world_directory": "depgraph"
+  },
+  "DepGraph Recipe Chain Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Recipe Chain Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Recipe Chain Vanilla WorldGen.yaml",
+    "world_directory": "depgraph_recipe_chain_vanilla_worldgen"
+  },
+  "DepGraph Recipe Chain WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Recipe Chain WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Recipe Chain WorldGen.yaml",
+    "world_directory": "depgraph_recipe_chain_worldgen"
+  },
+  "DepGraph Skill Tree Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Skill Tree Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Skill Tree Vanilla WorldGen.yaml",
+    "world_directory": "depgraph_skill_tree_vanilla_worldgen"
+  },
+  "DepGraph Skill Tree WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Skill Tree WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Skill Tree WorldGen.yaml",
+    "world_directory": "depgraph_skill_tree_worldgen"
+  },
+  "DepGraph Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Vanilla WorldGen.yaml",
+    "world_directory": "depgraph_vanilla_worldgen"
+  },
+  "DepGraph Vanilla WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph Vanilla WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph Vanilla WorldGen2.yaml",
+    "world_directory": "depgraph_vanilla_worldgen2"
+  },
+  "DepGraph WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph WorldGen.yaml",
+    "world_directory": "depgraph_worldgen"
+  },
   "Donkey Kong Country 3": {
     "exporter_path": null,
     "exporter_size": 0,
