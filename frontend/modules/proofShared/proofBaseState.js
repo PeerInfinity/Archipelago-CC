@@ -16,6 +16,7 @@
  *   @property {number}   index        - 1-based statement index
  *   @property {string}   label        - Short theorem/axiom name (e.g. "2cn")
  *   @property {string}   expression   - Mathematical expression (e.g. "|- 2 e. CC")
+ *   @property {string}   [instantiatedExpression] - Concrete instantiated expression (e.g. "|- ( 2 + 2 ) = 4")
  *   @property {number[]} dependencies - Indices of statements this depends on
  *   @property {string}   [fullText]   - Full description text
  *   @property {string}   itemName     - Archipelago item name ("Statement 1")
@@ -106,6 +107,7 @@ export class ProofBaseState {
         index,
         label,
         expression,
+        instantiatedExpression: stmt.instantiated_expression || null,
         dependencies: Array.isArray(stmt.dependencies) ? [...stmt.dependencies] : [],
         fullText: stmt.full_text || null,
         itemName,

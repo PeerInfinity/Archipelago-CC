@@ -10,12 +10,13 @@ from collections import defaultdict, deque
 class ProofStatement:
     """Represents a single statement in a metamath proof."""
 
-    def __init__(self, index: int, label: Optional[str], expression: str, dependencies: List[int], full_text: Optional[str] = None):
+    def __init__(self, index: int, label: Optional[str], expression: str, dependencies: List[int], full_text: Optional[str] = None, instantiated_expression: Optional[str] = None):
         self.index = index  # Statement number (1-based)
         self.label = label  # Optional theorem/axiom name
         self.expression = expression  # The mathematical expression
         self.dependencies = dependencies  # List of statement indices this depends on
         self.full_text = full_text  # Full text description of the statement (if available)
+        self.instantiated_expression = instantiated_expression  # Concrete expression from proof verification
 
 class ProofStructure:
     """
@@ -226,7 +227,7 @@ def topological_sort_proof(ordered_steps: List[str], dependencies: Dict[str, Set
     # Return sorted order if successful, otherwise original order
     return result if len(result) == len(ordered_steps) else ordered_steps
 
-def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, Set[str]]]:
+def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, Set[str]], Dict[str, str]]:
     """
     Extract proof steps and dependencies using metamath-py's proof verification.
 
@@ -235,11 +236,12 @@ def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[s
         theorem_name: Name of the theorem to analyze
 
     Returns:
-        Tuple of (ordered list of proof steps, dependency dictionary)
+        Tuple of (ordered list of proof steps, dependency dictionary, conclusions dictionary)
+        The conclusions dict maps label -> instantiated expression string from proof verification.
     """
     if theorem_name not in db.rules:
         print(f"Warning: Theorem {theorem_name} not found in database")
-        return [], {}
+        return [], {}, {}
 
     rule = db.rules[theorem_name]
 
@@ -252,6 +254,7 @@ def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[s
 
         # Build dependency graph
         dependencies = {}
+        conclusions = {}
         ordered_steps = []
         seen = set()
 
@@ -278,11 +281,15 @@ def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[s
 
                     dependencies[label] = deps
 
-        return ordered_steps, dependencies
+                    # Capture instantiated expression from proof verification
+                    if hasattr(step, 'conclusion') and step.conclusion:
+                        conclusions[label] = ' '.join(step.conclusion)
+
+        return ordered_steps, dependencies, conclusions
 
     except Exception as e:
         print(f"Error verifying proof for {theorem_name}: {e}")
-        return [], {}
+        return [], {}, {}
 
 def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str] = None) -> ProofStructure:
     """
@@ -292,7 +299,7 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
     structure = ProofStructure()
 
     # Extract dependencies using proof verification
-    ordered_steps, dependencies = extract_proof_dependencies(db, theorem_name)
+    ordered_steps, dependencies, conclusions = extract_proof_dependencies(db, theorem_name)
 
     if not ordered_steps:
         # Fallback: create a single-step proof if extraction failed
@@ -350,12 +357,16 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
         label_deps = dependencies.get(label, set())
         index_deps = [label_to_index[dep] for dep in label_deps if dep in label_to_index]
 
+        # Get instantiated expression from proof verification (if available)
+        inst_expr = conclusions.get(label)
+
         structure.add_statement(ProofStatement(
             index=i,
             label=label,
             expression=expression,
             dependencies=index_deps,
-            full_text=full_text
+            full_text=full_text,
+            instantiated_expression=inst_expr
         ))
 
     return structure

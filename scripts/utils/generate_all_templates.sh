@@ -236,6 +236,40 @@ YAMLEOF
   fi
 }
 
+# Generate a DepGraph seed with a specific graph (and optional extra options)
+generate_depgraph_seed() {
+  local graph="$1" seed_num="$2" extra_opts="${3:-}"
+  local temp_yaml="Players/Templates/DepGraph ${graph}.yaml"
+
+  if [ "$SCRIPT_MODE" = true ]; then
+    {
+      echo "mkdir -p \"Players/Templates\""
+      echo "cat > \"${temp_yaml}\" << 'YAMLEOF'"
+      echo "name: Player{number}"
+      echo "game: \"DepGraph\""
+      echo "DepGraph:"
+      echo "  graph_file: ${graph}"
+      if [ -n "$extra_opts" ]; then
+        echo "$extra_opts"
+      fi
+      echo "YAMLEOF"
+      _fmt python Generate.py --weights_file_path "Templates/DepGraph ${graph}.yaml" --multi 1 --seed "$seed_num"
+      echo "rm -f \"${temp_yaml}\""
+    } >> "$OUTPUT_SCRIPT"
+  else
+    mkdir -p "Players/Templates"
+    cat > "$temp_yaml" << YAMLEOF
+name: Player{number}
+game: "DepGraph"
+DepGraph:
+  graph_file: ${graph}
+$([ -n "$extra_opts" ] && echo "$extra_opts")
+YAMLEOF
+    python Generate.py --weights_file_path "Templates/DepGraph ${graph}.yaml" --multi 1 --seed "$seed_num"
+    rm -f "$temp_yaml"
+  fi
+}
+
 # Check if a game has vanilla seeds
 has_vanilla() {
   [ -n "${VANILLA_PRESET_DIR[$1]+x}" ]
@@ -410,6 +444,33 @@ if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
   generate_metamath_seed "wilth" 9
 fi
 
+# --- DepGraph graph variant presets ---
+
+section "Generating DepGraph graph variant presets"
+
+# --- Vanilla seeds ---
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "DepGraph"                                            # tech_tree, seed 1
+  generate_depgraph_seed "skill_tree" 2 "  vanilla_placement: true"           # skill_tree, seed 2
+  generate_depgraph_seed "recipe_chain" 3 "  vanilla_placement: true"         # recipe_chain, seed 3
+fi
+
+# --- Main seeds ---
+# tech_tree (default): seeds 1-3 via default template
+gen_seeds "DepGraph"
+# skill_tree: seeds 4-6
+generate_depgraph_seed "skill_tree" 4
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "skill_tree" 5
+  generate_depgraph_seed "skill_tree" 6
+fi
+# recipe_chain: seeds 7-9
+generate_depgraph_seed "recipe_chain" 7
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "recipe_chain" 8
+  generate_depgraph_seed "recipe_chain" 9
+fi
+
 # --- Multiworld ---
 
 if [ "$GENERATE_MULTIWORLD" = "true" ]; then
@@ -468,6 +529,26 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
       "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen" --apply-name-substitutions
   fi
 
+  # DepGraph graph variant WorldGen worlds
+  gen_worldgen_world "DepGraph"                      # tech_tree from seed 1
+  run_world_generator \
+    "frontend/presets/depgraph/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
+    "worlds/depgraph_skill_tree_worldgen" "DepGraph Skill Tree WorldGen"
+  run_world_generator \
+    "frontend/presets/depgraph/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
+    "worlds/depgraph_recipe_chain_worldgen" "DepGraph Recipe Chain WorldGen"
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/depgraph_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/depgraph_vanilla_worldgen" "DepGraph Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/depgraph_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
+      "worlds/depgraph_skill_tree_vanilla_worldgen" "DepGraph Skill Tree Vanilla WorldGen"
+    run_world_generator \
+      "frontend/presets/depgraph_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
+      "worlds/depgraph_recipe_chain_vanilla_worldgen" "DepGraph Recipe Chain Vanilla WorldGen"
+  fi
+
   section "Regenerating templates (for WorldGen)"
   regen_templates
 
@@ -496,6 +577,24 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     gen_seed "Metamath Canth Vanilla WorldGen" 2
     gen_seed "Metamath Wilth Vanilla WorldGen" 3
   fi
+
+  # DepGraph graph variant WorldGen seeds
+  gen_seeds "DepGraph WorldGen"
+  gen_seed "DepGraph Skill Tree WorldGen" 4
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "DepGraph Skill Tree WorldGen" 5
+    gen_seed "DepGraph Skill Tree WorldGen" 6
+  fi
+  gen_seed "DepGraph Recipe Chain WorldGen" 7
+  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+    gen_seed "DepGraph Recipe Chain WorldGen" 8
+    gen_seed "DepGraph Recipe Chain WorldGen" 9
+  fi
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    gen_seed "DepGraph Vanilla WorldGen" 1
+    gen_seed "DepGraph Skill Tree Vanilla WorldGen" 2
+    gen_seed "DepGraph Recipe Chain Vanilla WorldGen" 3
+  fi
 fi
 
 # --- WorldGen2 ---
@@ -518,6 +617,13 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
       "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2" --apply-name-substitutions
   fi
 
+  # DepGraph WorldGen2 (tech_tree vanilla only)
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    run_world_generator \
+      "frontend/presets/depgraph_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
+      "worlds/depgraph_vanilla_worldgen2" "DepGraph Vanilla WorldGen2"
+  fi
+
   section "Regenerating templates (for WorldGen2)"
   regen_templates
 
@@ -534,6 +640,11 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
   # MetaMath WorldGen2 seed
   if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
     gen_seed "Metamath Vanilla WorldGen2" 1
+  fi
+
+  # DepGraph WorldGen2 seed
+  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+    gen_seed "DepGraph Vanilla WorldGen2" 1
   fi
 fi
 
