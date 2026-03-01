@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    Proof Queue Panel — MetaMath Easy Mode
+   Progressive proof table with proven/working sections
    ═══════════════════════════════════════════════════════════ */
 
 .proof-queue-panel {
@@ -29,11 +30,18 @@
 
 .pq-toolbar {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
   padding: 6px 12px;
   background: #1e1e2e;
   border-bottom: 1px solid #313244;
   flex-shrink: 0;
+}
+
+.pq-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .pq-btn {
@@ -66,17 +74,198 @@
   background: #2b8a54;
 }
 
+.pq-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #a6adc8;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pq-checkbox-label input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+/* ─── Proven Section ────────────────────────────────────── */
+
+.pq-proven-section {
+  flex-shrink: 0;
+  max-height: 50%;
+  overflow-y: auto;
+  border-bottom: 1px solid #313244;
+}
+
+.proof-queue-panel.pq-complete .pq-proven-section {
+  max-height: none;
+  flex: 1;
+}
+
+.pq-theorem-header {
+  padding: 8px 12px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  color: #89b4fa;
+}
+
+/* ─── Proof Tables (shared by proven + queue) ───────────── */
+
+.pq-proven-table,
+.pq-queue-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  table-layout: fixed;
+}
+
+.pq-proven-table th,
+.pq-queue-table th {
+  position: sticky;
+  top: 0;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c7086;
+  background: #181825;
+  border-bottom: 1px solid #313244;
+  text-align: left;
+  z-index: 1;
+}
+
+.pq-proven-table td,
+.pq-queue-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #11111b;
+  vertical-align: top;
+}
+
+/* Column widths */
+.pq-col-step {
+  width: 40px;
+  text-align: right;
+  color: #6c7086;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-col-hyp {
+  width: 60px;
+  color: #a6adc8;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-col-ref {
+  width: 100px;
+  font-weight: 600;
+  color: #cdd6f4;
+}
+
+.pq-col-expr {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pq-col-type {
+  width: 36px;
+  text-align: center;
+}
+
+.pq-col-actions {
+  width: 28px;
+  text-align: center;
+}
+
+/* ─── Proven Rows ───────────────────────────────────────── */
+
+.pq-proven-row:hover {
+  background: #262637;
+}
+
+.pq-proven-goal {
+  background: #1a3328;
+}
+
+.pq-proven-goal:hover {
+  background: #1f3d30;
+}
+
+/* ─── Ref Links ─────────────────────────────────────────── */
+
+.pq-ref-link {
+  color: #89b4fa;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pq-ref-link:hover {
+  text-decoration: underline;
+}
+
+/* ─── Detail Text (full_text below expression) ──────────── */
+
+.pq-detail-text {
+  font-size: 10px;
+  color: #585b70;
+  white-space: normal;
+  word-break: break-word;
+  margin-top: 2px;
+}
+
+/* ─── Type Badges ───────────────────────────────────────── */
+
+.pq-type-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.pq-type-axiom {
+  color: #cba6f7;
+  background: #2a2040;
+}
+
+.pq-type-def {
+  color: #89dceb;
+  background: #1a2a3a;
+}
+
+.pq-type-thm {
+  color: #a6e3a1;
+  background: #1a3328;
+}
+
+/* ─── Hyp Missing ───────────────────────────────────────── */
+
+.pq-hyp-missing {
+  color: #f38ba8;
+}
+
+/* ─── QED ───────────────────────────────────────────────── */
+
+.pq-qed {
+  text-align: right;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: italic;
+  color: #a6e3a1;
+}
+
 /* ─── Sections ──────────────────────────────────────────── */
 
 .pq-section {
   flex-shrink: 0;
   border-bottom: 1px solid #313244;
-}
-
-.pq-queue-section {
-  flex: 1;
-  overflow-y: auto;
-  border-bottom: none;
 }
 
 .pq-section-label {
@@ -86,6 +275,21 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #6c7086;
+}
+
+/* ─── Working Area ──────────────────────────────────────── */
+
+.pq-working-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pq-queue-section {
+  flex: 1;
+  overflow-y: auto;
+  border-bottom: none;
 }
 
 /* ─── Available Pool ────────────────────────────────────── */
@@ -131,92 +335,44 @@
   text-overflow: ellipsis;
 }
 
-/* ─── Queue Rows ────────────────────────────────────────── */
+/* ─── Queue Rows (table-based) ──────────────────────────── */
 
-.pq-queue {
-  padding: 4px 0;
-}
-
-.pq-queue-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-bottom: 1px solid #11111b;
+tr.pq-queue-row {
   cursor: grab;
   transition: background 0.15s;
-  position: relative;
 }
 
-.pq-queue-row:hover {
+tr.pq-queue-row:hover {
   background: #262637;
 }
 
-/* Status variants */
-.pq-queue-row.pq-checked {
-  opacity: 0.6;
-  cursor: default;
+/* Status variants on <tr> */
+tr.pq-queue-row.pq-checkable {
+  background: #1a3328;
 }
 
-.pq-queue-row.pq-checkable {
-  background: #1a3328;
+tr.pq-queue-row.pq-checkable > td:first-child {
   border-left: 3px solid #a6e3a1;
 }
 
-.pq-queue-row.pq-valid {
+tr.pq-queue-row.pq-valid > td:first-child {
   border-left: 3px solid #89b4fa;
 }
 
-.pq-queue-row.pq-invalid {
-  border-left: 3px solid #f38ba8;
+tr.pq-queue-row.pq-invalid {
   background: #2a1a22;
 }
 
-.pq-queue-row.pq-checked {
-  border-left: 3px solid #6c7086;
+tr.pq-queue-row.pq-invalid > td:first-child {
+  border-left: 3px solid #f38ba8;
 }
 
-/* Row parts */
-.pq-row-num {
-  flex-shrink: 0;
-  width: 24px;
-  text-align: right;
-  color: #6c7086;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-}
-
-.pq-row-icon {
-  flex-shrink: 0;
-  width: 16px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.pq-checked .pq-row-icon { color: #6c7086; }
-.pq-checkable .pq-row-icon { color: #a6e3a1; }
-.pq-valid .pq-row-icon { color: #89b4fa; }
-.pq-invalid .pq-row-icon { color: #f38ba8; }
-
-.pq-row-text {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-}
-
-.pq-row-text strong {
-  color: #cdd6f4;
-}
-
-.pq-checked .pq-row-text {
-  text-decoration: line-through;
-  color: #6c7086;
-}
+/* ─── Queue Row Remove Button ───────────────────────────── */
 
 .pq-row-remove {
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
   height: 20px;
   border: none;
@@ -230,7 +386,7 @@
   transition: opacity 0.15s, background 0.15s;
 }
 
-.pq-queue-row:hover .pq-row-remove {
+tr.pq-queue-row:hover .pq-row-remove {
   opacity: 1;
 }
 
@@ -239,29 +395,26 @@
   color: #f38ba8;
 }
 
-/* Dependency hint (shown below invalid rows) */
+/* ─── Dependency Hint (inside table cell) ───────────────── */
+
 .pq-row-deps {
-  position: absolute;
-  bottom: -1px;
-  left: 56px;
-  right: 12px;
   font-size: 10px;
   color: #f38ba8;
   opacity: 0.8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  pointer-events: none;
+  margin-top: 2px;
 }
 
 /* ─── Drag and Drop ─────────────────────────────────────── */
 
-.pq-queue-row.pq-dragging {
+tr.pq-queue-row.pq-dragging {
   opacity: 0.4;
   background: #313244;
 }
 
-.pq-queue-row.pq-drag-over {
+tr.pq-queue-row.pq-drag-over {
   border-top: 2px solid #89b4fa;
 }
 
