@@ -14,7 +14,7 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To basic_combat",
+            "name": "To basic_tools",
             "connected_region": "Prove Statement 1",
             "access_rule": {
               "rule": "True_"
@@ -27,7 +27,7 @@
         "name": "Prove Statement 1",
         "exits": [
           {
-            "name": "From basic_combat to agility",
+            "name": "From basic_tools to logging",
             "connected_region": "Prove Statement 2",
             "access_rule": {
               "rule": "HasAll",
@@ -40,8 +40,8 @@
             }
           },
           {
-            "name": "From basic_combat to strength",
-            "connected_region": "Prove Statement 3",
+            "name": "From basic_tools to mining",
+            "connected_region": "Prove Statement 4",
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -59,31 +59,14 @@
         "name": "Prove Statement 2",
         "exits": [
           {
-            "name": "From agility to parry",
-            "connected_region": "Prove Statement 6",
+            "name": "From logging to carpentry",
+            "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 2",
-                  "Proved Statement 5",
-                  "Statement 2",
-                  "Statement 5"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From agility to dual_wield",
-            "connected_region": "Prove Statement 9",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 2",
-                  "Proved Statement 8",
-                  "Statement 2",
-                  "Statement 8"
+                  "Statement 2"
                 ]
               }
             }
@@ -97,7 +80,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 3",
+              "name": "Statement 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -125,40 +108,16 @@
         "name": "Prove Statement 3",
         "exits": [
           {
-            "name": "From strength to battle_cry",
-            "connected_region": "Prove Statement 4",
+            "name": "From carpentry to metalworking",
+            "connected_region": "Prove Statement 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 3",
-                  "Statement 3"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From strength to shield_mastery",
-            "connected_region": "Prove Statement 5",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 3",
-                  "Statement 3"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From strength to sword_mastery",
-            "connected_region": "Prove Statement 8",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 3",
-                  "Statement 3"
+                  "Proved Statement 5",
+                  "Statement 3",
+                  "Statement 5"
                 ]
               }
             }
@@ -172,7 +131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 2",
+              "name": "Statement 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -200,16 +159,14 @@
         "name": "Prove Statement 4",
         "exits": [
           {
-            "name": "From battle_cry to whirlwind",
-            "connected_region": "Prove Statement 10",
+            "name": "From mining to smelting",
+            "connected_region": "Prove Statement 5",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Proved Statement 4",
-                  "Proved Statement 9",
-                  "Statement 4",
-                  "Statement 9"
+                  "Statement 4"
                 ]
               }
             }
@@ -223,7 +180,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "Statement 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -251,15 +208,15 @@
         "name": "Prove Statement 5",
         "exits": [
           {
-            "name": "From shield_mastery to parry",
+            "name": "From smelting to metalworking",
             "connected_region": "Prove Statement 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 2",
+                  "Proved Statement 3",
                   "Proved Statement 5",
-                  "Statement 2",
+                  "Statement 3",
                   "Statement 5"
                 ]
               }
@@ -274,7 +231,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 8",
+              "name": "Statement 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -302,8 +259,21 @@
         "name": "Prove Statement 6",
         "exits": [
           {
-            "name": "From parry to counter",
+            "name": "From metalworking to architecture",
             "connected_region": "Prove Statement 7",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Proved Statement 6",
+                  "Statement 6"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From metalworking to engineering",
+            "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -351,16 +321,16 @@
         "name": "Prove Statement 7",
         "exits": [
           {
-            "name": "From counter to warrior_stance",
-            "connected_region": "Prove Statement 11",
+            "name": "From architecture to steam_power",
+            "connected_region": "Prove Statement 9",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 10",
                   "Proved Statement 7",
-                  "Statement 10",
-                  "Statement 7"
+                  "Proved Statement 8",
+                  "Statement 7",
+                  "Statement 8"
                 ]
               }
             }
@@ -374,7 +344,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -402,15 +372,15 @@
         "name": "Prove Statement 8",
         "exits": [
           {
-            "name": "From sword_mastery to dual_wield",
+            "name": "From engineering to steam_power",
             "connected_region": "Prove Statement 9",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 2",
+                  "Proved Statement 7",
                   "Proved Statement 8",
-                  "Statement 2",
+                  "Statement 7",
                   "Statement 8"
                 ]
               }
@@ -425,7 +395,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 4",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -453,15 +423,13 @@
         "name": "Prove Statement 9",
         "exits": [
           {
-            "name": "From dual_wield to whirlwind",
+            "name": "From steam_power to industrial_age",
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
                   "Proved Statement 9",
-                  "Statement 4",
                   "Statement 9"
                 ]
               }
@@ -502,23 +470,7 @@
       },
       "Prove Statement 10": {
         "name": "Prove Statement 10",
-        "exits": [
-          {
-            "name": "From whirlwind to warrior_stance",
-            "connected_region": "Prove Statement 11",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 10",
-                  "Proved Statement 7",
-                  "Statement 10",
-                  "Statement 7"
-                ]
-              }
-            }
-          }
-        ],
+        "exits": [],
         "locations": [
           {
             "name": "Prove Statement 10",
@@ -532,7 +484,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Proved Statement 10",
@@ -542,90 +494,6 @@
             },
             "item": {
               "name": "Proved Statement 10",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Prove Statement 11": {
-        "name": "Prove Statement 11",
-        "exits": [
-          {
-            "name": "From warrior_stance to legendary_hero",
-            "connected_region": "Prove Statement 12",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Proved Statement 11",
-                  "Statement 11"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Prove Statement 11",
-            "id": 234800011,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Statement 11",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Proved Statement 11",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Proved Statement 11",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Prove Statement 12": {
-        "name": "Prove Statement 12",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Prove Statement 12",
-            "id": 234800012,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Statement 12",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Proved Statement 12",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Proved Statement 12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -764,7 +632,7 @@
           "Everything",
           "Statements"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -775,7 +643,7 @@
           "Everything",
           "Statements"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -1846,28 +1714,6 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 11": {
-        "name": "Proved Statement 11",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Proved Statement 12": {
-        "name": "Proved Statement 12",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Proved Statement 1": {
         "name": "Proved Statement 1",
         "id": null,
@@ -1889,8 +1735,6 @@
     "1": {
       "Proved Statement 1": 1,
       "Proved Statement 10": 1,
-      "Proved Statement 11": 1,
-      "Proved Statement 12": 1,
       "Proved Statement 2": 1,
       "Proved Statement 3": 1,
       "Proved Statement 4": 1,
@@ -1901,8 +1745,6 @@
       "Proved Statement 9": 1,
       "Statement 1": 1,
       "Statement 10": 1,
-      "Statement 11": 1,
-      "Statement 12": 1,
       "Statement 2": 1,
       "Statement 3": 1,
       "Statement 4": 1,
@@ -1922,9 +1764,7 @@
       "Prove Statement 6": "Statement 6",
       "Prove Statement 7": "Statement 7",
       "Prove Statement 8": "Statement 8",
-      "Prove Statement 9": "Statement 9",
-      "Prove Statement 10": "Statement 10",
-      "Prove Statement 11": "Statement 11"
+      "Prove Statement 9": "Statement 9"
     }
   },
   "progression_mapping": {
@@ -1943,7 +1783,7 @@
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
-        "graph_file": 1,
+        "graph_file": 0,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
@@ -2010,77 +1850,67 @@
       },
       "graph_structure": {
         "label_to_index": {
-          "basic_combat": 1,
-          "agility": 2,
-          "strength": 3,
-          "battle_cry": 4,
-          "shield_mastery": 5,
-          "parry": 6,
-          "counter": 7,
-          "sword_mastery": 8,
-          "dual_wield": 9,
-          "whirlwind": 10,
-          "warrior_stance": 11,
-          "legendary_hero": 12
+          "basic_tools": 1,
+          "logging": 2,
+          "carpentry": 3,
+          "mining": 4,
+          "smelting": 5,
+          "metalworking": 6,
+          "architecture": 7,
+          "engineering": 8,
+          "steam_power": 9,
+          "industrial_age": 10
         },
-        "title": "Skill Tree"
+        "title": "Tech Tree"
       },
-      "num_statements": 12,
-      "preset_label": "skill_tree s2",
+      "num_statements": 10,
+      "preset_label": "tech_tree s2",
       "name_substitutions": {
         "items": {
-          "Statement 1": "Basic Combat",
-          "Proved Statement 1": "Event: Basic Combat",
-          "Statement 2": "Agility",
-          "Proved Statement 2": "Event: Agility",
-          "Statement 3": "Strength",
-          "Proved Statement 3": "Event: Strength",
-          "Statement 4": "Battle Cry",
-          "Proved Statement 4": "Event: Battle Cry",
-          "Statement 5": "Shield Mastery",
-          "Proved Statement 5": "Event: Shield Mastery",
-          "Statement 6": "Parry",
-          "Proved Statement 6": "Event: Parry",
-          "Statement 7": "Counter",
-          "Proved Statement 7": "Event: Counter",
-          "Statement 8": "Sword Mastery",
-          "Proved Statement 8": "Event: Sword Mastery",
-          "Statement 9": "Dual Wield",
-          "Proved Statement 9": "Event: Dual Wield",
-          "Statement 10": "Whirlwind",
-          "Proved Statement 10": "Event: Whirlwind",
-          "Statement 11": "Warrior Stance",
-          "Proved Statement 11": "Event: Warrior Stance",
-          "Statement 12": "Legendary Hero",
-          "Proved Statement 12": "Event: Legendary Hero"
+          "Statement 1": "Basic Tools",
+          "Proved Statement 1": "Event: Basic Tools",
+          "Statement 2": "Logging",
+          "Proved Statement 2": "Event: Logging",
+          "Statement 3": "Carpentry",
+          "Proved Statement 3": "Event: Carpentry",
+          "Statement 4": "Mining",
+          "Proved Statement 4": "Event: Mining",
+          "Statement 5": "Smelting",
+          "Proved Statement 5": "Event: Smelting",
+          "Statement 6": "Metalworking",
+          "Proved Statement 6": "Event: Metalworking",
+          "Statement 7": "Architecture",
+          "Proved Statement 7": "Event: Architecture",
+          "Statement 8": "Engineering",
+          "Proved Statement 8": "Event: Engineering",
+          "Statement 9": "Steam Power",
+          "Proved Statement 9": "Event: Steam Power",
+          "Statement 10": "Industrial Age",
+          "Proved Statement 10": "Event: Industrial Age"
         },
         "locations": {
-          "Prove Statement 1": "Basic Combat",
-          "Prove Statement 2": "Agility",
-          "Prove Statement 3": "Strength",
-          "Prove Statement 4": "Battle Cry",
-          "Prove Statement 5": "Shield Mastery",
-          "Prove Statement 6": "Parry",
-          "Prove Statement 7": "Counter",
-          "Prove Statement 8": "Sword Mastery",
-          "Prove Statement 9": "Dual Wield",
-          "Prove Statement 10": "Whirlwind",
-          "Prove Statement 11": "Warrior Stance",
-          "Prove Statement 12": "Legendary Hero"
+          "Prove Statement 1": "Basic Tools",
+          "Prove Statement 2": "Logging",
+          "Prove Statement 3": "Carpentry",
+          "Prove Statement 4": "Mining",
+          "Prove Statement 5": "Smelting",
+          "Prove Statement 6": "Metalworking",
+          "Prove Statement 7": "Architecture",
+          "Prove Statement 8": "Engineering",
+          "Prove Statement 9": "Steam Power",
+          "Prove Statement 10": "Industrial Age"
         },
         "regions": {
-          "Prove Statement 1": "Basic Combat",
-          "Prove Statement 2": "Agility",
-          "Prove Statement 3": "Strength",
-          "Prove Statement 4": "Battle Cry",
-          "Prove Statement 5": "Shield Mastery",
-          "Prove Statement 6": "Parry",
-          "Prove Statement 7": "Counter",
-          "Prove Statement 8": "Sword Mastery",
-          "Prove Statement 9": "Dual Wield",
-          "Prove Statement 10": "Whirlwind",
-          "Prove Statement 11": "Warrior Stance",
-          "Prove Statement 12": "Legendary Hero"
+          "Prove Statement 1": "Basic Tools",
+          "Prove Statement 2": "Logging",
+          "Prove Statement 3": "Carpentry",
+          "Prove Statement 4": "Mining",
+          "Prove Statement 5": "Smelting",
+          "Prove Statement 6": "Metalworking",
+          "Prove Statement 7": "Architecture",
+          "Prove Statement 8": "Engineering",
+          "Prove Statement 9": "Steam Power",
+          "Prove Statement 10": "Industrial Age"
         }
       },
       "canonical_placements": {
@@ -2091,9 +1921,7 @@
         "Prove Statement 6": "Statement 6",
         "Prove Statement 7": "Statement 7",
         "Prove Statement 8": "Statement 8",
-        "Prove Statement 9": "Statement 9",
-        "Prove Statement 10": "Statement 10",
-        "Prove Statement 11": "Statement 11"
+        "Prove Statement 9": "Statement 9"
       },
       "location_dependencies": {
         "Prove Statement 2": [
@@ -2105,38 +1933,38 @@
           "Proved Statement 1"
         ],
         "Prove Statement 3": [
-          "Statement 1",
-          "Proved Statement 1"
+          "Statement 2",
+          "Proved Statement 2"
         ],
         "Proved Statement 3": [
+          "Statement 2",
+          "Proved Statement 2"
+        ],
+        "Prove Statement 4": [
           "Statement 1",
           "Proved Statement 1"
         ],
-        "Prove Statement 4": [
-          "Statement 3",
-          "Proved Statement 3"
-        ],
         "Proved Statement 4": [
-          "Statement 3",
-          "Proved Statement 3"
+          "Statement 1",
+          "Proved Statement 1"
         ],
         "Prove Statement 5": [
-          "Statement 3",
-          "Proved Statement 3"
+          "Statement 4",
+          "Proved Statement 4"
         ],
         "Proved Statement 5": [
-          "Statement 3",
-          "Proved Statement 3"
+          "Statement 4",
+          "Proved Statement 4"
         ],
         "Prove Statement 6": [
-          "Statement 2",
-          "Proved Statement 2",
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
         "Proved Statement 6": [
-          "Statement 2",
-          "Proved Statement 2",
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
@@ -2149,320 +1977,230 @@
           "Proved Statement 6"
         ],
         "Prove Statement 8": [
-          "Statement 3",
-          "Proved Statement 3"
+          "Statement 6",
+          "Proved Statement 6"
         ],
         "Proved Statement 8": [
-          "Statement 3",
-          "Proved Statement 3"
+          "Statement 6",
+          "Proved Statement 6"
         ],
         "Prove Statement 9": [
-          "Statement 2",
-          "Proved Statement 2",
+          "Statement 7",
+          "Proved Statement 7",
           "Statement 8",
           "Proved Statement 8"
         ],
         "Proved Statement 9": [
-          "Statement 2",
-          "Proved Statement 2",
+          "Statement 7",
+          "Proved Statement 7",
           "Statement 8",
           "Proved Statement 8"
         ],
         "Prove Statement 10": [
-          "Statement 4",
-          "Proved Statement 4",
           "Statement 9",
           "Proved Statement 9"
         ],
         "Proved Statement 10": [
-          "Statement 4",
-          "Proved Statement 4",
           "Statement 9",
           "Proved Statement 9"
-        ],
-        "Prove Statement 11": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "Proved Statement 11": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "Prove Statement 12": [
-          "Statement 11",
-          "Proved Statement 11"
-        ],
-        "Proved Statement 12": [
-          "Statement 11",
-          "Proved Statement 11"
         ]
       },
       "entrance_dependencies": {
-        "From basic_combat to agility": [
+        "From basic_tools to logging": [
           "Statement 1",
           "Proved Statement 1"
         ],
-        "From basic_combat to strength": [
+        "From logging to carpentry": [
+          "Statement 2",
+          "Proved Statement 2"
+        ],
+        "From basic_tools to mining": [
           "Statement 1",
           "Proved Statement 1"
         ],
-        "From strength to battle_cry": [
-          "Statement 3",
-          "Proved Statement 3"
+        "From mining to smelting": [
+          "Statement 4",
+          "Proved Statement 4"
         ],
-        "From strength to shield_mastery": [
+        "From carpentry to metalworking": [
           "Statement 3",
-          "Proved Statement 3"
-        ],
-        "From agility to parry": [
-          "Statement 2",
-          "Proved Statement 2",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
-        "From shield_mastery to parry": [
-          "Statement 2",
-          "Proved Statement 2",
+        "From smelting to metalworking": [
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
-        "From parry to counter": [
+        "From metalworking to architecture": [
           "Statement 6",
           "Proved Statement 6"
         ],
-        "From strength to sword_mastery": [
-          "Statement 3",
-          "Proved Statement 3"
+        "From metalworking to engineering": [
+          "Statement 6",
+          "Proved Statement 6"
         ],
-        "From agility to dual_wield": [
-          "Statement 2",
-          "Proved Statement 2",
+        "From architecture to steam_power": [
+          "Statement 7",
+          "Proved Statement 7",
           "Statement 8",
           "Proved Statement 8"
         ],
-        "From sword_mastery to dual_wield": [
-          "Statement 2",
-          "Proved Statement 2",
+        "From engineering to steam_power": [
+          "Statement 7",
+          "Proved Statement 7",
           "Statement 8",
           "Proved Statement 8"
         ],
-        "From battle_cry to whirlwind": [
-          "Statement 4",
-          "Proved Statement 4",
+        "From steam_power to industrial_age": [
           "Statement 9",
           "Proved Statement 9"
-        ],
-        "From dual_wield to whirlwind": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From counter to warrior_stance": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "From whirlwind to warrior_stance": [
-          "Statement 7",
-          "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "From warrior_stance to legendary_hero": [
-          "Statement 11",
-          "Proved Statement 11"
         ]
       },
       "exit_dependencies": {
-        "From basic_combat to agility": [
+        "From basic_tools to logging": [
           "Statement 1",
           "Proved Statement 1"
         ],
-        "From basic_combat to strength": [
+        "From basic_tools to mining": [
           "Statement 1",
           "Proved Statement 1"
         ],
-        "From agility to parry": [
+        "From logging to carpentry": [
           "Statement 2",
-          "Proved Statement 2",
+          "Proved Statement 2"
+        ],
+        "From carpentry to metalworking": [
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
-        "From agility to dual_wield": [
-          "Statement 2",
-          "Proved Statement 2",
-          "Statement 8",
-          "Proved Statement 8"
-        ],
-        "From strength to battle_cry": [
-          "Statement 3",
-          "Proved Statement 3"
-        ],
-        "From strength to shield_mastery": [
-          "Statement 3",
-          "Proved Statement 3"
-        ],
-        "From strength to sword_mastery": [
-          "Statement 3",
-          "Proved Statement 3"
-        ],
-        "From battle_cry to whirlwind": [
+        "From mining to smelting": [
           "Statement 4",
-          "Proved Statement 4",
-          "Statement 9",
-          "Proved Statement 9"
+          "Proved Statement 4"
         ],
-        "From shield_mastery to parry": [
-          "Statement 2",
-          "Proved Statement 2",
+        "From smelting to metalworking": [
+          "Statement 3",
+          "Proved Statement 3",
           "Statement 5",
           "Proved Statement 5"
         ],
-        "From parry to counter": [
+        "From metalworking to architecture": [
           "Statement 6",
           "Proved Statement 6"
         ],
-        "From counter to warrior_stance": [
+        "From metalworking to engineering": [
+          "Statement 6",
+          "Proved Statement 6"
+        ],
+        "From architecture to steam_power": [
           "Statement 7",
           "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
-        ],
-        "From sword_mastery to dual_wield": [
-          "Statement 2",
-          "Proved Statement 2",
           "Statement 8",
           "Proved Statement 8"
         ],
-        "From dual_wield to whirlwind": [
-          "Statement 4",
-          "Proved Statement 4",
-          "Statement 9",
-          "Proved Statement 9"
-        ],
-        "From whirlwind to warrior_stance": [
+        "From engineering to steam_power": [
           "Statement 7",
           "Proved Statement 7",
-          "Statement 10",
-          "Proved Statement 10"
+          "Statement 8",
+          "Proved Statement 8"
         ],
-        "From warrior_stance to legendary_hero": [
-          "Statement 11",
-          "Proved Statement 11"
+        "From steam_power to industrial_age": [
+          "Statement 9",
+          "Proved Statement 9"
         ]
       },
       "world_description": "Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.",
       "slot_data": {
         "proof_structure": {
           "1": {
-            "label": "basic_combat",
-            "expression": "Basic Combat",
+            "label": "basic_tools",
+            "expression": "Basic Tools",
             "dependencies": [],
-            "full_text": "basic_combat: Basic Combat"
+            "full_text": "basic_tools: Craft primitive tools from stone and wood"
           },
           "2": {
-            "label": "agility",
-            "expression": "Agility",
+            "label": "logging",
+            "expression": "Logging",
             "dependencies": [
               1
             ],
-            "full_text": "agility: Agility"
+            "full_text": "logging: Harvest timber from forests"
           },
           "3": {
-            "label": "strength",
-            "expression": "Strength",
+            "label": "carpentry",
+            "expression": "Carpentry",
+            "dependencies": [
+              2
+            ],
+            "full_text": "carpentry: Shape wood into useful structures"
+          },
+          "4": {
+            "label": "mining",
+            "expression": "Mining",
             "dependencies": [
               1
             ],
-            "full_text": "strength: Strength"
-          },
-          "4": {
-            "label": "battle_cry",
-            "expression": "Battle Cry",
-            "dependencies": [
-              3
-            ],
-            "full_text": "battle_cry: Battle Cry"
+            "full_text": "mining: Extract ores from the earth"
           },
           "5": {
-            "label": "shield_mastery",
-            "expression": "Shield Mastery",
+            "label": "smelting",
+            "expression": "Smelting",
             "dependencies": [
-              3
+              4
             ],
-            "full_text": "shield_mastery: Shield Mastery"
+            "full_text": "smelting: Smelt ores into metal ingots"
           },
           "6": {
-            "label": "parry",
-            "expression": "Parry",
+            "label": "metalworking",
+            "expression": "Metalworking",
             "dependencies": [
-              2,
+              3,
               5
             ],
-            "full_text": "parry: Parry"
+            "full_text": "metalworking: Forge metal into advanced components"
           },
           "7": {
-            "label": "counter",
-            "expression": "Counter",
+            "label": "architecture",
+            "expression": "Architecture",
             "dependencies": [
               6
             ],
-            "full_text": "counter: Counter"
+            "full_text": "architecture: Design and construct buildings"
           },
           "8": {
-            "label": "sword_mastery",
-            "expression": "Sword Mastery",
+            "label": "engineering",
+            "expression": "Engineering",
             "dependencies": [
-              3
+              6
             ],
-            "full_text": "sword_mastery: Sword Mastery"
+            "full_text": "engineering: Apply scientific principles to construction"
           },
           "9": {
-            "label": "dual_wield",
-            "expression": "Dual Wield",
-            "dependencies": [
-              2,
-              8
-            ],
-            "full_text": "dual_wield: Dual Wield"
-          },
-          "10": {
-            "label": "whirlwind",
-            "expression": "Whirlwind",
-            "dependencies": [
-              4,
-              9
-            ],
-            "full_text": "whirlwind: Whirlwind"
-          },
-          "11": {
-            "label": "warrior_stance",
-            "expression": "Warrior Stance",
+            "label": "steam_power",
+            "expression": "Steam Power",
             "dependencies": [
               7,
-              10
+              8
             ],
-            "full_text": "warrior_stance: Warrior Stance"
+            "full_text": "steam_power: Harness the power of steam engines"
           },
-          "12": {
-            "label": "legendary_hero",
-            "expression": "Legendary Hero",
+          "10": {
+            "label": "industrial_age",
+            "expression": "Industrial Age",
             "dependencies": [
-              11
+              9
             ],
-            "full_text": "legendary_hero: Legendary Hero"
+            "full_text": "industrial_age: Enter the era of mass production"
           }
         },
         "starting_statements": [
           1
         ],
-        "theorem": "Skill Tree",
+        "theorem": "Tech Tree",
         "randomize_items": 1,
         "vanilla_placement": 0
       },
@@ -2489,10 +2227,10 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Proved Statement 12"
+        "item": "Proved Statement 10"
       }
     }
   },
   "helpers": {},
-  "preset_label": "skill_tree s2"
+  "preset_label": "tech_tree s2"
 }
