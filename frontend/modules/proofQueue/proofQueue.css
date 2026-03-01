@@ -444,3 +444,83 @@ tr.pq-queue-row.pq-drag-over {
   font-style: italic;
   font-size: 12px;
 }
+
+/* ─── Difficulty Selector ──────────────────────────────── */
+
+.pq-select-difficulty {
+  padding: 2px 6px;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.pq-select-difficulty:focus {
+  outline: none;
+  border-color: #89b4fa;
+}
+
+.pq-difficulty-desc {
+  font-size: 10px;
+  font-style: italic;
+  color: #6c7086;
+  margin-left: 4px;
+}
+
+/* ─── Hyp Inputs ───────────────────────────────────────── */
+
+.pq-hyp-input {
+  width: 28px;
+  padding: 1px 2px;
+  border: 1px solid #45475a;
+  border-radius: 3px;
+  background: #181825;
+  color: #cdd6f4;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+}
+
+.pq-hyp-input:focus {
+  border-color: #89b4fa;
+}
+
+.pq-hyp-input.pq-hyp-incorrect {
+  border-color: #f38ba8;
+  animation: pq-shake 0.3s ease-in-out;
+}
+
+.pq-hyp-locked {
+  color: #a6e3a1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-hyp-comma {
+  color: #6c7086;
+  margin: 0 1px;
+}
+
+/* ─── Cooldown Button ──────────────────────────────────── */
+
+.pq-btn-check.pq-btn-cooldown {
+  background: #45475a;
+  border-color: #585b70;
+  color: #6c7086;
+  cursor: not-allowed;
+}
+
+.pq-btn-check.pq-btn-cooldown:hover {
+  background: #45475a;
+}
+
+@keyframes pq-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}

@@ -86,6 +86,13 @@ export class ProofQueueUI {
     // Track in-flight check to prevent double-clicks
     this._checkingStep = null;
 
+    // Difficulty settings
+    this._selectDifficulty = null;
+    this._difficultyDescEl = null;
+    this._hypInputState = new Map();   // stepIndex → Map<depIndex, string>
+    this._checkCooldownUntil = 0;
+    this._checkCooldownTimer = null;
+
     this._createBaseUI();
     this._setupLifecycle();
   }
@@ -146,6 +153,31 @@ export class ProofQueueUI {
       <label class="pq-checkbox-label"><input type="checkbox" class="pq-cb-showdetails"> Show details &amp; links</label>
     `;
     this._toolbarEl.appendChild(row2);
+
+    // Row 3: hyp difficulty
+    const row3 = document.createElement('div');
+    row3.className = 'pq-toolbar-row';
+    const diffLabel = document.createElement('span');
+    diffLabel.className = 'pq-checkbox-label';
+    diffLabel.textContent = 'Hyp difficulty:';
+    row3.appendChild(diffLabel);
+
+    this._selectDifficulty = document.createElement('select');
+    this._selectDifficulty.className = 'pq-select-difficulty';
+    for (const [val, text] of [['trivial','Trivial'],['easy','Easy'],['medium','Medium'],['hard','Hard']]) {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = text;
+      this._selectDifficulty.appendChild(opt);
+    }
+    row3.appendChild(this._selectDifficulty);
+
+    this._difficultyDescEl = document.createElement('span');
+    this._difficultyDescEl.className = 'pq-difficulty-desc';
+    row3.appendChild(this._difficultyDescEl);
+    this._updateDifficultyDesc();
+
+    this._toolbarEl.appendChild(row3);
 
     this.rootElement.appendChild(this._toolbarEl);
 
@@ -254,6 +286,10 @@ export class ProofQueueUI {
     this._cbAutoCheck.addEventListener('change', () => {
       if (this._cbAutoCheck.checked) this._tryAutoCheck();
     });
+    this._selectDifficulty.addEventListener('change', () => {
+      this._onDifficultyChanged();
+      this.render();
+    });
 
     // Show empty state
     this._showEmptyState();
@@ -300,6 +336,10 @@ export class ProofQueueUI {
       if (typeof unsub === 'function') unsub();
     });
     this.unsubscribeHandles = [];
+    if (this._checkCooldownTimer) {
+      clearInterval(this._checkCooldownTimer);
+      this._checkCooldownTimer = null;
+    }
   }
 
   /**
@@ -412,6 +452,183 @@ export class ProofQueueUI {
   _formatHypForQueue(dependencies) {
     if (dependencies.length === 0) return '';
     return dependencies.map(d => String(d)).join(',');
+  }
+
+  // ─── Difficulty Helpers ──────────────────────────────────────
+
+  _getDifficulty() {
+    return this._selectDifficulty ? this._selectDifficulty.value : 'trivial';
+  }
+
+  _updateDifficultyDesc() {
+    if (!this._difficultyDescEl) return;
+    const descs = {
+      trivial: 'Hyp values auto-filled (default)',
+      easy: 'Type hyp refs; each locks when correct',
+      medium: 'Type hyp refs; all lock when step complete',
+      hard: 'Type hyp refs; wrong answer = 5s cooldown',
+    };
+    this._difficultyDescEl.textContent = descs[this._getDifficulty()] || '';
+  }
+
+  _onDifficultyChanged() {
+    this._updateDifficultyDesc();
+    if (this._getDifficulty() === 'trivial') {
+      this._hypInputState.clear();
+    }
+    // Clear any active cooldown
+    if (this._checkCooldownTimer) {
+      clearInterval(this._checkCooldownTimer);
+      this._checkCooldownTimer = null;
+    }
+    this._checkCooldownUntil = 0;
+    const btn = this._toolbarEl.querySelector('.pq-btn-check');
+    if (btn) {
+      btn.classList.remove('pq-btn-cooldown');
+      btn.disabled = false;
+      btn.textContent = 'Check Next';
+    }
+  }
+
+  /**
+   * True if all hyp entries for a step match the correct dep indices.
+   * Vacuously true for steps with no dependencies.
+   */
+  _isHypCorrectForStep(stepIndex) {
+    const step = proofQueueState.steps.get(stepIndex);
+    if (!step || step.dependencies.length === 0) return true;
+    const entries = this._hypInputState.get(stepIndex);
+    if (!entries) return false;
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (!this._isHypEntryCorrect(stepIndex, i)) return false;
+    }
+    return true;
+  }
+
+  _isHypEntryCorrect(stepIndex, depIndex) {
+    const step = proofQueueState.steps.get(stepIndex);
+    if (!step) return false;
+    const entries = this._hypInputState.get(stepIndex);
+    if (!entries) return false;
+    const val = (entries.get(depIndex) || '').trim();
+    const correct = String(step.dependencies[depIndex]);
+    return val === correct;
+  }
+
+  /**
+   * Render the Hyp cell content based on current difficulty.
+   */
+  _renderHypCell(tdHyp, step) {
+    const diff = this._getDifficulty();
+
+    if (step.dependencies.length === 0) return;
+
+    if (diff === 'trivial') {
+      tdHyp.textContent = this._formatHypForQueue(step.dependencies);
+      return;
+    }
+
+    // Ensure _hypInputState has entries for this step
+    if (!this._hypInputState.has(step.index)) {
+      this._hypInputState.set(step.index, new Map());
+    }
+    const entries = this._hypInputState.get(step.index);
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (!entries.has(i)) entries.set(i, '');
+    }
+
+    const allCorrect = this._isHypCorrectForStep(step.index);
+
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (i > 0) {
+        const comma = document.createElement('span');
+        comma.className = 'pq-hyp-comma';
+        comma.textContent = ',';
+        tdHyp.appendChild(comma);
+      }
+
+      const correct = this._isHypEntryCorrect(step.index, i);
+
+      // Determine if this entry should be locked (shown as plain text)
+      let locked = false;
+      if (diff === 'easy' && correct) locked = true;
+      if (diff === 'medium' && allCorrect) locked = true;
+      // hard: never locked in queue (stays as input until checked/proven)
+
+      if (locked) {
+        const span = document.createElement('span');
+        span.className = 'pq-hyp-locked';
+        span.textContent = String(step.dependencies[i]);
+        tdHyp.appendChild(span);
+      } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'pq-hyp-input';
+        input.size = 3;
+        input.maxLength = 4;
+        input.dataset.stepIndex = step.index;
+        input.dataset.depIndex = i;
+        input.value = entries.get(i) || '';
+        input.addEventListener('input', (e) => {
+          this._onHypInput(step.index, i, e.target.value);
+        });
+        tdHyp.appendChild(input);
+      }
+    }
+  }
+
+  _onHypInput(stepIndex, depIndex, value) {
+    if (!this._hypInputState.has(stepIndex)) {
+      this._hypInputState.set(stepIndex, new Map());
+    }
+    this._hypInputState.get(stepIndex).set(depIndex, value);
+
+    const diff = this._getDifficulty();
+    if (diff === 'easy' && this._isHypEntryCorrect(stepIndex, depIndex)) {
+      this.render();
+    } else if (diff === 'medium' && this._isHypCorrectForStep(stepIndex)) {
+      this.render();
+    }
+    // For easy/medium: also trigger auto-check if all hyps now correct
+    if (diff !== 'hard' && this._isHypCorrectForStep(stepIndex)) {
+      if (this._cbAutoCheck && this._cbAutoCheck.checked) {
+        requestAnimationFrame(() => this._tryAutoCheck());
+      }
+    }
+  }
+
+  _activateCheckCooldown() {
+    this._checkCooldownUntil = Date.now() + 5000;
+    const btn = this._toolbarEl.querySelector('.pq-btn-check');
+    if (!btn) return;
+
+    btn.disabled = true;
+    btn.classList.add('pq-btn-cooldown');
+
+    // Flash incorrect inputs
+    this._queueBodyEl.querySelectorAll('.pq-hyp-input').forEach(input => {
+      const si = Number(input.dataset.stepIndex);
+      const di = Number(input.dataset.depIndex);
+      if (!this._isHypEntryCorrect(si, di)) {
+        input.classList.add('pq-hyp-incorrect');
+        setTimeout(() => input.classList.remove('pq-hyp-incorrect'), 1000);
+      }
+    });
+
+    const update = () => {
+      const remaining = Math.max(0, this._checkCooldownUntil - Date.now());
+      if (remaining <= 0) {
+        clearInterval(this._checkCooldownTimer);
+        this._checkCooldownTimer = null;
+        btn.disabled = false;
+        btn.classList.remove('pq-btn-cooldown');
+        btn.textContent = 'Check Next';
+        return;
+      }
+      btn.textContent = `Check Next (${Math.ceil(remaining / 1000)}s)`;
+    };
+    update();
+    this._checkCooldownTimer = setInterval(update, 250);
   }
 
   // ─── Rendering ────────────────────────────────────────────
@@ -615,6 +832,18 @@ export class ProofQueueUI {
   }
 
   _renderQueue() {
+    // Focus preservation: capture focused hyp input before clearing
+    let focusInfo = null;
+    const focused = this._queueBodyEl.querySelector('.pq-hyp-input:focus');
+    if (focused) {
+      focusInfo = {
+        stepIndex: focused.dataset.stepIndex,
+        depIndex: focused.dataset.depIndex,
+        selStart: focused.selectionStart,
+        selEnd: focused.selectionEnd,
+      };
+    }
+
     this._queueBodyEl.innerHTML = '';
 
     const queueWithStatus = proofQueueState.getQueueWithStatus();
@@ -674,10 +903,10 @@ export class ProofQueueUI {
       tdStep.textContent = String(step.index);
       tr.appendChild(tdStep);
 
-      // Hyp column (original dep indices)
+      // Hyp column (difficulty-aware)
       const tdHyp = document.createElement('td');
       tdHyp.className = 'pq-col-hyp';
-      tdHyp.textContent = this._formatHypForQueue(step.dependencies);
+      this._renderHypCell(tdHyp, step);
       tr.appendChild(tdHyp);
 
       // Ref column
@@ -742,6 +971,16 @@ export class ProofQueueUI {
 
       this._queueBodyEl.appendChild(tr);
     }
+
+    // Restore focus to hyp input if it was focused before re-render
+    if (focusInfo) {
+      const sel = `.pq-hyp-input[data-step-index="${focusInfo.stepIndex}"][data-dep-index="${focusInfo.depIndex}"]`;
+      const el = this._queueBodyEl.querySelector(sel);
+      if (el) {
+        el.focus();
+        try { el.setSelectionRange(focusInfo.selStart, focusInfo.selEnd); } catch (_) {}
+      }
+    }
   }
 
   _renderStatus() {
@@ -774,6 +1013,7 @@ export class ProofQueueUI {
    */
   _tryAutoCheck() {
     if (!this._cbAutoCheck || !this._cbAutoCheck.checked) return;
+    if (this._checkCooldownUntil > Date.now()) return;
     if (this._checkingStep !== null) return;
     if (!proofQueueState || !_dispatcher) return;
     if (proofQueueState.isProofComplete()) return;
@@ -783,6 +1023,12 @@ export class ProofQueueUI {
 
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
+
+    // Hyp validation gate — silently wait until hyps are correct
+    const diff = this._getDifficulty();
+    if (diff !== 'trivial' && step.dependencies.length > 0) {
+      if (!this._isHypCorrectForStep(nextStep)) return;
+    }
 
     this._checkingStep = nextStep;
 
@@ -851,6 +1097,9 @@ export class ProofQueueUI {
   _onCheckNext() {
     if (!proofQueueState || !_dispatcher) return;
 
+    // Cooldown gate (hard mode)
+    if (this._checkCooldownUntil > Date.now()) return;
+
     // Prevent double-clicks while a check is in-flight
     if (this._checkingStep !== null) {
       log('info', 'Check already in progress, ignoring');
@@ -865,6 +1114,15 @@ export class ProofQueueUI {
 
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
+
+    // Hyp validation gate (non-trivial difficulties)
+    const diff = this._getDifficulty();
+    if (diff !== 'trivial' && step.dependencies.length > 0) {
+      if (!this._isHypCorrectForStep(nextStep)) {
+        if (diff === 'hard') this._activateCheckCooldown();
+        return;
+      }
+    }
 
     // Mark step as in-flight; cleared when snapshot sync updates checked locations
     this._checkingStep = nextStep;
