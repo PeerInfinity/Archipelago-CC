@@ -227,7 +227,7 @@ def topological_sort_proof(ordered_steps: List[str], dependencies: Dict[str, Set
     # Return sorted order if successful, otherwise original order
     return result if len(result) == len(ordered_steps) else ordered_steps
 
-def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, Set[str]], Dict[str, str]]:
+def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[str, List[str]], Dict[str, str]]:
     """
     Extract proof steps and dependencies using metamath-py's proof verification.
 
@@ -270,14 +270,14 @@ def extract_proof_dependencies(db, theorem_name: str) -> Tuple[List[str], Dict[s
                     seen.add(label)
                     ordered_steps.append(label)
 
-                    # Extract dependencies for this step
-                    deps = set()
+                    # Extract dependencies for this step (preserving duplicates)
+                    deps = []
                     for dep_label, dep_step in step.dependencies.items():
                         if hasattr(dep_step.rule, 'consequent'):
                             dep_name = dep_step.rule.consequent.label
                             # Only include non-constant, non-hypothesis dependencies
                             if not dep_name.startswith('c') and not dep_name.startswith('w'):
-                                deps.add(dep_name)
+                                deps.append(dep_name)
 
                     dependencies[label] = deps
 
@@ -308,7 +308,7 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
             expression = ' '.join(stmt.tokens)
             full_text = None
             if descriptions and theorem_name in descriptions:
-                full_text = f"{theorem_name}: {descriptions[theorem_name]} ({expression})"
+                full_text = f"{theorem_name}: {descriptions[theorem_name]}"
             else:
                 full_text = f"{theorem_name}: {expression}"
             structure.add_statement(ProofStatement(
@@ -348,13 +348,13 @@ def parse_proof_from_database(db, theorem_name: str, descriptions: Dict[str, str
         # Get full text description if available
         full_text = None
         if descriptions and label in descriptions:
-            full_text = f"{label}: {descriptions[label]} ({expression})"
+            full_text = f"{label}: {descriptions[label]}"
         elif label in db.statements:
             # If no description, use label and expression
             full_text = f"{label}: {expression}"
 
         # Convert label dependencies to index dependencies
-        label_deps = dependencies.get(label, set())
+        label_deps = dependencies.get(label, [])
         index_deps = [label_to_index[dep] for dep in label_deps if dep in label_to_index]
 
         # Get instantiated expression from proof verification (if available)
@@ -380,16 +380,16 @@ def get_hardcoded_2p2e4_proof() -> ProofStructure:
 
     # The actual 2p2e4 proof structure based on metamath with descriptions
     steps = [
-        (1, 'df-2', '2 = (1 + 1)', [], 'df-2: Define the number 2. (2 = (1 + 1))'),
-        (2, 'df-3', '3 = (2 + 1)', [], 'df-3: Define the number 3. (3 = (2 + 1))'),
-        (3, 'df-4', '4 = (3 + 1)', [], 'df-4: Define the number 4. (4 = (3 + 1))'),
-        (4, 'ax-1cn', '1 ∈ ℂ', [], 'ax-1cn: 1 is a complex number. (1 ∈ ℂ)'),
-        (5, '2cn', '2 ∈ ℂ', [], '2cn: 2 is a complex number. (2 ∈ ℂ)'),
-        (6, 'oveq2i', '(2 + 2) = (2 + (1 + 1))', [1], 'oveq2i: Equality of operation value. ((2 + 2) = (2 + (1 + 1)))'),  # Depends on df-2
-        (7, 'oveq1i', '(3 + 1) = ((2 + 1) + 1)', [2], 'oveq1i: Equality of operation value. ((3 + 1) = ((2 + 1) + 1))'),  # Depends on df-3
-        (8, 'addassi', '((2 + 1) + 1) = (2 + (1 + 1))', [4, 5], 'addassi: Associative law for addition. (((2 + 1) + 1) = (2 + (1 + 1)))'),  # Depends on ax-1cn and 2cn
-        (9, '3eqtri', '4 = (2 + (1 + 1))', [3, 7, 8], '3eqtri: Transitive equality. (4 = (2 + (1 + 1)))'),  # Depends on df-4, oveq1i, addassi
-        (10, 'eqtr4i', '(2 + 2) = 4', [6, 9], 'eqtr4i: Transitive equality. ((2 + 2) = 4)')  # Final step depends on oveq2i and 3eqtri
+        (1, 'df-2', '2 = (1 + 1)', [], 'df-2: Define the number 2.'),
+        (2, 'df-3', '3 = (2 + 1)', [], 'df-3: Define the number 3.'),
+        (3, 'df-4', '4 = (3 + 1)', [], 'df-4: Define the number 4.'),
+        (4, 'ax-1cn', '1 ∈ ℂ', [], 'ax-1cn: 1 is a complex number.'),
+        (5, '2cn', '2 ∈ ℂ', [], '2cn: 2 is a complex number.'),
+        (6, 'oveq2i', '(2 + 2) = (2 + (1 + 1))', [1], 'oveq2i: Equality of operation value.'),  # Depends on df-2
+        (7, 'oveq1i', '(3 + 1) = ((2 + 1) + 1)', [2], 'oveq1i: Equality of operation value.'),  # Depends on df-3
+        (8, 'addassi', '((2 + 1) + 1) = (2 + (1 + 1))', [5, 4, 4], 'addassi: Associative law for addition.'),  # Depends on 2cn, ax-1cn, ax-1cn
+        (9, '3eqtri', '4 = (2 + (1 + 1))', [3, 7, 8], '3eqtri: Transitive equality.'),  # Depends on df-4, oveq1i, addassi
+        (10, 'eqtr4i', '(2 + 2) = 4', [6, 9], 'eqtr4i: Transitive equality.')  # Final step depends on oveq2i and 3eqtri
     ]
 
     for index, label, expression, dependencies, full_text in steps:
