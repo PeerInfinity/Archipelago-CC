@@ -108,7 +108,7 @@ export class ProofGraphState extends ProofBaseState {
       this.drawnEdges.add(matchedKey);
 
       if (this.onEdgeDrawn) {
-        this.onEdgeDrawn(sourceIndex, targetIndex);
+        this.onEdgeDrawn(sourceIndex, targetIndex, matchedEdge.slot);
       }
 
       // Check if target step is now fully connected
@@ -183,6 +183,34 @@ export class ProofGraphState extends ProofBaseState {
    */
   getAxiomSteps() {
     return [...this.steps.values()].filter(s => s.dependencies.length === 0);
+  }
+
+  /**
+   * Get the set of step indices that should be visible in the graph.
+   * Uses the same logic as ProofQueueBaseState._updateAvailableSteps():
+   * a step is visible if it has no dependencies (axiom/definition) OR
+   * all its dependency items have been received and all dependency
+   * locations have been checked.
+   * @returns {Set<number>}
+   */
+  getVisibleSteps() {
+    const visible = new Set();
+    for (const [index, step] of this.steps) {
+      if (step.dependencies.length === 0) {
+        visible.add(index);
+      } else {
+        const allDepsSatisfied = step.dependencies.every(depIdx => {
+          const depStep = this.steps.get(depIdx);
+          return depStep &&
+            this.receivedItems.has(depStep.itemName) &&
+            this.checkedLocations.has(depStep.locationName);
+        });
+        if (allDepsSatisfied) {
+          visible.add(index);
+        }
+      }
+    }
+    return visible;
   }
 
   /**

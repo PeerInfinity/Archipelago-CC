@@ -56,6 +56,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
+  registrationApi.registerEventBusSubscriberIntent('proofQueue:hypAssigned');
 
   // Events we publish
   registrationApi.registerEventBusPublisher('proofGraph:edgeDrawn');
@@ -133,10 +134,10 @@ function handleInventoryChanged() {
 function _wireEventBusPublishing() {
   // Chain onto any existing callbacks (e.g. UI render) rather than overwriting
   const existingEdgeDrawn = proofGraphState.onEdgeDrawn;
-  proofGraphState.onEdgeDrawn = (source, target) => {
-    if (existingEdgeDrawn) existingEdgeDrawn(source, target);
+  proofGraphState.onEdgeDrawn = (source, target, slot) => {
+    if (existingEdgeDrawn) existingEdgeDrawn(source, target, slot);
     if (_moduleEventBus) {
-      _moduleEventBus.publish('proofGraph:edgeDrawn', { source, target });
+      _moduleEventBus.publish('proofGraph:edgeDrawn', { source, target, slot });
     }
   };
 

@@ -153,6 +153,7 @@ export class ProofQueueUI {
       const opt = document.createElement('option');
       opt.value = val;
       opt.textContent = text;
+      if (val === 'easy') opt.selected = true;
       this._selectDifficulty.appendChild(opt);
     }
     row1.appendChild(this._selectDifficulty);
@@ -238,7 +239,6 @@ export class ProofQueueUI {
       <th class="pq-col-ref">Ref</th>
       <th class="pq-col-expr">Expression</th>
       <th class="pq-col-type">Type</th>
-      <th class="pq-col-actions"></th>
     </tr>`;
     queueTable.appendChild(queueThead);
     this._queueBodyEl = document.createElement('tbody');
@@ -302,6 +302,7 @@ export class ProofQueueUI {
     subscribe('stateManager:rulesLoaded', this._handleRulesLoaded);
     subscribe('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
     subscribe('stateManager:inventoryChanged', this._handleInventoryChanged);
+    subscribe('proofGraph:edgeDrawn', this._handleEdgeDrawn);
   }
 
   destroy() {
@@ -373,6 +374,43 @@ export class ProofQueueUI {
     this.render();
   }
 
+  /**
+   * Handle a correct edge draw from the Proof Graph (Easy mode sync).
+   * Auto-fills the corresponding hyp input in the queue.
+   */
+  _handleEdgeDrawn({ source, target, slot }) {
+    if (this._getDifficulty() !== 'easy') return;
+    if (!proofQueueState?.isLoaded) return;
+    if (slot === undefined || slot === null) return;
+
+    const step = proofQueueState.steps.get(target);
+    if (!step) return;
+
+    // Compute the correct row number for the source step
+    const rowNum = this._stepToRow?.get(source);
+    if (rowNum === undefined) return;
+
+    // Initialize hyp input state if needed
+    if (!this._hypInputState.has(target)) {
+      this._hypInputState.set(target, new Map());
+    }
+    const entries = this._hypInputState.get(target);
+
+    // Only fill if this slot isn't already correctly filled
+    const currentVal = (entries.get(slot) || '').trim();
+    if (currentVal === String(rowNum)) return;
+
+    entries.set(slot, String(rowNum));
+    this.render();
+
+    // Trigger auto-check if all hyps now correct
+    if (this._isHypCorrectForStep(target)) {
+      if (this._cbAutoCheck && this._cbAutoCheck.checked) {
+        requestAnimationFrame(() => this._tryAutoCheck());
+      }
+    }
+  }
+
   // ─── Proven Order ──────────────────────────────────────────
 
   /**
@@ -439,8 +477,8 @@ export class ProofQueueUI {
   _updateDifficultyDesc() {
     if (!this._difficultyDescEl) return;
     const descs = {
-      trivial: 'Hyp values auto-filled (default)',
-      easy: 'Assign hyp refs by typing or clicking proven steps',
+      trivial: 'Hyp values auto-filled',
+      easy: 'Assign hyp refs by typing or clicking proven steps (default)',
       medium: 'Assign hyp refs; all lock when step is complete',
       hard: 'Assign hyp refs; wrong answer = 5s cooldown',
     };
@@ -579,6 +617,16 @@ export class ProofQueueUI {
 
     const diff = this._getDifficulty();
     if (diff === 'easy' && this._isHypEntryCorrect(stepIndex, depIndex)) {
+      // Publish hyp assignment for cross-panel sync
+      const step = proofQueueState.steps.get(stepIndex);
+      if (step && this.eventBus) {
+        const sourceStepIndex = step.dependencies[depIndex];
+        this.eventBus.publish('proofQueue:hypAssigned', {
+          source: sourceStepIndex,
+          target: stepIndex,
+          slot: depIndex,
+        });
+      }
       this.render();
     } else if (diff === 'medium' && this._isHypCorrectForStep(stepIndex)) {
       this.render();
@@ -844,7 +892,7 @@ export class ProofQueueUI {
       // Show empty in a row spanning all columns
       const tr = document.createElement('tr');
       const td = document.createElement('td');
-      td.colSpan = 6;
+      td.colSpan = 5;
       td.className = 'pq-empty';
       td.textContent = 'Click steps above to add them to the queue';
       tr.appendChild(td);
@@ -868,6 +916,8 @@ export class ProofQueueUI {
       const hypReady = diff === 'trivial' || step.dependencies.length === 0 || this._isHypCorrectForStep(step.index);
       if (checkable && hypReady) {
         tr.classList.add('pq-checkable');
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', () => this._checkQueueStep(step.index));
       } else if (!valid) {
         tr.classList.add('pq-invalid');
       } else {
@@ -935,20 +985,6 @@ export class ProofQueueUI {
       badge.title = classification.type;
       tdType.appendChild(badge);
       tr.appendChild(tdType);
-
-      // Actions column (remove button)
-      const tdActions = document.createElement('td');
-      tdActions.className = 'pq-col-actions';
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'pq-row-remove';
-      removeBtn.textContent = '\u00D7'; // ×
-      removeBtn.title = 'Remove from queue';
-      removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        proofQueueState.removeFromQueue(step.index);
-      });
-      tdActions.appendChild(removeBtn);
-      tr.appendChild(tdActions);
 
       this._queueBodyEl.appendChild(tr);
     }
@@ -1096,6 +1132,21 @@ export class ProofQueueUI {
 
     // Mark step as in-flight; cleared when snapshot sync updates checked locations
     this._checkingStep = nextStep;
+
+    dispatchLocationCheck(step, proofQueueState, _dispatcher, 'ProofQueueCheck', log, () => {
+      this._checkingStep = null;
+      this.render();
+    });
+  }
+
+  _checkQueueStep(stepIndex) {
+    if (!proofQueueState || !_dispatcher) return;
+    if (this._checkingStep !== null) return;
+
+    const step = proofQueueState.steps.get(stepIndex);
+    if (!step) return;
+
+    this._checkingStep = stepIndex;
 
     dispatchLocationCheck(step, proofQueueState, _dispatcher, 'ProofQueueCheck', log, () => {
       this._checkingStep = null;
