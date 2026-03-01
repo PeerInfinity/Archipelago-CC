@@ -38,29 +38,29 @@ class DepGraphWorld(World):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.graph_structure: GraphStructure = None
-        self.num_statements: int = 0
-        self.starting_statements: Set[int] = set()
+        self.num_nodes: int = 0
+        self.starting_node_set: Set[int] = set()
         self._entrance_labels: Dict[int, str] = {}
         self._region_name_to_index: Dict[str, int] = {}
 
     def _build_name_maps(self):
         """Build name mappings from graph structure."""
-        for index, node in self.graph_structure.statements.items():
-            self._entrance_labels[index] = node.node_id if node.node_id else f"Statement {index}"
-        for i in range(1, self.num_statements + 1):
-            self._region_name_to_index[f"Prove Statement {i}"] = i
+        for index, node in self.graph_structure.nodes.items():
+            self._entrance_labels[index] = node.node_id if node.node_id else f"Node {index}"
+        for i in range(1, self.num_nodes + 1):
+            self._region_name_to_index[f"Complete Node {i}"] = i
 
     def get_item_name(self, index: int) -> str:
         """Get the generic item name for a node index (matches datapackage)."""
-        return f"Statement {index}"
+        return f"Node {index}"
 
     def get_location_name(self, index: int) -> str:
         """Get the generic location/region name for a node index (matches datapackage)."""
-        return f"Prove Statement {index}"
+        return f"Complete Node {index}"
 
     def get_entrance_label(self, index: int) -> str:
         """Get a short label for entrance names."""
-        return self._entrance_labels.get(index, f"Statement {index}")
+        return self._entrance_labels.get(index, f"Node {index}")
 
     def generate_early(self):
         """Load and parse the dependency graph based on options."""
@@ -74,7 +74,7 @@ class DepGraphWorld(World):
 
         graph_key = self.options.graph_file.current_key
         self.graph_structure = parse_depgraph(graph_key)
-        self.num_statements = len(self.graph_structure.statements)
+        self.num_nodes = len(self.graph_structure.nodes)
 
         self._build_name_maps()
 
@@ -86,10 +86,10 @@ class DepGraphWorld(World):
 
         # Build name substitutions
         self.name_substitutions = {"items": {}, "locations": {}, "regions": {}}
-        for i, node in self.graph_structure.statements.items():
-            generic_item = f"Statement {i}"
-            generic_loc = f"Prove Statement {i}"
-            generic_proved = f"Proved Statement {i}"
+        for i, node in self.graph_structure.nodes.items():
+            generic_item = f"Node {i}"
+            generic_loc = f"Complete Node {i}"
+            generic_proved = f"Completed Node {i}"
             meaningful_item = node_item_name(node.expression)
             meaningful_loc = node_location_name(node.expression)
             meaningful_proved = event_item_name(node.expression)
@@ -102,36 +102,36 @@ class DepGraphWorld(World):
                 self.name_substitutions["regions"][generic_loc] = meaningful_loc
 
         # Determine starting nodes
-        num_starting = max(1, int(self.num_statements * self.options.starting_nodes.value / 100))
+        num_starting = max(1, int(self.num_nodes * self.options.starting_nodes.value / 100))
         if not self.options.randomize_starting_nodes.value:
-            self.starting_statements = set(range(1, num_starting + 1))
+            self.starting_node_set = set(range(1, num_starting + 1))
         else:
-            self.starting_statements = {1}
+            self.starting_node_set = {1}
             remaining = num_starting - 1
             if remaining > 0:
                 import random
-                candidates = list(range(2, self.num_statements + 1))
+                candidates = list(range(2, self.num_nodes + 1))
                 random.shuffle(candidates)
-                self.starting_statements.update(candidates[:remaining])
+                self.starting_node_set.update(candidates[:remaining])
 
         # Build canonical placements (exclude final node)
         self.canonical_placements: Dict[str, str] = {}
-        for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements and i != self.num_statements:
+        for i in range(1, self.num_nodes + 1):
+            if i not in self.starting_node_set and i != self.num_nodes:
                 self.canonical_placements[self.get_location_name(i)] = self.get_item_name(i)
 
     def create_regions(self):
         """Create one region per node with connections based on dependencies."""
         menu_region = Region("Menu", self.player, self.multiworld)
 
-        statement_regions = {}
+        node_regions = {}
 
-        for i in range(1, self.num_statements + 1):
+        for i in range(1, self.num_nodes + 1):
             region_name = self.get_location_name(i)
             region = Region(region_name, self.player, self.multiworld)
-            statement_regions[i] = region
+            node_regions[i] = region
 
-            if i not in self.starting_statements:
+            if i not in self.starting_node_set:
                 loc_name = self.get_location_name(i)
                 if loc_name in self.location_name_to_id:
                     location = DepGraphLocation(
@@ -145,13 +145,13 @@ class DepGraphWorld(World):
 
                 event_loc = DepGraphLocation(
                     self.player,
-                    f"Proved Statement {i}",
+                    f"Completed Node {i}",
                     None,
                     [],
                     region
                 )
                 event_item = DepGraphItem(
-                    f"Proved Statement {i}",
+                    f"Completed Node {i}",
                     ItemClassification.progression,
                     None,
                     self.player
@@ -160,8 +160,8 @@ class DepGraphWorld(World):
                 region.locations.append(event_loc)
 
         # Connect Menu to root nodes (no dependencies)
-        for i in sorted(statement_regions.keys()):
-            region = statement_regions[i]
+        for i in sorted(node_regions.keys()):
+            region = node_regions[i]
             dependencies = self.graph_structure.dependency_graph.get(i, [])
             if not dependencies:
                 menu_region.connect(region, f"To {self.get_entrance_label(i)}")
@@ -169,24 +169,24 @@ class DepGraphWorld(World):
         # Connect regions based on reverse dependencies
         for i in sorted(self.graph_structure.reverse_dependencies.keys()):
             dependents = self.graph_structure.reverse_dependencies[i]
-            if i in statement_regions:
-                source_region = statement_regions[i]
+            if i in node_regions:
+                source_region = node_regions[i]
                 for dependent in sorted(dependents):
-                    if dependent in statement_regions:
-                        target_region = statement_regions[dependent]
+                    if dependent in node_regions:
+                        target_region = node_regions[dependent]
                         source_region.connect(
                             target_region,
                             f"From {self.get_entrance_label(i)} to {self.get_entrance_label(dependent)}"
                         )
 
         self.multiworld.regions.append(menu_region)
-        self.multiworld.regions.extend(statement_regions.values())
+        self.multiworld.regions.extend(node_regions.values())
 
     def set_rules(self):
         """Set access rules based on graph dependencies."""
         set_depgraph_rules(self, self.graph_structure)
 
-        final_proved = f"Proved Statement {self.num_statements}"
+        final_proved = f"Completed Node {self.num_nodes}"
         self.multiworld.completion_condition[self.player] = \
             lambda state, name=final_proved: state.has(name, self.player)
 
@@ -203,7 +203,7 @@ class DepGraphWorld(World):
                     dep_names = []
                     for d in sorted(dependencies):
                         dep_names.append(self.get_item_name(d))
-                        dep_names.append(f"Proved Statement {d}")
+                        dep_names.append(f"Completed Node {d}")
 
                     for location in region.locations:
                         location_dependencies[location.name] = dep_names
@@ -220,7 +220,7 @@ class DepGraphWorld(World):
                             target_dep_names = []
                             for d in sorted(target_dependencies):
                                 target_dep_names.append(self.get_item_name(d))
-                                target_dep_names.append(f"Proved Statement {d}")
+                                target_dep_names.append(f"Completed Node {d}")
                             exit_dependencies[exit.name] = target_dep_names
 
         self.location_dependencies = location_dependencies
@@ -233,8 +233,8 @@ class DepGraphWorld(World):
             return
 
         items = []
-        for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements and i != self.num_statements:
+        for i in range(1, self.num_nodes + 1):
+            if i not in self.starting_node_set and i != self.num_nodes:
                 item_name = self.get_item_name(i)
                 if item_name in self.item_name_to_id:
                     item = DepGraphItem(
@@ -249,8 +249,8 @@ class DepGraphWorld(World):
 
     def pre_fill(self):
         """Pre-fill items: always lock the final node, and all others if not randomizing."""
-        final_item_name = self.get_item_name(self.num_statements)
-        final_location_name = self.get_location_name(self.num_statements)
+        final_item_name = self.get_item_name(self.num_nodes)
+        final_location_name = self.get_location_name(self.num_nodes)
         final_location = self.multiworld.get_location(final_location_name, self.player)
         final_location.place_locked_item(self.create_item(final_item_name))
 
@@ -259,8 +259,8 @@ class DepGraphWorld(World):
 
     def _place_original_items(self):
         """Place node items in their corresponding locations when randomization is disabled."""
-        for i in range(1, self.num_statements + 1):
-            if i not in self.starting_statements and i != self.num_statements:
+        for i in range(1, self.num_nodes + 1):
+            if i not in self.starting_node_set and i != self.num_nodes:
                 item_name = self.get_item_name(i)
                 location_name = self.get_location_name(i)
                 location = self.multiworld.get_location(location_name, self.player)
@@ -269,11 +269,11 @@ class DepGraphWorld(World):
 
     def generate_basic(self):
         """Generate the basic world structure."""
-        for stmt_index in self.starting_statements:
+        for stmt_index in self.starting_node_set:
             item_name = self.get_item_name(stmt_index)
             self.multiworld.push_precollected(self.create_item(item_name))
             proved_item = DepGraphItem(
-                f"Proved Statement {stmt_index}",
+                f"Completed Node {stmt_index}",
                 ItemClassification.progression,
                 None,
                 self.player
@@ -300,17 +300,17 @@ class DepGraphWorld(World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Data to send to the client for this world."""
         return {
-            "proof_structure": {
+            "graph_structure": {
                 i: {
                     "label": node.node_id,
                     "expression": node.expression,
                     "dependencies": node.dependencies,
                     "full_text": node.full_text,
                 }
-                for i, node in self.graph_structure.statements.items()
+                for i, node in self.graph_structure.nodes.items()
             },
-            "starting_statements": list(self.starting_statements),
-            "theorem": self.graph_structure.title,
+            "starting_nodes": list(self.starting_node_set),
+            "title": self.graph_structure.title,
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": self.options.vanilla_placement.value,
         }

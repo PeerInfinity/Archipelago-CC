@@ -13,8 +13,8 @@ class GraphNode:
     def __init__(self, index: int, node_id: str, expression: str,
                  dependencies: List[int], full_text: Optional[str] = None):
         self.index = index          # 1-based position in topological order
-        self.node_id = node_id      # Original string key (maps to ProofStatement.label)
-        self.expression = expression  # Display label (maps to ProofStatement.expression)
+        self.node_id = node_id      # Original string key
+        self.expression = expression  # Display label
         self.dependencies = dependencies  # List of node indices this depends on
         self.full_text = full_text  # Description text
 
@@ -23,15 +23,15 @@ class GraphStructure:
     """Manages the dependency structure of a directed acyclic graph."""
 
     def __init__(self):
-        self.statements: Dict[int, GraphNode] = {}
+        self.nodes: Dict[int, GraphNode] = {}
         self.dependency_graph: Dict[int, Set[int]] = {}
         self.reverse_dependencies: Dict[int, Set[int]] = {}
         self.label_to_index: Dict[str, int] = {}
         self.title: str = "Graph"
 
-    def add_statement(self, node: GraphNode):
+    def add_node(self, node: GraphNode):
         """Add a node to the graph structure."""
-        self.statements[node.index] = node
+        self.nodes[node.index] = node
         self.dependency_graph[node.index] = set(node.dependencies)
 
         if node.node_id:
@@ -146,7 +146,7 @@ def parse_json_graph(path: str) -> GraphStructure:
 
         full_text = f"{node_id}: {description}" if description else f"{node_id}: {label}"
 
-        structure.add_statement(GraphNode(
+        structure.add_node(GraphNode(
             index=index,
             node_id=node_id,
             expression=label,
@@ -222,7 +222,7 @@ def parse_dot_graph(path: str) -> GraphStructure:
         label = labels.get(node_id, node_id)
         dep_indices = [id_to_index[d] for d in dependencies[node_id]]
 
-        structure.add_statement(GraphNode(
+        structure.add_node(GraphNode(
             index=index,
             node_id=node_id,
             expression=label,
@@ -287,7 +287,7 @@ def parse_csv_graph(path: str) -> GraphStructure:
 
         full_text = f"{node_id}: {description}" if description else f"{node_id}: {label}"
 
-        structure.add_statement(GraphNode(
+        structure.add_node(GraphNode(
             index=index,
             node_id=node_id,
             expression=label,
@@ -342,8 +342,8 @@ def set_depgraph_rules(world, graph_structure: GraphStructure):
     """Set access rules for depgraph regions based on node dependencies.
 
     Entrance rules require both:
-    - "Proved Statement K" events (node was actually completed)
-    - "Statement K" items (item was received from the randomizer)
+    - "Completed Node K" events (node was actually completed)
+    - "Node K" items (item was received from the randomizer)
     for each dependency K.
     """
     player = world.player
@@ -362,7 +362,7 @@ def set_depgraph_rules(world, graph_structure: GraphStructure):
                 required_names = set()
                 for d in dependencies:
                     required_names.add(world.get_item_name(d))
-                    required_names.add(f"Proved Statement {d}")
+                    required_names.add(f"Completed Node {d}")
 
                 access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
 
