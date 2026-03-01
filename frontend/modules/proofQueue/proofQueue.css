@@ -65,7 +65,6 @@
 }
 
 .pq-btn-check {
-  margin-left: auto;
   background: #1e6640;
   border-color: #2b8a54;
 }
@@ -194,6 +193,33 @@
   background: #1f3d30;
 }
 
+/* ─── Click-to-assign (Proven row selection) ───────────── */
+
+.pq-proven-selectable {
+  cursor: pointer;
+}
+
+.pq-proven-row.pq-proven-selected {
+  background: #1a2440;
+}
+
+.pq-proven-row.pq-proven-selected > td:first-child {
+  border-left: 3px solid #89b4fa;
+}
+
+.pq-proven-row.pq-proven-selected:hover {
+  background: #1f2d50;
+}
+
+.pq-has-selection .pq-hyp-input {
+  animation: pq-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pq-pulse {
+  0%, 100% { border-color: #45475a; }
+  50% { border-color: #89b4fa; }
+}
+
 /* ─── Ref Links ─────────────────────────────────────────── */
 
 .pq-ref-link {
@@ -209,10 +235,17 @@
 /* ─── Detail Text (full_text below expression) ──────────── */
 
 .pq-detail-text {
-  font-size: 10px;
-  color: #585b70;
+  font-size: 11px;
+  color: #6c7086;
   white-space: normal;
   word-break: break-word;
+  margin-top: 2px;
+}
+
+/* ─── Generic Expression (non-instantiated, shown in details) */
+
+.pq-generic-expr {
+  color: #a6adc8;
   margin-top: 2px;
 }
 
@@ -443,4 +476,84 @@ tr.pq-queue-row.pq-drag-over {
   color: #585b70;
   font-style: italic;
   font-size: 12px;
+}
+
+/* ─── Difficulty Selector ──────────────────────────────── */
+
+.pq-select-difficulty {
+  padding: 2px 6px;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.pq-select-difficulty:focus {
+  outline: none;
+  border-color: #89b4fa;
+}
+
+.pq-difficulty-desc {
+  font-size: 10px;
+  font-style: italic;
+  color: #6c7086;
+  margin-left: 4px;
+}
+
+/* ─── Hyp Inputs ───────────────────────────────────────── */
+
+.pq-hyp-input {
+  width: 28px;
+  padding: 1px 2px;
+  border: 1px solid #45475a;
+  border-radius: 3px;
+  background: #181825;
+  color: #cdd6f4;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+}
+
+.pq-hyp-input:focus {
+  border-color: #89b4fa;
+}
+
+.pq-hyp-input.pq-hyp-incorrect {
+  border-color: #f38ba8;
+  animation: pq-shake 0.3s ease-in-out;
+}
+
+.pq-hyp-locked {
+  color: #a6e3a1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-hyp-comma {
+  color: #6c7086;
+  margin: 0 1px;
+}
+
+/* ─── Cooldown Button ──────────────────────────────────── */
+
+.pq-btn-check.pq-btn-cooldown {
+  background: #45475a;
+  border-color: #585b70;
+  color: #6c7086;
+  cursor: not-allowed;
+}
+
+.pq-btn-check.pq-btn-cooldown:hover {
+  background: #45475a;
+}
+
+@keyframes pq-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
 }

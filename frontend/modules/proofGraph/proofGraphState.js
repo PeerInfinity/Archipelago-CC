@@ -17,9 +17,9 @@ export class ProofGraphState extends ProofBaseState {
 
     /**
      * Correct dependency edges in the proof.
-     * Key: "source->target" (e.g. "1->3" means step 1 is a dependency of step 3)
-     * Value: { source: number, target: number }
-     * @type {Map<string, {source: number, target: number}>}
+     * Key: "source->target:slot" (e.g. "1->3:0" means step 1 fills slot 0 of step 3)
+     * Value: { source: number, target: number, slot: number }
+     * @type {Map<string, {source: number, target: number, slot: number}>}
      */
     this.correctEdges = new Map();
 
@@ -59,11 +59,12 @@ export class ProofGraphState extends ProofBaseState {
     const success = this._parseProofStructure(slotData, nameSubstitutions);
     if (!success) return false;
 
-    // Build correct edges from parsed step dependencies
+    // Build correct edges from parsed step dependencies (one per slot)
     for (const [index, step] of this.steps) {
-      for (const dep of step.dependencies) {
-        const edgeKey = `${dep}->${index}`;
-        this.correctEdges.set(edgeKey, { source: dep, target: index });
+      for (let slot = 0; slot < step.dependencies.length; slot++) {
+        const dep = step.dependencies[slot];
+        const edgeKey = `${dep}->${index}:${slot}`;
+        this.correctEdges.set(edgeKey, { source: dep, target: index, slot });
       }
     }
 
@@ -92,16 +93,19 @@ export class ProofGraphState extends ProofBaseState {
       return { success: false, reason: 'invalid-step' };
     }
 
-    const edgeKey = `${sourceIndex}->${targetIndex}`;
-
-    // Already drawn?
-    if (this.drawnEdges.has(edgeKey)) {
-      return { success: false, reason: 'already-drawn' };
+    // Find the first unfilled slot matching this source→target pair
+    let matchedKey = null;
+    let matchedEdge = null;
+    for (const [key, edge] of this.correctEdges) {
+      if (edge.source === sourceIndex && edge.target === targetIndex && !this.drawnEdges.has(key)) {
+        matchedKey = key;
+        matchedEdge = edge;
+        break;
+      }
     }
 
-    // Is this a correct dependency edge?
-    if (this.correctEdges.has(edgeKey)) {
-      this.drawnEdges.add(edgeKey);
+    if (matchedKey) {
+      this.drawnEdges.add(matchedKey);
 
       if (this.onEdgeDrawn) {
         this.onEdgeDrawn(sourceIndex, targetIndex);
@@ -115,7 +119,13 @@ export class ProofGraphState extends ProofBaseState {
       }
 
       if (this.onStateChanged) this.onStateChanged();
-      return { success: true };
+      return { success: true, slot: matchedEdge.slot };
+    }
+
+    // No unfilled slot — either all drawn or not a valid dependency
+    if (this.hasUnfilledSlot(sourceIndex, targetIndex) === false &&
+        this._hasAnySlot(sourceIndex, targetIndex)) {
+      return { success: false, reason: 'already-drawn' };
     }
 
     // Wrong edge
@@ -137,8 +147,9 @@ export class ProofGraphState extends ProofBaseState {
     if (!step) return false;
     if (step.dependencies.length === 0) return true;
 
-    return step.dependencies.every(dep => {
-      const edgeKey = `${dep}->${stepIndex}`;
+    // Every slot must be filled
+    return step.dependencies.every((dep, slot) => {
+      const edgeKey = `${dep}->${stepIndex}:${slot}`;
       return this.drawnEdges.has(edgeKey);
     });
   }
@@ -196,15 +207,41 @@ export class ProofGraphState extends ProofBaseState {
   }
 
   /**
-   * Get edges already drawn for a specific target step.
+   * Auto-draw all incoming edges for checked steps that aren't already drawn.
+   * @returns {Array<{source: number, target: number, slot: number, edgeKey: string}>}
+   *   List of newly drawn edges.
+   */
+  autoDrawEdgesForCheckedSteps() {
+    const newlyDrawn = [];
+    for (const [index, step] of this.steps) {
+      if (!this.checkedLocations.has(step.locationName)) continue;
+      for (let slot = 0; slot < step.dependencies.length; slot++) {
+        const dep = step.dependencies[slot];
+        const edgeKey = `${dep}->${index}:${slot}`;
+        if (!this.drawnEdges.has(edgeKey)) {
+          this.drawnEdges.add(edgeKey);
+          newlyDrawn.push({ source: dep, target: index, slot, edgeKey });
+        }
+      }
+    }
+    return newlyDrawn;
+  }
+
+  /**
+   * Get edges already drawn for a specific target step (one per filled slot).
    * @returns {number[]} Source indices of drawn incoming edges
    */
   getDrawnDependenciesFor(stepIndex) {
     const step = this.steps.get(stepIndex);
     if (!step) return [];
-    return step.dependencies.filter(dep => {
-      return this.drawnEdges.has(`${dep}->${stepIndex}`);
-    });
+    const drawn = [];
+    for (let slot = 0; slot < step.dependencies.length; slot++) {
+      const dep = step.dependencies[slot];
+      if (this.drawnEdges.has(`${dep}->${stepIndex}:${slot}`)) {
+        drawn.push(dep);
+      }
+    }
+    return drawn;
   }
 
   /**
@@ -214,5 +251,46 @@ export class ProofGraphState extends ProofBaseState {
     const step = this.steps.get(stepIndex);
     if (!step) return 0;
     return step.dependencies.length - this.getDrawnDependenciesFor(stepIndex).length;
+  }
+
+  /**
+   * Check if there's an unfilled slot for a source→target pair.
+   */
+  hasUnfilledSlot(sourceIndex, targetIndex) {
+    for (const [key, edge] of this.correctEdges) {
+      if (edge.source === sourceIndex && edge.target === targetIndex && !this.drawnEdges.has(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if any correct edge slot exists for source→target (regardless of filled state).
+   * @private
+   */
+  _hasAnySlot(sourceIndex, targetIndex) {
+    for (const [, edge] of this.correctEdges) {
+      if (edge.source === sourceIndex && edge.target === targetIndex) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Get a map of filled slots for a step: slot → sourceIndex.
+   */
+  getDrawnSlotsFor(stepIndex) {
+    const step = this.steps.get(stepIndex);
+    if (!step) return new Map();
+    const slots = new Map();
+    for (let slot = 0; slot < step.dependencies.length; slot++) {
+      const dep = step.dependencies[slot];
+      if (this.drawnEdges.has(`${dep}->${stepIndex}:${slot}`)) {
+        slots.set(slot, dep);
+      }
+    }
+    return slots;
   }
 }

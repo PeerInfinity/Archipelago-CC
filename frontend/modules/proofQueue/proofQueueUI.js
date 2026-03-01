@@ -60,7 +60,6 @@ export class ProofQueueUI {
     // DOM references
     this._headerEl = null;
     this._toolbarEl = null;
-    this._poolEl = null;
     this._statusEl = null;
 
     // New DOM references for proof table layout
@@ -72,7 +71,6 @@ export class ProofQueueUI {
     this._queueBodyEl = null;
 
     // Checkbox references
-    this._cbAutoFill = null;
     this._cbAutoCheck = null;
     this._cbShowDetails = null;
 
@@ -85,6 +83,19 @@ export class ProofQueueUI {
 
     // Track in-flight check to prevent double-clicks
     this._checkingStep = null;
+
+    // Difficulty settings
+    this._selectDifficulty = null;
+    this._difficultyDescEl = null;
+    this._hypInputState = new Map();   // stepIndex → Map<depIndex, string>
+    this._checkCooldownUntil = 0;
+    this._checkCooldownTimer = null;
+
+    // Click-to-assign: step index of "held" proven step
+    this._selectedProvenStep = null;
+
+    // stepIndex → proven row number map (rebuilt each render)
+    this._stepToRow = new Map();
 
     this._createBaseUI();
     this._setupLifecycle();
@@ -123,34 +134,46 @@ export class ProofQueueUI {
     this._headerEl.textContent = 'Proof Queue';
     this.rootElement.appendChild(this._headerEl);
 
-    // Toolbar (two rows)
+    // Toolbar (single row)
     this._toolbarEl = document.createElement('div');
     this._toolbarEl.className = 'pq-toolbar';
 
-    // Row 1: buttons + checkboxes
     const row1 = document.createElement('div');
     row1.className = 'pq-toolbar-row';
-    row1.innerHTML = `
-      <button class="pq-btn pq-btn-autofill" title="Add all available steps in valid order">Fill all</button>
-      <button class="pq-btn pq-btn-clear" title="Remove unchecked steps from queue">Clear</button>
-      <label class="pq-checkbox-label"><input type="checkbox" class="pq-cb-autofill"> Auto-fill</label>
-      <button class="pq-btn pq-btn-check" title="Check the next valid step">Check Next</button>
-      <label class="pq-checkbox-label"><input type="checkbox" class="pq-cb-autocheck"> Auto-check</label>
-    `;
-    this._toolbarEl.appendChild(row1);
 
-    // Row 2: show details
-    const row2 = document.createElement('div');
-    row2.className = 'pq-toolbar-row';
-    row2.innerHTML = `
-      <label class="pq-checkbox-label"><input type="checkbox" class="pq-cb-showdetails"> Show details &amp; links</label>
-    `;
-    this._toolbarEl.appendChild(row2);
+    // Difficulty selector
+    const diffLabel = document.createElement('span');
+    diffLabel.className = 'pq-checkbox-label';
+    diffLabel.textContent = 'Hyp:';
+    row1.appendChild(diffLabel);
+
+    this._selectDifficulty = document.createElement('select');
+    this._selectDifficulty.className = 'pq-select-difficulty';
+    for (const [val, text] of [['trivial','Trivial'],['easy','Easy'],['medium','Medium'],['hard','Hard']]) {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = text;
+      this._selectDifficulty.appendChild(opt);
+    }
+    row1.appendChild(this._selectDifficulty);
+
+    this._difficultyDescEl = document.createElement('span');
+    this._difficultyDescEl.className = 'pq-difficulty-desc';
+    row1.appendChild(this._difficultyDescEl);
+    this._updateDifficultyDesc();
+
+    // Show details, Auto-check, Check Next
+    row1.insertAdjacentHTML('beforeend', `
+      <label class="pq-checkbox-label" style="margin-left:auto"><input type="checkbox" class="pq-cb-showdetails"> Show details</label>
+      <label class="pq-checkbox-label"><input type="checkbox" class="pq-cb-autocheck"> Auto-check</label>
+      <button class="pq-btn pq-btn-check" title="Check the next valid step">Check Next</button>
+    `);
+
+    this._toolbarEl.appendChild(row1);
 
     this.rootElement.appendChild(this._toolbarEl);
 
     // Cache checkbox references
-    this._cbAutoFill = this._toolbarEl.querySelector('.pq-cb-autofill');
     this._cbAutoCheck = this._toolbarEl.querySelector('.pq-cb-autocheck');
     this._cbShowDetails = this._toolbarEl.querySelector('.pq-cb-showdetails');
 
@@ -198,18 +221,6 @@ export class ProofQueueUI {
     this._workingAreaEl = document.createElement('div');
     this._workingAreaEl.className = 'pq-working-area';
 
-    // Available steps pool
-    const poolSection = document.createElement('div');
-    poolSection.className = 'pq-section';
-    const poolLabel = document.createElement('div');
-    poolLabel.className = 'pq-section-label';
-    poolLabel.textContent = 'Available Steps';
-    poolSection.appendChild(poolLabel);
-    this._poolEl = document.createElement('div');
-    this._poolEl.className = 'pq-pool';
-    poolSection.appendChild(this._poolEl);
-    this._workingAreaEl.appendChild(poolSection);
-
     // Queue section (table-based)
     const queueSection = document.createElement('div');
     queueSection.className = 'pq-section pq-queue-section';
@@ -244,15 +255,14 @@ export class ProofQueueUI {
     this.rootElement.appendChild(this._statusEl);
 
     // ─── Wire toolbar handlers ───────────────────────────
-    this._toolbarEl.querySelector('.pq-btn-autofill').addEventListener('click', () => this._onAutoFill());
-    this._toolbarEl.querySelector('.pq-btn-clear').addEventListener('click', () => this._onClear());
     this._toolbarEl.querySelector('.pq-btn-check').addEventListener('click', () => this._onCheckNext());
     this._cbShowDetails.addEventListener('change', () => this.render());
-    this._cbAutoFill.addEventListener('change', () => {
-      if (this._cbAutoFill.checked) this._onAutoFill();
-    });
     this._cbAutoCheck.addEventListener('change', () => {
       if (this._cbAutoCheck.checked) this._tryAutoCheck();
+    });
+    this._selectDifficulty.addEventListener('change', () => {
+      this._onDifficultyChanged();
+      this.render();
     });
 
     // Show empty state
@@ -260,7 +270,6 @@ export class ProofQueueUI {
   }
 
   _showEmptyState() {
-    this._poolEl.innerHTML = '<div class="pq-empty">No proof loaded</div>';
     this._queueBodyEl.innerHTML = '';
     this._provenBodyEl.innerHTML = '';
     this._provenSectionEl.style.display = 'none';
@@ -300,6 +309,10 @@ export class ProofQueueUI {
       if (typeof unsub === 'function') unsub();
     });
     this.unsubscribeHandles = [];
+    if (this._checkCooldownTimer) {
+      clearInterval(this._checkCooldownTimer);
+      this._checkCooldownTimer = null;
+    }
   }
 
   /**
@@ -314,10 +327,8 @@ export class ProofQueueUI {
       this.render();
     };
     proofQueueState.onAvailableChanged = () => {
-      // If auto-fill is enabled, fill the queue when new steps become available
-      if (this._cbAutoFill && this._cbAutoFill.checked) {
-        proofQueueState.autoFillQueue();
-      }
+      // Auto-add newly available steps to the queue
+      proofQueueState.autoFillQueue();
       this.render();
     };
   }
@@ -334,11 +345,16 @@ export class ProofQueueUI {
       return;
     }
 
+    // Force reload from new rules data (ensureStateLoaded skips if already loaded)
+    proofQueueState.isLoaded = false;
+    this._hypInputState.clear();
+    this._selectedProvenStep = null;
     ensureStateLoaded(proofQueueState);
 
     if (proofQueueState && proofQueueState.isLoaded) {
       this._wireStateCallbacks();
       syncStateFromSnapshot(proofQueueState);
+      proofQueueState.autoFillQueue();
       this.render();
     }
   }
@@ -414,6 +430,201 @@ export class ProofQueueUI {
     return dependencies.map(d => String(d)).join(',');
   }
 
+  // ─── Difficulty Helpers ──────────────────────────────────────
+
+  _getDifficulty() {
+    return this._selectDifficulty ? this._selectDifficulty.value : 'trivial';
+  }
+
+  _updateDifficultyDesc() {
+    if (!this._difficultyDescEl) return;
+    const descs = {
+      trivial: 'Hyp values auto-filled (default)',
+      easy: 'Assign hyp refs by typing or clicking proven steps',
+      medium: 'Assign hyp refs; all lock when step is complete',
+      hard: 'Assign hyp refs; wrong answer = 5s cooldown',
+    };
+    this._difficultyDescEl.textContent = descs[this._getDifficulty()] || '';
+  }
+
+  _onDifficultyChanged() {
+    this._updateDifficultyDesc();
+    this._selectedProvenStep = null;
+    if (this._getDifficulty() === 'trivial') {
+      this._hypInputState.clear();
+    }
+    // Clear any active cooldown
+    if (this._checkCooldownTimer) {
+      clearInterval(this._checkCooldownTimer);
+      this._checkCooldownTimer = null;
+    }
+    this._checkCooldownUntil = 0;
+    const btn = this._toolbarEl.querySelector('.pq-btn-check');
+    if (btn) {
+      btn.classList.remove('pq-btn-cooldown');
+      btn.disabled = false;
+      btn.textContent = 'Check Next';
+    }
+  }
+
+  _onProvenRowClick(stepIndex) {
+    this._selectedProvenStep = (this._selectedProvenStep === stepIndex) ? null : stepIndex;
+    this.render();
+  }
+
+  /**
+   * True if all hyp entries for a step match the correct dep indices.
+   * Vacuously true for steps with no dependencies.
+   */
+  _isHypCorrectForStep(stepIndex) {
+    const step = proofQueueState.steps.get(stepIndex);
+    if (!step || step.dependencies.length === 0) return true;
+    const entries = this._hypInputState.get(stepIndex);
+    if (!entries) return false;
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (!this._isHypEntryCorrect(stepIndex, i)) return false;
+    }
+    return true;
+  }
+
+  _isHypEntryCorrect(stepIndex, depIndex) {
+    const step = proofQueueState.steps.get(stepIndex);
+    if (!step) return false;
+    const entries = this._hypInputState.get(stepIndex);
+    if (!entries) return false;
+    const val = (entries.get(depIndex) || '').trim();
+    const depStepIndex = step.dependencies[depIndex];
+    const rowNum = this._stepToRow?.get(depStepIndex);
+    if (rowNum === undefined) return false;
+    return val === String(rowNum);
+  }
+
+  /**
+   * Render the Hyp cell content based on current difficulty.
+   */
+  _renderHypCell(tdHyp, step) {
+    const diff = this._getDifficulty();
+
+    if (step.dependencies.length === 0) return;
+
+    if (diff === 'trivial') {
+      tdHyp.textContent = this._formatHyp(step.dependencies, this._stepToRow);
+      return;
+    }
+
+    // Ensure _hypInputState has entries for this step
+    if (!this._hypInputState.has(step.index)) {
+      this._hypInputState.set(step.index, new Map());
+    }
+    const entries = this._hypInputState.get(step.index);
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (!entries.has(i)) entries.set(i, '');
+    }
+
+    const allCorrect = this._isHypCorrectForStep(step.index);
+
+    for (let i = 0; i < step.dependencies.length; i++) {
+      if (i > 0) {
+        const comma = document.createElement('span');
+        comma.className = 'pq-hyp-comma';
+        comma.textContent = ',';
+        tdHyp.appendChild(comma);
+      }
+
+      const correct = this._isHypEntryCorrect(step.index, i);
+
+      // Determine if this entry should be locked (shown as plain text)
+      let locked = false;
+      if (diff === 'easy' && correct) locked = true;
+      if (diff === 'medium' && allCorrect) locked = true;
+      // hard: never locked in queue (stays as input until checked/proven)
+
+      if (locked) {
+        const span = document.createElement('span');
+        span.className = 'pq-hyp-locked';
+        span.textContent = String(this._stepToRow.get(step.dependencies[i]) ?? step.dependencies[i]);
+        tdHyp.appendChild(span);
+      } else {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'pq-hyp-input';
+        input.size = 3;
+        input.maxLength = 4;
+        input.dataset.stepIndex = step.index;
+        input.dataset.depIndex = i;
+        input.value = entries.get(i) || '';
+        input.addEventListener('input', (e) => {
+          this._onHypInput(step.index, i, e.target.value);
+        });
+        input.addEventListener('focus', () => {
+          if (this._selectedProvenStep !== null) {
+            const rowNum = this._stepToRow?.get(this._selectedProvenStep);
+            const val = String(rowNum ?? this._selectedProvenStep);
+            input.value = val;
+            this._onHypInput(step.index, i, val);
+            this._selectedProvenStep = null;
+            this.rootElement.classList.remove('pq-has-selection');
+          }
+        });
+        tdHyp.appendChild(input);
+      }
+    }
+  }
+
+  _onHypInput(stepIndex, depIndex, value) {
+    if (!this._hypInputState.has(stepIndex)) {
+      this._hypInputState.set(stepIndex, new Map());
+    }
+    this._hypInputState.get(stepIndex).set(depIndex, value);
+
+    const diff = this._getDifficulty();
+    if (diff === 'easy' && this._isHypEntryCorrect(stepIndex, depIndex)) {
+      this.render();
+    } else if (diff === 'medium' && this._isHypCorrectForStep(stepIndex)) {
+      this.render();
+    }
+    // For easy/medium: also trigger auto-check if all hyps now correct
+    if (diff !== 'hard' && this._isHypCorrectForStep(stepIndex)) {
+      if (this._cbAutoCheck && this._cbAutoCheck.checked) {
+        requestAnimationFrame(() => this._tryAutoCheck());
+      }
+    }
+  }
+
+  _activateCheckCooldown() {
+    this._checkCooldownUntil = Date.now() + 5000;
+    const btn = this._toolbarEl.querySelector('.pq-btn-check');
+    if (!btn) return;
+
+    btn.disabled = true;
+    btn.classList.add('pq-btn-cooldown');
+
+    // Flash incorrect inputs
+    this._queueBodyEl.querySelectorAll('.pq-hyp-input').forEach(input => {
+      const si = Number(input.dataset.stepIndex);
+      const di = Number(input.dataset.depIndex);
+      if (!this._isHypEntryCorrect(si, di)) {
+        input.classList.add('pq-hyp-incorrect');
+        setTimeout(() => input.classList.remove('pq-hyp-incorrect'), 1000);
+      }
+    });
+
+    const update = () => {
+      const remaining = Math.max(0, this._checkCooldownUntil - Date.now());
+      if (remaining <= 0) {
+        clearInterval(this._checkCooldownTimer);
+        this._checkCooldownTimer = null;
+        btn.disabled = false;
+        btn.classList.remove('pq-btn-cooldown');
+        btn.textContent = 'Check Next';
+        return;
+      }
+      btn.textContent = `Check Next (${Math.ceil(remaining / 1000)}s)`;
+    };
+    update();
+    this._checkCooldownTimer = setInterval(update, 250);
+  }
+
   // ─── Rendering ────────────────────────────────────────────
 
   render() {
@@ -446,11 +657,13 @@ export class ProofQueueUI {
       // Show working area
       this._workingAreaEl.style.display = '';
       this.rootElement.classList.remove('pq-complete');
-      this._renderPool();
       this._renderQueue();
     }
 
     this._renderStatus();
+
+    // Toggle selection class for CSS pulse animation
+    this.rootElement.classList.toggle('pq-has-selection', this._selectedProvenStep !== null);
 
     // Auto-check cascade
     if (this._cbAutoCheck && this._cbAutoCheck.checked) {
@@ -472,18 +685,30 @@ export class ProofQueueUI {
     // Show theorem header (prefer instantiated expression for concrete values)
     const goalStep = proofQueueState.steps.get(proofQueueState.goalStepIndex);
     if (goalStep) {
+      const name = proofQueueState.theoremName || goalStep.label;
       const goalExpr = goalStep.instantiatedExpression || goalStep.expression;
-      this._theoremHeaderEl.textContent = `Theorem ${proofQueueState.theoremName || goalStep.label}: ${goalExpr}`;
+      this._theoremHeaderEl.innerHTML = '';
+      this._theoremHeaderEl.appendChild(document.createTextNode('Theorem '));
+      const link = document.createElement('a');
+      link.className = 'pq-ref-link';
+      link.href = `https://us.metamath.org/mpeuni/${name}.html`;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = name;
+      this._theoremHeaderEl.appendChild(link);
+      this._theoremHeaderEl.appendChild(document.createTextNode(`: ${goalExpr}`));
     }
 
-    // Build stepIndex → row number map
-    const stepToRow = new Map();
+    // Build stepIndex → row number map (shared with queue rendering)
+    this._stepToRow = new Map();
     for (let i = 0; i < this._provenOrder.length; i++) {
-      stepToRow.set(this._provenOrder[i], i + 1);
+      this._stepToRow.set(this._provenOrder[i], i + 1);
     }
 
     const showDetails = this._cbShowDetails && this._cbShowDetails.checked;
     const isComplete = proofQueueState.isProofComplete();
+    const diff = this._getDifficulty();
+    const isNonTrivial = diff !== 'trivial';
 
     for (let i = 0; i < this._provenOrder.length; i++) {
       const stepIndex = this._provenOrder[i];
@@ -498,6 +723,15 @@ export class ProofQueueUI {
         tr.classList.add('pq-proven-goal');
       }
 
+      // Click-to-assign: selectable rows in non-trivial modes
+      if (isNonTrivial) {
+        tr.classList.add('pq-proven-selectable');
+        if (stepIndex === this._selectedProvenStep) {
+          tr.classList.add('pq-proven-selected');
+        }
+        tr.addEventListener('click', () => this._onProvenRowClick(stepIndex));
+      }
+
       const classification = ProofQueueUI._classifyStep(step.label);
 
       // Step column
@@ -509,35 +743,40 @@ export class ProofQueueUI {
       // Hyp column
       const tdHyp = document.createElement('td');
       tdHyp.className = 'pq-col-hyp';
-      tdHyp.textContent = this._formatHyp(step.dependencies, stepToRow);
+      tdHyp.textContent = this._formatHyp(step.dependencies, this._stepToRow);
       tr.appendChild(tdHyp);
 
-      // Ref column
+      // Ref column (always linked)
       const tdRef = document.createElement('td');
       tdRef.className = 'pq-col-ref';
-      if (showDetails) {
-        const link = document.createElement('a');
-        link.className = 'pq-ref-link';
-        link.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = step.label;
-        tdRef.appendChild(link);
-      } else {
-        tdRef.textContent = step.label;
-      }
+      const refLink = document.createElement('a');
+      refLink.className = 'pq-ref-link';
+      refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
+      refLink.target = '_blank';
+      refLink.rel = 'noopener';
+      refLink.textContent = step.label;
+      tdRef.appendChild(refLink);
       tr.appendChild(tdRef);
 
       // Expression column (prefer instantiated expression for concrete values)
       const tdExpr = document.createElement('td');
       tdExpr.className = 'pq-col-expr';
       tdExpr.textContent = step.instantiatedExpression || step.expression;
-      if (showDetails && step.fullText) {
-        const detail = document.createElement('div');
-        detail.className = 'pq-detail-text';
-        detail.textContent = step.fullText;
-        tdExpr.appendChild(detail);
+      if (showDetails) {
         tdExpr.style.whiteSpace = 'normal';
+        // Show non-instantiated expression when it differs from instantiated
+        if (step.instantiatedExpression && step.expression !== step.instantiatedExpression) {
+          const generic = document.createElement('div');
+          generic.className = 'pq-generic-expr';
+          generic.textContent = step.expression;
+          tdExpr.appendChild(generic);
+        }
+        if (step.fullText) {
+          const detail = document.createElement('div');
+          detail.className = 'pq-detail-text';
+          detail.textContent = step.fullText;
+          tdExpr.appendChild(detail);
+        }
       }
       tr.appendChild(tdExpr);
 
@@ -576,45 +815,19 @@ export class ProofQueueUI {
     }
   }
 
-  _renderPool() {
-    this._poolEl.innerHTML = '';
-
-    const unplaced = proofQueueState.getUnplacedSteps();
-    if (unplaced.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'pq-empty';
-      empty.textContent = proofQueueState.availableSteps.size === proofQueueState.steps.size
-        ? 'All steps placed in queue'
-        : 'No new steps available yet';
-      this._poolEl.appendChild(empty);
-      return;
-    }
-
-    for (const step of unplaced) {
-      const chip = document.createElement('button');
-      chip.className = 'pq-pool-chip';
-      chip.title = step.fullText || step.expression;
-      chip.dataset.stepIndex = step.index;
-
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'pq-chip-label';
-      labelSpan.textContent = step.label;
-      chip.appendChild(labelSpan);
-
-      const exprSpan = document.createElement('span');
-      exprSpan.className = 'pq-chip-expr';
-      exprSpan.textContent = step.expression;
-      chip.appendChild(exprSpan);
-
-      chip.addEventListener('click', () => {
-        proofQueueState.addToQueue(step.index);
-      });
-
-      this._poolEl.appendChild(chip);
-    }
-  }
-
   _renderQueue() {
+    // Focus preservation: capture focused hyp input before clearing
+    let focusInfo = null;
+    const focused = this._queueBodyEl.querySelector('.pq-hyp-input:focus');
+    if (focused) {
+      focusInfo = {
+        stepIndex: focused.dataset.stepIndex,
+        depIndex: focused.dataset.depIndex,
+        selStart: focused.selectionStart,
+        selEnd: focused.selectionEnd,
+      };
+    }
+
     this._queueBodyEl.innerHTML = '';
 
     const queueWithStatus = proofQueueState.getQueueWithStatus();
@@ -650,8 +863,10 @@ export class ProofQueueUI {
       tr.dataset.queueIndex = originalIndex;
       tr.dataset.stepIndex = step.index;
 
-      // Status classes
-      if (checkable) {
+      // Status classes (non-trivial: also require correct hyps for checkable)
+      const diff = this._getDifficulty();
+      const hypReady = diff === 'trivial' || step.dependencies.length === 0 || this._isHypCorrectForStep(step.index);
+      if (checkable && hypReady) {
         tr.classList.add('pq-checkable');
       } else if (!valid) {
         tr.classList.add('pq-invalid');
@@ -668,32 +883,27 @@ export class ProofQueueUI {
 
       const classification = ProofQueueUI._classifyStep(step.label);
 
-      // Step column (original step index)
+      // Step column (empty — row number assigned when proven)
       const tdStep = document.createElement('td');
       tdStep.className = 'pq-col-step';
-      tdStep.textContent = String(step.index);
       tr.appendChild(tdStep);
 
-      // Hyp column (original dep indices)
+      // Hyp column (difficulty-aware)
       const tdHyp = document.createElement('td');
       tdHyp.className = 'pq-col-hyp';
-      tdHyp.textContent = this._formatHypForQueue(step.dependencies);
+      this._renderHypCell(tdHyp, step);
       tr.appendChild(tdHyp);
 
-      // Ref column
+      // Ref column (always linked)
       const tdRef = document.createElement('td');
       tdRef.className = 'pq-col-ref';
-      if (showDetails) {
-        const link = document.createElement('a');
-        link.className = 'pq-ref-link';
-        link.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = step.label;
-        tdRef.appendChild(link);
-      } else {
-        tdRef.textContent = step.label;
-      }
+      const refLink = document.createElement('a');
+      refLink.className = 'pq-ref-link';
+      refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
+      refLink.target = '_blank';
+      refLink.rel = 'noopener';
+      refLink.textContent = step.label;
+      tdRef.appendChild(refLink);
       tr.appendChild(tdRef);
 
       // Expression column (generic in working area)
@@ -742,6 +952,16 @@ export class ProofQueueUI {
 
       this._queueBodyEl.appendChild(tr);
     }
+
+    // Restore focus to hyp input if it was focused before re-render
+    if (focusInfo) {
+      const sel = `.pq-hyp-input[data-step-index="${focusInfo.stepIndex}"][data-dep-index="${focusInfo.depIndex}"]`;
+      const el = this._queueBodyEl.querySelector(sel);
+      if (el) {
+        el.focus();
+        try { el.setSelectionRange(focusInfo.selStart, focusInfo.selEnd); } catch (_) {}
+      }
+    }
   }
 
   _renderStatus() {
@@ -754,14 +974,13 @@ export class ProofQueueUI {
     }
 
     const total = proofQueueState.steps.size;
-    const checked = proofQueueState.checkedLocations.size;
-    const available = proofQueueState.availableSteps.size;
+    const proved = this._provenOrder.length;
 
     // Count only unchecked queue entries
     const queueWithStatus = proofQueueState.getQueueWithStatus();
     const inQueue = queueWithStatus.filter(e => !e.alreadyChecked).length;
 
-    this._statusEl.textContent = `${checked}/${total} proved | ${inQueue} in queue | ${available} available`;
+    this._statusEl.textContent = `${proved}/${total} proved | ${inQueue} in queue`;
     this._statusEl.className = 'pq-status';
   }
 
@@ -774,6 +993,7 @@ export class ProofQueueUI {
    */
   _tryAutoCheck() {
     if (!this._cbAutoCheck || !this._cbAutoCheck.checked) return;
+    if (this._checkCooldownUntil > Date.now()) return;
     if (this._checkingStep !== null) return;
     if (!proofQueueState || !_dispatcher) return;
     if (proofQueueState.isProofComplete()) return;
@@ -783,6 +1003,12 @@ export class ProofQueueUI {
 
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
+
+    // Hyp validation gate — silently wait until hyps are correct
+    const diff = this._getDifficulty();
+    if (diff !== 'trivial' && step.dependencies.length > 0) {
+      if (!this._isHypCorrectForStep(nextStep)) return;
+    }
 
     this._checkingStep = nextStep;
 
@@ -838,18 +1064,11 @@ export class ProofQueueUI {
 
   // ─── Toolbar Actions ──────────────────────────────────────
 
-  _onAutoFill() {
-    if (!proofQueueState) return;
-    proofQueueState.autoFillQueue();
-  }
-
-  _onClear() {
-    if (!proofQueueState) return;
-    proofQueueState.clearUncheckedFromQueue();
-  }
-
   _onCheckNext() {
     if (!proofQueueState || !_dispatcher) return;
+
+    // Cooldown gate (hard mode)
+    if (this._checkCooldownUntil > Date.now()) return;
 
     // Prevent double-clicks while a check is in-flight
     if (this._checkingStep !== null) {
@@ -865,6 +1084,15 @@ export class ProofQueueUI {
 
     const step = proofQueueState.steps.get(nextStep);
     if (!step) return;
+
+    // Hyp validation gate (non-trivial difficulties)
+    const diff = this._getDifficulty();
+    if (diff !== 'trivial' && step.dependencies.length > 0) {
+      if (!this._isHypCorrectForStep(nextStep)) {
+        if (diff === 'hard') this._activateCheckCooldown();
+        return;
+      }
+    }
 
     // Mark step as in-flight; cleared when snapshot sync updates checked locations
     this._checkingStep = nextStep;

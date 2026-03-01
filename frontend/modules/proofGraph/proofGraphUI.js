@@ -144,19 +144,7 @@ export class ProofGraphUI {
       if (typeof unsub === 'function') unsub();
     });
     this.unsubscribeHandles = [];
-
-    if (this._resizeObserver) {
-      this._resizeObserver.disconnect();
-      this._resizeObserver = null;
-    }
-    if (this.eh) {
-      this.eh.destroy();
-      this.eh = null;
-    }
-    if (this.cy) {
-      this.cy.destroy();
-      this.cy = null;
-    }
+    this._destroyGraph();
   }
 
   _onPanelShow() {
@@ -266,6 +254,12 @@ export class ProofGraphUI {
 
     log('info', 'Initializing proof graph...');
 
+    // Auto-draw edges for any steps already checked before graph init
+    const autoDrawn = proofGraphState.autoDrawEdgesForCheckedSteps();
+    if (autoDrawn.length > 0) {
+      log('info', `Auto-connected ${autoDrawn.length} edges for pre-checked steps`);
+    }
+
     // Build node elements
     const elements = this._buildGraphElements();
 
@@ -282,8 +276,8 @@ export class ProofGraphUI {
     // Initialize edgehandles
     this._initEdgehandles();
 
-    // Node click handler: check step
-    this.cy.on('tap', 'node', (evt) => {
+    // Node click handler: check step (ignore port nodes)
+    this.cy.on('tap', 'node.proof-node', (evt) => {
       const node = evt.target;
       const stepIndex = parseInt(node.id(), 10);
       if (proofGraphState.isStepCheckable(stepIndex)) {
@@ -336,7 +330,6 @@ export class ProofGraphUI {
       if (isChecked) classes.push('checked');
       if (isComplete && !isChecked) classes.push('connected');
       if (index === proofGraphState.goalStepIndex) classes.push('goal');
-
       elements.push({
         group: 'nodes',
         data: {
@@ -344,23 +337,38 @@ export class ProofGraphUI {
           label: step.label,
           expression: step.expression,
           depCount: step.dependencies.length,
-          drawnCount: proofGraphState.getDrawnDependenciesFor(index).length,
           fullText: step.fullText || '',
         },
         classes: classes.join(' '),
       });
+
+      // Add port nodes for each dependency slot (positioned at top of parent)
+      for (let slot = 0; slot < step.dependencies.length; slot++) {
+        const dep = step.dependencies[slot];
+        const edgeKey = `${dep}->${index}:${slot}`;
+        const filled = proofGraphState.drawnEdges.has(edgeKey);
+        elements.push({
+          group: 'nodes',
+          data: {
+            id: `port-${index}-${slot}`,
+            slot,
+            portOf: index,
+          },
+          classes: `port-node${filled ? ' port-filled' : ''}`,
+        });
+      }
     }
 
-    // Add already-drawn edges
+    // Add already-drawn edges (targeting port nodes)
     for (const edgeKey of proofGraphState.drawnEdges) {
       const edge = proofGraphState.correctEdges.get(edgeKey);
       if (edge) {
         elements.push({
           group: 'edges',
           data: {
-            id: `edge-${edge.source}-${edge.target}`,
+            id: `edge-${edgeKey}`,
             source: String(edge.source),
-            target: String(edge.target),
+            target: `port-${edge.target}-${edge.slot}`,
           },
           classes: 'drawn-edge',
         });
@@ -392,6 +400,28 @@ export class ProofGraphUI {
           'border-color': '#585b70',
           'text-wrap': 'wrap',
           'text-max-width': '55px',
+        },
+      },
+      // ─── Port node (input connector) ───────────
+      {
+        selector: 'node.port-node',
+        style: {
+          'width': '8px',
+          'height': '8px',
+          'shape': 'ellipse',
+          'background-color': '#585b70',
+          'border-width': '1px',
+          'border-color': '#45475a',
+          'label': '',
+          'events': 'no',
+        },
+      },
+      // ─── Filled port ──────────────────────────
+      {
+        selector: 'node.port-filled',
+        style: {
+          'background-color': '#a6e3a1',
+          'border-color': '#6c7086',
         },
       },
       // ─── Axiom (no deps) ────────────────────────
@@ -450,7 +480,7 @@ export class ProofGraphUI {
           'line-color': '#a6e3a1',
           'target-arrow-color': '#a6e3a1',
           'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
+          'curve-style': 'straight',
           'opacity': 0.8,
         },
       },
@@ -514,19 +544,6 @@ export class ProofGraphUI {
           'background-color': '#1a3328',
         },
       },
-      // ─── Edge counter label ─────────────────────
-      {
-        selector: 'node.proof-node[depCount > 0]',
-        style: {
-          'label': (ele) => {
-            const label = ele.data('label');
-            const drawn = ele.data('drawnCount');
-            const total = ele.data('depCount');
-            return `${label}\n${drawn}/${total}`;
-          },
-          'font-size': '10px',
-        },
-      },
     ];
   }
 
@@ -552,15 +569,21 @@ export class ProofGraphUI {
       preview: true,
       ghostEdgePairs: true,
 
-      // Can this edge be created? Allow any non-self-loop, non-duplicate edge
-      // so the player can attempt incorrect edges (which get rejected with feedback).
+      // Can this edge be created? Allow any non-self-loop attempt.
+      // For correct deps, allow if there's an unfilled slot. For incorrect
+      // deps, allow so the player gets rejection feedback.
       canConnect: (sourceNode, targetNode) => {
+        // Port nodes are not valid edge targets
+        if (targetNode.hasClass('port-node')) return false;
         const sourceIdx = parseInt(sourceNode.id(), 10);
         const targetIdx = parseInt(targetNode.id(), 10);
         if (sourceIdx === targetIdx) return false;
-        // Don't allow edges that are already drawn
-        const edgeKey = `${sourceIdx}->${targetIdx}`;
-        return !proofGraphState.drawnEdges.has(edgeKey);
+        // If this is a known dependency, only allow if an unfilled slot remains
+        if (proofGraphState._hasAnySlot(sourceIdx, targetIdx)) {
+          return proofGraphState.hasUnfilledSlot(sourceIdx, targetIdx);
+        }
+        // Unknown dependency — allow attempt (will be rejected with feedback)
+        return true;
       },
 
       // Edge parameters for the created edge
@@ -583,14 +606,30 @@ export class ProofGraphUI {
       const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
 
       if (result.success) {
-        // Edge already added by edgehandles — set proper ID and class
-        addedEdge.data('id', `edge-${sourceIdx}-${targetIdx}`);
-        addedEdge.addClass('drawn-edge');
+        // Cytoscape edges are immutable in source/target, so replace with
+        // a new edge that targets the port node directly.
+        addedEdge.remove();
+
+        const portId = `port-${targetIdx}-${result.slot}`;
+        const edgeKey = `${sourceIdx}->${targetIdx}:${result.slot}`;
+        this.cy.add({
+          group: 'edges',
+          data: {
+            id: `edge-${edgeKey}`,
+            source: String(sourceIdx),
+            target: portId,
+          },
+          classes: 'drawn-edge',
+        });
+
+        // Mark port as filled
+        this.cy.getElementById(portId).addClass('port-filled');
+
         this._flashNode(targetNode, 'success-flash');
         // Move target node to the row below its source nodes
         this._updateRowAfterEdge(targetIdx);
         this._layoutFromRows(true);
-        log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx}`);
+        log('info', `Edge drawn: ${sourceIdx} -> ${targetIdx} (slot ${result.slot})`);
       } else {
         // Remove the edge that edgehandles added
         addedEdge.remove();
@@ -626,9 +665,6 @@ export class ProofGraphUI {
       const isChecked = proofGraphState.checkedLocations.has(step.locationName);
       const isComplete = proofGraphState._isStepFullyConnected(index);
 
-      // Update data for label refresh
-      node.data('drawnCount', proofGraphState.getDrawnDependenciesFor(index).length);
-
       // Update classes
       node.removeClass('axiom connected checkable checked');
       if (isChecked) {
@@ -639,6 +675,19 @@ export class ProofGraphUI {
         node.addClass('connected');
       } else if (isAxiom) {
         node.addClass('axiom');
+      }
+
+      // Update port fill states
+      for (let slot = 0; slot < step.dependencies.length; slot++) {
+        const dep = step.dependencies[slot];
+        const portNode = this.cy.getElementById(`port-${index}-${slot}`);
+        if (portNode.empty()) continue;
+        const edgeKey = `${dep}->${index}:${slot}`;
+        if (proofGraphState.drawnEdges.has(edgeKey)) {
+          portNode.addClass('port-filled');
+        } else {
+          portNode.removeClass('port-filled');
+        }
       }
     }
   }
@@ -660,6 +709,44 @@ export class ProofGraphUI {
 
     this._recalculateAllRows();
     this._layoutFromRows(false);
+  }
+
+  // ─── Auto-connect Checked Steps ─────────────────────────────
+
+  /**
+   * For any checked step with undrawn incoming edges, auto-draw them
+   * in both state and Cytoscape. Returns true if any edges were added.
+   */
+  _autoConnectCheckedSteps() {
+    if (!this.cy) return false;
+
+    const newEdges = proofGraphState.autoDrawEdgesForCheckedSteps();
+    if (newEdges.length === 0) return false;
+
+    for (const { source, target, slot, edgeKey } of newEdges) {
+      const portId = `port-${target}-${slot}`;
+
+      // Add edge element targeting the port
+      this.cy.add({
+        group: 'edges',
+        data: {
+          id: `edge-${edgeKey}`,
+          source: String(source),
+          target: portId,
+        },
+        classes: 'drawn-edge',
+      });
+
+      // Mark port as filled
+      this.cy.getElementById(portId).addClass('port-filled');
+
+      // Update row assignment for target
+      this._updateRowAfterEdge(target);
+    }
+
+    this._layoutFromRows(true);
+    log('info', `Auto-connected ${newEdges.length} edges for checked steps`);
+    return true;
   }
 
   // ─── Row-based Layout Helpers ──────────────────────────────
@@ -729,9 +816,9 @@ export class ProofGraphUI {
 
       // Cascade: update targets of outgoing drawn edges
       for (const edgeKey of proofGraphState.drawnEdges) {
-        const parts = edgeKey.split('->');
-        if (parseInt(parts[0], 10) === targetIdx) {
-          this._updateRowAfterEdge(parseInt(parts[1], 10));
+        const edge = proofGraphState.correctEdges.get(edgeKey);
+        if (edge && edge.source === targetIdx) {
+          this._updateRowAfterEdge(edge.target);
         }
       }
     }
@@ -774,6 +861,22 @@ export class ProofGraphUI {
         });
       });
     });
+
+    // Compute port positions relative to their parent nodes
+    for (const [index, step] of proofGraphState.steps) {
+      const n = step.dependencies.length;
+      if (n === 0) continue;
+      const parentPos = positions.get(String(index));
+      if (!parentPos) continue;
+      const parentW = 60; // node width
+      for (let slot = 0; slot < n; slot++) {
+        const xOff = -parentW / 2 + (parentW / (n + 1)) * (slot + 1);
+        positions.set(`port-${index}-${slot}`, {
+          x: parentPos.x + xOff,
+          y: parentPos.y - 16,
+        });
+      }
+    }
 
     if (animate) {
       for (const [id, pos] of positions) {
@@ -833,23 +936,49 @@ export class ProofGraphUI {
 
     if (!hasProofStructure()) {
       log('info', 'Not a MetaMath game — hiding proof graph');
+      this._destroyGraph();
       this._statusEl.textContent = 'This game has no proof structure.';
       this._toolbarEl.style.display = 'none';
       return;
     }
 
+    // Force reload from new rules data (ensureStateLoaded skips if already loaded)
+    proofGraphState.isLoaded = false;
+    this._destroyGraph();
     ensureStateLoaded(proofGraphState);
 
     if (proofGraphState.isLoaded) {
+      this._wireStateCallbacks();
       syncStateFromSnapshot(proofGraphState);
       this._loadCytoscape();
     }
+  }
+
+  /**
+   * Tear down the existing Cytoscape graph so it can be rebuilt from scratch.
+   */
+  _destroyGraph() {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
+    }
+    if (this.eh) {
+      this.eh.destroy();
+      this.eh = null;
+    }
+    if (this.cy) {
+      this.cy.destroy();
+      this.cy = null;
+    }
+    this.nodeRows.clear();
+    this._cytoscapeLoading = false;
   }
 
   _handleSnapshotUpdated(snapshotData) {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState, snapshotData);
     this._checkingStep = null; // Clear in-flight guard after snapshot sync
+    this._autoConnectCheckedSteps();
     this._updateNodeClasses();
     this._updateStatus();
   }
@@ -858,6 +987,7 @@ export class ProofGraphUI {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState);
     this._checkingStep = null;
+    this._autoConnectCheckedSteps();
     this._updateNodeClasses();
     this._updateStatus();
   }
