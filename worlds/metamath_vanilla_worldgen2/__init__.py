@@ -36,21 +36,21 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Proved Statement 2": "Proved Statement 2",
-    "Proved Statement 3": "Proved Statement 3",
-    "Proved Statement 4": "Proved Statement 4",
-    "Proved Statement 5": "Proved Statement 5",
-    "Proved Statement 6": "Proved Statement 6",
-    "Proved Statement 7": "Proved Statement 7",
-    "Proved Statement 8": "Proved Statement 8",
-    "Proved Statement 9": "Proved Statement 9",
-    "Proved Statement 10": "Proved Statement 10",
+    "Proved Statement 2": "Axiom ax-1cn: |- 1 e. CC",
+    "Proved Statement 3": "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+    "Proved Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
+    "Proved Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
+    "Proved Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
+    "Proved Statement 7": "Proved oveq1i: |- ( A F C ) = ( B F C )",
+    "Proved Statement 8": "Proved 3eqtri: |- A = D",
+    "Proved Statement 9": "Proved oveq2i: |- ( C F A ) = ( C F B )",
+    "Proved Statement 10": "Proved eqtr4i: |- A = C",
 }
 
 # Starting items - items the player begins with (precollected)
 STARTING_ITEMS: Dict[str, int] = {
     "2cn: |- 2 e. CC": 1,
-    "Proved Statement 1": 1,
+    "Given 2cn: |- 2 e. CC": 1,
 }
 
 
@@ -115,11 +115,11 @@ class MetamathWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Prove ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
+        "Axiom ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
         "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-        "Prove df-2: |- 2 = ( 1 + 1 )": "df-2: |- 2 = ( 1 + 1 )",
-        "Prove df-3: |- 3 = ( 2 + 1 )": "df-3: |- 3 = ( 2 + 1 )",
-        "Prove df-4: |- 4 = ( 3 + 1 )": "df-4: |- 4 = ( 3 + 1 )",
+        "Definition df-2: |- 2 = ( 1 + 1 )": "df-2: |- 2 = ( 1 + 1 )",
+        "Definition df-3: |- 3 = ( 2 + 1 )": "df-3: |- 3 = ( 2 + 1 )",
+        "Definition df-4: |- 4 = ( 3 + 1 )": "df-4: |- 4 = ( 3 + 1 )",
         "Prove oveq1i: |- ( A F C ) = ( B F C )": "oveq1i: |- ( A F C ) = ( B F C )",
         "Prove 3eqtri: |- A = D": "3eqtri: |- A = D",
         "Prove oveq2i: |- ( C F A ) = ( C F B )": "oveq2i: |- ( C F A ) = ( C F B )",
@@ -128,15 +128,15 @@ class MetamathWorld(RuleWorldMixin, World):
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Prove ax-1cn: |- 1 e. CC": True,
+        "Axiom ax-1cn: |- 1 e. CC": True,
         "Proved Statement 2": True,
         "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": True,
         "Proved Statement 3": True,
-        "Prove df-2: |- 2 = ( 1 + 1 )": True,
+        "Definition df-2: |- 2 = ( 1 + 1 )": True,
         "Proved Statement 4": True,
-        "Prove df-3: |- 3 = ( 2 + 1 )": True,
+        "Definition df-3: |- 3 = ( 2 + 1 )": True,
         "Proved Statement 5": True,
-        "Prove df-4: |- 4 = ( 3 + 1 )": True,
+        "Definition df-4: |- 4 = ( 3 + 1 )": True,
         "Proved Statement 6": True,
         "Prove oveq1i: |- ( A F C ) = ( B F C )": True,
         "Proved Statement 7": True,
@@ -157,10 +157,10 @@ class MetamathWorld(RuleWorldMixin, World):
         self.num_statements = 10
         self.is_vanilla = True
         self.preset_label = '2p2e4 v'
-        self.canonical_placements = {'Prove ax-1cn: |- 1 e. CC': 'ax-1cn: |- 1 e. CC', 'Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )': 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Prove df-2: |- 2 = ( 1 + 1 )': 'df-2: |- 2 = ( 1 + 1 )', 'Prove df-3: |- 3 = ( 2 + 1 )': 'df-3: |- 3 = ( 2 + 1 )', 'Prove df-4: |- 4 = ( 3 + 1 )': 'df-4: |- 4 = ( 3 + 1 )', 'Prove oveq1i: |- ( A F C ) = ( B F C )': 'oveq1i: |- ( A F C ) = ( B F C )', 'Prove 3eqtri: |- A = D': '3eqtri: |- A = D', 'Prove oveq2i: |- ( C F A ) = ( C F B )': 'oveq2i: |- ( C F A ) = ( C F B )'}
-        self.location_dependencies = {'Proved Statement 3': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'Proved Statement 7': ['df-3: |- 3 = ( 2 + 1 )', 'Proved Statement 5'], 'Proved Statement 8': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'Proved Statement 9': ['df-2: |- 2 = ( 1 + 1 )', 'Proved Statement 4'], 'Proved Statement 10': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9'], 'Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'Prove oveq1i: |- ( A F C ) = ( B F C )': ['df-3: |- 3 = ( 2 + 1 )', 'Proved Statement 5'], 'Prove 3eqtri: |- A = D': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'Prove oveq2i: |- ( C F A ) = ( C F B )': ['df-2: |- 2 = ( 1 + 1 )', 'Proved Statement 4'], 'Prove eqtr4i: |- A = C': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9']}
-        self.entrance_dependencies = {'From 2cn to addassi': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'From ax-1cn to addassi': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'From df-3 to oveq1i': ['df-3: |- 3 = ( 2 + 1 )', 'Proved Statement 5'], 'From addassi to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From df-4 to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From oveq1i to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From df-2 to oveq2i': ['df-2: |- 2 = ( 1 + 1 )', 'Proved Statement 4'], 'From 3eqtri to eqtr4i': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9'], 'From oveq2i to eqtr4i': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9']}
-        self.exit_dependencies = {'From 2cn to addassi': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'From ax-1cn to addassi': ['2cn: |- 2 e. CC', 'Proved Statement 1', 'ax-1cn: |- 1 e. CC', 'Proved Statement 2'], 'From addassi to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From df-2 to oveq2i': ['df-2: |- 2 = ( 1 + 1 )', 'Proved Statement 4'], 'From df-3 to oveq1i': ['df-3: |- 3 = ( 2 + 1 )', 'Proved Statement 5'], 'From df-4 to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From oveq1i to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved Statement 3', 'df-4: |- 4 = ( 3 + 1 )', 'Proved Statement 6', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved Statement 7'], 'From 3eqtri to eqtr4i': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9'], 'From oveq2i to eqtr4i': ['3eqtri: |- A = D', 'Proved Statement 8', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved Statement 9']}
+        self.canonical_placements = {'Axiom ax-1cn: |- 1 e. CC': 'ax-1cn: |- 1 e. CC', 'Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )': 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Definition df-2: |- 2 = ( 1 + 1 )': 'df-2: |- 2 = ( 1 + 1 )', 'Definition df-3: |- 3 = ( 2 + 1 )': 'df-3: |- 3 = ( 2 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )': 'df-4: |- 4 = ( 3 + 1 )', 'Prove oveq1i: |- ( A F C ) = ( B F C )': 'oveq1i: |- ( A F C ) = ( B F C )', 'Prove 3eqtri: |- A = D': '3eqtri: |- A = D', 'Prove oveq2i: |- ( C F A ) = ( C F B )': 'oveq2i: |- ( C F A ) = ( C F B )'}
+        self.location_dependencies = {'Proved Statement 3': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'Proved Statement 7': ['df-3: |- 3 = ( 2 + 1 )', 'Definition df-3: |- 3 = ( 2 + 1 )'], 'Proved Statement 8': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'Proved Statement 9': ['df-2: |- 2 = ( 1 + 1 )', 'Definition df-2: |- 2 = ( 1 + 1 )'], 'Proved Statement 10': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )'], 'Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'Prove oveq1i: |- ( A F C ) = ( B F C )': ['df-3: |- 3 = ( 2 + 1 )', 'Definition df-3: |- 3 = ( 2 + 1 )'], 'Prove 3eqtri: |- A = D': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'Prove oveq2i: |- ( C F A ) = ( C F B )': ['df-2: |- 2 = ( 1 + 1 )', 'Definition df-2: |- 2 = ( 1 + 1 )'], 'Prove eqtr4i: |- A = C': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )']}
+        self.entrance_dependencies = {'From 2cn to addassi': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'From ax-1cn to addassi': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'From df-3 to oveq1i': ['df-3: |- 3 = ( 2 + 1 )', 'Definition df-3: |- 3 = ( 2 + 1 )'], 'From addassi to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From df-4 to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From oveq1i to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From df-2 to oveq2i': ['df-2: |- 2 = ( 1 + 1 )', 'Definition df-2: |- 2 = ( 1 + 1 )'], 'From 3eqtri to eqtr4i': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )'], 'From oveq2i to eqtr4i': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )']}
+        self.exit_dependencies = {'From 2cn to addassi': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'From ax-1cn to addassi': ['2cn: |- 2 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC', 'Axiom ax-1cn: |- 1 e. CC'], 'From addassi to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From df-2 to oveq2i': ['df-2: |- 2 = ( 1 + 1 )', 'Definition df-2: |- 2 = ( 1 + 1 )'], 'From df-3 to oveq1i': ['df-3: |- 3 = ( 2 + 1 )', 'Definition df-3: |- 3 = ( 2 + 1 )'], 'From df-4 to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From oveq1i to 3eqtri': ['addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'Definition df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )', 'Proved oveq1i: |- ( A F C ) = ( B F C )'], 'From 3eqtri to eqtr4i': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )'], 'From oveq2i to eqtr4i': ['3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'oveq2i: |- ( C F A ) = ( C F B )', 'Proved oveq2i: |- ( C F A ) = ( C F B )']}
         self.world_description = 'Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.'
         self.slot_data = {'proof_structure': {1: {'label': '2cn', 'expression': '|- 2 e. CC', 'dependencies': [], 'full_text': '2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.) (|- 2 e. CC)'}, 2: {'label': 'ax-1cn', 'expression': '|- 1 e. CC', 'dependencies': [], 'full_text': "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.) (|- 1 e. CC)"}, 3: {'label': 'addassi', 'expression': '|- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'dependencies': [1, 2], 'full_text': 'addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))'}, 4: {'label': 'df-2', 'expression': '|- 2 = ( 1 + 1 )', 'dependencies': [], 'full_text': 'df-2: Define the number 2.  (Contributed by NM, 27-May-1999.) (|- 2 = ( 1 + 1 ))'}, 5: {'label': 'df-3', 'expression': '|- 3 = ( 2 + 1 )', 'dependencies': [], 'full_text': 'df-3: Define the number 3.  (Contributed by NM, 27-May-1999.) (|- 3 = ( 2 + 1 ))'}, 6: {'label': 'df-4', 'expression': '|- 4 = ( 3 + 1 )', 'dependencies': [], 'full_text': 'df-4: Define the number 4.  (Contributed by NM, 27-May-1999.) (|- 4 = ( 3 + 1 ))'}, 7: {'label': 'oveq1i', 'expression': '|- ( A F C ) = ( B F C )', 'dependencies': [5], 'full_text': 'oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))'}, 8: {'label': '3eqtri', 'expression': '|- A = D', 'dependencies': [3, 6, 7], 'full_text': "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"}, 9: {'label': 'oveq2i', 'expression': '|- ( C F A ) = ( C F B )', 'dependencies': [4], 'full_text': 'oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))'}, 10: {'label': 'eqtr4i', 'expression': '|- A = C', 'dependencies': [8, 9], 'full_text': 'eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)'}}, 'starting_statements': [1], 'theorem': '2p2e4', 'randomize_items': False, 'vanilla_placement': 1}
 
@@ -318,7 +318,7 @@ class MetamathWorld(RuleWorldMixin, World):
     def generate_basic(self) -> None:
         """Set completion condition."""
         self.multiworld.completion_condition[self.player] = \
-            lambda state: state.has("Proved Statement 10", self.player)
+            lambda state: state.has("Proved eqtr4i: |- A = C", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

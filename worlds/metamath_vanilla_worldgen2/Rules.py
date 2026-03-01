@@ -22,45 +22,45 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From 2cn to addassi", player),
-        HasAll('2cn: |- 2 e. CC', 'Proved Statement 1', 'Proved Statement 2', 'ax-1cn: |- 1 e. CC')
+        HasAll('2cn: |- 2 e. CC', 'Axiom ax-1cn: |- 1 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ax-1cn to addassi", player),
-        HasAll('2cn: |- 2 e. CC', 'Proved Statement 1', 'Proved Statement 2', 'ax-1cn: |- 1 e. CC')
+        HasAll('2cn: |- 2 e. CC', 'Axiom ax-1cn: |- 1 e. CC', 'Given 2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC')
     )
 
     world.set_rule(
         multiworld.get_entrance("From addassi to 3eqtri", player),
-        HasAll('Proved Statement 3', 'Proved Statement 6', 'Proved Statement 7', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
+        HasAll('Definition df-4: |- 4 = ( 3 + 1 )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved oveq1i: |- ( A F C ) = ( B F C )', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From df-2 to oveq2i", player),
-        HasAll('Proved Statement 4', 'df-2: |- 2 = ( 1 + 1 )')
+        HasAll('Definition df-2: |- 2 = ( 1 + 1 )', 'df-2: |- 2 = ( 1 + 1 )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From df-3 to oveq1i", player),
-        HasAll('Proved Statement 5', 'df-3: |- 3 = ( 2 + 1 )')
+        HasAll('Definition df-3: |- 3 = ( 2 + 1 )', 'df-3: |- 3 = ( 2 + 1 )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From df-4 to 3eqtri", player),
-        HasAll('Proved Statement 3', 'Proved Statement 6', 'Proved Statement 7', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
+        HasAll('Definition df-4: |- 4 = ( 3 + 1 )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved oveq1i: |- ( A F C ) = ( B F C )', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From oveq1i to 3eqtri", player),
-        HasAll('Proved Statement 3', 'Proved Statement 6', 'Proved Statement 7', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
+        HasAll('Definition df-4: |- 4 = ( 3 + 1 )', 'Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'Proved oveq1i: |- ( A F C ) = ( B F C )', 'addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )', 'df-4: |- 4 = ( 3 + 1 )', 'oveq1i: |- ( A F C ) = ( B F C )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From 3eqtri to eqtr4i", player),
-        HasAll('3eqtri: |- A = D', 'Proved Statement 8', 'Proved Statement 9', 'oveq2i: |- ( C F A ) = ( C F B )')
+        HasAll('3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'Proved oveq2i: |- ( C F A ) = ( C F B )', 'oveq2i: |- ( C F A ) = ( C F B )')
     )
 
     world.set_rule(
         multiworld.get_entrance("From oveq2i to eqtr4i", player),
-        HasAll('3eqtri: |- A = D', 'Proved Statement 8', 'Proved Statement 9', 'oveq2i: |- ( C F A ) = ( C F B )')
+        HasAll('3eqtri: |- A = D', 'Proved 3eqtri: |- A = D', 'Proved oveq2i: |- ( C F A ) = ( C F B )', 'oveq2i: |- ( C F A ) = ( C F B )')
     )
