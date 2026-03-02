@@ -105,6 +105,8 @@ import * as windowAdapterModule from './modules/windowAdapter/index.js';
 import * as windowPanelModule from './modules/windowPanel/index.js';
 import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js';
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
+import * as proofQueueModule from './modules/proofQueue/index.js';
+import * as proofGraphModule from './modules/proofGraph/index.js';
 
 // ============================================================================
 // STATIC TEST CASE IMPORTS - These get bundled and self-register on import
@@ -179,6 +181,8 @@ const BUNDLED_MODULES = {
   windowPanel: windowPanelModule,
   windowManagerPanel: windowManagerPanelModule,
   ruleConverter: ruleConverterModule,
+  proofQueue: proofQueueModule,
+  proofGraph: proofGraphModule,
 };
 
 // Make bundled modules available globally for the module loader
