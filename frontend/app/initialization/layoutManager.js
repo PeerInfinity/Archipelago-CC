@@ -78,6 +78,7 @@ export async function initializeLayoutManager(options) {
       layoutContainer,
       centralRegistry,
       layoutPresets,
+      settingsManager,
       moduleInfoMap,
       importedModules,
       logger,
@@ -195,6 +196,7 @@ async function setupMobileLayout(options) {
     layoutContainer,
     centralRegistry,
     layoutPresets,
+    settingsManager,
     moduleInfoMap,
     importedModules,
     logger,
@@ -237,8 +239,12 @@ async function setupMobileLayout(options) {
       }
     });
 
+  // Resolve which layout preset to use (same logic as desktop)
+  const activeLayoutId = await settingsManager.getSetting('activeLayout', 'default');
+  logger.info('init', `Mobile layout using active layout preset: "${activeLayoutId}"`);
+
   // Initialize the mobile layout manager
-  mobileLayoutManager.initialize(layoutContainer, layoutPresets);
+  mobileLayoutManager.initialize(layoutContainer, layoutPresets, activeLayoutId);
   logger.info('INIT_STEP', 'Mobile Layout Manager initialized with all components');
 
   // Add class to body to indicate mobile layout is active
