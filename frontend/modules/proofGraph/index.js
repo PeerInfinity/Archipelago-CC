@@ -1,8 +1,9 @@
 /**
- * Proof Graph module — MetaMath Medium mode.
+ * Proof Graph module — MetaMath Medium mode / DepGraph connection puzzle.
  *
- * Provides a Cytoscape graph where players reconstruct the proof dependency
- * structure by drawing edges between proof step nodes using edgehandles.
+ * Provides a Cytoscape graph where players reconstruct the dependency
+ * structure by drawing edges between nodes using edgehandles.
+ * Active when a game with proof_structure (MetaMath) or graph_structure (DepGraph) is loaded.
  */
 
 import proofGraphState from './proofGraphStateSingleton.js';
@@ -10,6 +11,7 @@ import { ProofGraphUI, setModuleEventBus, setDispatcher } from './proofGraphUI.j
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import {
   getPlayerWorld,
+  hasStructureData,
   syncStateFromSnapshot,
   createLogger,
   initializeProofState,
@@ -96,7 +98,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Check if rules already loaded
   const staticData = stateManager.getStaticData();
-  if (getPlayerWorld(staticData)?.slot_data?.proof_structure) {
+  if (hasStructureData(getPlayerWorld(staticData)?.slot_data)) {
     initializeProofState(proofGraphState, staticData, log, _wireEventBusPublishing);
   }
 

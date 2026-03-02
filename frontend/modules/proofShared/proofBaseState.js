@@ -2,10 +2,10 @@
  * ProofBaseState — shared base class for all proof module states.
  *
  * Provides common functionality:
- *   - Proof structure parsing from slot_data
+ *   - Structure parsing from slot_data (proof_structure or graph_structure)
  *   - Name substitution handling (generic ↔ display names)
  *   - Inventory and location sync
- *   - Proof completion check
+ *   - Proof/graph completion check
  *   - Step lookup helpers
  *
  * Subclasses: ProofQueueBaseState, ProofGraphState
@@ -51,8 +51,10 @@ export class ProofBaseState {
   // ─── Proof Structure Parsing ──────────────────────────────
 
   /**
-   * Parse proof structure from slot_data into this.steps and related fields.
+   * Parse proof/graph structure from slot_data into this.steps and related fields.
    * Called by subclass loadFromSlotData() implementations.
+   *
+   * Accepts either proof_structure (MetaMath) or graph_structure (DepGraph).
    *
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} [nameSubstitutions] - The name_substitutions object from rules.json
@@ -65,13 +67,15 @@ export class ProofBaseState {
     this.checkedLocations.clear();
     this.nameSubstitutions.clear();
 
-    if (!slotData?.proof_structure) {
+    // Accept either proof_structure (MetaMath) or graph_structure (DepGraph)
+    const structure = slotData?.proof_structure || slotData?.graph_structure;
+    if (!structure) {
       this.isLoaded = false;
       return false;
     }
 
-    const proofStructure = slotData.proof_structure;
-    this.theoremName = slotData.theorem || null;
+    const isGraphStructure = !slotData.proof_structure && !!slotData.graph_structure;
+    this.theoremName = slotData.theorem || slotData.title || null;
 
     // Build name substitution map (both items and locations)
     if (nameSubstitutions?.items) {
@@ -85,14 +89,15 @@ export class ProofBaseState {
       }
     }
 
-    // Detect naming scheme: if name_substitutions has item entries, the game
-    // uses generic "Statement N" / "Prove Statement N" names with substitutions.
-    // Otherwise (worldgen), items/locations use "label: expression" directly.
-    const useGenericNames = this.nameSubstitutions.size > 0;
+    // Detect naming scheme based on structure type and name_substitutions:
+    // - DepGraph (graph_structure): "Node N" / "Complete Node N"
+    // - MetaMath with substitutions: "Statement N" / "Prove Statement N"
+    // - MetaMath worldgen (no substitutions): "label: expression" / "Prove label: expression"
+    const useGenericNames = !isGraphStructure && this.nameSubstitutions.size > 0;
 
     // Parse each statement into a ProofStep
     let maxIndex = 0;
-    for (const [indexStr, stmt] of Object.entries(proofStructure)) {
+    for (const [indexStr, stmt] of Object.entries(structure)) {
       const index = parseInt(indexStr, 10);
       if (isNaN(index)) continue;
 
@@ -100,8 +105,20 @@ export class ProofBaseState {
       const expression = stmt.expression || '';
       const directName = `${label}: ${expression}`;
 
-      const itemName = useGenericNames ? `Statement ${index}` : directName;
-      const locationName = useGenericNames ? `Prove Statement ${index}` : `Prove ${directName}`;
+      let itemName, locationName;
+      if (isGraphStructure) {
+        // DepGraph naming: "Node N" / "Complete Node N"
+        itemName = `Node ${index}`;
+        locationName = `Complete Node ${index}`;
+      } else if (useGenericNames) {
+        // MetaMath with substitutions: "Statement N" / "Prove Statement N"
+        itemName = `Statement ${index}`;
+        locationName = `Prove Statement ${index}`;
+      } else {
+        // Direct naming (worldgen): "label: expression" / "Prove label: expression"
+        itemName = directName;
+        locationName = `Prove ${directName}`;
+      }
 
       const step = {
         index,
@@ -122,12 +139,13 @@ export class ProofBaseState {
       if (index > maxIndex) maxIndex = index;
     }
 
-    // The goal is the highest-indexed step (the final theorem)
+    // The goal is the highest-indexed step (the final theorem/node)
     this.goalStepIndex = maxIndex;
 
-    // Starting statements are available immediately and already proved
-    if (Array.isArray(slotData.starting_statements)) {
-      for (const idx of slotData.starting_statements) {
+    // Starting statements/nodes are available immediately and already proved
+    const startingIndices = slotData.starting_statements || slotData.starting_nodes || [];
+    if (Array.isArray(startingIndices)) {
+      for (const idx of startingIndices) {
         const startStep = this.steps.get(idx);
         if (startStep) {
           this.receivedItems.add(startStep.itemName);
