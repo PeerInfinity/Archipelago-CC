@@ -30,6 +30,8 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Iframe Manager Panel](./iframeManagerPanel.md) — Loading content into iframe panels
 - [Window Panel](./windowPanel.md) — Status display for a connected browser window
 - [Window Manager Panel](./windowManagerPanel.md) — Opening and managing separate windows
+- [Proof Queue](./proofQueue.md) — Table-based proof interface for MetaMath games
+- [Proof Graph](./proofGraph.md) — Visual graph of proof dependencies for MetaMath games
 
 ## Core Service Modules
 

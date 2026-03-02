@@ -89,9 +89,14 @@ If you want a non-randomized experience, enable `vanilla_placement` in your YAML
 - Complex theorems from algebra, analysis, or topology
 - Custom proofs from specialized areas
 
-## Tracking Your Progress
+## Playing with JSON Tools
 
-Since there's no dedicated client yet, you'll need to track your progress manually or use general Archipelago tracking tools. Keep notes on which statements you've collected and which locations are available based on your current items.
+The JSON Tools web client provides two dedicated panels for MetaMath games:
+
+- **[Proof Queue](../../../../docs/json/user/modules/proofQueue.md)** — A table-based interface showing your proof in standard MetaMath format. Steps are automatically queued as their dependencies become available. Supports multiple difficulty modes for assigning hypothesis references.
+- **[Proof Graph](../../../../docs/json/user/modules/proofGraph.md)** — An interactive graph where proof steps are nodes and you draw edges to connect dependencies. Provides a visual overview of the proof structure.
+
+Both panels appear automatically when a MetaMath game is loaded. In Easy difficulty mode, correct assignments in one panel are synchronized with the other.
 
 ## Mathematical Concepts
 

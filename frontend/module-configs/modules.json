@@ -210,11 +210,6 @@
       "enabled": true,
       "requires": ["stateManager"]
     },
-    "proofEntry": {
-      "path": "./modules/proofEntry/index.js",
-      "enabled": true,
-      "requires": ["stateManager"]
-    }
   },
   "loadPriority": [
     "modules",
@@ -263,7 +258,6 @@
     "windowManagerPanel",
     "ruleConverter",
     "proofQueue",
-    "proofGraph",
-    "proofEntry"
+    "proofGraph"
   ]
 }

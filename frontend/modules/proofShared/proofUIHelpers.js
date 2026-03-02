@@ -1,7 +1,7 @@
 /**
  * Shared UI helper functions for proof modules.
  *
- * Provides common utilities used by ProofQueueUI, ProofGraphUI, and ProofEntryUI:
+ * Provides common utilities used by ProofQueueUI and ProofGraphUI:
  *   - Event bus fallback wrapper
  *   - Logger factory
  *   - Proof structure detection

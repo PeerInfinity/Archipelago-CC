@@ -188,11 +188,6 @@
             },
             {
               "type": "component",
-              "componentType": "proofEntryPanel",
-              "title": "Proof Entry"
-            },
-            {
-              "type": "component",
               "componentType": "loopStatsPanel",
               "title": "Loop Stats"
             }

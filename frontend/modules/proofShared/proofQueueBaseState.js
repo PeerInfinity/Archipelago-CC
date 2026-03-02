@@ -8,7 +8,7 @@
  *   - Queue manipulation (add, remove, move, clear)
  *   - Topological sort helper
  *
- * Used by: ProofQueueState (Easy mode), ProofEntryState (Hard mode)
+ * Used by: ProofQueueState (Easy mode)
  */
 
 import { ProofBaseState } from './proofBaseState.js';
