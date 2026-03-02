@@ -71,6 +71,23 @@
       "enabled": true
     }
   },
+  "metamath": {
+    "moduleConfig": {
+      "path": "./module-configs/modules-metamath.json",
+      "enabled": true
+    },
+    "rulesConfig": {
+      "path": "./presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "enabled": true
+    },
+    "userSettings": {
+      "paths": [
+        "./settings/settings.json",
+        "./settings/settings-metamath.json"
+      ],
+      "enabled": true
+    }
+  },
   "discovery-entrance": {
     "userSettings": {
       "paths": [

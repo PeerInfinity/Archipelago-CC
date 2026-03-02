@@ -517,6 +517,7 @@ export async function initializeApplication(dependencies) {
   }, 'core');
 
   // Handle panel URL parameter (comma-separated to activate one panel per stack)
+  // Uses event bus so both desktop PanelManager and MobileLayoutManager can respond
   const panelParam = urlParams.get('panel');
   if (panelParam) {
     const panelIds = panelParam.split(',').map(s => s.trim()).filter(Boolean);
@@ -524,13 +525,8 @@ export async function initializeApplication(dependencies) {
       logger.info('init', `Activating panels from URL parameter: ${panelIds.join(', ')}`);
 
       for (const panelId of panelIds) {
-        if (panelManagerInstance && typeof panelManagerInstance.activatePanel === 'function') {
-          panelManagerInstance.activatePanel(panelId);
-          logger.info('init', `Panel activation request sent for: ${panelId}`);
-        } else {
-          logger.info('init', `Using event bus to activate panel: ${panelId}`);
-          eventBus.publish('ui:activatePanel', { panelId }, 'core');
-        }
+        logger.info('init', `Publishing panel activation for: ${panelId}`);
+        eventBus.publish('ui:activatePanel', { panelId }, 'core');
       }
     }, 1500);
   }

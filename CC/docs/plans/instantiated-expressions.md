@@ -120,7 +120,7 @@ const step = {
 
 - Steps where `instantiated_expression` equals `expression` (axioms/definitions): field is omitted from JSON, frontend falls back to `expression`. No visual change.
 - Hardcoded fallback proof: No `instantiated_expression` set — uses existing concrete expressions which are already correct.
-- Other proof modules (proofGraph, proofEntry): They read from the same `proofBaseState.js` so they'll have access to the field, but don't need UI changes now.
+- Other proof modules (proofGraph): They read from the same `proofBaseState.js` so they'll have access to the field, but don't need UI changes now.
 
 ## Verification
 

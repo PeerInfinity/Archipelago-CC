@@ -56,11 +56,13 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
+  registrationApi.registerEventBusSubscriberIntent('proofGraph:edgeDrawn');
 
   // Events we publish
   registrationApi.registerEventBusPublisher('proofQueue:stepChecked');
   registrationApi.registerEventBusPublisher('proofQueue:proofComplete');
   registrationApi.registerEventBusPublisher('proofQueue:queueChanged');
+  registrationApi.registerEventBusPublisher('proofQueue:hypAssigned');
 
   // Public API
   registrationApi.registerPublicFunction(moduleInfo.name, 'getProofQueueState', () => proofQueueState);

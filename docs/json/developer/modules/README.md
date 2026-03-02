@@ -59,6 +59,8 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Tests](./tests.md):** A developer panel that provides an in-app framework for running automated feature tests and integrates with Playwright for end-to-end validation.
 -   **[Text Adventure](./textAdventure.md):** Provides a text-based interface for interacting with the game world.
 -   **[Timer Panel](./timerPanel.md):** A dedicated panel that can host the Timer UI component.
+-   **[Proof Queue](./proofQueue.md):** Arrange MetaMath proof steps in dependency order with difficulty-based hypothesis assignment.
+-   **[Proof Graph](./proofGraph.md):** Reconstruct proof dependency edges in an interactive Cytoscape.js graph.
 -   **[Progress Bar Panel](./progressBarPanel.md):** A panel designed to host UI elements from the `ProgressBar` module.
 -   **[Meta Game Panel](./metaGamePanel.md):** A UI for loading and managing `MetaGame` configurations.
 -   **[Iframe Panel](./iframePanel.md):** A generic panel designed to host an `<iframe>` and connect it to the `iframeAdapter`.
@@ -73,6 +75,7 @@ These modules provide shared functionality but do not have their own UI panels.
 -   **[CommonUI](./commonUI.md):** Provides shared UI utility functions, such as rendering logic trees.
 -   **[Iframe Base](./iframe-base.md):** Communication client for standalone apps embedded in iframes.
 -   **[Path Analyzer](./pathAnalyzer.md):** The core logic and UI rendering components for the path analysis tool, used by `regionsPanel` and `pathAnalyzerPanel`.
+-   **[Proof Shared](./proofShared.md):** Base classes and helpers shared by the Proof Queue and Proof Graph modules.
 -   **[Shared](./shared.md):** Thread-agnostic utilities including rule engine, state interface, and game logic modules.
 -   **[Window Base](./window-base.md):** Communication client for standalone apps opened via `window.open()`.
 

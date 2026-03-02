@@ -420,6 +420,15 @@ export class OptionsPanelUI {
     this.unsubscribeHandles.push(
       this.eventBus.subscribe('settings:changed', settingsChangedHandler)
     );
+
+    const moduleStateHandler = () => {
+      if (this.currentView === 'home') {
+        this.showHome();
+      }
+    };
+    this.unsubscribeHandles.push(
+      this.eventBus.subscribe('module:stateChanged', moduleStateHandler)
+    );
   }
 
   // ========================================================================
@@ -431,7 +440,7 @@ export class OptionsPanelUI {
     this.clearContent();
 
     // Navigation cards
-    const cards = [
+    const allCards = [
       {
         icon: '\u2699',
         title: 'Options',
@@ -449,8 +458,16 @@ export class OptionsPanelUI {
         title: 'Discovery',
         desc: 'Discovery mode settings and discovered items display',
         view: 'discovery',
+        requiresModule: 'discovery',
       },
     ];
+
+    // Filter out cards whose required module is not loaded
+    const registry = window.centralRegistry;
+    const cards = allCards.filter(card => {
+      if (!card.requiresModule) return true;
+      return registry && registry.settingsSchemas.has(card.requiresModule);
+    });
 
     for (const card of cards) {
       const el = document.createElement('div');

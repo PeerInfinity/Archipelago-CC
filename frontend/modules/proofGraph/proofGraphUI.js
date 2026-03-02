@@ -49,6 +49,9 @@ export class ProofGraphUI {
     // Track in-flight check to prevent double-clicks
     this._checkingStep = null;
 
+    // Currently visible step indices in the graph
+    this._visibleSteps = new Set();
+
     this._createBaseUI();
     this._setupLifecycle();
   }
@@ -137,6 +140,7 @@ export class ProofGraphUI {
     subscribe('stateManager:rulesLoaded', this._handleRulesLoaded);
     subscribe('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
     subscribe('stateManager:inventoryChanged', this._handleInventoryChanged);
+    subscribe('proofQueue:hypAssigned', this._handleHypAssigned);
   }
 
   destroy() {
@@ -318,7 +322,12 @@ export class ProofGraphUI {
   _buildGraphElements() {
     const elements = [];
 
+    // Only include visible steps
+    this._visibleSteps = proofGraphState.getVisibleSteps();
+
     for (const [index, step] of proofGraphState.steps) {
+      if (!this._visibleSteps.has(index)) continue;
+
       const isAxiom = step.dependencies.length === 0;
       const isCheckable = proofGraphState.isStepCheckable(index);
       const isChecked = proofGraphState.checkedLocations.has(step.locationName);
@@ -342,7 +351,7 @@ export class ProofGraphUI {
         classes: classes.join(' '),
       });
 
-      // Add port nodes for each dependency slot (positioned at top of parent)
+      // Add port nodes for each dependency slot
       for (let slot = 0; slot < step.dependencies.length; slot++) {
         const dep = step.dependencies[slot];
         const edgeKey = `${dep}->${index}:${slot}`;
@@ -359,10 +368,10 @@ export class ProofGraphUI {
       }
     }
 
-    // Add already-drawn edges (targeting port nodes)
+    // Add already-drawn edges (only if both endpoints are visible)
     for (const edgeKey of proofGraphState.drawnEdges) {
       const edge = proofGraphState.correctEdges.get(edgeKey);
-      if (edge) {
+      if (edge && this._visibleSteps.has(edge.source) && this._visibleSteps.has(edge.target)) {
         elements.push({
           group: 'edges',
           data: {
@@ -699,6 +708,102 @@ export class ProofGraphUI {
     }, 600);
   }
 
+  // ─── Visibility Sync ────────────────────────────────────────
+
+  /**
+   * Add newly visible nodes (and their ports) to the Cytoscape graph.
+   * Returns true if any nodes were added, requiring a re-layout.
+   */
+  _syncVisibleNodes(animate) {
+    if (!this.cy) return false;
+
+    const newVisible = proofGraphState.getVisibleSteps();
+    const added = [];
+
+    for (const index of newVisible) {
+      if (this._visibleSteps.has(index)) continue;
+
+      const step = proofGraphState.steps.get(index);
+      if (!step) continue;
+
+      const isAxiom = step.dependencies.length === 0;
+      const isCheckable = proofGraphState.isStepCheckable(index);
+      const isChecked = proofGraphState.checkedLocations.has(step.locationName);
+      const isComplete = proofGraphState._isStepFullyConnected(index);
+
+      const classes = ['proof-node'];
+      if (isAxiom) classes.push('axiom');
+      if (isCheckable) classes.push('checkable');
+      if (isChecked) classes.push('checked');
+      if (isComplete && !isChecked) classes.push('connected');
+      if (index === proofGraphState.goalStepIndex) classes.push('goal');
+
+      // Add step node
+      this.cy.add({
+        group: 'nodes',
+        data: {
+          id: String(index),
+          label: step.label,
+          expression: step.expression,
+          depCount: step.dependencies.length,
+          fullText: step.fullText || '',
+        },
+        classes: classes.join(' '),
+      });
+
+      // Add port nodes
+      for (let slot = 0; slot < step.dependencies.length; slot++) {
+        const dep = step.dependencies[slot];
+        const edgeKey = `${dep}->${index}:${slot}`;
+        const filled = proofGraphState.drawnEdges.has(edgeKey);
+        this.cy.add({
+          group: 'nodes',
+          data: {
+            id: `port-${index}-${slot}`,
+            slot,
+            portOf: index,
+          },
+          classes: `port-node${filled ? ' port-filled' : ''}`,
+        });
+      }
+
+      // Temporary row — _recalculateAllRows will place it properly
+      this.nodeRows.set(String(index), 0);
+      added.push(index);
+    }
+
+    // Add any drawn edges for newly visible nodes whose both endpoints are now visible
+    if (added.length > 0) {
+      const allVisible = new Set([...this._visibleSteps, ...added]);
+      for (const edgeKey of proofGraphState.drawnEdges) {
+        const edge = proofGraphState.correctEdges.get(edgeKey);
+        if (!edge) continue;
+        if (!allVisible.has(edge.source) || !allVisible.has(edge.target)) continue;
+        // Only add if the edge element doesn't already exist
+        if (this.cy.getElementById(`edge-${edgeKey}`).nonempty()) continue;
+        this.cy.add({
+          group: 'edges',
+          data: {
+            id: `edge-${edgeKey}`,
+            source: String(edge.source),
+            target: `port-${edge.target}-${edge.slot}`,
+          },
+          classes: 'drawn-edge',
+        });
+      }
+    }
+
+    this._visibleSteps = newVisible;
+
+    if (added.length > 0) {
+      log('info', `Added ${added.length} newly visible nodes`);
+      this._recalculateAllRows();
+      if (animate !== false) this._layoutFromRows(true);
+      return true;
+    }
+    return false;
+  }
+
   // ─── Layout ───────────────────────────────────────────────
 
   _runLayout() {
@@ -717,13 +822,17 @@ export class ProofGraphUI {
    * For any checked step with undrawn incoming edges, auto-draw them
    * in both state and Cytoscape. Returns true if any edges were added.
    */
-  _autoConnectCheckedSteps() {
+  _autoConnectCheckedSteps(animate) {
     if (!this.cy) return false;
 
     const newEdges = proofGraphState.autoDrawEdgesForCheckedSteps();
     if (newEdges.length === 0) return false;
 
+    let addedToGraph = false;
     for (const { source, target, slot, edgeKey } of newEdges) {
+      // Only add edge if both endpoints are visible in the graph
+      if (!this._visibleSteps.has(source) || !this._visibleSteps.has(target)) continue;
+
       const portId = `port-${target}-${slot}`;
 
       // Add edge element targeting the port
@@ -742,9 +851,10 @@ export class ProofGraphUI {
 
       // Update row assignment for target
       this._updateRowAfterEdge(target);
+      addedToGraph = true;
     }
 
-    this._layoutFromRows(true);
+    if (addedToGraph && animate !== false) this._layoutFromRows(true);
     log('info', `Auto-connected ${newEdges.length} edges for checked steps`);
     return true;
   }
@@ -753,26 +863,39 @@ export class ProofGraphUI {
 
   /**
    * Recalculate all node rows from scratch based on drawn edges.
-   * Axioms start at row 0, all others at row 1, then drawn edges
-   * push targets to max(source rows) + 1.
+   * Axioms go to row 0. Fully-connected non-axioms are placed at
+   * max(source rows) + 1. Unconnected non-axioms are collected into
+   * a reserved bottom row below all connected nodes.
    */
   _recalculateAllRows() {
     this.nodeRows.clear();
-    for (const [index, step] of proofGraphState.steps) {
-      this.nodeRows.set(String(index), step.dependencies.length === 0 ? 0 : 1);
+
+    // Pass 1: assign axioms to row 0, others temporarily to row 1
+    const unconnected = [];
+    for (const index of this._visibleSteps) {
+      const step = proofGraphState.steps.get(index);
+      if (!step) continue;
+      if (step.dependencies.length === 0) {
+        this.nodeRows.set(String(index), 0);
+      } else {
+        this.nodeRows.set(String(index), 1);
+        if (!proofGraphState._isStepFullyConnected(index)) {
+          unconnected.push(index);
+        }
+      }
     }
 
-    // Recompute rows based on drawn edges in topological order
+    // Pass 2: recompute rows for connected nodes via drawn edges
     const visited = new Set();
     const visit = (idx) => {
       const id = String(idx);
       if (visited.has(id)) return;
+      if (!this._visibleSteps.has(idx)) return;
       visited.add(id);
 
       const drawnSources = proofGraphState.getDrawnDependenciesFor(idx);
       if (drawnSources.length === 0) return;
 
-      // Ensure all sources are visited first
       for (const srcIdx of drawnSources) {
         visit(srcIdx);
       }
@@ -789,8 +912,20 @@ export class ProofGraphUI {
       }
     };
 
-    for (const [index] of proofGraphState.steps) {
+    for (const index of this._visibleSteps) {
       visit(index);
+    }
+
+    // Pass 3: place unconnected non-axioms in a bottom row
+    if (unconnected.length > 0) {
+      let maxRow = 0;
+      for (const row of this.nodeRows.values()) {
+        if (row > maxRow) maxRow = row;
+      }
+      const bottomRow = maxRow + 1;
+      for (const index of unconnected) {
+        this.nodeRows.set(String(index), bottomRow);
+      }
     }
   }
 
@@ -863,7 +998,9 @@ export class ProofGraphUI {
     });
 
     // Compute port positions relative to their parent nodes
-    for (const [index, step] of proofGraphState.steps) {
+    for (const index of this._visibleSteps) {
+      const step = proofGraphState.steps.get(index);
+      if (!step) continue;
       const n = step.dependencies.length;
       if (n === 0) continue;
       const parentPos = positions.get(String(index));
@@ -971,6 +1108,7 @@ export class ProofGraphUI {
       this.cy = null;
     }
     this.nodeRows.clear();
+    this._visibleSteps.clear();
     this._cytoscapeLoading = false;
   }
 
@@ -978,16 +1116,73 @@ export class ProofGraphUI {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState, snapshotData);
     this._checkingStep = null; // Clear in-flight guard after snapshot sync
-    this._autoConnectCheckedSteps();
-    this._updateNodeClasses();
-    this._updateStatus();
+    this._syncAndLayout();
   }
 
   _handleInventoryChanged() {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState);
     this._checkingStep = null;
-    this._autoConnectCheckedSteps();
+    this._syncAndLayout();
+  }
+
+  /**
+   * Sync visible nodes, auto-connect edges, and run a single layout pass.
+   * Prevents double animation when both add nodes and draw edges.
+   */
+  _syncAndLayout() {
+    const nodesAdded = this._syncVisibleNodes(false);
+    const edgesAdded = this._autoConnectCheckedSteps(false);
+    if (nodesAdded || edgesAdded) {
+      this._layoutFromRows(true);
+    }
+    this._updateNodeClasses();
+    this._updateStatus();
+  }
+
+  /**
+   * Handle a correct hyp assignment from the Proof Queue (Easy mode sync).
+   * Draws the corresponding edge in the graph if both endpoints are visible.
+   */
+  _handleHypAssigned({ source, target, slot }) {
+    if (!proofGraphState.isLoaded || !this.cy) return;
+
+    // Try to draw the edge in state (may already be drawn)
+    const edgeKey = `${source}->${target}:${slot}`;
+    if (proofGraphState.drawnEdges.has(edgeKey)) return;
+
+    const result = proofGraphState.tryDrawEdge(source, target);
+    if (!result.success) return;
+
+    // Add the edge to the Cytoscape graph if both endpoints are visible
+    if (this._visibleSteps.has(source) && this._visibleSteps.has(target)) {
+      const portId = `port-${target}-${result.slot}`;
+      const drawnEdgeKey = `${source}->${target}:${result.slot}`;
+
+      // Only add if edge element doesn't already exist
+      if (this.cy.getElementById(`edge-${drawnEdgeKey}`).empty()) {
+        this.cy.add({
+          group: 'edges',
+          data: {
+            id: `edge-${drawnEdgeKey}`,
+            source: String(source),
+            target: portId,
+          },
+          classes: 'drawn-edge',
+        });
+      }
+
+      this.cy.getElementById(portId).addClass('port-filled');
+
+      const targetNode = this.cy.getElementById(String(target));
+      if (targetNode.nonempty()) {
+        this._flashNode(targetNode, 'success-flash');
+      }
+
+      this._updateRowAfterEdge(target);
+      this._layoutFromRows(true);
+    }
+
     this._updateNodeClasses();
     this._updateStatus();
   }

@@ -24,7 +24,7 @@ Metamath is a unique Archipelago world that transforms mathematical proofs into 
 
 1. **Installation**: Place the `metamath` folder in your Archipelago `worlds` directory
 2. **Generate**: Use a YAML configuration file to specify your theorem
-3. **Play**: Use general Archipelago tools to play (no dedicated client yet)
+3. **Play**: Use the JSON Tools web client — the Proof Queue and Proof Graph panels load automatically
 
 ## Available Theorems
 
@@ -58,6 +58,10 @@ Metamath:
 - [Setup Guide](setup.md) - Detailed installation and configuration
 - [Settings Guide](settings.md) - All available options explained
 - [Gameplay Guide](gameplay.md) - How to play and strategies
+
+### JSON Tools Panels
+- [Proof Queue Guide](../../../../docs/json/user/modules/proofQueue.md) - Table-based proof interface with difficulty modes
+- [Proof Graph Guide](../../../../docs/json/user/modules/proofGraph.md) - Interactive dependency graph visualization
 
 ### Resources
 - [Database Overview](database.md) - Statistics, theorem catalog, and difficulty analysis
