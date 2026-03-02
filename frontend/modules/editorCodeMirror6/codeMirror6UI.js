@@ -327,7 +327,7 @@ class CodeMirror6UI {
     log('info', `[CodeMirror6UI] Displaying content for source: ${currentSourceKey}`);
 
     if (!content.loaded) {
-      this._setEditorContent('Loading...');
+      this._setEditorContent(content.text || 'No data available.');
       return;
     }
 

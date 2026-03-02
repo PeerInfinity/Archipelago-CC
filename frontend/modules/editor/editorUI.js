@@ -455,7 +455,7 @@ class EditorUI {
     log('info', `[EditorUI] Displaying content for source: ${currentSourceKey}`);
 
     if (!content.loaded) {
-      this.textAreaElement.value = 'Loading...';
+      this.textAreaElement.value = content.text || 'No data available.';
       return;
     }
 

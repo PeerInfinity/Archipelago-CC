@@ -714,7 +714,7 @@ export class ProofGraphUI {
    * Add newly visible nodes (and their ports) to the Cytoscape graph.
    * Returns true if any nodes were added, requiring a re-layout.
    */
-  _syncVisibleNodes() {
+  _syncVisibleNodes(animate) {
     if (!this.cy) return false;
 
     const newVisible = proofGraphState.getVisibleSteps();
@@ -798,7 +798,7 @@ export class ProofGraphUI {
     if (added.length > 0) {
       log('info', `Added ${added.length} newly visible nodes`);
       this._recalculateAllRows();
-      this._layoutFromRows(true);
+      if (animate !== false) this._layoutFromRows(true);
       return true;
     }
     return false;
@@ -822,7 +822,7 @@ export class ProofGraphUI {
    * For any checked step with undrawn incoming edges, auto-draw them
    * in both state and Cytoscape. Returns true if any edges were added.
    */
-  _autoConnectCheckedSteps() {
+  _autoConnectCheckedSteps(animate) {
     if (!this.cy) return false;
 
     const newEdges = proofGraphState.autoDrawEdgesForCheckedSteps();
@@ -854,7 +854,7 @@ export class ProofGraphUI {
       addedToGraph = true;
     }
 
-    if (addedToGraph) this._layoutFromRows(true);
+    if (addedToGraph && animate !== false) this._layoutFromRows(true);
     log('info', `Auto-connected ${newEdges.length} edges for checked steps`);
     return true;
   }
@@ -1116,18 +1116,26 @@ export class ProofGraphUI {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState, snapshotData);
     this._checkingStep = null; // Clear in-flight guard after snapshot sync
-    this._syncVisibleNodes();
-    this._autoConnectCheckedSteps();
-    this._updateNodeClasses();
-    this._updateStatus();
+    this._syncAndLayout();
   }
 
   _handleInventoryChanged() {
     if (!proofGraphState.isLoaded) return;
     syncStateFromSnapshot(proofGraphState);
     this._checkingStep = null;
-    this._syncVisibleNodes();
-    this._autoConnectCheckedSteps();
+    this._syncAndLayout();
+  }
+
+  /**
+   * Sync visible nodes, auto-connect edges, and run a single layout pass.
+   * Prevents double animation when both add nodes and draw edges.
+   */
+  _syncAndLayout() {
+    const nodesAdded = this._syncVisibleNodes(false);
+    const edgesAdded = this._autoConnectCheckedSteps(false);
+    if (nodesAdded || edgesAdded) {
+      this._layoutFromRows(true);
+    }
     this._updateNodeClasses();
     this._updateStatus();
   }
