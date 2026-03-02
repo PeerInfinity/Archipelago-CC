@@ -509,46 +509,6 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     gen_worldgen_world "$template"
   done
 
-  # MetaMath theorem variant WorldGen worlds (--apply-name-substitutions for readable names)
-  gen_worldgen_world "Metamath"                    # 2p2e4 from seed 1
-  run_world_generator \
-    "frontend/presets/metamath/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
-    "worlds/metamath_canth_worldgen" "Metamath Canth WorldGen" --apply-name-substitutions
-  run_world_generator \
-    "frontend/presets/metamath/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
-    "worlds/metamath_wilth_worldgen" "Metamath Wilth WorldGen" --apply-name-substitutions
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen" "Metamath Vanilla WorldGen" --apply-name-substitutions
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
-      "worlds/metamath_canth_vanilla_worldgen" "Metamath Canth Vanilla WorldGen" --apply-name-substitutions
-    run_world_generator \
-      "frontend/presets/metamath_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
-      "worlds/metamath_wilth_vanilla_worldgen" "Metamath Wilth Vanilla WorldGen" --apply-name-substitutions
-  fi
-
-  # DepGraph graph variant WorldGen worlds
-  gen_worldgen_world "DepGraph"                      # tech_tree from seed 1
-  run_world_generator \
-    "frontend/presets/depgraph/AP_05594871498841892311/AP_05594871498841892311_rules.json" \
-    "worlds/depgraph_skill_tree_worldgen" "DepGraph Skill Tree WorldGen"
-  run_world_generator \
-    "frontend/presets/depgraph/AP_35931773795037525048/AP_35931773795037525048_rules.json" \
-    "worlds/depgraph_recipe_chain_worldgen" "DepGraph Recipe Chain WorldGen"
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/depgraph_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/depgraph_vanilla_worldgen" "DepGraph Vanilla WorldGen"
-    run_world_generator \
-      "frontend/presets/depgraph_vanilla/AP_01043188731678011336/AP_01043188731678011336_rules.json" \
-      "worlds/depgraph_skill_tree_vanilla_worldgen" "DepGraph Skill Tree Vanilla WorldGen"
-    run_world_generator \
-      "frontend/presets/depgraph_vanilla/AP_84719271504320872445/AP_84719271504320872445_rules.json" \
-      "worlds/depgraph_recipe_chain_vanilla_worldgen" "DepGraph Recipe Chain Vanilla WorldGen"
-  fi
-
   section "Regenerating templates (for WorldGen)"
   regen_templates
 
@@ -560,41 +520,6 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     gen_seed "${template} WorldGen" 1
   done
 
-  # MetaMath theorem variant WorldGen seeds
-  gen_seeds "Metamath WorldGen"
-  gen_seed "Metamath Canth WorldGen" 4
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Canth WorldGen" 5
-    gen_seed "Metamath Canth WorldGen" 6
-  fi
-  gen_seed "Metamath Wilth WorldGen" 7
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Wilth WorldGen" 8
-    gen_seed "Metamath Wilth WorldGen" 9
-  fi
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Vanilla WorldGen" 1
-    gen_seed "Metamath Canth Vanilla WorldGen" 2
-    gen_seed "Metamath Wilth Vanilla WorldGen" 3
-  fi
-
-  # DepGraph graph variant WorldGen seeds
-  gen_seeds "DepGraph WorldGen"
-  gen_seed "DepGraph Skill Tree WorldGen" 4
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "DepGraph Skill Tree WorldGen" 5
-    gen_seed "DepGraph Skill Tree WorldGen" 6
-  fi
-  gen_seed "DepGraph Recipe Chain WorldGen" 7
-  if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-    gen_seed "DepGraph Recipe Chain WorldGen" 8
-    gen_seed "DepGraph Recipe Chain WorldGen" 9
-  fi
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    gen_seed "DepGraph Vanilla WorldGen" 1
-    gen_seed "DepGraph Skill Tree Vanilla WorldGen" 2
-    gen_seed "DepGraph Recipe Chain Vanilla WorldGen" 3
-  fi
 fi
 
 # --- WorldGen2 ---
@@ -610,20 +535,6 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
     fi
   done
 
-  # MetaMath WorldGen2 (2p2e4 vanilla only)
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/metamath_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/metamath_vanilla_worldgen2" "Metamath Vanilla WorldGen2" --apply-name-substitutions
-  fi
-
-  # DepGraph WorldGen2 (tech_tree vanilla only)
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    run_world_generator \
-      "frontend/presets/depgraph_vanilla_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json" \
-      "worlds/depgraph_vanilla_worldgen2" "DepGraph Vanilla WorldGen2"
-  fi
-
   section "Regenerating templates (for WorldGen2)"
   regen_templates
 
@@ -637,15 +548,6 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
     fi
   done
 
-  # MetaMath WorldGen2 seed
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    gen_seed "Metamath Vanilla WorldGen2" 1
-  fi
-
-  # DepGraph WorldGen2 seed
-  if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-    gen_seed "DepGraph Vanilla WorldGen2" 1
-  fi
 fi
 
 # --- Cleanup ---

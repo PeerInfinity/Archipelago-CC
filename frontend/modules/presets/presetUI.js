@@ -543,6 +543,9 @@ export class PresetUI {
     );
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
+        // Save scroll position so we can restore it when navigating back
+        this._savedScrollTop = this.presetsListContainer ? this.presetsListContainer.scrollTop : 0;
+
         const gameDirectory = button.getAttribute('data-game-directory');
         const seedName = button.getAttribute('data-seed-name');
         const playerId = button.getAttribute('data-player'); // Will be null for standard buttons
@@ -564,6 +567,13 @@ export class PresetUI {
         }
       });
     });
+
+    // Restore scroll position if returning from a preset detail view
+    if (this._savedScrollTop && this.presetsListContainer) {
+      requestAnimationFrame(() => {
+        this.presetsListContainer.scrollTop = this._savedScrollTop;
+      });
+    }
   }
 
   displayLoadedJsonFileDetails(jsonData, fileName) {
