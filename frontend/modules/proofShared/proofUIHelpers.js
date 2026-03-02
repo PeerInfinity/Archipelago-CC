@@ -52,6 +52,20 @@ export function createLogger(component) {
 }
 
 /**
+ * Detect the structure type of the current game.
+ * @returns {'proof'|'graph'|null} 'proof' for MetaMath, 'graph' for DepGraph, null if neither
+ */
+export function getStructureType() {
+  const staticData = stateManager.getStaticData();
+  if (!staticData?.world) return null;
+  const playerId = staticData.playerId || '1';
+  const slotData = staticData.world[playerId]?.slot_data;
+  if (slotData?.proof_structure) return 'proof';
+  if (slotData?.graph_structure) return 'graph';
+  return null;
+}
+
+/**
  * Check if the current game has a proof or graph structure.
  * Accepts either proof_structure (MetaMath) or graph_structure (DepGraph).
  * @returns {boolean}

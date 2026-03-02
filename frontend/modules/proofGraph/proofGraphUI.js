@@ -69,7 +69,7 @@ export class ProofGraphUI {
     // Header
     this._headerEl = document.createElement('div');
     this._headerEl.className = 'pg-header';
-    this._headerEl.textContent = 'Proof Graph';
+    this._headerEl.textContent = proofGraphState.structureType === 'graph' ? 'Connection Graph' : 'Proof Graph';
     this.rootElement.appendChild(this._headerEl);
 
     // Toolbar
@@ -78,7 +78,7 @@ export class ProofGraphUI {
     this._toolbarEl.innerHTML = `
       <button class="pg-btn pg-btn-layout" title="Re-run layout algorithm">Re-layout</button>
       <button class="pg-btn pg-btn-fit" title="Fit graph to viewport">Fit</button>
-      <button class="pg-btn pg-btn-check" title="Check a fully-connected step">Check Next</button>
+      <button class="pg-btn pg-btn-check" title="Check a fully-connected node">Check Next</button>
     `;
     this.rootElement.appendChild(this._toolbarEl);
 
@@ -90,7 +90,7 @@ export class ProofGraphUI {
     // Status bar
     this._statusEl = document.createElement('div');
     this._statusEl.className = 'pg-status';
-    this._statusEl.textContent = 'Load a MetaMath game to begin.';
+    this._statusEl.textContent = 'Load a game to begin.';
     this.rootElement.appendChild(this._statusEl);
 
     // Toolbar handlers
@@ -120,7 +120,7 @@ export class ProofGraphUI {
       syncStateFromSnapshot(proofGraphState);
       this._loadCytoscape();
     } else if (hasProofStructure() && !proofGraphState.isLoaded) {
-      log('info', 'Proof structure available but state not loaded — loading from static data');
+      log('info', 'Graph structure available but state not loaded — loading from static data');
       ensureStateLoaded(proofGraphState);
       if (proofGraphState.isLoaded) {
         syncStateFromSnapshot(proofGraphState);
@@ -256,7 +256,10 @@ export class ProofGraphUI {
       return;
     }
 
-    log('info', 'Initializing proof graph...');
+    log('info', 'Initializing graph...');
+
+    // Update header based on structure type
+    this._headerEl.textContent = proofGraphState.structureType === 'graph' ? 'Connection Graph' : 'Proof Graph';
 
     // Auto-draw edges for any steps already checked before graph init
     const autoDrawn = proofGraphState.autoDrawEdgesForCheckedSteps();
@@ -316,7 +319,7 @@ export class ProofGraphUI {
     this._updateStatus();
     this._updateNodeClasses();
 
-    log('info', 'Proof graph initialized');
+    log('info', 'Graph initialized');
   }
 
   _buildGraphElements() {
@@ -1042,14 +1045,16 @@ export class ProofGraphUI {
   // ─── Status ───────────────────────────────────────────────
 
   _updateStatus() {
+    const isGraph = proofGraphState.structureType === 'graph';
+
     if (!proofGraphState.isLoaded) {
-      this._statusEl.textContent = 'Load a MetaMath game to begin.';
+      this._statusEl.textContent = isGraph ? 'Load a DepGraph game to begin.' : 'Load a MetaMath game to begin.';
       this._statusEl.className = 'pg-status';
       return;
     }
 
     if (proofGraphState.isProofComplete()) {
-      this._statusEl.textContent = 'Proof complete!';
+      this._statusEl.textContent = isGraph ? 'Solution complete!' : 'Proof complete!';
       this._statusEl.className = 'pg-status pg-status-complete';
       return;
     }
@@ -1072,9 +1077,9 @@ export class ProofGraphUI {
     log('info', 'Rules loaded, checking for proof structure');
 
     if (!hasProofStructure()) {
-      log('info', 'Not a MetaMath game — hiding proof graph');
+      log('info', 'No graph structure — hiding graph');
       this._destroyGraph();
-      this._statusEl.textContent = 'This game has no proof structure.';
+      this._statusEl.textContent = 'No graph structure found.';
       this._toolbarEl.style.display = 'none';
       return;
     }

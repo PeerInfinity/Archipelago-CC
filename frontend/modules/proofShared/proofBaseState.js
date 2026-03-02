@@ -46,6 +46,9 @@ export class ProofBaseState {
 
     /** @type {boolean} Whether proof structure data has been loaded */
     this.isLoaded = false;
+
+    /** @type {'proof'|'graph'|null} Structure type: 'proof' for MetaMath, 'graph' for DepGraph */
+    this.structureType = null;
   }
 
   // ─── Proof Structure Parsing ──────────────────────────────
@@ -71,10 +74,12 @@ export class ProofBaseState {
     const structure = slotData?.proof_structure || slotData?.graph_structure;
     if (!structure) {
       this.isLoaded = false;
+      this.structureType = null;
       return false;
     }
 
     const isGraphStructure = !slotData.proof_structure && !!slotData.graph_structure;
+    this.structureType = isGraphStructure ? 'graph' : 'proof';
     this.theoremName = slotData.theorem || slotData.title || null;
 
     // Build name substitution map (both items and locations)

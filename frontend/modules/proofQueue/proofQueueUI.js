@@ -29,6 +29,7 @@ import {
   createEventBusGetter,
   createLogger,
   hasProofStructure,
+  getStructureType,
   syncStateFromSnapshot,
   ensureStateLoaded,
   dispatchLocationCheck,
@@ -105,6 +106,16 @@ export class ProofQueueUI {
     return this.rootElement;
   }
 
+  /**
+   * Whether we're displaying a graph (DepGraph) vs proof (MetaMath).
+   * Uses state if loaded, falls back to static data detection.
+   * @returns {boolean}
+   */
+  _isGraphMode() {
+    if (proofQueueState?.structureType) return proofQueueState.structureType === 'graph';
+    return getStructureType() === 'graph';
+  }
+
   // ─── Step Classification ─────────────────────────────────
 
   /**
@@ -131,7 +142,7 @@ export class ProofQueueUI {
     // Header
     this._headerEl = document.createElement('div');
     this._headerEl.className = 'pq-header';
-    this._headerEl.textContent = 'Proof Queue';
+    this._headerEl.textContent = this._isGraphMode() ? 'Connection Tracker' : 'Proof Queue';
     this.rootElement.appendChild(this._headerEl);
 
     // Toolbar (single row)
@@ -142,10 +153,10 @@ export class ProofQueueUI {
     row1.className = 'pq-toolbar-row';
 
     // Difficulty selector
-    const diffLabel = document.createElement('span');
-    diffLabel.className = 'pq-checkbox-label';
-    diffLabel.textContent = 'Hyp:';
-    row1.appendChild(diffLabel);
+    this._diffLabel = document.createElement('span');
+    this._diffLabel.className = 'pq-checkbox-label';
+    this._diffLabel.textContent = this._isGraphMode() ? 'Deps:' : 'Hyp:';
+    row1.appendChild(this._diffLabel);
 
     this._selectDifficulty = document.createElement('select');
     this._selectDifficulty.className = 'pq-select-difficulty';
@@ -184,10 +195,10 @@ export class ProofQueueUI {
     this._provenSectionEl.style.display = 'none';
 
     // Section label
-    const provenLabel = document.createElement('div');
-    provenLabel.className = 'pq-section-label';
-    provenLabel.textContent = 'Proven Steps';
-    this._provenSectionEl.appendChild(provenLabel);
+    this._provenLabelEl = document.createElement('div');
+    this._provenLabelEl.className = 'pq-section-label';
+    this._provenLabelEl.textContent = this._isGraphMode() ? 'Completed Nodes' : 'Proven Steps';
+    this._provenSectionEl.appendChild(this._provenLabelEl);
 
     // Theorem header
     this._theoremHeaderEl = document.createElement('div');
@@ -198,13 +209,15 @@ export class ProofQueueUI {
     const provenTable = document.createElement('table');
     provenTable.className = 'pq-proven-table';
     const provenThead = document.createElement('thead');
+    const hypLabel = this._isGraphMode() ? 'Deps' : 'Hyp';
     provenThead.innerHTML = `<tr>
       <th class="pq-col-step">Step</th>
-      <th class="pq-col-hyp">Hyp</th>
+      <th class="pq-col-hyp">${hypLabel}</th>
       <th class="pq-col-ref">Ref</th>
       <th class="pq-col-expr">Expression</th>
       <th class="pq-col-type">Type</th>
     </tr>`;
+    this._provenHypTh = provenThead.querySelector('.pq-col-hyp');
     provenTable.appendChild(provenThead);
     this._provenBodyEl = document.createElement('tbody');
     provenTable.appendChild(this._provenBodyEl);
@@ -235,11 +248,12 @@ export class ProofQueueUI {
     const queueThead = document.createElement('thead');
     queueThead.innerHTML = `<tr>
       <th class="pq-col-step">Step</th>
-      <th class="pq-col-hyp">Hyp</th>
+      <th class="pq-col-hyp">${hypLabel}</th>
       <th class="pq-col-ref">Ref</th>
       <th class="pq-col-expr">Expression</th>
       <th class="pq-col-type">Type</th>
     </tr>`;
+    this._queueHypTh = queueThead.querySelector('.pq-col-hyp');
     queueTable.appendChild(queueThead);
     this._queueBodyEl = document.createElement('tbody');
     queueTable.appendChild(this._queueBodyEl);
@@ -251,7 +265,7 @@ export class ProofQueueUI {
     // Status bar
     this._statusEl = document.createElement('div');
     this._statusEl.className = 'pq-status';
-    this._statusEl.textContent = 'Load a MetaMath game to begin.';
+    this._statusEl.textContent = 'Load a game to begin.';
     this.rootElement.appendChild(this._statusEl);
 
     // ─── Wire toolbar handlers ───────────────────────────
@@ -340,9 +354,9 @@ export class ProofQueueUI {
     log('info', 'Rules loaded, checking for proof structure');
 
     if (!hasProofStructure()) {
-      log('info', 'Not a MetaMath game — hiding proof queue');
+      log('info', 'No graph structure — hiding queue');
       this._showEmptyState();
-      this._statusEl.textContent = 'This game has no proof structure.';
+      this._statusEl.textContent = 'No graph structure found.';
       return;
     }
 
@@ -476,11 +490,14 @@ export class ProofQueueUI {
 
   _updateDifficultyDesc() {
     if (!this._difficultyDescEl) return;
+    const isGraph = this._isGraphMode();
+    const refWord = isGraph ? 'dep refs' : 'hyp refs';
+    const stepWord = isGraph ? 'completed nodes' : 'proven steps';
     const descs = {
-      trivial: 'Hyp values auto-filled',
-      easy: 'Assign hyp refs by typing or clicking proven steps (default)',
-      medium: 'Assign hyp refs; all lock when step is complete',
-      hard: 'Assign hyp refs; wrong answer = 5s cooldown',
+      trivial: isGraph ? 'Dep values auto-filled' : 'Hyp values auto-filled',
+      easy: `Assign ${refWord} by typing or clicking ${stepWord} (default)`,
+      medium: `Assign ${refWord}; all lock when node is complete`,
+      hard: `Assign ${refWord}; wrong answer = 5s cooldown`,
     };
     this._difficultyDescEl.textContent = descs[this._getDifficulty()] || '';
   }
@@ -685,9 +702,14 @@ export class ProofQueueUI {
     this._toolbarEl.style.display = '';
 
     // Update header
-    this._headerEl.textContent = proofQueueState.theoremName
-      ? `Proof Queue: ${proofQueueState.theoremName}`
-      : 'Proof Queue';
+    const isGraph = this._isGraphMode();
+    if (proofQueueState.theoremName) {
+      this._headerEl.textContent = isGraph
+        ? `Connection Tracker: ${proofQueueState.theoremName}`
+        : `Proof Queue: ${proofQueueState.theoremName}`;
+    } else {
+      this._headerEl.textContent = isGraph ? 'Connection Tracker' : 'Proof Queue';
+    }
 
     // Rebuild proven order
     this._updateProvenOrder();
@@ -730,21 +752,38 @@ export class ProofQueueUI {
 
     this._provenSectionEl.style.display = '';
 
-    // Show theorem header (prefer instantiated expression for concrete values)
+    const isGraph = this._isGraphMode();
+
+    // Update labels based on mode
+    if (this._provenLabelEl) {
+      this._provenLabelEl.textContent = isGraph ? 'Completed Nodes' : 'Proven Steps';
+    }
+    const hypLabel = isGraph ? 'Deps' : 'Hyp';
+    if (this._provenHypTh) this._provenHypTh.textContent = hypLabel;
+    if (this._queueHypTh) this._queueHypTh.textContent = hypLabel;
+    if (this._diffLabel) this._diffLabel.textContent = isGraph ? 'Deps:' : 'Hyp:';
+
+    // Show theorem/title header (prefer instantiated expression for concrete values)
     const goalStep = proofQueueState.steps.get(proofQueueState.goalStepIndex);
     if (goalStep) {
       const name = proofQueueState.theoremName || goalStep.label;
       const goalExpr = goalStep.instantiatedExpression || goalStep.expression;
       this._theoremHeaderEl.innerHTML = '';
-      this._theoremHeaderEl.appendChild(document.createTextNode('Theorem '));
-      const link = document.createElement('a');
-      link.className = 'pq-ref-link';
-      link.href = `https://us.metamath.org/mpeuni/${name}.html`;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = name;
-      this._theoremHeaderEl.appendChild(link);
-      this._theoremHeaderEl.appendChild(document.createTextNode(`: ${goalExpr}`));
+      if (isGraph) {
+        // Graph mode: plain title without "Theorem" prefix or link
+        this._theoremHeaderEl.appendChild(document.createTextNode(`${name}: ${goalExpr}`));
+      } else {
+        // Proof mode: "Theorem" prefix with MetaMath link
+        this._theoremHeaderEl.appendChild(document.createTextNode('Theorem '));
+        const link = document.createElement('a');
+        link.className = 'pq-ref-link';
+        link.href = `https://us.metamath.org/mpeuni/${name}.html`;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = name;
+        this._theoremHeaderEl.appendChild(link);
+        this._theoremHeaderEl.appendChild(document.createTextNode(`: ${goalExpr}`));
+      }
     }
 
     // Build stepIndex → row number map (shared with queue rendering)
@@ -794,16 +833,20 @@ export class ProofQueueUI {
       tdHyp.textContent = this._formatHyp(step.dependencies, this._stepToRow);
       tr.appendChild(tdHyp);
 
-      // Ref column (always linked)
+      // Ref column (linked for proof mode, plain text for graph mode)
       const tdRef = document.createElement('td');
       tdRef.className = 'pq-col-ref';
-      const refLink = document.createElement('a');
-      refLink.className = 'pq-ref-link';
-      refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
-      refLink.target = '_blank';
-      refLink.rel = 'noopener';
-      refLink.textContent = step.label;
-      tdRef.appendChild(refLink);
+      if (isGraph) {
+        tdRef.textContent = step.label;
+      } else {
+        const refLink = document.createElement('a');
+        refLink.className = 'pq-ref-link';
+        refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
+        refLink.target = '_blank';
+        refLink.rel = 'noopener';
+        refLink.textContent = step.label;
+        tdRef.appendChild(refLink);
+      }
       tr.appendChild(tdRef);
 
       // Expression column (prefer instantiated expression for concrete values)
@@ -828,34 +871,44 @@ export class ProofQueueUI {
       }
       tr.appendChild(tdExpr);
 
-      // Type column
+      // Type column (hidden in graph mode)
       const tdType = document.createElement('td');
       tdType.className = 'pq-col-type';
-      const badge = document.createElement('span');
-      badge.className = `pq-type-badge ${classification.cssClass}`;
-      badge.textContent = classification.abbrev;
-      badge.title = classification.type;
-      tdType.appendChild(badge);
+      if (isGraph) {
+        tdType.textContent = 'Node';
+      } else {
+        const badge = document.createElement('span');
+        badge.className = `pq-type-badge ${classification.cssClass}`;
+        badge.textContent = classification.abbrev;
+        badge.title = classification.type;
+        tdType.appendChild(badge);
+      }
       tr.appendChild(tdType);
 
       this._provenBodyEl.appendChild(tr);
     }
 
-    // Show/hide QED with theorem link
+    // Show/hide completion marker
     if (isComplete) {
       this._qedEl.innerHTML = '';
-      this._qedEl.appendChild(document.createTextNode('Q.E.D.'));
-      const name = proofQueueState.theoremName;
-      if (name) {
-        const sep = document.createTextNode(' \u2014 ');
-        const link = document.createElement('a');
-        link.className = 'pq-ref-link';
-        link.href = `https://us.metamath.org/mpeuni/${name}.html`;
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = name;
-        this._qedEl.appendChild(sep);
-        this._qedEl.appendChild(link);
+      if (isGraph) {
+        // Graph mode: simple completion text
+        this._qedEl.appendChild(document.createTextNode('Complete'));
+      } else {
+        // Proof mode: Q.E.D. with theorem link
+        this._qedEl.appendChild(document.createTextNode('Q.E.D.'));
+        const name = proofQueueState.theoremName;
+        if (name) {
+          const sep = document.createTextNode(' \u2014 ');
+          const link = document.createElement('a');
+          link.className = 'pq-ref-link';
+          link.href = `https://us.metamath.org/mpeuni/${name}.html`;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = name;
+          this._qedEl.appendChild(sep);
+          this._qedEl.appendChild(link);
+        }
       }
       this._qedEl.style.display = '';
     } else {
@@ -901,6 +954,7 @@ export class ProofQueueUI {
     }
 
     const showDetails = this._cbShowDetails && this._cbShowDetails.checked;
+    const isGraph = this._isGraphMode();
 
     for (const entry of unchecked) {
       const { step, valid, checkable, missingDeps, originalIndex } = entry;
@@ -944,16 +998,20 @@ export class ProofQueueUI {
       this._renderHypCell(tdHyp, step);
       tr.appendChild(tdHyp);
 
-      // Ref column (always linked)
+      // Ref column (linked for proof mode, plain text for graph mode)
       const tdRef = document.createElement('td');
       tdRef.className = 'pq-col-ref';
-      const refLink = document.createElement('a');
-      refLink.className = 'pq-ref-link';
-      refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
-      refLink.target = '_blank';
-      refLink.rel = 'noopener';
-      refLink.textContent = step.label;
-      tdRef.appendChild(refLink);
+      if (isGraph) {
+        tdRef.textContent = step.label;
+      } else {
+        const refLink = document.createElement('a');
+        refLink.className = 'pq-ref-link';
+        refLink.href = `https://us.metamath.org/mpeuni/${step.label}.html`;
+        refLink.target = '_blank';
+        refLink.rel = 'noopener';
+        refLink.textContent = step.label;
+        tdRef.appendChild(refLink);
+      }
       tr.appendChild(tdRef);
 
       // Expression column (generic in working area)
@@ -976,14 +1034,18 @@ export class ProofQueueUI {
       }
       tr.appendChild(tdExpr);
 
-      // Type column
+      // Type column (hidden in graph mode)
       const tdType = document.createElement('td');
       tdType.className = 'pq-col-type';
-      const badge = document.createElement('span');
-      badge.className = `pq-type-badge ${classification.cssClass}`;
-      badge.textContent = classification.abbrev;
-      badge.title = classification.type;
-      tdType.appendChild(badge);
+      if (isGraph) {
+        tdType.textContent = 'Node';
+      } else {
+        const badge = document.createElement('span');
+        badge.className = `pq-type-badge ${classification.cssClass}`;
+        badge.textContent = classification.abbrev;
+        badge.title = classification.type;
+        tdType.appendChild(badge);
+      }
       tr.appendChild(tdType);
 
       this._queueBodyEl.appendChild(tr);
@@ -1003,8 +1065,10 @@ export class ProofQueueUI {
   _renderStatus() {
     if (!proofQueueState) return;
 
+    const isGraph = this._isGraphMode();
+
     if (proofQueueState.isProofComplete()) {
-      this._statusEl.textContent = 'Proof complete!';
+      this._statusEl.textContent = isGraph ? 'Solution complete!' : 'Proof complete!';
       this._statusEl.className = 'pq-status pq-status-complete';
       return;
     }
@@ -1016,7 +1080,8 @@ export class ProofQueueUI {
     const queueWithStatus = proofQueueState.getQueueWithStatus();
     const inQueue = queueWithStatus.filter(e => !e.alreadyChecked).length;
 
-    this._statusEl.textContent = `${proved}/${total} proved | ${inQueue} in queue`;
+    const verb = isGraph ? 'completed' : 'proved';
+    this._statusEl.textContent = `${proved}/${total} ${verb} | ${inQueue} in queue`;
     this._statusEl.className = 'pq-status';
   }
 
