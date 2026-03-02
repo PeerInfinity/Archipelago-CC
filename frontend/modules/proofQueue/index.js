@@ -1,8 +1,8 @@
 /**
- * Proof Queue module — MetaMath Easy mode.
+ * Proof Queue module — MetaMath Easy mode / DepGraph connection tracker.
  *
  * Provides a panel where players arrange proof steps in dependency order.
- * Only active when a MetaMath game is loaded (detected via slot_data.proof_structure).
+ * Active when a game with proof_structure (MetaMath) or graph_structure (DepGraph) is loaded.
  */
 
 import proofQueueState from './proofQueueStateSingleton.js';
@@ -10,6 +10,7 @@ import { ProofQueueUI, setModuleEventBus, setDispatcher } from './proofQueueUI.j
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import {
   getPlayerWorld,
+  hasStructureData,
   syncStateFromSnapshot,
   createLogger,
   initializeProofState,
@@ -96,7 +97,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Check if rules are already loaded (late initialization)
   const staticData = stateManager.getStaticData();
-  if (getPlayerWorld(staticData)?.slot_data?.proof_structure) {
+  if (hasStructureData(getPlayerWorld(staticData)?.slot_data)) {
     initializeProofState(proofQueueState, staticData, log, _wireEventBusPublishing);
   }
 

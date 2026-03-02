@@ -1,8 +1,9 @@
 /**
- * Shared helper functions for proof module index.js files.
+ * Shared helper functions for proof/graph module index.js files.
  *
- * Provides common utilities used by all three proof module entry points:
+ * Provides common utilities used by all proof module entry points:
  *   - Player world extraction from static data
+ *   - Structure detection (proof_structure or graph_structure)
  *   - State snapshot synchronization
  */
 
@@ -57,8 +58,19 @@ export function createLogger(moduleName) {
 }
 
 /**
- * Initialize proof state from static data.
- * Common pattern used by all three module index.js initialize functions.
+ * Check if slot data contains a proof or graph structure.
+ * @param {Object} slotData
+ * @returns {boolean}
+ */
+export function hasStructureData(slotData) {
+  return !!(slotData?.proof_structure || slotData?.graph_structure);
+}
+
+/**
+ * Initialize proof/graph state from static data.
+ * Common pattern used by all proof module index.js initialize functions.
+ *
+ * Accepts either proof_structure (MetaMath) or graph_structure (DepGraph).
  *
  * @param {Object} state - The proof state instance
  * @param {Object} staticData - Static data from stateManager
@@ -68,33 +80,35 @@ export function createLogger(moduleName) {
  */
 export function initializeProofState(state, staticData, log, wirePublishing) {
   const playerWorld = getPlayerWorld(staticData);
-  if (!playerWorld?.slot_data?.proof_structure) {
-    log('info', 'No proof_structure — not a MetaMath game');
+  const slotData = playerWorld?.slot_data;
+  if (!hasStructureData(slotData)) {
+    log('info', 'No proof_structure or graph_structure — not a proof/graph game');
     return false;
   }
 
   // If already loaded (UI handler may have loaded it first), just wire up
   // event bus publishing without re-loading or overwriting existing callbacks.
   if (state.isLoaded) {
-    log('info', 'Proof structure already loaded, wiring event bus publishing');
+    log('info', 'Structure already loaded, wiring event bus publishing');
     wirePublishing();
     syncStateFromSnapshot(state);
     return true;
   }
 
-  log('info', 'Found MetaMath proof structure, initializing...');
+  const structureType = slotData.proof_structure ? 'proof' : 'graph';
+  log('info', `Found ${structureType} structure, initializing...`);
 
   const success = state.loadFromSlotData(
-    playerWorld.slot_data,
+    slotData,
     playerWorld.name_substitutions
   );
 
   if (!success) {
-    log('warn', 'Failed to load proof structure from slot data');
+    log('warn', `Failed to load ${structureType} structure from slot data`);
     return false;
   }
 
-  log('info', `Loaded proof for "${state.theoremName}" with ${state.steps.size} steps`);
+  log('info', `Loaded ${structureType} "${state.theoremName}" with ${state.steps.size} steps`);
 
   syncStateFromSnapshot(state);
   wirePublishing();

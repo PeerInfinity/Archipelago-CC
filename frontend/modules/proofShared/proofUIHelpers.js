@@ -52,7 +52,8 @@ export function createLogger(component) {
 }
 
 /**
- * Check if the current game has a MetaMath proof structure.
+ * Check if the current game has a proof or graph structure.
+ * Accepts either proof_structure (MetaMath) or graph_structure (DepGraph).
  * @returns {boolean}
  */
 export function hasProofStructure() {
@@ -60,7 +61,8 @@ export function hasProofStructure() {
   if (!staticData?.world) return false;
   const playerId = staticData.playerId || '1';
   const playerWorld = staticData.world[playerId];
-  return !!playerWorld?.slot_data?.proof_structure;
+  const slotData = playerWorld?.slot_data;
+  return !!(slotData?.proof_structure || slotData?.graph_structure);
 }
 
 /**
@@ -145,8 +147,10 @@ export function dispatchLocationCheck(step, state, dispatcher, originator, log, 
 }
 
 /**
- * Load proof state from static data if not already loaded.
- * Common pattern used by all three UI _handleRulesLoaded methods.
+ * Load proof/graph state from static data if not already loaded.
+ * Common pattern used by all UI _handleRulesLoaded methods.
+ *
+ * Accepts either proof_structure (MetaMath) or graph_structure (DepGraph).
  *
  * @param {Object} state - The proof state instance
  * @returns {boolean} Whether state is loaded after this call
@@ -159,8 +163,9 @@ export function ensureStateLoaded(state) {
 
   const playerId = staticData.playerId || '1';
   const playerWorld = staticData.world[playerId];
-  if (!playerWorld?.slot_data?.proof_structure) return false;
+  const slotData = playerWorld?.slot_data;
+  if (!slotData?.proof_structure && !slotData?.graph_structure) return false;
 
-  state.loadFromSlotData(playerWorld.slot_data, playerWorld.name_substitutions);
+  state.loadFromSlotData(slotData, playerWorld.name_substitutions);
   return state.isLoaded;
 }

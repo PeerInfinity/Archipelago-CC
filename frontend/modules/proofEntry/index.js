@@ -3,7 +3,7 @@
  *
  * Provides a panel where players must type theorem labels or expressions
  * to discover proof steps, then arrange them in dependency order.
- * Only active when a MetaMath game is loaded (detected via slot_data.proof_structure).
+ * Active when a game with proof_structure or graph_structure is loaded.
  */
 
 import proofEntryState from './proofEntryStateSingleton.js';
@@ -11,6 +11,7 @@ import { ProofEntryUI, setModuleEventBus, setDispatcher } from './proofEntryUI.j
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import {
   getPlayerWorld,
+  hasStructureData,
   syncStateFromSnapshot,
   createLogger,
   initializeProofState,
@@ -97,7 +98,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Check if rules already loaded
   const staticData = stateManager.getStaticData();
-  if (getPlayerWorld(staticData)?.slot_data?.proof_structure) {
+  if (hasStructureData(getPlayerWorld(staticData)?.slot_data)) {
     initializeProofState(proofEntryState, staticData, log, _wireEventBusPublishing);
   }
 

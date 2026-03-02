@@ -88,6 +88,23 @@
       "enabled": true
     }
   },
+  "depgraph": {
+    "moduleConfig": {
+      "path": "./module-configs/modules-depgraph.json",
+      "enabled": true
+    },
+    "rulesConfig": {
+      "path": "./presets/depgraph/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+      "enabled": true
+    },
+    "userSettings": {
+      "paths": [
+        "./settings/settings.json",
+        "./settings/settings-depgraph.json"
+      ],
+      "enabled": true
+    }
+  },
   "discovery-entrance": {
     "userSettings": {
       "paths": [
