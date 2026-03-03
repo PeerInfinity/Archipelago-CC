@@ -7,7 +7,7 @@ import {
     ZONES, PERKS, PerkType, SkillType, TaskType,
     SKILL_XP_MULT, SKILL_NAMES, PERK_NAMES, getMandatoryTasks,
     ENERGY_ITEMS, ItemType, ARTIFACTS, HASTE_MULT, MAGIC_RING_MULT,
-    ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS
+    BOTTLED_LIGHTNING_MULT, ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS
 } from './gameData.js';
 
 // Game constants from simulation.ts
@@ -20,13 +20,14 @@ const TICK_RATE_MS = 66.6;
 const STARTING_ENERGY = 100;
 const ENERGETIC_MEMORY_MULT = 0.1;
 const REFLECTIONS_BASE = 0.95;
-const MAJOR_TIME_COMPRESSION_EFFECT = 2.0;
+const MAJOR_TIME_COMPRESSION_EFFECT = 1.5;
 
 /**
  * Calculate the base cost of a task
  */
 export function calcTaskCost(task, zoneId) {
-    return BASE_COST * task.costMult * Math.pow(ZONE_COST_EXPONENT, zoneId);
+    const exp = task.type === TaskType.Boss ? 4 : ZONE_COST_EXPONENT;
+    return BASE_COST * task.costMult * Math.pow(exp, zoneId);
 }
 
 /**
@@ -83,10 +84,15 @@ export function calcProgressPerTick(task, zoneId, state) {
         mult *= (1 + state.power / 100);
     }
 
-    // Attunement bonus (for Druid/Magic/Study)
-    const attunementSkills = [SkillType.Druid, SkillType.Magic, SkillType.Study];
+    // Attunement bonus (for Magic/Study)
+    const attunementSkills = [SkillType.Magic, SkillType.Study];
     if (state.perks.has(PerkType.Attunement) && task.skills.some(s => attunementSkills.includes(s))) {
         mult *= (1 + state.attunement / 1000);
+    }
+
+    // BottledLightning - 2x speed for boss tasks
+    if (task.type === TaskType.Boss && state.bottledLightnings > 0) {
+        mult *= BOTTLED_LIGHTNING_MULT;
     }
 
     return mult;
@@ -187,7 +193,7 @@ export function calcXpNeeded(level, skillType) {
  * A rep takes ceil(cost / progress) ticks to complete.
  * Total XP per rep = ticks * progress * 8 * xpMult ≈ cost * 8 * xpMult
  *
- * @param xpBoosted - if true, applies Magic Ring 3x XP multiplier
+ * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
 export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
     const progress = calcProgressPerTick(task, zoneId, state);
@@ -203,10 +209,15 @@ export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
         xp *= 1.5;
     }
 
+    // Gazed Beyond the Veil perk - 2x XP
+    if (state.perks.has(PerkType.GazedBeyondTheVeil)) {
+        xp *= 2;
+    }
+
     // Zone scaling
     xp *= Math.pow(1.25, zoneId);
 
-    // Magic Ring - 3x XP boost
+    // Magic Ring - 5x XP boost
     if (xpBoosted) {
         xp *= MAGIC_RING_MULT;
     }
@@ -278,7 +289,7 @@ export function getReachableZones(startingEnergy, state, maxZone = ZONES.length 
  *
  * @param reps - number of full task completions (each completion = maxReps of the task)
  * @param actualReps - if set, use this for XP calculation instead of task.maxReps
- * @param xpBoosted - if true, applies Magic Ring 3x XP multiplier
+ * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
 function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
     const xpPerRep = calcTaskXp(task, zoneId, state, xpBoosted);
@@ -1159,6 +1170,7 @@ export function doEnergyReset(state) {
     // Artifacts also persist at 50%
     state.scrollsOfHaste = Math.ceil(state.scrollsOfHaste / 2);
     state.magicRings = Math.ceil(state.magicRings / 2);
+    state.bottledLightnings = Math.ceil(state.bottledLightnings / 2);
 
     // Reset items found this reset (for Dreamcatcher)
     state.itemsFoundThisReset = [];
@@ -1194,7 +1206,8 @@ export function createInitialState() {
         energySpellApplied: false,
         items: new Map(),           // ItemType -> count (all items)
         scrollsOfHaste: 0,          // Artifact: 5x speed on next task
-        magicRings: 0,              // Artifact: 3x XP on next task
+        magicRings: 0,              // Artifact: 5x XP on next task
+        bottledLightnings: 0,       // Artifact: 2x speed on boss tasks
         bossesDefeated: new Set(),  // Set of boss task IDs that have been defeated
         unlockedHiddenTasks: new Set(), // Hidden tasks unlocked by defeating bosses
         itemsFoundThisReset: [],    // For Dreamcatcher artifact
@@ -1229,7 +1242,7 @@ function getItemType(itemNameOrType) {
         'Mushroom': ItemType.Mushroom, 'GoblinSupplies': ItemType.GoblinSupplies,
         'TravelEquipment': ItemType.TravelEquipment, 'Book': ItemType.Book,
         'ScrollOfHaste': ItemType.ScrollOfHaste, 'GoblinWaraxe': ItemType.GoblinWaraxe,
-        'FiremakingKit': ItemType.FiremakingKit, 'Reagents': ItemType.Reagents,
+        'CampingEquipment': ItemType.CampingEquipment, 'Reagents': ItemType.Reagents,
         'MagicalRoots': ItemType.MagicalRoots, 'GoblinTreasure': ItemType.GoblinTreasure,
         'Fish': ItemType.Fish, 'BanditWeapons': ItemType.BanditWeapons,
         'Cactus': ItemType.Cactus, 'CityChain': ItemType.CityChain,
@@ -1241,6 +1254,11 @@ function getItemType(itemNameOrType) {
         'KnightlyBoots': ItemType.KnightlyBoots, 'DragonScale': ItemType.DragonScale,
         'CaveInsects': ItemType.CaveInsects, 'MagicalVessel': ItemType.MagicalVessel,
         'MagicRing': ItemType.MagicRing,
+        'BottledLightning': ItemType.BottledLightning, 'HeatEssence': ItemType.HeatEssence,
+        'DivineNotes': ItemType.DivineNotes, 'GriffinQuill': ItemType.GriffinQuill,
+        'WingsOfShadow': ItemType.WingsOfShadow, 'RitualSymbol': ItemType.RitualSymbol,
+        'Glasses': ItemType.Glasses, 'Light': ItemType.Light,
+        'MadContraption': ItemType.MadContraption,
     };
     return nameMap[itemNameOrType] ?? null;
 }
@@ -1264,6 +1282,10 @@ function addItems(state, itemNameOrType, count) {
     }
     if (itemType === ItemType.MagicRing) {
         state.magicRings += count;
+        return;
+    }
+    if (itemType === ItemType.BottledLightning) {
+        state.bottledLightnings += count;
         return;
     }
     if (itemType === ItemType.Dreamcatcher) {
@@ -1368,7 +1390,8 @@ function buildTaskLookup() {
  * Now also tracks task milestones (first time each task is completed)
  */
 export function simulateUntilZone(targetZone, options = {}) {
-    const { maxResets = 500, verbose = false } = options;
+    const { maxResets = 500, verbose = false, timeoutMs = 0 } = options;
+    const startTime = timeoutMs > 0 ? Date.now() : 0;
 
     let state = createInitialState();
     const zoneMilestones = new Map(); // zoneId -> { reset, zoneId }
@@ -1412,6 +1435,14 @@ export function simulateUntilZone(targetZone, options = {}) {
         if (verbose) {
             console.log(`Reset ${reset + 1}: Reached zone ${runResult.highestZoneReached}, maxEnergy now ${state.maxEnergy.toFixed(1)}`);
         }
+
+        // Check timeout
+        if (startTime > 0 && Date.now() - startTime > timeoutMs) {
+            if (verbose) {
+                console.log(`Timeout after ${totalResets} resets`);
+            }
+            break;
+        }
     }
 
     // Sort task milestones by reset number
@@ -1430,11 +1461,12 @@ export function simulateUntilZone(targetZone, options = {}) {
 /**
  * Run baseline simulation and report results
  */
-export function runBaselineSimulation(maxZone = 15) {
+export function runBaselineSimulation(maxZone = 15, options = {}) {
+    const { timeoutMs = 0 } = options;
     console.log(`\n=== Journey to Ascension Baseline Simulation ===`);
     console.log(`Simulating original game progression up to zone ${maxZone}\n`);
 
-    const result = simulateUntilZone(maxZone, { verbose: false });
+    const result = simulateUntilZone(maxZone, { verbose: false, timeoutMs });
 
     console.log(`Total resets to reach zone ${maxZone}: ${result.totalResets}`);
 
