@@ -41,6 +41,11 @@ export class IframeManagerUI {
                 name: "Iframe Base",
                 url: "./modules/iframe-base/index.html",
                 description: "Basic iframe module showing connection status and heartbeat"
+            },
+            {
+                name: "A-Mazing-Idle",
+                url: "./modules/a-mazing-idle-remote/index-iframe.html",
+                description: "Incremental maze game with bot automation"
             }
         ];
         
