@@ -137,8 +137,8 @@ export function createRegistrationApi(moduleId, moduleInstance, dependencies) {
       );
     },
 
-    registerEventBusPublisher: (eventName) => {
-      centralRegistry.registerEventBusPublisher(moduleId, eventName);
+    registerEventBusPublisher: (eventName, publisherId) => {
+      centralRegistry.registerEventBusPublisher(publisherId || moduleId, eventName);
     },
 
     registerEventBusSubscriberIntent: (eventName) => {

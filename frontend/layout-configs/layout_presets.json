@@ -116,6 +116,11 @@
             },
             {
               "type": "component",
+              "componentType": "mazeGameDataPanel",
+              "title": "Maze Game Data"
+            },
+            {
+              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },

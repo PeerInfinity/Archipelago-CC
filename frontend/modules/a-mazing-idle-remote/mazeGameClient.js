@@ -132,6 +132,49 @@ function importSave(saveJson) {
 }
 
 /**
+ * Inject points into the current save and reload
+ * @param {object} data - Must contain { points: number }
+ */
+function injectPoints(data) {
+    const points = data?.points;
+    if (typeof points !== 'number' || points <= 0) {
+        console.error(`${LOG_PREFIX} injectPoints: invalid points value`, points);
+        return;
+    }
+
+    const saveData = localStorage.getItem('a-mazing-idle');
+    if (!saveData) {
+        console.error(`${LOG_PREFIX} injectPoints: no save data in localStorage`);
+        return;
+    }
+
+    let save;
+    try {
+        save = JSON.parse(saveData);
+    } catch (e) {
+        console.error(`${LOG_PREFIX} injectPoints: failed to parse save`, e.message);
+        return;
+    }
+
+    // Set points
+    if (!save.points) save.points = {};
+    save.points.points = points;
+    console.log(`${LOG_PREFIX} Injecting ${points} points`);
+
+    const newSaveJson = JSON.stringify(save);
+
+    // Block the game's own saves during write
+    const origSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function() {};
+
+    // Write modified save
+    origSetItem('a-mazing-idle', newSaveJson);
+
+    // Reload to apply
+    location.reload();
+}
+
+/**
  * Set up eventBus subscriptions for save import/export
  * @param {IframeClient} client
  */
@@ -148,6 +191,11 @@ function setupSaveSubscriptions(client) {
         } else {
             console.warn(`${LOG_PREFIX} importSave event received without saveJson`);
         }
+    });
+
+    // Listen for point injection requests from the parent
+    client.subscribeEventBus('amazingIdle:injectPoints', (data) => {
+        injectPoints(data);
     });
 
     console.log(`${LOG_PREFIX} Save subscriptions active`);
