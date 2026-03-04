@@ -621,6 +621,16 @@ export class RegionGraphUI {
             'color': '#999'
           }
         },
+        {
+          // Undiscovered but accessible: keep ??? text style but show accessibility coloring
+          selector: 'node.undiscovered-placeholder.accessible',
+          style: {
+            'background-color': '#2d5a1e',
+            'border-color': '#52b845',
+            'opacity': 0.8,
+            'color': '#ccc'
+          }
+        },
         // Undiscovered edge styles (Discovery Mode)
         {
           selector: 'edge.undiscovered',

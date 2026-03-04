@@ -460,8 +460,15 @@ function handlePlayerRegionChanged(eventData) {
   const regionName = eventData?.newRegion;
   if (!regionName) return;
 
-  // Only trigger auto-discovery if the region is already discovered
-  // (region discovery itself is handled by loop:moveCompleted or click handlers)
+  // Discover the region on enter if the trigger is 'onEnter'
+  if (_settings.regionDiscoveryTrigger === 'onEnter') {
+    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
+    if (wasNewlyDiscovered) {
+      log('info', `[Discovery Module] Discovered region on enter: ${regionName}`);
+    }
+  }
+
+  // Auto-discover locations and exits if the region is discovered and settings allow
   if (discoveryStateSingleton.isRegionDiscovered(regionName)) {
     autoDiscoverLocationsInRegion(regionName);
     autoDiscoverExitsInRegion(regionName);

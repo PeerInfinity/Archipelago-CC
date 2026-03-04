@@ -2,6 +2,8 @@
 
 import { ResolvedItemConfig, ResolvedStackItemConfig, ItemType, SizeUnitEnum }
   from '../../../libs/golden-layout/js/esm/golden-layout.js';
+import discoveryStateSingleton from '../../discovery/singleton.js';
+import settingsManager from '../../../app/core/settingsManager.js';
 
 /**
  * Move the progressBarPanel into its own Golden Layout stack above the middle-stack.
@@ -127,6 +129,13 @@ export async function initializeMetaGame({ eventBus, dispatcher, logger, progres
     // Step 3: Move progressBarPanel into its own stack above middle-stack
     moveProgressBarToOwnStack(logger);
 
+    // Step 4: Enable discovery mode so regions are discovered on first visit
+    await settingsManager.updateSetting('moduleSettings.discovery.enableDiscoveryMode', true);
+    await settingsManager.updateSetting('moduleSettings.discovery.regionDiscoveryTrigger', 'onEnter');
+    await settingsManager.updateSetting('moduleSettings.discovery.autoDiscoverLocations', true);
+    await settingsManager.updateSetting('moduleSettings.discovery.autoDiscoverExits', true);
+    logger.info('progressBarTest', 'Discovery mode enabled with onEnter trigger, auto-discover locations and exits');
+
     // Progress bars are created on-demand by the createProgressBar actions
     // in metaGameConfiguration when user:regionMove / user:locationCheck fire.
 
@@ -142,6 +151,11 @@ export async function initializeMetaGame({ eventBus, dispatcher, logger, progres
 export const metaGameConfiguration = {
   eventDispatcher: {
     'user:regionMove': {
+      // Only show the progress bar when moving to an undiscovered region
+      condition: (eventData) => {
+        const target = eventData.targetRegion || eventData.region;
+        return target && !discoveryStateSingleton.isRegionDiscovered(target);
+      },
       actions: [
         {
           type: 'hideProgressBar',

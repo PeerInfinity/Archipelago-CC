@@ -381,25 +381,32 @@ export class MetaGameLogic {
   
   async handleRegionMoveEvent(eventData, context) {
     this.logger.debug('metaGame', 'Handling user:regionMove event', eventData);
-    
+
     // First, immediately forward the event up unless configuration instructs otherwise
     let shouldForward = true;
-    
+
     if (this.configuration && this.configuration.eventDispatcher) {
       const eventConfig = this.configuration.eventDispatcher['user:regionMove'];
       if (eventConfig) {
+        // If a condition function is defined, evaluate it first
+        if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
+          this.logger.debug('metaGame', 'Condition returned false for user:regionMove, forwarding immediately');
+          this.dispatcher.publishToNextModule('MetaGame', 'user:regionMove', eventData, { direction: 'up' });
+          return { action: 'continue' };
+        }
+
         // Execute the configured actions
         if (eventConfig.actions) {
           await this.executeActions(eventConfig.actions, eventData, 'user:regionMove');
         }
-        
+
         // Check if configuration says not to forward
         if (eventConfig.stopPropagation) {
           shouldForward = false;
         }
       }
     }
-    
+
     if (shouldForward) {
       // Immediately forward the event up to the next module
       this.dispatcher.publishToNextModule(
@@ -409,31 +416,38 @@ export class MetaGameLogic {
         { direction: 'up' }
       );
     }
-    
+
     return { action: shouldForward ? 'continue' : 'stop' };
   }
   
   async handleLocationCheckEvent(eventData, context) {
     this.logger.debug('metaGame', 'Handling user:locationCheck event', eventData);
-    
+
     // First, immediately forward the event up unless configuration instructs otherwise
     let shouldForward = true;
-    
+
     if (this.configuration && this.configuration.eventDispatcher) {
       const eventConfig = this.configuration.eventDispatcher['user:locationCheck'];
       if (eventConfig) {
+        // If a condition function is defined, evaluate it first
+        if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
+          this.logger.debug('metaGame', 'Condition returned false for user:locationCheck, forwarding immediately');
+          this.dispatcher.publishToNextModule('MetaGame', 'user:locationCheck', eventData, { direction: 'up' });
+          return { action: 'continue' };
+        }
+
         // Execute the configured actions
         if (eventConfig.actions) {
           await this.executeActions(eventConfig.actions, eventData, 'user:locationCheck');
         }
-        
+
         // Check if configuration says not to forward
         if (eventConfig.stopPropagation) {
           shouldForward = false;
         }
       }
     }
-    
+
     if (shouldForward) {
       // Immediately forward the event up to the next module
       this.dispatcher.publishToNextModule(
@@ -443,7 +457,7 @@ export class MetaGameLogic {
         { direction: 'up' }
       );
     }
-    
+
     return { action: shouldForward ? 'continue' : 'stop' };
   }
   
