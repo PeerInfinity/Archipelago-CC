@@ -360,6 +360,9 @@ export class LocationUI {
       // Subscribe to state manager location check rejection events
       subscribe('stateManager:locationCheckRejected', this.handleLocationCheckRejected.bind(this));
 
+      // Subscribe to metaGame progress bar cancellation (e.g. user clicked a new location while previous check was in progress)
+      subscribe('metaGame:progressBarCancelled', this.handleProgressBarCancelled.bind(this));
+
       // Subscribe to loop state changes if relevant
       subscribe('loop:stateChanged', debouncedUpdate); // May affect explored status visibility
       subscribe('loop:actionCompleted', debouncedUpdate); // May affect explored status
@@ -721,6 +724,19 @@ export class LocationUI {
       log('info', `[LocationUI] Cleared pending state for rejected location: ${locationName}`);
 
       // Update the display to reflect the cleared pending state
+      this.updateLocationDisplay();
+    }
+  }
+
+  /**
+   * Handles metaGame progress bar cancellation.
+   * Clears pending state for the location whose check was cancelled.
+   */
+  handleProgressBarCancelled(data) {
+    const locationName = data?.eventData?.locationName;
+    if (locationName && this.pendingLocations.has(locationName)) {
+      this.pendingLocations.delete(locationName);
+      log('info', `[LocationUI] Cleared pending state for cancelled location check: ${locationName}`);
       this.updateLocationDisplay();
     }
   }

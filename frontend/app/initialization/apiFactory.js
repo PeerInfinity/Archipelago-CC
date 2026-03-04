@@ -50,6 +50,7 @@ export function createInitializationApi(moduleId, dependencies) {
       publish: (event, data) => eventBus.publish(event, data, moduleId),
       subscribe: (event, callback) => eventBus.subscribe(event, callback, moduleId),
       unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, moduleId),
+      registerPublisher: (event, publisherId) => eventBus.registerPublisher(event, publisherId || moduleId),
       // Escape hatch for adapter modules publishing on behalf of external entities
       publishAs: (event, data, sourceModuleName) => eventBus.publish(event, data, sourceModuleName),
       // Read-only pass-through

@@ -12,6 +12,7 @@ export class MetaGameLogic {
     this.isReady = false;
     this.eventHandlers = new Map();
     this.progressBars = new Map(); // Track created progress bars
+    this.progressBarCompletionHandlers = new Map(); // Track active completion handler unsubscribers
     this.registeredDispatcherReceivers = []; // Track registered dispatcher receivers for cleanup
     
     this.logger.info('metaGame', 'MetaGameLogic instance created');
@@ -284,27 +285,47 @@ export class MetaGameLogic {
       eventSource: 'eventBus'
     };
     
+    // If this progress bar is already active, cancel it (restart behavior)
+    const existingUnsub = this.progressBarCompletionHandlers.get(progressBarId);
+    if (existingUnsub) {
+      const oldConfig = this.progressBars.get(progressBarId);
+      this.logger.debug('metaGame', `Cancelling active progress bar: ${progressBarId}`);
+      existingUnsub();
+      this.progressBarCompletionHandlers.delete(progressBarId);
+
+      // Notify that this progress bar's action was cancelled
+      if (oldConfig?.completionPayload) {
+        this.eventBus.publish('metaGame:progressBarCancelled', {
+          progressBarId,
+          originalEvent: oldConfig.completionPayload.originalEvent,
+          eventData: oldConfig.completionPayload.eventData
+        });
+      }
+    }
+
     this.logger.debug('metaGame', `Creating progress bar: ${progressBarId}`, progressBarConfig);
     this.progressBarAPI.create(progressBarConfig);
     this.progressBars.set(progressBarId, progressBarConfig);
-    
+
     // Start the progress bar immediately
     this.eventBus.publish(`metaGame:${progressBarId}Start`, {});
-    
+
     // Set up completion handler
     const completionHandler = (completionData) => {
       this.logger.debug('metaGame', `Progress bar ${progressBarId} completed`, completionData);
-      
+
       // Execute completion actions if specified
       if (config.completionActions) {
         this.executeActions(config.completionActions, eventData, originalEventName);
       }
-      
+
       // Clean up the handler
-      this.eventBus.unsubscribe(`metaGame:${progressBarId}Complete`, completionHandler);
+      this.progressBarCompletionHandlers.delete(progressBarId);
+      unsubscribe();
     };
-    
-    this.eventBus.subscribe(`metaGame:${progressBarId}Complete`, completionHandler);
+
+    const unsubscribe = this.eventBus.subscribe(`metaGame:${progressBarId}Complete`, completionHandler);
+    this.progressBarCompletionHandlers.set(progressBarId, unsubscribe);
   }
   
   async handleForwardEvent(action, eventData, originalEventName) {
