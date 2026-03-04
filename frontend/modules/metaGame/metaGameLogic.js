@@ -35,13 +35,22 @@ export class MetaGameLogic {
     } catch (error) {
       this.logger.error('metaGame', 'MetaGameLogic post-initialization failed:', error);
       throw error;
+    } finally {
+      this._isLoadingConfig = false;
     }
   }
   
   async loadConfiguration(filePath) {
+    if (this._isLoadingConfig) {
+      this.logger.info('metaGame', `Ignoring duplicate loadConfiguration call for: ${filePath}`);
+      console.log('MetaGameLogic.loadConfiguration SKIPPED (already loading):', filePath);
+      return { success: true, configuration: this.configuration, skipped: true };
+    }
+    this._isLoadingConfig = true;
+
     this.logger.info('metaGame', `Loading configuration from: ${filePath}`);
     console.log('MetaGameLogic.loadConfiguration called with:', filePath);
-    
+
     try {
       // Dynamically import the configuration file
       console.log('About to import configuration module from:', filePath);

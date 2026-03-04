@@ -195,34 +195,52 @@ export class ProgressBarPanelUI {
   // Show UI content (header, buttons, info text)
   showUIContent() {
     this.log('debug', 'Showing Progress Bar Panel UI content');
-    
+
     if (this.headerElement) {
       this.headerElement.style.display = '';
     }
-    
+
     if (this.buttonContainer) {
       this.buttonContainer.style.display = '';
     }
-    
+
     if (this.infoElement) {
       this.infoElement.style.display = '';
+    }
+
+    // Restore default padding
+    if (this.rootElement) {
+      this.rootElement.style.padding = '';
+    }
+    if (this.mainAreaElement) {
+      this.mainAreaElement.style.padding = '8px';
+      this.mainAreaElement.style.height = 'calc(100% - 50px)';
     }
   }
 
   // Hide UI content (header, buttons, info text) - keep only progress bars visible
   hideUIContent() {
     this.log('debug', 'Hiding Progress Bar Panel UI content');
-    
+
     if (this.headerElement) {
       this.headerElement.style.display = 'none';
     }
-    
+
     if (this.buttonContainer) {
       this.buttonContainer.style.display = 'none';
     }
-    
+
     if (this.infoElement) {
       this.infoElement.style.display = 'none';
+    }
+
+    // Remove padding so progress bars sit flush at top-left
+    if (this.rootElement) {
+      this.rootElement.style.padding = '0';
+    }
+    if (this.mainAreaElement) {
+      this.mainAreaElement.style.padding = '0';
+      this.mainAreaElement.style.height = '100%';
     }
   }
 
