@@ -1,5 +1,6 @@
 // UI component for iframe manager panel module
 import { getModuleEventBus } from './index.js';
+import { knownIframePages } from '../../app/config/knownIframePages.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -30,24 +31,8 @@ export class IframeManagerUI {
         this.currentUrl = '';
         this.connectedIframes = new Map(); // iframeId -> info
         
-        // Known pages configuration
-        this.knownPages = [
-            {
-                name: "Text Adventure (Standalone)",
-                url: "./modules/textAdventure-remote/index-iframe.html",
-                description: "Interactive text adventure running in iframe"
-            },
-            {
-                name: "Iframe Base",
-                url: "./modules/iframe-base/index.html",
-                description: "Basic iframe module showing connection status and heartbeat"
-            },
-            {
-                name: "A-Mazing-Idle",
-                url: "./modules/a-mazing-idle-remote/index-iframe.html",
-                description: "Incremental maze game with bot automation"
-            }
-        ];
+        // Known pages configuration (from shared config)
+        this.knownPages = knownIframePages.map(({ name, url, description }) => ({ name, url, description }));
         
         // Event subscriptions
         this.unsubscribeHandles = [];

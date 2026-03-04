@@ -1,6 +1,7 @@
 // iframeManagerPanel module entry point
 import { IframeManagerUI } from './iframeManagerUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { knownIframePages } from '../../app/config/knownIframePages.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -49,13 +50,7 @@ export async function register(registrationApi) {
     registrationApi.registerSettingsSchema(moduleId, {
         knownPages: {
             type: 'array',
-            default: [
-                {
-                    name: "Text Adventure (Standalone)",
-                    url: "./modules/textAdventure-remote/index-iframe.html",
-                    description: "Interactive text adventure running in iframe"
-                }
-            ],
+            default: knownIframePages.map(({ name, url, description }) => ({ name, url, description })),
             description: 'List of known iframe applications'
         },
         allowCustomUrls: {

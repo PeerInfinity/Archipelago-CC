@@ -167,6 +167,7 @@ class PanelManager {
       }
 
       this.isInitialized = true;
+      eventBus.publish('panelManager:initialized', {}, 'panelManager');
       // log('info',
       //   '[PanelManager.initialize DEBUG] Initialization COMPLETE. isInitialized set to true.'
       // );

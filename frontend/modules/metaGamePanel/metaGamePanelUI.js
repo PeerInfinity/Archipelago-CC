@@ -1,4 +1,5 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { knownMetaGames } from '../../app/config/knownMetaGames.js';
 
 export class MetaGamePanelUI {
   constructor(container, componentState, componentType) {
@@ -17,14 +18,11 @@ export class MetaGamePanelUI {
     this.jsonDataTextarea = null;
     this.statusElement = null;
     
-    // Available preset configurations
-    this.presetConfigurations = [
-      {
-        name: 'Progress Bar Test',
-        path: './configs/progressBarTest.js'
-      }
-      // Future configurations can be added here
-    ];
+    // Available preset configurations (from shared config)
+    this.presetConfigurations = knownMetaGames.map(({ name, path }) => ({ name, path }));
+
+    // Pending load request from URL parameter (queued until APIs are ready)
+    this.pendingLoadPath = null;
     
     this.createUI();
     
@@ -499,7 +497,46 @@ export class MetaGamePanelUI {
   setAPIs(eventBus, metaGameAPI) {
     this.eventBus = eventBus;
     this.metaGameAPI = metaGameAPI;
-    
+
+    // Subscribe to URL-parameter-driven load requests
+    this.eventBus.subscribe('metaGame:loadFromUrl', (data) => {
+      if (data && data.path) {
+        this.loadConfigurationByPath(data.path);
+      }
+    });
+
     this.logger.debug('APIs set for MetaGamePanel UI');
+
+    // Process any pending load request queued before APIs were ready
+    if (this.pendingLoadPath) {
+      const path = this.pendingLoadPath;
+      this.pendingLoadPath = null;
+      this.loadConfigurationByPath(path);
+    }
+  }
+
+  /**
+   * Programmatically load a configuration by path.
+   * Sets the dropdown value and triggers the load flow.
+   * @param {string} path - Config path (e.g., "./configs/progressBarTest.js")
+   */
+  loadConfigurationByPath(path) {
+    if (!this.metaGameAPI) {
+      // Queue for when APIs become available
+      this.pendingLoadPath = path;
+      this.logger.debug(`Queued metagame load for: ${path}`);
+      return;
+    }
+
+    // Set the dropdown to match the requested path
+    if (this.configurationDropdown) {
+      this.configurationDropdown.value = path;
+      // Enable the load button
+      const loadBtn = this.rootElement.querySelector('#metagame-load-btn');
+      if (loadBtn) loadBtn.disabled = false;
+    }
+
+    // Trigger the same flow as clicking "Load Configuration"
+    this.handleConfigurationSelection();
   }
 }

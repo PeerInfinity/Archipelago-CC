@@ -74,6 +74,7 @@ class MobileLayoutManager {
     this.setupMobileLayout();
     this.attachEventListeners();
     this.isInitialized = true;
+    eventBus.publish('panelManager:initialized', {}, 'mobileLayoutManager');
 
     log('info', 'MobileLayoutManager initialized');
 
