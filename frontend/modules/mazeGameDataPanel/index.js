@@ -38,6 +38,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('amazingIdle:importSave');
     registrationApi.registerEventBusPublisher('amazingIdle:injectPoints');
     registrationApi.registerEventBusPublisher('amazingIdle:setBiome');
+    registrationApi.registerEventBusPublisher('amazingIdle:newMaze');
     registrationApi.registerEventBusPublisher('iframe:loadUrl');
 
     // Register EventBus subscribers

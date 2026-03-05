@@ -332,12 +332,8 @@ export class MazeGameDataPanelUI {
         // Generate new maze button (reload iframe)
         if (this._newMazeBtn) {
             this._newMazeBtn.addEventListener('click', () => {
-                if (!this.loadedUrl) {
-                    this._showFeedback('No iframe loaded to reload', true);
-                    return;
-                }
-                this.eventBus.publish('iframe:loadUrl', { url: this.loadedUrl });
-                this._showFeedback('Reloading maze game...');
+                this.eventBus.publish('amazingIdle:newMaze', {});
+                this._showFeedback('Generating new maze...');
             });
         }
 
@@ -519,15 +515,8 @@ export class MazeGameDataPanelUI {
             const points = save?.points?.points ?? '--';
             if (this._gsPoints) this._gsPoints.textContent = typeof points === 'number' ? points.toLocaleString() : points;
 
-            // Biome count from upgrades
-            let biomeCount = 0;
-            if (save?.upgrades && typeof save.upgrades === 'object') {
-                for (const key of Object.keys(save.upgrades)) {
-                    if (key.toLowerCase().includes('biome')) {
-                        biomeCount += (save.upgrades[key] || 0);
-                    }
-                }
-            }
+            // Biome from upgrades.upgradeMap.BIOME
+            const biomeCount = save?.upgrades?.upgradeMap?.BIOME ?? 0;
             if (this._gsBiome) this._gsBiome.textContent = biomeCount;
 
             // Total mazes completed from stats
@@ -545,12 +534,13 @@ export class MazeGameDataPanelUI {
             }
             if (this._gsMazes) this._gsMazes.textContent = totalMazes;
 
-            // Bot upgrades
+            // Bot upgrades from upgrades.upgradeMap
             let botCount = 0;
-            if (save?.upgrades && typeof save.upgrades === 'object') {
-                for (const key of Object.keys(save.upgrades)) {
-                    if (key.toLowerCase().includes('bot') || key.toLowerCase().includes('auto')) {
-                        const val = save.upgrades[key];
+            const upgradeMap = save?.upgrades?.upgradeMap;
+            if (upgradeMap && typeof upgradeMap === 'object') {
+                for (const key of Object.keys(upgradeMap)) {
+                    if (key.includes('BOT') || key.includes('AUTO')) {
+                        const val = upgradeMap[key];
                         if (val && val !== 0) botCount++;
                     }
                 }

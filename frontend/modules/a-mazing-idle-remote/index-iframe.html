@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  A-Mazing-Idle by ImGregHenry (https://imgreghenry.github.io/A-Mazing-Idle/)
+  Integrated with permission from the author.
+  This file adapts the game's HTML structure with Archipelago integration hooks.
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +16,256 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/erosson/swarm-numberformat/v0.4.0/dist/swarm-numberformat.js"></script>
     <script src="https://cdn.rawgit.com/MikeMcl/decimal.js/v7.0.1/decimal.js"></script>
+
+    <!-- Pre-bundle hooks: intercept globals before game initializes -->
+    <script>
+    (function() {
+        var LOG = '[PreBundle]';
+
+        // --- setInterval intercept: capture the 20s auto-save callback ---
+        var origSetInterval = window.setInterval;
+        window.setInterval = function(fn, delay) {
+            var id = origSetInterval.apply(window, arguments);
+            if (delay === 20000) {
+                console.log(LOG, 'Captured save timer (id=' + id + ', delay=' + delay + ')');
+                window.__saveTimerCallback = fn;
+                window.__saveTimerId = id;
+            }
+            return id;
+        };
+
+        // --- Map.prototype.set intercept: capture stats Map ---
+        // The game creates stats Maps in this order:
+        //   1. STATS_TO_UI_ID_MAP: stat key → DOM element ID (string values, module-level)
+        //   2. StatsManager.statsMap: stat key → 0 (initStatsMap, in constructor)
+        //   3. Deserialized statsMap: stat key → saved values (reloadFromLocalStorage)
+        // Step 3 REPLACES the Map from step 2 via Serializable.deserializeProperty.
+        // We always capture the latest numeric Map, so we get the final one from step 3.
+        //
+        // Note: Upgrade Map stores Upgrade objects (not numbers) as values, and
+        // deserialization updates upgradeLevel in-place rather than replacing the Map.
+        // We can't usefully capture it via Map.prototype.set.
+        var origMapSet = Map.prototype.set;
+        Map.prototype.set = function(key, value) {
+            if (key === 'TOTAL_MAZES_COMPLETED' && typeof value === 'number') {
+                // Always update ref — later Maps replace earlier ones (step 3 replaces step 2)
+                if (window.__statsMap !== this) {
+                    window.__statsMap = this;
+                    console.log(LOG, 'Captured stats Map (' + this.size + ' entries, value=' + value + ')');
+                }
+                // Fire a custom event on every stat update
+                window.dispatchEvent(new CustomEvent('amazingIdle:statsUpdated', {
+                    detail: { key: key, value: value }
+                }));
+            }
+            return origMapSet.call(this, key, value);
+        };
+
+        // --- localStorage.setItem intercept: notify on every game save ---
+        var origSetItem = Storage.prototype.setItem;
+        Storage.prototype.setItem = function(key, value) {
+            var result = origSetItem.call(this, key, value);
+            if (key === 'a-mazing-idle') {
+                window.dispatchEvent(new CustomEvent('amazingIdle:saveWritten', {
+                    detail: { length: value.length }
+                }));
+            }
+            return result;
+        };
+
+        // --- jQuery .css() intercept: capture tile/maze wall data and player movement ---
+        // The game renders tiles via individual .css('border-top', '2.5px solid #ea80fc')
+        // calls (2-arg, hyphenated). Walls use shorthand; open passages use separate
+        // -width and -style calls. Player/bot movement uses .css('background-color', ...).
+        if (typeof $ !== 'undefined' && $.fn) {
+            var origCss = $.fn.css;
+            var tileIdPattern = /^(-?\d+)_(-?\d+)$/;
+            var mazeRenderTimer = null;
+            var isNewRender = true;
+
+            // Map CSS property names → wall index (0=UP, 1=RIGHT, 2=DOWN, 3=LEFT)
+            // Covers both shorthand ('border-top') and split ('border-top-style') forms
+            var WALL_INDEX = {};
+            ['top', 'right', 'bottom', 'left'].forEach(function(side, idx) {
+                WALL_INDEX['border-' + side] = idx;
+                WALL_INDEX['border-' + side + '-style'] = idx;
+                // camelCase variants
+                var camel = side.charAt(0).toUpperCase() + side.slice(1);
+                WALL_INDEX['border' + camel] = idx;
+                WALL_INDEX['border' + camel + 'Style'] = idx;
+            });
+
+            // Wall values: 'wall' | 'open' | 'destructible' | null
+            window.__mazeData = {
+                grid: {},       // "x_y" → { x, y, walls: [up,right,down,left], visited, hasPlayer }
+                sizeX: 0,      // maze width (interior tiles only)
+                sizeY: 0,      // maze height (interior tiles only)
+                exitTile: null, // { x, y } of the exit boundary tile
+                generation: 0,  // incremented each new maze
+                toArray: function() {
+                    var arr = [];
+                    for (var y = 0; y < this.sizeY; y++) {
+                        arr[y] = [];
+                        for (var x = 0; x < this.sizeX; x++) {
+                            arr[y][x] = this.grid[x + '_' + y] || null;
+                        }
+                    }
+                    return arr;
+                }
+            };
+
+            function parseWall(cssValue) {
+                if (!cssValue || cssValue === '') return null;
+                var v = String(cssValue);
+                if (v.indexOf('solid') !== -1) return 'wall';
+                if (v.indexOf('hidden') !== -1) return 'open';
+                if (v.indexOf('dotted') !== -1) return 'destructible';
+                return null;
+            }
+
+            function onMazeRenderComplete() {
+                isNewRender = true;
+                window.__mazeData.generation++;
+
+                // Recalculate true interior size: border tiles have all-null walls,
+                // interior tiles have at least one non-null wall.
+                var grid = window.__mazeData.grid;
+                var maxX = 0, maxY = 0;
+                for (var key in grid) {
+                    var t = grid[key];
+                    if (t.x < 0 || t.y < 0) continue;
+                    var hasWalls = false;
+                    for (var w = 0; w < 4; w++) { if (t.walls[w] !== null) { hasWalls = true; break; } }
+                    if (hasWalls) {
+                        if (t.x + 1 > maxX) maxX = t.x + 1;
+                        if (t.y + 1 > maxY) maxY = t.y + 1;
+                    }
+                }
+                window.__mazeData.sizeX = maxX;
+                window.__mazeData.sizeY = maxY;
+
+                // Detect exit: interior edge tile with an 'open' wall facing outside
+                window.__mazeData.exitTile = null;
+                for (var key2 in grid) {
+                    var t2 = grid[key2];
+                    if (t2.x < 0 || t2.y < 0 || t2.x >= maxX || t2.y >= maxY) continue;
+                    if (t2.y === 0 && t2.walls[0] === 'open') { window.__mazeData.exitTile = { x: t2.x, y: t2.y, side: 'top' }; break; }
+                    if (t2.x === maxX - 1 && t2.walls[1] === 'open') { window.__mazeData.exitTile = { x: t2.x, y: t2.y, side: 'right' }; break; }
+                    if (t2.y === maxY - 1 && t2.walls[2] === 'open') { window.__mazeData.exitTile = { x: t2.x, y: t2.y, side: 'bottom' }; break; }
+                    if (t2.x === 0 && t2.walls[3] === 'open') { window.__mazeData.exitTile = { x: t2.x, y: t2.y, side: 'left' }; break; }
+                }
+                var tileCount = Object.keys(window.__mazeData.grid).length;
+                console.log(LOG, 'Maze captured (gen=' + window.__mazeData.generation +
+                    ', ' + window.__mazeData.sizeX + 'x' + window.__mazeData.sizeY +
+                    ', ' + tileCount + ' tiles' +
+                    (window.__mazeData.exitTile ?
+                        ', exit=' + window.__mazeData.exitTile.x + ',' + window.__mazeData.exitTile.y : '') +
+                    ')');
+                window.dispatchEvent(new CustomEvent('amazingIdle:mazeRendered', {
+                    detail: {
+                        generation: window.__mazeData.generation,
+                        sizeX: window.__mazeData.sizeX,
+                        sizeY: window.__mazeData.sizeY,
+                        tileCount: tileCount,
+                        exitTile: window.__mazeData.exitTile
+                    }
+                }));
+            }
+
+            $.fn.css = function() {
+                var result = origCss.apply(this, arguments);
+
+                // Only handle setter calls (2-arg or object form)
+                var prop, val, propsObj;
+                if (arguments.length >= 2 && typeof arguments[0] === 'string') {
+                    prop = arguments[0];
+                    val = arguments[1];
+                } else if (arguments.length === 1 && arguments[0] !== null &&
+                           typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+                    propsObj = arguments[0];
+                } else {
+                    return result;
+                }
+
+                // Quick filter for 2-arg form
+                if (prop) {
+                    var wallIdx = WALL_INDEX[prop];
+                    var isBgColor = (prop === 'background-color' || prop === 'backgroundColor');
+                    // Skip border-X-width (no wall info) and unrelated properties
+                    if (wallIdx === undefined && !isBgColor) return result;
+                    if (prop.indexOf('-width') !== -1 || prop.indexOf('Width') !== -1) return result;
+                }
+
+                for (var i = 0; i < this.length; i++) {
+                    var el = this[i];
+                    if (!el.id) continue;
+                    var match = tileIdPattern.exec(el.id);
+                    if (!match) continue;
+                    var x = parseInt(match[1]);
+                    var y = parseInt(match[2]);
+                    var key = match[0];
+
+                    // --- Process wall data ---
+                    if (prop && WALL_INDEX[prop] !== undefined) {
+                        if (isNewRender) {
+                            window.__mazeData.grid = {};
+                            window.__mazeData.sizeX = 0;
+                            window.__mazeData.sizeY = 0;
+                            window.__mazeData.exitTile = null;
+                            isNewRender = false;
+                        }
+                        var tile = window.__mazeData.grid[key];
+                        if (!tile) {
+                            tile = { x: x, y: y, walls: [null,null,null,null], visited: false, bgColor: '' };
+                            window.__mazeData.grid[key] = tile;
+                        }
+                        var wallType = parseWall(val);
+                        if (wallType !== null) {
+                            tile.walls[WALL_INDEX[prop]] = wallType;
+                        }
+                        if (mazeRenderTimer) clearTimeout(mazeRenderTimer);
+                        mazeRenderTimer = setTimeout(onMazeRenderComplete, 50);
+                    }
+
+                    // --- Process background color (player/bot movement) ---
+                    var bgVal = null;
+                    if (prop && (prop === 'background-color' || prop === 'backgroundColor')) {
+                        bgVal = val;
+                    } else if (propsObj) {
+                        bgVal = propsObj.backgroundColor || propsObj['background-color'];
+                    }
+                    if (bgVal !== null && bgVal !== undefined) {
+                        var tile2 = window.__mazeData.grid[key];
+                        if (tile2) {
+                            var bg = String(bgVal);
+                            var oldBg = tile2.bgColor || '';
+                            tile2.bgColor = bg;
+                            // Any non-empty/non-transparent bg = visited tile
+                            // Colors vary by biome (ColorManager), so detect generically
+                            if (bg && bg !== '' && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') {
+                                tile2.visited = true;
+                                // First color on a previously uncolored tile = player/bot arrived
+                                if (!oldBg || oldBg === '' || oldBg === 'transparent' || oldBg === 'rgba(0, 0, 0, 0)') {
+                                    window.dispatchEvent(new CustomEvent('amazingIdle:playerMoved', {
+                                        detail: { x: x, y: y, key: key, color: bg }
+                                    }));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return result;
+            };
+
+            console.log(LOG, 'jQuery .css() hook installed for tile data capture');
+        } else {
+            console.warn(LOG, 'jQuery not available, skipping tile data hooks');
+        }
+
+        console.log(LOG, 'All hooks installed, waiting for bundle...');
+    })();
+    </script>
 
     <!-- Game bundle (resolved via base href) -->
     <script src="public/bundle-0.2.0.js"></script>

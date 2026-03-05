@@ -18,6 +18,37 @@ function updateConnectionStatus(status, type = 'connecting') {
 }
 
 /**
+ * Click the game's manual save button to flush in-memory state to localStorage.
+ * The game auto-saves every 20s, so without this, localStorage reads get stale data.
+ */
+function triggerManualSave() {
+    const btn = document.querySelector('#manualSaveGameButton');
+    if (btn) {
+        btn.click();
+    }
+}
+
+/**
+ * Read TOTAL_MAZES_COMPLETED from the save data in localStorage.
+ * Stats are stored as a serialized Map: save.stats.statsMap = "~~[[key,val],...]"
+ * @returns {number}
+ */
+function readTotalMazesCompleted() {
+    const saveData = localStorage.getItem('a-mazing-idle');
+    if (!saveData) return 0;
+    try {
+        const save = JSON.parse(saveData);
+        const statsStr = save.stats?.statsMap;
+        if (!statsStr) return 0;
+        const arr = JSON.parse(statsStr.replace('~~', ''));
+        const entry = arr.find(e => e[0] === 'TOTAL_MAZES_COMPLETED');
+        return entry ? entry[1] : 0;
+    } catch {
+        return 0;
+    }
+}
+
+/**
  * Wait for the game to initialize (maze tbody has child rows)
  * @param {number} timeoutMs - Maximum wait time
  * @returns {Promise<void>}
@@ -45,6 +76,36 @@ function waitForGameReady(timeoutMs = 30000) {
 }
 
 /**
+ * Set up MutationObserver on completion requirements panel to detect exit unlock.
+ * At biome 8+, the exit is locked until keys are found. The checkmark element's
+ * display changes from 'none' to 'flex' when all keys are collected.
+ * @param {IframeClient} client
+ */
+function setupExitUnlockDetection(client) {
+    const checkMark = document.querySelector('#mazeCompletionRequirementsMazeKeysCheckMark');
+    if (!checkMark) {
+        console.log(`${LOG_PREFIX} No completion requirements panel (biome < 8), skipping exit unlock detection`);
+        return;
+    }
+
+    let wasUnlocked = checkMark.style.display === 'flex';
+
+    const observer = new MutationObserver(() => {
+        const isUnlocked = checkMark.style.display === 'flex';
+        if (isUnlocked && !wasUnlocked) {
+            console.log(`${LOG_PREFIX} Exit unlocked (keys found)`);
+            client.publishEventBus('amazingIdle:exitUnlocked', {
+                timestamp: Date.now()
+            });
+        }
+        wasUnlocked = isUnlocked;
+    });
+
+    observer.observe(checkMark, { attributes: true, attributeFilter: ['style'] });
+    console.log(`${LOG_PREFIX} Exit unlock observer active`);
+}
+
+/**
  * Set up MutationObserver on #maze to detect maze completions.
  * The game rebuilds the maze DOM on completion, producing many childList mutations.
  * @param {IframeClient} client
@@ -56,7 +117,12 @@ function setupMazeCompletionDetection(client) {
         return;
     }
 
+    // Initialize baseline maze count from save data
+    triggerManualSave();
+    let lastMazeCount = readTotalMazesCompleted();
     let completionCount = 0;
+    console.log(`${LOG_PREFIX} Baseline TOTAL_MAZES_COMPLETED: ${lastMazeCount}`);
+
     // Debounce: maze rebuild produces ~63 mutations at once for a 5x5 maze.
     // We batch them and fire one event per rebuild.
     let debounceTimer = null;
@@ -68,14 +134,24 @@ function setupMazeCompletionDetection(client) {
         // Debounce: wait for the batch of mutations to settle
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
-            completionCount++;
-            console.log(`${LOG_PREFIX} Maze completed (#${completionCount}, ${childChanges.length} DOM changes)`);
+            // Flush in-memory state and check if a real completion occurred
+            triggerManualSave();
+            const currentMazeCount = readTotalMazesCompleted();
 
-            client.publishEventBus('amazingIdle:mazeCompleted', {
-                completionCount,
-                mutationCount: childChanges.length,
-                timestamp: Date.now()
-            });
+            if (currentMazeCount > lastMazeCount) {
+                completionCount++;
+                lastMazeCount = currentMazeCount;
+                console.log(`${LOG_PREFIX} Maze completed (#${completionCount}, total: ${currentMazeCount}, ${childChanges.length} DOM changes)`);
+
+                client.publishEventBus('amazingIdle:mazeCompleted', {
+                    completionCount,
+                    totalMazesCompleted: currentMazeCount,
+                    mutationCount: childChanges.length,
+                    timestamp: Date.now()
+                });
+            } else {
+                console.log(`${LOG_PREFIX} Maze DOM rebuild (not a completion, total still ${currentMazeCount}, ${childChanges.length} DOM changes)`);
+            }
         }, 50);
     });
 
@@ -88,6 +164,7 @@ function setupMazeCompletionDetection(client) {
  * @param {IframeClient} client
  */
 function exportSave(client) {
+    triggerManualSave();
     const saveData = localStorage.getItem('a-mazing-idle');
     if (saveData) {
         console.log(`${LOG_PREFIX} Exporting save (${saveData.length} chars)`);
@@ -142,6 +219,7 @@ function injectPoints(data) {
         return;
     }
 
+    triggerManualSave();
     const saveData = localStorage.getItem('a-mazing-idle');
     if (!saveData) {
         console.error(`${LOG_PREFIX} injectPoints: no save data in localStorage`);
@@ -185,6 +263,7 @@ function setBiome(data) {
         return;
     }
 
+    triggerManualSave();
     const saveData = localStorage.getItem('a-mazing-idle');
     if (!saveData) {
         console.error(`${LOG_PREFIX} setBiome: no save data in localStorage`);
@@ -247,6 +326,17 @@ function setupSaveSubscriptions(client) {
         setBiome(data);
     });
 
+    // Listen for new maze requests from the parent
+    client.subscribeEventBus('amazingIdle:newMaze', () => {
+        const btn = document.querySelector('#experimentNewMaze');
+        if (btn) {
+            btn.click();
+            console.log(`${LOG_PREFIX} New maze triggered via #experimentNewMaze`);
+        } else {
+            console.warn(`${LOG_PREFIX} #experimentNewMaze button not found`);
+        }
+    });
+
     console.log(`${LOG_PREFIX} Save subscriptions active`);
 }
 
@@ -286,10 +376,13 @@ async function initialize() {
         // 3. Set up maze completion detection
         setupMazeCompletionDetection(client);
 
-        // 4. Set up save import/export subscriptions
+        // 4. Set up exit unlock detection (biome 8+)
+        setupExitUnlockDetection(client);
+
+        // 5. Set up save import/export subscriptions
         setupSaveSubscriptions(client);
 
-        // 5. Notify adapter that we're fully ready
+        // 6. Notify adapter that we're fully ready
         client.notifyAppReady();
 
         updateConnectionStatus('Ready - A-Mazing-Idle loaded', 'connected');
