@@ -203,7 +203,7 @@ export class MazeGameDataPanelUI {
                             align-items: center; justify-content: center;
                             color: #666; font-size: 12px; pointer-events: none;
                         ">Click "Export from Game" to load save data</div>
-                        <div class="mgd-editor-mount" style="height: 300px; overflow: hidden;"></div>
+                        <div class="mgd-editor-mount" style="height: 300px; overflow-y: auto;"></div>
                     </div>
                 `)}
             </div>
@@ -320,17 +320,12 @@ export class MazeGameDataPanelUI {
             });
         }
 
-        // Advance biome button
+        // Set biome button
         if (this._advanceBtn) {
             this._advanceBtn.addEventListener('click', () => {
                 const targetBiome = parseInt(this._biomeSelect.value, 10);
-                const cost = BIOME_CUMULATIVE[targetBiome] || 0;
-                if (cost <= 0) {
-                    this._showFeedback('Biome 0 requires 0 points', true);
-                    return;
-                }
-                this.eventBus.publish('amazingIdle:injectPoints', { points: cost });
-                this._showFeedback(`Injecting ${cost.toLocaleString()} points for biome ${targetBiome}...`);
+                this.eventBus.publish('amazingIdle:setBiome', { biome: targetBiome });
+                this._showFeedback(`Setting biome to ${targetBiome}...`);
             });
         }
 

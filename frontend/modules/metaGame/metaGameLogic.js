@@ -139,14 +139,14 @@ export class MetaGameLogic {
       };
       
       this.registrationApi.registerDispatcherReceiver(
-        'MetaGame',
+        'metaGame',
         'user:regionMove',
         regionMoveHandler,
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
       );
       
       this.registrationApi.registerDispatcherReceiver(
-        'MetaGame',
+        'metaGame',
         'user:locationCheck',
         locationCheckHandler,
         { direction: 'up', condition: 'unconditional', timing: 'immediate' }
@@ -154,8 +154,8 @@ export class MetaGameLogic {
       
       // Track registered receivers for cleanup
       this.registeredDispatcherReceivers.push(
-        { moduleName: 'MetaGame', eventName: 'user:regionMove', handler: regionMoveHandler },
-        { moduleName: 'MetaGame', eventName: 'user:locationCheck', handler: locationCheckHandler }
+        { moduleName: 'metaGame', eventName: 'user:regionMove', handler: regionMoveHandler },
+        { moduleName: 'metaGame', eventName: 'user:locationCheck', handler: locationCheckHandler }
       );
       
       this.logger.info('metaGame', 'Event dispatcher receivers registered after configuration loading');
@@ -394,6 +394,11 @@ export class MetaGameLogic {
     // Activate the iframe panel to show the maze game
     this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
 
+    // Set the biome for this challenge (triggers iframe reload)
+    if (typeof config.biome === 'number') {
+      this.eventBus.publish('amazingIdle:setBiome', { biome: config.biome });
+    }
+
     // Focus the iframe so keyboard input goes to the maze game
     requestAnimationFrame(() => {
       const iframe = document.querySelector('.iframe-panel-container iframe');
@@ -529,7 +534,7 @@ export class MetaGameLogic {
         // If a condition function is defined, evaluate it first
         if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
           this.logger.debug('metaGame', 'Condition returned false for user:regionMove, forwarding immediately');
-          this.dispatcher.publishToNextModule('MetaGame', 'user:regionMove', eventData, { direction: 'up' });
+          this.dispatcher.publishToNextModule('metaGame', 'user:regionMove', eventData, { direction: 'up' });
           return { action: 'continue' };
         }
 
@@ -548,7 +553,7 @@ export class MetaGameLogic {
     if (shouldForward) {
       // Immediately forward the event up to the next module
       this.dispatcher.publishToNextModule(
-        'MetaGame',
+        'metaGame',
         'user:regionMove',
         eventData,
         { direction: 'up' }
@@ -570,7 +575,7 @@ export class MetaGameLogic {
         // If a condition function is defined, evaluate it first
         if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
           this.logger.debug('metaGame', 'Condition returned false for user:locationCheck, forwarding immediately');
-          this.dispatcher.publishToNextModule('MetaGame', 'user:locationCheck', eventData, { direction: 'up' });
+          this.dispatcher.publishToNextModule('metaGame', 'user:locationCheck', eventData, { direction: 'up' });
           return { action: 'continue' };
         }
 
@@ -589,7 +594,7 @@ export class MetaGameLogic {
     if (shouldForward) {
       // Immediately forward the event up to the next module
       this.dispatcher.publishToNextModule(
-        'MetaGame',
+        'metaGame',
         'user:locationCheck',
         eventData,
         { direction: 'up' }

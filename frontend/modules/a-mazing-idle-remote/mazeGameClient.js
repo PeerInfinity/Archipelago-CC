@@ -175,6 +175,50 @@ function injectPoints(data) {
 }
 
 /**
+ * Set the biome in the current save and reload
+ * @param {object} data - Must contain { biome: number }
+ */
+function setBiome(data) {
+    const biome = data?.biome;
+    if (typeof biome !== 'number' || biome < 0) {
+        console.error(`${LOG_PREFIX} setBiome: invalid biome value`, biome);
+        return;
+    }
+
+    const saveData = localStorage.getItem('a-mazing-idle');
+    if (!saveData) {
+        console.error(`${LOG_PREFIX} setBiome: no save data in localStorage`);
+        return;
+    }
+
+    let save;
+    try {
+        save = JSON.parse(saveData);
+    } catch (e) {
+        console.error(`${LOG_PREFIX} setBiome: failed to parse save`, e.message);
+        return;
+    }
+
+    // Set biome upgrade
+    if (!save.upgrades) save.upgrades = {};
+    if (!save.upgrades.upgradeMap) save.upgrades.upgradeMap = {};
+    save.upgrades.upgradeMap.BIOME = biome;
+    console.log(`${LOG_PREFIX} Setting biome to ${biome}`);
+
+    const newSaveJson = JSON.stringify(save);
+
+    // Block the game's own saves during write
+    const origSetItem = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function() {};
+
+    // Write modified save
+    origSetItem('a-mazing-idle', newSaveJson);
+
+    // Reload to apply
+    location.reload();
+}
+
+/**
  * Set up eventBus subscriptions for save import/export
  * @param {IframeClient} client
  */
@@ -196,6 +240,11 @@ function setupSaveSubscriptions(client) {
     // Listen for point injection requests from the parent
     client.subscribeEventBus('amazingIdle:injectPoints', (data) => {
         injectPoints(data);
+    });
+
+    // Listen for biome set requests from the parent
+    client.subscribeEventBus('amazingIdle:setBiome', (data) => {
+        setBiome(data);
     });
 
     console.log(`${LOG_PREFIX} Save subscriptions active`);

@@ -12,6 +12,7 @@ export async function initializeMetaGame({ eventBus, dispatcher, logger, progres
     eventBus.registerPublisher('ui:activatePanel');
     eventBus.registerPublisher('amazingIdle:mazeCompleted');
     eventBus.registerPublisher('iframe:loadUrl');
+    eventBus.registerPublisher('amazingIdle:setBiome');
 
     // Load the maze game into the iframe
     const mazeUrl = resolveIframeUrl('mazegame');
@@ -49,7 +50,7 @@ export const metaGameConfiguration = {
           type: 'startMazeChallenge',
           challengeId: 'regionMoveMaze',
           config: {
-            biome: 1,
+            biome: 0,
             preserveScore: true,
             completionActions: [
               { type: 'forwardEvent', eventName: 'user:regionMove', direction: 'up' }
@@ -66,7 +67,7 @@ export const metaGameConfiguration = {
           type: 'startMazeChallenge',
           challengeId: 'locationCheckMaze',
           config: {
-            biome: 2,
+            biome: 1,
             preserveScore: true,
             completionActions: [
               { type: 'forwardEvent', eventName: 'user:locationCheck', direction: 'up' }
