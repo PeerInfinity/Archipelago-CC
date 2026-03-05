@@ -3,8 +3,8 @@
   "game_name": "DepGraph",
   "game_directory": "depgraph",
   "archipelago_version": "0.6.7",
-  "generation_seed": 3,
-  "seed_name": "84719271504320872445",
+  "generation_seed": 10,
+  "seed_name": "55941320597534372051",
   "player_names": {
     "1": "Player1"
   },
@@ -14,7 +14,7 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To basic_tools",
+            "name": "To basic_combat",
             "connected_region": "Complete Node 1",
             "access_rule": {
               "rule": "True_"
@@ -27,7 +27,7 @@
         "name": "Complete Node 1",
         "exits": [
           {
-            "name": "From basic_tools to logging",
+            "name": "From basic_combat to agility",
             "connected_region": "Complete Node 2",
             "access_rule": {
               "rule": "HasAll",
@@ -40,8 +40,8 @@
             }
           },
           {
-            "name": "From basic_tools to mining",
-            "connected_region": "Complete Node 4",
+            "name": "From basic_combat to strength",
+            "connected_region": "Complete Node 3",
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -59,14 +59,31 @@
         "name": "Complete Node 2",
         "exits": [
           {
-            "name": "From logging to carpentry",
-            "connected_region": "Complete Node 3",
+            "name": "From agility to parry",
+            "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 2",
-                  "Node 2"
+                  "Completed Node 5",
+                  "Node 2",
+                  "Node 5"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From agility to dual_wield",
+            "connected_region": "Complete Node 9",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 2",
+                  "Completed Node 8",
+                  "Node 2",
+                  "Node 8"
                 ]
               }
             }
@@ -80,12 +97,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 2",
+              "name": "Node 3",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 2",
@@ -108,16 +125,40 @@
         "name": "Complete Node 3",
         "exits": [
           {
-            "name": "From carpentry to metalworking",
-            "connected_region": "Complete Node 6",
+            "name": "From strength to battle_cry",
+            "connected_region": "Complete Node 4",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 3",
-                  "Completed Node 5",
-                  "Node 3",
-                  "Node 5"
+                  "Node 3"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From strength to shield_mastery",
+            "connected_region": "Complete Node 5",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 3",
+                  "Node 3"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From strength to sword_mastery",
+            "connected_region": "Complete Node 8",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 3",
+                  "Node 3"
                 ]
               }
             }
@@ -131,12 +172,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 3",
+              "name": "Node 9",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 3",
@@ -159,14 +200,16 @@
         "name": "Complete Node 4",
         "exits": [
           {
-            "name": "From mining to smelting",
-            "connected_region": "Complete Node 5",
+            "name": "From battle_cry to whirlwind",
+            "connected_region": "Complete Node 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 4",
-                  "Node 4"
+                  "Completed Node 9",
+                  "Node 4",
+                  "Node 9"
                 ]
               }
             }
@@ -180,12 +223,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 4",
+              "name": "Node 8",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 4",
@@ -208,15 +251,15 @@
         "name": "Complete Node 5",
         "exits": [
           {
-            "name": "From smelting to metalworking",
+            "name": "From shield_mastery to parry",
             "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 3",
+                  "Completed Node 2",
                   "Completed Node 5",
-                  "Node 3",
+                  "Node 2",
                   "Node 5"
                 ]
               }
@@ -231,12 +274,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 5",
+              "name": "Node 7",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 5",
@@ -259,21 +302,8 @@
         "name": "Complete Node 6",
         "exits": [
           {
-            "name": "From metalworking to architecture",
+            "name": "From parry to counter",
             "connected_region": "Complete Node 7",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Completed Node 6",
-                  "Node 6"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From metalworking to engineering",
-            "connected_region": "Complete Node 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -293,12 +323,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 6",
+              "name": "Node 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 6",
@@ -321,16 +351,16 @@
         "name": "Complete Node 7",
         "exits": [
           {
-            "name": "From architecture to steam_power",
-            "connected_region": "Complete Node 9",
+            "name": "From counter to warrior_stance",
+            "connected_region": "Complete Node 11",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Completed Node 10",
                   "Completed Node 7",
-                  "Completed Node 8",
-                  "Node 7",
-                  "Node 8"
+                  "Node 10",
+                  "Node 7"
                 ]
               }
             }
@@ -344,12 +374,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 7",
+              "name": "Node 10",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 7",
@@ -372,15 +402,15 @@
         "name": "Complete Node 8",
         "exits": [
           {
-            "name": "From engineering to steam_power",
+            "name": "From sword_mastery to dual_wield",
             "connected_region": "Complete Node 9",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 7",
+                  "Completed Node 2",
                   "Completed Node 8",
-                  "Node 7",
+                  "Node 2",
                   "Node 8"
                 ]
               }
@@ -395,12 +425,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 8",
+              "name": "Node 2",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 8",
@@ -423,13 +453,15 @@
         "name": "Complete Node 9",
         "exits": [
           {
-            "name": "From steam_power to industrial_age",
+            "name": "From dual_wield to whirlwind",
             "connected_region": "Complete Node 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Completed Node 4",
                   "Completed Node 9",
+                  "Node 4",
                   "Node 9"
                 ]
               }
@@ -444,12 +476,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 9",
+              "name": "Node 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 9",
@@ -470,7 +502,23 @@
       },
       "Complete Node 10": {
         "name": "Complete Node 10",
-        "exits": [],
+        "exits": [
+          {
+            "name": "From whirlwind to warrior_stance",
+            "connected_region": "Complete Node 11",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 10",
+                  "Completed Node 7",
+                  "Node 10",
+                  "Node 7"
+                ]
+              }
+            }
+          }
+        ],
         "locations": [
           {
             "name": "Complete Node 10",
@@ -479,12 +527,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 10",
+              "name": "Node 6",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 10",
@@ -494,6 +542,90 @@
             },
             "item": {
               "name": "Completed Node 10",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Complete Node 11": {
+        "name": "Complete Node 11",
+        "exits": [
+          {
+            "name": "From warrior_stance to legendary_hero",
+            "connected_region": "Complete Node 12",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 11",
+                  "Node 11"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Complete Node 11",
+            "id": 234800011,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 11",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Completed Node 11",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 11",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Complete Node 12": {
+        "name": "Complete Node 12",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Complete Node 12",
+            "id": 234800012,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 12",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Completed Node 12",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -632,7 +764,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -643,7 +775,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -1714,6 +1846,28 @@
         "type": "Event",
         "max_count": 1
       },
+      "Completed Node 11": {
+        "name": "Completed Node 11",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Completed Node 12": {
+        "name": "Completed Node 12",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Completed Node 1": {
         "name": "Completed Node 1",
         "id": null,
@@ -1735,6 +1889,8 @@
     "1": {
       "Completed Node 1": 1,
       "Completed Node 10": 1,
+      "Completed Node 11": 1,
+      "Completed Node 12": 1,
       "Completed Node 2": 1,
       "Completed Node 3": 1,
       "Completed Node 4": 1,
@@ -1745,6 +1901,8 @@
       "Completed Node 9": 1,
       "Node 1": 1,
       "Node 10": 1,
+      "Node 11": 1,
+      "Node 12": 1,
       "Node 2": 1,
       "Node 3": 1,
       "Node 4": 1,
@@ -1764,7 +1922,9 @@
       "Complete Node 6": "Node 6",
       "Complete Node 7": "Node 7",
       "Complete Node 8": "Node 8",
-      "Complete Node 9": "Node 9"
+      "Complete Node 9": "Node 9",
+      "Complete Node 10": "Node 10",
+      "Complete Node 11": "Node 11"
     }
   },
   "progression_mapping": {
@@ -1781,22 +1941,22 @@
       "game": "DepGraph",
       "world_class_name": "DepGraphWorld",
       "options": {
-        "accessibility": 2,
+        "accessibility": 0,
         "exclude_locations": [],
-        "graph_file": 0,
+        "graph_file": 1,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
         "randomize_starting_nodes": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "starting_nodes": 0,
-        "vanilla_placement": true
+        "vanilla_placement": false
       },
       "option_definitions": {
         "accessibility": {
@@ -1852,68 +2012,77 @@
       },
       "graph_structure": {
         "label_to_index": {
-          "basic_tools": 1,
-          "logging": 2,
-          "carpentry": 3,
-          "mining": 4,
-          "smelting": 5,
-          "metalworking": 6,
-          "architecture": 7,
-          "engineering": 8,
-          "steam_power": 9,
-          "industrial_age": 10
+          "basic_combat": 1,
+          "agility": 2,
+          "strength": 3,
+          "battle_cry": 4,
+          "shield_mastery": 5,
+          "parry": 6,
+          "counter": 7,
+          "sword_mastery": 8,
+          "dual_wield": 9,
+          "whirlwind": 10,
+          "warrior_stance": 11,
+          "legendary_hero": 12
         },
-        "title": "Tech Tree"
+        "title": "Skill Tree"
       },
-      "num_nodes": 10,
-      "is_vanilla": true,
-      "preset_label": "tech_tree v",
+      "num_nodes": 12,
+      "preset_label": "skill_tree s10",
       "name_substitutions": {
         "items": {
-          "Node 1": "Basic Tools",
-          "Completed Node 1": "Event: Basic Tools",
-          "Node 2": "Logging",
-          "Completed Node 2": "Event: Logging",
-          "Node 3": "Carpentry",
-          "Completed Node 3": "Event: Carpentry",
-          "Node 4": "Mining",
-          "Completed Node 4": "Event: Mining",
-          "Node 5": "Smelting",
-          "Completed Node 5": "Event: Smelting",
-          "Node 6": "Metalworking",
-          "Completed Node 6": "Event: Metalworking",
-          "Node 7": "Architecture",
-          "Completed Node 7": "Event: Architecture",
-          "Node 8": "Engineering",
-          "Completed Node 8": "Event: Engineering",
-          "Node 9": "Steam Power",
-          "Completed Node 9": "Event: Steam Power",
-          "Node 10": "Industrial Age",
-          "Completed Node 10": "Event: Industrial Age"
+          "Node 1": "Basic Combat",
+          "Completed Node 1": "Event: Basic Combat",
+          "Node 2": "Agility",
+          "Completed Node 2": "Event: Agility",
+          "Node 3": "Strength",
+          "Completed Node 3": "Event: Strength",
+          "Node 4": "Battle Cry",
+          "Completed Node 4": "Event: Battle Cry",
+          "Node 5": "Shield Mastery",
+          "Completed Node 5": "Event: Shield Mastery",
+          "Node 6": "Parry",
+          "Completed Node 6": "Event: Parry",
+          "Node 7": "Counter",
+          "Completed Node 7": "Event: Counter",
+          "Node 8": "Sword Mastery",
+          "Completed Node 8": "Event: Sword Mastery",
+          "Node 9": "Dual Wield",
+          "Completed Node 9": "Event: Dual Wield",
+          "Node 10": "Whirlwind",
+          "Completed Node 10": "Event: Whirlwind",
+          "Node 11": "Warrior Stance",
+          "Completed Node 11": "Event: Warrior Stance",
+          "Node 12": "Legendary Hero",
+          "Completed Node 12": "Event: Legendary Hero"
         },
         "locations": {
-          "Complete Node 1": "Basic Tools",
-          "Complete Node 2": "Logging",
-          "Complete Node 3": "Carpentry",
-          "Complete Node 4": "Mining",
-          "Complete Node 5": "Smelting",
-          "Complete Node 6": "Metalworking",
-          "Complete Node 7": "Architecture",
-          "Complete Node 8": "Engineering",
-          "Complete Node 9": "Steam Power",
-          "Complete Node 10": "Industrial Age"
+          "Complete Node 1": "Basic Combat",
+          "Complete Node 2": "Agility",
+          "Complete Node 3": "Strength",
+          "Complete Node 4": "Battle Cry",
+          "Complete Node 5": "Shield Mastery",
+          "Complete Node 6": "Parry",
+          "Complete Node 7": "Counter",
+          "Complete Node 8": "Sword Mastery",
+          "Complete Node 9": "Dual Wield",
+          "Complete Node 10": "Whirlwind",
+          "Complete Node 11": "Warrior Stance",
+          "Complete Node 12": "Legendary Hero"
         },
         "regions": {
-          "Complete Node 1": "Basic Tools",
-          "Complete Node 2": "Logging",
-          "Complete Node 3": "Carpentry",
-          "Complete Node 4": "Mining",
-          "Complete Node 5": "Smelting",
-          "Complete Node 6": "Metalworking",
-          "Complete Node 7": "Architecture",
-          "Complete Node 8": "Engineering",
-          "Complete Node 9": "Steam Power",
-          "Complete Node 10": "Industrial Age"
+          "Complete Node 1": "Basic Combat",
+          "Complete Node 2": "Agility",
+          "Complete Node 3": "Strength",
+          "Complete Node 4": "Battle Cry",
+          "Complete Node 5": "Shield Mastery",
+          "Complete Node 6": "Parry",
+          "Complete Node 7": "Counter",
+          "Complete Node 8": "Sword Mastery",
+          "Complete Node 9": "Dual Wield",
+          "Complete Node 10": "Whirlwind",
+          "Complete Node 11": "Warrior Stance",
+          "Complete Node 12": "Legendary Hero"
         }
       },
       "canonical_placements": {
@@ -1924,7 +2093,9 @@
         "Complete Node 6": "Node 6",
         "Complete Node 7": "Node 7",
         "Complete Node 8": "Node 8",
-        "Complete Node 9": "Node 9"
+        "Complete Node 9": "Node 9",
+        "Complete Node 10": "Node 10",
+        "Complete Node 11": "Node 11"
       },
       "location_dependencies": {
         "Complete Node 2": [
@@ -1936,38 +2107,38 @@
           "Completed Node 1"
         ],
         "Complete Node 3": [
-          "Node 2",
-          "Completed Node 2"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Completed Node 3": [
-          "Node 2",
-          "Completed Node 2"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Complete Node 4": [
-          "Node 1",
-          "Completed Node 1"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Completed Node 4": [
-          "Node 1",
-          "Completed Node 1"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Complete Node 5": [
-          "Node 4",
-          "Completed Node 4"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Completed Node 5": [
-          "Node 4",
-          "Completed Node 4"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Complete Node 6": [
-          "Node 3",
-          "Completed Node 3",
+          "Node 2",
+          "Completed Node 2",
           "Node 5",
           "Completed Node 5"
         ],
         "Completed Node 6": [
-          "Node 3",
-          "Completed Node 3",
+          "Node 2",
+          "Completed Node 2",
           "Node 5",
           "Completed Node 5"
         ],
@@ -1980,232 +2151,322 @@
           "Completed Node 6"
         ],
         "Complete Node 8": [
-          "Node 6",
-          "Completed Node 6"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Completed Node 8": [
-          "Node 6",
-          "Completed Node 6"
+          "Node 3",
+          "Completed Node 3"
         ],
         "Complete Node 9": [
-          "Node 7",
-          "Completed Node 7",
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
         "Completed Node 9": [
-          "Node 7",
-          "Completed Node 7",
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
         "Complete Node 10": [
+          "Node 4",
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
         ],
         "Completed Node 10": [
+          "Node 4",
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
+        ],
+        "Complete Node 11": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "Completed Node 11": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "Complete Node 12": [
+          "Node 11",
+          "Completed Node 11"
+        ],
+        "Completed Node 12": [
+          "Node 11",
+          "Completed Node 11"
         ]
       },
       "entrance_dependencies": {
-        "From basic_tools to logging": [
+        "From basic_combat to agility": [
           "Node 1",
           "Completed Node 1"
         ],
-        "From logging to carpentry": [
+        "From basic_combat to strength": [
+          "Node 1",
+          "Completed Node 1"
+        ],
+        "From strength to battle_cry": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From strength to shield_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From agility to parry": [
           "Node 2",
-          "Completed Node 2"
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
         ],
-        "From basic_tools to mining": [
-          "Node 1",
-          "Completed Node 1"
+        "From shield_mastery to parry": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
         ],
-        "From mining to smelting": [
+        "From parry to counter": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "From strength to sword_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From agility to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From sword_mastery to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From battle_cry to whirlwind": [
           "Node 4",
-          "Completed Node 4"
-        ],
-        "From carpentry to metalworking": [
-          "Node 3",
-          "Completed Node 3",
-          "Node 5",
-          "Completed Node 5"
-        ],
-        "From smelting to metalworking": [
-          "Node 3",
-          "Completed Node 3",
-          "Node 5",
-          "Completed Node 5"
-        ],
-        "From metalworking to architecture": [
-          "Node 6",
-          "Completed Node 6"
-        ],
-        "From metalworking to engineering": [
-          "Node 6",
-          "Completed Node 6"
-        ],
-        "From architecture to steam_power": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From engineering to steam_power": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From steam_power to industrial_age": [
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
+        ],
+        "From dual_wield to whirlwind": [
+          "Node 4",
+          "Completed Node 4",
+          "Node 9",
+          "Completed Node 9"
+        ],
+        "From counter to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "From whirlwind to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "From warrior_stance to legendary_hero": [
+          "Node 11",
+          "Completed Node 11"
         ]
       },
       "exit_dependencies": {
-        "From basic_tools to logging": [
+        "From basic_combat to agility": [
           "Node 1",
           "Completed Node 1"
         ],
-        "From basic_tools to mining": [
+        "From basic_combat to strength": [
           "Node 1",
           "Completed Node 1"
         ],
-        "From logging to carpentry": [
+        "From agility to parry": [
           "Node 2",
-          "Completed Node 2"
-        ],
-        "From carpentry to metalworking": [
-          "Node 3",
-          "Completed Node 3",
+          "Completed Node 2",
           "Node 5",
           "Completed Node 5"
         ],
-        "From mining to smelting": [
+        "From agility to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From strength to battle_cry": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From strength to shield_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From strength to sword_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From battle_cry to whirlwind": [
           "Node 4",
-          "Completed Node 4"
-        ],
-        "From smelting to metalworking": [
-          "Node 3",
-          "Completed Node 3",
-          "Node 5",
-          "Completed Node 5"
-        ],
-        "From metalworking to architecture": [
-          "Node 6",
-          "Completed Node 6"
-        ],
-        "From metalworking to engineering": [
-          "Node 6",
-          "Completed Node 6"
-        ],
-        "From architecture to steam_power": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From engineering to steam_power": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From steam_power to industrial_age": [
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
+        ],
+        "From shield_mastery to parry": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "From parry to counter": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "From counter to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "From sword_mastery to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From dual_wield to whirlwind": [
+          "Node 4",
+          "Completed Node 4",
+          "Node 9",
+          "Completed Node 9"
+        ],
+        "From whirlwind to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 10",
+          "Completed Node 10"
+        ],
+        "From warrior_stance to legendary_hero": [
+          "Node 11",
+          "Completed Node 11"
         ]
       },
       "world_description": "Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.",
       "slot_data": {
         "graph_structure": {
           "1": {
-            "label": "basic_tools",
-            "expression": "Basic Tools",
+            "label": "basic_combat",
+            "expression": "Basic Combat",
             "dependencies": [],
-            "full_text": "basic_tools: Craft primitive tools from stone and wood"
+            "full_text": "basic_combat: Basic Combat"
           },
           "2": {
-            "label": "logging",
-            "expression": "Logging",
+            "label": "agility",
+            "expression": "Agility",
             "dependencies": [
               1
             ],
-            "full_text": "logging: Harvest timber from forests"
+            "full_text": "agility: Agility"
           },
           "3": {
-            "label": "carpentry",
-            "expression": "Carpentry",
-            "dependencies": [
-              2
-            ],
-            "full_text": "carpentry: Shape wood into useful structures"
-          },
-          "4": {
-            "label": "mining",
-            "expression": "Mining",
+            "label": "strength",
+            "expression": "Strength",
             "dependencies": [
               1
             ],
-            "full_text": "mining: Extract ores from the earth"
+            "full_text": "strength: Strength"
+          },
+          "4": {
+            "label": "battle_cry",
+            "expression": "Battle Cry",
+            "dependencies": [
+              3
+            ],
+            "full_text": "battle_cry: Battle Cry"
           },
           "5": {
-            "label": "smelting",
-            "expression": "Smelting",
+            "label": "shield_mastery",
+            "expression": "Shield Mastery",
             "dependencies": [
-              4
+              3
             ],
-            "full_text": "smelting: Smelt ores into metal ingots"
+            "full_text": "shield_mastery: Shield Mastery"
           },
           "6": {
-            "label": "metalworking",
-            "expression": "Metalworking",
+            "label": "parry",
+            "expression": "Parry",
             "dependencies": [
-              3,
+              2,
               5
             ],
-            "full_text": "metalworking: Forge metal into advanced components"
+            "full_text": "parry: Parry"
           },
           "7": {
-            "label": "architecture",
-            "expression": "Architecture",
+            "label": "counter",
+            "expression": "Counter",
             "dependencies": [
               6
             ],
-            "full_text": "architecture: Design and construct buildings"
+            "full_text": "counter: Counter"
           },
           "8": {
-            "label": "engineering",
-            "expression": "Engineering",
+            "label": "sword_mastery",
+            "expression": "Sword Mastery",
             "dependencies": [
-              6
+              3
             ],
-            "full_text": "engineering: Apply scientific principles to construction"
+            "full_text": "sword_mastery: Sword Mastery"
           },
           "9": {
-            "label": "steam_power",
-            "expression": "Steam Power",
+            "label": "dual_wield",
+            "expression": "Dual Wield",
             "dependencies": [
-              7,
+              2,
               8
             ],
-            "full_text": "steam_power: Harness the power of steam engines"
+            "full_text": "dual_wield: Dual Wield"
           },
           "10": {
-            "label": "industrial_age",
-            "expression": "Industrial Age",
+            "label": "whirlwind",
+            "expression": "Whirlwind",
             "dependencies": [
+              4,
               9
             ],
-            "full_text": "industrial_age: Enter the era of mass production"
+            "full_text": "whirlwind: Whirlwind"
+          },
+          "11": {
+            "label": "warrior_stance",
+            "expression": "Warrior Stance",
+            "dependencies": [
+              7,
+              10
+            ],
+            "full_text": "warrior_stance: Warrior Stance"
+          },
+          "12": {
+            "label": "legendary_hero",
+            "expression": "Legendary Hero",
+            "dependencies": [
+              11
+            ],
+            "full_text": "legendary_hero: Legendary Hero"
           }
         },
         "starting_nodes": [
           1
         ],
-        "title": "Tech Tree",
-        "randomize_items": false,
-        "vanilla_placement": 1
+        "title": "Skill Tree",
+        "randomize_items": 1,
+        "vanilla_placement": 0
       },
       "web": {
         "theme": "grass",
@@ -2230,11 +2491,10 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Completed Node 10"
+        "item": "Completed Node 12"
       }
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "preset_label": "tech_tree v"
+  "preset_label": "skill_tree s10"
 }

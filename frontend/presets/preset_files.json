@@ -895,7 +895,7 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_vanilla": true,
-        "label": "tech_tree v"
+        "label": "coding_adventure v"
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -913,7 +913,7 @@
           "AP_01043188731678011336_sphere_log.jsonl"
         ],
         "is_vanilla": true,
-        "label": "skill_tree v"
+        "label": "baking_adventure v"
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -931,7 +931,7 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ],
         "is_vanilla": true,
-        "label": "recipe_chain v"
+        "label": "tech_tree v"
       }
     }
   },
@@ -953,7 +953,7 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
-        "label": "tech_tree s1"
+        "label": "coding_adventure s1"
       },
       "AP_01043188731678011336": {
         "seed": 2,
@@ -970,7 +970,7 @@
           "AP_01043188731678011336_rules.json",
           "AP_01043188731678011336_sphere_log.jsonl"
         ],
-        "label": "tech_tree s2"
+        "label": "coding_adventure s2"
       },
       "AP_84719271504320872445": {
         "seed": 3,
@@ -987,7 +987,7 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ],
-        "label": "tech_tree s3"
+        "label": "coding_adventure s3"
       },
       "AP_05594871498841892311": {
         "seed": 4,
@@ -1004,7 +1004,7 @@
           "AP_05594871498841892311_rules.json",
           "AP_05594871498841892311_sphere_log.jsonl"
         ],
-        "label": "skill_tree s4"
+        "label": "baking_adventure s4"
       },
       "AP_96945849220684217413": {
         "seed": 5,
@@ -1021,7 +1021,7 @@
           "AP_96945849220684217413_rules.json",
           "AP_96945849220684217413_sphere_log.jsonl"
         ],
-        "label": "skill_tree s5"
+        "label": "baking_adventure s5"
       },
       "AP_00679259829289197625": {
         "seed": 6,
@@ -1038,7 +1038,7 @@
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_sphere_log.jsonl"
         ],
-        "label": "skill_tree s6"
+        "label": "baking_adventure s6"
       },
       "AP_35931773795037525048": {
         "seed": 7,
@@ -1055,7 +1055,7 @@
           "AP_35931773795037525048_rules.json",
           "AP_35931773795037525048_sphere_log.jsonl"
         ],
-        "label": "recipe_chain s7"
+        "label": "tech_tree s7"
       },
       "AP_20777137877808592492": {
         "seed": 8,
@@ -1072,7 +1072,7 @@
           "AP_20777137877808592492_rules.json",
           "AP_20777137877808592492_sphere_log.jsonl"
         ],
-        "label": "recipe_chain s8"
+        "label": "tech_tree s8"
       },
       "AP_48205312626925217390": {
         "seed": 9,
@@ -1089,7 +1089,109 @@
           "AP_48205312626925217390_rules.json",
           "AP_48205312626925217390_sphere_log.jsonl"
         ],
-        "label": "recipe_chain s9"
+        "label": "tech_tree s9"
+      },
+      "AP_55941320597534372051": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_55941320597534372051.archipelago",
+          "AP_55941320597534372051_Spoiler.txt",
+          "AP_55941320597534372051_rules.json",
+          "AP_55941320597534372051_sphere_log.jsonl"
+        ],
+        "label": "skill_tree s10"
+      },
+      "AP_89757102641179993453": {
+        "seed": 11,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_89757102641179993453.archipelago",
+          "AP_89757102641179993453_Spoiler.txt",
+          "AP_89757102641179993453_rules.json",
+          "AP_89757102641179993453_sphere_log.jsonl"
+        ],
+        "label": "skill_tree s11"
+      },
+      "AP_97195801408842856158": {
+        "seed": 12,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_97195801408842856158.archipelago",
+          "AP_97195801408842856158_Spoiler.txt",
+          "AP_97195801408842856158_rules.json",
+          "AP_97195801408842856158_sphere_log.jsonl"
+        ],
+        "label": "skill_tree s12"
+      },
+      "AP_97597253031866294651": {
+        "seed": 13,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_97597253031866294651.archipelago",
+          "AP_97597253031866294651_Spoiler.txt",
+          "AP_97597253031866294651_rules.json",
+          "AP_97597253031866294651_sphere_log.jsonl"
+        ],
+        "label": "recipe_chain s13"
+      },
+      "AP_85815028503973011889": {
+        "seed": 14,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_85815028503973011889.archipelago",
+          "AP_85815028503973011889_Spoiler.txt",
+          "AP_85815028503973011889_rules.json",
+          "AP_85815028503973011889_sphere_log.jsonl"
+        ],
+        "label": "recipe_chain s14"
+      },
+      "AP_03855006904931195900": {
+        "seed": 15,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DepGraph"
+          }
+        ],
+        "files": [
+          "AP_03855006904931195900.archipelago",
+          "AP_03855006904931195900_Spoiler.txt",
+          "AP_03855006904931195900_rules.json",
+          "AP_03855006904931195900_sphere_log.jsonl"
+        ],
+        "label": "recipe_chain s15"
       }
     }
   },
@@ -2850,7 +2952,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-02Mar2026-180400_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-05Mar2026-194354_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -6902,7 +7004,7 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ],
         "is_canonical": true,
-        "label": "tech_tree s1"
+        "label": "coding_adventure s1"
       }
     }
   },
@@ -9341,7 +9443,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-02T18:20:35.985201+00:00",
+    "test_data_updated": "2026-03-05T19:58:53.553057+00:00",
     "games_with_test_data": 151,
     "total_games": 158,
     "games_without_test_data": 7,
