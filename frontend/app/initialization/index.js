@@ -3,6 +3,11 @@
 // Extracted and refactored from init.js main() function (lines 1148-2610)
 
 import { profiler } from '../../modules/shared/profiler.js';
+import { resolveIframeUrl } from '../config/knownIframePages.js';
+import { resolveMetaGamePath } from '../config/knownMetaGames.js';
+
+// Delay (ms) between panel activation and iframe/metagame loading
+const IFRAME_LOAD_DELAY_MS = 500;
 
 // Import mode management
 import { determineActiveMode } from '../mode/modeManager.js';
@@ -519,16 +524,61 @@ export async function initializeApplication(dependencies) {
   // Handle panel URL parameter (comma-separated to activate one panel per stack)
   // Uses event bus so both desktop PanelManager and MobileLayoutManager can respond
   const panelParam = urlParams.get('panel');
-  if (panelParam) {
-    const panelIds = panelParam.split(',').map(s => s.trim()).filter(Boolean);
-    setTimeout(() => {
-      logger.info('init', `Activating panels from URL parameter: ${panelIds.join(', ')}`);
+  const iframeParam = urlParams.get('iframe');
+  const metagameParam = urlParams.get('metagame');
+  if (iframeParam) {
+    eventBus.registerPublisher('iframe:loadUrl', 'core');
+  }
+  if (metagameParam) {
+    eventBus.registerPublisher('metaGame:loadFromUrl', 'core');
+  }
+  if (panelParam || iframeParam || metagameParam) {
+    const activatePanelsAndAutoLoad = () => {
+      if (panelParam) {
+        const panelIds = panelParam.split(',').map(s => s.trim()).filter(Boolean);
+        logger.info('init', `Activating panels from URL parameter: ${panelIds.join(', ')}`);
 
-      for (const panelId of panelIds) {
-        logger.info('init', `Publishing panel activation for: ${panelId}`);
-        eventBus.publish('ui:activatePanel', { panelId }, 'core');
+        for (const panelId of panelIds) {
+          logger.info('init', `Publishing panel activation for: ${panelId}`);
+          eventBus.publish('ui:activatePanel', { panelId }, 'core');
+        }
       }
-    }, 1500);
+
+      // Handle ?iframe= parameter: resolve and load after a short delay for panels to settle
+      if (iframeParam) {
+        const resolvedUrl = resolveIframeUrl(iframeParam);
+        if (resolvedUrl) {
+          setTimeout(() => {
+            logger.info('init', `Loading iframe from URL parameter: ${iframeParam} -> ${resolvedUrl}`);
+            eventBus.publish('iframe:loadUrl', { url: resolvedUrl }, 'core');
+          }, IFRAME_LOAD_DELAY_MS);
+        } else {
+          logger.warn('init', `Could not resolve iframe URL parameter: ${iframeParam}`);
+        }
+      }
+
+      // Handle ?metagame= parameter: resolve shortname and load after panels settle
+      if (metagameParam) {
+        const resolvedPath = resolveMetaGamePath(metagameParam);
+        if (resolvedPath) {
+          setTimeout(() => {
+            logger.info('init', `Loading metagame from URL parameter: ${metagameParam} -> ${resolvedPath}`);
+            eventBus.publish('metaGame:loadFromUrl', { path: resolvedPath }, 'core');
+          }, IFRAME_LOAD_DELAY_MS);
+        } else {
+          logger.warn('init', `Could not resolve metagame URL parameter: ${metagameParam}`);
+        }
+      }
+    };
+
+    // Wait for panelManager to be initialized before activating panels
+    if (panelManagerInstance.isInitialized) {
+      activatePanelsAndAutoLoad();
+    } else {
+      eventBus.subscribe('panelManager:initialized', () => {
+        activatePanelsAndAutoLoad();
+      }, 'core');
+    }
   }
 
   // Subscribe to files:jsonLoaded event

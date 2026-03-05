@@ -1,5 +1,6 @@
 // UI component for iframe manager panel module
 import { getModuleEventBus } from './index.js';
+import { knownIframePages } from '../../app/config/knownIframePages.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -30,19 +31,8 @@ export class IframeManagerUI {
         this.currentUrl = '';
         this.connectedIframes = new Map(); // iframeId -> info
         
-        // Known pages configuration
-        this.knownPages = [
-            {
-                name: "Text Adventure (Standalone)",
-                url: "./modules/textAdventure-remote/index-iframe.html",
-                description: "Interactive text adventure running in iframe"
-            },
-            {
-                name: "Iframe Base",
-                url: "./modules/iframe-base/index.html",
-                description: "Basic iframe module showing connection status and heartbeat"
-            }
-        ];
+        // Known pages configuration (from shared config)
+        this.knownPages = knownIframePages.map(({ name, url, description, shortName }) => ({ name, url, description, shortName }));
         
         // Event subscriptions
         this.unsubscribeHandles = [];
@@ -327,9 +317,11 @@ export class IframeManagerUI {
         this.knownPages.forEach(page => {
             const option = document.createElement('option');
             option.value = page.url;
-            option.textContent = `${page.name} - ${page.description}`;
+            option.textContent = page.shortName
+                ? `${page.name} [${page.shortName}] - ${page.description}`
+                : `${page.name} - ${page.description}`;
             this.knownPagesSelect.appendChild(option);
-            log('info', `Added option: value="${page.url}", text="${page.name} - ${page.description}"`);
+            log('info', `Added option: value="${page.url}", text="${option.textContent}"`);
         });
         
         log('info', `Dropdown populated with ${this.knownPagesSelect.options.length} total options`);

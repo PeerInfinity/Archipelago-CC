@@ -73,6 +73,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('progressBarPanel:showUIContent');
   registrationApi.registerEventBusPublisher('progressBarPanel:hideUIContent');
+  registrationApi.registerEventBusPublisher('metaGame:progressBarCancelled');
   // Note: metaGame-specific progress bar events are registered dynamically when progress bars are created
   
   // Register settings schema

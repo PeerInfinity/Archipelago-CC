@@ -31,10 +31,10 @@
     // Task types (matching game's TaskType enum)
     const TaskType = {
         Normal: 0,
-        Mandatory: 1,
-        Travel: 2,
-        Boss: 3,
-        Prestige: 4
+        Travel: 1,
+        Mandatory: 2,
+        Prestige: 3,
+        Boss: 4
     };
 
     /**
@@ -42,7 +42,9 @@
      */
     function calcTaskCost(task, zoneId) {
         const costMult = task.task_definition?.cost_multiplier ?? task.costMult ?? 1;
-        return BASE_COST * costMult * Math.pow(ZONE_EXPONENT, zoneId);
+        const type = task.task_definition?.type ?? TaskType.Normal;
+        const exp = type === TaskType.Boss ? 4 : ZONE_EXPONENT;
+        return BASE_COST * costMult * Math.pow(exp, zoneId);
     }
 
     /**
@@ -57,15 +59,15 @@
         for (const skillType of skills) {
             const skill = gamestate.skills?.[skillType];
             if (skill) {
-                // Each skill level adds 5% speed (matching game's SKILL_SPEED_BOOST)
-                totalSpeedMod *= (1 + skill.level * 0.05);
+                // Skill level multiplier: 1.01^level (geometric)
+                totalSpeedMod *= Math.pow(1.01, skill.level);
                 // Apply any speed modifiers on the skill
                 totalSpeedMod *= (skill.speed_modifier ?? 1.0);
             }
         }
 
-        // Zone speedup bonus
-        const zoneSpeedup = Math.pow(ZONE_SPEEDUP_BASE, gamestate.highest_zone ?? 0);
+        // Zone speedup bonus (based on current zone, not highest)
+        const zoneSpeedup = Math.pow(ZONE_SPEEDUP_BASE, zoneId);
         totalSpeedMod *= zoneSpeedup;
 
         return totalSpeedMod;
@@ -93,16 +95,13 @@
      * Calculate energy drain per tick
      */
     function calcEnergyDrainPerTick(task, zoneId, gamestate, singleTick) {
-        const cost = calcTaskCost(task, zoneId);
-        const progressPerTick = calcProgressPerTick(task, zoneId, gamestate);
+        // Base drain is 1 per tick, scaled by zone speedup
+        let drain = 1;
 
-        if (singleTick) {
-            // Single tick tasks drain the full cost as energy
-            return cost;
-        }
+        // Zone scaling - later zones cost more energy per tick
+        drain *= Math.pow(ZONE_SPEEDUP_BASE, zoneId);
 
-        // Multi-tick tasks drain progressPerTick energy per tick
-        return progressPerTick;
+        return drain;
     }
 
     /**

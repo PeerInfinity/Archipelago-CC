@@ -116,6 +116,11 @@
             },
             {
               "type": "component",
+              "componentType": "mazeGameDataPanel",
+              "title": "Maze Game Data"
+            },
+            {
+              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },
@@ -250,6 +255,81 @@
               "type": "component",
               "componentType": "proofGraphPanel",
               "title": "Proof Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "optionsPanel",
+              "title": "Options"
+            },
+            {
+              "type": "component",
+              "componentType": "jsonPanel",
+              "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "modulesPanel",
+              "title": "Modules"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "depgraph": {
+    "settings": {
+      "showPopoutIcon": false,
+      "reorderEnabled": true
+    },
+    "root": {
+      "type": "row",
+      "content": [
+        {
+          "type": "stack",
+          "width": 45,
+          "id": "middle-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "proofQueuePanel",
+              "title": "Connection Tracker"
+            },
+            {
+              "type": "component",
+              "componentType": "clientPanel",
+              "title": "Console"
+            },
+            {
+              "type": "component",
+              "componentType": "regionGraphPanel",
+              "title": "Region Graph"
+            },
+            {
+              "type": "component",
+              "componentType": "presetsPanel",
+              "title": "Presets"
+            },
+            {
+              "type": "component",
+              "componentType": "editorPanel",
+              "title": "Editor"
+            },
+            {
+              "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor"
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "width": 55,
+          "id": "right-stack",
+          "content": [
+            {
+              "type": "component",
+              "componentType": "proofGraphPanel",
+              "title": "Connection Graph"
             },
             {
               "type": "component",

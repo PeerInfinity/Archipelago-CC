@@ -21,7 +21,7 @@ export class ProgressBarManager {
     }
 
     if (this.progressBars.has(data.id)) {
-      this.log('warn', `Progress bar with id "${data.id}" already exists, replacing it`);
+      this.log('debug', `Progress bar with id "${data.id}" already exists, replacing it`);
       this.destroyProgressBar(data.id);
     }
 
@@ -154,7 +154,7 @@ export class ProgressBarManager {
   hideProgressBar(id) {
     const progressBar = this.progressBars.get(id);
     if (!progressBar) {
-      this.log('warn', `Cannot hide progress bar "${id}" - not found`);
+      this.log('debug', `Cannot hide progress bar "${id}" - not found (may not be created yet)`);
       return;
     }
 

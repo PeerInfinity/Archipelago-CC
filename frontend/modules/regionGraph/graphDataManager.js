@@ -361,8 +361,9 @@ export class GraphDataManager {
       }
 
       // Step 2: Build a DAG from edge pairs. For each pair of connected regions,
-      // create one directed edge: shallower→deeper. For same BFS depth, use
-      // alphabetical order as a consistent tiebreaker (guaranteed acyclic).
+      // create one directed edge. For unidirectional exits, trust the data
+      // direction. For bidirectional exits, orient shallower→deeper using BFS
+      // depth, with alphabetical tiebreaker (guaranteed acyclic).
       const dagAdj = new Map();
       const dagInDeg = new Map();
       const seenPairs = new Set();
@@ -378,12 +379,22 @@ export class GraphDataManager {
         if (seenPairs.has(pairKey)) continue;
         seenPairs.add(pairKey);
 
-        const da = ubfsDepth.get(a);
-        const db = ubfsDepth.get(b);
+        const reverseKey = `${b}->${a}`;
+        const isBidirectional = exitMap.has(reverseKey);
+
         let parent, child;
-        if (da < db) { parent = a; child = b; }
-        else if (db < da) { parent = b; child = a; }
-        else { parent = a < b ? a : b; child = a < b ? b : a; }
+        if (!isBidirectional) {
+          // Unidirectional exit: trust the data direction
+          parent = a;
+          child = b;
+        } else {
+          // Bidirectional: orient by BFS depth, alphabetical tiebreak
+          const da = ubfsDepth.get(a);
+          const db = ubfsDepth.get(b);
+          if (da < db) { parent = a; child = b; }
+          else if (db < da) { parent = b; child = a; }
+          else { parent = a < b ? a : b; child = a < b ? b : a; }
+        }
 
         dagAdj.get(parent).push(child);
         dagInDeg.set(child, dagInDeg.get(child) + 1);
@@ -427,11 +438,12 @@ export class GraphDataManager {
       const hasReverseExit = exitMap.has(reverseExitKey);
       const isBidirectional = hasReverseExit;
 
-      // Orient edge parent→child based on longest-path depth from starting region.
-      // Flip the edge if toRegion is shallower (closer to root) than fromRegion.
+      // Orient edge parent→child. For unidirectional exits, trust the data
+      // direction. For bidirectional exits, use longest-path depth to orient
+      // shallower→deeper.
       const fromDepth = bfsDepth.get(fromRegion);
       const toDepth = bfsDepth.get(toRegion);
-      const useDataDirection = fromDepth === undefined || toDepth === undefined || fromDepth <= toDepth;
+      const useDataDirection = !hasReverseExit || fromDepth === undefined || toDepth === undefined || fromDepth <= toDepth;
 
       const edgeSource = useDataDirection ? fromRegion : toRegion;
       const edgeTarget = useDataDirection ? toRegion : fromRegion;

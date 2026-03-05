@@ -82,10 +82,14 @@ export class WindowAdapterCore {
      */
     handlePostMessage(event) {
         const message = event.data;
-        
+
         // Validate message structure
         if (!validateMessage(message)) {
-            log('warn', 'Received invalid message', message);
+            return;
+        }
+
+        // Skip messages intended for iframeAdapter (have iframeId but no windowId)
+        if (message.iframeId && !message.windowId) {
             return;
         }
         

@@ -1,64 +1,53 @@
-// iframeManagerPanel module entry point
-import { IframeManagerUI } from './iframeManagerUI.js';
+// mazeGameDataPanel module entry point
+import { MazeGameDataPanelUI } from './mazeGameDataPanelUI.js';
 import eventBus from '../../app/core/eventBus.js';
-import { knownIframePages } from '../../app/config/knownIframePages.js';
 
 // --- Module Info ---
 export const moduleInfo = {
-  name: 'iframeManagerPanel',
-  title: 'Iframe Manager',
-  componentType: 'iframeManagerPanel',
-  icon: '🖼️',
-  column: 2, // Middle column
-  description: 'Iframe Manager display panel.',
+  name: 'mazeGameDataPanel',
+  title: 'Maze Game Data',
+  componentType: 'mazeGameDataPanel',
+  icon: '',
+  column: 2,
+  description: 'View and control A-Mazing-Idle game data.',
 };
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('iframeManagerPanel', message, ...data);
+    window.logger[level]('mazeGameDataPanel', message, ...data);
   } else {
     const consoleMethod =
       console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[iframeManagerPanel] ${message}`, ...data);
+    consoleMethod(`[mazeGameDataPanel] ${message}`, ...data);
   }
 }
 
 // Store module-level references
 let moduleEventBus = null;
-let moduleId = 'iframeManagerPanel';
+let moduleId = 'mazeGameDataPanel';
 
 export async function register(registrationApi) {
     log('info', `[${moduleId} Module] Registering...`);
 
     // Register panel component for Golden Layout
-    registrationApi.registerPanelComponent('iframeManagerPanel', IframeManagerUI);
+    registrationApi.registerPanelComponent('mazeGameDataPanel', MazeGameDataPanelUI);
 
     // Register EventBus publishers
+    registrationApi.registerEventBusPublisher('amazingIdle:exportSave');
+    registrationApi.registerEventBusPublisher('amazingIdle:importSave');
+    registrationApi.registerEventBusPublisher('amazingIdle:injectPoints');
+    registrationApi.registerEventBusPublisher('amazingIdle:setBiome');
+    registrationApi.registerEventBusPublisher('amazingIdle:newMaze');
     registrationApi.registerEventBusPublisher('iframe:loadUrl');
-    registrationApi.registerEventBusPublisher('iframe:unload');
-    registrationApi.registerEventBusPublisher('iframeManager:urlChanged');
 
     // Register EventBus subscribers
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:loaded');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:unloaded');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:error');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:connected');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:disconnected');
-
-    // Register module settings schema
-    registrationApi.registerSettingsSchema(moduleId, {
-        knownPages: {
-            type: 'array',
-            default: knownIframePages.map(({ name, url, description }) => ({ name, url, description })),
-            description: 'List of known iframe applications'
-        },
-        allowCustomUrls: {
-            type: 'boolean',
-            default: true,
-            description: 'Allow users to enter custom URLs'
-        }
-    });
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:loaded');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:unloaded');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'amazingIdle:saveExported');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'amazingIdle:mazeCompleted');
 
     log('info', `[${moduleId} Module] Registration complete.`);
 }
@@ -69,7 +58,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
     // Store API references
     moduleEventBus = initializationApi.getEventBus();
-    
+
     log('info', `[${moduleId} Module] Initialization complete.`);
 }
 
@@ -78,9 +67,9 @@ export function getModuleEventBus() {
   if (moduleEventBus) return moduleEventBus;
   // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
   return {
-    publish: (event, data) => eventBus.publish(event, data, 'iframeManagerPanel'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'iframeManagerPanel'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'iframeManagerPanel'),
+    publish: (event, data) => eventBus.publish(event, data, 'mazeGameDataPanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'mazeGameDataPanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'mazeGameDataPanel'),
     publishAs: (event, data, source) => eventBus.publish(event, data, source),
     getAllPublishers: () => eventBus.getAllPublishers(),
     getAllSubscribers: () => eventBus.getAllSubscribers(),

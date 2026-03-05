@@ -396,10 +396,8 @@ export class IframePanelUI {
                 break;
                 
             default:
-                // Forward other messages to the adapter core
-                if (window.iframeAdapterCore) {
-                    window.iframeAdapterCore.handlePostMessage(event);
-                }
+                // Other messages are handled by iframeAdapterCore's own
+                // postMessage listener — no forwarding needed here.
                 break;
         }
     }
