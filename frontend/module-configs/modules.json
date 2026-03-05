@@ -187,6 +187,11 @@
       "enabled": true,
       "requires": ["iframeAdapter", "iframePanel"]
     },
+    "jtaGameDataPanel": {
+      "path": "./modules/jtaGameDataPanel/index.js",
+      "enabled": true,
+      "requires": ["iframeAdapter", "iframePanel"]
+    },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
       "enabled": true
@@ -259,6 +264,7 @@
     "iframePanel",
     "iframeManagerPanel",
     "mazeGameDataPanel",
+    "jtaGameDataPanel",
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",

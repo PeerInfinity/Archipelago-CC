@@ -121,6 +121,11 @@
             },
             {
               "type": "component",
+              "componentType": "jtaGameDataPanel",
+              "title": "JTA Game Data"
+            },
+            {
+              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },
