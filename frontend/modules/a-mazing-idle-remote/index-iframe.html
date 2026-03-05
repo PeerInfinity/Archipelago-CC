@@ -738,9 +738,10 @@
 
     <!-- Archipelago integration client (dynamic import to bypass base href resolution) -->
     <script type="module">
-        // <base href> redirects all URL resolution (including absolute paths) to the game's
-        // GitHub origin. Use location.origin to construct the correct localhost URL.
-        const clientUrl = new URL('/frontend/modules/a-mazing-idle-remote/mazeGameClient.js', location.origin).href;
+        // <base href> redirects all relative URL resolution to the game's GitHub origin.
+        // new URL() ignores <base> and resolves against the explicit base argument,
+        // so using location.href gives us the actual document URL regardless of deploy path.
+        const clientUrl = new URL('./mazeGameClient.js', location.href).href;
         import(clientUrl);
     </script>
 </body>
