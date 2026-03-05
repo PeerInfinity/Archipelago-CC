@@ -313,6 +313,8 @@ def parse_depgraph(graph_key: str) -> GraphStructure:
         "tech_tree": ("tech_tree.json", parse_json_graph),
         "skill_tree": ("skill_tree.dot", parse_dot_graph),
         "recipe_chain": ("recipe_chain.csv", parse_csv_graph),
+        "baking_adventure": ("baking_adventure.json", parse_json_graph),
+        "coding_adventure": ("coding_adventure.json", parse_json_graph),
     }
     if graph_key in bundled_graphs:
         filename, parser = bundled_graphs[graph_key]

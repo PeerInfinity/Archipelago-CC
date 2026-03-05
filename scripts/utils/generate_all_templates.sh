@@ -450,25 +450,37 @@ section "Generating DepGraph graph variant presets"
 
 # --- Vanilla seeds ---
 if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
-  generate_vanilla_seed "DepGraph"                                            # tech_tree, seed 1
-  generate_depgraph_seed "skill_tree" 2 "  vanilla_placement: true"           # skill_tree, seed 2
-  generate_depgraph_seed "recipe_chain" 3 "  vanilla_placement: true"         # recipe_chain, seed 3
+  generate_vanilla_seed "DepGraph"                                            # coding_adventure, seed 1
+  generate_depgraph_seed "baking_adventure" 2 "  vanilla_placement: true"     # baking_adventure, seed 2
+  generate_depgraph_seed "tech_tree" 3 "  vanilla_placement: true"            # tech_tree, seed 3
 fi
 
 # --- Main seeds ---
-# tech_tree (default): seeds 1-3 via default template
+# coding_adventure (default): seeds 1-3 via default template
 gen_seeds "DepGraph"
-# skill_tree: seeds 4-6
-generate_depgraph_seed "skill_tree" 4
+# baking_adventure: seeds 4-6
+generate_depgraph_seed "baking_adventure" 4
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-  generate_depgraph_seed "skill_tree" 5
-  generate_depgraph_seed "skill_tree" 6
+  generate_depgraph_seed "baking_adventure" 5
+  generate_depgraph_seed "baking_adventure" 6
 fi
-# recipe_chain: seeds 7-9
-generate_depgraph_seed "recipe_chain" 7
+# tech_tree: seeds 7-9
+generate_depgraph_seed "tech_tree" 7
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-  generate_depgraph_seed "recipe_chain" 8
-  generate_depgraph_seed "recipe_chain" 9
+  generate_depgraph_seed "tech_tree" 8
+  generate_depgraph_seed "tech_tree" 9
+fi
+# skill_tree: seeds 10-12
+generate_depgraph_seed "skill_tree" 10
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "skill_tree" 11
+  generate_depgraph_seed "skill_tree" 12
+fi
+# recipe_chain: seeds 13-15
+generate_depgraph_seed "recipe_chain" 13
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "recipe_chain" 14
+  generate_depgraph_seed "recipe_chain" 15
 fi
 
 # --- Multiworld ---
