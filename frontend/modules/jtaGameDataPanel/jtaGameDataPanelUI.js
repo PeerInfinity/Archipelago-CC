@@ -1,5 +1,6 @@
 // UI component for JTA game data panel module
 import { getModuleEventBus } from './index.js';
+import { compareZoneTasks, stateSummary, gameStateToSimState } from '../jta-randomizer/jtaSimComparison.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -123,6 +124,32 @@ export class JTAGameDataPanelUI {
                     ">Clear</button>
                 `)}
 
+                <!-- Simulator Comparison Section -->
+                ${this._sectionHTML('simComparison', 'Simulator Comparison', false, `
+                    <div style="margin-bottom: 8px; display: flex; gap: 6px; align-items: center;">
+                        <button class="jta-compare-btn" style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Compare Current Zone</button>
+                        <label style="font-size: 11px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <input type="checkbox" class="jta-auto-compare-cb" style="margin: 0;">
+                            Auto-refresh on zone change
+                        </label>
+                        <span class="jta-compare-status" style="font-size: 11px; color: #999;"></span>
+                    </div>
+                    <div class="jta-compare-state-summary" style="
+                        font-size: 11px; margin-bottom: 8px; padding: 6px;
+                        background: #2d2d30; border: 1px solid #555; border-radius: 3px;
+                        display: none;
+                    "></div>
+                    <div class="jta-compare-results" style="
+                        font-size: 11px; overflow-x: auto;
+                    ">
+                        <div style="color: #888; padding: 8px;">Click "Compare Current Zone" to run simulator formulas against the live game state.</div>
+                    </div>
+                `)}
+
                 <!-- Save Data Editor Section -->
                 ${this._sectionHTML('saveEditor', 'Save Data Editor', false, `
                     <div style="margin-bottom: 8px; display: flex; gap: 6px; align-items: center;">
@@ -200,6 +227,13 @@ export class JTAGameDataPanelUI {
         this._logEntries = q('.jta-log-entries');
         this._logClearBtn = q('.jta-log-clear-btn');
 
+        // Simulator comparison
+        this._compareBtn = q('.jta-compare-btn');
+        this._autoCompareCb = q('.jta-auto-compare-cb');
+        this._compareStatus = q('.jta-compare-status');
+        this._compareStateSummary = q('.jta-compare-state-summary');
+        this._compareResults = q('.jta-compare-results');
+
         // Save editor
         this._exportBtn = q('.jta-export-btn');
         this._importBtn = q('.jta-import-btn');
@@ -242,6 +276,22 @@ export class JTAGameDataPanelUI {
             this._logClearBtn.addEventListener('click', () => {
                 this.eventLog = [];
                 this._renderLog();
+            });
+        }
+
+        // Compare button - request detailed state for simulator comparison
+        if (this._compareBtn) {
+            this._compareBtn.addEventListener('click', () => {
+                this.eventBus.publish('jta:requestDetailedState', {});
+                this._setCompareStatus('Requesting game state...');
+            });
+        }
+
+        // Auto-compare checkbox
+        this._autoCompare = false;
+        if (this._autoCompareCb) {
+            this._autoCompareCb.addEventListener('change', (e) => {
+                this._autoCompare = e.target.checked;
             });
         }
 
@@ -295,6 +345,7 @@ export class JTAGameDataPanelUI {
         sub('iframePanel:unloaded', (data) => this._handleIframeUnloaded(data));
         sub('jta:saveExported', (data) => this._handleSaveExported(data));
         sub('jta:stateSnapshot', (data) => this._handleStateSnapshot(data));
+        sub('jta:detailedStateSnapshot', (data) => this._handleDetailedStateSnapshot(data));
         sub('jta:zoneChanged', (data) => this._handleZoneChanged(data));
         sub('jta:energyReset', (data) => this._handleEnergyReset(data));
         sub('jta:prestige', (data) => this._handlePrestige(data));
@@ -370,6 +421,10 @@ export class JTAGameDataPanelUI {
             const current = parseInt(this._gsHighestZone.textContent) || 0;
             if (data.highestZone > current) this._gsHighestZone.textContent = data.highestZone;
         }
+        // Auto-compare on zone change
+        if (this._autoCompare) {
+            this.eventBus.publish('jta:requestDetailedState', {});
+        }
     }
 
     _handleEnergyReset(data) {
@@ -388,6 +443,131 @@ export class JTAGameDataPanelUI {
         const time = new Date(data.timestamp).toLocaleTimeString('en-US', { hour12: false });
         this._addLogEntry(`[${time}] Perks: ${data.perkCount}`);
         if (this._gsPerks) this._gsPerks.textContent = data.perkCount;
+    }
+
+    _handleDetailedStateSnapshot(data) {
+        const gs = data.state;
+        if (!gs) {
+            this._setCompareStatus('No game state received', true);
+            return;
+        }
+
+        try {
+            const comparison = compareZoneTasks(gs);
+            const summary = stateSummary(gs, comparison.simState);
+            this._renderComparison(comparison, summary);
+            this._setCompareStatus(`Zone ${comparison.zoneId}: ${comparison.zoneName}`);
+        } catch (e) {
+            this._setCompareStatus(`Error: ${e.message}`, true);
+            log('error', 'Comparison failed:', e);
+        }
+    }
+
+    _setCompareStatus(msg, isError = false) {
+        if (!this._compareStatus) return;
+        this._compareStatus.textContent = msg;
+        this._compareStatus.style.color = isError ? '#f44336' : '#4CAF50';
+    }
+
+    _renderComparison(comparison, summary) {
+        // Render state summary
+        if (this._compareStateSummary) {
+            this._compareStateSummary.style.display = 'block';
+            const skills = Object.entries(summary.skills)
+                .map(([name, level]) => `${name}: ${level}`)
+                .join(', ');
+            this._compareStateSummary.innerHTML = `
+                <div style="margin-bottom: 4px;"><strong>Zone:</strong> ${summary.zone} | <strong>Energy:</strong> ${summary.energy} | <strong>Resets:</strong> ${summary.resets}</div>
+                <div style="margin-bottom: 4px;"><strong>Perks:</strong> ${summary.perks} | <strong>Power:</strong> ${summary.power} | <strong>Attunement:</strong> ${summary.attunement} | <strong>Prestige:</strong> ${summary.prestige}</div>
+                <div style="margin-bottom: 4px;"><strong>Artifacts:</strong> Haste: ${summary.artifacts.haste}, Ring: ${summary.artifacts.magicRing}, Lightning: ${summary.artifacts.lightning}</div>
+                <div><strong>Skills:</strong> ${skills || 'none'}</div>
+            `;
+        }
+
+        // Render task comparison table
+        if (!this._compareResults) return;
+
+        if (comparison.error) {
+            this._compareResults.innerHTML = `<div style="color: #f44336; padding: 8px;">${comparison.error}</div>`;
+            return;
+        }
+
+        if (comparison.tasks.length === 0) {
+            this._compareResults.innerHTML = `<div style="color: #888; padding: 8px;">No tasks in zone ${comparison.zoneId}</div>`;
+            return;
+        }
+
+        const fmt = (n) => {
+            if (n === undefined || n === null) return '--';
+            if (Number.isInteger(n)) return n.toLocaleString();
+            if (Math.abs(n) >= 100) return n.toFixed(1);
+            if (Math.abs(n) >= 1) return n.toFixed(3);
+            return n.toFixed(5);
+        };
+
+        let html = `
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; font-family: monospace;">
+                <thead>
+                    <tr style="background: #2a2a2a; border-bottom: 2px solid #555;">
+                        <th style="padding: 4px 6px; text-align: left;">Task</th>
+                        <th style="padding: 4px 6px; text-align: left;">Type</th>
+                        <th style="padding: 4px 6px; text-align: right;">Reps</th>
+                        <th style="padding: 4px 6px; text-align: right;">Cost</th>
+                        <th style="padding: 4px 6px; text-align: right;">Prog/Tick</th>
+                        <th style="padding: 4px 6px; text-align: right;">Ticks</th>
+                        <th style="padding: 4px 6px; text-align: right;">Drain/Tick</th>
+                        <th style="padding: 4px 6px; text-align: right;">Energy/Rep</th>
+                        <th style="padding: 4px 6px; text-align: right;">XP/Rep</th>
+                        <th style="padding: 4px 6px; text-align: center;">Flags</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        for (const task of comparison.tasks) {
+            if (task.error) {
+                html += `<tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 3px 6px; color: #f44336;" colspan="10">${task.name} (${task.id}): ${task.error}</td>
+                </tr>`;
+                continue;
+            }
+
+            const s = task.sim;
+            const flags = [
+                s.singleTick ? '1T' : '',
+                task.hasted ? 'H' : '',
+                task.xpBoosted ? 'XP' : '',
+                task.lightning ? 'L' : '',
+            ].filter(Boolean).join(' ');
+
+            html += `
+                <tr style="border-bottom: 1px solid #333;">
+                    <td style="padding: 3px 6px;" title="${task.skills}">${task.name}</td>
+                    <td style="padding: 3px 6px; color: ${this._taskTypeColor(task.type)};">${task.type}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${task.reps}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${fmt(s.cost)}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${fmt(s.progressPerTick)}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${s.ticks}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${fmt(s.energyDrainPerTick)}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${fmt(s.energyCostPerRep)}</td>
+                    <td style="padding: 3px 6px; text-align: right;">${fmt(s.xpPerRep)}</td>
+                    <td style="padding: 3px 6px; text-align: center; color: #888;">${flags}</td>
+                </tr>
+            `;
+        }
+
+        html += '</tbody></table>';
+        this._compareResults.innerHTML = html;
+    }
+
+    _taskTypeColor(type) {
+        switch (type) {
+            case 'Travel': return '#4fc3f7';
+            case 'Mandatory': return '#ffb74d';
+            case 'Boss': return '#ef5350';
+            case 'Prestige': return '#ce93d8';
+            default: return '#ccc';
+        }
     }
 
     // --- UI updates ---
@@ -604,6 +784,11 @@ export class JTAGameDataPanelUI {
         this._gsPerks = null;
         this._gsPrestige = null;
         this._refreshBtn = null;
+        this._compareBtn = null;
+        this._autoCompareCb = null;
+        this._compareStatus = null;
+        this._compareStateSummary = null;
+        this._compareResults = null;
         this._logEntries = null;
         this._logClearBtn = null;
         this._exportBtn = null;

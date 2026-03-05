@@ -37,6 +37,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jta:exportSave');
     registrationApi.registerEventBusPublisher('jta:importSave');
     registrationApi.registerEventBusPublisher('jta:requestState');
+    registrationApi.registerEventBusPublisher('jta:requestDetailedState');
     registrationApi.registerEventBusPublisher('iframe:loadUrl');
 
     // Register EventBus subscribers
@@ -46,6 +47,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframePanel:unloaded');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:saveExported');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:stateSnapshot');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:detailedStateSnapshot');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:zoneChanged');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyReset');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestige');

@@ -193,8 +193,11 @@
 
     <div id="tooltip" class="tooltip hidden"></div>
 
-    <!-- Game bundle (resolved via base href) -->
-    <script type="module" src="./build/game.js"></script>
+    <!-- Game bundle (local build with Archipelago patches; bypasses base href) -->
+    <script type="module">
+        const gameUrl = new URL('./game-bundle/game.js', location.href).href;
+        import(gameUrl);
+    </script>
 
     <!-- Archipelago integration client (dynamic import to bypass base href resolution) -->
     <script type="module">

@@ -91,6 +91,112 @@ function readGameState() {
 }
 
 /**
+ * Read detailed game state for simulator comparison.
+ * Extracts skill levels, perks, items, power/attunement, prestige, and
+ * per-task computed values from the live GAMESTATE.
+ * @returns {object|null}
+ */
+function readDetailedGameState() {
+    const gs = window.getGamestate;
+    if (!gs) return null;
+
+    // Skills: array of {type, level, progress, speed_modifier}
+    const skills = {};
+    if (Array.isArray(gs.skills)) {
+        for (const skill of gs.skills) {
+            skills[skill.type] = {
+                level: skill.level,
+                xp: skill.progress,
+                speedModifier: skill.speed_modifier,
+            };
+        }
+    }
+
+    // Perks: array of perk type IDs that are owned
+    const perks = [];
+    if (gs.perks instanceof Map) {
+        for (const [perkType, owned] of gs.perks) {
+            if (owned) perks.push(perkType);
+        }
+    }
+
+    // Items: object of itemType -> count
+    const items = {};
+    if (gs.items instanceof Map) {
+        for (const [itemType, count] of gs.items) {
+            if (count > 0) items[itemType] = count;
+        }
+    }
+
+    // Prestige unlocks and repeatables
+    const prestigeUnlocks = Array.isArray(gs.prestige_unlocks) ? [...gs.prestige_unlocks] : [];
+    const prestigeRepeatables = {};
+    if (gs.prestige_repeatables instanceof Map) {
+        for (const [type, level] of gs.prestige_repeatables) {
+            prestigeRepeatables[type] = level;
+        }
+    }
+
+    // Per-task data for current zone's tasks (Task objects with runtime state)
+    const tasks = [];
+    if (Array.isArray(gs.tasks)) {
+        for (const task of gs.tasks) {
+            const def = task.task_definition;
+            tasks.push({
+                id: def.id,
+                name: def.name,
+                type: def.type,
+                zoneId: def.zone_id,
+                costMult: def.cost_multiplier,
+                skills: [...def.skills],
+                xpMult: def.xp_mult,
+                maxReps: def.max_reps,
+                perk: def.perk,
+                item: def.item,
+                useItem: def.use_item,
+                hidden: def.hidden_by_default,
+                // Runtime state
+                progress: task.progress,
+                reps: task.reps,
+                enabled: task.enabled,
+                hasted: task.hasted,
+                xpBoosted: task.xp_boosted,
+                lightning: task.lightning,
+            });
+        }
+    }
+
+    return {
+        // Zone/energy
+        currentZone: gs.current_zone,
+        highestZone: gs.highest_zone,
+        highestZoneEver: gs.highest_zone_ever,
+        highestZoneFullyCompleted: gs.highest_zone_fully_completed,
+        highestZoneFullyCompletedEver: gs.highest_zone_fully_completed_ever,
+        currentEnergy: gs.current_energy,
+        maxEnergy: gs.max_energy,
+        energyResetCount: gs.energy_reset_count,
+        // Skills, perks, items
+        skills,
+        perks,
+        items,
+        // Power/attunement
+        power: gs.power,
+        attunement: gs.attunement,
+        // Prestige
+        prestigeCount: gs.prestige_count,
+        prestigeUnlocks,
+        prestigeRepeatables,
+        // Artifacts
+        queuedScrollsOfHaste: gs.queued_scrolls_of_haste,
+        queuedMagicRings: gs.queued_magic_rings,
+        queuedLightning: gs.queued_lightning,
+        // Current zone tasks with runtime state
+        tasks,
+    };
+}
+
+/**
  * Set up polling to detect game state changes and publish events
  * @param {IframeClient} client
  */
@@ -231,6 +337,177 @@ function importSave(saveJson) {
 }
 
 /**
+ * Patch the live game runtime state.
+ * Accepts a partial state object matching the detailedGameState structure.
+ * Only provided fields are modified; omitted fields are untouched.
+ * @param {object} patch
+ * @param {IframeClient} client
+ */
+function patchGameState(patch, client) {
+    const gs = window.getGamestate;
+    if (!gs) {
+        console.error(`${LOG_PREFIX} patchGameState: no GAMESTATE`);
+        return;
+    }
+
+    let changes = 0;
+
+    // Energy
+    if (patch.currentEnergy !== undefined) { gs.current_energy = patch.currentEnergy; changes++; }
+    if (patch.maxEnergy !== undefined) { gs.max_energy = patch.maxEnergy; changes++; }
+
+    // Zone tracking
+    if (patch.currentZone !== undefined) { gs.current_zone = patch.currentZone; changes++; }
+    if (patch.highestZone !== undefined) { gs.highest_zone = patch.highestZone; changes++; }
+    if (patch.highestZoneEver !== undefined) { gs.highest_zone_ever = patch.highestZoneEver; changes++; }
+    if (patch.highestZoneFullyCompleted !== undefined) { gs.highest_zone_fully_completed = patch.highestZoneFullyCompleted; changes++; }
+    if (patch.highestZoneFullyCompletedEver !== undefined) { gs.highest_zone_fully_completed_ever = patch.highestZoneFullyCompletedEver; changes++; }
+    if (patch.energyResetCount !== undefined) { gs.energy_reset_count = patch.energyResetCount; changes++; }
+
+    // Skills: { skillType: { level, xp, speedModifier } }
+    if (patch.skills && Array.isArray(gs.skills)) {
+        for (const [skillTypeStr, data] of Object.entries(patch.skills)) {
+            const skillType = Number(skillTypeStr);
+            const skill = gs.skills[skillType];
+            if (!skill) continue;
+            if (data.level !== undefined) { skill.level = data.level; changes++; }
+            if (data.xp !== undefined) { skill.progress = data.xp; changes++; }
+            if (data.speedModifier !== undefined) { skill.speed_modifier = data.speedModifier; changes++; }
+        }
+    }
+
+    // Perks: array of perk type IDs to set as owned (replaces current perks)
+    if (Array.isArray(patch.perks) && gs.perks instanceof Map) {
+        gs.perks.clear();
+        for (const perkType of patch.perks) {
+            gs.perks.set(perkType, true);
+        }
+        changes++;
+    }
+
+    // Items: { itemType: count }
+    if (patch.items && gs.items instanceof Map) {
+        for (const [itemTypeStr, count] of Object.entries(patch.items)) {
+            gs.items.set(Number(itemTypeStr), count);
+        }
+        changes++;
+    }
+
+    // Power / Attunement
+    if (patch.power !== undefined) { gs.power = patch.power; changes++; }
+    if (patch.attunement !== undefined) { gs.attunement = patch.attunement; changes++; }
+
+    // Artifacts
+    if (patch.queuedScrollsOfHaste !== undefined) { gs.queued_scrolls_of_haste = patch.queuedScrollsOfHaste; changes++; }
+    if (patch.queuedMagicRings !== undefined) { gs.queued_magic_rings = patch.queuedMagicRings; changes++; }
+    if (patch.queuedLightning !== undefined) { gs.queued_lightning = patch.queuedLightning; changes++; }
+
+    // Prestige unlocks: array of PrestigeUnlockType values (replaces current)
+    if (Array.isArray(patch.prestigeUnlocks)) {
+        gs.prestige_unlocks = [...patch.prestigeUnlocks];
+        changes++;
+    }
+
+    // Prestige repeatables: { type: level }
+    if (patch.prestigeRepeatables && gs.prestige_repeatables instanceof Map) {
+        for (const [typeStr, level] of Object.entries(patch.prestigeRepeatables)) {
+            gs.prestige_repeatables.set(Number(typeStr), level);
+        }
+        changes++;
+    }
+
+    if (patch.prestigeCount !== undefined) { gs.prestige_count = patch.prestigeCount; changes++; }
+
+    // Optionally rebuild current zone tasks after state changes
+    if (patch.resetTasks && window.resetTasks) {
+        window.resetTasks();
+        changes++;
+    }
+
+    console.log(`${LOG_PREFIX} patchGameState: ${changes} changes applied`);
+    client.publishEventBus('jta:gameStatePatched', { changes, timestamp: Date.now() });
+}
+
+/**
+ * Patch task definitions in the game's ZONES/TASK_LOOKUP data.
+ * Each entry in the patches array targets a task by ID and modifies its fields.
+ * After patching, optionally calls resetTasks() to rebuild current zone.
+ *
+ * @param {object} data - { patches: [{id, perk?, item?, skills?, costMult?, xpMult?, maxReps?, ...}], resetTasks? }
+ * @param {IframeClient} client
+ */
+function patchTaskDefs(data, client) {
+    const taskLookup = window.TASK_LOOKUP;
+    if (!taskLookup) {
+        console.error(`${LOG_PREFIX} patchTaskDefs: TASK_LOOKUP not available on window`);
+        client.publishEventBus('jta:taskDefsPatched', { error: 'TASK_LOOKUP not available', timestamp: Date.now() });
+        return;
+    }
+
+    const patches = data.patches || [];
+    let patched = 0;
+    let notFound = 0;
+
+    for (const patch of patches) {
+        const def = taskLookup.get(patch.id);
+        if (!def) {
+            console.warn(`${LOG_PREFIX} patchTaskDefs: task ${patch.id} not found`);
+            notFound++;
+            continue;
+        }
+
+        if (patch.perk !== undefined) def.perk = patch.perk;
+        if (patch.item !== undefined) def.item = patch.item;
+        if (patch.useItem !== undefined) def.use_item = patch.useItem;
+        if (patch.skills !== undefined) def.skills = [...patch.skills];
+        if (patch.costMult !== undefined) def.cost_multiplier = patch.costMult;
+        if (patch.xpMult !== undefined) def.xp_mult = patch.xpMult;
+        if (patch.maxReps !== undefined) def.max_reps = patch.maxReps;
+        if (patch.type !== undefined) def.type = patch.type;
+        if (patch.name !== undefined) def.name = patch.name;
+        if (patch.hidden !== undefined) def.hidden_by_default = patch.hidden;
+
+        patched++;
+    }
+
+    // Rebuild current zone tasks so active Task objects pick up changes
+    if (data.resetTasks !== false && window.resetTasks) {
+        window.resetTasks();
+    }
+
+    console.log(`${LOG_PREFIX} patchTaskDefs: ${patched} patched, ${notFound} not found`);
+    client.publishEventBus('jta:taskDefsPatched', { patched, notFound, timestamp: Date.now() });
+}
+
+/**
+ * Read the game's full zone/task definition data (for comparison with our gameData.js)
+ * @returns {object|null}
+ */
+function readGameDefinitions() {
+    const zones = window.ZONES;
+    if (!zones) return null;
+
+    return zones.map((zone, zoneId) => ({
+        name: zone.name,
+        zoneId,
+        tasks: zone.tasks.map(def => ({
+            id: def.id,
+            name: def.name,
+            type: def.type,
+            zoneId: def.zone_id,
+            costMult: def.cost_multiplier,
+            skills: [...def.skills],
+            xpMult: def.xp_mult,
+            maxReps: def.max_reps,
+            perk: def.perk,
+            item: def.item,
+            useItem: def.use_item,
+            hidden: def.hidden_by_default,
+        })),
+    }));
+}
+
+/**
  * Set up eventBus subscriptions for save import/export and game commands
  * @param {IframeClient} client
  */
@@ -249,13 +526,41 @@ function setupSubscriptions(client) {
         }
     });
 
-    // Request game state snapshot
+    // Request game state snapshot (summary)
     client.subscribeEventBus('jta:requestState', () => {
         const state = readGameState();
         client.publishEventBus('jta:stateSnapshot', {
             state,
             timestamp: Date.now()
         });
+    });
+
+    // Request detailed game state for simulator comparison
+    client.subscribeEventBus('jta:requestDetailedState', () => {
+        const detailedState = readDetailedGameState();
+        client.publishEventBus('jta:detailedStateSnapshot', {
+            state: detailedState,
+            timestamp: Date.now()
+        });
+    });
+
+    // Request game zone/task definitions
+    client.subscribeEventBus('jta:requestGameDefs', () => {
+        const defs = readGameDefinitions();
+        client.publishEventBus('jta:gameDefsSnapshot', {
+            zones: defs,
+            timestamp: Date.now()
+        });
+    });
+
+    // Patch runtime game state
+    client.subscribeEventBus('jta:patchGameState', (data) => {
+        patchGameState(data, client);
+    });
+
+    // Patch task definitions
+    client.subscribeEventBus('jta:patchTaskDefs', (data) => {
+        patchTaskDefs(data, client);
     });
 
     console.log(`${LOG_PREFIX} Subscriptions active`);
