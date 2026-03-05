@@ -19,7 +19,7 @@ export class MetaGamePanelUI {
     this.statusElement = null;
     
     // Available preset configurations (from shared config)
-    this.presetConfigurations = knownMetaGames.map(({ name, path }) => ({ name, path }));
+    this.presetConfigurations = knownMetaGames.map(({ name, path, shortName }) => ({ name, path, shortName }));
 
     // Pending load request from URL parameter (queued until APIs are ready)
     this.pendingLoadPath = null;
@@ -216,7 +216,7 @@ export class MetaGamePanelUI {
         <select id="metagame-config-dropdown" class="metagame-dropdown">
           <option value="">-- Select a configuration --</option>
           ${this.presetConfigurations.map(config =>
-            `<option value="${config.path}">${config.name}</option>`
+            `<option value="${config.path}">${config.name}${config.shortName ? ` [${config.shortName}]` : ''}</option>`
           ).join('')}
         </select>
         <div style="margin-top: 10px;">

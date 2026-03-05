@@ -32,7 +32,7 @@ export class IframeManagerUI {
         this.connectedIframes = new Map(); // iframeId -> info
         
         // Known pages configuration (from shared config)
-        this.knownPages = knownIframePages.map(({ name, url, description }) => ({ name, url, description }));
+        this.knownPages = knownIframePages.map(({ name, url, description, shortName }) => ({ name, url, description, shortName }));
         
         // Event subscriptions
         this.unsubscribeHandles = [];
@@ -317,9 +317,11 @@ export class IframeManagerUI {
         this.knownPages.forEach(page => {
             const option = document.createElement('option');
             option.value = page.url;
-            option.textContent = `${page.name} - ${page.description}`;
+            option.textContent = page.shortName
+                ? `${page.name} [${page.shortName}] - ${page.description}`
+                : `${page.name} - ${page.description}`;
             this.knownPagesSelect.appendChild(option);
-            log('info', `Added option: value="${page.url}", text="${page.name} - ${page.description}"`);
+            log('info', `Added option: value="${page.url}", text="${option.textContent}"`);
         });
         
         log('info', `Dropdown populated with ${this.knownPagesSelect.options.length} total options`);
