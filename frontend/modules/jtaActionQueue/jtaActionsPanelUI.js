@@ -74,25 +74,47 @@ export class JTAActionsPanelUI {
             this.#renderZoneTasks();
         });
 
+        const actionsBody = this.#container.querySelector('.aq-actions-body');
+
         // Click handler for all action buttons (delegated)
-        this.#container.querySelector('.aq-actions-body').addEventListener('click', (e) => {
+        actionsBody.addEventListener('click', (e) => {
             const btn = e.target.closest('.aq-action-btn');
             if (!btn || !this.#queue || !this.#catalog) return;
 
-            const actionType = btn.dataset.actionType;
-            const actionId = btn.dataset.actionId;
-
-            const allActions = [...this.#catalog.tasks, ...this.#catalog.items, ...this.#catalog.prestige];
-            const catalogEntry = allActions.find(a =>
-                a.actionType === actionType && String(a.actionId) === String(actionId)
-            );
-
+            const catalogEntry = this.#findCatalogEntry(btn.dataset.actionType, btn.dataset.actionId);
             if (catalogEntry) {
                 const queueEntry = createQueueEntry(catalogEntry);
                 this.#queue.add(queueEntry);
                 if (this.#onQueueChanged) this.#onQueueChanged();
             }
         });
+
+        // Drag support — action buttons can be dragged onto the queue
+        actionsBody.addEventListener('dragstart', (e) => {
+            const btn = e.target.closest('.aq-action-btn');
+            if (!btn || !this.#catalog) return;
+
+            const catalogEntry = this.#findCatalogEntry(btn.dataset.actionType, btn.dataset.actionId);
+            if (catalogEntry) {
+                e.dataTransfer.effectAllowed = 'copy';
+                e.dataTransfer.setData('application/aq-action', JSON.stringify(catalogEntry));
+                btn.classList.add('aq-dragging');
+            }
+        });
+
+        actionsBody.addEventListener('dragend', (e) => {
+            const btn = e.target.closest('.aq-action-btn');
+            if (btn) btn.classList.remove('aq-dragging');
+        });
+    }
+
+    /** Find a catalog entry by type and id */
+    #findCatalogEntry(actionType, actionId) {
+        if (!this.#catalog) return null;
+        const allActions = [...this.#catalog.tasks, ...this.#catalog.items, ...this.#catalog.prestige];
+        return allActions.find(a =>
+            a.actionType === actionType && String(a.actionId) === String(actionId)
+        ) || null;
     }
 
     /** Build the ordered zone name list from catalog */
@@ -142,7 +164,7 @@ export class JTAActionsPanelUI {
         const tasks = this.#catalog.tasks.filter(t => t.group === zoneName);
         let html = '<div class="aq-action-group-buttons" style="display: flex; flex-wrap: wrap; gap: 4px;">';
         for (const task of tasks) {
-            html += `<button class="aq-action-btn" data-action-type="${task.actionType}" data-action-id="${task.actionId}" title="${zoneName}: ${task.label}">${task.label}</button>`;
+            html += `<button class="aq-action-btn" draggable="true" data-action-type="${task.actionType}" data-action-id="${task.actionId}" title="${zoneName}: ${task.label}">${task.label}</button>`;
         }
         html += '</div>';
         container.innerHTML = html;
@@ -168,7 +190,7 @@ export class JTAActionsPanelUI {
                     <div style="font-weight: bold; margin-bottom: 2px;">${groupName}</div>
                     <div class="aq-action-group-buttons" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
                 for (const item of items) {
-                    html += `<button class="aq-action-btn aq-item-btn" data-action-type="${item.actionType}" data-action-id="${item.actionId}" title="Use ${item.label}">${item.icon || ''} ${item.label}</button>`;
+                    html += `<button class="aq-action-btn aq-item-btn" draggable="true" data-action-type="${item.actionType}" data-action-id="${item.actionId}" title="Use ${item.label}">${item.icon || ''} ${item.label}</button>`;
                 }
                 html += `</div></div>`;
             }
@@ -180,7 +202,7 @@ export class JTAActionsPanelUI {
                 <div style="font-weight: bold; margin-bottom: 2px;">Special</div>
                 <div class="aq-action-group-buttons" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
             for (const action of this.#catalog.prestige) {
-                html += `<button class="aq-action-btn aq-special-btn" data-action-type="${action.actionType}" data-action-id="${action.actionId}" title="${action.label}">${action.label}</button>`;
+                html += `<button class="aq-action-btn aq-special-btn" draggable="true" data-action-type="${action.actionType}" data-action-id="${action.actionId}" title="${action.label}">${action.label}</button>`;
             }
             html += `</div></div>`;
         }

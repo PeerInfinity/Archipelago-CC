@@ -14,6 +14,9 @@ export class ActionQueue {
     /** @type {boolean} */
     #running = false;
 
+    /** @type {object|null} Serialized snapshot for single-level undo */
+    #lastSnapshot = null;
+
     /**
      * @returns {import('./actionTypes.js').QueueEntry[]} Shallow copy of entries
      */
@@ -56,11 +59,13 @@ export class ActionQueue {
     }
 
     /**
-     * Add an entry to the end of the queue
+     * Add an entry to the end (or optionally at a specific index) of the queue
      * @param {Partial<import('./actionTypes.js').QueueEntry>} entry
+     * @param {number} [atIndex] - Optional insertion index
      * @returns {import('./actionTypes.js').QueueEntry} The created entry
      */
-    add(entry) {
+    add(entry, atIndex) {
+        this.recordLast();
         const full = {
             entryId: entry.entryId || generateEntryId(),
             actionType: entry.actionType,
@@ -70,7 +75,11 @@ export class ActionQueue {
             loops: entry.loops ?? 1,
             disabled: entry.disabled ?? false,
         };
-        this.#entries.push(full);
+        if (atIndex !== undefined && atIndex >= 0 && atIndex <= this.#entries.length) {
+            this.#entries.splice(atIndex, 0, full);
+        } else {
+            this.#entries.push(full);
+        }
         this.#statuses.set(full.entryId, {
             entryId: full.entryId,
             state: ActionState.PENDING,
@@ -85,6 +94,7 @@ export class ActionQueue {
      * @returns {boolean}
      */
     remove(entryId) {
+        this.recordLast();
         const idx = this.#entries.findIndex(e => e.entryId === entryId);
         if (idx === -1) return false;
         this.#entries.splice(idx, 1);
@@ -102,10 +112,28 @@ export class ActionQueue {
      * @param {number} toIndex
      */
     reorder(fromIndex, toIndex) {
+        this.recordLast();
         if (fromIndex < 0 || fromIndex >= this.#entries.length) return;
         if (toIndex < 0 || toIndex >= this.#entries.length) return;
         const [entry] = this.#entries.splice(fromIndex, 1);
         this.#entries.splice(toIndex, 0, entry);
+    }
+
+    /**
+     * Update properties of an entry by entryId
+     * @param {string} entryId
+     * @param {Partial<import('./actionTypes.js').QueueEntry>} changes
+     * @returns {boolean}
+     */
+    updateEntry(entryId, changes) {
+        this.recordLast();
+        const entry = this.#entries.find(e => e.entryId === entryId);
+        if (!entry) return false;
+        if (changes.loops !== undefined) entry.loops = changes.loops;
+        if (changes.disabled !== undefined) entry.disabled = changes.disabled;
+        if (changes.label !== undefined) entry.label = changes.label;
+        if (changes.group !== undefined) entry.group = changes.group;
+        return true;
     }
 
     /**
@@ -168,6 +196,7 @@ export class ActionQueue {
      * Clear all entries and statuses
      */
     clear() {
+        this.recordLast();
         this.#entries = [];
         this.#statuses.clear();
         this.#cursor = 0;
@@ -193,15 +222,86 @@ export class ActionQueue {
     }
 
     /**
-     * Load from serialized data
+     * Load from serialized data (does not record undo snapshot)
      * @param {object} data
      */
     deserialize(data) {
-        this.clear();
+        this.#entries = [];
+        this.#statuses.clear();
+        this.#cursor = 0;
+        this.#running = false;
         if (data && Array.isArray(data.entries)) {
             for (const entry of data.entries) {
-                this.add(entry);
+                const full = {
+                    entryId: entry.entryId || generateEntryId(),
+                    actionType: entry.actionType,
+                    actionId: entry.actionId,
+                    label: entry.label || '',
+                    group: entry.group || '',
+                    loops: entry.loops ?? 1,
+                    disabled: entry.disabled ?? false,
+                };
+                this.#entries.push(full);
+                this.#statuses.set(full.entryId, {
+                    entryId: full.entryId,
+                    state: ActionState.PENDING,
+                    loopsCompleted: 0,
+                });
             }
         }
+    }
+
+    /**
+     * Snapshot the current state for single-level undo.
+     * Called automatically before mutating operations.
+     */
+    recordLast() {
+        this.#lastSnapshot = {
+            entries: this.#entries.map(e => ({ ...e })),
+        };
+    }
+
+    /**
+     * Undo the last mutation. Toggles: calling twice restores the state before undo.
+     * @returns {boolean} True if undo was performed
+     */
+    undoLast() {
+        if (!this.#lastSnapshot) return false;
+        const current = {
+            entries: this.#entries.map(e => ({ ...e })),
+        };
+        // Restore without triggering recordLast (use internal deserialize)
+        this.#entries = [];
+        this.#statuses.clear();
+        this.#cursor = 0;
+        this.#running = false;
+        for (const entry of this.#lastSnapshot.entries) {
+            const full = {
+                entryId: entry.entryId || generateEntryId(),
+                actionType: entry.actionType,
+                actionId: entry.actionId,
+                label: entry.label || '',
+                group: entry.group || '',
+                loops: entry.loops ?? 1,
+                disabled: entry.disabled ?? false,
+            };
+            this.#entries.push(full);
+            this.#statuses.set(full.entryId, {
+                entryId: full.entryId,
+                state: ActionState.PENDING,
+                loopsCompleted: 0,
+            });
+        }
+        this.#lastSnapshot = current; // swap so undo toggles
+        return true;
+    }
+
+    /**
+     * Find the index of an entry by entryId
+     * @param {string} entryId
+     * @returns {number} Index, or -1 if not found
+     */
+    findIndex(entryId) {
+        return this.#entries.findIndex(e => e.entryId === entryId);
     }
 }

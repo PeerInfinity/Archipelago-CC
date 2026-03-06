@@ -28,7 +28,7 @@ Everything below.
 
 ### Phase 1: Per-Action Controls
 
-Add control buttons to each queue entry. Idle Loops has 9 buttons per action. For JTA we need 8:
+Add control buttons to each queue entry. Idle Loops has 9 buttons per action. For JTA we need 7:
 
 **Buttons per queue entry:**
 
@@ -38,12 +38,12 @@ Add control buttons to each queue entry. Idle Loops has 9 buttons per action. Fo
 | Move Down | `v` | Swap with entry below | Uses `ActionQueue.reorder()` |
 | Add Loop | `+` | Increment `loops` by `addAmount` | Clamp to 1..1e12 |
 | Remove Loop | `-` | Decrement `loops` by `addAmount` | Clamp to 1..1e12 |
-| Split | `\|\|` | Split into two entries with half loops each | New: `ActionQueue.split(entryId)` |
 | Collapse | `v/^` | Toggle collapse of zone span | Hide non-travel actions within a zone |
 | Disable | `o/` | Toggle `disabled` flag | Entry stays in queue but is skipped |
 | Remove | `x` | Remove entry from queue | Already exists |
 
 No cap button — JTA doesn't have limited-count actions the way Idle Loops does.
+No split button — JTA tasks typically want all reps, splitting loop counts isn't useful.
 
 **Zone collapse:** JTA actions are clearly divided by zone with transition points (travel tasks). Although JTA zones have fewer actions than Idle Loops towns, collapsing zones is still useful when the queue is long (many zones queued). The collapse button appears on zone-transition actions and hides non-travel actions within that zone span.
 
@@ -56,7 +56,7 @@ JTA tasks typically want "run all reps" rather than a specific count. For items/
 
 **Files to modify:**
 - `jtaQueuePanelUI.js` — add buttons to entry rendering, add amount selector
-- `actionQueue.js` — add `split(entryId)` method, add `updateEntry(entryId, changes)` method
+- `actionQueue.js` — add `updateEntry(entryId, changes)` method
 
 **HTML structure per entry (reference: main.view.js line 679):**
 ```html
@@ -69,7 +69,6 @@ JTA tasks typically want "run all reps" rather than a specific count. For items/
         <button class="aq-btn-down" title="Move down">v</button>
         <button class="aq-btn-plus" title="Add loops">+</button>
         <button class="aq-btn-minus" title="Remove loops">-</button>
-        <button class="aq-btn-split" title="Split">||</button>
         <button class="aq-btn-collapse" title="Collapse zone">v</button>
         <button class="aq-btn-disable" title="Disable">o/</button>
         <button class="aq-btn-remove" title="Remove">x</button>

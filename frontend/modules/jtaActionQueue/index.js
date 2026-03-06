@@ -4,7 +4,7 @@ import { JTAActionsPanelUI } from './jtaActionsPanelUI.js';
 import { ActionQueue } from '../shared/actionQueue/actionQueue.js';
 import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
 import { JTAQueueExecutor } from './jtaQueueExecutor.js';
-import { buildActionCatalog } from './jtaActionDefs.js';
+import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
 import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
 import eventBus from '../../app/core/eventBus.js';
 
@@ -136,12 +136,131 @@ class JTAActionQueuePanel {
                 .jtaActionQueue-panel button:active {
                     background: #333;
                 }
+
+                /* Queue entries */
+                .aq-entry {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 3px 4px;
+                    border: 1px solid transparent;
+                    border-radius: 3px;
+                    cursor: grab;
+                    transition: background-color 0.1s;
+                }
+                .aq-entry:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                }
+                .aq-entry-index {
+                    min-width: 20px;
+                    text-align: right;
+                    opacity: 0.5;
+                    font-size: 0.8em;
+                }
+                .aq-entry-label {
+                    flex: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .aq-entry-group {
+                    font-size: 0.75em;
+                    opacity: 0.5;
+                    max-width: 80px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .aq-entry-state {
+                    font-size: 0.7em;
+                    opacity: 0.6;
+                    min-width: 50px;
+                    text-align: center;
+                }
+
+                /* Entry action buttons */
+                .aq-entry-buttons {
+                    display: flex;
+                    gap: 1px;
+                    flex-shrink: 0;
+                }
+                .aq-entry-buttons .aq-btn {
+                    padding: 1px 4px;
+                    font-size: 0.75em;
+                    min-width: 20px;
+                    line-height: 1.2;
+                }
+
+                /* Entry states */
+                .aq-current {
+                    border-color: #5a9;
+                    background: rgba(85, 170, 153, 0.15);
+                }
+                .aq-disabled {
+                    opacity: 0.4;
+                }
+                .aq-disabled .aq-entry-label {
+                    text-decoration: line-through;
+                }
+                .aq-state-completed .aq-entry-state {
+                    color: #5a5;
+                }
+                .aq-state-failed .aq-entry-state {
+                    color: #d55;
+                }
+                .aq-state-active .aq-entry-state {
+                    color: #5af;
+                }
+
+                /* Drag states */
+                .aq-dragging {
+                    opacity: 0.4;
+                }
+                .aq-drag-over {
+                    border-color: #5af !important;
+                    background: rgba(85, 170, 255, 0.15);
+                }
+
+                /* Amount selector */
+                .aq-queue-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding-bottom: 4px;
+                }
+                .aq-amount-selector {
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                    font-size: 0.8em;
+                }
+                .aq-amount-label {
+                    opacity: 0.6;
+                    margin-right: 2px;
+                }
+                .aq-amount-btn {
+                    padding: 1px 5px !important;
+                    font-size: 0.85em;
+                }
+                .aq-amount-active {
+                    background: #555 !important;
+                    border-color: #888 !important;
+                }
+
+                /* Empty state */
+                .aq-empty {
+                    opacity: 0.5;
+                    font-style: italic;
+                    padding: 8px;
+                    text-align: center;
+                }
             </style>
             <div class="aq-controls" style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="aq-start-btn">Start</button>
                 <button class="aq-stop-btn">Stop</button>
                 <button class="aq-reset-btn">Reset</button>
                 <button class="aq-clear-btn">Clear</button>
+                <button class="aq-undo-btn">Undo</button>
                 <span class="aq-status-text" style="margin-left: 8px; align-self: center;"></span>
             </div>
             <details class="aq-settings" style="border: 1px solid #444; border-radius: 4px; padding: 4px 8px; background: #252525;">
@@ -219,6 +338,15 @@ class JTAActionQueuePanel {
                 queue.clear();
                 statusText.textContent = 'Cleared';
                 this._refreshUI();
+                this._saveLoadout();
+            }
+        });
+
+        el.querySelector('.aq-undo-btn').addEventListener('click', () => {
+            if (queue && queue.undoLast()) {
+                statusText.textContent = 'Undone';
+                this._refreshUI();
+                this._saveLoadout();
             }
         });
     }
@@ -281,17 +409,35 @@ class JTAActionQueuePanel {
         };
     }
 
+    _saveLoadout() {
+        if (loadoutManager && queue) loadoutManager.saveActive(queue);
+    }
+
     _setupQueue() {
         const queueSection = this.rootElement.querySelector('.aq-queue-section');
         queuePanelUI = new JTAQueuePanelUI(queueSection);
+
+        const onQueueChanged = () => {
+            this._saveLoadout();
+        };
+
         // queue may not exist yet (GL init runs before module init),
         // so also bind lazily when game defs arrive
-        if (queue) queuePanelUI.bind(queue);
+        if (queue) queuePanelUI.bind(queue, onQueueChanged);
+
+        // Handle actions dragged from actions panel onto queue
+        queuePanelUI.onExternalDrop = (catalogEntry, targetIndex) => {
+            if (!queue) return;
+            const queueEntry = createQueueEntry(catalogEntry);
+            queue.add(queueEntry, targetIndex);
+            queuePanelUI.refresh();
+            this._saveLoadout();
+        };
     }
 
     _ensureQueueBound() {
         if (queuePanelUI && queue && !queuePanelUI._bound) {
-            queuePanelUI.bind(queue);
+            queuePanelUI.bind(queue, () => this._saveLoadout());
             queuePanelUI._bound = true;
         }
     }
@@ -312,7 +458,7 @@ class JTAActionQueuePanel {
             actionsPanelUI = new JTAActionsPanelUI(actionsSection);
             actionsPanelUI.bind(queue, catalog, () => {
                 if (queuePanelUI) queuePanelUI.refresh();
-                if (loadoutManager && queue) loadoutManager.saveActive(queue);
+                this._saveLoadout();
             });
         };
 
