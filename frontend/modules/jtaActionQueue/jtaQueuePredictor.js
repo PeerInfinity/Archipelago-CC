@@ -273,6 +273,48 @@ function predictItem(entry, state, remainingEnergy, useAll) {
 }
 
 /**
+ * From a raw detailedStateSnapshot (jta:detailedStateSnapshot.state),
+ * extract fractional skill levels for all skills.
+ * @param {object} gameState - Raw state from readDetailedGameState()
+ * @returns {object} { skillId: fractionalLevel }
+ */
+export function snapshotSkillsFromGameState(gameState) {
+    const snap = {};
+    if (!gameState?.skills) return snap;
+    for (const [skillId, data] of Object.entries(gameState.skills)) {
+        const id = Number(skillId);
+        const level = data.level || 0;
+        const xp = data.xp || 0;
+        const needed = calcXpNeeded(level, id);
+        snap[id] = level + (needed > 0 ? xp / needed : 0);
+    }
+    return snap;
+}
+
+/**
+ * Compute skill gains between two { skillId: fractionalLevel } snapshots.
+ * @param {object} before
+ * @param {object} after
+ * @returns {object} { skillId: { name, gained } }
+ */
+export function computeSkillGainsBetween(before, after) {
+    const gains = {};
+    const allSkills = new Set([
+        ...Object.keys(before).map(Number),
+        ...Object.keys(after).map(Number),
+    ]);
+    for (const skill of allSkills) {
+        const beforeVal = before[skill] || 0;
+        const afterVal = after[skill] || 0;
+        const gained = afterVal - beforeVal;
+        if (gained > 0.001) {
+            gains[skill] = { name: SKILL_NAMES[skill] || `Skill ${skill}`, gained };
+        }
+    }
+    return gains;
+}
+
+/**
  * Deep-clone the mutable parts of a sim state for rolling prediction.
  */
 function cloneSimState(state) {

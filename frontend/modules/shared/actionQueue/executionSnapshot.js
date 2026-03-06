@@ -8,6 +8,14 @@ import { ActionState } from './actionTypes.js';
  * @property {ActionState} state
  * @property {number} loopsCompleted
  * @property {string} [error]
+ * @property {number} [energyBefore] - Energy when entry started
+ * @property {number} [energyAfter] - Energy when entry completed
+ * @property {number} [actualEnergyCost] - energyBefore - energyAfter
+ * @property {object} [skillsBefore] - { skillId: fractionalLevel }
+ * @property {object} [actualSkillGains] - { skillId: { name, gained } }
+ * @property {number} [startTime] - Date.now() when started
+ * @property {number} [endTime] - Date.now() when completed
+ * @property {number} [actualTimeMs] - endTime - startTime
  */
 
 export class ExecutionSnapshot {
@@ -22,6 +30,9 @@ export class ExecutionSnapshot {
 
     /** @type {boolean} */
     #running = false;
+
+    /** @type {Map<string, object>|null} Predictions frozen at execution start */
+    #frozenPredictions = null;
 
     /**
      * Create a snapshot from an ActionQueue's current entries
@@ -64,6 +75,12 @@ export class ExecutionSnapshot {
     set running(value) {
         this.#running = !!value;
     }
+
+    /** @returns {Map<string, object>|null} */
+    get frozenPredictions() { return this.#frozenPredictions; }
+
+    /** @param {Map<string, object>|null} preds */
+    set frozenPredictions(preds) { this.#frozenPredictions = preds; }
 
     /**
      * @returns {import('./actionTypes.js').QueueEntry|null}

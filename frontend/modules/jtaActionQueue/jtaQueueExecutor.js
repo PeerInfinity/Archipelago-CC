@@ -4,6 +4,7 @@ import { ActionState } from '../shared/actionQueue/actionTypes.js';
 import { ExecutionSnapshot } from '../shared/actionQueue/executionSnapshot.js';
 import { JTAActionType } from './jtaActionDefs.js';
 import { DrainStrategy, pickDrainTask } from './jtaEnergyDrainStrategy.js';
+import { snapshotSkillsFromGameState, computeSkillGainsBetween } from './jtaQueuePredictor.js';
 
 const LOG_PREFIX = '[JTAQueueExecutor]';
 const POLL_INTERVAL = 500; // ms
@@ -53,6 +54,15 @@ export class JTAQueueExecutor {
     /** @type {Function|null} */
     #onStatusChange = null;
 
+    /** @type {number} Last known energy from polls/snapshots */
+    #lastKnownEnergy = 0;
+
+    /** @type {object|null} { skillId: fractionalLevel } */
+    #lastSkillSnapshot = null;
+
+    /** @type {string|null} Entry ID awaiting skill snapshot */
+    #pendingSkillsEntryId = null;
+
     /**
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
      * @param {{ publish: Function, subscribe: Function, unsubscribe: Function }} eventBus
@@ -99,6 +109,17 @@ export class JTAQueueExecutor {
         return { ...this.#config };
     }
 
+    /**
+     * Initialize tracking state with current game values.
+     * Call before start() for accurate first-entry tracking.
+     * @param {number} [energy]
+     * @param {object} [skillSnapshot] - { skillId: fractionalLevel }
+     */
+    setTrackingState(energy, skillSnapshot) {
+        if (energy !== undefined) this.#lastKnownEnergy = energy;
+        if (skillSnapshot) this.#lastSkillSnapshot = skillSnapshot;
+    }
+
     /** @returns {boolean} */
     get isRunning() {
         return this.#snapshot?.running ?? false;
@@ -129,6 +150,7 @@ export class JTAQueueExecutor {
         }
         this.#snapshot.running = true;
         this.#draining = false;
+        this.#pendingSkillsEntryId = null;
         console.log(`${LOG_PREFIX} Starting queue execution`);
         this.#subscribeEvents();
         this.#executeNext();
@@ -179,6 +201,7 @@ export class JTAQueueExecutor {
         sub('jta:taskStatus', (data) => this.#onTaskStatus(data));
         sub('jta:energyDepleted', (data) => this.#onEnergyDepleted(data));
         sub('jta:gameOverDismissed', (data) => this.#onGameOverDismissed(data));
+        sub('jta:detailedStateSnapshot', (data) => this.#onDetailedState(data));
     }
 
     /** Unsubscribe from all events */
@@ -201,7 +224,12 @@ export class JTAQueueExecutor {
         }
 
         console.log(`${LOG_PREFIX} Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
-        this.#snapshot.updateStatus(entry.entryId, { state: ActionState.ACTIVE });
+        this.#snapshot.updateStatus(entry.entryId, {
+            state: ActionState.ACTIVE,
+            energyBefore: this.#lastKnownEnergy,
+            skillsBefore: this.#lastSkillSnapshot ? { ...this.#lastSkillSnapshot } : null,
+            startTime: Date.now(),
+        });
         this.#notifyStatusChange();
 
         switch (entry.actionType) {
@@ -287,6 +315,9 @@ export class JTAQueueExecutor {
 
     /** Handle jta:taskStatus poll response */
     #onTaskStatus(data) {
+        if (data.currentEnergy !== undefined) {
+            this.#lastKnownEnergy = data.currentEnergy;
+        }
         if (!this.#snapshot?.running || !this.#waitingForCompletion) {
             // Also handle drain task status
             if (this.#draining && data.activeTaskId === null) {
@@ -317,8 +348,18 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, { loopsCompleted: completed });
 
         if (completed >= entry.loops) {
-            // All loops done
-            this.#snapshot.updateStatus(entry.entryId, { state: ActionState.COMPLETED });
+            // All loops done — record actuals
+            const now = Date.now();
+            this.#snapshot.updateStatus(entry.entryId, {
+                state: ActionState.COMPLETED,
+                energyAfter: this.#lastKnownEnergy,
+                actualEnergyCost: (status.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+                endTime: now,
+                actualTimeMs: now - (status.startTime || now),
+            });
+            // Request detailed state for skill gains (async — display updates when it arrives)
+            this.#pendingSkillsEntryId = entry.entryId;
+            this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
             this.#snapshot.advance();
             this.#notifyStatusChange();
             this.#executeNext();
@@ -350,7 +391,16 @@ export class JTAQueueExecutor {
 
     /** Mark entry as failed and advance */
     #markFailedAndAdvance(entry, error) {
-        this.#snapshot.updateStatus(entry.entryId, { state: ActionState.FAILED, error });
+        const status = this.#snapshot.getStatus(entry.entryId);
+        const now = Date.now();
+        this.#snapshot.updateStatus(entry.entryId, {
+            state: ActionState.FAILED,
+            error,
+            energyAfter: this.#lastKnownEnergy,
+            actualEnergyCost: (status?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+            endTime: now,
+            actualTimeMs: now - (status?.startTime || now),
+        });
         this.#stopPolling();
         this.#waitingForCompletion = false;
         this.#snapshot.advance();
@@ -400,8 +450,34 @@ export class JTAQueueExecutor {
         this.#snapshot = ExecutionSnapshot.fromQueue(this.#queue);
         this.#snapshot.running = true;
         this.#draining = false;
+        this.#pendingSkillsEntryId = null;
         this.#notifyStatusChange();
         this.#executeNext();
+    }
+
+    /** Handle detailed state snapshot for skill tracking during execution */
+    #onDetailedState(data) {
+        if (!this.#snapshot?.running) return;
+        if (!data?.state) return;
+
+        const skillSnap = snapshotSkillsFromGameState(data.state);
+        if (data.state.currentEnergy !== undefined) {
+            this.#lastKnownEnergy = data.state.currentEnergy;
+        }
+
+        // If we were waiting for a skill snapshot to compute actuals
+        if (this.#pendingSkillsEntryId) {
+            const entryId = this.#pendingSkillsEntryId;
+            this.#pendingSkillsEntryId = null;
+            const status = this.#snapshot.getStatus(entryId);
+            if (status?.skillsBefore) {
+                const gains = computeSkillGainsBetween(status.skillsBefore, skillSnap);
+                this.#snapshot.updateStatus(entryId, { actualSkillGains: gains });
+                this.#notifyStatusChange();
+            }
+        }
+
+        this.#lastSkillSnapshot = skillSnap;
     }
 
     /** Start the energy drain strategy */

@@ -6,7 +6,7 @@ import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
 import { JTAQueueExecutor } from './jtaQueueExecutor.js';
 import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
 import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
-import { convertToSimState, predictQueue } from './jtaQueuePredictor.js';
+import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
@@ -39,6 +39,7 @@ let catalog = null;
 let queuePanelUI = null;
 let actionsPanelUI = null;
 let lastSimState = null;
+let lastGameState = null;
 let predictions = null;
 let predictionDebounceTimer = null;
 
@@ -354,6 +355,63 @@ class JTAActionQueuePanel {
                     color: #8bf;
                 }
 
+                /* Actuals in current list */
+                .aq-actuals {
+                    display: flex;
+                    gap: 4px;
+                    font-size: 0.75em;
+                    flex-shrink: 0;
+                    margin-left: auto;
+                    margin-right: 4px;
+                }
+                .aq-actual-cost {
+                    opacity: 0.7;
+                }
+                .aq-actual-remaining {
+                    font-weight: bold;
+                    color: #8cf;
+                }
+                .aq-actual-skills {
+                    display: flex;
+                    gap: 3px;
+                    opacity: 0.7;
+                }
+                .aq-actual-skill {
+                    color: #8bf;
+                }
+                .aq-actual-time {
+                    opacity: 0.5;
+                }
+
+                /* Comparison table */
+                .aq-comp-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 0.75em;
+                }
+                .aq-comp-table th, .aq-comp-table td {
+                    padding: 2px 4px;
+                    text-align: left;
+                    border-bottom: 1px solid #333;
+                }
+                .aq-comp-table th {
+                    opacity: 0.6;
+                    font-weight: normal;
+                }
+                .aq-comp-worse {
+                    color: #d55;
+                }
+                .aq-comp-better {
+                    color: #5a5;
+                }
+                .aq-comp-exact {
+                    color: #888;
+                }
+                .aq-comp-skills {
+                    font-size: 0.9em;
+                    opacity: 0.8;
+                }
+
                 /* Empty state */
                 .aq-empty {
                     opacity: 0.5;
@@ -421,6 +479,16 @@ class JTAActionQueuePanel {
                             </select>
                         </label>
                     </div>
+                    <hr style="border: none; border-top: 1px solid #444; margin: 4px 0;">
+                    <div style="font-weight: bold; font-size: 0.85em; opacity: 0.7;">Debug</div>
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" class="aq-setting-show-actuals">
+                        Show actuals in current list
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" class="aq-setting-show-comparison">
+                        Show prediction comparison
+                    </label>
                 </div>
             </details>
             <div class="aq-actions-section" style="flex-shrink: 0;"></div>
@@ -448,6 +516,13 @@ class JTAActionQueuePanel {
                 executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
             }
             if (executor) {
+                // Initialize tracking state before starting
+                if (lastSimState) {
+                    executor.setTrackingState(
+                        lastSimState.currentEnergy,
+                        lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
+                    );
+                }
                 executor.start();
                 statusText.textContent = 'Running...';
                 this._refreshUI();
@@ -646,6 +721,8 @@ class JTAActionQueuePanel {
         const drainOptions = el.querySelector('.aq-drain-options');
         const autoResetCheckbox = el.querySelector('.aq-setting-autoreset');
         const addToTopCheckbox = el.querySelector('.aq-setting-add-to-top');
+        const showActualsCheckbox = el.querySelector('.aq-setting-show-actuals');
+        const showComparisonCheckbox = el.querySelector('.aq-setting-show-comparison');
         const radios = el.querySelectorAll('input[name="aq-drain-strategy"]');
 
         // Load persisted settings
@@ -662,6 +739,12 @@ class JTAActionQueuePanel {
             if (saved.addToTop === true) {
                 addToTopCheckbox.checked = true;
             }
+            if (saved.showActuals === true) {
+                showActualsCheckbox.checked = true;
+            }
+            if (saved.showComparison === true) {
+                showComparisonCheckbox.checked = true;
+            }
             if (saved.drainStrategy) {
                 const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${saved.drainStrategy}"]`);
                 if (radio) radio.checked = true;
@@ -675,6 +758,8 @@ class JTAActionQueuePanel {
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
                 addToTop: addToTopCheckbox.checked,
+                showActuals: showActualsCheckbox.checked,
+                showComparison: showComparisonCheckbox.checked,
             };
             localStorage.setItem('jta-aq-settings', JSON.stringify(settings));
             if (executor) executor.updateConfig(settings);
@@ -692,6 +777,15 @@ class JTAActionQueuePanel {
         for (const radio of radios) {
             radio.addEventListener('change', persistSettings);
         }
+
+        const updateDisplayOptions = () => {
+            if (queuePanelUI) queuePanelUI.setDisplayOptions({
+                showActuals: showActualsCheckbox.checked,
+                showComparison: showComparisonCheckbox.checked,
+            });
+        };
+        showActualsCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
+        showComparisonCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
 
         // Store ref so executor can be initialized with saved settings
         this._savedSettings = () => {
@@ -712,6 +806,15 @@ class JTAActionQueuePanel {
     _setupQueue() {
         const queueSection = this.rootElement.querySelector('.aq-queue-section');
         queuePanelUI = new JTAQueuePanelUI(queueSection);
+
+        // Apply saved display options
+        try {
+            const saved = JSON.parse(localStorage.getItem('jta-aq-settings') || '{}');
+            queuePanelUI.setDisplayOptions({
+                showActuals: saved.showActuals || false,
+                showComparison: saved.showComparison || false,
+            });
+        } catch (e) { /* ignore */ }
 
         const onQueueChanged = () => {
             this._saveLoadout();
@@ -781,6 +884,7 @@ class JTAActionQueuePanel {
         // Subscribe to detailed state for predictions
         const handleDetailedState = (data) => {
             if (!data || !data.state) return;
+            lastGameState = data.state;
             lastSimState = convertToSimState(data.state);
             this._runPredictions();
         };
@@ -825,7 +929,12 @@ class JTAActionQueuePanel {
 
     _refreshUI() {
         if (queuePanelUI) {
-            queuePanelUI.setSnapshot(executor?.snapshot ?? null);
+            const snapshot = executor?.snapshot ?? null;
+            // Freeze predictions onto new snapshots for comparison
+            if (snapshot && !snapshot.frozenPredictions && predictions) {
+                snapshot.frozenPredictions = new Map(predictions);
+            }
+            queuePanelUI.setSnapshot(snapshot);
             queuePanelUI.setPredictions(predictions);
         }
     }

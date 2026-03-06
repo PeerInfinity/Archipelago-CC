@@ -58,6 +58,12 @@ export class JTAQueuePanelUI {
     /** @type {Map<string, object>|null} entryId -> prediction */
     #predictions = null;
 
+    /** @type {boolean} */
+    #showActuals = false;
+
+    /** @type {boolean} */
+    #showComparison = false;
+
     constructor(container) {
         this.#container = container;
         this.#render();
@@ -92,9 +98,20 @@ export class JTAQueuePanelUI {
         this.#refreshNextList();
     }
 
+    /**
+     * Set display options for debug features
+     * @param {{ showActuals?: boolean, showComparison?: boolean }} options
+     */
+    setDisplayOptions(options) {
+        this.#showActuals = options.showActuals ?? false;
+        this.#showComparison = options.showComparison ?? false;
+        this.refresh();
+    }
+
     /** Refresh the display */
     refresh() {
         this.#refreshCurrentList();
+        this.#refreshComparison();
         this.#refreshNextList();
     }
 
@@ -136,21 +153,146 @@ export class JTAQueuePanelUI {
                 progressPct = 50; // indeterminate-ish for single-loop active
             }
 
+            // Actuals display (when enabled and entry has data)
+            let actualsHtml = '';
+            if (this.#showActuals && status) {
+                const parts = [];
+                if (status.actualEnergyCost !== undefined) {
+                    const costSign = status.actualEnergyCost >= 0 ? '-' : '+';
+                    parts.push(`<span class="aq-actual-cost">${costSign}${fmtEnergy(Math.abs(status.actualEnergyCost))}</span>`);
+                }
+                if (status.energyAfter !== undefined) {
+                    parts.push(`<span class="aq-actual-remaining">${fmtEnergy(status.energyAfter)}</span>`);
+                }
+                if (status.actualSkillGains && Object.keys(status.actualSkillGains).length > 0) {
+                    const skillParts = Object.values(status.actualSkillGains).map(g =>
+                        `<span class="aq-actual-skill">+${g.gained.toFixed(1)} ${g.name.slice(0, 3)}</span>`
+                    );
+                    parts.push(`<span class="aq-actual-skills">${skillParts.join(' ')}</span>`);
+                }
+                if (status.actualTimeMs !== undefined) {
+                    parts.push(`<span class="aq-actual-time">${(status.actualTimeMs / 1000).toFixed(1)}s</span>`);
+                }
+                if (parts.length > 0) {
+                    actualsHtml = `<span class="aq-actuals">${parts.join(' ')}</span>`;
+                }
+            }
+
             // Build tooltip text
             const tipParts = [`${entry.label} (${entry.actionType})`];
             if (loopsTotal > 1) tipParts.push(`Loops: ${loopsCompleted}/${loopsTotal}`);
             tipParts.push(`State: ${state || 'pending'}`);
             if (status?.error) tipParts.push(`Error: ${status.error}`);
+            if (this.#showActuals && status) {
+                if (status.actualEnergyCost !== undefined) {
+                    tipParts.push(`Energy: -${fmtEnergy(Math.abs(status.actualEnergyCost))} → ${fmtEnergy(status.energyAfter ?? 0)} remaining`);
+                }
+                if (status.actualSkillGains) {
+                    for (const g of Object.values(status.actualSkillGains)) {
+                        tipParts.push(`${g.name}: +${g.gained.toFixed(1)} levels`);
+                    }
+                }
+                if (status.actualTimeMs !== undefined) {
+                    tipParts.push(`Time: ${(status.actualTimeMs / 1000).toFixed(1)}s`);
+                }
+            }
             const tooltip = tipParts.join('\n');
 
             return `<div class="aq-current-entry ${stateClass} ${currentClass}" title="${tooltip.replace(/"/g, '&quot;')}">
                 <div class="aq-progress-bar" style="width: ${progressPct}%"></div>
                 <span class="aq-entry-index">${idx + 1}</span>
                 <span class="aq-entry-label">${entry.label}</span>
+                ${actualsHtml}
                 <span class="aq-current-loops">${loopDisplay}</span>
                 <span class="aq-entry-state">${state}</span>
             </div>`;
         }).join('');
+    }
+
+    /** Render the comparison table (predicted vs actual, debug) */
+    #refreshComparison() {
+        const section = this.#container.querySelector('.aq-comparison-section');
+        if (!section) return;
+
+        if (!this.#showComparison || !this.#snapshot) {
+            section.style.display = 'none';
+            return;
+        }
+
+        const frozenPreds = this.#snapshot.frozenPredictions;
+        if (!frozenPreds || frozenPreds.size === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        const entries = this.#snapshot.getEntries();
+        const rows = entries.map(entry => {
+            const status = this.#snapshot.getStatus(entry.entryId);
+            const pred = frozenPreds.get(entry.entryId);
+            if (!status || !pred) return null;
+            if (status.state !== ActionState.COMPLETED && status.state !== ActionState.FAILED) return null;
+
+            const predCost = pred.energyCost;
+            const actCost = status.actualEnergyCost ?? null;
+            const deltaCost = (actCost !== null) ? actCost - predCost : null;
+
+            // Skill comparison
+            const predSkills = pred.skillGains || {};
+            const actSkills = status.actualSkillGains || {};
+            const allSkillIds = new Set([
+                ...Object.keys(predSkills).map(Number),
+                ...Object.keys(actSkills).map(Number),
+            ]);
+
+            const skillComps = [];
+            for (const sid of allSkillIds) {
+                const p = predSkills[sid];
+                const a = actSkills[sid];
+                const pVal = p ? p.gained : 0;
+                const aVal = a ? a.gained : 0;
+                const name = (p || a).name.slice(0, 3);
+                const delta = aVal - pVal;
+                skillComps.push({ name, pred: pVal, actual: aVal, delta });
+            }
+
+            return { entry, predCost, actCost, deltaCost, skillComps };
+        }).filter(Boolean);
+
+        if (rows.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = '';
+        const body = section.querySelector('.aq-comparison-body');
+
+        body.innerHTML = `<table class="aq-comp-table">
+            <thead><tr>
+                <th>Entry</th>
+                <th>Pred E</th>
+                <th>Act E</th>
+                <th>\u0394E</th>
+                <th>Skills</th>
+            </tr></thead>
+            <tbody>${rows.map(r => {
+                const deltaClass = r.deltaCost === null ? '' :
+                    Math.abs(r.deltaCost) < 0.5 ? 'aq-comp-exact' :
+                    r.deltaCost > 0 ? 'aq-comp-worse' : 'aq-comp-better';
+
+                const skillsHtml = r.skillComps.map(s => {
+                    const dSign = s.delta >= 0 ? '+' : '';
+                    return `${s.name}: ${s.pred.toFixed(1)}\u2192${s.actual.toFixed(1)} (${dSign}${s.delta.toFixed(1)})`;
+                }).join(', ');
+
+                return `<tr>
+                    <td>${r.entry.label}</td>
+                    <td>${fmtEnergy(r.predCost)}</td>
+                    <td>${r.actCost !== null ? fmtEnergy(r.actCost) : '\u2014'}</td>
+                    <td class="${deltaClass}">${r.deltaCost !== null ? (r.deltaCost > 0 ? '+' : '') + fmtEnergy(r.deltaCost) : '\u2014'}</td>
+                    <td class="aq-comp-skills">${skillsHtml || '\u2014'}</td>
+                </tr>`;
+            }).join('')}</tbody>
+        </table>`;
     }
 
     /** Render the next list (editable queue with controls) */
@@ -231,6 +373,10 @@ export class JTAQueuePanelUI {
                 <div class="aq-current-section" style="display: none; margin-bottom: 6px;">
                     <div class="aq-section-header"><strong>Current</strong></div>
                     <div class="aq-current-list"></div>
+                </div>
+                <div class="aq-comparison-section" style="display: none; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 6px;">
+                    <div class="aq-section-header"><strong>Predicted vs Actual</strong></div>
+                    <div class="aq-comparison-body"></div>
                 </div>
                 <div class="aq-next-section">
                     <div class="aq-next-header">
