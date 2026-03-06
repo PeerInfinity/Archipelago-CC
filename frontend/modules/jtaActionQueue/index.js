@@ -120,6 +120,23 @@ class JTAActionQueuePanel {
         this.rootElement.className = 'jtaActionQueue-panel';
         this.rootElement.style.cssText = 'display: flex; flex-direction: column; height: 100%; overflow: auto; background: #1e1e1e; color: #cccccc; padding: 8px; gap: 8px;';
         this.rootElement.innerHTML = `
+            <style>
+                .jtaActionQueue-panel button {
+                    background: #3a3a3a;
+                    color: #ccc;
+                    border: 1px solid #555;
+                    border-radius: 3px;
+                    padding: 3px 8px;
+                    cursor: pointer;
+                }
+                .jtaActionQueue-panel button:hover {
+                    background: #4a4a4a;
+                    border-color: #777;
+                }
+                .jtaActionQueue-panel button:active {
+                    background: #333;
+                }
+            </style>
             <div class="aq-controls" style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="aq-start-btn">Start</button>
                 <button class="aq-stop-btn">Stop</button>
@@ -150,8 +167,8 @@ class JTAActionQueuePanel {
                     </label>
                 </div>
             </details>
-            <div class="aq-queue-section" style="flex: 1; min-height: 100px;"></div>
-            <div class="aq-actions-section" style="flex: 2; min-height: 200px; overflow: auto;"></div>
+            <div class="aq-actions-section" style="flex-shrink: 0;"></div>
+            <div class="aq-queue-section" style="flex: 1; min-height: 60px; overflow: auto;"></div>
         `;
 
         this._setupControls();

@@ -60,7 +60,7 @@ export class JTAQueuePanelUI {
                 <div class="aq-queue-header">
                     <strong>Action Queue</strong>
                 </div>
-                <div class="aq-queue-list"></div>
+                <div class="aq-queue-list" style="padding-bottom: 8px;"></div>
             </div>
         `;
 
