@@ -323,6 +323,9 @@ class JTAActionQueuePanel {
                 <button class="aq-reset-btn">Reset</button>
                 <button class="aq-clear-btn">Clear</button>
                 <button class="aq-undo-btn">Undo</button>
+                <label class="aq-stop-after" style="margin-left: 8px; display: flex; align-items: center; gap: 4px; font-size: 0.85em; opacity: 0.8;" title="Stop after the current queue finishes (no drain, no repeat, no sequencing)">
+                    <input type="checkbox" class="aq-setting-stop-after"> Stop after
+                </label>
                 <span class="aq-status-text" style="margin-left: 8px; align-self: center;"></span>
             </div>
             <div class="aq-loadout-bar" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">
@@ -443,6 +446,16 @@ class JTAActionQueuePanel {
     }
 
     _handleQueueExhausted(statusText) {
+        // "Stop after" overrides all continuation logic
+        const stopAfter = this.rootElement.querySelector('.aq-setting-stop-after');
+        if (stopAfter?.checked) {
+            stopAfter.checked = false;
+            if (executor) executor.stop();
+            statusText.textContent = 'Queue finished (stopped)';
+            this._refreshUI();
+            return;
+        }
+
         if (!loadoutManager) {
             statusText.textContent = 'Queue finished';
             return;
