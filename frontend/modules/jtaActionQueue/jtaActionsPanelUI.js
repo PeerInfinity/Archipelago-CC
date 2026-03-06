@@ -14,6 +14,9 @@ export class JTAActionsPanelUI {
     /** @type {Function|null} */
     #onQueueChanged = null;
 
+    /** @type {Function|null} Returns insertion index (0 for top, undefined for end) */
+    #getInsertIndex = null;
+
     /** @type {string[]} Zone names in order */
     #zoneNames = [];
 
@@ -30,11 +33,13 @@ export class JTAActionsPanelUI {
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
      * @param {object} catalog - From buildActionCatalog()
      * @param {Function} [onQueueChanged] - Called when entries are added
+     * @param {Function} [getInsertIndex] - Returns insertion index (0 for top, undefined for end)
      */
-    bind(queue, catalog, onQueueChanged) {
+    bind(queue, catalog, onQueueChanged, getInsertIndex) {
         this.#queue = queue;
         this.#catalog = catalog;
         this.#onQueueChanged = onQueueChanged || null;
+        this.#getInsertIndex = getInsertIndex || null;
         this.#buildZoneList();
         this.#renderButtons();
     }
@@ -84,7 +89,8 @@ export class JTAActionsPanelUI {
             const catalogEntry = this.#findCatalogEntry(btn.dataset.actionType, btn.dataset.actionId);
             if (catalogEntry) {
                 const queueEntry = createQueueEntry(catalogEntry);
-                this.#queue.add(queueEntry);
+                const idx = this.#getInsertIndex ? this.#getInsertIndex() : undefined;
+                this.#queue.add(queueEntry, idx);
                 if (this.#onQueueChanged) this.#onQueueChanged();
             }
         });

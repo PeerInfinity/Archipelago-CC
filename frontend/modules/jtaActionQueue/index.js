@@ -346,6 +346,11 @@ class JTAActionQueuePanel {
                         <input type="checkbox" class="aq-setting-autoreset">
                         Auto-reset when energy depleted
                     </label>
+                    <hr style="border: none; border-top: 1px solid #444; margin: 4px 0;">
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" class="aq-setting-add-to-top">
+                        Add new actions to top of queue
+                    </label>
                 </div>
             </details>
             <div class="aq-actions-section" style="flex-shrink: 0;"></div>
@@ -417,6 +422,7 @@ class JTAActionQueuePanel {
         const drainCheckbox = el.querySelector('.aq-setting-drain');
         const drainOptions = el.querySelector('.aq-drain-options');
         const autoResetCheckbox = el.querySelector('.aq-setting-autoreset');
+        const addToTopCheckbox = el.querySelector('.aq-setting-add-to-top');
         const radios = el.querySelectorAll('input[name="aq-drain-strategy"]');
 
         // Load persisted settings
@@ -430,6 +436,9 @@ class JTAActionQueuePanel {
             if (saved.autoReset === true) {
                 autoResetCheckbox.checked = true;
             }
+            if (saved.addToTop === true) {
+                addToTopCheckbox.checked = true;
+            }
             if (saved.drainStrategy) {
                 const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${saved.drainStrategy}"]`);
                 if (radio) radio.checked = true;
@@ -442,6 +451,7 @@ class JTAActionQueuePanel {
                 drainEnabled: drainCheckbox.checked,
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
+                addToTop: addToTopCheckbox.checked,
             };
             localStorage.setItem('jta-aq-settings', JSON.stringify(settings));
             if (executor) executor.updateConfig(settings);
@@ -455,6 +465,7 @@ class JTAActionQueuePanel {
         });
 
         autoResetCheckbox.addEventListener('change', persistSettings);
+        addToTopCheckbox.addEventListener('change', persistSettings);
         for (const radio of radios) {
             radio.addEventListener('change', persistSettings);
         }
@@ -466,6 +477,7 @@ class JTAActionQueuePanel {
                 drainEnabled: drainCheckbox.checked,
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
+                addToTop: addToTopCheckbox.checked,
             };
         };
     }
@@ -517,10 +529,14 @@ class JTAActionQueuePanel {
 
             const actionsSection = this.rootElement.querySelector('.aq-actions-section');
             actionsPanelUI = new JTAActionsPanelUI(actionsSection);
+            const getInsertIndex = () => {
+                const settings = this._savedSettings ? this._savedSettings() : {};
+                return settings.addToTop ? 0 : undefined;
+            };
             actionsPanelUI.bind(queue, catalog, () => {
                 if (queuePanelUI) queuePanelUI.refresh();
                 this._saveLoadout();
-            });
+            }, getInsertIndex);
         };
 
         const unsub = bus.subscribe('jta:gameDefsSnapshot', handleGameDefs);
