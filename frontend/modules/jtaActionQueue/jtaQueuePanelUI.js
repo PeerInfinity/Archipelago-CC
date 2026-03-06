@@ -2,6 +2,20 @@
 // Per-action controls and drag-and-drop on the next list
 import { ActionState } from '../shared/actionQueue/actionTypes.js';
 
+/**
+ * Generate a subtle tint color from a group name (zone name).
+ * Uses HSL with fixed low saturation/lightness for dark theme.
+ */
+function groupTint(group) {
+    if (!group) return '';
+    let hash = 0;
+    for (let i = 0; i < group.length; i++) {
+        hash = ((hash << 5) - hash + group.charCodeAt(i)) | 0;
+    }
+    const hue = ((hash % 360) + 360) % 360;
+    return `hsla(${hue}, 40%, 50%, 0.08)`;
+}
+
 export class JTAQueuePanelUI {
     /** @type {HTMLElement} */
     #container;
@@ -90,7 +104,14 @@ export class JTAQueuePanelUI {
                 progressPct = 50; // indeterminate-ish for single-loop active
             }
 
-            return `<div class="aq-current-entry ${stateClass} ${currentClass}">
+            // Build tooltip text
+            const tipParts = [`${entry.label} (${entry.actionType})`];
+            if (loopsTotal > 1) tipParts.push(`Loops: ${loopsCompleted}/${loopsTotal}`);
+            tipParts.push(`State: ${state || 'pending'}`);
+            if (status?.error) tipParts.push(`Error: ${status.error}`);
+            const tooltip = tipParts.join('\n');
+
+            return `<div class="aq-current-entry ${stateClass} ${currentClass}" title="${tooltip.replace(/"/g, '&quot;')}">
                 <div class="aq-progress-bar" style="width: ${progressPct}%"></div>
                 <span class="aq-entry-index">${idx + 1}</span>
                 <span class="aq-entry-label">${entry.label}</span>
@@ -114,8 +135,10 @@ export class JTAQueuePanelUI {
         list.innerHTML = entries.map((entry, idx) => {
             const disabledClass = entry.disabled ? 'aq-disabled' : '';
             const loopText = entry.loops > 1 ? ` x${entry.loops}` : '';
+            const tint = groupTint(entry.group);
+            const tintStyle = tint ? `background: ${tint};` : '';
 
-            return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true">
+            return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}">
                 <span class="aq-entry-index">${idx + 1}</span>
                 <span class="aq-entry-label">${entry.label}${loopText}</span>
                 <span class="aq-entry-group">${entry.group || ''}</span>
