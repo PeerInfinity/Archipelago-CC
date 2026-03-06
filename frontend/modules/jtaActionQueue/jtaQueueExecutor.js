@@ -395,10 +395,11 @@ export class JTAQueueExecutor {
             console.warn(`${LOG_PREFIX} dismissGameOver failed: ${data.error}`);
             return;
         }
-        console.log(`${LOG_PREFIX} Game-over dismissed, restarting from snapshot`);
-        // Reset snapshot to beginning and re-execute
-        this.#snapshot.reset();
+        console.log(`${LOG_PREFIX} Game-over dismissed, creating fresh snapshot from queue`);
+        // Create new snapshot from current queue so Next list edits take effect
+        this.#snapshot = ExecutionSnapshot.fromQueue(this.#queue);
         this.#snapshot.running = true;
+        this.#draining = false;
         this.#notifyStatusChange();
         this.#executeNext();
     }
