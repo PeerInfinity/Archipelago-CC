@@ -371,16 +371,16 @@ Add a mode where clicking action buttons in the JTA game iframe adds the action 
 
 ## Implementation Order
 
-1. Phase 1 (per-action controls) — highest impact, enables basic queue management
-2. Phase 2 (drag-and-drop) — natural complement to Phase 1
-3. Phase 7 (undo) — safety net before users start doing complex edits
-4. Phase 3 (dual queue) — requires executor changes, unlocks phases 5-6
-5. Phase 5 (progress bars) — visual feedback during execution
-6. Phase 6 (tooltips) — detailed execution info
+1. ~~Phase 1 (per-action controls)~~ — DONE
+2. ~~Phase 2 (drag-and-drop)~~ — DONE
+3. ~~Phase 7 (undo)~~ — DONE
+4. ~~Phase 3 (dual queue)~~ — DONE
+5. ~~Phase 5 (progress bars + zone tinting)~~ — DONE
+6. ~~Phase 6 (tooltips)~~ — DONE
 7. Phase 4 (separable panels) — Golden Layout integration
-8. Phase 9 (settings) — quick win
-9. Phase 10 (loadout UI + sequencing) — expose existing backend feature + new sequencing
-10. Phase 8 (resource prediction) — depends on simulator access, most complex
+8. ~~Phase 9 (settings)~~ — DONE (add-to-top, stop-after)
+9. ~~Phase 10 (loadout UI + sequencing)~~ — DONE
+10. ~~Phase 8 (resource prediction)~~ — DONE
 11. Phase 11 (iframe hooks) — future enhancement
 
 ## Shared Code Considerations
