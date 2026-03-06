@@ -247,6 +247,68 @@ class JTAActionQueuePanel {
                     border-color: #888 !important;
                 }
 
+                /* Current list (execution snapshot) */
+                .aq-current-section {
+                    border-bottom: 1px solid #444;
+                    padding-bottom: 6px;
+                }
+                .aq-section-header {
+                    font-size: 0.85em;
+                    padding: 2px 4px;
+                    opacity: 0.7;
+                }
+                .aq-next-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 2px 4px 4px;
+                }
+                .aq-current-entry {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 2px 4px;
+                    border-radius: 3px;
+                    position: relative;
+                    overflow: hidden;
+                    font-size: 0.9em;
+                }
+                .aq-current-entry .aq-progress-bar {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    background: rgba(85, 170, 153, 0.15);
+                    transition: width 0.3s ease;
+                    z-index: 0;
+                }
+                .aq-current-entry > * {
+                    position: relative;
+                    z-index: 1;
+                }
+                .aq-current-entry.aq-current {
+                    border: 1px solid #5a9;
+                    background: rgba(85, 170, 153, 0.1);
+                }
+                .aq-current-entry.aq-state-completed {
+                    opacity: 0.5;
+                }
+                .aq-current-entry.aq-state-completed .aq-progress-bar {
+                    background: rgba(85, 170, 85, 0.2);
+                }
+                .aq-current-entry.aq-state-active .aq-progress-bar {
+                    background: rgba(85, 170, 255, 0.2);
+                }
+                .aq-current-entry.aq-state-failed .aq-entry-state {
+                    color: #d55;
+                }
+                .aq-current-loops {
+                    font-size: 0.8em;
+                    opacity: 0.7;
+                    min-width: 30px;
+                    text-align: center;
+                }
+
                 /* Empty state */
                 .aq-empty {
                     opacity: 0.5;
@@ -324,16 +386,15 @@ class JTAActionQueuePanel {
         });
 
         el.querySelector('.aq-reset-btn').addEventListener('click', () => {
-            if (executor) executor.stop();
-            if (queue) {
-                queue.reset();
+            if (executor) {
+                executor.clearSnapshot();
                 statusText.textContent = 'Reset';
                 this._refreshUI();
             }
         });
 
         el.querySelector('.aq-clear-btn').addEventListener('click', () => {
-            if (executor) executor.stop();
+            if (executor) executor.clearSnapshot();
             if (queue) {
                 queue.clear();
                 statusText.textContent = 'Cleared';
@@ -480,7 +541,9 @@ class JTAActionQueuePanel {
     }
 
     _refreshUI() {
-        if (queuePanelUI) queuePanelUI.refresh();
+        if (queuePanelUI) {
+            queuePanelUI.setSnapshot(executor?.snapshot ?? null);
+        }
     }
 
     destroy() {

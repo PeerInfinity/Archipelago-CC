@@ -1,4 +1,5 @@
-// Queue display panel - shows queue entries with per-action controls and drag-and-drop
+// Queue display panel - dual queue: current list (execution snapshot) + next list (editable queue)
+// Per-action controls and drag-and-drop on the next list
 import { ActionState } from '../shared/actionQueue/actionTypes.js';
 
 export class JTAQueuePanelUI {
@@ -7,6 +8,9 @@ export class JTAQueuePanelUI {
 
     /** @type {import('../shared/actionQueue/actionQueue.js').ActionQueue|null} */
     #queue = null;
+
+    /** @type {import('../shared/actionQueue/executionSnapshot.js').ExecutionSnapshot|null} */
+    #snapshot = null;
 
     /** @type {Function|null} */
     #onQueueChanged = null;
@@ -33,9 +37,72 @@ export class JTAQueuePanelUI {
         this.refresh();
     }
 
+    /**
+     * Set the execution snapshot for current list display
+     * @param {import('../shared/actionQueue/executionSnapshot.js').ExecutionSnapshot|null} snapshot
+     */
+    setSnapshot(snapshot) {
+        this.#snapshot = snapshot;
+        this.refresh();
+    }
+
     /** Refresh the display */
     refresh() {
-        const list = this.#container.querySelector('.aq-queue-list');
+        this.#refreshCurrentList();
+        this.#refreshNextList();
+    }
+
+    /** Render the current list (execution snapshot, read-only) */
+    #refreshCurrentList() {
+        const section = this.#container.querySelector('.aq-current-section');
+        if (!section) return;
+
+        if (!this.#snapshot || this.#snapshot.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = '';
+        const list = section.querySelector('.aq-current-list');
+        if (!list) return;
+
+        const entries = this.#snapshot.getEntries();
+        const cursor = this.#snapshot.cursor;
+
+        list.innerHTML = entries.map((entry, idx) => {
+            const status = this.#snapshot.getStatus(entry.entryId);
+            const state = status ? status.state : '';
+            const stateClass = status ? `aq-state-${state}` : '';
+            const isCurrent = idx === cursor && this.#snapshot.running;
+            const currentClass = isCurrent ? 'aq-current' : '';
+
+            const loopsCompleted = status ? (status.loopsCompleted || 0) : 0;
+            const loopsTotal = entry.loops;
+            const loopDisplay = loopsTotal > 1 ? `${loopsCompleted}/${loopsTotal}` : '';
+
+            // Progress bar width (for completed loops within a multi-loop action)
+            let progressPct = 0;
+            if (state === ActionState.COMPLETED) {
+                progressPct = 100;
+            } else if (state === ActionState.ACTIVE && loopsTotal > 1) {
+                progressPct = (loopsCompleted / loopsTotal) * 100;
+            } else if (state === ActionState.ACTIVE) {
+                progressPct = 50; // indeterminate-ish for single-loop active
+            }
+
+            return `<div class="aq-current-entry ${stateClass} ${currentClass}">
+                <div class="aq-progress-bar" style="width: ${progressPct}%"></div>
+                <span class="aq-entry-index">${idx + 1}</span>
+                <span class="aq-entry-label">${entry.label}</span>
+                <span class="aq-current-loops">${loopDisplay}</span>
+                <span class="aq-entry-state">${state}</span>
+            </div>`;
+        }).join('');
+    }
+
+    /** Render the next list (editable queue with controls) */
+    #refreshNextList() {
+        const list = this.#container.querySelector('.aq-next-list');
         if (!list || !this.#queue) return;
 
         const entries = this.#queue.getEntries();
@@ -44,21 +111,14 @@ export class JTAQueuePanelUI {
             return;
         }
 
-        const cursor = this.#queue.cursor;
         list.innerHTML = entries.map((entry, idx) => {
-            const status = this.#queue.getStatus(entry.entryId);
-            const stateClass = status ? `aq-state-${status.state}` : '';
-            const isCurrent = idx === cursor && this.#queue.running;
-            const currentClass = isCurrent ? 'aq-current' : '';
             const disabledClass = entry.disabled ? 'aq-disabled' : '';
             const loopText = entry.loops > 1 ? ` x${entry.loops}` : '';
-            const loopProgress = status && status.loopsCompleted > 0 ? ` (${status.loopsCompleted}/${entry.loops})` : '';
 
-            return `<div class="aq-entry ${stateClass} ${currentClass} ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true">
+            return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true">
                 <span class="aq-entry-index">${idx + 1}</span>
-                <span class="aq-entry-label">${entry.label}${loopText}${loopProgress}</span>
+                <span class="aq-entry-label">${entry.label}${loopText}</span>
                 <span class="aq-entry-group">${entry.group || ''}</span>
-                <span class="aq-entry-state">${status ? status.state : ''}</span>
                 <div class="aq-entry-buttons">
                     <button class="aq-btn aq-btn-up" data-action="up" title="Move up">&uarr;</button>
                     <button class="aq-btn aq-btn-down" data-action="down" title="Move down">&darr;</button>
@@ -75,23 +135,33 @@ export class JTAQueuePanelUI {
     #render() {
         this.#container.innerHTML = `
             <div class="aq-queue-panel">
-                <div class="aq-queue-header">
-                    <strong>Action Queue</strong>
-                    <div class="aq-amount-selector">
-                        <span class="aq-amount-label">&plusmn;</span>
-                        <button class="aq-amount-btn aq-amount-active" data-amount="1">1</button>
-                        <button class="aq-amount-btn" data-amount="5">5</button>
-                        <button class="aq-amount-btn" data-amount="10">10</button>
-                        <input type="number" class="aq-amount-input" min="1" max="999999" value="" placeholder="#" title="Custom loop amount" style="width: 40px; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 1px 3px; font-size: 0.75em;">
-                    </div>
+                <div class="aq-current-section" style="display: none; margin-bottom: 6px;">
+                    <div class="aq-section-header"><strong>Current</strong></div>
+                    <div class="aq-current-list"></div>
                 </div>
-                <div class="aq-queue-list" style="padding-bottom: 8px;"></div>
+                <div class="aq-next-section">
+                    <div class="aq-next-header">
+                        <strong>Next</strong>
+                        <div class="aq-amount-selector">
+                            <span class="aq-amount-label">&plusmn;</span>
+                            <button class="aq-amount-btn aq-amount-active" data-amount="1">1</button>
+                            <button class="aq-amount-btn" data-amount="5">5</button>
+                            <button class="aq-amount-btn" data-amount="10">10</button>
+                            <input type="number" class="aq-amount-input" min="1" max="999999" value="" placeholder="#" title="Custom loop amount" style="width: 40px; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 1px 3px; font-size: 0.75em;">
+                        </div>
+                    </div>
+                    <div class="aq-next-list" style="padding-bottom: 8px;"></div>
+                </div>
             </div>
         `;
 
+        this.#setupAmountSelector();
+        this.#setupNextListEvents();
+    }
+
+    #setupAmountSelector() {
         const amountSelector = this.#container.querySelector('.aq-amount-selector');
 
-        // Amount button clicks
         amountSelector.addEventListener('click', (e) => {
             const btn = e.target.closest('.aq-amount-btn');
             if (!btn) return;
@@ -102,7 +172,6 @@ export class JTAQueuePanelUI {
             this.refresh();
         });
 
-        // Custom amount input
         amountSelector.querySelector('.aq-amount-input').addEventListener('change', (e) => {
             const val = parseInt(e.target.value, 10);
             if (val > 0) {
@@ -111,9 +180,13 @@ export class JTAQueuePanelUI {
                 this.refresh();
             }
         });
+    }
+
+    #setupNextListEvents() {
+        const list = this.#container.querySelector('.aq-next-list');
 
         // Delegated click handler for all entry buttons
-        this.#container.querySelector('.aq-queue-list').addEventListener('click', (e) => {
+        list.addEventListener('click', (e) => {
             const btn = e.target.closest('.aq-btn');
             if (!btn || !this.#queue) return;
 
@@ -172,8 +245,7 @@ export class JTAQueuePanelUI {
             }
         });
 
-        // Drag-and-drop on the queue list
-        const list = this.#container.querySelector('.aq-queue-list');
+        // Drag-and-drop
         list.addEventListener('dragstart', (e) => {
             const entryEl = e.target.closest('.aq-entry');
             if (!entryEl) return;
@@ -187,7 +259,6 @@ export class JTAQueuePanelUI {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
             const entryEl = e.target.closest('.aq-entry');
-            // Clear all drag-over highlights
             list.querySelectorAll('.aq-drag-over').forEach(el => el.classList.remove('aq-drag-over'));
             if (entryEl && entryEl.dataset.entryId !== this.#dragSourceId) {
                 entryEl.classList.add('aq-drag-over');
@@ -202,15 +273,13 @@ export class JTAQueuePanelUI {
         list.addEventListener('drop', (e) => {
             e.preventDefault();
             list.querySelectorAll('.aq-drag-over').forEach(el => el.classList.remove('aq-drag-over'));
-
             if (!this.#queue) return;
 
             const targetEl = e.target.closest('.aq-entry');
             if (!targetEl) return;
-
             const targetIndex = parseInt(targetEl.dataset.index, 10);
 
-            // Check if this is a drag from the actions panel (external)
+            // Check for external drag from actions panel
             const actionData = e.dataTransfer.getData('application/aq-action');
             if (actionData) {
                 try {

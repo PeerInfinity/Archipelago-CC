@@ -1,5 +1,7 @@
 // JTAQueueExecutor - drives queue execution by sending eventBus commands to the iframe
+// Uses ExecutionSnapshot (current list) for execution, leaving ActionQueue (next list) editable
 import { ActionState } from '../shared/actionQueue/actionTypes.js';
+import { ExecutionSnapshot } from '../shared/actionQueue/executionSnapshot.js';
 import { JTAActionType } from './jtaActionDefs.js';
 import { DrainStrategy, pickDrainTask } from './jtaEnergyDrainStrategy.js';
 
@@ -17,6 +19,9 @@ const POLL_INTERVAL = 500; // ms
 export class JTAQueueExecutor {
     /** @type {import('../shared/actionQueue/actionQueue.js').ActionQueue} */
     #queue;
+
+    /** @type {ExecutionSnapshot|null} */
+    #snapshot = null;
 
     /** @type {{ publish: Function, subscribe: Function, unsubscribe: Function }} */
     #eventBus;
@@ -94,26 +99,35 @@ export class JTAQueueExecutor {
         return { ...this.#config };
     }
 
-    /**
-     * @returns {boolean}
-     */
+    /** @returns {boolean} */
     get isRunning() {
-        return this.#queue.running;
+        return this.#snapshot?.running ?? false;
     }
 
-    /**
-     * @returns {boolean}
-     */
+    /** @returns {boolean} */
     get isDraining() {
         return this.#draining;
     }
 
     /**
-     * Start executing the queue from the current cursor position
+     * Get the current execution snapshot (current list), or null if not started
+     * @returns {ExecutionSnapshot|null}
+     */
+    get snapshot() {
+        return this.#snapshot;
+    }
+
+    /**
+     * Start executing. Creates a snapshot from the queue if none exists (first start or after restart).
+     * If a snapshot exists (resume after stop), continues from where it left off.
      */
     start() {
-        if (this.#queue.running) return;
-        this.#queue.running = true;
+        if (this.#snapshot?.running) return;
+
+        if (!this.#snapshot) {
+            this.#snapshot = ExecutionSnapshot.fromQueue(this.#queue);
+        }
+        this.#snapshot.running = true;
         this.#draining = false;
         console.log(`${LOG_PREFIX} Starting queue execution`);
         this.#subscribeEvents();
@@ -121,11 +135,11 @@ export class JTAQueueExecutor {
     }
 
     /**
-     * Stop execution (pause)
+     * Stop execution (pause). Snapshot is preserved for resume.
      */
     stop() {
         console.log(`${LOG_PREFIX} Stopping queue execution`);
-        this.#queue.running = false;
+        if (this.#snapshot) this.#snapshot.running = false;
         this.#draining = false;
         this.#stopPolling();
         this.#unsubscribeEvents();
@@ -134,13 +148,22 @@ export class JTAQueueExecutor {
     }
 
     /**
-     * Reset and restart from the beginning
+     * Reset and restart: creates a new snapshot from the current queue and starts from the beginning.
      */
     restart() {
         this.stop();
-        this.#queue.reset();
+        this.#snapshot = null; // force new snapshot on next start()
         this.#notifyStatusChange();
         this.start();
+    }
+
+    /**
+     * Clear the snapshot (e.g., when queue is cleared or reset from UI)
+     */
+    clearSnapshot() {
+        this.stop();
+        this.#snapshot = null;
+        this.#notifyStatusChange();
     }
 
     /** Subscribe to iframe response events */
@@ -166,28 +189,19 @@ export class JTAQueueExecutor {
         this.#unsubs = [];
     }
 
-    /** Execute the next action in the queue */
+    /** Execute the next action in the snapshot */
     #executeNext() {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
 
-        const entry = this.#queue.currentEntry();
+        const entry = this.#snapshot.currentEntry();
         if (!entry) {
             // Queue exhausted — start drain strategy
             this.#startDraining();
             return;
         }
 
-        // Skip disabled entries
-        if (entry.disabled) {
-            this.#queue.updateStatus(entry.entryId, { state: ActionState.SKIPPED });
-            this.#queue.advance();
-            this.#notifyStatusChange();
-            this.#executeNext();
-            return;
-        }
-
         console.log(`${LOG_PREFIX} Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
-        this.#queue.updateStatus(entry.entryId, { state: ActionState.ACTIVE });
+        this.#snapshot.updateStatus(entry.entryId, { state: ActionState.ACTIVE });
         this.#notifyStatusChange();
 
         switch (entry.actionType) {
@@ -228,9 +242,9 @@ export class JTAQueueExecutor {
 
     /** Handle jta:taskClicked response */
     #onTaskClicked(data) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
 
-        const entry = this.#queue.currentEntry();
+        const entry = this.#snapshot.currentEntry();
         if (!entry || entry.actionType !== JTAActionType.CLICK_TASK) return;
 
         if (!data.success) {
@@ -246,9 +260,9 @@ export class JTAQueueExecutor {
 
     /** Handle jta:itemClicked response */
     #onItemClicked(data) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
 
-        const entry = this.#queue.currentEntry();
+        const entry = this.#snapshot.currentEntry();
         if (!entry) return;
         if (entry.actionType !== JTAActionType.USE_ITEM && entry.actionType !== JTAActionType.USE_ALL_ITEMS) return;
 
@@ -258,9 +272,9 @@ export class JTAQueueExecutor {
 
     /** Handle jta:prestigeDone response */
     #onPrestigeDone(data) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
 
-        const entry = this.#queue.currentEntry();
+        const entry = this.#snapshot.currentEntry();
         if (!entry || entry.actionType !== JTAActionType.PRESTIGE) return;
 
         if (!data.success) {
@@ -273,7 +287,7 @@ export class JTAQueueExecutor {
 
     /** Handle jta:taskStatus poll response */
     #onTaskStatus(data) {
-        if (!this.#queue.running || !this.#waitingForCompletion) {
+        if (!this.#snapshot?.running || !this.#waitingForCompletion) {
             // Also handle drain task status
             if (this.#draining && data.activeTaskId === null) {
                 // Drain task finished, start another
@@ -282,7 +296,7 @@ export class JTAQueueExecutor {
             return;
         }
 
-        const entry = this.#queue.currentEntry();
+        const entry = this.#snapshot.currentEntry();
         if (!entry) return;
 
         // Check if our task is no longer active (completed or cancelled)
@@ -296,16 +310,16 @@ export class JTAQueueExecutor {
 
     /** Complete one loop of an entry, advance if all loops done */
     #completeLoop(entry) {
-        const status = this.#queue.getStatus(entry.entryId);
+        const status = this.#snapshot.getStatus(entry.entryId);
         if (!status) return;
 
         const completed = (status.loopsCompleted || 0) + 1;
-        this.#queue.updateStatus(entry.entryId, { loopsCompleted: completed });
+        this.#snapshot.updateStatus(entry.entryId, { loopsCompleted: completed });
 
         if (completed >= entry.loops) {
             // All loops done
-            this.#queue.updateStatus(entry.entryId, { state: ActionState.COMPLETED });
-            this.#queue.advance();
+            this.#snapshot.updateStatus(entry.entryId, { state: ActionState.COMPLETED });
+            this.#snapshot.advance();
             this.#notifyStatusChange();
             this.#executeNext();
         } else {
@@ -317,7 +331,7 @@ export class JTAQueueExecutor {
 
     /** Re-execute the current entry for another loop */
     #executeCurrentAgain(entry) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
         switch (entry.actionType) {
             case JTAActionType.CLICK_TASK:
                 this.#executeTask(entry);
@@ -336,10 +350,10 @@ export class JTAQueueExecutor {
 
     /** Mark entry as failed and advance */
     #markFailedAndAdvance(entry, error) {
-        this.#queue.updateStatus(entry.entryId, { state: ActionState.FAILED, error });
+        this.#snapshot.updateStatus(entry.entryId, { state: ActionState.FAILED, error });
         this.#stopPolling();
         this.#waitingForCompletion = false;
-        this.#queue.advance();
+        this.#snapshot.advance();
         this.#notifyStatusChange();
         this.#executeNext();
     }
@@ -362,7 +376,7 @@ export class JTAQueueExecutor {
 
     /** Handle energy depletion (game-over overlay appeared) */
     #onEnergyDepleted(data) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
         if (!this.#config.autoReset) {
             console.log(`${LOG_PREFIX} Energy depleted — autoReset disabled, pausing`);
             return;
@@ -376,15 +390,15 @@ export class JTAQueueExecutor {
 
     /** Handle game-over dismissed (energy reset performed) */
     #onGameOverDismissed(data) {
-        if (!this.#queue.running) return;
+        if (!this.#snapshot?.running) return;
         if (!data.success) {
             console.warn(`${LOG_PREFIX} dismissGameOver failed: ${data.error}`);
             return;
         }
-        console.log(`${LOG_PREFIX} Game-over dismissed, restarting queue`);
-        // Reset queue to beginning and re-execute
-        this.#queue.reset();
-        this.#queue.running = true; // reset() sets running=false, restore it
+        console.log(`${LOG_PREFIX} Game-over dismissed, restarting from snapshot`);
+        // Reset snapshot to beginning and re-execute
+        this.#snapshot.reset();
+        this.#snapshot.running = true;
         this.#notifyStatusChange();
         this.#executeNext();
     }
@@ -409,7 +423,7 @@ export class JTAQueueExecutor {
 
     /** Pick a drain task and send clickTask */
     #pickAndStartDrainTask(statusData) {
-        if (!this.#draining || !this.#queue.running) return;
+        if (!this.#draining || !this.#snapshot?.running) return;
 
         const taskId = pickDrainTask(
             this.#config.drainStrategy,
