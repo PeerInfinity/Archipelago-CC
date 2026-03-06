@@ -63,6 +63,9 @@ export class JTAQueueExecutor {
     /** @type {string|null} Entry ID awaiting skill snapshot */
     #pendingSkillsEntryId = null;
 
+    /** @type {boolean} Waiting for initial state before first execution */
+    #awaitingInitialState = false;
+
     /**
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
      * @param {{ publish: Function, subscribe: Function, unsubscribe: Function }} eventBus
@@ -153,7 +156,17 @@ export class JTAQueueExecutor {
         this.#pendingSkillsEntryId = null;
         console.log(`${LOG_PREFIX} Starting queue execution`);
         this.#subscribeEvents();
-        this.#executeNext();
+
+        if (this.#lastKnownEnergy > 0 && this.#lastSkillSnapshot) {
+            // Already have valid tracking state (from setTrackingState or previous run)
+            this.#awaitingInitialState = false;
+            this.#executeNext();
+        } else {
+            // Request initial state before executing first entry
+            this.#awaitingInitialState = true;
+            this.#notifyStatusChange();
+            this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
+        }
     }
 
     /**
@@ -163,6 +176,7 @@ export class JTAQueueExecutor {
         console.log(`${LOG_PREFIX} Stopping queue execution`);
         if (this.#snapshot) this.#snapshot.running = false;
         this.#draining = false;
+        this.#awaitingInitialState = false;
         this.#stopPolling();
         this.#unsubscribeEvents();
         this.#waitingForCompletion = false;
@@ -175,6 +189,8 @@ export class JTAQueueExecutor {
     restart() {
         this.stop();
         this.#snapshot = null; // force new snapshot on next start()
+        this.#lastKnownEnergy = 0;
+        this.#lastSkillSnapshot = null;
         this.#notifyStatusChange();
         this.start();
     }
@@ -185,6 +201,8 @@ export class JTAQueueExecutor {
     clearSnapshot() {
         this.stop();
         this.#snapshot = null;
+        this.#lastKnownEnergy = 0;
+        this.#lastSkillSnapshot = null;
         this.#notifyStatusChange();
     }
 
@@ -227,7 +245,6 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.ACTIVE,
             energyBefore: this.#lastKnownEnergy,
-            skillsBefore: this.#lastSkillSnapshot ? { ...this.#lastSkillSnapshot } : null,
             startTime: Date.now(),
         });
         this.#notifyStatusChange();
@@ -451,8 +468,12 @@ export class JTAQueueExecutor {
         this.#snapshot.running = true;
         this.#draining = false;
         this.#pendingSkillsEntryId = null;
+        this.#lastKnownEnergy = 0;
+        this.#lastSkillSnapshot = null;
+        // Request fresh state before restarting execution
+        this.#awaitingInitialState = true;
         this.#notifyStatusChange();
-        this.#executeNext();
+        this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
     }
 
     /** Handle detailed state snapshot for skill tracking during execution */
@@ -465,16 +486,24 @@ export class JTAQueueExecutor {
             this.#lastKnownEnergy = data.state.currentEnergy;
         }
 
-        // If we were waiting for a skill snapshot to compute actuals
+        // Handle initial state: begin execution now that we have tracking data
+        if (this.#awaitingInitialState) {
+            this.#awaitingInitialState = false;
+            this.#lastSkillSnapshot = skillSnap;
+            console.log(`${LOG_PREFIX} Initial state received (energy=${this.#lastKnownEnergy}), starting execution`);
+            this.#executeNext();
+            return;
+        }
+
+        // Compute actual skill gains for the just-completed entry
+        // Uses #lastSkillSnapshot (previous entry's "after") as baseline
         if (this.#pendingSkillsEntryId) {
             const entryId = this.#pendingSkillsEntryId;
             this.#pendingSkillsEntryId = null;
-            const status = this.#snapshot.getStatus(entryId);
-            if (status?.skillsBefore) {
-                const gains = computeSkillGainsBetween(status.skillsBefore, skillSnap);
-                this.#snapshot.updateStatus(entryId, { actualSkillGains: gains });
-                this.#notifyStatusChange();
-            }
+            const before = this.#lastSkillSnapshot || {};
+            const gains = computeSkillGainsBetween(before, skillSnap);
+            this.#snapshot.updateStatus(entryId, { actualSkillGains: gains });
+            this.#notifyStatusChange();
         }
 
         this.#lastSkillSnapshot = skillSnap;
