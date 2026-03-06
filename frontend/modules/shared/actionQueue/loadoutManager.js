@@ -86,6 +86,31 @@ export class LoadoutManager {
     }
 
     /**
+     * Get sequencing config for a loadout
+     * @param {number} index
+     * @returns {{ repeatCount: number, nextLoadout: number }} repeatCount 0 = infinite, nextLoadout -1 = stop
+     */
+    getSequencing(index) {
+        const loadout = this.#loadouts[index];
+        return {
+            repeatCount: loadout?.repeatCount ?? 1,
+            nextLoadout: loadout?.nextLoadout ?? -1,
+        };
+    }
+
+    /**
+     * Update sequencing config for a loadout
+     * @param {number} index
+     * @param {{ repeatCount?: number, nextLoadout?: number }} config
+     */
+    updateSequencing(index, config) {
+        if (index < 0 || index >= this.#loadouts.length) return;
+        if (config.repeatCount !== undefined) this.#loadouts[index].repeatCount = config.repeatCount;
+        if (config.nextLoadout !== undefined) this.#loadouts[index].nextLoadout = config.nextLoadout;
+        this.#persist();
+    }
+
+    /**
      * Create a new empty loadout and switch to it
      * @param {string} [name]
      * @param {ActionQueue} [queue]
@@ -93,7 +118,7 @@ export class LoadoutManager {
      */
     create(name, queue) {
         const loadoutName = name || `Loadout ${this.#loadouts.length + 1}`;
-        this.#loadouts.push({ name: loadoutName, data: {} });
+        this.#loadouts.push({ name: loadoutName, data: {}, repeatCount: 1, nextLoadout: -1 });
         const idx = this.#loadouts.length - 1;
         if (queue) {
             this.#activeIndex = idx;

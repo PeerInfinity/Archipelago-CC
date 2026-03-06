@@ -325,6 +325,13 @@ class JTAActionQueuePanel {
                 <button class="aq-undo-btn">Undo</button>
                 <span class="aq-status-text" style="margin-left: 8px; align-self: center;"></span>
             </div>
+            <div class="aq-loadout-bar" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">
+                <select class="aq-loadout-select" style="flex: 1; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 2px 4px;"></select>
+                <button class="aq-loadout-save" title="Save current queue to loadout">Save</button>
+                <button class="aq-loadout-new" title="Create new loadout">New</button>
+                <button class="aq-loadout-rename" title="Rename loadout">Rename</button>
+                <button class="aq-loadout-delete" title="Delete loadout">Del</button>
+            </div>
             <details class="aq-settings" style="border: 1px solid #444; border-radius: 4px; padding: 4px 8px; background: #252525;">
                 <summary style="cursor: pointer; user-select: none; font-weight: bold; padding: 2px 0;">Settings</summary>
                 <div class="aq-settings-body" style="display: flex; flex-direction: column; gap: 6px; padding: 6px 0 2px;">
@@ -351,6 +358,21 @@ class JTAActionQueuePanel {
                         <input type="checkbox" class="aq-setting-add-to-top">
                         Add new actions to top of queue
                     </label>
+                    <hr style="border: none; border-top: 1px solid #444; margin: 4px 0;">
+                    <div class="aq-sequencing" style="display: flex; flex-direction: column; gap: 4px;">
+                        <div style="font-weight: bold; font-size: 0.85em;">Loadout Sequencing</div>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            Repeat
+                            <input type="number" class="aq-seq-repeat" min="0" max="9999" value="1" style="width: 50px; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 1px 3px;">
+                            times (0 = infinite)
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            Then switch to
+                            <select class="aq-seq-next" style="flex: 1; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 2px 4px;">
+                                <option value="-1">(stop)</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
             </details>
             <div class="aq-actions-section" style="flex-shrink: 0;"></div>
@@ -358,7 +380,9 @@ class JTAActionQueuePanel {
         `;
 
         this._setupControls();
+        this._setupLoadouts();
         this._setupSettings();
+        this._setupSequencing();
         this._setupQueue();
     }
 
@@ -366,14 +390,14 @@ class JTAActionQueuePanel {
         const el = this.rootElement;
         const statusText = el.querySelector('.aq-status-text');
 
+        this._loadoutRunCount = 0;
+
         el.querySelector('.aq-start-btn').addEventListener('click', () => {
             if (!executor && queue) {
                 const settings = this._savedSettings ? this._savedSettings() : {};
                 executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, settings);
                 executor.onStatusChange = () => this._refreshUI();
-                executor.onQueueExhausted = () => {
-                    statusText.textContent = settings.drainEnabled !== false ? 'Draining energy...' : 'Queue finished';
-                };
+                executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
             }
             if (executor) {
                 executor.start();
@@ -391,6 +415,7 @@ class JTAActionQueuePanel {
         });
 
         el.querySelector('.aq-reset-btn').addEventListener('click', () => {
+            this._loadoutRunCount = 0;
             if (executor) {
                 executor.clearSnapshot();
                 statusText.textContent = 'Reset';
@@ -415,6 +440,146 @@ class JTAActionQueuePanel {
                 this._saveLoadout();
             }
         });
+    }
+
+    _handleQueueExhausted(statusText) {
+        if (!loadoutManager) {
+            statusText.textContent = 'Queue finished';
+            return;
+        }
+
+        this._loadoutRunCount = (this._loadoutRunCount || 0) + 1;
+        const seq = loadoutManager.getSequencing(loadoutManager.activeIndex);
+
+        // Check if we should repeat this loadout
+        if (seq.repeatCount === 0 || this._loadoutRunCount < seq.repeatCount) {
+            // Repeat: restart from beginning of same loadout
+            if (executor) executor.restart();
+            statusText.textContent = `Running... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
+            return;
+        }
+
+        // Check if we should switch to next loadout
+        if (seq.nextLoadout >= 0 && seq.nextLoadout < loadoutManager.count) {
+            this._loadoutRunCount = 0;
+            loadoutManager.saveActive(queue);
+            if (executor) executor.clearSnapshot();
+            loadoutManager.switchTo(seq.nextLoadout, queue);
+            if (this._refreshLoadouts) this._refreshLoadouts();
+            if (queuePanelUI) queuePanelUI.refresh();
+
+            // Start the new loadout
+            if (executor) executor.start();
+            statusText.textContent = `Running ${loadoutManager.activeName}...`;
+            return;
+        }
+
+        // No sequencing — fall through to drain or stop
+        const settings = this._savedSettings ? this._savedSettings() : {};
+        statusText.textContent = settings.drainEnabled !== false ? 'Draining energy...' : 'Queue finished';
+    }
+
+    _setupLoadouts() {
+        const el = this.rootElement;
+        const select = el.querySelector('.aq-loadout-select');
+
+        const refreshSelect = () => {
+            if (!loadoutManager) return;
+            const loadouts = loadoutManager.getLoadouts();
+            select.innerHTML = loadouts.map((l, i) =>
+                `<option value="${i}">${l.name}</option>`
+            ).join('');
+            select.selectedIndex = loadoutManager.activeIndex;
+            this._refreshSequencingUI();
+        };
+
+        select.addEventListener('change', () => {
+            if (!loadoutManager || !queue) return;
+            // Save current queue before switching
+            loadoutManager.saveActive(queue);
+            if (executor) executor.clearSnapshot();
+            loadoutManager.switchTo(select.selectedIndex, queue);
+            this._refreshUI();
+            if (queuePanelUI) queuePanelUI.refresh();
+            this._refreshSequencingUI();
+        });
+
+        el.querySelector('.aq-loadout-save').addEventListener('click', () => {
+            if (loadoutManager && queue) {
+                loadoutManager.saveActive(queue);
+            }
+        });
+
+        el.querySelector('.aq-loadout-new').addEventListener('click', () => {
+            if (!loadoutManager || !queue) return;
+            loadoutManager.saveActive(queue);
+            const name = prompt('Loadout name:', `Loadout ${loadoutManager.count + 1}`);
+            if (name === null) return;
+            loadoutManager.create(name, queue);
+            if (executor) executor.clearSnapshot();
+            refreshSelect();
+            this._refreshUI();
+            if (queuePanelUI) queuePanelUI.refresh();
+        });
+
+        el.querySelector('.aq-loadout-rename').addEventListener('click', () => {
+            if (!loadoutManager) return;
+            const name = prompt('New name:', loadoutManager.activeName);
+            if (name === null) return;
+            loadoutManager.rename(loadoutManager.activeIndex, name);
+            refreshSelect();
+        });
+
+        el.querySelector('.aq-loadout-delete').addEventListener('click', () => {
+            if (!loadoutManager || !queue) return;
+            if (loadoutManager.count <= 1) return;
+            if (!confirm(`Delete "${loadoutManager.activeName}"?`)) return;
+            loadoutManager.delete(loadoutManager.activeIndex);
+            loadoutManager.loadActive(queue);
+            if (executor) executor.clearSnapshot();
+            refreshSelect();
+            this._refreshUI();
+            if (queuePanelUI) queuePanelUI.refresh();
+        });
+
+        // Initial populate
+        refreshSelect();
+        this._refreshLoadouts = refreshSelect;
+    }
+
+    _refreshSequencingUI() {
+        const el = this.rootElement;
+        if (!loadoutManager) return;
+
+        const repeatInput = el.querySelector('.aq-seq-repeat');
+        const nextSelect = el.querySelector('.aq-seq-next');
+        if (!repeatInput || !nextSelect) return;
+
+        const seq = loadoutManager.getSequencing(loadoutManager.activeIndex);
+        repeatInput.value = seq.repeatCount;
+
+        // Populate next-loadout dropdown
+        const loadouts = loadoutManager.getLoadouts();
+        nextSelect.innerHTML = '<option value="-1">(stop)</option>' +
+            loadouts.map((l, i) => `<option value="${i}">${l.name}</option>`).join('');
+        nextSelect.value = String(seq.nextLoadout);
+    }
+
+    _setupSequencing() {
+        const el = this.rootElement;
+        const repeatInput = el.querySelector('.aq-seq-repeat');
+        const nextSelect = el.querySelector('.aq-seq-next');
+
+        const persistSeq = () => {
+            if (!loadoutManager) return;
+            loadoutManager.updateSequencing(loadoutManager.activeIndex, {
+                repeatCount: parseInt(repeatInput.value, 10) || 0,
+                nextLoadout: parseInt(nextSelect.value, 10),
+            });
+        };
+
+        repeatInput.addEventListener('change', persistSeq);
+        nextSelect.addEventListener('change', persistSeq);
     }
 
     _setupSettings() {
