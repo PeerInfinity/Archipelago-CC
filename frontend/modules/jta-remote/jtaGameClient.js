@@ -205,6 +205,7 @@ function setupStateChangeDetection(client) {
     let lastResetCount = -1;
     let lastPrestigeCount = -1;
     let lastPerkCount = -1;
+    let lastIsInEnergyReset = false;
 
     // Initialize from current state
     const gs = window.getGamestate;
@@ -212,6 +213,7 @@ function setupStateChangeDetection(client) {
         lastZone = gs.current_zone;
         lastResetCount = gs.energy_reset_count;
         lastPrestigeCount = gs.prestige_count;
+        lastIsInEnergyReset = !!gs.is_in_energy_reset;
         if (gs.perks instanceof Map) {
             for (const [, owned] of gs.perks) {
                 if (owned) lastPerkCount++;
@@ -281,6 +283,16 @@ function setupStateChangeDetection(client) {
             });
         }
         lastPerkCount = currentPerkCount;
+
+        // Energy depleted detection (game-over overlay showing, game paused)
+        if (gs.is_in_energy_reset && !lastIsInEnergyReset) {
+            console.log(`${LOG_PREFIX} Energy depleted — game-over overlay showing`);
+            client.publishEventBus('jta:energyDepleted', {
+                resetCount: gs.energy_reset_count,
+                timestamp: Date.now()
+            });
+        }
+        lastIsInEnergyReset = gs.is_in_energy_reset;
 
     }, 500); // Poll every 500ms
 
@@ -508,6 +520,34 @@ function readGameDefinitions() {
 }
 
 /**
+ * Read the game's item definitions (ITEMS array + ARTIFACTS list)
+ * @returns {{ items: object[], artifacts: number[] }|null}
+ */
+function readItemDefinitions() {
+    const items = window.ITEMS;
+    const artifacts = window.ARTIFACTS;
+    if (!items) return null;
+
+    const itemDefs = [];
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (!item || !item.name) continue;
+        itemDefs.push({
+            index: i,
+            enumValue: item.enum,
+            name: item.name,
+            namePlural: item.name_plural,
+            icon: item.icon || '',
+        });
+    }
+
+    return {
+        items: itemDefs,
+        artifacts: artifacts ? [...artifacts] : [],
+    };
+}
+
+/**
  * Set up eventBus subscriptions for save import/export and game commands
  * @param {IframeClient} client
  */
@@ -547,8 +587,10 @@ function setupSubscriptions(client) {
     // Request game zone/task definitions
     client.subscribeEventBus('jta:requestGameDefs', () => {
         const defs = readGameDefinitions();
+        const items = readItemDefinitions();
         client.publishEventBus('jta:gameDefsSnapshot', {
             zones: defs,
+            items: items,
             timestamp: Date.now()
         });
     });
@@ -561,6 +603,116 @@ function setupSubscriptions(client) {
     // Patch task definitions
     client.subscribeEventBus('jta:patchTaskDefs', (data) => {
         patchTaskDefs(data, client);
+    });
+
+    // Click a task by definition ID (sets it as active_task)
+    client.subscribeEventBus('jta:clickTask', (data) => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:taskClicked', { success: false, error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        const taskId = data.taskId;
+        const task = gs.tasks.find(t => t.task_definition.id === taskId);
+        if (!task) {
+            console.warn(`${LOG_PREFIX} clickTask: task ${taskId} not found in current zone ${gs.current_zone}`);
+            client.publishEventBus('jta:taskClicked', {
+                success: false,
+                taskId,
+                error: `Task ${taskId} not in current zone`,
+                timestamp: Date.now()
+            });
+            return;
+        }
+        if (window.clickTask) {
+            window.clickTask(task);
+            console.log(`${LOG_PREFIX} clickTask: activated task ${taskId} "${task.task_definition.name}"`);
+            client.publishEventBus('jta:taskClicked', {
+                success: true,
+                taskId,
+                taskName: task.task_definition.name,
+                timestamp: Date.now()
+            });
+        } else {
+            client.publishEventBus('jta:taskClicked', { success: false, taskId, error: 'clickTask not on window', timestamp: Date.now() });
+        }
+    });
+
+    // Use an item (clickItem)
+    client.subscribeEventBus('jta:clickItem', (data) => {
+        if (window.clickItem) {
+            window.clickItem(data.itemType, !!data.useAll);
+            console.log(`${LOG_PREFIX} clickItem: used item type ${data.itemType} (useAll: ${!!data.useAll})`);
+            client.publishEventBus('jta:itemClicked', {
+                success: true,
+                itemType: data.itemType,
+                useAll: !!data.useAll,
+                timestamp: Date.now()
+            });
+        } else {
+            client.publishEventBus('jta:itemClicked', { success: false, error: 'clickItem not on window', timestamp: Date.now() });
+        }
+    });
+
+    // Trigger prestige
+    client.subscribeEventBus('jta:doPrestige', () => {
+        if (window.doPrestige) {
+            window.doPrestige();
+            console.log(`${LOG_PREFIX} doPrestige: triggered`);
+            client.publishEventBus('jta:prestigeDone', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:prestigeDone', { success: false, error: 'doPrestige not on window', timestamp: Date.now() });
+        }
+    });
+
+    // Dismiss the game-over overlay and trigger energy reset
+    client.subscribeEventBus('jta:dismissGameOver', () => {
+        const gs = window.getGamestate;
+        if (!gs || !gs.is_in_energy_reset) {
+            client.publishEventBus('jta:gameOverDismissed', {
+                success: false,
+                error: 'Not in energy reset state',
+                timestamp: Date.now()
+            });
+            return;
+        }
+        // Hide the overlay (same as clicking the dismiss button)
+        const overlay = document.getElementById('game-over-overlay');
+        if (overlay) overlay.classList.add('hidden');
+        // Perform the actual energy reset
+        if (window.doEnergyReset) {
+            window.doEnergyReset();
+            console.log(`${LOG_PREFIX} dismissGameOver: reset triggered`);
+            client.publishEventBus('jta:gameOverDismissed', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:gameOverDismissed', { success: false, error: 'doEnergyReset not on window', timestamp: Date.now() });
+        }
+    });
+
+    // Request current task status (active task + all tasks in zone)
+    client.subscribeEventBus('jta:requestTaskStatus', () => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:taskStatus', { error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        const tasks = (gs.tasks || []).map(t => ({
+            id: t.task_definition.id,
+            name: t.task_definition.name,
+            type: t.task_definition.type,
+            progress: t.progress,
+            reps: t.reps,
+            maxReps: t.task_definition.max_reps,
+            enabled: t.enabled,
+        }));
+        client.publishEventBus('jta:taskStatus', {
+            activeTaskId: gs.active_task ? gs.active_task.task_definition.id : null,
+            currentZone: gs.current_zone,
+            currentEnergy: gs.current_energy,
+            maxEnergy: gs.max_energy,
+            tasks,
+            timestamp: Date.now()
+        });
     });
 
     console.log(`${LOG_PREFIX} Subscriptions active`);

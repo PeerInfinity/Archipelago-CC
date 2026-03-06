@@ -612,7 +612,7 @@ function updateTaskRendering() {
         }
         if (task.task_definition.type != TaskType.Travel) {
             const reps = task_element.getElementsByClassName("task-rep");
-            for (let i = 0; i < task.reps; ++i) {
+            for (let i = 0; i < task.reps && i < reps.length; ++i) {
                 reps[i].classList.add("finished");
             }
         }

@@ -38,6 +38,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jta:importSave');
     registrationApi.registerEventBusPublisher('jta:requestState');
     registrationApi.registerEventBusPublisher('jta:requestDetailedState');
+    registrationApi.registerEventBusPublisher('jta:requestGameDefs');
     registrationApi.registerEventBusPublisher('iframe:loadUrl');
 
     // Register EventBus subscribers
@@ -52,6 +53,13 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyReset');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestige');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:perkChanged');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskClicked');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:itemClicked');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestigeDone');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskStatus');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameDefsSnapshot');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyDepleted');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameOverDismissed');
 
     log('info', `[${moduleId} Module] Registration complete.`);
 }

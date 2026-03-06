@@ -219,6 +219,11 @@
       "path": "./modules/proofGraph/index.js",
       "enabled": true,
       "requires": ["stateManager"]
+    },
+    "jtaActionQueue": {
+      "path": "./modules/jtaActionQueue/index.js",
+      "enabled": true,
+      "requires": ["iframeAdapter", "iframePanel"]
     }
   },
   "loadPriority": [
@@ -270,6 +275,7 @@
     "windowManagerPanel",
     "ruleConverter",
     "proofQueue",
-    "proofGraph"
+    "proofGraph",
+    "jtaActionQueue"
   ]
 }

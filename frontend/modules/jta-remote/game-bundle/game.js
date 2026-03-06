@@ -1,6 +1,7 @@
 import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate } from "./simulation.js";
+import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset } from "./simulation.js";
 import { ZONES, TASK_LOOKUP } from "./zones.js";
+import { ITEMS, ARTIFACTS } from "./items.js";
 function gameLoop() {
     updateGamestate();
     updateRendering();
@@ -53,4 +54,18 @@ window.ZONES = ZONES;
 window.TASK_LOOKUP = TASK_LOOKUP;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.resetTasks = resetTasks;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.clickTask = clickTask;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.clickItem = clickItem;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.doPrestige = doPrestige;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.doEnergyReset = doEnergyReset;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.saveGame = saveGame;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.ITEMS = ITEMS;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.ARTIFACTS = ARTIFACTS;
 //# sourceMappingURL=game.js.map
