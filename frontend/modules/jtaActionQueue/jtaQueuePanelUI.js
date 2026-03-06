@@ -6,6 +6,26 @@ import { ActionState } from '../shared/actionQueue/actionTypes.js';
  * Generate a subtle tint color from a group name (zone name).
  * Uses HSL with fixed low saturation/lightness for dark theme.
  */
+/**
+ * Format energy value for display.
+ */
+function fmtEnergy(value) {
+    if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+    if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(1) + 'K';
+    return Math.round(value).toLocaleString();
+}
+
+/**
+ * Get CSS color class for remaining energy relative to max.
+ */
+function energyColorClass(remaining, max) {
+    if (remaining < 0) return 'aq-pred-insufficient';
+    const pct = max > 0 ? remaining / max : 0;
+    if (pct > 0.5) return 'aq-pred-good';
+    if (pct > 0.1) return 'aq-pred-warn';
+    return 'aq-pred-low';
+}
+
 function groupTint(group) {
     if (!group) return '';
     let hash = 0;
@@ -35,6 +55,9 @@ export class JTAQueuePanelUI {
     /** @type {string|null} entryId being dragged */
     #dragSourceId = null;
 
+    /** @type {Map<string, object>|null} entryId -> prediction */
+    #predictions = null;
+
     constructor(container) {
         this.#container = container;
         this.#render();
@@ -58,6 +81,15 @@ export class JTAQueuePanelUI {
     setSnapshot(snapshot) {
         this.#snapshot = snapshot;
         this.refresh();
+    }
+
+    /**
+     * Set predictions for next list display
+     * @param {Map<string, object>|null} predictions - entryId -> prediction
+     */
+    setPredictions(predictions) {
+        this.#predictions = predictions;
+        this.#refreshNextList();
     }
 
     /** Refresh the display */
@@ -138,9 +170,24 @@ export class JTAQueuePanelUI {
             const tint = groupTint(entry.group);
             const tintStyle = tint ? `background: ${tint};` : '';
 
+            // Prediction display
+            let predHtml = '';
+            const pred = this.#predictions?.get(entry.entryId);
+            if (pred && !entry.disabled) {
+                const costSign = pred.energyCost >= 0 ? '-' : '+';
+                const costAbs = Math.abs(pred.energyCost);
+                const remainClass = energyColorClass(pred.energyRemaining, pred.energyRemaining + pred.energyCost);
+                const insufficientClass = !pred.canComplete ? 'aq-pred-insufficient' : '';
+                predHtml = `<span class="aq-prediction ${insufficientClass}">
+                    <span class="aq-pred-cost">${costSign}${fmtEnergy(costAbs)}</span>
+                    <span class="aq-pred-remaining ${remainClass}">${fmtEnergy(pred.energyRemaining)}</span>
+                </span>`;
+            }
+
             return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}">
                 <span class="aq-entry-index">${idx + 1}</span>
                 <span class="aq-entry-label">${entry.label}${loopText}</span>
+                ${predHtml}
                 <span class="aq-entry-group">${entry.group || ''}</span>
                 <div class="aq-entry-buttons">
                     <button class="aq-btn aq-btn-up" data-action="up" title="Move up">&uarr;</button>

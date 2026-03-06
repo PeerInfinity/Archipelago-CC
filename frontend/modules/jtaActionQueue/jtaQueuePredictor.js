@@ -1,0 +1,250 @@
+// JTA Queue Predictor - predicts energy cost, time, and skill gains for queue entries
+// Uses the JTA simulator's exported calculation functions with a rolling state clone
+
+import {
+    ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS,
+} from '../jta-randomizer/gameData.js';
+import {
+    calcTaskEnergyCostSingleRep, calcTaskTicks,
+    applyTaskXp, createInitialState,
+} from '../jta-randomizer/simulator.js';
+import { JTAActionType } from './jtaActionDefs.js';
+
+// Build a lookup: taskId -> { task, zoneId }
+const TASK_LOOKUP = new Map();
+for (const zone of ZONES) {
+    for (const task of zone.tasks) {
+        TASK_LOOKUP.set(task.id, { task, zoneId: zone.id });
+    }
+}
+
+/**
+ * Convert a jta:detailedStateSnapshot into the simulator's state format.
+ * @param {object} snapshot - From jta:detailedStateSnapshot event data
+ * @returns {object} Simulator-compatible state object
+ */
+export function convertToSimState(snapshot) {
+    const state = createInitialState();
+
+    // Energy
+    state.maxEnergy = snapshot.maxEnergy || 100;
+    state.currentEnergy = snapshot.currentEnergy || state.maxEnergy;
+    state.currentZone = snapshot.currentZone || 0;
+    state.highestZone = snapshot.highestZone ?? -1;
+    state.highestZoneFullyCompleted = snapshot.highestZoneFullyCompleted ?? -1;
+
+    // Skills
+    if (snapshot.skills) {
+        for (const [skillId, data] of Object.entries(snapshot.skills)) {
+            const id = Number(skillId);
+            state.skillLevels[id] = data.level || 0;
+            state.skillXp[id] = data.xp || 0;
+            state.skillSpeedModifiers[id] = data.speedModifier || 0;
+        }
+    }
+
+    // Perks
+    state.perks = new Set(snapshot.perks || []);
+
+    // Power / Attunement
+    state.power = snapshot.power || 0;
+    state.attunement = snapshot.attunement || 0;
+
+    // Items
+    state.items = new Map();
+    if (snapshot.items) {
+        for (const [itemType, count] of Object.entries(snapshot.items)) {
+            state.items.set(Number(itemType), count);
+        }
+    }
+
+    // Artifacts
+    state.scrollsOfHaste = snapshot.queuedScrollsOfHaste || 0;
+    state.magicRings = snapshot.queuedMagicRings || 0;
+    state.bottledLightnings = snapshot.queuedLightning || 0;
+
+    // Prestige
+    state.prestigeUnlocks = new Set(snapshot.prestigeUnlocks || []);
+    state.prestigeRepeatables = new Map();
+    if (snapshot.prestigeRepeatables) {
+        for (const [type, level] of Object.entries(snapshot.prestigeRepeatables)) {
+            state.prestigeRepeatables.set(Number(type), level);
+        }
+    }
+
+    return state;
+}
+
+/**
+ * @typedef {object} EntryPrediction
+ * @property {string} entryId
+ * @property {number} energyCost - Total energy for all loops
+ * @property {number} energyRemaining - Energy after this entry
+ * @property {number} ticks - Total ticks for all loops
+ * @property {number} timeMs - Estimated wall-clock time
+ * @property {boolean} canComplete - Whether there's enough energy
+ * @property {string} [note] - Special note (e.g., "resets state")
+ */
+
+const TICK_MS = 66.6;
+
+/**
+ * Predict energy cost and remaining energy for each queue entry,
+ * walking the queue sequentially with a rolling state clone.
+ *
+ * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
+ * @param {object} simState - From convertToSimState()
+ * @returns {Map<string, EntryPrediction>} Map of entryId -> prediction
+ */
+export function predictQueue(queue, simState) {
+    const predictions = new Map();
+    const entries = queue.getEntries();
+    let remainingEnergy = simState.currentEnergy;
+
+    // Deep-clone mutable parts of state for rolling simulation
+    const state = cloneSimState(simState);
+
+    for (const entry of entries) {
+        if (entry.disabled) continue;
+
+        const pred = predictEntry(entry, state, remainingEnergy);
+        predictions.set(entry.entryId, pred);
+        remainingEnergy = pred.energyRemaining;
+
+        // If prestige, we can't predict further meaningfully
+        if (entry.actionType === JTAActionType.PRESTIGE) break;
+    }
+
+    return predictions;
+}
+
+/**
+ * Predict a single queue entry and mutate rolling state.
+ */
+function predictEntry(entry, state, remainingEnergy) {
+    switch (entry.actionType) {
+        case JTAActionType.CLICK_TASK:
+            return predictTask(entry, state, remainingEnergy);
+        case JTAActionType.USE_ITEM:
+            return predictItem(entry, state, remainingEnergy, false);
+        case JTAActionType.USE_ALL_ITEMS:
+            return predictItem(entry, state, remainingEnergy, true);
+        case JTAActionType.PRESTIGE:
+            return {
+                entryId: entry.entryId,
+                energyCost: 0,
+                energyRemaining: remainingEnergy,
+                ticks: 0,
+                timeMs: 0,
+                canComplete: true,
+                note: 'Resets state',
+            };
+        default:
+            return {
+                entryId: entry.entryId,
+                energyCost: 0,
+                energyRemaining: remainingEnergy,
+                ticks: 0,
+                timeMs: 0,
+                canComplete: true,
+            };
+    }
+}
+
+/**
+ * Predict a clickTask entry.
+ */
+function predictTask(entry, state, remainingEnergy) {
+    const lookup = TASK_LOOKUP.get(entry.actionId);
+    if (!lookup) {
+        return {
+            entryId: entry.entryId,
+            energyCost: 0,
+            energyRemaining: remainingEnergy,
+            ticks: 0,
+            timeMs: 0,
+            canComplete: true,
+            note: 'Unknown task',
+        };
+    }
+
+    const { task, zoneId } = lookup;
+    const loops = entry.loops || 1;
+
+    // Cost per rep (one completion of all maxReps)
+    const costPerRep = calcTaskEnergyCostSingleRep(task, zoneId, state) * task.maxReps;
+    const ticksPerRep = calcTaskTicks(task, zoneId, state) * task.maxReps;
+
+    const totalCost = costPerRep * loops;
+    const totalTicks = ticksPerRep * loops;
+    const canComplete = remainingEnergy >= totalCost;
+
+    // Apply XP to rolling state (mutates state for subsequent predictions)
+    applyTaskXp(task, zoneId, state, loops);
+
+    return {
+        entryId: entry.entryId,
+        energyCost: totalCost,
+        energyRemaining: remainingEnergy - totalCost,
+        ticks: totalTicks,
+        timeMs: totalTicks * TICK_MS,
+        canComplete,
+    };
+}
+
+/**
+ * Predict a useItem/useAllItems entry.
+ * Items are instant (0 ticks). Energy items restore energy.
+ * Skill modifier items boost speed (applied to rolling state).
+ */
+function predictItem(entry, state, remainingEnergy, useAll) {
+    const itemType = entry.actionId;
+    const count = useAll ? (state.items.get(itemType) || 0) : (entry.loops || 1);
+
+    let energyGain = 0;
+    const energyValue = ENERGY_ITEMS[itemType];
+    if (energyValue) {
+        energyGain = energyValue * count;
+    }
+
+    // Apply skill speed modifiers to rolling state
+    const mods = ITEM_SKILL_MODIFIERS[itemType];
+    if (mods) {
+        for (const [skill, bonus] of Object.entries(mods)) {
+            const skillId = Number(skill);
+            state.skillSpeedModifiers[skillId] = (state.skillSpeedModifiers[skillId] || 0) + bonus * count;
+        }
+    }
+
+    // Deduct items from rolling state
+    const current = state.items.get(itemType) || 0;
+    state.items.set(itemType, Math.max(0, current - count));
+
+    return {
+        entryId: entry.entryId,
+        energyCost: -energyGain,
+        energyRemaining: remainingEnergy + energyGain,
+        ticks: 0,
+        timeMs: 0,
+        canComplete: true,
+    };
+}
+
+/**
+ * Deep-clone the mutable parts of a sim state for rolling prediction.
+ */
+function cloneSimState(state) {
+    return {
+        ...state,
+        skillLevels: { ...state.skillLevels },
+        skillXp: { ...state.skillXp },
+        skillSpeedModifiers: { ...state.skillSpeedModifiers },
+        perks: new Set(state.perks),
+        items: new Map(state.items),
+        bossesDefeated: new Set(state.bossesDefeated || []),
+        unlockedHiddenTasks: new Set(state.unlockedHiddenTasks || []),
+        itemsFoundThisReset: [...(state.itemsFoundThisReset || [])],
+        prestigeUnlocks: new Set(state.prestigeUnlocks),
+        prestigeRepeatables: new Map(state.prestigeRepeatables),
+    };
+}

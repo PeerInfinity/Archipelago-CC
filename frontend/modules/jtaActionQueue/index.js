@@ -6,6 +6,7 @@ import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
 import { JTAQueueExecutor } from './jtaQueueExecutor.js';
 import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
 import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
+import { convertToSimState, predictQueue } from './jtaQueuePredictor.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
@@ -37,6 +38,9 @@ let executor = null;
 let catalog = null;
 let queuePanelUI = null;
 let actionsPanelUI = null;
+let lastSimState = null;
+let predictions = null;
+let predictionDebounceTimer = null;
 
 export async function register(registrationApi) {
     log('info', `[${moduleId}] Registering...`);
@@ -50,6 +54,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jta:requestTaskStatus');
     registrationApi.registerEventBusPublisher('jta:requestGameDefs');
     registrationApi.registerEventBusPublisher('jta:dismissGameOver');
+    registrationApi.registerEventBusPublisher('jta:requestDetailedState');
 
     // Subscribers — responses from the iframe
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskClicked');
@@ -59,6 +64,7 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameDefsSnapshot');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyDepleted');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameOverDismissed');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:detailedStateSnapshot');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:connected');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:disconnected');
 
@@ -307,6 +313,37 @@ class JTAActionQueuePanel {
                     opacity: 0.7;
                     min-width: 30px;
                     text-align: center;
+                }
+
+                /* Predictions */
+                .aq-prediction {
+                    display: flex;
+                    gap: 4px;
+                    font-size: 0.75em;
+                    flex-shrink: 0;
+                    margin-left: auto;
+                    margin-right: 4px;
+                }
+                .aq-pred-cost {
+                    opacity: 0.6;
+                }
+                .aq-pred-remaining {
+                    font-weight: bold;
+                }
+                .aq-pred-good {
+                    color: #5a5;
+                }
+                .aq-pred-warn {
+                    color: #da5;
+                }
+                .aq-pred-low {
+                    color: #d55;
+                }
+                .aq-pred-insufficient {
+                    color: #a33;
+                }
+                .aq-pred-insufficient .aq-entry-label {
+                    text-decoration: line-through;
                 }
 
                 /* Empty state */
@@ -670,6 +707,7 @@ class JTAActionQueuePanel {
 
         const onQueueChanged = () => {
             this._saveLoadout();
+            this._schedulePredictions();
         };
 
         // queue may not exist yet (GL init runs before module init),
@@ -705,6 +743,9 @@ class JTAActionQueuePanel {
             // Ensure queue panel is bound now that queue exists (created in Phase 9)
             this._ensureQueueBound();
 
+            // Request game state for initial predictions
+            this._requestPredictionState();
+
             const actionsSection = this.rootElement.querySelector('.aq-actions-section');
             actionsPanelUI = new JTAActionsPanelUI(actionsSection);
             const getInsertIndex = () => {
@@ -714,6 +755,7 @@ class JTAActionQueuePanel {
             actionsPanelUI.bind(queue, catalog, () => {
                 if (queuePanelUI) queuePanelUI.refresh();
                 this._saveLoadout();
+                this._schedulePredictions();
             }, getInsertIndex);
         };
 
@@ -728,15 +770,55 @@ class JTAActionQueuePanel {
         const unsub2 = bus.subscribe('iframe:connected', handleConnected);
         this._unsubs.push(typeof unsub2 === 'function' ? unsub2 : () => bus.unsubscribe('iframe:connected', handleConnected));
 
+        // Subscribe to detailed state for predictions
+        const handleDetailedState = (data) => {
+            if (!data || !data.state) return;
+            lastSimState = convertToSimState(data.state);
+            this._runPredictions();
+        };
+        const unsub3 = bus.subscribe('jta:detailedStateSnapshot', handleDetailedState);
+        this._unsubs.push(typeof unsub3 === 'function' ? unsub3 : () => bus.unsubscribe('jta:detailedStateSnapshot', handleDetailedState));
+
         // Request immediately in case already connected
         setTimeout(() => {
             bus.publish('jta:requestGameDefs', {});
         }, 1000);
     }
 
+    /** Request fresh game state for predictions */
+    _requestPredictionState() {
+        const bus = getModuleEventBus();
+        bus.publish('jta:requestDetailedState', {});
+    }
+
+    /** Run predictions (debounced) */
+    _schedulePredictions() {
+        if (predictionDebounceTimer) clearTimeout(predictionDebounceTimer);
+        predictionDebounceTimer = setTimeout(() => {
+            predictionDebounceTimer = null;
+            this._requestPredictionState();
+        }, 250);
+    }
+
+    /** Run predictions with current sim state */
+    _runPredictions() {
+        if (!lastSimState || !queue) {
+            predictions = null;
+        } else {
+            try {
+                predictions = predictQueue(queue, lastSimState);
+            } catch (e) {
+                console.warn('[jtaActionQueue] Prediction error:', e);
+                predictions = null;
+            }
+        }
+        if (queuePanelUI) queuePanelUI.setPredictions(predictions);
+    }
+
     _refreshUI() {
         if (queuePanelUI) {
             queuePanelUI.setSnapshot(executor?.snapshot ?? null);
+            queuePanelUI.setPredictions(predictions);
         }
     }
 

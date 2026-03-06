@@ -341,7 +341,7 @@ export function getReachableZones(startingEnergy, state, maxZone = ZONES.length 
  * @param actualReps - if set, use this for XP calculation instead of task.maxReps
  * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
-function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
+export function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
     const xpPerRep = calcTaskXp(task, zoneId, state, xpBoosted);
     const repsPerCompletion = actualReps !== null ? actualReps : task.maxReps;
     const totalXp = xpPerRep * repsPerCompletion * reps;
