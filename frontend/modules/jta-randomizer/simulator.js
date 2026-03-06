@@ -10,6 +10,7 @@ import {
     BOTTLED_LIGHTNING_MULT, ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS,
     PrestigeUnlockType, PrestigeRepeatableType,
     GOTTA_GO_FAST_BASE, MANDATORY_SCHMANDATORY_MULT,
+    SPITE_THE_GODS_MULT, DIVINE_KNOWLEDGE_MULT, DIVINER_KNOWLEDGE_MULT,
 } from './gameData.js';
 
 // Game constants from simulation.ts / simulation_constants.ts
@@ -99,16 +100,19 @@ export function calcProgressPerTick(task, zoneId, state) {
             mult *= (1 + state.power / 100);
         }
 
-        // Attunement bonus (per-skill, then divided out for anti-stacking)
-        if (state.perks.has(PerkType.Attunement) && attunementSkills.includes(skill)) {
+        // Track attunement skills (applied once after loop to avoid stacking)
+        if (attunementSkills.includes(skill)) {
             hasAttunementSkill = true;
-            // Divide out per-skill (will apply once after loop to avoid stacking)
-            mult /= (1 + state.attunement / 1000);
+        }
+
+        // Spite The Gods prestige repeatable (Ascension + Charisma)
+        if (skill === SkillType.Ascension || skill === SkillType.Charisma) {
+            mult *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.SpiteTheGods) * SPITE_THE_GODS_MULT;
         }
     }
 
-    // Apply attunement bonus once (anti-stacking, matching game logic)
-    if (hasAttunementSkill) {
+    // Apply attunement bonus once (unconditional, matching game's calcSkillTaskProgressWithoutLevel)
+    if (hasAttunementSkill && state.attunement > 0) {
         mult *= (1 + state.attunement / 1000);
     }
 
@@ -239,20 +243,19 @@ export function calcXpNeeded(level, skillType) {
 /**
  * Calculate XP gained from completing a task (one rep)
  *
- * The original game awards XP every tick: xp_per_tick = progress * 8 * xpMult
- * A rep takes ceil(cost / progress) ticks to complete.
- * Total XP per rep = ticks * progress * 8 * xpMult ≈ cost * 8 * xpMult
+ * The game awards XP every tick proportional to progress made that tick.
+ * Since progress is capped at remaining cost, the sum of all progress
+ * across ticks equals exactly `cost`. So total XP per rep = cost * 8 * xpMult,
+ * independent of progress-per-tick and skill levels.
  *
  * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
 export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
-    const progress = calcProgressPerTick(task, zoneId, state);
     const cost = calcTaskCost(task, zoneId);
-    const ticks = Math.ceil(cost / progress);
 
-    // XP per tick, then multiply by ticks to get XP per rep
+    // Total XP per rep = cost * 8 * xpMult (progress cancels out across ticks)
     const XP_MULT = 8;
-    let xp = progress * XP_MULT * task.xpMult * ticks;
+    let xp = cost * XP_MULT * task.xpMult;
 
     // Writing perk - 50% more XP
     if (state.perks.has(PerkType.Writing)) {
@@ -263,6 +266,17 @@ export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
     if (state.perks.has(PerkType.GazedBeyondTheVeil)) {
         xp *= 2;
     }
+
+    // Divine Inspiration prestige unlock - 1.5x XP
+    if (hasPrestigeUnlock(state, PrestigeUnlockType.DivineInspiration)) {
+        xp *= 1.5;
+    }
+
+    // Divine Knowledge prestige repeatable
+    xp *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.DivineKnowledge) * DIVINE_KNOWLEDGE_MULT;
+
+    // Diviner Knowledge prestige repeatable
+    xp *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.DivinerKnowledge) * DIVINER_KNOWLEDGE_MULT;
 
     // Zone scaling
     xp *= Math.pow(1.25, zoneId);

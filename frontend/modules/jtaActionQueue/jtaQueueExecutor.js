@@ -60,11 +60,17 @@ export class JTAQueueExecutor {
     /** @type {object|null} { skillId: fractionalLevel } */
     #lastSkillSnapshot = null;
 
-    /** @type {string|null} Entry ID awaiting skill snapshot */
+    /** @type {string|null} Entry ID awaiting skill/energy fix from detailed state */
     #pendingSkillsEntryId = null;
+
+    /** @type {string|null} Entry ID that started right after the pending one (needs energyBefore fix) */
+    #pendingNextEntryId = null;
 
     /** @type {boolean} Waiting for initial state before first execution */
     #awaitingInitialState = false;
+
+    /** @type {boolean} Events should be unsubscribed after pending skill data is processed */
+    #deferredUnsubscribe = false;
 
     /**
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
@@ -154,6 +160,8 @@ export class JTAQueueExecutor {
         this.#snapshot.running = true;
         this.#draining = false;
         this.#pendingSkillsEntryId = null;
+        this.#pendingNextEntryId = null;
+        this.#deferredUnsubscribe = false;
         console.log(`${LOG_PREFIX} Starting queue execution`);
         this.#subscribeEvents();
 
@@ -178,7 +186,13 @@ export class JTAQueueExecutor {
         this.#draining = false;
         this.#awaitingInitialState = false;
         this.#stopPolling();
-        this.#unsubscribeEvents();
+        // Defer unsubscribe if we're still waiting for a detailedStateSnapshot response
+        // for the last completed entry — #onDetailedState will clean up after processing
+        if (this.#pendingSkillsEntryId) {
+            this.#deferredUnsubscribe = true;
+        } else {
+            this.#unsubscribeEvents();
+        }
         this.#waitingForCompletion = false;
         this.#activeTaskId = null;
     }
@@ -187,6 +201,8 @@ export class JTAQueueExecutor {
      * Reset and restart: creates a new snapshot from the current queue and starts from the beginning.
      */
     restart() {
+        this.#pendingSkillsEntryId = null;
+        this.#pendingNextEntryId = null;
         this.stop();
         this.#snapshot = null; // force new snapshot on next start()
         this.#lastKnownEnergy = 0;
@@ -199,6 +215,8 @@ export class JTAQueueExecutor {
      * Clear the snapshot (e.g., when queue is cleared or reset from UI)
      */
     clearSnapshot() {
+        this.#pendingSkillsEntryId = null;
+        this.#pendingNextEntryId = null;
         this.stop();
         this.#snapshot = null;
         this.#lastKnownEnergy = 0;
@@ -365,7 +383,7 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, { loopsCompleted: completed });
 
         if (completed >= entry.loops) {
-            // All loops done — record actuals
+            // All loops done — record preliminary actuals (will be retroactively fixed by #onDetailedState)
             const now = Date.now();
             this.#snapshot.updateStatus(entry.entryId, {
                 state: ActionState.COMPLETED,
@@ -374,10 +392,12 @@ export class JTAQueueExecutor {
                 endTime: now,
                 actualTimeMs: now - (status.startTime || now),
             });
-            // Request detailed state for skill gains (async — display updates when it arrives)
+            // Request detailed state for authoritative skill/energy data (async — fixes arrive in #onDetailedState)
             this.#pendingSkillsEntryId = entry.entryId;
             this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
             this.#snapshot.advance();
+            // Track the entry that's about to start so we can fix its energyBefore retroactively
+            this.#pendingNextEntryId = this.#snapshot.currentEntry()?.entryId || null;
             this.#notifyStatusChange();
             this.#executeNext();
         } else {
@@ -468,6 +488,7 @@ export class JTAQueueExecutor {
         this.#snapshot.running = true;
         this.#draining = false;
         this.#pendingSkillsEntryId = null;
+        this.#pendingNextEntryId = null;
         this.#lastKnownEnergy = 0;
         this.#lastSkillSnapshot = null;
         // Request fresh state before restarting execution
@@ -476,10 +497,13 @@ export class JTAQueueExecutor {
         this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
     }
 
-    /** Handle detailed state snapshot for skill tracking during execution */
+    /** Handle detailed state snapshot for skill/energy tracking during execution */
     #onDetailedState(data) {
-        if (!this.#snapshot?.running) return;
         if (!data?.state) return;
+        // Allow processing if snapshot exists and either running OR has pending skill data
+        // (executor may have been stopped by onQueueExhausted before this async response arrived)
+        if (!this.#snapshot) return;
+        if (!this.#snapshot.running && !this.#pendingSkillsEntryId && !this.#awaitingInitialState) return;
 
         const skillSnap = snapshotSkillsFromGameState(data.state);
         if (data.state.currentEnergy !== undefined) {
@@ -495,15 +519,46 @@ export class JTAQueueExecutor {
             return;
         }
 
-        // Compute actual skill gains for the just-completed entry
-        // Uses #lastSkillSnapshot (previous entry's "after") as baseline
+        // Retroactively fix the just-completed entry's actuals from authoritative state.
+        // This is critical for items (instant, no poll between them) and also improves
+        // task accuracy since the snapshot is taken right at the entry boundary.
         if (this.#pendingSkillsEntryId) {
             const entryId = this.#pendingSkillsEntryId;
+            const nextEntryId = this.#pendingNextEntryId;
             this.#pendingSkillsEntryId = null;
+            this.#pendingNextEntryId = null;
+
+            const status = this.#snapshot.getStatus(entryId);
+            const update = {};
+
+            // Skill gains: use consecutive "after" snapshots as baseline
             const before = this.#lastSkillSnapshot || {};
-            const gains = computeSkillGainsBetween(before, skillSnap);
-            this.#snapshot.updateStatus(entryId, { actualSkillGains: gains });
+            update.actualSkillGains = computeSkillGainsBetween(before, skillSnap);
+
+            // Energy: retroactively fix energyAfter and actualEnergyCost from authoritative state.
+            // The detailed snapshot is read in the iframe BEFORE the next entry starts,
+            // so this energy value is the true post-entry energy.
+            if (data.state.currentEnergy !== undefined) {
+                update.energyAfter = data.state.currentEnergy;
+                update.actualEnergyCost = (status?.energyBefore ?? data.state.currentEnergy) - data.state.currentEnergy;
+
+                // Also fix the next entry's energyBefore — it was set with stale #lastKnownEnergy
+                // but the authoritative energy is the true starting point
+                if (nextEntryId) {
+                    this.#snapshot.updateStatus(nextEntryId, {
+                        energyBefore: data.state.currentEnergy,
+                    });
+                }
+            }
+
+            this.#snapshot.updateStatus(entryId, update);
             this.#notifyStatusChange();
+
+            // If stop() was called while we had pending data, finish cleanup now
+            if (this.#deferredUnsubscribe) {
+                this.#deferredUnsubscribe = false;
+                this.#unsubscribeEvents();
+            }
         }
 
         this.#lastSkillSnapshot = skillSnap;

@@ -5,7 +5,7 @@ import {
     ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS, SKILL_NAMES,
 } from '../jta-randomizer/gameData.js';
 import {
-    calcTaskEnergyCostSingleRep, calcTaskTicks, calcXpNeeded,
+    calcTaskEnergyCost, calcTaskEnergyCostSingleRep, calcTaskTicks, calcXpNeeded,
     applyTaskXp, createInitialState,
 } from '../jta-randomizer/simulator.js';
 import { JTAActionType } from './jtaActionDefs.js';
@@ -39,7 +39,8 @@ export function convertToSimState(snapshot) {
             const id = Number(skillId);
             state.skillLevels[id] = data.level || 0;
             state.skillXp[id] = data.xp || 0;
-            state.skillSpeedModifiers[id] = data.speedModifier || 0;
+            // Game uses multiplicative speed_modifier (base=1), simulator uses additive (base=0)
+            state.skillSpeedModifiers[id] = (data.speedModifier ?? 1) - 1;
         }
     }
 
@@ -206,11 +207,11 @@ function predictTask(entry, state, remainingEnergy) {
     const { task, zoneId } = lookup;
     const loops = entry.loops || 1;
 
-    // Cost per rep (one completion of all maxReps)
-    const costPerRep = calcTaskEnergyCostSingleRep(task, zoneId, state) * task.maxReps;
+    // Cost for one full task completion (all maxReps), handles MTC+single-tick edge case
+    const costPerCompletion = calcTaskEnergyCost(task, zoneId, state);
     const ticksPerRep = calcTaskTicks(task, zoneId, state) * task.maxReps;
 
-    const totalCost = costPerRep * loops;
+    const totalCost = costPerCompletion * loops;
     const totalTicks = ticksPerRep * loops;
     const canComplete = remainingEnergy >= totalCost;
 
