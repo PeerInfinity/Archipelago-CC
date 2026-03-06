@@ -2,10 +2,10 @@
 // Uses the JTA simulator's exported calculation functions with a rolling state clone
 
 import {
-    ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS,
+    ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS, SKILL_NAMES,
 } from '../jta-randomizer/gameData.js';
 import {
-    calcTaskEnergyCostSingleRep, calcTaskTicks,
+    calcTaskEnergyCostSingleRep, calcTaskTicks, calcXpNeeded,
     applyTaskXp, createInitialState,
 } from '../jta-randomizer/simulator.js';
 import { JTAActionType } from './jtaActionDefs.js';
@@ -152,6 +152,40 @@ function predictEntry(entry, state, remainingEnergy) {
 }
 
 /**
+ * Snapshot skill levels + fractional progress for a set of skill IDs.
+ * Fractional level = level + (currentXp / xpNeeded).
+ */
+function snapshotSkills(state, skillIds) {
+    const snap = {};
+    for (const skill of skillIds) {
+        const level = state.skillLevels[skill] || 0;
+        const xp = state.skillXp[skill] || 0;
+        const needed = calcXpNeeded(level, skill);
+        snap[skill] = level + (needed > 0 ? xp / needed : 0);
+    }
+    return snap;
+}
+
+/**
+ * Compute skill gains: { skillId: { name, gained } } where gained is fractional levels.
+ */
+function computeSkillGains(beforeSnap, afterState, skillIds) {
+    const gains = {};
+    for (const skill of skillIds) {
+        const before = beforeSnap[skill] || 0;
+        const level = afterState.skillLevels[skill] || 0;
+        const xp = afterState.skillXp[skill] || 0;
+        const needed = calcXpNeeded(level, skill);
+        const after = level + (needed > 0 ? xp / needed : 0);
+        const gained = after - before;
+        if (gained > 0.001) {
+            gains[skill] = { name: SKILL_NAMES[skill] || `Skill ${skill}`, gained };
+        }
+    }
+    return gains;
+}
+
+/**
  * Predict a clickTask entry.
  */
 function predictTask(entry, state, remainingEnergy) {
@@ -164,6 +198,7 @@ function predictTask(entry, state, remainingEnergy) {
             ticks: 0,
             timeMs: 0,
             canComplete: true,
+            skillGains: {},
             note: 'Unknown task',
         };
     }
@@ -179,8 +214,14 @@ function predictTask(entry, state, remainingEnergy) {
     const totalTicks = ticksPerRep * loops;
     const canComplete = remainingEnergy >= totalCost;
 
+    // Snapshot skills before XP application
+    const before = snapshotSkills(state, task.skills);
+
     // Apply XP to rolling state (mutates state for subsequent predictions)
     applyTaskXp(task, zoneId, state, loops);
+
+    // Compute skill gains
+    const skillGains = computeSkillGains(before, state, task.skills);
 
     return {
         entryId: entry.entryId,
@@ -189,6 +230,7 @@ function predictTask(entry, state, remainingEnergy) {
         ticks: totalTicks,
         timeMs: totalTicks * TICK_MS,
         canComplete,
+        skillGains,
     };
 }
 

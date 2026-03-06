@@ -172,19 +172,42 @@ export class JTAQueuePanelUI {
 
             // Prediction display
             let predHtml = '';
+            let predTooltip = '';
             const pred = this.#predictions?.get(entry.entryId);
             if (pred && !entry.disabled) {
                 const costSign = pred.energyCost >= 0 ? '-' : '+';
                 const costAbs = Math.abs(pred.energyCost);
                 const remainClass = energyColorClass(pred.energyRemaining, pred.energyRemaining + pred.energyCost);
                 const insufficientClass = !pred.canComplete ? 'aq-pred-insufficient' : '';
+
+                // Skill gains inline (compact: "+2.3 Com +1.0 Str")
+                let skillHtml = '';
+                if (pred.skillGains && Object.keys(pred.skillGains).length > 0) {
+                    const parts = Object.values(pred.skillGains).map(g =>
+                        `<span class="aq-pred-skill">+${g.gained.toFixed(1)} ${g.name.slice(0, 3)}</span>`
+                    );
+                    skillHtml = `<span class="aq-pred-skills">${parts.join(' ')}</span>`;
+                }
+
                 predHtml = `<span class="aq-prediction ${insufficientClass}">
                     <span class="aq-pred-cost">${costSign}${fmtEnergy(costAbs)}</span>
                     <span class="aq-pred-remaining ${remainClass}">${fmtEnergy(pred.energyRemaining)}</span>
+                    ${skillHtml}
                 </span>`;
+
+                // Detailed tooltip
+                const tipParts = [`Energy: ${costSign}${fmtEnergy(costAbs)} → ${fmtEnergy(pred.energyRemaining)} remaining`];
+                if (pred.skillGains) {
+                    for (const g of Object.values(pred.skillGains)) {
+                        tipParts.push(`${g.name}: +${g.gained.toFixed(1)} levels`);
+                    }
+                }
+                if (pred.note) tipParts.push(pred.note);
+                predTooltip = tipParts.join('\n');
             }
 
-            return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}">
+            const titleAttr = predTooltip ? ` title="${predTooltip.replace(/"/g, '&quot;')}"` : '';
+            return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}"${titleAttr}>
                 <span class="aq-entry-index">${idx + 1}</span>
                 <span class="aq-entry-label">${entry.label}${loopText}</span>
                 ${predHtml}

@@ -345,6 +345,14 @@ class JTAActionQueuePanel {
                 .aq-pred-insufficient .aq-entry-label {
                     text-decoration: line-through;
                 }
+                .aq-pred-skills {
+                    display: flex;
+                    gap: 3px;
+                    opacity: 0.7;
+                }
+                .aq-pred-skill {
+                    color: #8bf;
+                }
 
                 /* Empty state */
                 .aq-empty {
