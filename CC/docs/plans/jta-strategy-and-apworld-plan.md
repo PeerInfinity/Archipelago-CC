@@ -185,9 +185,94 @@ All perk items are classified as `progression` since any perk can contribute to 
 
 The `completion_condition` checks whether the player has reached the goal zone. In practice, this is reported by the frontend when the game reaches that zone.
 
-### Seed Output
+### Game Data JSON
 
-The world generates a configuration that the frontend consumes:
+The APWorld includes a static JSON file (`worlds/jta/jta_game_data.json`) containing the complete, unmodified game data from JTA v0.5.0. This file mirrors the structure of `gameData.js`, using the same numeric IDs and field names so the frontend can directly replace the game's internal data with it.
+
+The JSON file contains:
+- **skills** — Skill type IDs, names, XP multipliers
+- **perks** — Perk type IDs, names, skill modifiers, special effects
+- **items** — Item type IDs, names, energy values, skill modifiers, artifact flags
+- **zones** — Zone IDs, names, and complete task arrays (each task has id, name, type, costMult, skills, xpMult, maxReps, perk, item, hidden)
+- **prestige** — Prestige unlock types, repeatable types, constants
+- **constants** — Game formula constants (HASTE_MULT, ZONE_COST_EXPONENT, etc.)
+- **bossUnlocks** — Boss task ID → hidden task ID mapping
+
+Format uses numeric IDs matching the game's enums:
+```json
+{
+    "version": "0.5.0",
+    "skills": [
+        { "id": 0, "name": "Charisma", "xpMult": 1 },
+        { "id": 1, "name": "Study", "xpMult": 1 },
+        { "id": 2, "name": "Combat", "xpMult": 5 }
+    ],
+    "perks": {
+        "0": { "name": "How to Read", "skillModifiers": { "1": 0.5 }, "special": null },
+        "1": { "name": "How to Write", "skillModifiers": {}, "special": "xp_bonus_50" }
+    },
+    "items": {
+        "0": { "name": "Food", "energy": 5, "skillModifiers": {} },
+        "7": { "name": "ScrollOfHaste", "energy": null, "skillModifiers": {}, "artifact": true }
+    },
+    "zones": [
+        {
+            "id": 0, "name": "The Village",
+            "tasks": [
+                { "id": 10, "name": "Join the Watch", "type": 1, "costMult": 4,
+                  "skills": [0], "xpMult": 1, "maxReps": 1, "perk": null, "item": null },
+                { "id": 13, "name": "Learn How to Read", "type": 0, "costMult": 8,
+                  "skills": [1], "xpMult": 0.5, "maxReps": 1, "perk": 0, "item": null }
+            ]
+        }
+    ],
+    "bossUnlocks": { "36": 37, "57": 58 },
+    "constants": {
+        "baseCost": 10, "zoneCostExponent": 2.2, "bossCostExponent": 4,
+        "zoneSpeedupBase": 1.05, "skillLevelExponent": 1.01, "skillXpExponent": 1.02,
+        "startingEnergy": 100, "hasteMult": 5, "magicRingMult": 5,
+        "bottledLightningMult": 2
+    }
+}
+```
+
+### Seed Output Pipeline
+
+Seed generation produces three files in a pipeline:
+
+```
+1. jta_game_data.json (static, in worlds/jta/)
+   │  Original unmodified game data
+   │
+   ├──► APWorld randomization (generate_output)
+   │
+2. AP_[SEED_ID]_gamedata.json (in preset dir)
+   │  Randomized game data (perk placements shuffled, etc.)
+   │
+   ├──► Cost adjustment tool (JS, via Node.js CLI or frontend)
+   │
+3. AP_[SEED_ID]_costs.json (in preset dir)
+      Cost-adjusted game data (costMult/xpMult values modified)
+```
+
+**File 1: Original game data** (`worlds/jta/jta_game_data.json`)
+- Static, checked into git
+- Complete JTA v0.5.0 game data in JSON format
+- Source of truth; extracted once from `gameData.js`
+
+**File 2: Randomized game data** (`AP_[SEED_ID]_gamedata.json`)
+- Output by `JTAWorld.generate_output()` during seed generation
+- Same format as the original, but with modifications applied:
+  - Perk assignments shuffled (task.perk values changed)
+  - Future: item drops shuffled, task names/costs changed, etc.
+- Written alongside `_rules.json` and `_sphere_log.jsonl` in the preset directory
+
+**File 3: Cost-adjusted game data** (`AP_[SEED_ID]_costs.json`)
+- Output by the cost adjustment tool (see Part 2)
+- Same format as file 2, but with costMult and xpMult values adjusted
+- This is the final file the frontend loads and applies to the game
+
+**Slot data** (`fill_slot_data`) continues to include `perkPlacements` for backward compatibility and for the Archipelago server to track item placements. It also includes all options (goalZone, resetsPerSphere, costGenFactors, automation):
 
 ```json
 {
@@ -195,34 +280,11 @@ The world generates a configuration that the frontend consumes:
     "version": "0.5.0",
     "goalZone": 15,
     "resetsPerSphere": 5,
-    "costGenFactors": {
-        "itemCollection": true,
-        "pushCollect": true,
-        "xpGrinding": true,
-        "grindWithPushCollect": true,
-        "artifacts": true
-    },
-    "automation": {
-        "autoQueue": true,
-        "autoReset": true,
-        "drainStrategy": true,
-        "loadoutSequencing": true
-    },
-    "perkPlacements": {
-        "13": 5,
-        "27": 0,
-        "34": 11,
-        ...
-    },
-    "costAdjustments": {
-        "13": { "costMult": 2.5 },
-        "27": { "costMult": 1.8, "xpMult": 2.0 },
-        ...
-    }
+    "costGenFactors": { "itemCollection": true, ... },
+    "automation": { "autoQueue": true, ... },
+    "perkPlacements": { "13": "High Altitude Climbing", "27": "Attunement", ... }
 }
 ```
-
-Where `perkPlacements` maps task ID → perk type (the randomized assignment), and `costAdjustments` maps task ID → adjusted cost/XP multipliers. Cost adjustments apply to ALL tasks on the path (mandatory, travel, and perk tasks), not just perk-granting tasks. Costs may be adjusted up (to enforce pacing) or down (to ensure reachability).
 
 ---
 
@@ -275,28 +337,43 @@ Process:
 
 ### Where Cost Adjustment Runs
 
-**Option A: Frontend (JavaScript)**
-- All formulas already implemented in `simulator.js`
-- Cost adjustment runs after the frontend receives the perk placements from the AP seed
-- The AP seed only contains perk placements; cost adjustment happens client-side
-- Pro: No code duplication, uses existing battle-tested formulas
-- Con: Cost adjustments aren't deterministic across clients (floating point), can't validate during seed generation
+**Decision: JavaScript (via Node.js CLI and frontend)**
 
-**Option B: APWorld (Python)**
-- Port the simulator formulas to Python
-- Cost adjustment runs during `generate_output()` in the world class
-- The AP seed contains both perk placements AND cost adjustments
-- Pro: Fully deterministic, validated during generation, standard AP approach
-- Con: Duplicating ~500 lines of formula code in Python
+The simulator formulas (~2000 lines) already exist in `simulator.js`. Rather than duplicating them in Python, the cost adjustment tool is implemented in JavaScript and can be run two ways:
 
-**Option C: APWorld calls JavaScript via subprocess**
-- The APWorld invokes Node.js or a headless browser to run the existing JS simulator
-- Pro: No formula duplication, guaranteed consistency
-- Con: Requires Node.js at generation time, complex subprocess management
+1. **Node.js CLI** — For batch processing and automated testing. Reads the randomized game data JSON + sphere log, runs the cost adjustment algorithm using the existing simulator, and outputs the cost-adjusted game data JSON.
 
-**Recommendation:** Start with **Option A** (frontend-only) for the first version. The APWorld generates perk placements and passes strategy/pacing options to the frontend. The frontend runs cost adjustment using the existing simulator before applying patches to the game. This avoids code duplication and gets us to a working system fastest.
+2. **Frontend** — For interactive use. The user loads a seed, runs cost adjustment in the browser, and the adjusted game data is applied to the live game.
 
-Later, if deterministic seeds become important (e.g., for multiworld validation), port the cost generator to Python (Option B).
+Both share the same core cost adjustment code. The CLI tool uses Node.js directly (or Playwright if browser APIs are needed). The frontend runs the same code in the browser context.
+
+### CLI Tool
+
+```
+node scripts/jta/cost-adjust.js \
+    --gamedata frontend/presets/jta/AP_[SEED_ID]/AP_[SEED_ID]_gamedata.json \
+    --spherelog frontend/presets/jta/AP_[SEED_ID]/AP_[SEED_ID]_sphere_log.jsonl \
+    --output frontend/presets/jta/AP_[SEED_ID]/AP_[SEED_ID]_costs.json \
+    --resets-per-sphere 5 \
+    --factors itemCollection,pushCollect,xpGrinding,grindWithPushCollect,artifacts
+```
+
+The CLI tool:
+1. Loads the randomized game data JSON and sphere log
+2. Initializes the simulator with fresh game state
+3. Walks the sphere log in order, applying the cost adjustment algorithm
+4. Writes the cost-adjusted game data JSON to the output path
+
+### Frontend Tool
+
+The frontend cost adjustment tool is triggered when a JTA seed is loaded:
+1. Load the randomized game data JSON from the preset directory
+2. Apply the game data to the JTA iframe via `jta:patchTaskDefs`
+3. Run cost adjustment using the simulator
+4. Write the cost-adjusted game data JSON
+5. Re-apply the adjusted game data to the iframe
+
+The frontend also provides a manual "Run Cost Adjustment" button for re-running with different settings.
 
 ---
 
@@ -490,11 +567,11 @@ Strategy-backed loadouts are generated based on the factor configuration:
 
 ## Part 4: Implementation Plan
 
-### Phase 1: APWorld Skeleton
+### Phase 1: APWorld Skeleton — DONE
 
-Create the basic world package with options, regions, locations, items, and victory condition. No cost adjustment yet — use original game costs.
+Created the basic world package with options, regions, locations, items, and victory condition.
 
-**Files to create:**
+**Files created:**
 ```
 worlds/jta/
     __init__.py      — JTAWorld class
@@ -506,9 +583,58 @@ worlds/jta/
     game_data.py     — Static game data (zones, tasks, perks) extracted from gameData.js
 ```
 
-**Validation:** Generate a seed with `python Generate.py --weights_file_path "Templates/Journey to Ascension.yaml" --multi 1 --seed 1`. Verify the spoiler log shows randomized perk placements across zones.
+**Validated:** Seed generation works with `python Generate.py --weights_file_path "Templates/Journey to Ascension.yaml" --multi 1 --seed 1`. Perk placements are randomized. Slot data includes perkPlacements, options, and all configuration.
 
-### Phase 2: Strategy Factor Refactor
+### Phase 1b: Game Data JSON Pipeline
+
+Add the full game data JSON file and the `generate_output()` method that writes randomized game data.
+
+**Step 1: Create `jta_game_data.json`**
+- Extract complete game data from `gameData.js` into JSON format
+- Include all zones (with all tasks), skills, perks, items, prestige, constants, boss unlocks
+- Use numeric IDs matching the game's enums (same format as JS)
+- File location: `worlds/jta/jta_game_data.json`
+
+**Step 2: Add `generate_output()` to JTAWorld**
+- Load `jta_game_data.json` from the world package
+- Apply randomized perk placements (modify task.perk values according to the fill)
+- Write modified game data to `AP_[SEED_ID]_gamedata.json` in the preset directory
+- The existing exporter pipeline handles rules.json and sphere_log.jsonl separately
+
+**Step 3: Frontend game data loading**
+- Add a function to load the game data JSON from a URL/file
+- Apply the complete game data to the JTA iframe via `jta:patchTaskDefs`
+- This replaces the current approach of only patching perk placements
+
+**Validation:** Generate a seed. Verify `AP_[SEED_ID]_gamedata.json` is created alongside `_rules.json`. Load in frontend and verify the game runs with the patched data.
+
+### Phase 2: Cost Adjustment Tool (JavaScript)
+
+Implement the cost adjustment algorithm in JavaScript, usable from both Node.js CLI and frontend.
+
+**Step 1: Core cost adjustment module**
+- New file: `frontend/modules/jta-randomizer/jtaCostGenerator.js`
+- Imports simulator formulas from `simulator.js`
+- Algorithm (see Part 2): walks sphere log, simulates play, solves for costMult/xpMult
+- Pure function: takes game data + sphere log + options → returns adjusted game data
+- No browser dependencies (works in Node.js and browser)
+
+**Step 2: Node.js CLI wrapper**
+- New file: `scripts/jta/cost-adjust.js`
+- Parses command-line args (gamedata path, sphere log path, output path, options)
+- Calls the core cost adjustment module
+- Writes the cost-adjusted game data JSON to the output path
+
+**Step 3: Frontend integration**
+- Add "Run Cost Adjustment" button to JTA Game Data panel
+- Loads randomized game data from preset directory
+- Runs cost adjustment in browser
+- Writes cost-adjusted game data JSON
+- Applies adjusted data to the live game
+
+**Validation:** Run CLI tool on a generated seed. Verify the output costs JSON has modified costMult values. Load in frontend and verify the game is completable with the adjusted costs.
+
+### Phase 3: Strategy Factor Refactor
 
 Refactor `jtaQueueBuilder.js` from fixed strategies to composable factors.
 
@@ -520,33 +646,22 @@ Refactor `jtaQueueBuilder.js` from fixed strategies to composable factors.
 
 **Validation:** Existing queue functionality works with all factors enabled (equivalent to current AUTO behavior). Disabling all factors produces minimal sphere-progression-only queues.
 
-### Phase 3: Cost Adjustment (Frontend)
-
-Implement cost adjustment in the frontend, triggered when a seed is loaded.
-
-1. Frontend receives perk placements and options from the AP seed
-2. Cost generator walks the sphere log, simulating play with enabled factors
-3. For each sphere tier, solves for costMult values that make tasks completable
-4. Applies adjusted costs via `jta:patchTaskDefs`
-
-**Validation:** Load a randomized seed. Verify that the auto-queue can complete the sphere log in approximately the expected number of resets.
-
 ### Phase 4: Frontend Integration
 
 Wire the APWorld seed data into the existing frontend systems.
 
-1. Load seed configuration (perk placements, options, cost adjustments)
-2. Apply perk randomization via `jta:patchTaskDefs` (remap which tasks grant which perks)
-3. Apply cost adjustments via `jta:patchTaskDefs`
-4. Configure queue builder with strategy factors from seed
-5. Intercept perk grants → report location checks to Archipelago
-6. Receive items from Archipelago → grant perks via `jta:patchGameState`
+1. Load cost-adjusted game data JSON from preset directory
+2. Apply complete game data to JTA iframe via `jta:patchTaskDefs`
+3. Configure queue builder with strategy factors from seed
+4. Intercept perk grants → report location checks to Archipelago
+5. Receive items from Archipelago → grant perks via `jta:patchGameState`
 
 ### Future Phases
 
 - **Item randomization** — Shuffle consumable item drops across tasks
 - **Prestige randomization** — Include prestige unlocks in the item pool
-- **Python cost generator** — Port simulator to Python for deterministic seeds
+- **Re-theming** — Change task/skill/zone names for alternate themes
+- **Python cost generator** — Port simulator to Python for deterministic seeds (if needed)
 - **Additional strategy factors** — Prestige-aware strategies, zone-skipping, etc.
 - **Difficulty presets** — Named combinations of options (Easy/Normal/Hard/Expert)
 

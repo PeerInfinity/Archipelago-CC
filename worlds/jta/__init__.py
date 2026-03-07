@@ -5,6 +5,9 @@ An incremental/idle game randomizer that shuffles perk placements
 and uses post-hoc cost adjustment to make the resulting seed completable.
 """
 
+import copy
+import json
+import os
 from typing import Any, ClassVar, Dict
 
 from BaseClasses import ItemClassification
@@ -82,6 +85,42 @@ class JTAWorld(World):
         if data is None:
             return JTAItem(name, ItemClassification.progression, None, self.player)
         return JTAItem(name, data.classification, data.id, self.player)
+
+    def generate_output(self, output_directory: str) -> None:
+        goal_zone = self.options.goal_zone.value
+        perk_tasks = get_perk_tasks_for_goal(goal_zone)
+
+        # Load original game data
+        game_data_path = os.path.join(os.path.dirname(__file__), "jta_game_data.json")
+        with open(game_data_path, "r", encoding="utf-8") as f:
+            game_data = json.load(f)
+
+        # Build reverse map: perk display name -> perk type ID
+        perk_name_to_id: Dict[str, int] = {}
+        for perk_id_str, perk_info in game_data["perks"].items():
+            perk_name_to_id[perk_info["name"]] = int(perk_id_str)
+
+        # Build task_id -> new perk type ID from the fill
+        perk_placement_by_task: Dict[int, int] = {}
+        for task in perk_tasks:
+            location = self.multiworld.get_location(task.task_name, self.player)
+            if location.item is not None:
+                perk_id = perk_name_to_id.get(location.item.name)
+                if perk_id is not None:
+                    perk_placement_by_task[task.task_id] = perk_id
+
+        # Deep copy and apply randomized perk placements to zone task data
+        modified_data = copy.deepcopy(game_data)
+        for zone in modified_data["zones"]:
+            for task in zone["tasks"]:
+                if task["id"] in perk_placement_by_task:
+                    task["perk"] = perk_placement_by_task[task["id"]]
+
+        # Write modified game data
+        filename_base = self.multiworld.get_out_file_name_base(self.player)
+        output_path = os.path.join(output_directory, f"{filename_base}_gamedata.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(modified_data, f, indent=2)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         goal_zone = self.options.goal_zone.value
