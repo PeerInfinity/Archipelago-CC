@@ -52,12 +52,21 @@ def build_item_table(goal_zone: int) -> Dict[str, ItemData]:
     return table
 
 
+MAX_STARTING_PERKS = 15
+
+
 def get_full_item_table() -> Dict[str, ItemData]:
     """Build item table for the maximum goal zone (all perks).
 
     Used for class-level item_name_to_id which must be static.
+    Includes filler items for starting perks (up to MAX_STARTING_PERKS).
     """
-    return build_item_table(27)
+    table = build_item_table(27)
+    next_id = BASE_ITEM_ID + len(table)
+    for i in range(MAX_STARTING_PERKS):
+        name = f"Starting Perk Bonus #{i + 1}"
+        table[name] = ItemData(next_id + i, ItemClassification.filler)
+    return table
 
 
 # Static table used for class-level registration (includes all possible items)

@@ -18,7 +18,7 @@ from .Locations import location_table
 from .Options import JTAOptions
 from .Regions import create_regions
 from .Rules import set_rules
-from .game_data import get_perk_tasks_for_goal
+from .game_data import get_all_perk_display_names_for_goal, get_perk_tasks_for_goal
 
 
 class JTAWeb(WebWorld):
@@ -55,18 +55,50 @@ class JTAWorld(World):
 
     def create_items(self) -> None:
         goal_zone = self.options.goal_zone.value
+        starting_perks_count = self.options.starting_perks.value
+        starting_perk_list = self.options.starting_perk_list.value
         active_item_table = build_item_table(goal_zone)
 
+        # Determine which perks are precollected (starting items)
+        precollected_names = set()
+        if starting_perk_list:
+            # Explicit list overrides count
+            for perk_name in starting_perk_list:
+                if perk_name in active_item_table:
+                    precollected_names.add(perk_name)
+                    self.multiworld.push_precollected(self.create_item(perk_name))
+        elif starting_perks_count > 0:
+            all_perks = get_all_perk_display_names_for_goal(goal_zone)
+            for perk_name in all_perks[:starting_perks_count]:
+                precollected_names.add(perk_name)
+                self.multiworld.push_precollected(self.create_item(perk_name))
+
         item_pool = []
+        filler_idx = 0
         for item_name, item_data in active_item_table.items():
-            item = JTAItem(item_name, item_data.classification, item_data.id, self.player)
-            item_pool.append(item)
+            if item_name in precollected_names:
+                filler_idx += 1
+                filler_name = f"Starting Perk Bonus #{filler_idx}"
+                filler_data = item_table[filler_name]
+                item_pool.append(JTAItem(
+                    filler_name, filler_data.classification, filler_data.id, self.player
+                ))
+            else:
+                item_pool.append(JTAItem(
+                    item_name, item_data.classification, item_data.id, self.player
+                ))
 
         self.multiworld.itempool += item_pool
 
     def set_rules(self) -> None:
         goal_zone = self.options.goal_zone.value
-        set_rules(self.multiworld, self.player, goal_zone)
+        free_zones = self.options.free_zones.value
+        starting_perk_list = self.options.starting_perk_list.value
+        if starting_perk_list:
+            starting_perks = len(starting_perk_list)
+        else:
+            starting_perks = self.options.starting_perks.value
+        set_rules(self.multiworld, self.player, goal_zone, free_zones, starting_perks)
 
     def generate_basic(self) -> None:
         # Place victory event

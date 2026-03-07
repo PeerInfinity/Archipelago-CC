@@ -612,18 +612,17 @@ Add the full game data JSON file and the `generate_output()` method that writes 
 
 Implement the cost adjustment algorithm in JavaScript, usable from both Node.js CLI and frontend.
 
-**Step 1: Core cost adjustment module**
-- New file: `frontend/modules/jta-randomizer/jtaCostGenerator.js`
-- Imports simulator formulas from `simulator.js`
-- Algorithm (see Part 2): walks sphere log, simulates play, solves for costMult/xpMult
-- Pure function: takes game data + sphere log + options → returns adjusted game data
-- No browser dependencies (works in Node.js and browser)
+**Step 1: Core cost adjustment module** ✅
+- `jtaCostGenerator.js`: `parseSphereLog()` extracts ordered steps (handles multiworld), `adjustCosts()` walks steps and binary-searches costMult per task
+- Re-implements key simulator formulas (calcTaskCost, calcProgressMult, calcTaskXp, etc.) parameterized with game data context from `jtaGameDataLoader.js`
+- Handles multiworld: tasks completed and perks received are independent events from the sphere log
+- Pure function: game data + sphere log + options → adjusted game data + log
+- Known v1 limitations: doesn't adjust mandatory task costs (only perk tasks), simplified perk effects (no items/artifacts/prestige), high-zone tasks may hit reset cap when zone traversal is the bottleneck
 
-**Step 2: Node.js CLI wrapper**
-- New file: `scripts/jta/cost-adjust.js`
-- Parses command-line args (gamedata path, sphere log path, output path, options)
-- Calls the core cost adjustment module
-- Writes the cost-adjusted game data JSON to the output path
+**Step 2: Node.js CLI wrapper** ✅
+- `scripts/jta/cost-adjust.js`: reads gamedata JSON + sphere log, runs cost adjustment, writes output
+- Options: `--resets-per-sphere`, `--player`, `--verbose`
+- Produces summary with per-task adjustment details
 
 **Step 3: Frontend integration**
 - Add "Run Cost Adjustment" button to JTA Game Data panel

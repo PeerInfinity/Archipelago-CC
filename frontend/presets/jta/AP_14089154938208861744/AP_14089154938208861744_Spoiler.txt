@@ -17,6 +17,9 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Goal Zone:                       15
+Free Zones:                      1
+Starting Perks:                  0
+Starting Perk List:              
 Resets Per Sphere:               5
 Cost Gen: Item Collection:       Yes
 Cost Gen: Push/Collect:          Yes
@@ -60,26 +63,38 @@ Playthrough:
 
 }
 1: {
-  Avoid Notice by the Sandworm: The Worm
+  Learn How to Read: High Altitude Climbing
+}
+2: {
+  Learn How to Write: Attunement
+}
+3: {
+  Rescue Villager: Reflections on the Journey
+  Save the Village: Minor Time Compression
+}
+4: {
+  Find an Amulet: Purged Bureaucracy
+  Try Casting a Spell: Understanding of the Reset
+  Wipe Out Goblins: Village Hero
+}
+5: {
   Cast a Spell: Sunken Treasure
+  Get Used to Traveling: Goblin Scourge
+  Negotiate with a Rogue Guard: Walk Without Rhythm
+  Purge Corrupt Bureaucracy: How to Read
+  Study the Amulet: Villager Gratitude
+}
+6: {
+  Avoid Notice by the Sandworm: The Worm
   Dive as a Squid: Found Lost Temple
   Explore Kraken's Lair: Energetic Memory
   Explore the Jungle: Underground Connection
   Figure Out How to Attune: Energetic Spell
-  Find an Amulet: Purged Bureaucracy
-  Get Used to Traveling: Goblin Scourge
-  Learn How to Read: High Altitude Climbing
-  Learn How to Write: Attunement
   Learn to Dance the Worm: Experienced Traveler
-  Negotiate with a Rogue Guard: Walk Without Rhythm
+  Scale the Mountain: Deep Sea Diving
+}
+7: {
   Practice Memorization: Mysterious Amulet
-  Purge Corrupt Bureaucracy: How to Read
   Reach Goal Zone: Victory
   Reflect on the Journey: How to Write
-  Rescue Villager: Reflections on the Journey
-  Save the Village: Minor Time Compression
-  Scale the Mountain: Deep Sea Diving
-  Study the Amulet: Villager Gratitude
-  Try Casting a Spell: Understanding of the Reset
-  Wipe Out Goblins: Village Hero
 }

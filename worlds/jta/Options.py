@@ -3,7 +3,7 @@ Options for Journey to Ascension.
 """
 
 from dataclasses import dataclass
-from Options import DefaultOnToggle, PerGameCommonOptions, Range
+from Options import DefaultOnToggle, ItemSet, PerGameCommonOptions, Range
 
 
 class GoalZone(Range):
@@ -13,6 +13,35 @@ class GoalZone(Range):
     range_start = 1
     range_end = 27
     default = 15
+
+
+class FreeZones(Range):
+    """Number of zones at the start that require no perks to access.
+    After the free zones, each subsequent zone requires one more perk.
+    With 1 (default): only zone 0 is free, zone 1 needs 1 perk.
+    With 3: zones 0-2 are free, zone 3 needs 1 perk, zone 4 needs 2."""
+    display_name = "Free Zones"
+    range_start = 1
+    range_end = 15
+    default = 1
+
+
+class StartingPerks(Range):
+    """Number of perks the player starts with (chosen from earliest zones).
+    Combined with free_zones, zone Z requires
+    max(0, Z - free_zones + 1 - starting_perks) perks.
+    Use starting_perk_list to choose specific perks instead."""
+    display_name = "Starting Perks"
+    range_start = 0
+    range_end = 15
+    default = 0
+
+
+class StartingPerkList(ItemSet):
+    """Specific perks to start with. These are granted at the beginning
+    and replaced with filler in the item pool. Overrides starting_perks
+    count if non-empty (the count becomes the size of this list)."""
+    display_name = "Starting Perk List"
 
 
 class ResetsPerSphere(Range):
@@ -80,6 +109,9 @@ class AutomationLoadoutSequencing(DefaultOnToggle):
 @dataclass
 class JTAOptions(PerGameCommonOptions):
     goal_zone: GoalZone
+    free_zones: FreeZones
+    starting_perks: StartingPerks
+    starting_perk_list: StartingPerkList
     resets_per_sphere: ResetsPerSphere
     # Cost generation factors
     costgen_item_collection: CostGenItemCollection

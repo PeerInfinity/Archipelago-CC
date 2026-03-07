@@ -189,6 +189,18 @@ def get_unique_perks_for_goal(goal_zone: int) -> List[str]:
     return result
 
 
+def get_all_perk_display_names_for_goal(goal_zone: int) -> List[str]:
+    """Return all unique perk display names for zones before goal_zone."""
+    seen: Set[str] = set()
+    result: List[str] = []
+    for task in PERK_TASKS:
+        if task.zone_id < goal_zone:
+            if task.perk_display_name not in seen:
+                seen.add(task.perk_display_name)
+                result.append(task.perk_display_name)
+    return result
+
+
 def get_zones_for_goal(goal_zone: int) -> List[ZoneData]:
     """Return zones from 0 to goal_zone (inclusive, since the goal zone is the victory region)."""
     return [z for z in ZONES if z.id <= goal_zone]
