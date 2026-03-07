@@ -99,6 +99,35 @@ export class LoadoutManager {
     }
 
     /**
+     * Get strategy config for a loadout
+     * @param {number} index
+     * @returns {object|null} Strategy config or null for manual loadouts
+     */
+    getStrategy(index) {
+        return this.#loadouts[index]?.strategy || null;
+    }
+
+    /**
+     * Set strategy config for a loadout
+     * @param {number} index
+     * @param {object|null} strategy
+     */
+    setStrategy(index, strategy) {
+        if (index < 0 || index >= this.#loadouts.length) return;
+        this.#loadouts[index].strategy = strategy || null;
+        this.#persist();
+    }
+
+    /**
+     * Check if a loadout is strategy-backed (auto-generated)
+     * @param {number} index
+     * @returns {boolean}
+     */
+    isStrategyBacked(index) {
+        return !!this.#loadouts[index]?.strategy;
+    }
+
+    /**
      * Update sequencing config for a loadout
      * @param {number} index
      * @param {{ repeatCount?: number, nextLoadout?: number }} config
@@ -114,11 +143,18 @@ export class LoadoutManager {
      * Create a new empty loadout and switch to it
      * @param {string} [name]
      * @param {ActionQueue} [queue]
+     * @param {object} [options] - { strategy, repeatCount, nextLoadout }
      * @returns {number} Index of new loadout
      */
-    create(name, queue) {
+    create(name, queue, options = {}) {
         const loadoutName = name || `Loadout ${this.#loadouts.length + 1}`;
-        this.#loadouts.push({ name: loadoutName, data: {}, repeatCount: 1, nextLoadout: -1 });
+        this.#loadouts.push({
+            name: loadoutName,
+            data: {},
+            repeatCount: options.repeatCount ?? 1,
+            nextLoadout: options.nextLoadout ?? -1,
+            strategy: options.strategy || null,
+        });
         const idx = this.#loadouts.length - 1;
         if (queue) {
             this.#activeIndex = idx;

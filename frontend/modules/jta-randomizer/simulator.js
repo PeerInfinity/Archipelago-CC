@@ -1612,6 +1612,20 @@ export function runBaselineSimulation(maxZone = 15, options = {}) {
 // Re-export ZONES for convenience
 export { ZONES } from './gameData.js';
 
+// Export strategy helper functions for queue builder
+export {
+    getGrindableTasks,
+    getAllReachableGrindableTasks,
+    getReachablePerkTasks,
+    getReachableItemTasks,
+    getReachableSkillBoostTasks,
+    getReachableBossTasks,
+    getBottleneckSkills,
+    getBottleneckTrainingTasks,
+    calcItemEnergy,
+    getItemType,
+};
+
 /**
  * Run a detailed simulation showing every action taken
  * @param maxResets - maximum number of resets to simulate

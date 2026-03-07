@@ -54,6 +54,9 @@ export class JTAQueueExecutor {
     /** @type {Function|null} */
     #onStatusChange = null;
 
+    /** @type {Function|null} Called before creating a new snapshot on energy reset */
+    #onBeforeReset = null;
+
     /** @type {number} Last known energy from polls/snapshots */
     #lastKnownEnergy = 0;
 
@@ -101,6 +104,13 @@ export class JTAQueueExecutor {
      * @param {Function} cb
      */
     set onStatusChange(cb) { this.#onStatusChange = cb; }
+
+    /**
+     * Set a callback called before creating a new snapshot on energy reset.
+     * Use to regenerate strategy queues before the snapshot is taken.
+     * @param {Function} cb
+     */
+    set onBeforeReset(cb) { this.#onBeforeReset = cb; }
 
     /**
      * Update drain strategy config
@@ -483,6 +493,8 @@ export class JTAQueueExecutor {
             return;
         }
         console.log(`${LOG_PREFIX} Game-over dismissed, creating fresh snapshot from queue`);
+        // Allow strategy regeneration before snapshotting
+        if (this.#onBeforeReset) this.#onBeforeReset();
         // Create new snapshot from current queue so Next list edits take effect
         this.#snapshot = ExecutionSnapshot.fromQueue(this.#queue);
         this.#snapshot.running = true;

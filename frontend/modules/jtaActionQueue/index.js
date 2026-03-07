@@ -7,6 +7,7 @@ import { JTAQueueExecutor } from './jtaQueueExecutor.js';
 import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
 import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
 import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
+import { StrategyType, buildQueueForStrategy } from './jtaQueueBuilder.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
@@ -81,6 +82,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     // Create shared instances
     queue = new ActionQueue();
     loadoutManager = new LoadoutManager('jta-action-loadouts');
+    ensureStrategyLoadouts();
     loadoutManager.loadActive(queue);
 
     log('info', `[${moduleId}] Initialization complete.`);
@@ -93,6 +95,30 @@ export function getModuleEventBus() {
         subscribe: (event, callback) => eventBus.subscribe(event, callback, 'jtaActionQueue'),
         unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'jtaActionQueue'),
     };
+}
+
+/** Ensure strategy loadouts exist in the loadout manager. */
+function ensureStrategyLoadouts() {
+    if (!loadoutManager) return;
+    const existing = loadoutManager.getLoadouts();
+    const existingNames = new Set(existing.map(l => l.name));
+
+    const strategies = [
+        { name: '[Auto]', strategy: { type: StrategyType.AUTO }, repeatCount: 0 },
+        { name: '[Push]', strategy: { type: StrategyType.PUSH }, repeatCount: 0 },
+        { name: '[Collect]', strategy: { type: StrategyType.COLLECT }, repeatCount: 0 },
+        { name: '[Grind XP]', strategy: { type: StrategyType.GRIND_XP }, repeatCount: 0 },
+    ];
+
+    for (const spec of strategies) {
+        if (!existingNames.has(spec.name)) {
+            loadoutManager.create(spec.name, null, {
+                strategy: spec.strategy,
+                repeatCount: spec.repeatCount,
+                nextLoadout: -1,
+            });
+        }
+    }
 }
 
 // Accessors for module-level instances
@@ -423,6 +449,7 @@ class JTAActionQueuePanel {
             <div class="aq-controls" style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="aq-start-btn">Start</button>
                 <button class="aq-stop-btn">Stop</button>
+                <button class="aq-drain-btn" title="Drain all energy using the drain strategy, then trigger reset">Drain</button>
                 <button class="aq-reset-btn">Reset</button>
                 <button class="aq-clear-btn">Clear</button>
                 <button class="aq-undo-btn">Undo</button>
@@ -514,8 +541,14 @@ class JTAActionQueuePanel {
                 executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, settings);
                 executor.onStatusChange = () => this._refreshUI();
                 executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
+                executor.onBeforeReset = () => this._regenerateStrategyQueue();
             }
             if (executor) {
+                // Regenerate strategy queue before starting if applicable
+                if (this._regenerateStrategyQueue()) {
+                    executor.clearSnapshot();
+                    if (queuePanelUI) queuePanelUI.refresh();
+                }
                 // Initialize tracking state before starting
                 if (lastSimState) {
                     executor.setTrackingState(
@@ -524,7 +557,8 @@ class JTAActionQueuePanel {
                     );
                 }
                 executor.start();
-                statusText.textContent = 'Running...';
+                const strategyLabel = loadoutManager?.getStrategy(loadoutManager.activeIndex)?.type;
+                statusText.textContent = strategyLabel ? `Running [${strategyLabel}]...` : 'Running...';
                 this._refreshUI();
             }
         });
@@ -535,6 +569,44 @@ class JTAActionQueuePanel {
                 statusText.textContent = 'Stopped';
                 this._refreshUI();
             }
+        });
+
+        el.querySelector('.aq-drain-btn').addEventListener('click', () => {
+            // Create a temporary executor with an empty queue to drain energy and reset
+            if (executor) executor.stop();
+            const emptyQueue = new ActionQueue();
+            const drainSettings = this._savedSettings ? this._savedSettings() : {};
+            drainSettings.drainEnabled = true;
+            drainSettings.autoReset = true;
+            const drainExecutor = new JTAQueueExecutor(emptyQueue, getModuleEventBus(), moduleId, drainSettings);
+            drainExecutor.onStatusChange = () => this._refreshUI();
+            drainExecutor.onQueueExhausted = () => {
+                statusText.textContent = 'Draining energy...';
+            };
+            // When the drain executor resets, it will request detailed state and
+            // create a new snapshot from the empty queue — which exhausts immediately.
+            // Detect the second exhaustion as "drain complete" and stop.
+            let drainResetOccurred = false;
+            const origOnExhausted = drainExecutor.onQueueExhausted;
+            drainExecutor.onQueueExhausted = () => {
+                if (drainResetOccurred) {
+                    // Energy was drained and reset happened — we're done
+                    drainExecutor.stop();
+                    executor = null; // Clear so Start creates a fresh executor
+                    statusText.textContent = 'Drained and reset';
+                    this._refreshUI();
+                    // Request fresh state for predictions
+                    this._requestPredictionState();
+                    return;
+                }
+                drainResetOccurred = true;
+                statusText.textContent = 'Draining energy...';
+            };
+            // Replace module executor temporarily
+            executor = drainExecutor;
+            drainExecutor.start();
+            statusText.textContent = 'Draining...';
+            this._refreshUI();
         });
 
         el.querySelector('.aq-reset-btn').addEventListener('click', () => {
@@ -586,9 +658,16 @@ class JTAActionQueuePanel {
 
         // Check if we should repeat this loadout
         if (seq.repeatCount === 0 || this._loadoutRunCount < seq.repeatCount) {
-            // Repeat: restart from beginning of same loadout
-            if (executor) executor.restart();
-            statusText.textContent = `Running... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
+            // Regenerate strategy queue if applicable (picks new actions based on current state)
+            if (this._regenerateStrategyQueue()) {
+                if (executor) executor.clearSnapshot();
+                if (queuePanelUI) queuePanelUI.refresh();
+                if (executor) executor.start();
+            } else {
+                if (executor) executor.restart();
+            }
+            const strategyLabel = loadoutManager?.getStrategy(loadoutManager.activeIndex)?.type;
+            statusText.textContent = `Running${strategyLabel ? ` [${strategyLabel}]` : ''}... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
             return;
         }
 
@@ -598,6 +677,8 @@ class JTAActionQueuePanel {
             loadoutManager.saveActive(queue);
             if (executor) executor.clearSnapshot();
             loadoutManager.switchTo(seq.nextLoadout, queue);
+            // Regenerate if new loadout is strategy-backed
+            this._regenerateStrategyQueue();
             if (this._refreshLoadouts) this._refreshLoadouts();
             if (queuePanelUI) queuePanelUI.refresh();
 
@@ -632,9 +713,12 @@ class JTAActionQueuePanel {
             loadoutManager.saveActive(queue);
             if (executor) executor.clearSnapshot();
             loadoutManager.switchTo(select.selectedIndex, queue);
+            // Regenerate if switching to a strategy-backed loadout
+            this._regenerateStrategyQueue();
             this._refreshUI();
             if (queuePanelUI) queuePanelUI.refresh();
             this._refreshSequencingUI();
+            this._schedulePredictions();
         });
 
         el.querySelector('.aq-loadout-save').addEventListener('click', () => {
@@ -799,6 +883,24 @@ class JTAActionQueuePanel {
         };
     }
 
+    /**
+     * If the active loadout is strategy-backed, regenerate its queue entries
+     * from the current game state.
+     * @returns {boolean} true if regeneration occurred
+     */
+    _regenerateStrategyQueue() {
+        if (!loadoutManager || !queue || !lastSimState) return false;
+        const strategy = loadoutManager.getStrategy(loadoutManager.activeIndex);
+        if (!strategy) return false;
+
+        const entries = buildQueueForStrategy(lastSimState, strategy);
+        queue.clear();
+        for (const entry of entries) queue.add(entry);
+        loadoutManager.saveActive(queue);
+        log('info', `Regenerated strategy queue: ${strategy.type} (${entries.length} entries)`);
+        return true;
+    }
+
     _saveLoadout() {
         if (loadoutManager && queue) loadoutManager.saveActive(queue);
     }
@@ -853,6 +955,10 @@ class JTAActionQueuePanel {
 
             // Ensure queue panel is bound now that queue exists (created in Phase 9)
             this._ensureQueueBound();
+
+            // Refresh loadout dropdown (initialize() may have added strategy loadouts
+            // after the dropdown was first populated during GL panel construction)
+            if (this._refreshLoadouts) this._refreshLoadouts();
 
             // Request game state for initial predictions
             this._requestPredictionState();
