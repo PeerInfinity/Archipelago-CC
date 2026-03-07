@@ -492,6 +492,57 @@ function patchTaskDefs(data, client) {
 }
 
 /**
+ * Replace the game's complete task definition data from a game data JSON zones array.
+ * This patches every task in the provided zones data, effectively replacing all task
+ * definitions. Used when loading randomized or cost-adjusted game data.
+ *
+ * @param {object} data - { zones: [{id, name, tasks: [...]}], resetTasks? }
+ * @param {IframeClient} client
+ */
+function replaceGameData(data, client) {
+    const taskLookup = window.TASK_LOOKUP;
+    if (!taskLookup) {
+        console.error(`${LOG_PREFIX} replaceGameData: TASK_LOOKUP not available on window`);
+        client.publishEventBus('jta:gameDataReplaced', { error: 'TASK_LOOKUP not available', timestamp: Date.now() });
+        return;
+    }
+
+    const zones = data.zones || [];
+    let patched = 0;
+    let notFound = 0;
+
+    for (const zone of zones) {
+        for (const task of zone.tasks) {
+            const def = taskLookup.get(task.id);
+            if (!def) {
+                console.warn(`${LOG_PREFIX} replaceGameData: task ${task.id} not found`);
+                notFound++;
+                continue;
+            }
+
+            if (task.perk !== undefined) def.perk = task.perk;
+            if (task.item !== undefined) def.item = task.item;
+            if (task.skills !== undefined) def.skills = [...task.skills];
+            if (task.costMult !== undefined) def.cost_multiplier = task.costMult;
+            if (task.xpMult !== undefined) def.xp_mult = task.xpMult;
+            if (task.maxReps !== undefined) def.max_reps = task.maxReps;
+            if (task.type !== undefined) def.type = task.type;
+            if (task.name !== undefined) def.name = task.name;
+            if (task.hidden !== undefined) def.hidden_by_default = task.hidden;
+
+            patched++;
+        }
+    }
+
+    if (data.resetTasks !== false && window.resetTasks) {
+        window.resetTasks();
+    }
+
+    console.log(`${LOG_PREFIX} replaceGameData: ${patched} tasks patched, ${notFound} not found`);
+    client.publishEventBus('jta:gameDataReplaced', { patched, notFound, timestamp: Date.now() });
+}
+
+/**
  * Read the game's full zone/task definition data (for comparison with our gameData.js)
  * @returns {object|null}
  */
@@ -603,6 +654,11 @@ function setupSubscriptions(client) {
     // Patch task definitions
     client.subscribeEventBus('jta:patchTaskDefs', (data) => {
         patchTaskDefs(data, client);
+    });
+
+    // Replace all game data (full zones array from game data JSON)
+    client.subscribeEventBus('jta:replaceGameData', (data) => {
+        replaceGameData(data, client);
     });
 
     // Click a task by definition ID (sets it as active_task)

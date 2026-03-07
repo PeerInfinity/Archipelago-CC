@@ -601,10 +601,10 @@ Add the full game data JSON file and the `generate_output()` method that writes 
 - Write modified game data to `AP_[SEED_ID]_gamedata.json` in the preset directory
 - The existing exporter pipeline handles rules.json and sphere_log.jsonl separately
 
-**Step 3: Frontend game data loading**
-- Add a function to load the game data JSON from a URL/file
-- Apply the complete game data to the JTA iframe via `jta:patchTaskDefs`
-- This replaces the current approach of only patching perk placements
+**Step 3: Frontend game data loading** ✅
+- `jtaGameDataLoader.js`: `loadGameDataFromJson()` converts JSON → simulator-compatible format, `buildTaskPatches()` generates iframe patch arrays, `loadGameDataFromUrl()` fetches and loads
+- `jtaGameClient.js`: Added `jta:replaceGameData` event that applies complete zones data to the live game via TASK_LOOKUP
+- Loader output verified against hardcoded gameData.js (1491 assertions, all pass)
 
 **Validation:** Generate a seed. Verify `AP_[SEED_ID]_gamedata.json` is created alongside `_rules.json`. Load in frontend and verify the game runs with the patched data.
 
