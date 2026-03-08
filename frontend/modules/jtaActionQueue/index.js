@@ -127,6 +127,15 @@ function ensureStrategyLoadouts() {
             nextLoadout: -1,
         });
     }
+
+    // Clean up: only [Auto] should have a strategy — strip stray strategies
+    // from non-[Auto] loadouts (can happen from earlier code versions)
+    const cleaned = loadoutManager.getLoadouts();
+    for (let i = 0; i < cleaned.length; i++) {
+        if (cleaned[i].name !== '[Auto]' && loadoutManager.isStrategyBacked(i)) {
+            loadoutManager.setStrategy(i, null);
+        }
+    }
 }
 
 // Accessors for module-level instances
@@ -568,6 +577,10 @@ class JTAActionQueuePanel {
                         <input type="checkbox" class="aq-setting-add-to-top">
                         Add new actions to top of queue
                     </label>
+                    <label style="display: flex; align-items: center; gap: 6px;" title="Actions are executed immediately when added. Queue stops at the end.">
+                        <input type="checkbox" class="aq-setting-immediate">
+                        Immediate mode
+                    </label>
                     <hr style="border: none; border-top: 1px solid #444; margin: 4px 0;">
                     <div class="aq-sequencing" style="display: flex; flex-direction: column; gap: 4px;">
                         <div style="font-weight: bold; font-size: 0.85em;">Loadout Sequencing</div>
@@ -633,18 +646,27 @@ class JTAActionQueuePanel {
         this._loadoutRunCount = 0;
 
         el.querySelector('.aq-start-btn').addEventListener('click', () => {
+            const settings = this._savedSettings ? this._savedSettings() : {};
+            const isImmediate = settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
+
             if (!executor && queue) {
-                const settings = this._savedSettings ? this._savedSettings() : {};
-                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, settings);
+                const execSettings = isImmediate ? { ...settings, drainEnabled: false, autoReset: false } : settings;
+                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
                 executor.onStatusChange = () => this._refreshUI();
                 executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
                 executor.onBeforeReset = () => this._regenerateStrategyQueue();
             }
             if (executor) {
-                // Regenerate strategy queue before starting if applicable
-                if (this._regenerateStrategyQueue()) {
+                if (isImmediate) {
+                    // Immediate mode: override config, clear old snapshot, skip strategy regen
+                    executor.updateConfig({ drainEnabled: false, autoReset: false });
                     executor.clearSnapshot();
-                    if (queuePanelUI) queuePanelUI.refresh();
+                } else {
+                    // Normal mode: regenerate strategy queue if applicable
+                    if (this._regenerateStrategyQueue()) {
+                        executor.clearSnapshot();
+                        if (queuePanelUI) queuePanelUI.refresh();
+                    }
                 }
                 // Initialize tracking state before starting
                 if (lastSimState) {
@@ -654,17 +676,24 @@ class JTAActionQueuePanel {
                     );
                 }
                 executor.start();
-                const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
-                const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
-                statusText.textContent = isStrategy ? `Running [${levelLabel}]...` : 'Running...';
+                if (isImmediate) {
+                    statusText.textContent = 'Running (immediate)...';
+                } else {
+                    const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
+                    const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
+                    statusText.textContent = isStrategy ? `Running [${levelLabel}]...` : 'Running...';
+                }
                 this._refreshUI();
             }
         });
 
         el.querySelector('.aq-next-btn').addEventListener('click', () => {
+            const settings = this._savedSettings ? this._savedSettings() : {};
+            const isImmediate = settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
+
             if (!executor && queue) {
-                const settings = this._savedSettings ? this._savedSettings() : {};
-                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, settings);
+                const execSettings = isImmediate ? { ...settings, drainEnabled: false, autoReset: false } : settings;
+                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
                 executor.onStatusChange = () => this._refreshUI();
                 executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
                 executor.onBeforeReset = () => this._regenerateStrategyQueue();
@@ -672,9 +701,11 @@ class JTAActionQueuePanel {
             if (executor) {
                 // Regenerate strategy queue before stepping if no snapshot yet
                 if (!executor.snapshot) {
-                    if (this._regenerateStrategyQueue()) {
-                        executor.clearSnapshot();
-                        if (queuePanelUI) queuePanelUI.refresh();
+                    if (!isImmediate) {
+                        if (this._regenerateStrategyQueue()) {
+                            executor.clearSnapshot();
+                            if (queuePanelUI) queuePanelUI.refresh();
+                        }
                     }
                     if (lastSimState) {
                         executor.setTrackingState(
@@ -682,6 +713,9 @@ class JTAActionQueuePanel {
                             lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
                         );
                     }
+                }
+                if (isImmediate) {
+                    executor.updateConfig({ drainEnabled: false, autoReset: false });
                 }
                 executor.stepOne();
                 statusText.textContent = 'Stepping...';
@@ -774,6 +808,29 @@ class JTAActionQueuePanel {
             return;
         }
 
+        // Immediate mode: check if new entries were added while executing
+        // Only applies to non-strategy loadouts (Auto loadouts use repeat/sequencing below)
+        const settings = this._savedSettings ? this._savedSettings() : {};
+        if (settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex)) {
+            const snapshotCount = executor?.snapshot?.length || 0;
+            const queueCount = queue ? queue.getEntries().length : 0;
+            if (queueCount > snapshotCount) {
+                // New entries were added — append and continue from where we left off
+                if (executor) {
+                    executor.appendNewEntries();
+                    executor.resumeAfterAppend();
+                }
+                statusText.textContent = 'Running (immediate)...';
+                this._refreshUI();
+                return;
+            }
+            // No new entries — stop
+            if (executor) executor.stop();
+            statusText.textContent = 'Ready (immediate)';
+            this._refreshUI();
+            return;
+        }
+
         if (!loadoutManager) {
             statusText.textContent = 'Queue finished';
             return;
@@ -816,8 +873,56 @@ class JTAActionQueuePanel {
         }
 
         // No sequencing — fall through to drain or stop
+        const settings2 = this._savedSettings ? this._savedSettings() : {};
+        statusText.textContent = settings2.drainEnabled !== false ? 'Draining energy...' : 'Queue finished';
+    }
+
+    /**
+     * If immediate mode is active and the executor is idle, start execution
+     * so the newly-added entry runs immediately.
+     */
+    _maybeExecuteImmediate() {
         const settings = this._savedSettings ? this._savedSettings() : {};
-        statusText.textContent = settings.drainEnabled !== false ? 'Draining energy...' : 'Queue finished';
+        if (!settings.immediateMode) return;
+        if (!queue) return;
+
+        // Don't auto-execute for strategy-backed (Auto) loadouts — they manage their own queue
+        if (loadoutManager?.isStrategyBacked(loadoutManager.activeIndex)) return;
+
+        const statusText = this.rootElement.querySelector('.aq-status-text');
+
+        // Create executor if needed
+        if (!executor) {
+            const execSettings = { ...settings, drainEnabled: false, autoReset: false };
+            executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
+            executor.onStatusChange = () => this._refreshUI();
+            executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
+            executor.onBeforeReset = () => this._regenerateStrategyQueue();
+        }
+
+        // If already running, the new entry will be picked up by _handleQueueExhausted
+        if (executor.isRunning) return;
+
+        // Override drain/reset for immediate mode
+        executor.updateConfig({ drainEnabled: false, autoReset: false });
+
+        // Append new entries to existing snapshot (preserves completed state)
+        // If no snapshot exists, start() will create one from the full queue
+        if (executor.snapshot) {
+            executor.appendNewEntries();
+        }
+
+        // Set tracking state if available
+        if (lastSimState) {
+            executor.setTrackingState(
+                lastSimState.currentEnergy,
+                lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
+            );
+        }
+
+        executor.start();
+        if (statusText) statusText.textContent = 'Running (immediate)...';
+        this._refreshUI();
     }
 
     _setupLoadouts() {
@@ -935,6 +1040,7 @@ class JTAActionQueuePanel {
         const drainOptions = el.querySelector('.aq-drain-options');
         const autoResetCheckbox = el.querySelector('.aq-setting-autoreset');
         const addToTopCheckbox = el.querySelector('.aq-setting-add-to-top');
+        const immediateCheckbox = el.querySelector('.aq-setting-immediate');
         const showActualsCheckbox = el.querySelector('.aq-setting-show-actuals');
         const showComparisonCheckbox = el.querySelector('.aq-setting-show-comparison');
         const radios = el.querySelectorAll('input[name="aq-drain-strategy"]');
@@ -956,6 +1062,9 @@ class JTAActionQueuePanel {
             }
             if (saved.addToTop === true) {
                 addToTopCheckbox.checked = true;
+            }
+            if (saved.immediateMode === true) {
+                immediateCheckbox.checked = true;
             }
             if (saved.showActuals === true) {
                 showActualsCheckbox.checked = true;
@@ -982,6 +1091,7 @@ class JTAActionQueuePanel {
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
                 addToTop: addToTopCheckbox.checked,
+                immediateMode: immediateCheckbox.checked,
                 showActuals: showActualsCheckbox.checked,
                 showComparison: showComparisonCheckbox.checked,
                 strategyLevel: strategyLevelSelect.value,
@@ -1000,6 +1110,7 @@ class JTAActionQueuePanel {
 
         autoResetCheckbox.addEventListener('change', persistSettings);
         addToTopCheckbox.addEventListener('change', persistSettings);
+        immediateCheckbox.addEventListener('change', persistSettings);
         strategyLevelSelect.addEventListener('change', persistSettings);
         for (const radio of radios) {
             radio.addEventListener('change', persistSettings);
@@ -1023,6 +1134,7 @@ class JTAActionQueuePanel {
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
                 addToTop: addToTopCheckbox.checked,
+                immediateMode: immediateCheckbox.checked,
                 strategyLevel: strategyLevelSelect.value,
             };
         };
@@ -1288,6 +1400,7 @@ class JTAActionQueuePanel {
             queue.add(queueEntry, targetIndex);
             queuePanelUI.refresh();
             this._saveLoadout();
+            this._maybeExecuteImmediate();
         };
     }
 
@@ -1327,6 +1440,7 @@ class JTAActionQueuePanel {
                 if (queuePanelUI) queuePanelUI.refresh();
                 this._saveLoadout();
                 this._schedulePredictions();
+                this._maybeExecuteImmediate();
             }, getInsertIndex);
         };
 
@@ -1380,7 +1494,7 @@ class JTAActionQueuePanel {
             try {
                 predictions = predictQueue(queue, lastSimState);
             } catch (e) {
-                console.warn('[jtaActionQueue] Prediction error:', e);
+                log('warn', 'Prediction error:', e);
                 predictions = null;
             }
         }

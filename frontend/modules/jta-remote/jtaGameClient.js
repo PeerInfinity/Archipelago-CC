@@ -1,8 +1,10 @@
 // Journey to Ascension integration client for Archipelago iframe adapter
 // Connects the JTA game to the Archipelago eventBus via IframeClient
 import { IframeClient } from '../iframe-base/iframeClient.js';
+import { createSharedLogger, initializeIframeLogger } from '../iframe-base/shared/sharedLogger.js';
 
-const LOG_PREFIX = '[JTAGameClient]';
+initializeIframeLogger({ defaultLevel: 'WARN' });
+const log = createSharedLogger('jtaGameClient');
 const SAVE_KEY = 'incrementalGameSave';
 
 /**
@@ -40,13 +42,13 @@ function waitForGameReady(timeoutMs = 30000) {
             const gameArea = document.getElementById('game-area');
             // Game removes 'hidden' class when ready
             if (gameArea && !gameArea.classList.contains('hidden')) {
-                console.log(`${LOG_PREFIX} Game initialized (game-area visible)`);
+                log.info(`Game initialized (game-area visible)`);
                 resolve();
                 return;
             }
             // Also check if GAMESTATE is available on window
             if (window.getGamestate && typeof window.getGamestate === 'object') {
-                console.log(`${LOG_PREFIX} Game initialized (GAMESTATE available)`);
+                log.info(`Game initialized (GAMESTATE available)`);
                 resolve();
                 return;
             }
@@ -250,7 +252,7 @@ function setupStateChangeDetection(client) {
         }
     }
 
-    console.log(`${LOG_PREFIX} Perk task lookup built: ${perkTaskLookup.size} perk-granting tasks`);
+    log.info(`Perk task lookup built: ${perkTaskLookup.size} perk-granting tasks`);
 
     setInterval(() => {
         const gs = window.getGamestate;
@@ -261,7 +263,7 @@ function setupStateChangeDetection(client) {
             const prevZone = lastZone;
             lastZone = gs.current_zone;
             if (prevZone >= 0) {
-                console.log(`${LOG_PREFIX} Zone changed: ${prevZone} -> ${gs.current_zone}`);
+                log.info(`Zone changed: ${prevZone} -> ${gs.current_zone}`);
                 client.publishEventBus('jta:zoneChanged', {
                     previousZone: prevZone,
                     currentZone: gs.current_zone,
@@ -276,7 +278,7 @@ function setupStateChangeDetection(client) {
             const prevCount = lastResetCount;
             lastResetCount = gs.energy_reset_count;
             if (prevCount >= 0) {
-                console.log(`${LOG_PREFIX} Energy reset #${gs.energy_reset_count}`);
+                log.info(`Energy reset #${gs.energy_reset_count}`);
                 client.publishEventBus('jta:energyReset', {
                     resetCount: gs.energy_reset_count,
                     timestamp: Date.now()
@@ -289,7 +291,7 @@ function setupStateChangeDetection(client) {
             const prevCount = lastPrestigeCount;
             lastPrestigeCount = gs.prestige_count;
             if (prevCount >= 0) {
-                console.log(`${LOG_PREFIX} Prestige #${gs.prestige_count}`);
+                log.info(`Prestige #${gs.prestige_count}`);
                 client.publishEventBus('jta:prestige', {
                     prestigeCount: gs.prestige_count,
                     timestamp: Date.now()
@@ -305,7 +307,7 @@ function setupStateChangeDetection(client) {
                     if (task.reps >= task.task_definition.max_reps) {
                         completedPerkTasks.add(taskId);
                         const info = perkTaskLookup.get(taskId);
-                        console.log(`${LOG_PREFIX} Perk task completed: ${info.taskName} (task ${taskId}, perk ${info.perkType})`);
+                        log.info(`Perk task completed: ${info.taskName} (task ${taskId}, perk ${info.perkType})`);
                         client.publishEventBus('jta:perkTaskCompleted', {
                             taskId,
                             taskName: info.taskName,
@@ -334,7 +336,7 @@ function setupStateChangeDetection(client) {
                 if (newPerks.length > 0) {
                     // Update tracked set
                     for (const pt of newPerks) ownedPerks.add(pt);
-                    console.log(`${LOG_PREFIX} Perk count changed to ${currentPerks.size} (new: ${newPerks.join(', ')})`);
+                    log.info(`Perk count changed to ${currentPerks.size} (new: ${newPerks.join(', ')})`);
                     client.publishEventBus('jta:perkChanged', {
                         perkCount: currentPerks.size,
                         ownedPerks: [...currentPerks],
@@ -351,7 +353,7 @@ function setupStateChangeDetection(client) {
 
         // Energy depleted detection (game-over overlay showing, game paused)
         if (gs.is_in_energy_reset && !lastIsInEnergyReset) {
-            console.log(`${LOG_PREFIX} Energy depleted — game-over overlay showing`);
+            log.info(`Energy depleted — game-over overlay showing`);
             client.publishEventBus('jta:energyDepleted', {
                 resetCount: gs.energy_reset_count,
                 timestamp: Date.now()
@@ -361,7 +363,7 @@ function setupStateChangeDetection(client) {
 
     }, 500); // Poll every 500ms
 
-    console.log(`${LOG_PREFIX} State change detection active`);
+    log.info(`State change detection active`);
 }
 
 /**
@@ -372,13 +374,13 @@ function exportSave(client) {
     triggerManualSave();
     const saveData = localStorage.getItem(SAVE_KEY);
     if (saveData) {
-        console.log(`${LOG_PREFIX} Exporting save (${saveData.length} chars)`);
+        log.info(`Exporting save (${saveData.length} chars)`);
         client.publishEventBus('jta:saveExported', {
             saveJson: saveData,
             timestamp: Date.now()
         });
     } else {
-        console.warn(`${LOG_PREFIX} No save data found in localStorage`);
+        log.warn(`No save data found in localStorage`);
         client.publishEventBus('jta:saveExported', {
             saveJson: null,
             error: 'No save data found',
@@ -392,13 +394,13 @@ function exportSave(client) {
  * @param {string} saveJson - JSON string of the save data
  */
 function importSave(saveJson) {
-    console.log(`${LOG_PREFIX} Importing save (${saveJson.length} chars)`);
+    log.info(`Importing save (${saveJson.length} chars)`);
 
     // Validate JSON
     try {
         JSON.parse(saveJson);
     } catch (e) {
-        console.error(`${LOG_PREFIX} Invalid save JSON:`, e.message);
+        log.error(`Invalid save JSON:`, e.message);
         return;
     }
 
@@ -423,7 +425,7 @@ function importSave(saveJson) {
 function patchGameState(patch, client) {
     const gs = window.getGamestate;
     if (!gs) {
-        console.error(`${LOG_PREFIX} patchGameState: no GAMESTATE`);
+        log.error(`patchGameState: no GAMESTATE`);
         return;
     }
 
@@ -501,7 +503,7 @@ function patchGameState(patch, client) {
         changes++;
     }
 
-    console.log(`${LOG_PREFIX} patchGameState: ${changes} changes applied`);
+    log.info(`patchGameState: ${changes} changes applied`);
     client.publishEventBus('jta:gameStatePatched', { changes, timestamp: Date.now() });
 }
 
@@ -516,7 +518,7 @@ function patchGameState(patch, client) {
 function patchTaskDefs(data, client) {
     const taskLookup = window.TASK_LOOKUP;
     if (!taskLookup) {
-        console.error(`${LOG_PREFIX} patchTaskDefs: TASK_LOOKUP not available on window`);
+        log.error(`patchTaskDefs: TASK_LOOKUP not available on window`);
         client.publishEventBus('jta:taskDefsPatched', { error: 'TASK_LOOKUP not available', timestamp: Date.now() });
         return;
     }
@@ -528,7 +530,7 @@ function patchTaskDefs(data, client) {
     for (const patch of patches) {
         const def = taskLookup.get(patch.id);
         if (!def) {
-            console.warn(`${LOG_PREFIX} patchTaskDefs: task ${patch.id} not found`);
+            log.warn(`patchTaskDefs: task ${patch.id} not found`);
             notFound++;
             continue;
         }
@@ -552,7 +554,7 @@ function patchTaskDefs(data, client) {
         window.resetTasks();
     }
 
-    console.log(`${LOG_PREFIX} patchTaskDefs: ${patched} patched, ${notFound} not found`);
+    log.info(`patchTaskDefs: ${patched} patched, ${notFound} not found`);
     client.publishEventBus('jta:taskDefsPatched', { patched, notFound, timestamp: Date.now() });
 }
 
@@ -580,7 +582,7 @@ function buildSkillModifierList(type, modObj) {
 function replaceGameData(data, client) {
     const taskLookup = window.TASK_LOOKUP;
     if (!taskLookup) {
-        console.error(`${LOG_PREFIX} replaceGameData: TASK_LOOKUP not available on window`);
+        log.error(`replaceGameData: TASK_LOOKUP not available on window`);
         client.publishEventBus('jta:gameDataReplaced', { error: 'TASK_LOOKUP not available', timestamp: Date.now() });
         return;
     }
@@ -722,7 +724,7 @@ function replaceGameData(data, client) {
     if (counts.prestigeUnlocks) parts.push(`${counts.prestigeUnlocks} prestige unlocks`);
     if (counts.prestigeRepeatables) parts.push(`${counts.prestigeRepeatables} prestige repeatables`);
     if (counts.renderingConstants) parts.push(`${counts.renderingConstants} rendering constants`);
-    console.log(`${LOG_PREFIX} replaceGameData: ${parts.join(', ')}`);
+    log.info(`replaceGameData: ${parts.join(', ')}`);
     client.publishEventBus('jta:gameDataReplaced', { ...counts, timestamp: Date.now() });
 }
 
@@ -883,7 +885,7 @@ function setupSubscriptions(client) {
         if (data && data.saveJson) {
             importSave(data.saveJson);
         } else {
-            console.warn(`${LOG_PREFIX} importSave event received without saveJson`);
+            log.warn(`importSave event received without saveJson`);
         }
     });
 
@@ -939,7 +941,7 @@ function setupSubscriptions(client) {
         const taskId = data.taskId;
         const task = gs.tasks.find(t => t.task_definition.id === taskId);
         if (!task) {
-            console.warn(`${LOG_PREFIX} clickTask: task ${taskId} not found in current zone ${gs.current_zone}`);
+            log.warn(`clickTask: task ${taskId} not found in current zone ${gs.current_zone}`);
             client.publishEventBus('jta:taskClicked', {
                 success: false,
                 taskId,
@@ -948,9 +950,23 @@ function setupSubscriptions(client) {
             });
             return;
         }
+        // Check if task is already completed (reps maxed out for this cycle)
+        const maxReps = task.task_definition.max_reps;
+        if (maxReps > 0 && task.reps >= maxReps) {
+            log.info(`clickTask: task ${taskId} "${task.task_definition.name}" already completed (${task.reps}/${maxReps})`);
+            client.publishEventBus('jta:taskClicked', {
+                success: false,
+                taskId,
+                taskName: task.task_definition.name,
+                alreadyCompleted: true,
+                error: `Task already completed (${task.reps}/${maxReps})`,
+                timestamp: Date.now()
+            });
+            return;
+        }
         if (window.clickTask) {
             window.clickTask(task);
-            console.log(`${LOG_PREFIX} clickTask: activated task ${taskId} "${task.task_definition.name}"`);
+            log.info(`clickTask: activated task ${taskId} "${task.task_definition.name}"`);
             client.publishEventBus('jta:taskClicked', {
                 success: true,
                 taskId,
@@ -966,7 +982,7 @@ function setupSubscriptions(client) {
     client.subscribeEventBus('jta:clickItem', (data) => {
         if (window.clickItem) {
             window.clickItem(data.itemType, !!data.useAll);
-            console.log(`${LOG_PREFIX} clickItem: used item type ${data.itemType} (useAll: ${!!data.useAll})`);
+            log.info(`clickItem: used item type ${data.itemType} (useAll: ${!!data.useAll})`);
             client.publishEventBus('jta:itemClicked', {
                 success: true,
                 itemType: data.itemType,
@@ -982,7 +998,7 @@ function setupSubscriptions(client) {
     client.subscribeEventBus('jta:doPrestige', () => {
         if (window.doPrestige) {
             window.doPrestige();
-            console.log(`${LOG_PREFIX} doPrestige: triggered`);
+            log.info(`doPrestige: triggered`);
             client.publishEventBus('jta:prestigeDone', { success: true, timestamp: Date.now() });
         } else {
             client.publishEventBus('jta:prestigeDone', { success: false, error: 'doPrestige not on window', timestamp: Date.now() });
@@ -1006,7 +1022,7 @@ function setupSubscriptions(client) {
         // Perform the actual energy reset
         if (window.doEnergyReset) {
             window.doEnergyReset();
-            console.log(`${LOG_PREFIX} dismissGameOver: reset triggered`);
+            log.info(`dismissGameOver: reset triggered`);
             client.publishEventBus('jta:gameOverDismissed', { success: true, timestamp: Date.now() });
         } else {
             client.publishEventBus('jta:gameOverDismissed', { success: false, error: 'doEnergyReset not on window', timestamp: Date.now() });
@@ -1043,7 +1059,7 @@ function setupSubscriptions(client) {
     client.subscribeEventBus('jta:grantPerks', (data) => {
         if (!Array.isArray(data.perkTypes)) return;
         if (!window.tryAddPerk) {
-            console.error(`${LOG_PREFIX} grantPerks: tryAddPerk not available on window`);
+            log.error(`grantPerks: tryAddPerk not available on window`);
             client.publishEventBus('jta:perksGranted', {
                 success: false,
                 error: 'tryAddPerk not available',
@@ -1063,7 +1079,7 @@ function setupSubscriptions(client) {
         }
 
         if (granted.length > 0) {
-            console.log(`${LOG_PREFIX} grantPerks: granted ${granted.length} perk(s): ${granted.join(', ')}`);
+            log.info(`grantPerks: granted ${granted.length} perk(s): ${granted.join(', ')}`);
         }
         client.publishEventBus('jta:perksGranted', {
             success: true,
@@ -1072,7 +1088,7 @@ function setupSubscriptions(client) {
         });
     });
 
-    console.log(`${LOG_PREFIX} Subscriptions active`);
+    log.info(`Subscriptions active`);
 }
 
 /**
@@ -1080,7 +1096,7 @@ function setupSubscriptions(client) {
  */
 async function initialize() {
     try {
-        console.log(`${LOG_PREFIX} Starting initialization...`);
+        log.info(`Starting initialization...`);
 
         // Hide connection status when embedded in iframe panel
         if (window.self !== window.top) {
@@ -1102,7 +1118,7 @@ async function initialize() {
             throw new Error('Failed to establish connection with Archipelago adapter');
         }
 
-        console.log(`${LOG_PREFIX} Connected to Archipelago adapter`);
+        log.info(`Connected to Archipelago adapter`);
         updateConnectionStatus('Connected', 'connected');
 
         // Make client available for debugging
@@ -1118,10 +1134,10 @@ async function initialize() {
         client.notifyAppReady();
 
         updateConnectionStatus('Ready - Journey to Ascension loaded', 'connected');
-        console.log(`${LOG_PREFIX} Initialization complete`);
+        log.info(`Initialization complete`);
 
     } catch (error) {
-        console.error(`${LOG_PREFIX} Initialization failed:`, error);
+        log.error(`Initialization failed:`, error);
         updateConnectionStatus(`Error: ${error.message}`, 'error');
     }
 }

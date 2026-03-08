@@ -12,8 +12,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
+    <!-- Non-render-blocking stylesheets: parent hides iframe until onload, so no FOUC -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="./style.css" media="print" onload="this.media='all'">
 
     <!-- Pre-bundle hooks: intercept globals before game initializes -->
     <script>
@@ -193,16 +194,19 @@
 
     <div id="tooltip" class="tooltip hidden"></div>
 
-    <!-- Game bundle (local build with Archipelago patches; bypasses base href) -->
+    <!-- Game bundle + Archipelago client (deferred until stylesheets loaded to avoid forced layout warning) -->
     <script type="module">
-        const gameUrl = new URL('./game-bundle/game.js', location.href).href;
-        import(gameUrl);
-    </script>
-
-    <!-- Archipelago integration client (dynamic import to bypass base href resolution) -->
-    <script type="module">
-        const clientUrl = new URL('./jtaGameClient.js', location.href).href;
-        import(clientUrl);
+        function loadScripts() {
+            const gameUrl = new URL('./game-bundle/game.js', location.href).href;
+            const clientUrl = new URL('./jtaGameClient.js', location.href).href;
+            import(gameUrl);
+            import(clientUrl);
+        }
+        if (document.readyState === 'complete') {
+            loadScripts();
+        } else {
+            window.addEventListener('load', loadScripts);
+        }
     </script>
 </body>
 </html>

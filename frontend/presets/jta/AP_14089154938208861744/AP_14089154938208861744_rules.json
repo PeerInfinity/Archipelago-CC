@@ -1700,7 +1700,6 @@
         "costGenFactors": {
           "itemCollection": true,
           "pushCollect": true,
-          "xpGrinding": true,
           "grindWithPushCollect": true,
           "artifacts": true
         },

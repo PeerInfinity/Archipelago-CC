@@ -6,8 +6,17 @@ import { JTAActionType } from './jtaActionDefs.js';
 import { DrainStrategy, pickDrainTask } from './jtaEnergyDrainStrategy.js';
 import { snapshotSkillsFromGameState, computeSkillGainsBetween } from './jtaQueuePredictor.js';
 
-const LOG_PREFIX = '[JTAQueueExecutor]';
+const LOG_CAT = 'jtaQueueExecutor';
 const POLL_INTERVAL = 500; // ms
+
+function log(level, message, ...data) {
+    if (typeof window !== 'undefined' && window.logger) {
+        window.logger[level](LOG_CAT, message, ...data);
+    } else {
+        const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
+        consoleMethod(`[${LOG_CAT}] ${message}`, ...data);
+    }
+}
 
 /**
  * @typedef {object} ExecutorConfig
@@ -175,7 +184,7 @@ export class JTAQueueExecutor {
         this.#pendingSkillsEntryId = null;
         this.#pendingNextEntryId = null;
         this.#deferredUnsubscribe = false;
-        console.log(`${LOG_PREFIX} Starting queue execution`);
+        log('info', 'Starting queue execution');
         this.#subscribeEvents();
 
         if (this.#lastKnownEnergy > 0 && this.#lastSkillSnapshot) {
@@ -194,7 +203,7 @@ export class JTAQueueExecutor {
      * Stop execution (pause). Snapshot is preserved for resume.
      */
     stop() {
-        console.log(`${LOG_PREFIX} Stopping queue execution`);
+        log('info', 'Stopping queue execution');
         if (this.#snapshot) this.#snapshot.running = false;
         this.#draining = false;
         this.#awaitingInitialState = false;
@@ -250,6 +259,27 @@ export class JTAQueueExecutor {
         this.#notifyStatusChange();
     }
 
+    /**
+     * Append new queue entries to the existing snapshot (entries not already present).
+     * Preserves completed/skipped state of existing entries.
+     */
+    appendNewEntries() {
+        if (this.#snapshot) {
+            this.#snapshot.appendFromQueue(this.#queue);
+            this.#notifyStatusChange();
+        }
+    }
+
+    /**
+     * Resume execution after new entries were appended.
+     * Called from within the execution chain (snapshot is still running).
+     */
+    resumeAfterAppend() {
+        if (!this.#snapshot?.running) return;
+        this.#draining = false;
+        this.#executeNext();
+    }
+
     /** Subscribe to iframe response events */
     #subscribeEvents() {
         this.#unsubscribeEvents();
@@ -285,7 +315,7 @@ export class JTAQueueExecutor {
             return;
         }
 
-        console.log(`${LOG_PREFIX} Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
+        log('debug', `Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.ACTIVE,
             energyBefore: this.#lastKnownEnergy,
@@ -307,7 +337,7 @@ export class JTAQueueExecutor {
                 this.#executePrestige(entry);
                 break;
             default:
-                console.warn(`${LOG_PREFIX} Unknown action type: ${entry.actionType}`);
+                log('warn', `Unknown action type: ${entry.actionType}`);
                 this.#markFailedAndAdvance(entry, `Unknown action type: ${entry.actionType}`);
         }
     }
@@ -337,8 +367,13 @@ export class JTAQueueExecutor {
         if (!entry || entry.actionType !== JTAActionType.CLICK_TASK) return;
 
         if (!data.success) {
-            console.warn(`${LOG_PREFIX} clickTask failed: ${data.error}`);
-            this.#markFailedAndAdvance(entry, data.error);
+            if (data.alreadyCompleted) {
+                log('info', `Task ${data.taskId} already completed — skipping`);
+                this.#markSkippedAndAdvance(entry, data.error);
+            } else {
+                log('warn', `clickTask failed: ${data.error}`);
+                this.#markFailedAndAdvance(entry, data.error);
+            }
             return;
         }
 
@@ -484,6 +519,30 @@ export class JTAQueueExecutor {
         this.#executeNext();
     }
 
+    /** Mark entry as skipped (already completed) and advance */
+    #markSkippedAndAdvance(entry, reason) {
+        const now = Date.now();
+        this.#snapshot.updateStatus(entry.entryId, {
+            state: ActionState.SKIPPED,
+            error: reason,
+            energyAfter: this.#lastKnownEnergy,
+            actualEnergyCost: 0,
+            endTime: now,
+            actualTimeMs: 0,
+        });
+        this.#stopPolling();
+        this.#waitingForCompletion = false;
+        this.#snapshot.advance();
+        this.#notifyStatusChange();
+        if (this.#stopAfterEntry) {
+            this.#stopAfterEntry = false;
+            this.stop();
+            this.#notifyStatusChange();
+            return;
+        }
+        this.#executeNext();
+    }
+
     /** Start polling for task completion */
     #startPolling() {
         this.#stopPolling();
@@ -504,10 +563,10 @@ export class JTAQueueExecutor {
     #onEnergyDepleted(data) {
         if (!this.#snapshot?.running) return;
         if (!this.#config.autoReset) {
-            console.log(`${LOG_PREFIX} Energy depleted — autoReset disabled, pausing`);
+            log('info', 'Energy depleted — autoReset disabled, pausing');
             return;
         }
-        console.log(`${LOG_PREFIX} Energy depleted — auto-dismissing game-over`);
+        log('info', 'Energy depleted — auto-dismissing game-over');
         this.#stopPolling();
         this.#waitingForCompletion = false;
         this.#draining = false;
@@ -518,10 +577,10 @@ export class JTAQueueExecutor {
     #onGameOverDismissed(data) {
         if (!this.#snapshot?.running) return;
         if (!data.success) {
-            console.warn(`${LOG_PREFIX} dismissGameOver failed: ${data.error}`);
+            log('warn', `dismissGameOver failed: ${data.error}`);
             return;
         }
-        console.log(`${LOG_PREFIX} Game-over dismissed, creating fresh snapshot from queue`);
+        log('info', 'Game-over dismissed, creating fresh snapshot from queue');
         // Allow strategy regeneration before snapshotting
         if (this.#onBeforeReset) this.#onBeforeReset();
         // Create new snapshot from current queue so Next list edits take effect
@@ -564,7 +623,7 @@ export class JTAQueueExecutor {
         if (this.#awaitingInitialState) {
             this.#awaitingInitialState = false;
             this.#lastSkillSnapshot = skillSnap;
-            console.log(`${LOG_PREFIX} Initial state received (energy=${this.#lastKnownEnergy}), starting execution`);
+            log('info', `Initial state received (energy=${this.#lastKnownEnergy}), starting execution`);
             this.#executeNext();
             return;
         }
@@ -617,12 +676,12 @@ export class JTAQueueExecutor {
     /** Start the energy drain strategy */
     #startDraining() {
         if (!this.#config.drainEnabled) {
-            console.log(`${LOG_PREFIX} Queue exhausted, drain disabled — idling`);
+            log('info', 'Queue exhausted, drain disabled — idling');
             this.#notifyStatusChange();
             if (this.#onQueueExhausted) this.#onQueueExhausted();
             return;
         }
-        console.log(`${LOG_PREFIX} Queue exhausted, starting drain strategy: ${this.#config.drainStrategy}`);
+        log('info', `Queue exhausted, starting drain strategy: ${this.#config.drainStrategy}`);
         this.#draining = true;
         this.#notifyStatusChange();
         if (this.#onQueueExhausted) this.#onQueueExhausted();

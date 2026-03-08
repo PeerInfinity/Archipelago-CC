@@ -227,6 +227,8 @@ export class IframePanelUI {
             this.iframe.style.width = '100%';
             this.iframe.style.height = '100%';
             this.iframe.style.border = 'none';
+            // Hide until loaded to prevent forced layout before stylesheets are ready
+            this.iframe.style.visibility = 'hidden';
             // Note: sandbox attribute removed - not needed since iframe content is trusted and same-origin
 
             // Set up iframe event listeners
@@ -317,6 +319,10 @@ export class IframePanelUI {
     handleIframeLoad() {
         log('debug', `handleIframeLoad: iframe loaded for URL ${this.currentUrl}`);
         this.isLoaded = true;
+        // Reveal iframe now that stylesheets are loaded
+        if (this.iframe) {
+            this.iframe.style.visibility = 'visible';
+        }
         this.updateStatus(`Loaded: ${this.currentUrl} - Waiting for connection...`);
         
         log('debug', 'Iframe loaded, waiting for IFRAME_READY message...');

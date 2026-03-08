@@ -46,6 +46,13 @@ class GoalZone(Range):
     range_end = 27  # 27 = all zones completed
     default = 15
 
+class GameDataFile(FreeText):
+    """Path to an alternative base game data JSON file.
+    If empty (default), uses the built-in jta_game_data.json.
+    Path is relative to the Archipelago root directory."""
+    display_name = "Game Data File"
+    default = ""
+
 class ResetsPerSphere(Range):
     """Target number of energy resets the player must grind before their
     stats are high enough to reach the next perk unlock.
@@ -79,16 +86,10 @@ class CostGenPushCollect(DefaultOnToggle):
     Requires Item Collection to be enabled."""
     display_name = "Cost Gen: Push/Collect Alternation"
 
-class CostGenXPGrinding(DefaultOnToggle):
-    """Cost generator assumes the player grinds skill XP when unable to
-    progress to the next sphere. Selects tasks that train bottleneck skills.
-    When disabled, costs are set as if the player only does direct progression."""
-    display_name = "Cost Gen: XP Grinding"
-
 class CostGenGrindWithPushCollect(DefaultOnToggle):
     """Cost generator assumes the player applies push/collect alternation
     to XP grinding runs, not just progression runs.
-    Requires both Push/Collect Alternation and XP Grinding."""
+    Requires Push/Collect Alternation."""
     display_name = "Cost Gen: Grind with Push/Collect"
 
 class CostGenArtifacts(DefaultOnToggle):
@@ -187,7 +188,7 @@ The `completion_condition` checks whether the player has reached the goal zone. 
 
 ### Game Data JSON
 
-The APWorld includes a static JSON file (`worlds/jta/jta_game_data.json`) containing the complete, unmodified game data from JTA v0.5.0. This file mirrors the structure of `gameData.js`, using the same numeric IDs and field names so the frontend can directly replace the game's internal data with it.
+The APWorld includes a static JSON file (`worlds/jta/jta_game_data.json`) containing the complete, unmodified game data from JTA v0.5.0. This file mirrors the structure of `gameData.js`, using the same numeric IDs and field names so the frontend can directly replace the game's internal data with it. An alternative base data file can be specified via the `game_data_file` option.
 
 The JSON file contains:
 - **skills** — Skill type IDs, names, XP multipliers
@@ -241,7 +242,7 @@ Format uses numeric IDs matching the game's enums:
 Seed generation produces three files in a pipeline:
 
 ```
-1. jta_game_data.json (static, in worlds/jta/)
+1. jta_game_data.json (default, in worlds/jta/; overridable via game_data_file option)
    │  Original unmodified game data
    │
    ├──► APWorld randomization (generate_output)
@@ -255,10 +256,11 @@ Seed generation produces three files in a pipeline:
       Cost-adjusted game data (costMult/xpMult values modified)
 ```
 
-**File 1: Original game data** (`worlds/jta/jta_game_data.json`)
-- Static, checked into git
+**File 1: Original game data** (`worlds/jta/jta_game_data.json` or custom path via `game_data_file`)
+- Default file is static, checked into git
 - Complete JTA v0.5.0 game data in JSON format
 - Source of truth; extracted once from `gameData.js`
+- Can be overridden with the `game_data_file` option to use alternative base data
 
 **File 2: Randomized game data** (`AP_[SEED_ID]_gamedata.json`)
 - Output by `JTAWorld.generate_output()` during seed generation
@@ -467,19 +469,9 @@ Decision logic for when to push (mirrors `simulateRun`):
 - Push when items are "ripe" (item energy >= 20% of max energy)
 - Otherwise collect
 
-#### Factor: XP Grinding
-
-When enabled, the queue builder adds grinding tasks when the simulator predicts the player can't complete the next sphere's perk task with current stats.
-
-Grinding task selection:
-1. Identify bottleneck skills (skills needed for the target task that are insufficiently leveled)
-2. Find tasks that train those skills, sorted by XP/energy efficiency
-3. Queue the top 1-3 grinding tasks with appropriate loop counts
-4. Grinding tasks are placed after progression tasks (use remaining energy for grinding)
-
 #### Factor: Grind with Push/Collect
 
-When enabled AND both push/collect and XP grinding are active, the push/collect alternation pattern applies to grinding phases too:
+When enabled AND push/collect is active, the push/collect alternation pattern applies to grinding phases too:
 - Collect runs: grind + collect items
 - Push runs: consume items + grind with boosted stats
 
@@ -596,7 +588,7 @@ Add the full game data JSON file and the `generate_output()` method that writes 
 - File location: `worlds/jta/jta_game_data.json`
 
 **Step 2: Add `generate_output()` to JTAWorld**
-- Load `jta_game_data.json` from the world package
+- Load base game data from `game_data_file` option (if set) or built-in `jta_game_data.json`
 - Apply randomized perk placements (modify task.perk values according to the fill)
 - Write modified game data to `AP_[SEED_ID]_gamedata.json` in the preset directory
 - The existing exporter pipeline handles rules.json and sphere_log.jsonl separately
@@ -638,7 +630,7 @@ Implement the cost adjustment algorithm in JavaScript, usable from both Node.js 
 Refactor `jtaQueueBuilder.js` from fixed strategies to composable factors.
 
 1. Add `buildSphereProgressionQueue(simState, sphereLog, sphereIndex)` — base behavior
-2. Refactor item collection, push/collect, XP grinding, artifacts as layered functions
+2. Refactor item collection, push/collect, artifacts as layered functions
 3. Replace `StrategyType` with `StrategyConfig` containing factor flags
 4. Update `generateStrategyLoadouts()` to generate loadouts based on factor config
 5. Update `index.js` to read factor config from seed data instead of hardcoded strategies

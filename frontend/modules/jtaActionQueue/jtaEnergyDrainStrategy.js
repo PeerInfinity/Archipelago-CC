@@ -22,10 +22,15 @@ export const DrainStrategy = Object.freeze({
 export function pickDrainTask(strategy, tasks, specificTaskId) {
     if (!tasks || tasks.length === 0) return null;
 
-    // Filter to enabled tasks, preferring non-travel tasks
+    // Filter to enabled tasks, preferring non-completed and non-travel tasks
+    // maxReps > 0 && reps >= maxReps = task fully completed this cycle
     // Type 1 = Travel — only use as fallback since they advance the zone
-    const nonTravel = tasks.filter(t => t.enabled && t.type !== 1);
-    const available = nonTravel.length > 0 ? nonTravel : tasks.filter(t => t.enabled);
+    const isCompleted = t => t.maxReps > 0 && t.reps >= t.maxReps;
+    const enabled = tasks.filter(t => t.enabled);
+    const incomplete = enabled.filter(t => !isCompleted(t));
+    const pool = incomplete.length > 0 ? incomplete : enabled;
+    const nonTravel = pool.filter(t => t.type !== 1);
+    const available = nonTravel.length > 0 ? nonTravel : pool;
 
     if (available.length === 0) return null;
 

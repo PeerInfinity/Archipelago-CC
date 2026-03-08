@@ -52,6 +52,25 @@ export class ExecutionSnapshot {
         return snapshot;
     }
 
+    /**
+     * Append entries from the queue that aren't already in the snapshot.
+     * Preserves completed/skipped/failed state of existing entries.
+     * @param {import('./actionQueue.js').ActionQueue} queue
+     */
+    appendFromQueue(queue) {
+        const existingIds = new Set(this.#entries.map(e => e.entryId));
+        for (const entry of queue.getEntries()) {
+            if (entry.disabled) continue;
+            if (existingIds.has(entry.entryId)) continue;
+            this.#entries.push({ ...entry });
+            this.#statuses.set(entry.entryId, {
+                entryId: entry.entryId,
+                state: ActionState.PENDING,
+                loopsCompleted: 0,
+            });
+        }
+    }
+
     /** @returns {import('./actionTypes.js').QueueEntry[]} */
     getEntries() {
         return [...this.#entries];

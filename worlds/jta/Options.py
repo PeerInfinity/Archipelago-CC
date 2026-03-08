@@ -3,7 +3,7 @@ Options for Journey to Ascension.
 """
 
 from dataclasses import dataclass
-from Options import DefaultOnToggle, ItemSet, PerGameCommonOptions, Range
+from Options import DefaultOnToggle, FreeText, ItemSet, PerGameCommonOptions, Range
 
 
 class GoalZone(Range):
@@ -44,6 +44,14 @@ class StartingPerkList(ItemSet):
     display_name = "Starting Perk List"
 
 
+class GameDataFile(FreeText):
+    """Path to an alternative base game data JSON file.
+    If empty (default), uses the built-in jta_game_data.json.
+    Path is relative to the Archipelago root directory."""
+    display_name = "Game Data File"
+    default = ""
+
+
 class ResetsPerSphere(Range):
     """Target number of energy resets the player must grind before their
     stats are high enough to reach the next perk unlock.
@@ -75,11 +83,6 @@ class CostGenPushCollect(DefaultOnToggle):
     """Cost generator assumes the player alternates between collection
     runs (save items) and push runs (consume all items)."""
     display_name = "Cost Gen: Push/Collect"
-
-
-class CostGenXPGrinding(DefaultOnToggle):
-    """Cost generator assumes the player grinds XP when unable to progress."""
-    display_name = "Cost Gen: XP Grinding"
 
 
 class CostGenGrindWithPushCollect(DefaultOnToggle):
@@ -120,12 +123,12 @@ class JTAOptions(PerGameCommonOptions):
     free_zones: FreeZones
     starting_perks: StartingPerks
     starting_perk_list: StartingPerkList
+    game_data_file: GameDataFile
     resets_per_sphere: ResetsPerSphere
     auto_cost_adjust: AutoCostAdjust
     # Cost generation factors
     costgen_item_collection: CostGenItemCollection
     costgen_push_collect: CostGenPushCollect
-    costgen_xp_grinding: CostGenXPGrinding
     costgen_grind_with_push_collect: CostGenGrindWithPushCollect
     costgen_artifacts: CostGenArtifacts
     # Automation unlocks

@@ -136,7 +136,13 @@ class JTAWorld(World):
         perk_tasks = get_perk_tasks_for_goal(goal_zone)
 
         # Load original game data
-        game_data_path = os.path.join(os.path.dirname(__file__), "jta_game_data.json")
+        custom_path = str(self.options.game_data_file.value).strip()
+        if custom_path:
+            game_data_path = custom_path
+        else:
+            game_data_path = os.path.join(
+                os.path.dirname(__file__), "jta_game_data.json"
+            )
         with open(game_data_path, "r", encoding="utf-8") as f:
             game_data = json.load(f)
 
@@ -253,7 +259,6 @@ class JTAWorld(World):
             "costGenFactors": {
                 "itemCollection": bool(self.options.costgen_item_collection.value),
                 "pushCollect": bool(self.options.costgen_push_collect.value),
-                "xpGrinding": bool(self.options.costgen_xp_grinding.value),
                 "grindWithPushCollect": bool(
                     self.options.costgen_grind_with_push_collect.value
                 ),
