@@ -21,6 +21,17 @@ def export_post_output_hook(multiworld: "MultiWorld", output_dir: str, filename_
     from exporter.pickle_exporter import export_multiworld_pickle
     from .json_tools_settings import get_json_tools_settings
 
+    # Call per-world post_output hooks (e.g., JTA cost adjustment).
+    # Runs before export_game_rules so generated files are included in preset copy.
+    for player_id, world in multiworld.worlds.items():
+        if hasattr(world, "post_output"):
+            try:
+                world.post_output(output_dir, filename_base)
+            except Exception as e:
+                logger.warning(
+                    f"post_output failed for {world.game} player {player_id}: {e}"
+                )
+
     jt = get_json_tools_settings()
 
     # Export rules data after create_playthrough so sphere_log.jsonl is included.

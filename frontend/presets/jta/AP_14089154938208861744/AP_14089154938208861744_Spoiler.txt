@@ -21,6 +21,7 @@ Free Zones:                      1
 Starting Perks:                  0
 Starting Perk List:              
 Resets Per Sphere:               5
+Auto Cost Adjust:                Yes
 Cost Gen: Item Collection:       Yes
 Cost Gen: Push/Collect:          Yes
 Cost Gen: XP Grinding:           Yes

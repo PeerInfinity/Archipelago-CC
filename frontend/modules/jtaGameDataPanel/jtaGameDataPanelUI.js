@@ -1,6 +1,7 @@
 // UI component for JTA game data panel module
 import { getModuleEventBus } from './index.js';
 import { compareZoneTasks, stateSummary, gameStateToSimState } from '../jta-randomizer/jtaSimComparison.js';
+import { adjustCosts, parseSphereLog } from '../jta-randomizer/jtaCostGenerator.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -39,9 +40,11 @@ export class JTAGameDataPanelUI {
 
         // Event subscriptions
         this.unsubscribeHandles = [];
+        this._initialPresetTimer = null;
 
         this.initialize();
         this.setupEventSubscriptions();
+        this._checkInitialPreset();
 
         log('info', 'JTAGameDataPanelUI initialized');
     }
@@ -84,6 +87,9 @@ export class JTAGameDataPanelUI {
                     <div style="font-size: 11px; color: #999;">
                         <div>Iframe ID: <span class="jta-conn-iframe-id">--</span></div>
                         <div>Last connected: <span class="jta-conn-last-time">--</span></div>
+                    </div>
+                    <div style="margin-top: 6px; font-size: 11px; border-top: 1px solid #333; padding-top: 6px;">
+                        <div>Game data: <span class="jta-loaded-data-label" style="color: #999;">Not loaded</span></div>
                     </div>
                 `)}
 
@@ -150,6 +156,98 @@ export class JTAGameDataPanelUI {
                     </div>
                 `)}
 
+                <!-- Game Data Loading Section -->
+                ${this._sectionHTML('gameDataLoad', 'Game Data Loading', false, `
+                    <div style="font-size: 11px; color: #999; margin-bottom: 8px;">
+                        Load game data from preset files or upload a JSON file.
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
+                        <button class="jta-load-gamedata-btn" style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Load Randomized Data</button>
+                        <button class="jta-load-costs-btn" style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Load Adjusted Costs</button>
+                        <label style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px; display: inline-block;
+                        ">Upload File
+                            <input type="file" class="jta-upload-gamedata-input" accept=".json" style="display: none;">
+                        </label>
+                    </div>
+                    <div class="jta-load-status" style="font-size: 11px; color: #999; min-height: 14px;"></div>
+                `)}
+
+                <!-- Game Data Editor Section -->
+                ${this._sectionHTML('gameDataViewer', 'Game Data Editor', false, `
+                    <div style="margin-bottom: 8px; display: flex; gap: 6px; align-items: center;">
+                        <button class="jta-viewer-load-btn" style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Load from Game</button>
+                        <button class="jta-viewer-apply-btn" style="
+                            padding: 5px 10px; background: #2a4a6a; color: #ccc;
+                            border: 1px solid #3a6a8a; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Apply to Game</button>
+                        <span class="jta-viewer-status" style="font-size: 11px; color: #999;"></span>
+                    </div>
+                    <div class="jta-viewer-wrapper" style="
+                        border: 1px solid #555; border-radius: 3px;
+                        position: relative;
+                    ">
+                        <div class="jta-viewer-empty" style="
+                            position: absolute; inset: 0; display: flex;
+                            align-items: center; justify-content: center;
+                            color: #666; font-size: 12px; pointer-events: none;
+                        ">Click "Load from Game" or load from preset</div>
+                        <div class="jta-viewer-mount" style="height: 400px; overflow-y: auto;"></div>
+                    </div>
+                `)}
+
+                <!-- Cost Adjustment Section -->
+                ${this._sectionHTML('costAdjust', 'Cost Adjustment', false, `
+                    <div style="font-size: 11px; color: #999; margin-bottom: 8px;">
+                        Run the cost adjustment algorithm in-browser. No Node.js required.
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px;">
+                        <label style="font-size: 11px;">Resets/sphere:
+                            <input type="number" class="jta-cost-resets-input" value="5" min="1" max="20" style="
+                                width: 40px; background: #333; color: #ccc; border: 1px solid #555;
+                                border-radius: 3px; padding: 3px; font-size: 11px; text-align: center;
+                            ">
+                        </label>
+                        <button class="jta-run-cost-adjust-btn" style="
+                            padding: 5px 10px; background: #2a6a2a; color: #ccc;
+                            border: 1px solid #3a8a3a; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Run Cost Adjustment</button>
+                    </div>
+                    <div class="jta-cost-status" style="font-size: 11px; color: #999; min-height: 14px;"></div>
+                    <div class="jta-cost-results" style="
+                        font-size: 11px; max-height: 300px; overflow-y: auto;
+                        display: none;
+                    "></div>
+                    <div class="jta-cost-actions" style="display: none; margin-top: 8px; gap: 6px;">
+                        <button class="jta-apply-costs-btn" style="
+                            padding: 5px 10px; background: #2a4a6a; color: #ccc;
+                            border: 1px solid #3a6a8a; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Apply to Game</button>
+                        <button class="jta-download-costs-btn" style="
+                            padding: 5px 10px; background: #444; color: #ccc;
+                            border: 1px solid #555; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Download Costs JSON</button>
+                    </div>
+                `)}
+
                 <!-- Save Data Editor Section -->
                 ${this._sectionHTML('saveEditor', 'Save Data Editor', false, `
                     <div style="margin-bottom: 8px; display: flex; gap: 6px; align-items: center;">
@@ -213,6 +311,7 @@ export class JTAGameDataPanelUI {
         this._connLabel = q('.jta-conn-label');
         this._connIframeId = q('.jta-conn-iframe-id');
         this._connLastTime = q('.jta-conn-last-time');
+        this._loadedDataLabel = q('.jta-loaded-data-label');
 
         // Game state
         this._gsZone = q('.jta-gs-zone');
@@ -233,6 +332,28 @@ export class JTAGameDataPanelUI {
         this._compareStatus = q('.jta-compare-status');
         this._compareStateSummary = q('.jta-compare-state-summary');
         this._compareResults = q('.jta-compare-results');
+
+        // Game data loading
+        this._loadGamedataBtn = q('.jta-load-gamedata-btn');
+        this._loadCostsBtn = q('.jta-load-costs-btn');
+        this._uploadGamedataInput = q('.jta-upload-gamedata-input');
+        this._loadStatus = q('.jta-load-status');
+
+        // Game data editor
+        this._viewerLoadBtn = q('.jta-viewer-load-btn');
+        this._viewerApplyBtn = q('.jta-viewer-apply-btn');
+        this._viewerStatus = q('.jta-viewer-status');
+        this._viewerEmpty = q('.jta-viewer-empty');
+        this._viewerMount = q('.jta-viewer-mount');
+
+        // Cost adjustment
+        this._costResetsInput = q('.jta-cost-resets-input');
+        this._runCostAdjustBtn = q('.jta-run-cost-adjust-btn');
+        this._costStatus = q('.jta-cost-status');
+        this._costResults = q('.jta-cost-results');
+        this._costActions = q('.jta-cost-actions');
+        this._applyCostsBtn = q('.jta-apply-costs-btn');
+        this._downloadCostsBtn = q('.jta-download-costs-btn');
 
         // Save editor
         this._exportBtn = q('.jta-export-btn');
@@ -255,9 +376,12 @@ export class JTAGameDataPanelUI {
                 body.style.display = isOpen ? 'none' : 'block';
                 arrow.textContent = isOpen ? '\u25B6' : '\u25BC';
 
-                // Lazy-init CM6 editor on first expand of save editor section
+                // Lazy-init CM6 editors on first expand
                 if (sectionId === 'saveEditor' && !isOpen && !this.editorInitialized) {
                     this._initEditor();
+                }
+                if (sectionId === 'gameDataViewer' && !isOpen && !this._viewerEditorView) {
+                    this._initViewerEditor();
                 }
             });
         });
@@ -322,6 +446,36 @@ export class JTAGameDataPanelUI {
             });
         }
 
+        // Game data loading buttons
+        if (this._loadGamedataBtn) {
+            this._loadGamedataBtn.addEventListener('click', () => this._loadPresetFile('gamedata'));
+        }
+        if (this._loadCostsBtn) {
+            this._loadCostsBtn.addEventListener('click', () => this._loadPresetFile('costs'));
+        }
+        if (this._uploadGamedataInput) {
+            this._uploadGamedataInput.addEventListener('change', (e) => this._handleFileUpload(e));
+        }
+
+        // Game data editor buttons
+        if (this._viewerLoadBtn) {
+            this._viewerLoadBtn.addEventListener('click', () => this._loadGameDataFromGame());
+        }
+        if (this._viewerApplyBtn) {
+            this._viewerApplyBtn.addEventListener('click', () => this._applyViewerToGame());
+        }
+
+        // Cost adjustment buttons
+        if (this._runCostAdjustBtn) {
+            this._runCostAdjustBtn.addEventListener('click', () => this._runCostAdjustment());
+        }
+        if (this._applyCostsBtn) {
+            this._applyCostsBtn.addEventListener('click', () => this._applyCostsToGame());
+        }
+        if (this._downloadCostsBtn) {
+            this._downloadCostsBtn.addEventListener('click', () => this._downloadCosts());
+        }
+
         // Button hover effects
         this.rootElement.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('mouseenter', () => { btn.style.background = '#555'; });
@@ -339,6 +493,7 @@ export class JTAGameDataPanelUI {
             this.unsubscribeHandles.push(unsub);
         };
 
+        sub('files:jsonLoaded', (data) => this._handlePresetLoaded(data));
         sub('iframe:connected', (data) => this._handleConnected(data));
         sub('iframe:disconnected', (data) => this._handleDisconnected(data));
         sub('iframePanel:loaded', (data) => this._handleIframeLoaded(data));
@@ -346,6 +501,8 @@ export class JTAGameDataPanelUI {
         sub('jta:saveExported', (data) => this._handleSaveExported(data));
         sub('jta:stateSnapshot', (data) => this._handleStateSnapshot(data));
         sub('jta:detailedStateSnapshot', (data) => this._handleDetailedStateSnapshot(data));
+        sub('jta:gameDataReplaced', (data) => this._handleGameDataReplaced(data));
+        sub('jta:gameDefsSnapshot', (data) => this._handleGameDefsSnapshot(data));
         sub('jta:zoneChanged', (data) => this._handleZoneChanged(data));
         sub('jta:energyReset', (data) => this._handleEnergyReset(data));
         sub('jta:prestige', (data) => this._handlePrestige(data));
@@ -654,19 +811,71 @@ export class JTAGameDataPanelUI {
         }
     }
 
-    // --- CodeMirror 6 Editor ---
+    // --- CodeMirror 6 Editors ---
+
+    async _ensureCM6() {
+        if (!this.cm6Module) {
+            this.cm6Module = await import('../../modules/editorCodeMirror6/codemirror6Imports.js');
+        }
+        return this.cm6Module;
+    }
+
+    async _initViewerEditor() {
+        if (this._viewerEditorView) return;
+
+        try {
+            const cm6 = await this._ensureCM6();
+            const { EditorView, EditorState, lineNumbers, highlightActiveLine,
+                drawSelection, history, foldGutter, json, oneDark, keymap,
+                defaultKeymap, historyKeymap, foldKeymap
+            } = cm6;
+
+            const extensions = [
+                lineNumbers(),
+                highlightActiveLine(),
+                drawSelection(),
+                history(),
+                foldGutter(),
+                json(),
+                oneDark,
+                EditorView.lineWrapping,
+                keymap.of([
+                    ...defaultKeymap,
+                    ...historyKeymap,
+                    ...foldKeymap,
+                ]),
+            ];
+
+            this._viewerEditorView = new EditorView({
+                state: EditorState.create({
+                    doc: this._pendingViewerContent || '',
+                    extensions,
+                }),
+                parent: this._viewerMount,
+            });
+            this._pendingViewerContent = null;
+
+            if (this._viewerEmpty) {
+                this._viewerEmpty.style.display = this._viewerEditorView.state.doc.length ? 'none' : 'flex';
+            }
+
+            log('info', 'CM6 game data viewer initialized');
+        } catch (e) {
+            log('error', 'Failed to initialize CM6 viewer:', e);
+        }
+    }
 
     async _initEditor() {
         if (this.editorInitialized) return;
         this.editorInitialized = true;
 
         try {
-            this.cm6Module = await import('../../modules/editorCodeMirror6/codemirror6Imports.js');
+            const cm6 = await this._ensureCM6();
             const {
                 EditorView, EditorState, lineNumbers, highlightActiveLine,
                 drawSelection, history, foldGutter, json, oneDark, keymap,
                 defaultKeymap, historyKeymap, foldKeymap
-            } = this.cm6Module;
+            } = cm6;
 
             const extensions = [
                 lineNumbers(),
@@ -749,6 +958,461 @@ export class JTAGameDataPanelUI {
         return this.editorView.state.doc.toString();
     }
 
+    // --- Auto-load on preset selection ---
+
+    _checkInitialPreset() {
+        // Handle URL-based loading (e.g. ?game=jta&seed=1).
+        // modeDataLoader resolves the rules file during init but doesn't
+        // publish files:jsonLoaded, so _handlePresetLoaded never fires.
+        // Poll briefly for G_combinedModeData which is set after Phase 8.
+        let attempts = 0;
+        const check = () => {
+            this._initialPresetTimer = null;
+            // Don't double-load if files:jsonLoaded already triggered
+            if (this._currentLoadedFile) return;
+
+            const details = window.G_combinedModeData?.dataSources?.rulesConfig?.details;
+            if (details && details.includes('/jta/')) {
+                // Extract path from details like "Loaded from URL parameter override: ./presets/jta/AP_X/..."
+                const pathMatch = details.match(/(\.\/presets\/jta\/[^/]+\/)/);
+                if (pathMatch) {
+                    log('info', 'JTA preset detected from URL params, triggering auto-load');
+                    this._handlePresetLoaded({ sourceName: pathMatch[1] });
+                }
+                return;
+            }
+            if (++attempts < 20) {
+                this._initialPresetTimer = setTimeout(check, 100);
+            }
+        };
+        this._initialPresetTimer = setTimeout(check, 100);
+    }
+
+    async _handlePresetLoaded(data) {
+        const source = data.sourceName || '';
+        // Only act on JTA presets
+        if (!source.includes('/jta/')) return;
+
+        // Extract the preset base path: presets/jta/AP_SEED
+        const match = source.match(/(\.\/)?presets\/jta\/([^/]+)\//);
+        if (!match) return;
+
+        const seedFolder = match[2];
+        const basePath = `presets/jta/${seedFolder}`;
+
+        log('info', `JTA preset detected: ${seedFolder}, auto-loading game data`);
+
+        // Discover available files
+        const preset = await this._discoverPreset();
+        if (!preset || preset.folderName !== seedFolder) {
+            log('warn', `Preset mismatch: expected ${seedFolder}`);
+            return;
+        }
+
+        // Try costs file first, fall back to gamedata
+        const costsFile = preset.files.find(f => f.endsWith('_costs.json'));
+        const gamedataFile = preset.files.find(f => f.endsWith('_gamedata.json'));
+        const fileToLoad = costsFile || gamedataFile;
+
+        if (!fileToLoad) {
+            log('warn', 'No game data file found in JTA preset');
+            return;
+        }
+
+        const label = costsFile ? 'adjusted costs' : 'randomized data';
+        try {
+            const resp = await fetch(`${basePath}/${fileToLoad}`);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const gameData = await resp.json();
+
+            this._applyGameData(gameData, fileToLoad);
+            this._setLoadedDataStatus(fileToLoad, label);
+            this._addLogEntry(`Auto-loaded ${label}: ${fileToLoad}`);
+        } catch (e) {
+            log('error', `Failed to auto-load ${fileToLoad}:`, e);
+            this._addLogEntry(`Failed to auto-load ${label}: ${e.message}`);
+        }
+    }
+
+    _setLoadedDataStatus(fileName, label) {
+        this._currentLoadedFile = fileName;
+        this._currentLoadedLabel = label;
+        if (this._loadedDataLabel) {
+            this._loadedDataLabel.textContent = `${label} (${fileName})`;
+            this._loadedDataLabel.style.color = '#4CAF50';
+        }
+    }
+
+    // --- Game Data Loading ---
+
+    async _discoverPreset() {
+        try {
+            const resp = await fetch('presets/preset_files.json');
+            const index = await resp.json();
+            const jta = index.jta;
+            if (!jta || !jta.folders) return null;
+
+            const folderName = Object.keys(jta.folders)[0];
+            if (!folderName) return null;
+
+            const folder = jta.folders[folderName];
+            return { folderName, files: folder.files, basePath: `presets/jta/${folderName}` };
+        } catch (e) {
+            log('warn', 'Failed to discover JTA preset:', e.message);
+            return null;
+        }
+    }
+
+    async _loadPresetFile(type) {
+        const statusEl = this._loadStatus;
+        const setStatus = (msg, isError) => {
+            if (statusEl) {
+                statusEl.textContent = msg;
+                statusEl.style.color = isError ? '#f44336' : '#4CAF50';
+            }
+        };
+
+        setStatus('Discovering preset...', false);
+        const preset = await this._discoverPreset();
+        if (!preset) {
+            setStatus('No JTA preset found', true);
+            return;
+        }
+
+        const suffix = type === 'costs' ? '_costs.json' : '_gamedata.json';
+        const file = preset.files.find(f => f.endsWith(suffix));
+        if (!file) {
+            setStatus(`No ${type} file found in preset`, true);
+            return;
+        }
+
+        setStatus(`Loading ${file}...`, false);
+        try {
+            const resp = await fetch(`${preset.basePath}/${file}`);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            this._applyGameData(data, file);
+            const label = type === 'costs' ? 'adjusted costs' : 'randomized data';
+            this._setLoadedDataStatus(file, label);
+            setStatus(`Applied ${file} (${data.zones?.length || 0} zones)`, false);
+        } catch (e) {
+            setStatus(`Failed to load: ${e.message}`, true);
+        }
+    }
+
+    _handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                this._applyGameData(data, file.name);
+                const label = file.name.includes('costs') ? 'adjusted costs' : 'uploaded file';
+                this._setLoadedDataStatus(file.name, label);
+                if (this._loadStatus) {
+                    this._loadStatus.textContent = `Applied ${file.name}`;
+                    this._loadStatus.style.color = '#4CAF50';
+                }
+            } catch (err) {
+                if (this._loadStatus) {
+                    this._loadStatus.textContent = `Invalid JSON: ${err.message}`;
+                    this._loadStatus.style.color = '#f44336';
+                }
+            }
+        };
+        reader.readAsText(file);
+        // Reset input so the same file can be re-uploaded
+        event.target.value = '';
+    }
+
+    _applyGameData(data, sourceName) {
+        if (!data.zones || !Array.isArray(data.zones)) {
+            log('warn', `${sourceName}: no zones array found`);
+            if (this._loadStatus) {
+                this._loadStatus.textContent = 'Invalid game data: no zones array';
+                this._loadStatus.style.color = '#f44336';
+            }
+            return;
+        }
+        this._loadedGameData = data;
+        this._updateGameDataViewer();
+        // Forward all data sections to the game client
+        const payload = { zones: data.zones };
+        if (data.skills) payload.skills = data.skills;
+        if (data.items) payload.items = data.items;
+        if (data.perks) payload.perks = data.perks;
+        if (data.prestigeUnlocks) payload.prestigeUnlocks = data.prestigeUnlocks;
+        if (data.prestigeRepeatables) payload.prestigeRepeatables = data.prestigeRepeatables;
+        if (data.prestige) payload.prestige = data.prestige;
+        if (data.renderingConstants) payload.renderingConstants = data.renderingConstants;
+        this.eventBus.publish('jta:replaceGameData', payload);
+        log('info', `Applied game data from ${sourceName}: ${data.zones.length} zones`);
+    }
+
+    _updateGameDataViewer() {
+        if (!this._viewerStatus) return;
+        const data = this._loadedGameData;
+        if (!data) {
+            this._viewerStatus.textContent = 'No game data loaded.';
+            if (this._viewerEmpty) this._viewerEmpty.style.display = 'flex';
+            return;
+        }
+        const zones = data.zones?.length || 0;
+        const tasks = data.zones?.reduce((n, z) => n + (z.tasks?.length || 0), 0) || 0;
+        this._viewerStatus.textContent = `${zones} zones, ${tasks} tasks`;
+
+        const formatted = JSON.stringify(data, null, 2);
+        if (this._viewerEditorView) {
+            if (this._viewerEmpty) this._viewerEmpty.style.display = 'none';
+            this._viewerEditorView.dispatch({
+                changes: {
+                    from: 0,
+                    to: this._viewerEditorView.state.doc.length,
+                    insert: formatted,
+                },
+            });
+        } else {
+            // Editor not yet initialized — store content for when it inits
+            this._pendingViewerContent = formatted;
+        }
+    }
+
+    _loadGameDataFromGame() {
+        this._setViewerStatus('Requesting game data...');
+        this.eventBus.publish('jta:requestGameDefs', {});
+    }
+
+    _handleGameDefsSnapshot(data) {
+        if (!data.zones) {
+            this._setViewerStatus('No zone data received from game', true);
+            return;
+        }
+        const gameData = { zones: data.zones };
+        if (data.skills) gameData.skills = data.skills;
+        if (data.items) gameData.items = data.items;
+        if (data.perks) gameData.perks = data.perks;
+        if (data.prestigeUnlocks) gameData.prestigeUnlocks = data.prestigeUnlocks;
+        if (data.prestigeRepeatables) gameData.prestigeRepeatables = data.prestigeRepeatables;
+        if (data.renderingConstants) gameData.renderingConstants = data.renderingConstants;
+        this._loadedGameData = gameData;
+        this._updateGameDataViewer();
+        const parts = [`${data.zones.length} zones`];
+        if (data.skills) parts.push(`${data.skills.length} skills`);
+        if (data.items) parts.push(`${data.items.length} items`);
+        if (data.perks) parts.push(`${Object.keys(data.perks).length} perks`);
+        this._setViewerStatus(`Loaded from game: ${parts.join(', ')}`);
+    }
+
+    _applyViewerToGame() {
+        if (!this._viewerEditorView) {
+            this._setViewerStatus('Editor not initialized', true);
+            return;
+        }
+        const content = this._viewerEditorView.state.doc.toString();
+        if (!content.trim()) {
+            this._setViewerStatus('Editor is empty', true);
+            return;
+        }
+        let data;
+        try {
+            data = JSON.parse(content);
+        } catch (e) {
+            this._setViewerStatus('Invalid JSON: ' + e.message, true);
+            return;
+        }
+        this._applyGameData(data, 'editor');
+        this._setLoadedDataStatus('editor', 'manual edit');
+        this._setViewerStatus('Applied to game');
+    }
+
+    _setViewerStatus(msg, isError) {
+        if (this._viewerStatus) {
+            this._viewerStatus.textContent = msg;
+            this._viewerStatus.style.color = isError ? '#f44336' : '#999';
+        }
+    }
+
+    _handleGameDataReplaced(data) {
+        if (data.error) {
+            log('warn', 'Game data replace failed:', data.error);
+            return;
+        }
+        const parts = [];
+        if (data.tasks) parts.push(`${data.tasks} tasks`);
+        if (data.tasksNotFound) parts.push(`${data.tasksNotFound} not found`);
+        if (data.skills) parts.push(`${data.skills} skills`);
+        if (data.items) parts.push(`${data.items} items`);
+        if (data.perks) parts.push(`${data.perks} perks`);
+        if (data.prestigeUnlocks) parts.push(`${data.prestigeUnlocks} prestige unlocks`);
+        if (data.prestigeRepeatables) parts.push(`${data.prestigeRepeatables} prestige repeatables`);
+        if (data.renderingConstants) parts.push(`${data.renderingConstants} rendering constants`);
+        this._addLogEntry(`Game data applied: ${parts.join(', ')}`);
+    }
+
+    // --- Cost Adjustment ---
+
+    async _runCostAdjustment() {
+        const setStatus = (msg, isError) => {
+            if (this._costStatus) {
+                this._costStatus.textContent = msg;
+                this._costStatus.style.color = isError ? '#f44336' : '#4CAF50';
+            }
+        };
+
+        setStatus('Discovering preset files...', false);
+        const preset = await this._discoverPreset();
+        if (!preset) {
+            setStatus('No JTA preset found. Generate a seed first.', true);
+            return;
+        }
+
+        // Find gamedata and sphere log
+        const gamedataFile = preset.files.find(f => f.endsWith('_gamedata.json'));
+        const sphereLogFile = preset.files.find(f => f.endsWith('_sphere_log.jsonl'));
+
+        if (!gamedataFile) {
+            setStatus('No gamedata file found in preset', true);
+            return;
+        }
+        if (!sphereLogFile) {
+            setStatus('No sphere log found in preset', true);
+            return;
+        }
+
+        setStatus('Loading game data and sphere log...', false);
+        try {
+            const [gamedataResp, sphereLogResp] = await Promise.all([
+                fetch(`${preset.basePath}/${gamedataFile}`),
+                fetch(`${preset.basePath}/${sphereLogFile}`),
+            ]);
+
+            if (!gamedataResp.ok) throw new Error(`Failed to load gamedata: HTTP ${gamedataResp.status}`);
+            if (!sphereLogResp.ok) throw new Error(`Failed to load sphere log: HTTP ${sphereLogResp.status}`);
+
+            const gamedataJson = await gamedataResp.json();
+            const sphereLogContent = await sphereLogResp.text();
+
+            const resetsPerSphere = parseInt(this._costResetsInput?.value) || 5;
+
+            setStatus(`Running cost adjustment (r=${resetsPerSphere})...`, false);
+
+            // Run async to avoid blocking UI
+            await new Promise(resolve => setTimeout(resolve, 10));
+
+            const startTime = performance.now();
+            const { adjustedData, log: adjLog, mandatoryLog } = adjustCosts(
+                gamedataJson, sphereLogContent, { resetsPerSphere }
+            );
+            const elapsed = Math.round(performance.now() - startTime);
+
+            // Store results for apply/download
+            this._lastAdjustedData = adjustedData;
+            this._lastAdjustmentLog = adjLog;
+            this._lastMandatoryLog = mandatoryLog;
+
+            // Show results
+            const adjusted = adjLog.filter(e => e.oldCost !== e.newCost);
+            const bottlenecked = adjLog.filter(e => e.bottleneck);
+
+            setStatus(
+                `Done in ${elapsed}ms: ${adjLog.length} tasks, ${adjusted.length} adjusted` +
+                (bottlenecked.length ? `, ${bottlenecked.length} bottlenecked` : ''),
+                false
+            );
+
+            this._renderCostResults(adjLog, mandatoryLog);
+            if (this._costActions) this._costActions.style.display = 'flex';
+
+        } catch (e) {
+            setStatus(`Error: ${e.message}`, true);
+            log('error', 'Cost adjustment failed:', e);
+        }
+    }
+
+    _renderCostResults(adjLog, mandatoryLog) {
+        if (!this._costResults) return;
+        this._costResults.style.display = 'block';
+
+        let html = '';
+
+        // Mandatory/XP adjustments
+        if (mandatoryLog.length > 0) {
+            html += '<div style="margin-bottom: 8px; padding: 6px; background: #2d2d30; border: 1px solid #555; border-radius: 3px;">';
+            html += '<div style="font-weight: bold; margin-bottom: 4px;">Zone Adjustments:</div>';
+            for (const entry of mandatoryLog) {
+                if (entry.type === 'xp_boost') {
+                    html += `<div style="color: #81c784;">XP boost for ${entry.trigger}: ${entry.multiplier.toFixed(2)}x (${entry.count} tasks)</div>`;
+                } else {
+                    html += `<div style="color: #ffb74d;">Cost reduction for ${entry.trigger}: ${entry.multiplier.toFixed(4)}x (${entry.count} tasks)</div>`;
+                }
+            }
+            html += '</div>';
+        }
+
+        // Task adjustments table
+        const adjusted = adjLog.filter(e => e.oldCost !== e.newCost);
+        if (adjusted.length > 0) {
+            html += '<table style="width: 100%; border-collapse: collapse; font-family: monospace;">';
+            html += `<thead><tr style="background: #2a2a2a; border-bottom: 2px solid #555;">
+                <th style="padding: 3px 6px; text-align: left;">Task</th>
+                <th style="padding: 3px 6px; text-align: left;">Zone</th>
+                <th style="padding: 3px 6px; text-align: right;">Old</th>
+                <th style="padding: 3px 6px; text-align: right;">New</th>
+                <th style="padding: 3px 6px; text-align: right;">Resets</th>
+            </tr></thead><tbody>`;
+            for (const entry of adjusted) {
+                const dir = entry.newCost > entry.oldCost ? '#81c784' : '#ffb74d';
+                const bn = entry.bottleneck ? ' style="color: #f44336;"' : '';
+                html += `<tr style="border-bottom: 1px solid #333;"${bn}>
+                    <td style="padding: 2px 6px;">${entry.task}</td>
+                    <td style="padding: 2px 6px;">${entry.zone}</td>
+                    <td style="padding: 2px 6px; text-align: right;">${entry.oldCost.toFixed(2)}</td>
+                    <td style="padding: 2px 6px; text-align: right; color: ${dir};">${entry.newCost.toFixed(2)}</td>
+                    <td style="padding: 2px 6px; text-align: right;">${entry.resets}/${entry.targetResets}</td>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+        }
+
+        this._costResults.innerHTML = html;
+    }
+
+    _applyCostsToGame() {
+        if (!this._lastAdjustedData) {
+            if (this._costStatus) {
+                this._costStatus.textContent = 'No adjusted data available. Run cost adjustment first.';
+                this._costStatus.style.color = '#f44336';
+            }
+            return;
+        }
+        this._applyGameData(this._lastAdjustedData, 'cost adjustment');
+        this._setLoadedDataStatus('in-browser cost adjustment', 'adjusted costs (generated)');
+        if (this._costStatus) {
+            this._costStatus.textContent = 'Applied adjusted costs to game';
+            this._costStatus.style.color = '#4CAF50';
+        }
+    }
+
+    _downloadCosts() {
+        if (!this._lastAdjustedData) {
+            if (this._costStatus) {
+                this._costStatus.textContent = 'No adjusted data available. Run cost adjustment first.';
+                this._costStatus.style.color = '#f44336';
+            }
+            return;
+        }
+        const json = JSON.stringify(this._lastAdjustedData, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'jta_adjusted_costs.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
     // --- Golden Layout lifecycle ---
 
     show() {}
@@ -758,13 +1422,23 @@ export class JTAGameDataPanelUI {
     dispose() {
         log('info', 'JTAGameDataPanelUI disposing...');
 
+        // Cancel initial preset check timer
+        if (this._initialPresetTimer) {
+            clearTimeout(this._initialPresetTimer);
+            this._initialPresetTimer = null;
+        }
+
         // Unsubscribe from events
         this.unsubscribeHandles.forEach(unsub => {
             if (typeof unsub === 'function') unsub();
         });
         this.unsubscribeHandles = [];
 
-        // Destroy CM6 editor
+        // Destroy CM6 editors
+        if (this._viewerEditorView) {
+            this._viewerEditorView.destroy();
+            this._viewerEditorView = null;
+        }
         if (this.editorView) {
             this.editorView.destroy();
             this.editorView = null;
@@ -791,6 +1465,30 @@ export class JTAGameDataPanelUI {
         this._compareResults = null;
         this._logEntries = null;
         this._logClearBtn = null;
+        this._loadedDataLabel = null;
+        this._currentLoadedFile = null;
+        this._currentLoadedLabel = null;
+        this._loadGamedataBtn = null;
+        this._loadCostsBtn = null;
+        this._uploadGamedataInput = null;
+        this._loadStatus = null;
+        this._viewerLoadBtn = null;
+        this._viewerApplyBtn = null;
+        this._viewerStatus = null;
+        this._viewerEmpty = null;
+        this._viewerMount = null;
+        this._loadedGameData = null;
+        this._pendingViewerContent = null;
+        this._costResetsInput = null;
+        this._runCostAdjustBtn = null;
+        this._costStatus = null;
+        this._costResults = null;
+        this._costActions = null;
+        this._applyCostsBtn = null;
+        this._downloadCostsBtn = null;
+        this._lastAdjustedData = null;
+        this._lastAdjustmentLog = null;
+        this._lastMandatoryLog = null;
         this._exportBtn = null;
         this._importBtn = null;
         this._editorStatus = null;

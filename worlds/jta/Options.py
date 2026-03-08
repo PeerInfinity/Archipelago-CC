@@ -58,6 +58,14 @@ class ResetsPerSphere(Range):
 
 # --- Cost Generation Strategy Factors ---
 
+class AutoCostAdjust(DefaultOnToggle):
+    """Automatically run the cost adjustment algorithm after seed generation.
+    Requires Node.js to be installed. If disabled or Node.js is not found,
+    you can run the cost adjuster manually with:
+      node scripts/jta/cost-adjust.js"""
+    display_name = "Auto Cost Adjust"
+
+
 class CostGenItemCollection(DefaultOnToggle):
     """Cost generator assumes the player collects items during runs."""
     display_name = "Cost Gen: Item Collection"
@@ -113,6 +121,7 @@ class JTAOptions(PerGameCommonOptions):
     starting_perks: StartingPerks
     starting_perk_list: StartingPerkList
     resets_per_sphere: ResetsPerSphere
+    auto_cost_adjust: AutoCostAdjust
     # Cost generation factors
     costgen_item_collection: CostGenItemCollection
     costgen_push_collect: CostGenPushCollect

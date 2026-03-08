@@ -2,6 +2,11 @@ import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering }
 import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset } from "./simulation.js";
 import { ZONES, TASK_LOOKUP } from "./zones.js";
 import { ITEMS, ARTIFACTS } from "./items.js";
+import { SKILL_DEFINITIONS } from "./skills.js";
+import { PERKS } from "./perks.js";
+import { PRESTIGE_UNLOCKABLES, PRESTIGE_REPEATABLES } from "./prestige_upgrades.js";
+import { ItemSkillModifierList, PerkSkillModifierList } from "./modifiers.js";
+import { patchRenderingConstants, readRenderingConstants } from "./rendering_constants.js";
 function gameLoop() {
     updateGamestate();
     updateRendering();
@@ -68,4 +73,20 @@ window.saveGame = saveGame;
 window.ITEMS = ITEMS;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.ARTIFACTS = ARTIFACTS;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.SKILL_DEFINITIONS = SKILL_DEFINITIONS;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.PERKS = PERKS;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.PRESTIGE_UNLOCKABLES = PRESTIGE_UNLOCKABLES;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.PRESTIGE_REPEATABLES = PRESTIGE_REPEATABLES;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.ItemSkillModifierList = ItemSkillModifierList;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.PerkSkillModifierList = PerkSkillModifierList;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.patchRenderingConstants = patchRenderingConstants;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.readRenderingConstants = readRenderingConstants;
 //# sourceMappingURL=game.js.map

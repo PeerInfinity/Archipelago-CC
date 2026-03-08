@@ -4,52 +4,62 @@
     {
       "id": 0,
       "name": "Charisma",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🎭"
     },
     {
       "id": 1,
       "name": "Study",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🧠"
     },
     {
       "id": 2,
       "name": "Combat",
-      "xpMult": 5
+      "xpMult": 5,
+      "icon": "⚔️"
     },
     {
       "id": 3,
       "name": "Search",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🔎"
     },
     {
       "id": 4,
       "name": "Subterfuge",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🗡️"
     },
     {
       "id": 5,
       "name": "Crafting",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🔨"
     },
     {
       "id": 7,
       "name": "Travel",
-      "xpMult": 1
+      "xpMult": 1,
+      "icon": "🗺️"
     },
     {
       "id": 8,
       "name": "Magic",
-      "xpMult": 3
+      "xpMult": 3,
+      "icon": "🔮"
     },
     {
       "id": 9,
       "name": "Fortitude",
-      "xpMult": 5
+      "xpMult": 5,
+      "icon": "🛡️"
     },
     {
       "id": 11,
       "name": "Ascension",
-      "xpMult": 200
+      "xpMult": 200,
+      "icon": "🙏"
     }
   ],
   "perks": {
@@ -58,38 +68,44 @@
       "skillModifiers": {
         "1": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "📖"
     },
     "1": {
       "name": "How to Write",
       "skillModifiers": {},
-      "special": "xp_bonus_50"
+      "special": "xp_bonus_50",
+      "icon": "📝"
     },
     "2": {
       "name": "Villager Gratitude",
       "skillModifiers": {
         "0": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "❤️"
     },
     "3": {
       "name": "Mysterious Amulet",
       "skillModifiers": {
         "8": 0.5
       },
-      "special": "automation"
+      "special": "automation",
+      "icon": "📿"
     },
     "4": {
       "name": "Energetic Spell",
       "skillModifiers": {},
-      "special": "max_energy_50"
+      "special": "max_energy_50",
+      "icon": "⚡️"
     },
     "5": {
       "name": "Experienced Traveler",
       "skillModifiers": {
         "7": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "🦶"
     },
     "6": {
       "name": "Underground Connection",
@@ -97,17 +113,20 @@
         "4": 0.4,
         "0": 0.2
       },
-      "special": null
+      "special": null,
+      "icon": "🎲"
     },
     "7": {
       "name": "Minor Time Compression",
       "skillModifiers": {},
-      "special": "minor_time_compression"
+      "special": "minor_time_compression",
+      "icon": "⌚"
     },
     "8": {
       "name": "High Altitude Climbing",
       "skillModifiers": {},
-      "special": "energy_reduction_20"
+      "special": "energy_reduction_20",
+      "icon": "🗻"
     },
     "10": {
       "name": "Village Hero",
@@ -115,12 +134,14 @@
         "0": 0.4,
         "2": 0.2
       },
-      "special": null
+      "special": null,
+      "icon": "🎖️"
     },
     "11": {
       "name": "Attunement",
       "skillModifiers": {},
-      "special": "attunement"
+      "special": "attunement",
+      "icon": "🌀"
     },
     "12": {
       "name": "Goblin Scourge",
@@ -128,7 +149,8 @@
         "2": 0.3,
         "9": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "💀"
     },
     "13": {
       "name": "Sunken Treasure",
@@ -136,14 +158,16 @@
         "3": 0.3,
         "9": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "⚓"
     },
     "14": {
       "name": "Found Lost Temple",
       "skillModifiers": {
         "8": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "🏯"
     },
     "15": {
       "name": "Walk Without Rhythm",
@@ -151,12 +175,14 @@
         "4": 0.4,
         "7": 0.2
       },
-      "special": null
+      "special": null,
+      "icon": "👣"
     },
     "16": {
       "name": "Reflections on the Journey",
       "skillModifiers": {},
-      "special": "reflections"
+      "special": "reflections",
+      "icon": "🕰️"
     },
     "17": {
       "name": "Purged Bureaucracy",
@@ -164,7 +190,8 @@
         "0": 0.3,
         "5": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "⚖️"
     },
     "18": {
       "name": "Deep Sea Diving",
@@ -172,19 +199,22 @@
         "3": 0.3,
         "8": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🤿"
     },
     "19": {
       "name": "Energetic Memory",
       "skillModifiers": {},
-      "special": "energetic_memory"
+      "special": "energetic_memory",
+      "icon": "💭"
     },
     "20": {
       "name": "The Worm",
       "skillModifiers": {
         "0": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "💃"
     },
     "21": {
       "name": "Tower of Babel",
@@ -192,24 +222,28 @@
         "0": 0.3,
         "11": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🧱"
     },
     "22": {
       "name": "Awakening",
       "skillModifiers": {},
-      "special": "divine_spark_bonus"
+      "special": "divine_spark_bonus",
+      "icon": "💤"
     },
     "23": {
       "name": "Major Time Compression",
       "skillModifiers": {},
-      "special": "major_time_compression"
+      "special": "major_time_compression",
+      "icon": "⏰"
     },
     "24": {
       "name": "Hide in Plain Sight",
       "skillModifiers": {
         "4": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "👥"
     },
     "25": {
       "name": "Dream Prism",
@@ -217,19 +251,22 @@
         "8": 0.3,
         "7": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🔷"
     },
     "26": {
       "name": "Dragon Killing Plan",
       "skillModifiers": {
         "2": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "🏔️"
     },
     "27": {
       "name": "Unified Theory of Magic",
       "skillModifiers": {},
-      "special": "unified_theory"
+      "special": "unified_theory",
+      "icon": "📜"
     },
     "28": {
       "name": "Headmaster",
@@ -237,7 +274,8 @@
         "8": 0.3,
         "1": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🧙‍♂️"
     },
     "29": {
       "name": "Dragon Slayer",
@@ -245,12 +283,14 @@
         "2": 0.3,
         "0": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🐉"
     },
     "30": {
       "name": "Understanding of the Reset",
       "skillModifiers": {},
-      "special": "understanding_reset"
+      "special": "understanding_reset",
+      "icon": "🔁"
     },
     "31": {
       "name": "Overcame Fear of Skydiving",
@@ -258,7 +298,8 @@
         "2": 0.3,
         "9": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🪂"
     },
     "32": {
       "name": "Destroyed the Ring",
@@ -266,19 +307,22 @@
         "11": 1.0,
         "0": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "💍"
     },
     "33": {
       "name": "Gazed Beyond the Veil",
       "skillModifiers": {},
-      "special": "xp_bonus_100"
+      "special": "xp_bonus_100",
+      "icon": "👀"
     },
     "34": {
       "name": "Studied Underground Forge",
       "skillModifiers": {
         "5": 0.5
       },
-      "special": null
+      "special": null,
+      "icon": "⛏️"
     },
     "35": {
       "name": "Understanding Leviathan",
@@ -286,7 +330,8 @@
         "1": 0.3,
         "2": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "🐋"
     },
     "36": {
       "name": "Purged Demonic Influences",
@@ -294,14 +339,16 @@
         "0": 0.3,
         "9": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "👹"
     },
     "37": {
       "name": "Defied the Gods",
       "skillModifiers": {
         "11": 1.0
       },
-      "special": "divine_spark_bonus_25"
+      "special": "divine_spark_bonus_25",
+      "icon": "🚫"
     },
     "38": {
       "name": "Survived the Void",
@@ -309,12 +356,14 @@
         "11": 0.3,
         "9": 0.3
       },
-      "special": null
+      "special": null,
+      "icon": "⚫"
     },
     "39": {
       "name": "Communed with Damned Souls",
       "skillModifiers": {},
-      "special": "double_attunement"
+      "special": "double_attunement",
+      "icon": "👻"
     },
     "40": {
       "name": "Divine Power",
@@ -324,33 +373,42 @@
         "8": 0.25,
         "1": 0.25
       },
-      "special": null
+      "special": null,
+      "icon": "☀️"
     }
   },
   "items": {
     "0": {
       "name": "Food",
       "energy": 5,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🍲",
+      "namePlural": "Food"
     },
     "1": {
       "name": "Arrow",
       "skillModifiers": {
         "2": 0.15
-      }
+      },
+      "icon": "🏹",
+      "namePlural": "Arrows"
     },
     "2": {
       "name": "Coin",
       "skillModifiers": {
         "0": 0.2
-      }
+      },
+      "icon": "💰",
+      "namePlural": "Coins"
     },
     "3": {
       "name": "Mushroom",
       "skillModifiers": {
         "8": 0.2,
         "3": 0.2
-      }
+      },
+      "icon": "🍄",
+      "namePlural": "Mushrooms"
     },
     "4": {
       "name": "GoblinSupplies",
@@ -358,109 +416,143 @@
         "4": 0.15,
         "2": 0.1,
         "9": 0.1
-      }
+      },
+      "icon": "📦",
+      "namePlural": "Goblin Supplies"
     },
     "5": {
       "name": "TravelEquipment",
       "skillModifiers": {
         "7": 0.1,
         "9": 0.1
-      }
+      },
+      "icon": "🎒",
+      "namePlural": "Travel Equipment"
     },
     "6": {
       "name": "Book",
       "skillModifiers": {
         "1": 0.1,
         "8": 0.1
-      }
+      },
+      "icon": "📚",
+      "namePlural": "Books"
     },
     "7": {
       "name": "ScrollOfHaste",
       "artifact": true,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🐇",
+      "namePlural": "Scrolls of Haste"
     },
     "8": {
       "name": "GoblinWaraxe",
       "skillModifiers": {
         "2": 1
-      }
+      },
+      "icon": "🪓",
+      "namePlural": "Goblin Waraxes"
     },
     "9": {
       "name": "CampingEquipment",
       "skillModifiers": {
         "9": 0.15
-      }
+      },
+      "icon": "⛺",
+      "namePlural": "Camping Equipment"
     },
     "10": {
       "name": "Reagents",
       "skillModifiers": {
         "8": 0.2,
         "5": 0.1
-      }
+      },
+      "icon": "🌿",
+      "namePlural": "Reagents"
     },
     "11": {
       "name": "MagicalRoots",
       "skillModifiers": {
         "9": 0.2,
         "8": 0.1
-      }
+      },
+      "icon": "🌲",
+      "namePlural": "Magical Roots"
     },
     "12": {
       "name": "GoblinTreasure",
       "skillModifiers": {
         "4": 0.5,
         "8": 0.5
-      }
+      },
+      "icon": "💎",
+      "namePlural": "Goblin Treasures"
     },
     "13": {
       "name": "Fish",
       "energy": 10,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🐟",
+      "namePlural": "Fish"
     },
     "14": {
       "name": "BanditWeapons",
       "skillModifiers": {
         "4": 0.1,
         "2": 0.2
-      }
+      },
+      "icon": "🔪",
+      "namePlural": "Bandit Weapons"
     },
     "15": {
       "name": "Cactus",
       "skillModifiers": {
         "9": 0.15
-      }
+      },
+      "icon": "🌵",
+      "namePlural": "Cactuses"
     },
     "16": {
       "name": "CityChain",
       "skillModifiers": {
         "0": 0.5,
         "4": 0.5
-      }
+      },
+      "icon": "🔗",
+      "namePlural": "City Chains"
     },
     "17": {
       "name": "WerewolfFur",
       "skillModifiers": {
         "0": 0.2,
         "9": 0.2
-      }
+      },
+      "icon": "🐺",
+      "namePlural": "Werewolf Furs"
     },
     "18": {
       "name": "OasisWater",
       "skillModifiers": {
         "8": 0.2,
         "9": 0.1
-      }
+      },
+      "icon": "💧",
+      "namePlural": "Oasis Water"
     },
     "19": {
       "name": "Calamari",
       "energy": 50,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🦑",
+      "namePlural": "Calamari"
     },
     "20": {
       "name": "MysticIncense",
       "skillModifiers": {
         "11": 0.1
-      }
+      },
+      "icon": "🕯️",
+      "namePlural": "Mystic Incense"
     },
     "21": {
       "name": "OracleBones",
@@ -469,78 +561,104 @@
         "8": 0.2,
         "11": 0.1,
         "7": 0.1
-      }
+      },
+      "icon": "🦴",
+      "namePlural": "Oracle Bones"
     },
     "22": {
       "name": "WormHideCoat",
       "skillModifiers": {
         "9": 1
-      }
+      },
+      "icon": "🧥",
+      "namePlural": "Worm Hide Coats"
     },
     "23": {
       "name": "DjinnLamp",
       "skillModifiers": {
         "11": 0.3,
         "8": 0.3
-      }
+      },
+      "icon": "🧞",
+      "namePlural": "Djinn Lamps"
     },
     "24": {
       "name": "Dreamcatcher",
       "artifact": true,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🕸️",
+      "namePlural": "Dreamcatchers"
     },
     "25": {
       "name": "MagicEssence",
       "skillModifiers": {
         "8": 4
-      }
+      },
+      "icon": "🌠",
+      "namePlural": "Magical Essences"
     },
     "26": {
       "name": "CraftingRecipe",
       "skillModifiers": {
         "5": 0.3
-      }
+      },
+      "icon": "🛠️",
+      "namePlural": "Crafting Recipes"
     },
     "27": {
       "name": "KnightlyBoots",
       "skillModifiers": {
         "2": 0.2,
         "9": 0.2
-      }
+      },
+      "icon": "👢",
+      "namePlural": "Knightly Boots"
     },
     "28": {
       "name": "DragonScale",
       "skillModifiers": {
         "2": 0.5,
         "9": 0.5
-      }
+      },
+      "icon": "🐲",
+      "namePlural": "Dragon Scales"
     },
     "29": {
       "name": "CaveInsects",
       "energy": 5,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "🦟",
+      "namePlural": "Cave Insects"
     },
     "30": {
       "name": "MagicalVessel",
       "skillModifiers": {
         "11": 0.3
-      }
+      },
+      "icon": "🏺",
+      "namePlural": "Magical Vessels"
     },
     "31": {
       "name": "MagicRing",
       "artifact": true,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "💍",
+      "namePlural": "Magic Rings"
     },
     "32": {
       "name": "BottledLightning",
       "artifact": true,
-      "skillModifiers": {}
+      "skillModifiers": {},
+      "icon": "⚡",
+      "namePlural": "Bottled Lightning"
     },
     "33": {
       "name": "HeatEssence",
       "skillModifiers": {
         "0": 1.0
-      }
+      },
+      "icon": "🔥",
+      "namePlural": "Heat Essence"
     },
     "34": {
       "name": "DivineNotes",
@@ -548,32 +666,42 @@
         "1": 0.3,
         "3": 0.3,
         "7": 0.1
-      }
+      },
+      "icon": "📜",
+      "namePlural": "Divine Notes"
     },
     "35": {
       "name": "GriffinQuill",
       "skillModifiers": {
         "1": 1.0
-      }
+      },
+      "icon": "🕊️",
+      "namePlural": "Griffin Quills"
     },
     "36": {
       "name": "WingsOfShadow",
       "skillModifiers": {
         "11": 5.0,
         "7": 1.0
-      }
+      },
+      "icon": "🦇",
+      "namePlural": "Wings of Shadow"
     },
     "37": {
       "name": "RitualSymbol",
       "skillModifiers": {
         "11": 1.0
-      }
+      },
+      "icon": "☯️",
+      "namePlural": "Ritual Symbols"
     },
     "38": {
       "name": "Glasses",
       "skillModifiers": {
         "3": 1.0
-      }
+      },
+      "icon": "👓",
+      "namePlural": "Glasses"
     },
     "39": {
       "name": "Light",
@@ -581,7 +709,9 @@
         "3": 0.5,
         "7": 0.5,
         "9": 0.5
-      }
+      },
+      "icon": "💡",
+      "namePlural": "Light"
     },
     "40": {
       "name": "MadContraption",
@@ -589,7 +719,9 @@
         "1": 1,
         "5": 1,
         "2": 1
-      }
+      },
+      "icon": "🤪",
+      "namePlural": "Mad Contraptions"
     }
   },
   "zones": [
@@ -3982,34 +4114,166 @@
     "277": 278
   },
   "prestige": {
-    "unlockTypes": {
-      "0": "PermanentAutomation",
-      "1": "DivineInspiration",
-      "2": "LookInTheMirror",
-      "3": "FullyAttuned",
-      "4": "TranscendantMemory",
-      "5": "DivineSpeed",
-      "6": "MasteryOfTime",
-      "7": "SeeBeyondTheVeil",
-      "8": "Perky",
-      "9": "CompulsiveNotetaking",
-      "10": "CraftingBreakthrough",
-      "11": "DivinePlaceholder4"
-    },
-    "repeatableTypes": {
-      "0": "DivineKnowledge",
-      "1": "UnlimitedPower",
-      "2": "DivineAppetite",
-      "3": "GottaGoFast",
-      "4": "DivineLightning",
-      "5": "TranscendantAptitude",
-      "6": "Energized",
-      "7": "Deenergized",
-      "8": "MandatorySchmandatory",
-      "9": "DivineAttunement",
-      "10": "SpiteTheGods",
-      "11": "DivinerKnowledge"
-    }
+    "unlocks": [
+      {
+        "type": 0,
+        "layer": 0,
+        "name": "Permanent Automation",
+        "cost": 10
+      },
+      {
+        "type": 1,
+        "layer": 0,
+        "name": "Divine Inspiration",
+        "cost": 10
+      },
+      {
+        "type": 2,
+        "layer": 0,
+        "name": "Look in the Mirror",
+        "cost": 101
+      },
+      {
+        "type": 3,
+        "layer": 0,
+        "name": "Fully Attuned",
+        "cost": 800
+      },
+      {
+        "type": 4,
+        "layer": 1,
+        "name": "Transcendant Memory",
+        "cost": 100
+      },
+      {
+        "type": 5,
+        "layer": 1,
+        "name": "Divine Speed",
+        "cost": 500
+      },
+      {
+        "type": 6,
+        "layer": 1,
+        "name": "Mastery of Time",
+        "cost": 40000
+      },
+      {
+        "type": 7,
+        "layer": 1,
+        "name": "See Beyond the Veil",
+        "cost": 100000
+      },
+      {
+        "type": 8,
+        "layer": 2,
+        "name": "Perky",
+        "cost": 100000
+      },
+      {
+        "type": 9,
+        "layer": 2,
+        "name": "Compulsive Notetaking",
+        "cost": 1000000
+      },
+      {
+        "type": 10,
+        "layer": 2,
+        "name": "Crafting Breakthrough",
+        "cost": 3000000
+      },
+      {
+        "type": 11,
+        "layer": 2,
+        "name": "PLACEHOLDER",
+        "cost": 100000000000
+      }
+    ],
+    "repeatables": [
+      {
+        "type": 0,
+        "layer": 0,
+        "name": "Divine Knowledge",
+        "initialCost": 10,
+        "scalingExponent": 1.25
+      },
+      {
+        "type": 1,
+        "layer": 0,
+        "name": "Unlimited Power",
+        "initialCost": 10,
+        "scalingExponent": 2.5
+      },
+      {
+        "type": 2,
+        "layer": 0,
+        "name": "Divine Appetite",
+        "initialCost": 30,
+        "scalingExponent": 2.5
+      },
+      {
+        "type": 3,
+        "layer": 0,
+        "name": "Gotta Go Fast",
+        "initialCost": 20,
+        "scalingExponent": 1.75
+      },
+      {
+        "type": 4,
+        "layer": 1,
+        "name": "Divine Lightning",
+        "initialCost": 1000,
+        "scalingExponent": 4
+      },
+      {
+        "type": 5,
+        "layer": 1,
+        "name": "Transcendant Aptitude",
+        "initialCost": 100,
+        "scalingExponent": 3
+      },
+      {
+        "type": 6,
+        "layer": 1,
+        "name": "Energized",
+        "initialCost": 1500,
+        "scalingExponent": 1.75
+      },
+      {
+        "type": 7,
+        "layer": 1,
+        "name": "Deenergized",
+        "initialCost": 10000,
+        "scalingExponent": 2.5
+      },
+      {
+        "type": 8,
+        "layer": 2,
+        "name": "Mandatory Schmandatory",
+        "initialCost": 500000,
+        "scalingExponent": 1.5
+      },
+      {
+        "type": 9,
+        "layer": 2,
+        "name": "Divine Attunement",
+        "initialCost": 1000000,
+        "scalingExponent": 2
+      },
+      {
+        "type": 10,
+        "layer": 2,
+        "name": "Spite the Gods",
+        "initialCost": 200000,
+        "scalingExponent": 1.4
+      },
+      {
+        "type": 11,
+        "layer": 2,
+        "name": "Diviner Knowledge",
+        "initialCost": 5000000,
+        "scalingExponent": 3
+      }
+    ]
   },
   "constants": {
     "baseCost": 10,
@@ -4029,5 +4293,23 @@
     "divineKnowledgeMult": 0.5,
     "divinerKnowledgeMult": 1,
     "deenergizedBase": 0.9
+  },
+  "renderingConstants": {
+    "ENERGY_EMOJI": "🔋",
+    "ENERGY_TEXT": "🔋Energy",
+    "XP_EMOJI": "♟️",
+    "XP_TEXT": "♟️XP",
+    "DIVINE_SPARK_EMOJI": "✨",
+    "DIVINE_SPARK_TEXT": "✨Divine Spark",
+    "ATTUNEMENT_EMOJI": "🌀",
+    "ATTUNEMENT_TEXT": "🌀Attunement",
+    "POWER_EMOJI": "💪",
+    "POWER_TEXT": "💪Power",
+    "HASTE_EMOJI": "🐇",
+    "HASTE_TEXT": "🐇Haste",
+    "TRAVEL_EMOJI": "🗺️",
+    "MINOR_TIME_COMPRESSION_EMOJI": "⌚",
+    "BOTTLED_LIGHTNING_EMOJI": "⚡",
+    "BOTTLED_LIGHTNING_TEXT": "⚡Bottled Lightning"
   }
 }

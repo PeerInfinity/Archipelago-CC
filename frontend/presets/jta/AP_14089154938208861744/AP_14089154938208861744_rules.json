@@ -1569,6 +1569,7 @@
       "world_class_name": "JTAWorld",
       "options": {
         "accessibility": 0,
+        "auto_cost_adjust": true,
         "automation_auto_queue": true,
         "automation_auto_reset": true,
         "automation_drain_strategy": true,
@@ -1603,6 +1604,11 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "auto_cost_adjust": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Auto Cost Adjust"
         },
         "automation_auto_queue": {
           "type": "default_on_toggle",
@@ -1729,7 +1735,19 @@
         }
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Setup Guide",
+            "description": "A guide to setting up Journey to Ascension for Archipelago multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Archipelago Team"
+            ]
+          }
+        ]
       },
       "world_directory": "jta"
     }

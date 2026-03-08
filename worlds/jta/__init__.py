@@ -7,10 +7,12 @@ and uses post-hoc cost adjustment to make the resulting seed completable.
 
 import copy
 import json
+import logging
 import os
+import subprocess
 from typing import Any, ClassVar, Dict
 
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 
 from .Items import JTAItem, build_item_table, item_table
@@ -21,9 +23,20 @@ from .Rules import set_rules
 from .game_data import get_all_perk_display_names_for_goal, get_perk_tasks_for_goal
 
 
+logger = logging.getLogger(__name__)
+
+
 class JTAWeb(WebWorld):
     theme = "ocean"
     game_info_languages = []
+    tutorials = [Tutorial(
+        "Setup Guide",
+        "A guide to setting up Journey to Ascension for Archipelago multiworld.",
+        "English",
+        "setup_en.md",
+        "setup/en",
+        ["Archipelago Team"],
+    )]
 
 
 class JTAWorld(World):
@@ -153,6 +166,73 @@ class JTAWorld(World):
         output_path = os.path.join(output_directory, f"{filename_base}_gamedata.json")
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(modified_data, f, indent=2)
+
+    def post_output(self, output_directory: str, filename_base: str) -> None:
+        """Run cost adjustment after sphere log is generated.
+
+        Called by the export hook after generate_output and create_playthrough
+        have both completed, so both the gamedata JSON and sphere log exist
+        in output_directory.
+        """
+        if not self.options.auto_cost_adjust.value:
+            return
+
+        player_base = self.multiworld.get_out_file_name_base(self.player)
+        gamedata_path = os.path.join(output_directory, f"{player_base}_gamedata.json")
+        sphere_log_path = os.path.join(
+            output_directory, f"{filename_base}_sphere_log.jsonl"
+        )
+        costs_path = os.path.join(output_directory, f"{player_base}_costs.json")
+
+        if not os.path.exists(gamedata_path):
+            logger.warning(f"JTA: gamedata not found at {gamedata_path}, skipping cost adjust")
+            return
+        if not os.path.exists(sphere_log_path):
+            logger.warning(f"JTA: sphere log not found at {sphere_log_path}, skipping cost adjust")
+            return
+
+        # Find the cost-adjust.js script relative to project root
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        script_path = os.path.join(project_root, "scripts", "jta", "cost-adjust.js")
+
+        if not os.path.exists(script_path):
+            logger.warning(f"JTA: cost-adjust.js not found at {script_path}")
+            return
+
+        resets = self.options.resets_per_sphere.value
+        cmd = [
+            "node", script_path,
+            "--gamedata", gamedata_path,
+            "--spherelog", sphere_log_path,
+            "--output", costs_path,
+            "--resets-per-sphere", str(resets),
+            "--player", str(self.player),
+        ]
+
+        try:
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=60
+            )
+            if result.returncode == 0:
+                logger.info(f"JTA: cost adjustment complete for player {self.player}")
+                if result.stdout:
+                    for line in result.stdout.strip().split("\n"):
+                        logger.info(f"  {line}")
+            else:
+                logger.warning(
+                    f"JTA: cost adjustment failed (exit {result.returncode})"
+                )
+                if result.stderr:
+                    logger.warning(f"  {result.stderr.strip()}")
+        except FileNotFoundError:
+            logger.warning(
+                "JTA: Node.js not found. Install Node.js to enable automatic "
+                "cost adjustment, or run manually:\n"
+                f"  node {script_path} -g {gamedata_path} -s {sphere_log_path} "
+                f"-o {costs_path} -r {resets}"
+            )
+        except subprocess.TimeoutExpired:
+            logger.warning("JTA: cost adjustment timed out after 60 seconds")
 
     def fill_slot_data(self) -> Dict[str, Any]:
         goal_zone = self.options.goal_zone.value

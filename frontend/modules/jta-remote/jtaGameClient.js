@@ -492,11 +492,24 @@ function patchTaskDefs(data, client) {
 }
 
 /**
- * Replace the game's complete task definition data from a game data JSON zones array.
- * This patches every task in the provided zones data, effectively replacing all task
- * definitions. Used when loading randomized or cost-adjusted game data.
+ * Build a skill modifier list from a JSON { skillId: effect } object.
+ * @param {'item'|'perk'} type
+ * @param {object} modObj - { skillId: effect }
+ * @returns {object|null} An ItemSkillModifierList or PerkSkillModifierList, or null if constructor unavailable
+ */
+function buildSkillModifierList(type, modObj) {
+    const Ctor = type === 'item' ? window.ItemSkillModifierList : window.PerkSkillModifierList;
+    if (!Ctor) return null;
+    const pairs = Object.entries(modObj).map(([k, v]) => [Number(k), v]);
+    return new Ctor(pairs);
+}
+
+/**
+ * Replace the game's complete definition data from a game data JSON.
+ * Patches: tasks, zone names, skills, items, perks, prestige upgrades,
+ * and rendering constants.
  *
- * @param {object} data - { zones: [{id, name, tasks: [...]}], resetTasks? }
+ * @param {object} data - Full game data object
  * @param {IframeClient} client
  */
 function replaceGameData(data, client) {
@@ -507,21 +520,27 @@ function replaceGameData(data, client) {
         return;
     }
 
-    const zones = data.zones || [];
-    let patched = 0;
-    let notFound = 0;
+    const counts = { tasks: 0, tasksNotFound: 0, skills: 0, items: 0, perks: 0, prestigeUnlocks: 0, prestigeRepeatables: 0, renderingConstants: 0 };
 
-    for (const zone of zones) {
+    // --- Zones & Tasks ---
+    const zones = data.zones || [];
+    for (let zoneIdx = 0; zoneIdx < zones.length; zoneIdx++) {
+        const zone = zones[zoneIdx];
+
+        if (zone.name !== undefined && window.ZONES && window.ZONES[zoneIdx]) {
+            window.ZONES[zoneIdx].name = zone.name;
+        }
+
         for (const task of zone.tasks) {
             const def = taskLookup.get(task.id);
             if (!def) {
-                console.warn(`${LOG_PREFIX} replaceGameData: task ${task.id} not found`);
-                notFound++;
+                counts.tasksNotFound++;
                 continue;
             }
 
             if (task.perk !== undefined) def.perk = task.perk;
             if (task.item !== undefined) def.item = task.item;
+            if (task.useItem !== undefined) def.use_item = task.useItem;
             if (task.skills !== undefined) def.skills = [...task.skills];
             if (task.costMult !== undefined) def.cost_multiplier = task.costMult;
             if (task.xpMult !== undefined) def.xp_mult = task.xpMult;
@@ -529,73 +548,259 @@ function replaceGameData(data, client) {
             if (task.type !== undefined) def.type = task.type;
             if (task.name !== undefined) def.name = task.name;
             if (task.hidden !== undefined) def.hidden_by_default = task.hidden;
+            if (task.zoneId !== undefined) def.zone_id = task.zoneId;
 
-            patched++;
+            counts.tasks++;
         }
+    }
+
+    // --- Skills ---
+    const skills = data.skills || [];
+    const skillDefs = window.SKILL_DEFINITIONS;
+    if (skillDefs && skills.length > 0) {
+        for (const skill of skills) {
+            if (skill.id === undefined) continue;
+            const def = skillDefs[skill.id];
+            if (!def) continue;
+            if (skill.xpMult !== undefined) def.xp_needed_mult = skill.xpMult;
+            if (skill.name !== undefined) def.name = skill.name;
+            if (skill.icon !== undefined) def.icon = skill.icon;
+            counts.skills++;
+        }
+    }
+
+    // --- Items ---
+    const itemsData = data.items;
+    const itemDefs = window.ITEMS;
+    if (itemDefs && itemsData) {
+        // items can be an array (from readGameDefinitions) or an object keyed by ID (from gamedata JSON)
+        const entries = Array.isArray(itemsData)
+            ? itemsData.map(it => [it.index !== undefined ? it.index : it.enumValue, it])
+            : Object.entries(itemsData).map(([k, v]) => [Number(k), v]);
+
+        for (const [idx, item] of entries) {
+            const def = itemDefs[idx];
+            if (!def) continue;
+            if (item.name !== undefined) def.name = item.name;
+            if (item.namePlural !== undefined) def.name_plural = item.namePlural;
+            if (item.name_plural !== undefined) def.name_plural = item.name_plural;
+            if (item.icon !== undefined) def.icon = item.icon;
+            if (item.skillModifiers !== undefined) {
+                const modList = buildSkillModifierList('item', item.skillModifiers);
+                if (modList) def.skill_modifiers = modList;
+            }
+            counts.items++;
+        }
+    }
+
+    // --- Perks ---
+    const perksData = data.perks;
+    const perkDefs = window.PERKS;
+    if (perkDefs && perksData) {
+        for (const [idStr, perk] of Object.entries(perksData)) {
+            const idx = Number(idStr);
+            const def = perkDefs[idx];
+            if (!def) continue;
+            if (perk.name !== undefined) def.name = perk.name;
+            if (perk.icon !== undefined) def.icon = perk.icon;
+            if (perk.skillModifiers !== undefined) {
+                const modList = buildSkillModifierList('perk', perk.skillModifiers);
+                if (modList) def.skill_modifiers = modList;
+            }
+            counts.perks++;
+        }
+    }
+
+    // --- Prestige Unlocks ---
+    // Support both top-level prestigeUnlocks (from readGameDefinitions) and nested prestige.unlocks (from JSON files)
+    const puData = data.prestigeUnlocks || (data.prestige && data.prestige.unlocks);
+    const puDefs = window.PRESTIGE_UNLOCKABLES;
+    if (puDefs && Array.isArray(puData)) {
+        for (let i = 0; i < puData.length && i < puDefs.length; i++) {
+            const src = puData[i];
+            if (src.name !== undefined) puDefs[i].name = src.name;
+            if (src.cost !== undefined) puDefs[i].cost = src.cost;
+            counts.prestigeUnlocks++;
+        }
+    }
+
+    // --- Prestige Repeatables ---
+    const prData = data.prestigeRepeatables || (data.prestige && data.prestige.repeatables);
+    const prDefs = window.PRESTIGE_REPEATABLES;
+    if (prDefs && Array.isArray(prData)) {
+        for (let i = 0; i < prData.length && i < prDefs.length; i++) {
+            const src = prData[i];
+            if (src.name !== undefined) prDefs[i].name = src.name;
+            if (src.initialCost !== undefined) prDefs[i].initial_cost = src.initialCost;
+            if (src.initial_cost !== undefined) prDefs[i].initial_cost = src.initial_cost;
+            if (src.scalingExponent !== undefined) prDefs[i].scaling_exponent = src.scalingExponent;
+            if (src.scaling_exponent !== undefined) prDefs[i].scaling_exponent = src.scaling_exponent;
+            counts.prestigeRepeatables++;
+        }
+    }
+
+    // --- Rendering Constants ---
+    if (data.renderingConstants && window.patchRenderingConstants) {
+        window.patchRenderingConstants(data.renderingConstants);
+        counts.renderingConstants = Object.keys(data.renderingConstants).length;
     }
 
     if (data.resetTasks !== false && window.resetTasks) {
         window.resetTasks();
     }
 
-    console.log(`${LOG_PREFIX} replaceGameData: ${patched} tasks patched, ${notFound} not found`);
-    client.publishEventBus('jta:gameDataReplaced', { patched, notFound, timestamp: Date.now() });
+    const parts = [`${counts.tasks} tasks`];
+    if (counts.tasksNotFound) parts.push(`${counts.tasksNotFound} not found`);
+    if (counts.skills) parts.push(`${counts.skills} skills`);
+    if (counts.items) parts.push(`${counts.items} items`);
+    if (counts.perks) parts.push(`${counts.perks} perks`);
+    if (counts.prestigeUnlocks) parts.push(`${counts.prestigeUnlocks} prestige unlocks`);
+    if (counts.prestigeRepeatables) parts.push(`${counts.prestigeRepeatables} prestige repeatables`);
+    if (counts.renderingConstants) parts.push(`${counts.renderingConstants} rendering constants`);
+    console.log(`${LOG_PREFIX} replaceGameData: ${parts.join(', ')}`);
+    client.publishEventBus('jta:gameDataReplaced', { ...counts, timestamp: Date.now() });
 }
 
 /**
- * Read the game's full zone/task definition data (for comparison with our gameData.js)
+ * Serialize a SkillModifierList's modifiers to a plain { skillId: effect } object.
+ * @param {object} modList - An ItemSkillModifierList or PerkSkillModifierList instance
+ * @returns {object}
+ */
+function serializeSkillModifiers(modList) {
+    const result = {};
+    if (modList && Array.isArray(modList.modifiers)) {
+        for (const mod of modList.modifiers) {
+            result[mod.skill] = mod.effect;
+        }
+    }
+    return result;
+}
+
+/**
+ * Read the game's full definition data: zones, tasks, skills, items, perks,
+ * prestige upgrades, and rendering constants.
  * @returns {object|null}
  */
 function readGameDefinitions() {
     const zones = window.ZONES;
     if (!zones) return null;
 
-    return zones.map((zone, zoneId) => ({
-        name: zone.name,
-        zoneId,
-        tasks: zone.tasks.map(def => ({
-            id: def.id,
-            name: def.name,
-            type: def.type,
-            zoneId: def.zone_id,
-            costMult: def.cost_multiplier,
-            skills: [...def.skills],
-            xpMult: def.xp_mult,
-            maxReps: def.max_reps,
-            perk: def.perk,
-            item: def.item,
-            useItem: def.use_item,
-            hidden: def.hidden_by_default,
+    const result = {
+        zones: zones.map((zone, zoneId) => ({
+            name: zone.name,
+            zoneId,
+            tasks: zone.tasks.map(def => ({
+                id: def.id,
+                name: def.name,
+                type: def.type,
+                zoneId: def.zone_id,
+                costMult: def.cost_multiplier,
+                skills: [...def.skills],
+                xpMult: def.xp_mult,
+                maxReps: def.max_reps,
+                perk: def.perk,
+                item: def.item,
+                useItem: def.use_item,
+                hidden: def.hidden_by_default,
+            })),
         })),
-    }));
-}
+    };
 
-/**
- * Read the game's item definitions (ITEMS array + ARTIFACTS list)
- * @returns {{ items: object[], artifacts: number[] }|null}
- */
-function readItemDefinitions() {
-    const items = window.ITEMS;
-    const artifacts = window.ARTIFACTS;
-    if (!items) return null;
-
-    const itemDefs = [];
-    for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (!item || !item.name) continue;
-        itemDefs.push({
-            index: i,
-            enumValue: item.enum,
-            name: item.name,
-            namePlural: item.name_plural,
-            icon: item.icon || '',
-        });
+    // Skills
+    const skillDefs = window.SKILL_DEFINITIONS;
+    if (skillDefs) {
+        result.skills = [];
+        for (let i = 0; i < skillDefs.length; i++) {
+            const sd = skillDefs[i];
+            if (sd && sd.name) {
+                result.skills.push({
+                    id: sd.type !== undefined ? sd.type : i,
+                    name: sd.name,
+                    icon: sd.icon || '',
+                    xpMult: sd.xp_needed_mult,
+                });
+            }
+        }
     }
 
-    return {
-        items: itemDefs,
-        artifacts: artifacts ? [...artifacts] : [],
-    };
+    // Items
+    const items = window.ITEMS;
+    const artifacts = window.ARTIFACTS;
+    if (items) {
+        result.items = [];
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (!item || !item.name) continue;
+            const def = {
+                index: i,
+                enumValue: item.enum,
+                name: item.name,
+                namePlural: item.name_plural || '',
+                icon: item.icon || '',
+                skillModifiers: serializeSkillModifiers(item.skill_modifiers),
+            };
+            // Energy items (Food, Fish, etc.) - check on_consume for energy value
+            // Energy value isn't stored as a field, so we can't read it generically
+            if (item.enum !== undefined && artifacts && artifacts.includes(item.enum)) {
+                def.artifact = true;
+            }
+            result.items.push(def);
+        }
+        if (artifacts) {
+            result.artifacts = [...artifacts];
+        }
+    }
+
+    // Perks
+    const perks = window.PERKS;
+    if (perks) {
+        result.perks = {};
+        for (let i = 0; i < perks.length; i++) {
+            const p = perks[i];
+            if (!p || !p.name || p.name === 'DELETED PERK - Deep Trance') continue;
+            result.perks[i] = {
+                name: p.name,
+                icon: p.icon || '',
+                skillModifiers: serializeSkillModifiers(p.skill_modifiers),
+            };
+        }
+    }
+
+    // Prestige unlocks
+    const prestigeUnlocks = window.PRESTIGE_UNLOCKABLES;
+    if (prestigeUnlocks) {
+        result.prestigeUnlocks = [];
+        for (const pu of prestigeUnlocks) {
+            result.prestigeUnlocks.push({
+                type: pu.type,
+                layer: pu.layer,
+                name: pu.name,
+                cost: pu.cost,
+            });
+        }
+    }
+
+    // Prestige repeatables
+    const prestigeRepeatables = window.PRESTIGE_REPEATABLES;
+    if (prestigeRepeatables) {
+        result.prestigeRepeatables = [];
+        for (const pr of prestigeRepeatables) {
+            result.prestigeRepeatables.push({
+                type: pr.type,
+                layer: pr.layer,
+                name: pr.name,
+                initialCost: pr.initial_cost,
+                scalingExponent: pr.scaling_exponent,
+            });
+        }
+    }
+
+    // Rendering constants
+    if (window.readRenderingConstants) {
+        result.renderingConstants = window.readRenderingConstants();
+    }
+
+    return result;
 }
 
 /**
@@ -635,13 +840,11 @@ function setupSubscriptions(client) {
         });
     });
 
-    // Request game zone/task definitions
+    // Request game zone/task definitions (includes all data categories)
     client.subscribeEventBus('jta:requestGameDefs', () => {
         const defs = readGameDefinitions();
-        const items = readItemDefinitions();
         client.publishEventBus('jta:gameDefsSnapshot', {
-            zones: defs,
-            items: items,
+            ...defs,
             timestamp: Date.now()
         });
     });
