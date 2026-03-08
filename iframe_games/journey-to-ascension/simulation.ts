@@ -822,7 +822,7 @@ export function knowsItem(item: ItemType) {
 }
 
 // MARK: Perks
-function tryAddPerk(perk: PerkType, show_notification = true) {
+export function tryAddPerk(perk: PerkType, show_notification = true) {
     if (hasPerk(perk)) {
         return;
     }

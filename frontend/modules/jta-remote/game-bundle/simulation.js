@@ -652,7 +652,7 @@ export function knowsItem(item) {
     return GAMESTATE.items.get(item) != null;
 }
 // MARK: Perks
-function tryAddPerk(perk, show_notification = true) {
+export function tryAddPerk(perk, show_notification = true) {
     if (hasPerk(perk)) {
         return;
     }

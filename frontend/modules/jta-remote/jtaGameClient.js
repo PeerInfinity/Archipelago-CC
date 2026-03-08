@@ -197,6 +197,27 @@ function readDetailedGameState() {
 }
 
 /**
+ * Build a lookup of perk-granting task IDs from the game definitions.
+ * Returns a Map<taskId, {taskName, perkType}> for all tasks that grant perks.
+ */
+function buildPerkTaskLookup() {
+    const lookup = new Map();
+    const zones = window.ZONES;
+    if (!zones) return lookup;
+
+    for (const zone of zones) {
+        if (!zone.tasks) continue;
+        for (const def of zone.tasks) {
+            // PerkType.Count (41) means "no perk"; null/undefined also means no perk
+            if (def.perk != null && def.perk !== 41) {
+                lookup.set(def.id, { taskName: def.name, perkType: def.perk });
+            }
+        }
+    }
+    return lookup;
+}
+
+/**
  * Set up polling to detect game state changes and publish events
  * @param {IframeClient} client
  */
@@ -204,8 +225,15 @@ function setupStateChangeDetection(client) {
     let lastZone = -1;
     let lastResetCount = -1;
     let lastPrestigeCount = -1;
-    let lastPerkCount = -1;
     let lastIsInEnergyReset = false;
+
+    // Track owned perks as a Set of perk type IDs
+    const ownedPerks = new Set();
+    let perkTrackingInitialized = false;
+
+    // Track completed perk-granting tasks
+    const completedPerkTasks = new Set();
+    const perkTaskLookup = buildPerkTaskLookup();
 
     // Initialize from current state
     const gs = window.getGamestate;
@@ -215,12 +243,14 @@ function setupStateChangeDetection(client) {
         lastPrestigeCount = gs.prestige_count;
         lastIsInEnergyReset = !!gs.is_in_energy_reset;
         if (gs.perks instanceof Map) {
-            for (const [, owned] of gs.perks) {
-                if (owned) lastPerkCount++;
+            for (const [perkType, owned] of gs.perks) {
+                if (owned) ownedPerks.add(perkType);
             }
-            if (lastPerkCount === -1) lastPerkCount = 0;
+            perkTrackingInitialized = true;
         }
     }
+
+    console.log(`${LOG_PREFIX} Perk task lookup built: ${perkTaskLookup.size} perk-granting tasks`);
 
     setInterval(() => {
         const gs = window.getGamestate;
@@ -267,22 +297,57 @@ function setupStateChangeDetection(client) {
             }
         }
 
-        // Perk grant detection
-        let currentPerkCount = 0;
-        if (gs.perks instanceof Map) {
-            for (const [, owned] of gs.perks) {
-                if (owned) currentPerkCount++;
+        // Perk task completion detection: check current zone's tasks
+        if (Array.isArray(gs.tasks)) {
+            for (const task of gs.tasks) {
+                const taskId = task.task_definition.id;
+                if (perkTaskLookup.has(taskId) && !completedPerkTasks.has(taskId)) {
+                    if (task.reps >= task.task_definition.max_reps) {
+                        completedPerkTasks.add(taskId);
+                        const info = perkTaskLookup.get(taskId);
+                        console.log(`${LOG_PREFIX} Perk task completed: ${info.taskName} (task ${taskId}, perk ${info.perkType})`);
+                        client.publishEventBus('jta:perkTaskCompleted', {
+                            taskId,
+                            taskName: info.taskName,
+                            perkType: info.perkType,
+                            timestamp: Date.now()
+                        });
+                    }
+                }
             }
         }
-        if (currentPerkCount !== lastPerkCount && lastPerkCount >= 0) {
-            lastPerkCount = currentPerkCount;
-            console.log(`${LOG_PREFIX} Perk count changed to ${currentPerkCount}`);
-            client.publishEventBus('jta:perkChanged', {
-                perkCount: currentPerkCount,
-                timestamp: Date.now()
-            });
+
+        // Perk grant detection (enhanced: tracks full set of owned perks)
+        if (gs.perks instanceof Map) {
+            const currentPerks = new Set();
+            for (const [perkType, owned] of gs.perks) {
+                if (owned) currentPerks.add(perkType);
+            }
+
+            if (perkTrackingInitialized) {
+                // Find newly gained perks
+                const newPerks = [];
+                for (const pt of currentPerks) {
+                    if (!ownedPerks.has(pt)) newPerks.push(pt);
+                }
+
+                if (newPerks.length > 0) {
+                    // Update tracked set
+                    for (const pt of newPerks) ownedPerks.add(pt);
+                    console.log(`${LOG_PREFIX} Perk count changed to ${currentPerks.size} (new: ${newPerks.join(', ')})`);
+                    client.publishEventBus('jta:perkChanged', {
+                        perkCount: currentPerks.size,
+                        ownedPerks: [...currentPerks],
+                        newPerks,
+                        timestamp: Date.now()
+                    });
+                }
+            } else {
+                // First time — initialize without publishing
+                for (const pt of currentPerks) ownedPerks.add(pt);
+                perkTrackingInitialized = true;
+            }
         }
-        lastPerkCount = currentPerkCount;
 
         // Energy depleted detection (game-over overlay showing, game paused)
         if (gs.is_in_energy_reset && !lastIsInEnergyReset) {
@@ -970,6 +1035,39 @@ function setupSubscriptions(client) {
             currentEnergy: gs.current_energy,
             maxEnergy: gs.max_energy,
             tasks,
+            timestamp: Date.now()
+        });
+    });
+
+    // Grant perks from Archipelago (incrementally via tryAddPerk)
+    client.subscribeEventBus('jta:grantPerks', (data) => {
+        if (!Array.isArray(data.perkTypes)) return;
+        if (!window.tryAddPerk) {
+            console.error(`${LOG_PREFIX} grantPerks: tryAddPerk not available on window`);
+            client.publishEventBus('jta:perksGranted', {
+                success: false,
+                error: 'tryAddPerk not available',
+                timestamp: Date.now()
+            });
+            return;
+        }
+
+        const granted = [];
+        for (const perkType of data.perkTypes) {
+            const gs = window.getGamestate;
+            if (gs && gs.perks instanceof Map && gs.perks.get(perkType)) {
+                continue; // Already owned
+            }
+            window.tryAddPerk(perkType, !data.silent);
+            granted.push(perkType);
+        }
+
+        if (granted.length > 0) {
+            console.log(`${LOG_PREFIX} grantPerks: granted ${granted.length} perk(s): ${granted.join(', ')}`);
+        }
+        client.publishEventBus('jta:perksGranted', {
+            success: true,
+            granted,
             timestamp: Date.now()
         });
     });

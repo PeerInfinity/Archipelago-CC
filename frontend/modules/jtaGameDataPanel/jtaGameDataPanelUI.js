@@ -507,6 +507,8 @@ export class JTAGameDataPanelUI {
         sub('jta:energyReset', (data) => this._handleEnergyReset(data));
         sub('jta:prestige', (data) => this._handlePrestige(data));
         sub('jta:perkChanged', (data) => this._handlePerkChanged(data));
+        sub('jta:perkTaskCompleted', (data) => this._handlePerkTaskCompleted(data));
+        sub('jta:perksGranted', (data) => this._handlePerksGranted(data));
     }
 
     _handleConnected(data) {
@@ -598,8 +600,23 @@ export class JTAGameDataPanelUI {
 
     _handlePerkChanged(data) {
         const time = new Date(data.timestamp).toLocaleTimeString('en-US', { hour12: false });
-        this._addLogEntry(`[${time}] Perks: ${data.perkCount}`);
+        const newInfo = data.newPerks && data.newPerks.length > 0
+            ? ` (new: ${data.newPerks.join(', ')})`
+            : '';
+        this._addLogEntry(`[${time}] Perks: ${data.perkCount}${newInfo}`);
         if (this._gsPerks) this._gsPerks.textContent = data.perkCount;
+    }
+
+    _handlePerkTaskCompleted(data) {
+        const time = new Date(data.timestamp).toLocaleTimeString('en-US', { hour12: false });
+        this._addLogEntry(`[${time}] Location check: "${data.taskName}" (task ${data.taskId})`);
+    }
+
+    _handlePerksGranted(data) {
+        const time = new Date(data.timestamp).toLocaleTimeString('en-US', { hour12: false });
+        if (data.success && data.granted && data.granted.length > 0) {
+            this._addLogEntry(`[${time}] Perks granted from AP: ${data.granted.join(', ')}`);
+        }
     }
 
     _handleDetailedStateSnapshot(data) {

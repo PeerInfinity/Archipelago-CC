@@ -54,6 +54,8 @@ export async function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyReset');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestige');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:perkChanged');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:perkTaskCompleted');
+    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:perksGranted');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskClicked');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:itemClicked');
     registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestigeDone');

@@ -1,5 +1,5 @@
 import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset } from "./simulation.js";
+import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset, tryAddPerk } from "./simulation.js";
 import { ZONES, TASK_LOOKUP } from "./zones.js";
 import { ITEMS, ARTIFACTS } from "./items.js";
 import { SKILL_DEFINITIONS } from "./skills.js";
@@ -85,6 +85,8 @@ window.PRESTIGE_REPEATABLES = PRESTIGE_REPEATABLES;
 window.ItemSkillModifierList = ItemSkillModifierList;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.PerkSkillModifierList = PerkSkillModifierList;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.tryAddPerk = tryAddPerk;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.patchRenderingConstants = patchRenderingConstants;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

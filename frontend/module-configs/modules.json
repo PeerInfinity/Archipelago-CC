@@ -224,6 +224,11 @@
       "path": "./modules/jtaActionQueue/index.js",
       "enabled": true,
       "requires": ["iframeAdapter", "iframePanel"]
+    },
+    "jtaArchipelago": {
+      "path": "./modules/jtaArchipelago/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "client", "iframeAdapter", "iframePanel"]
     }
   },
   "loadPriority": [
@@ -276,6 +281,7 @@
     "ruleConverter",
     "proofQueue",
     "proofGraph",
-    "jtaActionQueue"
+    "jtaActionQueue",
+    "jtaArchipelago"
   ]
 }

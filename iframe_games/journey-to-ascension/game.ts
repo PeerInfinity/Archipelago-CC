@@ -1,5 +1,5 @@
 import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset } from "./simulation.js";
+import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset, tryAddPerk } from "./simulation.js";
 import { ZONES, TASK_LOOKUP } from "./zones.js";
 import { ITEMS, ARTIFACTS } from "./items.js";
 import { SKILL_DEFINITIONS } from "./skills.js";
@@ -94,6 +94,8 @@ export function resetSave() {
 (window as any).ItemSkillModifierList = ItemSkillModifierList;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).PerkSkillModifierList = PerkSkillModifierList;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any).tryAddPerk = tryAddPerk;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).patchRenderingConstants = patchRenderingConstants;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
