@@ -7,7 +7,7 @@ import { JTAQueueExecutor } from './jtaQueueExecutor.js';
 import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
 import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
 import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
-import { StrategyType, buildQueueForStrategy } from './jtaQueueBuilder.js';
+import { StrategyType, StrategyLevel, buildQueueForStrategy } from './jtaQueueBuilder.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // --- Module Info ---
@@ -103,21 +103,21 @@ function ensureStrategyLoadouts() {
     const existing = loadoutManager.getLoadouts();
     const existingNames = new Set(existing.map(l => l.name));
 
-    const strategies = [
-        { name: '[Auto]', strategy: { type: StrategyType.AUTO }, repeatCount: 0 },
-        { name: '[Push]', strategy: { type: StrategyType.PUSH }, repeatCount: 0 },
-        { name: '[Collect]', strategy: { type: StrategyType.COLLECT }, repeatCount: 0 },
-        { name: '[Grind XP]', strategy: { type: StrategyType.GRIND_XP }, repeatCount: 0 },
-    ];
-
-    for (const spec of strategies) {
-        if (!existingNames.has(spec.name)) {
-            loadoutManager.create(spec.name, null, {
-                strategy: spec.strategy,
-                repeatCount: spec.repeatCount,
-                nextLoadout: -1,
-            });
+    // Remove obsolete per-strategy loadouts from earlier versions
+    const obsolete = ['[Push]', '[Collect]', '[Grind XP]'];
+    for (let i = existing.length - 1; i >= 0; i--) {
+        if (obsolete.includes(existing[i].name)) {
+            loadoutManager.delete(i);
         }
+    }
+
+    // Ensure the single [Auto] strategy loadout exists
+    if (!existingNames.has('[Auto]')) {
+        loadoutManager.create('[Auto]', null, {
+            strategy: { type: StrategyType.AUTO },
+            repeatCount: 0,
+            nextLoadout: -1,
+        });
     }
 }
 
@@ -449,6 +449,7 @@ class JTAActionQueuePanel {
             <div class="aq-controls" style="display: flex; gap: 4px; flex-wrap: wrap;">
                 <button class="aq-start-btn">Start</button>
                 <button class="aq-stop-btn">Stop</button>
+                <button class="aq-next-btn" title="Execute the next queue entry, then stop">Next</button>
                 <button class="aq-drain-btn" title="Drain all energy using the drain strategy, then trigger reset">Drain</button>
                 <button class="aq-reset-btn">Reset</button>
                 <button class="aq-clear-btn">Clear</button>
@@ -516,6 +517,17 @@ class JTAActionQueuePanel {
                         <input type="checkbox" class="aq-setting-show-comparison">
                         Show prediction comparison
                     </label>
+                    <hr style="border: none; border-top: 1px solid #444; margin: 4px 0;">
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-weight: bold; font-size: 0.85em;">Auto-Queue Strategy</span>
+                        <select class="aq-strategy-level" style="flex: 1; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 2px 4px;">
+                            <option value="baseline">Baseline</option>
+                            <option value="itemCollection">Item Collection</option>
+                            <option value="pushCollect" selected>Push/Collect</option>
+                            <option value="grindPushCollect" disabled>Grind with Push/Collect</option>
+                            <option value="artifactUsage" disabled>Artifact Usage</option>
+                        </select>
+                    </label>
                 </div>
             </details>
             <div class="aq-actions-section" style="flex-shrink: 0;"></div>
@@ -557,8 +569,37 @@ class JTAActionQueuePanel {
                     );
                 }
                 executor.start();
-                const strategyLabel = loadoutManager?.getStrategy(loadoutManager.activeIndex)?.type;
-                statusText.textContent = strategyLabel ? `Running [${strategyLabel}]...` : 'Running...';
+                const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
+                const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
+                statusText.textContent = isStrategy ? `Running [${levelLabel}]...` : 'Running...';
+                this._refreshUI();
+            }
+        });
+
+        el.querySelector('.aq-next-btn').addEventListener('click', () => {
+            if (!executor && queue) {
+                const settings = this._savedSettings ? this._savedSettings() : {};
+                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, settings);
+                executor.onStatusChange = () => this._refreshUI();
+                executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
+                executor.onBeforeReset = () => this._regenerateStrategyQueue();
+            }
+            if (executor) {
+                // Regenerate strategy queue before stepping if no snapshot yet
+                if (!executor.snapshot) {
+                    if (this._regenerateStrategyQueue()) {
+                        executor.clearSnapshot();
+                        if (queuePanelUI) queuePanelUI.refresh();
+                    }
+                    if (lastSimState) {
+                        executor.setTrackingState(
+                            lastSimState.currentEnergy,
+                            lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
+                        );
+                    }
+                }
+                executor.stepOne();
+                statusText.textContent = 'Stepping...';
                 this._refreshUI();
             }
         });
@@ -666,8 +707,9 @@ class JTAActionQueuePanel {
             } else {
                 if (executor) executor.restart();
             }
-            const strategyLabel = loadoutManager?.getStrategy(loadoutManager.activeIndex)?.type;
-            statusText.textContent = `Running${strategyLabel ? ` [${strategyLabel}]` : ''}... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
+            const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
+            const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
+            statusText.textContent = `Running${isStrategy ? ` [${levelLabel}]` : ''}... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
             return;
         }
 
@@ -809,6 +851,9 @@ class JTAActionQueuePanel {
         const showComparisonCheckbox = el.querySelector('.aq-setting-show-comparison');
         const radios = el.querySelectorAll('input[name="aq-drain-strategy"]');
 
+        // Auto-queue strategy level dropdown (disabled for now)
+        const strategyLevelSelect = el.querySelector('.aq-strategy-level');
+
         // Load persisted settings
         try {
             const saved = JSON.parse(localStorage.getItem('jta-aq-settings') || '{}');
@@ -833,6 +878,9 @@ class JTAActionQueuePanel {
                 const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${saved.drainStrategy}"]`);
                 if (radio) radio.checked = true;
             }
+            if (saved.strategyLevel) {
+                strategyLevelSelect.value = saved.strategyLevel;
+            }
         } catch (e) { /* ignore */ }
 
         const persistSettings = () => {
@@ -844,6 +892,7 @@ class JTAActionQueuePanel {
                 addToTop: addToTopCheckbox.checked,
                 showActuals: showActualsCheckbox.checked,
                 showComparison: showComparisonCheckbox.checked,
+                strategyLevel: strategyLevelSelect.value,
             };
             localStorage.setItem('jta-aq-settings', JSON.stringify(settings));
             if (executor) executor.updateConfig(settings);
@@ -858,6 +907,7 @@ class JTAActionQueuePanel {
 
         autoResetCheckbox.addEventListener('change', persistSettings);
         addToTopCheckbox.addEventListener('change', persistSettings);
+        strategyLevelSelect.addEventListener('change', persistSettings);
         for (const radio of radios) {
             radio.addEventListener('change', persistSettings);
         }
@@ -879,6 +929,7 @@ class JTAActionQueuePanel {
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
                 addToTop: addToTopCheckbox.checked,
+                strategyLevel: strategyLevelSelect.value,
             };
         };
     }
@@ -893,11 +944,12 @@ class JTAActionQueuePanel {
         const strategy = loadoutManager.getStrategy(loadoutManager.activeIndex);
         if (!strategy) return false;
 
-        const entries = buildQueueForStrategy(lastSimState, strategy);
+        const strategyLevel = this._savedSettings ? this._savedSettings().strategyLevel : StrategyLevel.PUSH_COLLECT;
+        const entries = buildQueueForStrategy(lastSimState, strategy, strategyLevel);
         queue.clear();
         for (const entry of entries) queue.add(entry);
         loadoutManager.saveActive(queue);
-        log('info', `Regenerated strategy queue: ${strategy.type} (${entries.length} entries)`);
+        log('info', `Regenerated strategy queue: ${strategyLevel} (${entries.length} entries)`);
         return true;
     }
 

@@ -1,24 +1,38 @@
 // JTA Queue Builder - generates queue entries from game state + strategy config
 // Converts simulator strategy logic into concrete QueueEntry arrays
+//
+// Strategy levels (composable, each builds on the previous):
+//   baseline         - mandatory zone traversal + perk tasks + XP grinding
+//   itemCollection   - baseline + collect & immediately use items
+//   pushCollect      - itemCollection + push/collect alternation
+//   grindPushCollect - (not yet implemented)
+//   artifactUsage    - (not yet implemented)
 
 import {
     ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS, ARTIFACTS,
     getMandatoryTasks, TaskType, ItemType,
 } from '../jta-randomizer/gameData.js';
 import {
-    getReachableZones, calcTaskEnergyCost, calcTaskEnergyCostSingleRep,
-    calcZoneMandatoryEnergyCost, calcItemEnergy,
+    getReachableZones, calcZoneMandatoryEnergyCost, calcItemEnergy,
     getReachablePerkTasks, getReachableItemTasks, getReachableSkillBoostTasks,
-    getReachableBossTasks, getBottleneckSkills, getBottleneckTrainingTasks,
-    getAllReachableGrindableTasks, getItemType,
+    getReachableBossTasks, getAllReachableGrindableTasks, getItemType,
 } from '../jta-randomizer/simulator.js';
 import { JTAActionType } from './jtaActionDefs.js';
 import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
 
 /**
- * Strategy types
+ * Strategy levels — each level enables all factors up to that point.
  * @enum {string}
  */
+export const StrategyLevel = Object.freeze({
+    BASELINE: 'baseline',
+    ITEM_COLLECTION: 'itemCollection',
+    PUSH_COLLECT: 'pushCollect',
+    GRIND_PUSH_COLLECT: 'grindPushCollect',
+    ARTIFACT_USAGE: 'artifactUsage',
+});
+
+// Keep StrategyType for backward compat with loadout storage
 export const StrategyType = Object.freeze({
     AUTO: 'auto',
     PUSH: 'push',
@@ -27,30 +41,47 @@ export const StrategyType = Object.freeze({
 });
 
 /**
- * @typedef {object} StrategyConfig
- * @property {StrategyType} type
+ * Determine whether the given strategy level enables a factor.
  */
+function hasItemCollection(level) {
+    return level === StrategyLevel.ITEM_COLLECTION
+        || level === StrategyLevel.PUSH_COLLECT
+        || level === StrategyLevel.GRIND_PUSH_COLLECT
+        || level === StrategyLevel.ARTIFACT_USAGE;
+}
+
+function hasPushCollect(level) {
+    return level === StrategyLevel.PUSH_COLLECT
+        || level === StrategyLevel.GRIND_PUSH_COLLECT
+        || level === StrategyLevel.ARTIFACT_USAGE;
+}
 
 /**
  * Build queue entries for a strategy given current game state.
  *
  * @param {object} simState - Simulator-format state (from convertToSimState)
- * @param {StrategyConfig} strategy
+ * @param {object} strategy - { type: 'auto' } (from loadout)
+ * @param {string} [strategyLevel] - Strategy level from settings (defaults to 'pushCollect' for backward compat)
  * @returns {import('../shared/actionQueue/actionTypes.js').QueueEntry[]}
  */
-export function buildQueueForStrategy(simState, strategy) {
-    switch (strategy.type) {
-        case StrategyType.AUTO:
-            return buildAutoQueue(simState);
-        case StrategyType.PUSH:
-            return buildPushQueue(simState);
-        case StrategyType.COLLECT:
-            return buildCollectQueue(simState);
-        case StrategyType.GRIND_XP:
-            return buildGrindXpQueue(simState);
-        default:
-            return [];
+export function buildQueueForStrategy(simState, strategy, strategyLevel) {
+    const level = strategyLevel || StrategyLevel.PUSH_COLLECT;
+
+    // Push/collect: decide whether this run should push or collect
+    if (hasPushCollect(level)) {
+        if (wouldAutoPush(simState)) {
+            return buildItemCollectionQueue(simState, true);
+        }
+        return buildItemCollectionQueue(simState, false);
     }
+
+    // Item collection: always use items immediately
+    if (hasItemCollection(level)) {
+        return buildItemCollectionQueue(simState, true);
+    }
+
+    // Baseline: mandatory zones + perks + XP grinding, no items
+    return buildBaselineQueue(simState);
 }
 
 /**
@@ -73,90 +104,82 @@ export function wouldAutoPush(simState) {
     return itemsCouldReachNewZone || itemsAreRipe;
 }
 
+// ============================================================================
+// Strategy: Baseline
+// ============================================================================
+
 /**
- * Auto strategy: mirrors simulateRun's push/collect decision,
- * then delegates to push or collect builder.
+ * Baseline queue: mandatory zone traversal + perk tasks + XP grinding.
+ * No item collection or consumption.
  */
-function buildAutoQueue(simState) {
-    if (wouldAutoPush(simState)) {
-        return buildPushQueue(simState);
-    }
-    return buildCollectQueue(simState);
+function buildBaselineQueue(simState) {
+    const energy = simState.maxEnergy;
+
+    // Pass 1: traverse without grind tasks to determine remaining energy
+    const plan = planZoneProgression(simState, energy, false, false);
+
+    // Plan grind tasks with the remaining energy budget
+    const grindByZone = plan.maxReachableZone >= 0
+        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy)
+        : new Map();
+
+    // Pass 2: re-traverse with grind tasks interleaved
+    const finalPlan = planZoneProgression(simState, energy, false, false, grindByZone);
+    return finalPlan.entries;
 }
 
-// --- Push Strategy ---
+// ============================================================================
+// Strategy: Item Collection (also used by Push/Collect)
+// ============================================================================
 
-function buildPushQueue(simState) {
+/**
+ * Item collection queue. When consumeItems=true (push or standalone item collection),
+ * uses all items at start and collects along the way. When consumeItems=false (collect
+ * run in push/collect mode), collects items but doesn't consume stockpiled ones.
+ */
+function buildItemCollectionQueue(simState, consumeItems) {
     const entries = [];
     const energy = simState.maxEnergy;
 
-    // Step 1: Use all energy items at start
-    addUseAllItemEntries(entries, simState);
+    if (consumeItems) {
+        // Use all stockpiled items at start of run
+        addUseAllItemEntries(entries, simState);
+    }
 
-    // Calculate effective energy after items
-    const itemEnergy = calcItemEnergy(simState);
+    // Calculate effective energy (with or without item energy)
+    const itemEnergy = consumeItems ? calcItemEnergy(simState) : 0;
     const effectiveEnergy = energy + itemEnergy;
 
-    // Step 2: Plan zone progression with perk/item/boss collection
-    const plan = planZoneProgression(simState, effectiveEnergy, true);
-    entries.push(...plan.entries);
+    // Pass 1: traverse without grind tasks to determine remaining energy
+    const plan = planZoneProgression(simState, effectiveEnergy, consumeItems, true);
 
-    // Step 3: Fill remaining energy with XP grinding
-    if (plan.remainingEnergy > 1) {
-        const grindEntries = planXpGrinding(simState, plan.maxReachableZone);
-        entries.push(...grindEntries);
-    }
+    // Plan grind tasks with the remaining energy budget
+    const grindByZone = plan.maxReachableZone >= 0
+        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy)
+        : new Map();
 
-    return entries;
-}
-
-// --- Collect Strategy ---
-
-function buildCollectQueue(simState) {
-    const entries = [];
-    const energy = simState.maxEnergy;
-
-    // No item consumption — plan progression with base energy
-    const plan = planZoneProgression(simState, energy, false);
-    entries.push(...plan.entries);
-
-    // Fill remaining energy with XP grinding
-    if (plan.remainingEnergy > 1) {
-        const grindEntries = planXpGrinding(simState, plan.maxReachableZone);
-        entries.push(...grindEntries);
-    }
+    // Pass 2: re-traverse with grind tasks interleaved
+    const finalPlan = planZoneProgression(simState, effectiveEnergy, consumeItems, true, grindByZone);
+    entries.push(...finalPlan.entries);
 
     return entries;
 }
 
-// --- Grind XP Strategy ---
-
-function buildGrindXpQueue(simState) {
-    const entries = [];
-    const energy = simState.maxEnergy;
-    const reachable = getReachableZones(energy, simState);
-    const maxReachable = Math.max(...reachable.filter(z => z.canComplete).map(z => z.zoneId), -1);
-
-    // Get grind tasks grouped by zone
-    const grindByZone = planXpGrindingByZone(simState, Math.max(maxReachable, 0));
-
-    // Build zone-by-zone: mandatory → grind tasks → travel
-    if (maxReachable >= 0) {
-        for (let z = 0; z <= maxReachable; z++) {
-            addZoneEntries(entries, z, grindByZone.get(z) || []);
-        }
-    }
-
-    return entries;
-}
-
-// --- Shared Building Blocks ---
+// ============================================================================
+// Shared Building Blocks
+// ============================================================================
 
 /**
- * Plan zone progression: mandatory tasks + perks + items + bosses.
+ * Plan zone progression: mandatory tasks + perks, optionally + items + bosses.
  * Returns the entries and estimated remaining energy.
+ *
+ * @param {object} simState
+ * @param {number} totalEnergy
+ * @param {boolean} consumeItems - Whether items are being consumed (affects energy budget)
+ * @param {boolean} collectItems - Whether to include item/boost collection tasks
+ * @param {Map<number, QueueEntry[]>} [grindByZone] - Grind tasks grouped by zone to interleave
  */
-function planZoneProgression(simState, totalEnergy, consumeItems) {
+function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, grindByZone) {
     const entries = [];
     let energy = totalEnergy;
     const zonesTraversed = new Set();
@@ -169,17 +192,22 @@ function planZoneProgression(simState, totalEnergy, consumeItems) {
         return { entries, remainingEnergy: energy, maxReachableZone: 0 };
     }
 
+    // Helper: traverse a zone with its grind tasks interleaved
+    const traverseZone = (z) => {
+        if (zonesTraversed.has(z)) return;
+        const extras = grindByZone ? (grindByZone.get(z) || []) : [];
+        addZoneEntries(entries, z, extras);
+        energy -= calcZoneMandatoryEnergyCost(z, simState);
+        zonesTraversed.add(z);
+    };
+
     // Priority 1: Perks — interleaved with zone navigation
     const perkTasks = getReachablePerkTasks(reachable, simState);
     for (const pt of perkTasks) {
         if (pt.totalEnergyNeeded > energy) continue;
         // Navigate to the zone
         for (let z = 0; z < pt.zoneId; z++) {
-            if (!zonesTraversed.has(z)) {
-                addZoneEntries(entries, z);
-                energy -= calcZoneMandatoryEnergyCost(z, simState);
-                zonesTraversed.add(z);
-            }
+            traverseZone(z);
         }
         // Add the perk task
         if (!tasksPlanned.has(pt.task.id)) {
@@ -189,37 +217,32 @@ function planZoneProgression(simState, totalEnergy, consumeItems) {
         }
     }
 
-    // Priority 2: Energy items (on all runs, not just push)
-    const itemTasks = getReachableItemTasks(reachable, simState);
-    for (const it of itemTasks) {
-        if (it.totalCost > energy || tasksPlanned.has(it.task.id)) continue;
-        // Navigate
-        for (let z = 0; z < it.zoneId; z++) {
-            if (!zonesTraversed.has(z)) {
-                addZoneEntries(entries, z);
-                energy -= calcZoneMandatoryEnergyCost(z, simState);
-                zonesTraversed.add(z);
+    // Priority 2: Energy items (only when item collection is enabled)
+    if (collectItems) {
+        const itemTasks = getReachableItemTasks(reachable, simState);
+        for (const it of itemTasks) {
+            if (it.totalCost > energy || tasksPlanned.has(it.task.id)) continue;
+            for (let z = 0; z < it.zoneId; z++) {
+                traverseZone(z);
             }
+            entries.push(makeTaskEntry(it.task, it.zoneId));
+            energy -= it.fullCost;
+            tasksPlanned.add(it.task.id);
         }
-        entries.push(makeTaskEntry(it.task, it.zoneId));
-        energy -= it.fullCost;
-        tasksPlanned.add(it.task.id);
     }
 
-    // Priority 3: Skill boost items
-    const boostTasks = getReachableSkillBoostTasks(reachable, simState);
-    for (const bt of boostTasks) {
-        if (bt.totalCost > energy || tasksPlanned.has(bt.task.id)) continue;
-        for (let z = 0; z < bt.zoneId; z++) {
-            if (!zonesTraversed.has(z)) {
-                addZoneEntries(entries, z);
-                energy -= calcZoneMandatoryEnergyCost(z, simState);
-                zonesTraversed.add(z);
+    // Priority 3: Skill boost items (only when item collection is enabled)
+    if (collectItems) {
+        const boostTasks = getReachableSkillBoostTasks(reachable, simState);
+        for (const bt of boostTasks) {
+            if (bt.totalCost > energy || tasksPlanned.has(bt.task.id)) continue;
+            for (let z = 0; z < bt.zoneId; z++) {
+                traverseZone(z);
             }
+            entries.push(makeTaskEntry(bt.task, bt.zoneId));
+            energy -= bt.fullCost;
+            tasksPlanned.add(bt.task.id);
         }
-        entries.push(makeTaskEntry(bt.task, bt.zoneId));
-        energy -= bt.fullCost;
-        tasksPlanned.add(bt.task.id);
     }
 
     // Priority 4: Bosses
@@ -233,13 +256,9 @@ function planZoneProgression(simState, totalEnergy, consumeItems) {
 
     // Priority 5: Complete remaining zones (mandatory tasks)
     for (let z = 0; z <= maxReachable; z++) {
-        if (!zonesTraversed.has(z)) {
-            const cost = calcZoneMandatoryEnergyCost(z, simState);
-            if (cost <= energy) {
-                addZoneEntries(entries, z);
-                energy -= cost;
-                zonesTraversed.add(z);
-            }
+        const cost = calcZoneMandatoryEnergyCost(z, simState);
+        if (!zonesTraversed.has(z) && cost <= energy) {
+            traverseZone(z);
         }
     }
 
@@ -247,55 +266,47 @@ function planZoneProgression(simState, totalEnergy, consumeItems) {
 }
 
 /**
- * Pick the top grinding tasks, returned as a flat list of entries.
- */
-function planXpGrinding(simState, maxReachableZone) {
-    const byZone = planXpGrindingByZone(simState, maxReachableZone);
-    const entries = [];
-    for (const zoneEntries of byZone.values()) {
-        entries.push(...zoneEntries);
-    }
-    return entries;
-}
-
-/**
- * Pick top grinding tasks, grouped by zone.
+ * Pick grinding tasks to fill the energy budget.
+ * Tasks are selected by XP/energy efficiency, each with 1 loop (tasks
+ * can only be performed once per reset). The last task included may cost
+ * more than the remaining budget — we'll run out of energy during it.
+ *
+ * @param {object} simState
+ * @param {number} maxReachableZone
+ * @param {number} energyBudget - remaining energy after mandatory traversal
  * @returns {Map<number, QueueEntry[]>} zoneId -> entries for that zone
  */
-function planXpGrindingByZone(simState, maxReachableZone) {
+function planXpGrindingByZone(simState, maxReachableZone, energyBudget) {
     const result = new Map();
+    if (energyBudget <= 0 || maxReachableZone < 0) return result;
+
     const maxZone = Math.max(maxReachableZone, 0);
-    const bottleneckSkills = getBottleneckSkills(simState, simState.maxEnergy, maxZone);
-    let tasksToFarm = [];
+    const candidates = getAllReachableGrindableTasks(maxZone, simState);
+    candidates.sort((a, b) => b.totalXpPerEnergy - a.totalXpPerEnergy);
 
-    if (bottleneckSkills.size > 0) {
-        tasksToFarm = getBottleneckTrainingTasks(maxZone, simState, bottleneckSkills);
-    }
-
-    if (tasksToFarm.length === 0) {
-        tasksToFarm = getAllReachableGrindableTasks(maxZone, simState);
-        tasksToFarm.sort((a, b) => b.totalXpPerEnergy - a.totalXpPerEnergy);
-    }
-
-    // Add top 1-3 grinding tasks grouped by zone
+    // Select tasks in efficiency order, 1 loop each.
+    // Include the first task that exceeds the budget (we'll drain during it).
+    let remaining = energyBudget;
     const seen = new Set();
-    for (const gt of tasksToFarm) {
+
+    for (const gt of candidates) {
+        if (remaining <= 0) break;
         if (seen.has(gt.task.id)) continue;
+        if (gt.fullCost <= 0) continue;
         seen.add(gt.task.id);
+        remaining -= gt.fullCost;
 
-        const loops = Math.max(1, Math.ceil(3 / gt.task.maxReps));
-        const entry = makeTaskEntry(gt.task, gt.zoneId, loops);
-
+        const entry = makeTaskEntry(gt.task, gt.zoneId, 1);
         if (!result.has(gt.zoneId)) result.set(gt.zoneId, []);
         result.get(gt.zoneId).push(entry);
-
-        if (seen.size >= 3) break;
     }
 
     return result;
 }
 
-// --- Entry Creation Helpers ---
+// ============================================================================
+// Entry Creation Helpers
+// ============================================================================
 
 function makeTaskEntry(task, zoneId, loops = 1) {
     const zone = ZONES[zoneId];
@@ -311,10 +322,10 @@ function makeTaskEntry(task, zoneId, loops = 1) {
 }
 
 /**
- * Add all tasks for a zone: mandatory first, then extras, then travel (which leaves the zone).
+ * Add all tasks for a zone: extras (e.g. grind), then mandatory non-travel, then travel.
  * @param {Array} entries - queue entries to append to
  * @param {number} zoneId
- * @param {Array} [extraEntries] - additional entries to insert before the travel task
+ * @param {Array} [extraEntries] - additional entries to insert before mandatory tasks
  */
 function addZoneEntries(entries, zoneId, extraEntries = []) {
     const zone = ZONES[zoneId];
@@ -387,48 +398,12 @@ function getItemName(itemType) {
  * @returns {{ loadouts: Array<{name: string, strategy: StrategyConfig, repeatCount: number, nextLoadout: number}> }}
  */
 export function generateStrategyLoadouts(strategyType) {
-    switch (strategyType) {
-        case StrategyType.AUTO:
-            return {
-                loadouts: [{
-                    name: '[Auto]',
-                    strategy: { type: StrategyType.AUTO },
-                    repeatCount: 0, // infinite
-                    nextLoadout: -1,
-                }],
-            };
-
-        case StrategyType.PUSH:
-            return {
-                loadouts: [{
-                    name: '[Push]',
-                    strategy: { type: StrategyType.PUSH },
-                    repeatCount: 0,
-                    nextLoadout: -1,
-                }],
-            };
-
-        case StrategyType.COLLECT:
-            return {
-                loadouts: [{
-                    name: '[Collect]',
-                    strategy: { type: StrategyType.COLLECT },
-                    repeatCount: 0,
-                    nextLoadout: -1,
-                }],
-            };
-
-        case StrategyType.GRIND_XP:
-            return {
-                loadouts: [{
-                    name: '[Grind XP]',
-                    strategy: { type: StrategyType.GRIND_XP },
-                    repeatCount: 0,
-                    nextLoadout: -1,
-                }],
-            };
-
-        default:
-            return { loadouts: [] };
-    }
+    return {
+        loadouts: [{
+            name: '[Auto]',
+            strategy: { type: StrategyType.AUTO },
+            repeatCount: 0, // infinite
+            nextLoadout: -1,
+        }],
+    };
 }

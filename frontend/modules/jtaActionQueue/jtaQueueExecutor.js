@@ -75,6 +75,9 @@ export class JTAQueueExecutor {
     /** @type {boolean} Events should be unsubscribed after pending skill data is processed */
     #deferredUnsubscribe = false;
 
+    /** @type {boolean} Stop after the current entry completes (for step-one mode) */
+    #stopAfterEntry = false;
+
     /**
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
      * @param {{ publish: Function, subscribe: Function, unsubscribe: Function }} eventBus
@@ -195,6 +198,7 @@ export class JTAQueueExecutor {
         if (this.#snapshot) this.#snapshot.running = false;
         this.#draining = false;
         this.#awaitingInitialState = false;
+        this.#stopAfterEntry = false;
         this.#stopPolling();
         // Defer unsubscribe if we're still waiting for a detailedStateSnapshot response
         // for the last completed entry — #onDetailedState will clean up after processing
@@ -219,6 +223,18 @@ export class JTAQueueExecutor {
         this.#lastSkillSnapshot = null;
         this.#notifyStatusChange();
         this.start();
+    }
+
+    /**
+     * Execute just the next entry, then stop.
+     */
+    stepOne() {
+        this.#stopAfterEntry = true;
+        if (!this.#snapshot?.running) {
+            this.start();
+        } else {
+            // Already running — flag is set, will stop after current entry completes
+        }
     }
 
     /**
@@ -409,6 +425,13 @@ export class JTAQueueExecutor {
             // Track the entry that's about to start so we can fix its energyBefore retroactively
             this.#pendingNextEntryId = this.#snapshot.currentEntry()?.entryId || null;
             this.#notifyStatusChange();
+            // Step-one mode: stop after completing this entry
+            if (this.#stopAfterEntry) {
+                this.#stopAfterEntry = false;
+                this.stop();
+                this.#notifyStatusChange();
+                return;
+            }
             this.#executeNext();
         } else {
             // More loops needed — re-execute same entry
@@ -452,6 +475,12 @@ export class JTAQueueExecutor {
         this.#waitingForCompletion = false;
         this.#snapshot.advance();
         this.#notifyStatusChange();
+        if (this.#stopAfterEntry) {
+            this.#stopAfterEntry = false;
+            this.stop();
+            this.#notifyStatusChange();
+            return;
+        }
         this.#executeNext();
     }
 
@@ -503,6 +532,15 @@ export class JTAQueueExecutor {
         this.#pendingNextEntryId = null;
         this.#lastKnownEnergy = 0;
         this.#lastSkillSnapshot = null;
+
+        // Step-one mode: stop after the energy reset instead of continuing
+        if (this.#stopAfterEntry) {
+            this.#stopAfterEntry = false;
+            this.stop();
+            this.#notifyStatusChange();
+            return;
+        }
+
         // Request fresh state before restarting execution
         this.#awaitingInitialState = true;
         this.#notifyStatusChange();
