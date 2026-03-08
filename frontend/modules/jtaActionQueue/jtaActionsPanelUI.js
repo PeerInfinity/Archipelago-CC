@@ -1,5 +1,5 @@
 // Actions button panel - shows available actions grouped by zone (with navigation), items, artifacts, and special
-import { createQueueEntry } from './jtaActionDefs.js';
+import { createQueueEntry } from '../jtaQueueEngine/jtaActionDefs.js';
 
 export class JTAActionsPanelUI {
     /** @type {HTMLElement} */

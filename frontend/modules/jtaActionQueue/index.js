@@ -1,14 +1,8 @@
-// jtaActionQueue module entry point
+// jtaActionQueue module — UI panel for JTA action queue
+// All state and logic lives in the jtaQueueEngine module; this is a pure UI shell.
 import { JTAQueuePanelUI } from './jtaQueuePanelUI.js';
 import { JTAActionsPanelUI } from './jtaActionsPanelUI.js';
-import { ActionQueue } from '../shared/actionQueue/actionQueue.js';
-import { LoadoutManager } from '../shared/actionQueue/loadoutManager.js';
-import { JTAQueueExecutor } from './jtaQueueExecutor.js';
-import { buildActionCatalog, createQueueEntry } from './jtaActionDefs.js';
-import { DrainStrategy } from './jtaEnergyDrainStrategy.js';
-import { convertToSimState, predictQueue, snapshotSkillsFromGameState } from './jtaQueuePredictor.js';
-import { StrategyType, StrategyLevel, buildQueueForStrategy } from './jtaQueueBuilder.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getEngine, createQueueEntry } from '../jtaQueueEngine/index.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -37,131 +31,32 @@ function fmtE(value) {
     return Math.round(value).toLocaleString();
 }
 
-let moduleEventBus = null;
-let moduleId = 'jtaActionQueue';
-
-// Shared module-level instances
-let queue = null;
-let loadoutManager = null;
-let executor = null;
-let catalog = null;
-let queuePanelUI = null;
-let actionsPanelUI = null;
-let lastSimState = null;
-let lastGameState = null;
-let predictions = null;
-let predictionDebounceTimer = null;
-
 export async function register(registrationApi) {
-    log('info', `[${moduleId}] Registering...`);
-
     registrationApi.registerPanelComponent('jtaActionQueue', JTAActionQueuePanel);
-
-    // Publishers — commands we send to the iframe
-    registrationApi.registerEventBusPublisher('jta:clickTask');
-    registrationApi.registerEventBusPublisher('jta:clickItem');
-    registrationApi.registerEventBusPublisher('jta:doPrestige');
-    registrationApi.registerEventBusPublisher('jta:requestTaskStatus');
-    registrationApi.registerEventBusPublisher('jta:requestGameDefs');
-    registrationApi.registerEventBusPublisher('jta:dismissGameOver');
-    registrationApi.registerEventBusPublisher('jta:requestDetailedState');
-
-    // Subscribers — responses from the iframe
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskClicked');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:itemClicked');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:prestigeDone');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:taskStatus');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameDefsSnapshot');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:energyDepleted');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:gameOverDismissed');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'jta:detailedStateSnapshot');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:connected');
-    registrationApi.registerEventBusSubscriberIntent(moduleId, 'iframe:disconnected');
-
-    log('info', `[${moduleId}] Registration complete.`);
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
-    moduleId = mId;
-    log('info', `[${moduleId}] Initializing with priority ${priorityIndex}...`);
-
-    moduleEventBus = initializationApi.getEventBus();
-
-    // Create shared instances
-    queue = new ActionQueue();
-    loadoutManager = new LoadoutManager('jta-action-loadouts');
-    ensureStrategyLoadouts();
-    loadoutManager.loadActive(queue);
-
-    log('info', `[${moduleId}] Initialization complete.`);
+    // Nothing to do — all state lives in jtaQueueEngine
+    log('info', `[${mId}] Initialized (UI only).`);
 }
-
-export function getModuleEventBus() {
-    if (moduleEventBus) return moduleEventBus;
-    return {
-        publish: (event, data) => eventBus.publish(event, data, 'jtaActionQueue'),
-        subscribe: (event, callback) => eventBus.subscribe(event, callback, 'jtaActionQueue'),
-        unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'jtaActionQueue'),
-    };
-}
-
-/** Ensure strategy loadouts exist in the loadout manager. */
-function ensureStrategyLoadouts() {
-    if (!loadoutManager) return;
-    const existing = loadoutManager.getLoadouts();
-    const existingNames = new Set(existing.map(l => l.name));
-
-    // Remove obsolete per-strategy loadouts from earlier versions
-    const obsolete = ['[Push]', '[Collect]', '[Grind XP]'];
-    for (let i = existing.length - 1; i >= 0; i--) {
-        if (obsolete.includes(existing[i].name)) {
-            loadoutManager.delete(i);
-        }
-    }
-
-    // Ensure the single [Auto] strategy loadout exists
-    if (!existingNames.has('[Auto]')) {
-        loadoutManager.create('[Auto]', null, {
-            strategy: { type: StrategyType.AUTO },
-            repeatCount: 0,
-            nextLoadout: -1,
-        });
-    }
-
-    // Clean up: only [Auto] should have a strategy — strip stray strategies
-    // from non-[Auto] loadouts (can happen from earlier code versions)
-    const cleaned = loadoutManager.getLoadouts();
-    for (let i = 0; i < cleaned.length; i++) {
-        if (cleaned[i].name !== '[Auto]' && loadoutManager.isStrategyBacked(i)) {
-            loadoutManager.setStrategy(i, null);
-        }
-    }
-}
-
-// Accessors for module-level instances
-export function getQueue() { return queue; }
-export function getLoadoutManager() { return loadoutManager; }
-export function getExecutor() { return executor; }
-export function getCatalog() { return catalog; }
 
 /**
  * Panel component for Golden Layout.
- * GL passes (container, componentState, componentType) — container is a GL ComponentContainer, not an HTMLElement.
- * Must implement getRootElement() returning a DOM element.
+ * Pure UI: delegates all state and logic to the engine.
  */
 class JTAActionQueuePanel {
     constructor(container, componentState) {
         this.container = container;
         this.componentState = componentState;
         this.rootElement = null;
-        this._unsubs = [];
-        this._lastReasoning = null;
+        this._queuePanelUI = null;
+        this._actionsPanelUI = null;
     }
 
     getRootElement() {
         if (!this.rootElement) {
             this._createRootElement();
-            this._subscribeToGameDefs();
+            this._wireEngine();
         }
         return this.rootElement;
     }
@@ -639,379 +534,207 @@ class JTAActionQueuePanel {
         this._setupCollapsibleState();
     }
 
-    _setupControls() {
-        const el = this.rootElement;
-        const statusText = el.querySelector('.aq-status-text');
+    // =================================================================
+    // Wire engine callbacks
+    // =================================================================
 
-        this._loadoutRunCount = 0;
-
-        el.querySelector('.aq-start-btn').addEventListener('click', () => {
-            const settings = this._savedSettings ? this._savedSettings() : {};
-            const isImmediate = settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
-
-            if (!executor && queue) {
-                const execSettings = isImmediate ? { ...settings, drainEnabled: false, autoReset: false } : settings;
-                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
-                executor.onStatusChange = () => this._refreshUI();
-                executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
-                executor.onBeforeReset = () => this._regenerateStrategyQueue();
-            }
-            if (executor) {
-                if (isImmediate) {
-                    // Immediate mode: override config, clear old snapshot, skip strategy regen
-                    executor.updateConfig({ drainEnabled: false, autoReset: false });
-                    executor.clearSnapshot();
-                } else {
-                    // Normal mode: regenerate strategy queue if applicable
-                    if (this._regenerateStrategyQueue()) {
-                        executor.clearSnapshot();
-                        if (queuePanelUI) queuePanelUI.refresh();
-                    }
+    _wireEngine() {
+        const engine = getEngine();
+        if (!engine) {
+            log('warn', 'Engine not available yet — will poll until ready');
+            // GL creates panels before module init phase, so engine doesn't exist yet.
+            // Poll until it's available, then do late binding.
+            this._engineRetryTimer = setInterval(() => {
+                const e = getEngine();
+                if (e) {
+                    clearInterval(this._engineRetryTimer);
+                    this._engineRetryTimer = null;
+                    this._lateWireEngine(e);
                 }
-                // Initialize tracking state before starting
-                if (lastSimState) {
-                    executor.setTrackingState(
-                        lastSimState.currentEnergy,
-                        lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
-                    );
-                }
-                executor.start();
-                if (isImmediate) {
-                    statusText.textContent = 'Running (immediate)...';
-                } else {
-                    const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
-                    const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
-                    statusText.textContent = isStrategy ? `Running [${levelLabel}]...` : 'Running...';
-                }
-                this._refreshUI();
-            }
-        });
-
-        el.querySelector('.aq-next-btn').addEventListener('click', () => {
-            const settings = this._savedSettings ? this._savedSettings() : {};
-            const isImmediate = settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
-
-            if (!executor && queue) {
-                const execSettings = isImmediate ? { ...settings, drainEnabled: false, autoReset: false } : settings;
-                executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
-                executor.onStatusChange = () => this._refreshUI();
-                executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
-                executor.onBeforeReset = () => this._regenerateStrategyQueue();
-            }
-            if (executor) {
-                // Regenerate strategy queue before stepping if no snapshot yet
-                if (!executor.snapshot) {
-                    if (!isImmediate) {
-                        if (this._regenerateStrategyQueue()) {
-                            executor.clearSnapshot();
-                            if (queuePanelUI) queuePanelUI.refresh();
-                        }
-                    }
-                    if (lastSimState) {
-                        executor.setTrackingState(
-                            lastSimState.currentEnergy,
-                            lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
-                        );
-                    }
-                }
-                if (isImmediate) {
-                    executor.updateConfig({ drainEnabled: false, autoReset: false });
-                }
-                executor.stepOne();
-                statusText.textContent = 'Stepping...';
-                this._refreshUI();
-            }
-        });
-
-        el.querySelector('.aq-stop-btn').addEventListener('click', () => {
-            if (executor) {
-                executor.stop();
-                statusText.textContent = 'Stopped';
-                this._refreshUI();
-            }
-        });
-
-        el.querySelector('.aq-drain-btn').addEventListener('click', () => {
-            // Create a temporary executor with an empty queue to drain energy and reset
-            if (executor) executor.stop();
-            const emptyQueue = new ActionQueue();
-            const drainSettings = this._savedSettings ? this._savedSettings() : {};
-            drainSettings.drainEnabled = true;
-            drainSettings.autoReset = true;
-            const drainExecutor = new JTAQueueExecutor(emptyQueue, getModuleEventBus(), moduleId, drainSettings);
-            drainExecutor.onStatusChange = () => this._refreshUI();
-            drainExecutor.onQueueExhausted = () => {
-                statusText.textContent = 'Draining energy...';
-            };
-            // When the drain executor resets, it will request detailed state and
-            // create a new snapshot from the empty queue — which exhausts immediately.
-            // Detect the second exhaustion as "drain complete" and stop.
-            let drainResetOccurred = false;
-            const origOnExhausted = drainExecutor.onQueueExhausted;
-            drainExecutor.onQueueExhausted = () => {
-                if (drainResetOccurred) {
-                    // Energy was drained and reset happened — we're done
-                    drainExecutor.stop();
-                    executor = null; // Clear so Start creates a fresh executor
-                    statusText.textContent = 'Drained and reset';
-                    this._refreshUI();
-                    // Request fresh state for predictions
-                    this._requestPredictionState();
-                    return;
-                }
-                drainResetOccurred = true;
-                statusText.textContent = 'Draining energy...';
-            };
-            // Replace module executor temporarily
-            executor = drainExecutor;
-            drainExecutor.start();
-            statusText.textContent = 'Draining...';
-            this._refreshUI();
-        });
-
-        el.querySelector('.aq-reset-btn').addEventListener('click', () => {
-            this._loadoutRunCount = 0;
-            if (executor) {
-                executor.clearSnapshot();
-                statusText.textContent = 'Reset';
-                this._refreshUI();
-            }
-        });
-
-        el.querySelector('.aq-clear-btn').addEventListener('click', () => {
-            if (executor) executor.clearSnapshot();
-            if (queue) {
-                queue.clear();
-                statusText.textContent = 'Cleared';
-                this._refreshUI();
-                this._saveLoadout();
-            }
-        });
-
-        el.querySelector('.aq-undo-btn').addEventListener('click', () => {
-            if (queue && queue.undoLast()) {
-                statusText.textContent = 'Undone';
-                this._refreshUI();
-                this._saveLoadout();
-            }
-        });
-    }
-
-    _handleQueueExhausted(statusText) {
-        // "Stop after" overrides all continuation logic
-        const stopAfter = this.rootElement.querySelector('.aq-setting-stop-after');
-        if (stopAfter?.checked) {
-            stopAfter.checked = false;
-            if (executor) executor.stop();
-            statusText.textContent = 'Queue finished (stopped)';
-            this._refreshUI();
+            }, 100);
             return;
         }
-
-        // Immediate mode: check if new entries were added while executing
-        // Only applies to non-strategy loadouts (Auto loadouts use repeat/sequencing below)
-        const settings = this._savedSettings ? this._savedSettings() : {};
-        if (settings.immediateMode && !loadoutManager?.isStrategyBacked(loadoutManager.activeIndex)) {
-            const snapshotCount = executor?.snapshot?.length || 0;
-            const queueCount = queue ? queue.getEntries().length : 0;
-            if (queueCount > snapshotCount) {
-                // New entries were added — append and continue from where we left off
-                if (executor) {
-                    executor.appendNewEntries();
-                    executor.resumeAfterAppend();
-                }
-                statusText.textContent = 'Running (immediate)...';
-                this._refreshUI();
-                return;
-            }
-            // No new entries — stop
-            if (executor) executor.stop();
-            statusText.textContent = 'Ready (immediate)';
-            this._refreshUI();
-            return;
-        }
-
-        if (!loadoutManager) {
-            statusText.textContent = 'Queue finished';
-            return;
-        }
-
-        this._loadoutRunCount = (this._loadoutRunCount || 0) + 1;
-        const seq = loadoutManager.getSequencing(loadoutManager.activeIndex);
-
-        // Check if we should repeat this loadout
-        if (seq.repeatCount === 0 || this._loadoutRunCount < seq.repeatCount) {
-            // Regenerate strategy queue if applicable (picks new actions based on current state)
-            if (this._regenerateStrategyQueue()) {
-                if (executor) executor.clearSnapshot();
-                if (queuePanelUI) queuePanelUI.refresh();
-                if (executor) executor.start();
-            } else {
-                if (executor) executor.restart();
-            }
-            const isStrategy = loadoutManager?.isStrategyBacked(loadoutManager.activeIndex);
-            const levelLabel = this._savedSettings ? this._savedSettings().strategyLevel : '';
-            statusText.textContent = `Running${isStrategy ? ` [${levelLabel}]` : ''}... (repeat ${this._loadoutRunCount + 1}${seq.repeatCount > 0 ? '/' + seq.repeatCount : ''})`;
-            return;
-        }
-
-        // Check if we should switch to next loadout
-        if (seq.nextLoadout >= 0 && seq.nextLoadout < loadoutManager.count) {
-            this._loadoutRunCount = 0;
-            loadoutManager.saveActive(queue);
-            if (executor) executor.clearSnapshot();
-            loadoutManager.switchTo(seq.nextLoadout, queue);
-            // Regenerate if new loadout is strategy-backed
-            this._regenerateStrategyQueue();
-            if (this._refreshLoadouts) this._refreshLoadouts();
-            if (queuePanelUI) queuePanelUI.refresh();
-
-            // Start the new loadout
-            if (executor) executor.start();
-            statusText.textContent = `Running ${loadoutManager.activeName}...`;
-            return;
-        }
-
-        // No sequencing — fall through to drain or stop
-        const settings2 = this._savedSettings ? this._savedSettings() : {};
-        statusText.textContent = settings2.drainEnabled !== false ? 'Draining energy...' : 'Queue finished';
+        this._connectEngineCallbacks(engine);
     }
 
     /**
-     * If immediate mode is active and the executor is idle, start execution
-     * so the newly-added entry runs immediately.
+     * Called when the engine becomes available after the panel was already created.
+     * Performs all the wiring that couldn't happen during initial setup.
      */
-    _maybeExecuteImmediate() {
-        const settings = this._savedSettings ? this._savedSettings() : {};
-        if (!settings.immediateMode) return;
-        if (!queue) return;
+    _lateWireEngine(engine) {
+        log('info', 'Engine now available — performing late wiring');
+        this._connectEngineCallbacks(engine);
 
-        // Don't auto-execute for strategy-backed (Auto) loadouts — they manage their own queue
-        if (loadoutManager?.isStrategyBacked(loadoutManager.activeIndex)) return;
+        // Bind queue panel (couldn't bind during _setupQueue because engine was null)
+        const queue = engine.queue;
+        if (queue && this._queuePanelUI) {
+            this._queuePanelUI.bind(queue, () => {
+                engine.saveActiveLoadout();
+                engine.schedulePredictions();
+            });
+        }
+
+        // Sync engine settings to UI controls (they defaulted to HTML defaults)
+        this._syncSettingsToUI(engine);
+
+        // Refresh loadout dropdown with engine data
+        this._refreshLoadoutSelect();
+
+        // If catalog already arrived before we wired up, handle it now
+        if (engine.catalog) {
+            this._handleCatalogChanged(engine.catalog);
+        }
+    }
+
+    _connectEngineCallbacks(engine) {
+        if (!engine) return;
 
         const statusText = this.rootElement.querySelector('.aq-status-text');
 
-        // Create executor if needed
-        if (!executor) {
-            const execSettings = { ...settings, drainEnabled: false, autoReset: false };
-            executor = new JTAQueueExecutor(queue, getModuleEventBus(), moduleId, execSettings);
-            executor.onStatusChange = () => this._refreshUI();
-            executor.onQueueExhausted = () => this._handleQueueExhausted(statusText);
-            executor.onBeforeReset = () => this._regenerateStrategyQueue();
-        }
-
-        // If already running, the new entry will be picked up by _handleQueueExhausted
-        if (executor.isRunning) return;
-
-        // Override drain/reset for immediate mode
-        executor.updateConfig({ drainEnabled: false, autoReset: false });
-
-        // Append new entries to existing snapshot (preserves completed state)
-        // If no snapshot exists, start() will create one from the full queue
-        if (executor.snapshot) {
-            executor.appendNewEntries();
-        }
-
-        // Set tracking state if available
-        if (lastSimState) {
-            executor.setTrackingState(
-                lastSimState.currentEnergy,
-                lastGameState ? snapshotSkillsFromGameState(lastGameState) : null
-            );
-        }
-
-        executor.start();
-        if (statusText) statusText.textContent = 'Running (immediate)...';
-        this._refreshUI();
+        engine.onStatusChange = () => this._refreshUI();
+        engine.onStatusMessage = (msg) => { if (statusText) statusText.textContent = msg; };
+        engine.onPredictionsChanged = (preds) => {
+            if (this._queuePanelUI) this._queuePanelUI.setPredictions(preds);
+        };
+        engine.onCatalogChanged = (catalog) => this._handleCatalogChanged(catalog);
+        engine.onReasoningChanged = () => this._refreshReasoningLog();
+        engine.onLoadoutsChanged = () => this._refreshLoadoutSelect();
     }
+
+    // =================================================================
+    // Controls (buttons)
+    // =================================================================
+
+    _setupControls() {
+        const el = this.rootElement;
+
+        el.querySelector('.aq-start-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.start();
+        });
+
+        el.querySelector('.aq-next-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.stepOne();
+        });
+
+        el.querySelector('.aq-stop-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.stop();
+        });
+
+        el.querySelector('.aq-drain-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.drain();
+        });
+
+        el.querySelector('.aq-reset-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.reset();
+        });
+
+        el.querySelector('.aq-clear-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.clear();
+        });
+
+        el.querySelector('.aq-undo-btn').addEventListener('click', () => {
+            const engine = getEngine();
+            if (engine) engine.undo();
+        });
+
+        // Stop-after checkbox synced to engine
+        const stopAfter = el.querySelector('.aq-setting-stop-after');
+        stopAfter.addEventListener('change', () => {
+            const engine = getEngine();
+            if (engine) engine.stopAfter = stopAfter.checked;
+        });
+    }
+
+    // =================================================================
+    // Loadouts
+    // =================================================================
 
     _setupLoadouts() {
         const el = this.rootElement;
         const select = el.querySelector('.aq-loadout-select');
 
-        const refreshSelect = () => {
-            if (!loadoutManager) return;
-            const loadouts = loadoutManager.getLoadouts();
-            select.innerHTML = loadouts.map((l, i) =>
-                `<option value="${i}">${l.name}</option>`
-            ).join('');
-            select.selectedIndex = loadoutManager.activeIndex;
-            this._refreshSequencingUI();
-        };
-
         select.addEventListener('change', () => {
-            if (!loadoutManager || !queue) return;
-            // Save current queue before switching
-            loadoutManager.saveActive(queue);
-            if (executor) executor.clearSnapshot();
-            loadoutManager.switchTo(select.selectedIndex, queue);
-            // Regenerate if switching to a strategy-backed loadout
-            if (!this._regenerateStrategyQueue()) {
-                this._lastReasoning = null;
-                this._refreshReasoningLog();
+            const engine = getEngine();
+            if (engine) {
+                engine.switchLoadout(select.selectedIndex);
+                if (this._queuePanelUI) this._queuePanelUI.refresh();
+                this._refreshSequencingUI();
             }
-            this._refreshUI();
-            if (queuePanelUI) queuePanelUI.refresh();
-            this._refreshSequencingUI();
-            this._schedulePredictions();
         });
 
         el.querySelector('.aq-loadout-save').addEventListener('click', () => {
-            if (loadoutManager && queue) {
-                loadoutManager.saveActive(queue);
-            }
+            const engine = getEngine();
+            if (engine) engine.saveActiveLoadout();
         });
 
         el.querySelector('.aq-loadout-new').addEventListener('click', () => {
-            if (!loadoutManager || !queue) return;
-            loadoutManager.saveActive(queue);
-            const name = prompt('Loadout name:', `Loadout ${loadoutManager.count + 1}`);
+            const engine = getEngine();
+            if (!engine || !engine.loadoutManager) return;
+            engine.saveActiveLoadout();
+            const name = prompt('Loadout name:', `Loadout ${engine.loadoutManager.count + 1}`);
             if (name === null) return;
-            loadoutManager.create(name, queue);
-            if (executor) executor.clearSnapshot();
-            refreshSelect();
-            this._refreshUI();
-            if (queuePanelUI) queuePanelUI.refresh();
+            engine.createLoadout(name);
+            if (this._queuePanelUI) this._queuePanelUI.refresh();
         });
 
         el.querySelector('.aq-loadout-rename').addEventListener('click', () => {
-            if (!loadoutManager) return;
-            const name = prompt('New name:', loadoutManager.activeName);
+            const engine = getEngine();
+            if (!engine || !engine.loadoutManager) return;
+            const name = prompt('New name:', engine.loadoutManager.activeName);
             if (name === null) return;
-            loadoutManager.rename(loadoutManager.activeIndex, name);
-            refreshSelect();
+            engine.renameLoadout(engine.loadoutManager.activeIndex, name);
         });
 
         el.querySelector('.aq-loadout-delete').addEventListener('click', () => {
-            if (!loadoutManager || !queue) return;
-            if (loadoutManager.count <= 1) return;
-            if (!confirm(`Delete "${loadoutManager.activeName}"?`)) return;
-            loadoutManager.delete(loadoutManager.activeIndex);
-            loadoutManager.loadActive(queue);
-            if (executor) executor.clearSnapshot();
-            refreshSelect();
-            this._refreshUI();
-            if (queuePanelUI) queuePanelUI.refresh();
+            const engine = getEngine();
+            if (!engine || !engine.loadoutManager) return;
+            if (engine.loadoutManager.count <= 1) return;
+            if (!confirm(`Delete "${engine.loadoutManager.activeName}"?`)) return;
+            engine.deleteLoadout(engine.loadoutManager.activeIndex);
+            if (this._queuePanelUI) this._queuePanelUI.refresh();
         });
 
-        // Initial populate
-        refreshSelect();
-        this._refreshLoadouts = refreshSelect;
+        this._refreshLoadoutSelect();
     }
 
-    _refreshSequencingUI() {
-        const el = this.rootElement;
-        if (!loadoutManager) return;
+    _refreshLoadoutSelect() {
+        const engine = getEngine();
+        const lm = engine?.loadoutManager;
+        if (!lm) return;
 
+        const select = this.rootElement.querySelector('.aq-loadout-select');
+        const loadouts = lm.getLoadouts();
+        select.innerHTML = loadouts.map((l, i) =>
+            `<option value="${i}">${l.name}</option>`
+        ).join('');
+        select.selectedIndex = lm.activeIndex;
+        this._refreshSequencingUI();
+    }
+
+    // =================================================================
+    // Sequencing
+    // =================================================================
+
+    _refreshSequencingUI() {
+        const engine = getEngine();
+        const lm = engine?.loadoutManager;
+        if (!lm) return;
+
+        const el = this.rootElement;
         const repeatInput = el.querySelector('.aq-seq-repeat');
         const nextSelect = el.querySelector('.aq-seq-next');
         if (!repeatInput || !nextSelect) return;
 
-        const seq = loadoutManager.getSequencing(loadoutManager.activeIndex);
+        const seq = lm.getSequencing(lm.activeIndex);
         repeatInput.value = seq.repeatCount;
 
-        // Populate next-loadout dropdown
-        const loadouts = loadoutManager.getLoadouts();
+        const loadouts = lm.getLoadouts();
         nextSelect.innerHTML = '<option value="-1">(stop)</option>' +
             loadouts.map((l, i) => `<option value="${i}">${l.name}</option>`).join('');
         nextSelect.value = String(seq.nextLoadout);
@@ -1023,8 +746,10 @@ class JTAActionQueuePanel {
         const nextSelect = el.querySelector('.aq-seq-next');
 
         const persistSeq = () => {
-            if (!loadoutManager) return;
-            loadoutManager.updateSequencing(loadoutManager.activeIndex, {
+            const engine = getEngine();
+            const lm = engine?.loadoutManager;
+            if (!lm) return;
+            engine.updateSequencing(lm.activeIndex, {
                 repeatCount: parseInt(repeatInput.value, 10) || 0,
                 nextLoadout: parseInt(nextSelect.value, 10),
             });
@@ -1033,6 +758,10 @@ class JTAActionQueuePanel {
         repeatInput.addEventListener('change', persistSeq);
         nextSelect.addEventListener('change', persistSeq);
     }
+
+    // =================================================================
+    // Settings
+    // =================================================================
 
     _setupSettings() {
         const el = this.rootElement;
@@ -1044,49 +773,35 @@ class JTAActionQueuePanel {
         const showActualsCheckbox = el.querySelector('.aq-setting-show-actuals');
         const showComparisonCheckbox = el.querySelector('.aq-setting-show-comparison');
         const radios = el.querySelectorAll('input[name="aq-drain-strategy"]');
-
-        // Auto-queue strategy level dropdown (disabled for now)
         const strategyLevelSelect = el.querySelector('.aq-strategy-level');
         const verboseLogCheckbox = el.querySelector('.aq-setting-verbose-log');
 
-        // Load persisted settings
-        try {
-            const saved = JSON.parse(localStorage.getItem('jta-aq-settings') || '{}');
-            if (saved.drainEnabled === false) {
-                drainCheckbox.checked = false;
-                drainOptions.style.opacity = '0.5';
-                drainOptions.style.pointerEvents = 'none';
-            }
-            if (saved.autoReset === true) {
-                autoResetCheckbox.checked = true;
-            }
-            if (saved.addToTop === true) {
-                addToTopCheckbox.checked = true;
-            }
-            if (saved.immediateMode === true) {
-                immediateCheckbox.checked = true;
-            }
-            if (saved.showActuals === true) {
-                showActualsCheckbox.checked = true;
-            }
-            if (saved.showComparison === true) {
-                showComparisonCheckbox.checked = true;
-            }
-            if (saved.drainStrategy) {
-                const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${saved.drainStrategy}"]`);
-                if (radio) radio.checked = true;
-            }
-            if (saved.strategyLevel) {
-                strategyLevelSelect.value = saved.strategyLevel;
-            }
-            if (saved.verboseLog === true) {
-                verboseLogCheckbox.checked = true;
-            }
-        } catch (e) { /* ignore */ }
+        // Load initial values from engine settings
+        const engine = getEngine();
+        const settings = engine ? engine.settings : {};
+        if (settings.drainEnabled === false) {
+            drainCheckbox.checked = false;
+            drainOptions.style.opacity = '0.5';
+            drainOptions.style.pointerEvents = 'none';
+        }
+        if (settings.autoReset) autoResetCheckbox.checked = true;
+        if (settings.addToTop) addToTopCheckbox.checked = true;
+        if (settings.immediateMode) immediateCheckbox.checked = true;
+        if (settings.showActuals) showActualsCheckbox.checked = true;
+        if (settings.showComparison) showComparisonCheckbox.checked = true;
+        if (settings.drainStrategy) {
+            const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${settings.drainStrategy}"]`);
+            if (radio) radio.checked = true;
+        }
+        if (settings.strategyLevel) strategyLevelSelect.value = settings.strategyLevel;
+        if (settings.verboseLog) verboseLogCheckbox.checked = true;
 
-        const persistSettings = () => {
+        // Push changes to engine
+        const pushSettings = () => {
+            const engine = getEngine();
+            if (!engine) return;
             const strategy = el.querySelector('input[name="aq-drain-strategy"]:checked')?.value || 'mostDraining';
-            const settings = {
+            engine.updateSettings({
                 drainEnabled: drainCheckbox.checked,
                 drainStrategy: strategy,
                 autoReset: autoResetCheckbox.checked,
@@ -1096,97 +811,165 @@ class JTAActionQueuePanel {
                 showComparison: showComparisonCheckbox.checked,
                 strategyLevel: strategyLevelSelect.value,
                 verboseLog: verboseLogCheckbox.checked,
-            };
-            localStorage.setItem('jta-aq-settings', JSON.stringify(settings));
-            if (executor) executor.updateConfig(settings);
+            });
         };
 
         drainCheckbox.addEventListener('change', () => {
             const enabled = drainCheckbox.checked;
             drainOptions.style.opacity = enabled ? '1' : '0.5';
             drainOptions.style.pointerEvents = enabled ? 'auto' : 'none';
-            persistSettings();
+            pushSettings();
         });
 
-        autoResetCheckbox.addEventListener('change', persistSettings);
-        addToTopCheckbox.addEventListener('change', persistSettings);
-        immediateCheckbox.addEventListener('change', persistSettings);
-        strategyLevelSelect.addEventListener('change', persistSettings);
-        for (const radio of radios) {
-            radio.addEventListener('change', persistSettings);
-        }
+        autoResetCheckbox.addEventListener('change', pushSettings);
+        addToTopCheckbox.addEventListener('change', pushSettings);
+        immediateCheckbox.addEventListener('change', pushSettings);
+        strategyLevelSelect.addEventListener('change', pushSettings);
+        for (const radio of radios) radio.addEventListener('change', pushSettings);
 
         const updateDisplayOptions = () => {
-            if (queuePanelUI) queuePanelUI.setDisplayOptions({
+            if (this._queuePanelUI) this._queuePanelUI.setDisplayOptions({
                 showActuals: showActualsCheckbox.checked,
                 showComparison: showComparisonCheckbox.checked,
             });
         };
-        showActualsCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
-        showComparisonCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
-        verboseLogCheckbox.addEventListener('change', () => { persistSettings(); this._refreshReasoningLog(); });
+        showActualsCheckbox.addEventListener('change', () => { pushSettings(); updateDisplayOptions(); });
+        showComparisonCheckbox.addEventListener('change', () => { pushSettings(); updateDisplayOptions(); });
+        verboseLogCheckbox.addEventListener('change', () => { pushSettings(); this._refreshReasoningLog(); });
+    }
 
-        // Store ref so executor can be initialized with saved settings
-        this._savedSettings = () => {
-            const strategy = el.querySelector('input[name="aq-drain-strategy"]:checked')?.value || 'mostDraining';
-            return {
-                drainEnabled: drainCheckbox.checked,
-                drainStrategy: strategy,
-                autoReset: autoResetCheckbox.checked,
-                addToTop: addToTopCheckbox.checked,
-                immediateMode: immediateCheckbox.checked,
-                strategyLevel: strategyLevelSelect.value,
-            };
+    // =================================================================
+    // Queue Panel
+    // =================================================================
+
+    _setupQueue() {
+        const queueSection = this.rootElement.querySelector('.aq-queue-section');
+        this._queuePanelUI = new JTAQueuePanelUI(queueSection);
+
+        // Apply saved display options
+        const engine = getEngine();
+        const settings = engine ? engine.settings : {};
+        this._queuePanelUI.setDisplayOptions({
+            showActuals: settings.showActuals || false,
+            showComparison: settings.showComparison || false,
+        });
+
+        const onQueueChanged = () => {
+            const engine = getEngine();
+            if (engine) {
+                engine.saveActiveLoadout();
+                engine.schedulePredictions();
+            }
+        };
+
+        const queue = engine?.queue;
+        if (queue) this._queuePanelUI.bind(queue, onQueueChanged);
+
+        // Handle actions dragged from actions panel onto queue
+        this._queuePanelUI.onExternalDrop = (catalogEntry, targetIndex) => {
+            const engine = getEngine();
+            const queue = engine?.queue;
+            if (!queue) return;
+            const queueEntry = createQueueEntry(catalogEntry);
+            queue.add(queueEntry, targetIndex);
+            this._queuePanelUI.refresh();
+            if (engine) {
+                engine.saveActiveLoadout();
+                engine.maybeExecuteImmediate();
+            }
         };
     }
 
-    /**
-     * If the active loadout is strategy-backed, regenerate its queue entries
-     * from the current game state.
-     * @returns {boolean} true if regeneration occurred
-     */
-    _regenerateStrategyQueue() {
-        if (!loadoutManager || !queue || !lastSimState) return false;
-        const strategy = loadoutManager.getStrategy(loadoutManager.activeIndex);
-        if (!strategy) return false;
+    // =================================================================
+    // Catalog Changed (from engine)
+    // =================================================================
 
-        const strategyLevel = this._savedSettings ? this._savedSettings().strategyLevel : StrategyLevel.PUSH_COLLECT;
-        const result = buildQueueForStrategy(lastSimState, strategy, strategyLevel);
-        queue.clear();
-        for (const entry of result.entries) queue.add(entry);
-        loadoutManager.saveActive(queue);
-        this._lastReasoning = result.reasoning;
-        this._refreshReasoningLog();
-        log('info', `Regenerated strategy queue: ${strategyLevel} (${result.entries.length} entries)`);
-        return true;
+    _handleCatalogChanged(catalog) {
+        const engine = getEngine();
+
+        // Ensure engine callbacks are wired (handles case where engine wasn't ready at panel creation)
+        this._connectEngineCallbacks(engine);
+
+        // Ensure queue panel is bound
+        const queue = engine?.queue;
+        if (this._queuePanelUI && queue && !this._queuePanelUI._bound) {
+            this._queuePanelUI.bind(queue, () => {
+                if (engine) {
+                    engine.saveActiveLoadout();
+                    engine.schedulePredictions();
+                }
+            });
+            this._queuePanelUI._bound = true;
+        }
+
+        // Refresh loadout dropdown
+        this._refreshLoadoutSelect();
+
+        // Create actions panel
+        const actionsSection = this.rootElement.querySelector('.aq-actions-section');
+        this._actionsPanelUI = new JTAActionsPanelUI(actionsSection);
+        const getInsertIndex = () => {
+            const settings = engine ? engine.settings : {};
+            return settings.addToTop ? 0 : undefined;
+        };
+        this._actionsPanelUI.bind(queue, catalog, () => {
+            if (this._queuePanelUI) this._queuePanelUI.refresh();
+            if (engine) {
+                engine.saveActiveLoadout();
+                engine.schedulePredictions();
+                engine.maybeExecuteImmediate();
+            }
+        }, getInsertIndex);
     }
+
+    // =================================================================
+    // Refresh UI
+    // =================================================================
+
+    _refreshUI() {
+        const engine = getEngine();
+        if (this._queuePanelUI) {
+            const snapshot = engine?.executor?.snapshot ?? null;
+            const predictions = engine?.predictions ?? null;
+            // Freeze predictions onto new snapshots for comparison
+            if (snapshot && !snapshot.frozenPredictions && predictions) {
+                snapshot.frozenPredictions = new Map(predictions);
+            }
+            this._queuePanelUI.setSnapshot(snapshot);
+            this._queuePanelUI.setPredictions(predictions);
+        }
+    }
+
+    // =================================================================
+    // Reasoning Log (pure rendering)
+    // =================================================================
 
     _refreshReasoningLog() {
         const body = this.rootElement?.querySelector('.aq-reasoning-body');
         if (!body) return;
 
-        const r = this._lastReasoning;
+        const engine = getEngine();
+        const r = engine?.lastReasoning;
         if (!r) {
             body.innerHTML = '<div style="opacity: 0.5; font-style: italic;">No strategy queue generated yet.</div>';
             return;
         }
 
-        // Helpers for table formatting
         const pad = (str, len) => String(str).padEnd(len);
         const rpad = (str, len) => String(str).padStart(len);
-        const truncName = (name, max) => name.length > max ? name.substring(0, max - 1) + '…' : name;
+        const truncName = (name, max) => name.length > max ? name.substring(0, max - 1) + '\u2026' : name;
         const tblRow = (cls, cols) => `<span class="${cls}">${cols}</span>`;
         const pre = (html) => `<pre style="margin:0; font-size:inherit; font-family:inherit; white-space:pre;">${html}</pre>`;
 
         const sections = [];
 
-        // Header: strategy level + run type
-        sections.push(`<div class="aq-reason-header"><strong>${r.strategyLevel}</strong> — ${r.runType || 'unknown'} run</div>`);
+        // Header
+        sections.push(`<div class="aq-reason-header"><strong>${r.strategyLevel}</strong> \u2014 ${r.runType || 'unknown'} run</div>`);
 
         // State summary
         const s = r.state;
         const skillParts = Object.entries(s.skillLevels).map(([name, lvl]) => `${name}:${lvl}`).join(' ');
-        const itemParts = Object.entries(s.items).map(([name, count]) => `${name}×${count}`).join(', ');
+        const itemParts = Object.entries(s.items).map(([name, count]) => `${name}\u00d7${count}`).join(', ');
         sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">State</div><div class="aq-reason-grid">` +
             `<span>Energy: ${fmtE(s.maxEnergy)}${s.currentEnergy !== undefined ? ` (current: ${fmtE(s.currentEnergy)})` : ''} | Zone: ${s.highestZone + 1} | Perks: ${s.perkCount}</span>` +
             (skillParts ? `<span>Skills: ${skillParts}</span>` : '') +
@@ -1197,7 +980,7 @@ class JTAActionQueuePanel {
         if (r.pushCollect) {
             const pc = r.pushCollect;
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Push/Collect Decision</div><div class="aq-reason-grid">` +
-                `<span>${pc.shouldPush ? '→ PUSH' : '→ COLLECT'}: ${pc.reason}</span>` +
+                `<span>${pc.shouldPush ? '\u2192 PUSH' : '\u2192 COLLECT'}: ${pc.reason}</span>` +
                 (pc.nextNewZone !== null ? `<span>Next new zone: ${pc.nextNewZone + 1}, traversal cost: ${fmtE(pc.totalCostToNextNewZone)}</span>` : '') +
                 `<span>Energy: ${fmtE(pc.energy)}, item energy: ${fmtE(pc.itemEnergy)}</span>` +
                 `</div></div>`);
@@ -1206,8 +989,8 @@ class JTAActionQueuePanel {
         // Items consumed
         if (r.itemsConsumed.length > 0) {
             const itemRows = r.itemsConsumed.map(ic => {
-                if (ic.type === 'energy') return `<span class="aq-reason-queued">${ic.name} ×${ic.count} (+${fmtE(ic.energyValue)} energy)</span>`;
-                return `<span class="aq-reason-queued">${ic.name} ×${ic.count} (skill boost)</span>`;
+                if (ic.type === 'energy') return `<span class="aq-reason-queued">${ic.name} \u00d7${ic.count} (+${fmtE(ic.energyValue)} energy)</span>`;
+                return `<span class="aq-reason-queued">${ic.name} \u00d7${ic.count} (skill boost)</span>`;
             }).join('');
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Items Consumed</div><div class="aq-reason-grid">${itemRows}</div></div>`);
         }
@@ -1215,10 +998,10 @@ class JTAActionQueuePanel {
         // Reachability table
         if (r.reachability.zones) {
             const reach = r.reachability;
-            const NW = 22; // zone name width
+            const NW = 22;
             const rows = [];
             rows.push(`${rpad('Z', 2)} ${pad('Zone', NW)} ${rpad('Cost', 7)} ${rpad('Remain', 7)}`);
-            rows.push('─'.repeat(NW + 19));
+            rows.push('\u2500'.repeat(NW + 19));
             for (let i = 0; i < reach.zones.length; i++) {
                 const z = reach.zones[i];
                 const prev = i > 0 ? reach.zones[i - 1] : null;
@@ -1237,63 +1020,63 @@ class JTAActionQueuePanel {
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Zone Reachability (${reach.zonesReachable} zones, ${fmtE(reach.totalEnergy)} energy)</div>${pre(rows.join('\n'))}</div>`);
         }
 
-        // Perk decisions table
+        // Perk decisions
         if (r.perkDecisions.length > 0) {
             const NW = 22;
             const rows = [];
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Total', 7)}  Reason`);
-            rows.push('─'.repeat(NW + 41));
+            rows.push('\u2500'.repeat(NW + 41));
             for (const d of r.perkDecisions) {
-                const mark = d.queued ? '✓' : '✗';
+                const mark = d.queued ? '\u2713' : '\u2717';
                 const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
                 rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(fmtE(d.totalEnergyNeeded), 7)}  ${d.reason}`));
             }
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Perk Tasks (Priority 1)</div>${pre(rows.join('\n'))}</div>`);
         }
 
-        // Item decisions table
+        // Item decisions
         if (r.itemDecisions.length > 0) {
             const NW = 22;
             const rows = [];
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Value', 7)} ${rpad('Net', 7)}  Reason`);
-            rows.push('─'.repeat(NW + 48));
+            rows.push('\u2500'.repeat(NW + 48));
             for (const d of r.itemDecisions) {
-                const mark = d.queued ? '✓' : '✗';
+                const mark = d.queued ? '\u2713' : '\u2717';
                 const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
                 rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(fmtE(d.itemValue), 7)} ${rpad(fmtE(d.netGain), 7)}  ${d.reason}`));
             }
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Energy Items (Priority 2)</div>${pre(rows.join('\n'))}</div>`);
         }
 
-        // Boost decisions table
+        // Boost decisions
         if (r.boostDecisions.length > 0) {
             const NW = 22;
             const rows = [];
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Bon/E', 7)}  Reason`);
-            rows.push('─'.repeat(NW + 41));
+            rows.push('\u2500'.repeat(NW + 41));
             for (const d of r.boostDecisions) {
-                const mark = d.queued ? '✓' : '✗';
+                const mark = d.queued ? '\u2713' : '\u2717';
                 const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
                 rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(d.bonusPerEnergy.toFixed(3), 7)}  ${d.reason}`));
             }
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Skill Boost Items (Priority 3)</div>${pre(rows.join('\n'))}</div>`);
         }
 
-        // Boss decisions table
+        // Boss decisions
         if (r.bossDecisions.length > 0) {
             const NW = 22;
             const rows = [];
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)}  Reason`);
-            rows.push('─'.repeat(NW + 31));
+            rows.push('\u2500'.repeat(NW + 31));
             for (const d of r.bossDecisions) {
-                const mark = d.queued ? '✓' : '✗';
+                const mark = d.queued ? '\u2713' : '\u2717';
                 const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
                 rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)}  ${d.reason}`));
             }
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Boss Tasks (Priority 4)</div>${pre(rows.join('\n'))}</div>`);
         }
 
-        // Grind plan / All tasks table
+        // Grind plan / All tasks
         const verbose = this.rootElement?.querySelector('.aq-setting-verbose-log')?.checked || false;
         const NW = 22;
         if (verbose && r.allTasks) {
@@ -1303,10 +1086,10 @@ class JTAActionQueuePanel {
             rows.push(`Budget: ${fmtE(gp.budget)}, selected ${gp.tasksSelected} of ${gp.tasksConsidered} grindable`);
             rows.push('');
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Cost', 7)} ${rpad('XP/E', 8)} ${pad('Skills', 7)} Type`);
-            rows.push('─'.repeat(NW + 38));
+            rows.push('\u2500'.repeat(NW + 38));
             for (const t of r.allTasks) {
                 const isSelected = selectedNames.has(t.task);
-                const mark = isSelected ? '✓' : '·';
+                const mark = isSelected ? '\u2713' : '\u00b7';
                 const cls = isSelected ? 'aq-reason-queued' : 'aq-reason-skipped';
                 const tags = [];
                 if (t.type !== 'Normal') tags.push(t.type);
@@ -1321,10 +1104,10 @@ class JTAActionQueuePanel {
             rows.push(`Budget: ${fmtE(gp.budget)}, selected ${gp.tasksSelected} of ${gp.tasksConsidered} candidates`);
             rows.push('');
             rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Cost', 7)} ${rpad('XP/E', 8)} Skills`);
-            rows.push('─'.repeat(NW + 31));
+            rows.push('\u2500'.repeat(NW + 31));
             for (const gt of gp.tasks) {
                 const note = gt.overBudget ? ' drain' : '';
-                rows.push(tblRow('aq-reason-queued', `✓ ${rpad(gt.zoneId + 1, 2)} ${pad(truncName(gt.task, NW), NW)} ${rpad(fmtE(gt.fullCost), 7)} ${rpad(gt.totalXpPerEnergy.toFixed(2), 8)} ${gt.skills.join('/')}${note}`));
+                rows.push(tblRow('aq-reason-queued', `\u2713 ${rpad(gt.zoneId + 1, 2)} ${pad(truncName(gt.task, NW), NW)} ${rpad(fmtE(gt.fullCost), 7)} ${rpad(gt.totalXpPerEnergy.toFixed(2), 8)} ${gt.skills.join('/')}${note}`));
             }
             sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">XP Grinding (Priority 5)</div>${pre(rows.join('\n'))}</div>`);
         } else if (r.grindPlan.budget !== undefined) {
@@ -1340,9 +1123,9 @@ class JTAActionQueuePanel {
         body.innerHTML = sections.join('');
     }
 
-    _saveLoadout() {
-        if (loadoutManager && queue) loadoutManager.saveActive(queue);
-    }
+    // =================================================================
+    // Collapsible State Persistence
+    // =================================================================
 
     _setupCollapsibleState() {
         const sections = [
@@ -1371,153 +1154,51 @@ class JTAActionQueuePanel {
         });
     }
 
-    _setupQueue() {
-        const queueSection = this.rootElement.querySelector('.aq-queue-section');
-        queuePanelUI = new JTAQueuePanelUI(queueSection);
+    /**
+     * Sync engine settings to UI controls. Used during late wiring when
+     * _setupSettings() ran before the engine existed.
+     */
+    _syncSettingsToUI(engine) {
+        const settings = engine.settings;
+        const el = this.rootElement;
 
-        // Apply saved display options
-        try {
-            const saved = JSON.parse(localStorage.getItem('jta-aq-settings') || '{}');
-            queuePanelUI.setDisplayOptions({
-                showActuals: saved.showActuals || false,
-                showComparison: saved.showComparison || false,
+        const drainCheckbox = el.querySelector('.aq-setting-drain');
+        const drainOptions = el.querySelector('.aq-drain-options');
+        const autoResetCheckbox = el.querySelector('.aq-setting-autoreset');
+        const addToTopCheckbox = el.querySelector('.aq-setting-add-to-top');
+        const immediateCheckbox = el.querySelector('.aq-setting-immediate');
+        const showActualsCheckbox = el.querySelector('.aq-setting-show-actuals');
+        const showComparisonCheckbox = el.querySelector('.aq-setting-show-comparison');
+        const strategyLevelSelect = el.querySelector('.aq-strategy-level');
+        const verboseLogCheckbox = el.querySelector('.aq-setting-verbose-log');
+
+        drainCheckbox.checked = settings.drainEnabled !== false;
+        drainOptions.style.opacity = drainCheckbox.checked ? '1' : '0.5';
+        drainOptions.style.pointerEvents = drainCheckbox.checked ? 'auto' : 'none';
+        autoResetCheckbox.checked = !!settings.autoReset;
+        addToTopCheckbox.checked = !!settings.addToTop;
+        immediateCheckbox.checked = !!settings.immediateMode;
+        showActualsCheckbox.checked = !!settings.showActuals;
+        showComparisonCheckbox.checked = !!settings.showComparison;
+        if (settings.drainStrategy) {
+            const radio = el.querySelector(`input[name="aq-drain-strategy"][value="${settings.drainStrategy}"]`);
+            if (radio) radio.checked = true;
+        }
+        if (settings.strategyLevel) strategyLevelSelect.value = settings.strategyLevel;
+        verboseLogCheckbox.checked = !!settings.verboseLog;
+
+        if (this._queuePanelUI) {
+            this._queuePanelUI.setDisplayOptions({
+                showActuals: !!settings.showActuals,
+                showComparison: !!settings.showComparison,
             });
-        } catch (e) { /* ignore */ }
-
-        const onQueueChanged = () => {
-            this._saveLoadout();
-            this._schedulePredictions();
-        };
-
-        // queue may not exist yet (GL init runs before module init),
-        // so also bind lazily when game defs arrive
-        if (queue) queuePanelUI.bind(queue, onQueueChanged);
-
-        // Handle actions dragged from actions panel onto queue
-        queuePanelUI.onExternalDrop = (catalogEntry, targetIndex) => {
-            if (!queue) return;
-            const queueEntry = createQueueEntry(catalogEntry);
-            queue.add(queueEntry, targetIndex);
-            queuePanelUI.refresh();
-            this._saveLoadout();
-            this._maybeExecuteImmediate();
-        };
-    }
-
-    _ensureQueueBound() {
-        if (queuePanelUI && queue && !queuePanelUI._bound) {
-            queuePanelUI.bind(queue, () => this._saveLoadout());
-            queuePanelUI._bound = true;
-        }
-    }
-
-    _subscribeToGameDefs() {
-        const bus = getModuleEventBus();
-
-        const handleGameDefs = (data) => {
-            if (!data || !data.zones) return;
-            log('info', `Received game definitions: ${data.zones.length} zones`);
-
-            catalog = buildActionCatalog(data.zones, data.items || null);
-
-            // Ensure queue panel is bound now that queue exists (created in Phase 9)
-            this._ensureQueueBound();
-
-            // Refresh loadout dropdown (initialize() may have added strategy loadouts
-            // after the dropdown was first populated during GL panel construction)
-            if (this._refreshLoadouts) this._refreshLoadouts();
-
-            // Request game state for initial predictions
-            this._requestPredictionState();
-
-            const actionsSection = this.rootElement.querySelector('.aq-actions-section');
-            actionsPanelUI = new JTAActionsPanelUI(actionsSection);
-            const getInsertIndex = () => {
-                const settings = this._savedSettings ? this._savedSettings() : {};
-                return settings.addToTop ? 0 : undefined;
-            };
-            actionsPanelUI.bind(queue, catalog, () => {
-                if (queuePanelUI) queuePanelUI.refresh();
-                this._saveLoadout();
-                this._schedulePredictions();
-                this._maybeExecuteImmediate();
-            }, getInsertIndex);
-        };
-
-        const unsub = bus.subscribe('jta:gameDefsSnapshot', handleGameDefs);
-        this._unsubs.push(typeof unsub === 'function' ? unsub : () => bus.unsubscribe('jta:gameDefsSnapshot', handleGameDefs));
-
-        const handleConnected = () => {
-            setTimeout(() => {
-                bus.publish('jta:requestGameDefs', {});
-            }, 500);
-        };
-        const unsub2 = bus.subscribe('iframe:connected', handleConnected);
-        this._unsubs.push(typeof unsub2 === 'function' ? unsub2 : () => bus.unsubscribe('iframe:connected', handleConnected));
-
-        // Subscribe to detailed state for predictions
-        const handleDetailedState = (data) => {
-            if (!data || !data.state) return;
-            lastGameState = data.state;
-            lastSimState = convertToSimState(data.state);
-            this._runPredictions();
-        };
-        const unsub3 = bus.subscribe('jta:detailedStateSnapshot', handleDetailedState);
-        this._unsubs.push(typeof unsub3 === 'function' ? unsub3 : () => bus.unsubscribe('jta:detailedStateSnapshot', handleDetailedState));
-
-        // Request immediately in case already connected
-        setTimeout(() => {
-            bus.publish('jta:requestGameDefs', {});
-        }, 1000);
-    }
-
-    /** Request fresh game state for predictions */
-    _requestPredictionState() {
-        const bus = getModuleEventBus();
-        bus.publish('jta:requestDetailedState', {});
-    }
-
-    /** Run predictions (debounced) */
-    _schedulePredictions() {
-        if (predictionDebounceTimer) clearTimeout(predictionDebounceTimer);
-        predictionDebounceTimer = setTimeout(() => {
-            predictionDebounceTimer = null;
-            this._requestPredictionState();
-        }, 250);
-    }
-
-    /** Run predictions with current sim state */
-    _runPredictions() {
-        if (!lastSimState || !queue) {
-            predictions = null;
-        } else {
-            try {
-                predictions = predictQueue(queue, lastSimState);
-            } catch (e) {
-                log('warn', 'Prediction error:', e);
-                predictions = null;
-            }
-        }
-        if (queuePanelUI) queuePanelUI.setPredictions(predictions);
-    }
-
-    _refreshUI() {
-        if (queuePanelUI) {
-            const snapshot = executor?.snapshot ?? null;
-            // Freeze predictions onto new snapshots for comparison
-            if (snapshot && !snapshot.frozenPredictions && predictions) {
-                snapshot.frozenPredictions = new Map(predictions);
-            }
-            queuePanelUI.setSnapshot(snapshot);
-            queuePanelUI.setPredictions(predictions);
         }
     }
 
     destroy() {
-        for (const unsub of this._unsubs) {
-            try { unsub(); } catch (e) { /* ignore */ }
+        if (this._engineRetryTimer) {
+            clearInterval(this._engineRetryTimer);
+            this._engineRetryTimer = null;
         }
-        this._unsubs = [];
-        if (executor) executor.stop();
     }
 }

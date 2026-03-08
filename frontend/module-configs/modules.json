@@ -220,10 +220,15 @@
       "enabled": true,
       "requires": ["stateManager"]
     },
+    "jtaQueueEngine": {
+      "path": "./modules/jtaQueueEngine/index.js",
+      "enabled": true,
+      "requires": ["iframeAdapter", "iframePanel"]
+    },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
       "enabled": true,
-      "requires": ["iframeAdapter", "iframePanel"]
+      "requires": ["jtaQueueEngine"]
     },
     "jtaArchipelago": {
       "path": "./modules/jtaArchipelago/index.js",
@@ -281,6 +286,7 @@
     "ruleConverter",
     "proofQueue",
     "proofGraph",
+    "jtaQueueEngine",
     "jtaActionQueue",
     "jtaArchipelago"
   ]

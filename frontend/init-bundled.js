@@ -109,6 +109,7 @@ import * as mazeGameDataPanelModule from './modules/mazeGameDataPanel/index.js';
 import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
 import * as proofGraphModule from './modules/proofGraph/index.js';
+import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
 import * as jtaActionQueueModule from './modules/jtaActionQueue/index.js';
 
 // ============================================================================
@@ -188,6 +189,7 @@ const BUNDLED_MODULES = {
   jtaGameDataPanel: jtaGameDataPanelModule,
   proofQueue: proofQueueModule,
   proofGraph: proofGraphModule,
+  jtaQueueEngine: jtaQueueEngineModule,
   jtaActionQueue: jtaActionQueueModule,
 };
 
