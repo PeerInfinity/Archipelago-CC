@@ -15,6 +15,10 @@ function fmtEnergy(value) {
     return Math.round(value).toLocaleString();
 }
 
+function truncLabel(name, max) {
+    return name.length > max ? name.substring(0, max - 1) + '…' : name;
+}
+
 /**
  * Get CSS color class for remaining energy relative to max.
  */
@@ -125,7 +129,7 @@ export class JTAQueuePanelUI {
             return;
         }
 
-        section.style.display = '';
+        section.style.display = 'block';
         const list = section.querySelector('.aq-current-list');
         if (!list) return;
 
@@ -164,12 +168,14 @@ export class JTAQueuePanelUI {
                 if (status.energyAfter !== undefined) {
                     parts.push(`<span class="aq-actual-remaining">${fmtEnergy(status.energyAfter)}</span>`);
                 }
+                let skillInner = '';
                 if (status.actualSkillGains && Object.keys(status.actualSkillGains).length > 0) {
                     const skillParts = Object.values(status.actualSkillGains).map(g =>
                         `<span class="aq-actual-skill">+${g.gained.toFixed(1)} ${g.name.slice(0, 3)}</span>`
                     );
-                    parts.push(`<span class="aq-actual-skills">${skillParts.join(' ')}</span>`);
+                    skillInner = skillParts.join(' ');
                 }
+                parts.push(`<span class="aq-actual-skills">${skillInner}</span>`);
                 if (status.actualTimeMs !== undefined) {
                     parts.push(`<span class="aq-actual-time">${(status.actualTimeMs / 1000).toFixed(1)}s</span>`);
                 }
@@ -198,10 +204,14 @@ export class JTAQueuePanelUI {
             }
             const tooltip = tipParts.join('\n');
 
+            const zoneNum = entry.zoneId !== undefined ? String(entry.zoneId + 1) : '';
+            const nameCol = truncLabel(entry.label, 20);
+
             return `<div class="aq-current-entry ${stateClass} ${currentClass}" title="${tooltip.replace(/"/g, '&quot;')}">
                 <div class="aq-progress-bar" style="width: ${progressPct}%"></div>
                 <span class="aq-entry-index">${idx + 1}</span>
-                <span class="aq-entry-label">${entry.label}</span>
+                <span class="aq-col-zone">${zoneNum}</span>
+                <span class="aq-col-name">${nameCol}</span>
                 ${actualsHtml}
                 <span class="aq-current-loops">${loopDisplay}</span>
                 <span class="aq-entry-state">${state}</span>
@@ -323,13 +333,14 @@ export class JTAQueuePanelUI {
                 const insufficientClass = !pred.canComplete ? 'aq-pred-insufficient' : '';
 
                 // Skill gains inline (compact: "+2.3 Com +1.0 Str")
-                let skillHtml = '';
+                let skillInner = '';
                 if (pred.skillGains && Object.keys(pred.skillGains).length > 0) {
                     const parts = Object.values(pred.skillGains).map(g =>
                         `<span class="aq-pred-skill">+${g.gained.toFixed(1)} ${g.name.slice(0, 3)}</span>`
                     );
-                    skillHtml = `<span class="aq-pred-skills">${parts.join(' ')}</span>`;
+                    skillInner = parts.join(' ');
                 }
+                const skillHtml = `<span class="aq-pred-skills">${skillInner}</span>`;
 
                 predHtml = `<span class="aq-prediction ${insufficientClass}">
                     <span class="aq-pred-cost">${costSign}${fmtEnergy(costAbs)}</span>
@@ -349,11 +360,14 @@ export class JTAQueuePanelUI {
             }
 
             const titleAttr = predTooltip ? ` title="${predTooltip.replace(/"/g, '&quot;')}"` : '';
+            const zoneNum = entry.zoneId !== undefined ? String(entry.zoneId + 1) : '';
+            const nameCol = truncLabel(entry.label, 20) + loopText;
+
             return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}"${titleAttr}>
                 <span class="aq-entry-index">${idx + 1}</span>
-                <span class="aq-entry-label">${entry.label}${loopText}</span>
+                <span class="aq-col-zone">${zoneNum}</span>
+                <span class="aq-col-name">${nameCol}</span>
                 ${predHtml}
-                <span class="aq-entry-group">${entry.group || ''}</span>
                 <div class="aq-entry-buttons">
                     <button class="aq-btn aq-btn-up" data-action="up" title="Move up">&uarr;</button>
                     <button class="aq-btn aq-btn-down" data-action="down" title="Move down">&darr;</button>
@@ -370,27 +384,27 @@ export class JTAQueuePanelUI {
     #render() {
         this.#container.innerHTML = `
             <div class="aq-queue-panel">
-                <div class="aq-current-section" style="display: none; margin-bottom: 6px;">
-                    <div class="aq-section-header"><strong>Current</strong></div>
+                <details class="aq-current-section" style="display: none; margin-bottom: 6px;" open>
+                    <summary class="aq-section-header" style="cursor: pointer; user-select: none;"><strong>Current</strong></summary>
                     <div class="aq-current-list"></div>
-                </div>
+                </details>
                 <div class="aq-comparison-section" style="display: none; margin-bottom: 6px; border-bottom: 1px solid #444; padding-bottom: 6px;">
                     <div class="aq-section-header"><strong>Predicted vs Actual</strong></div>
                     <div class="aq-comparison-body"></div>
                 </div>
-                <div class="aq-next-section">
-                    <div class="aq-next-header">
+                <details class="aq-next-section" open>
+                    <summary class="aq-next-header" style="cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px;">
                         <strong>Next</strong>
-                        <div class="aq-amount-selector">
+                        <span class="aq-amount-selector" style="margin-left: auto; display: inline-flex; align-items: center; gap: 2px;">
                             <span class="aq-amount-label">&plusmn;</span>
                             <button class="aq-amount-btn aq-amount-active" data-amount="1">1</button>
                             <button class="aq-amount-btn" data-amount="5">5</button>
                             <button class="aq-amount-btn" data-amount="10">10</button>
                             <input type="number" class="aq-amount-input" min="1" max="999999" value="" placeholder="#" title="Custom loop amount" style="width: 40px; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 1px 3px; font-size: 0.75em;">
-                        </div>
-                    </div>
+                        </span>
+                    </summary>
                     <div class="aq-next-list" style="padding-bottom: 8px;"></div>
-                </div>
+                </details>
             </div>
         `;
 
@@ -400,6 +414,11 @@ export class JTAQueuePanelUI {
 
     #setupAmountSelector() {
         const amountSelector = this.#container.querySelector('.aq-amount-selector');
+
+        // Prevent clicks on amount controls from toggling the parent <details>/<summary>
+        amountSelector.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
 
         amountSelector.addEventListener('click', (e) => {
             const btn = e.target.closest('.aq-amount-btn');

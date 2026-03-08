@@ -100,7 +100,7 @@ const TICK_MS = 66.6;
 export function predictQueue(queue, simState) {
     const predictions = new Map();
     const entries = queue.getEntries();
-    let remainingEnergy = simState.currentEnergy;
+    let remainingEnergy = simState.maxEnergy;
 
     // Deep-clone mutable parts of state for rolling simulation
     const state = cloneSimState(simState);

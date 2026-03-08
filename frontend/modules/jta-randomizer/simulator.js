@@ -384,7 +384,7 @@ export function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xp
  * Calculate total XP value of a task (sum across all skills it trains)
  * Weighted by skill XP multipliers so harder-to-level skills count more
  */
-function calcTotalXpValue(task, zoneId, state) {
+export function calcTotalXpValue(task, zoneId, state) {
     const xpPerRep = calcTaskXp(task, zoneId, state);
     let totalValue = 0;
     for (const skill of task.skills) {

@@ -9,13 +9,14 @@
 //   artifactUsage    - (not yet implemented)
 
 import {
-    ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS, ARTIFACTS,
+    ZONES, ENERGY_ITEMS, ITEM_SKILL_MODIFIERS, ARTIFACTS, SKILL_NAMES,
     getMandatoryTasks, TaskType, ItemType,
 } from '../jta-randomizer/gameData.js';
 import {
     getReachableZones, calcZoneMandatoryEnergyCost, calcItemEnergy,
     getReachablePerkTasks, getReachableItemTasks, getReachableSkillBoostTasks,
     getReachableBossTasks, getAllReachableGrindableTasks, getItemType,
+    calcTaskEnergyCostSingleRep, calcTaskEnergyCost, calcTaskXp, calcTotalXpValue,
 } from '../jta-randomizer/simulator.js';
 import { JTAActionType } from './jtaActionDefs.js';
 import { generateEntryId } from '../shared/actionQueue/actionTypes.js';
@@ -62,36 +63,122 @@ function hasPushCollect(level) {
  * @param {object} simState - Simulator-format state (from convertToSimState)
  * @param {object} strategy - { type: 'auto' } (from loadout)
  * @param {string} [strategyLevel] - Strategy level from settings (defaults to 'pushCollect' for backward compat)
- * @returns {import('../shared/actionQueue/actionTypes.js').QueueEntry[]}
+ * @returns {{ entries: import('../shared/actionQueue/actionTypes.js').QueueEntry[], reasoning: StrategyReasoning }}
  */
 export function buildQueueForStrategy(simState, strategy, strategyLevel) {
     const level = strategyLevel || StrategyLevel.PUSH_COLLECT;
+    const reasoning = createReasoning(simState, level);
 
     // Push/collect: decide whether this run should push or collect
     if (hasPushCollect(level)) {
-        if (wouldAutoPush(simState)) {
-            return buildItemCollectionQueue(simState, true);
+        const pushDecision = analyzePushDecision(simState);
+        reasoning.pushCollect = pushDecision;
+        if (pushDecision.shouldPush) {
+            reasoning.runType = 'push';
+            reasoning.notes.push(`Push run: ${pushDecision.reason}`);
+        } else {
+            reasoning.runType = 'collect';
+            reasoning.notes.push(`Collect run: ${pushDecision.reason}`);
         }
-        return buildItemCollectionQueue(simState, false);
+        const entries = buildItemCollectionQueue(simState, pushDecision.shouldPush, reasoning);
+        return { entries, reasoning };
     }
 
     // Item collection: always use items immediately
     if (hasItemCollection(level)) {
-        return buildItemCollectionQueue(simState, true);
+        reasoning.runType = 'push';
+        reasoning.notes.push('Item collection: consume all items at start');
+        const entries = buildItemCollectionQueue(simState, true, reasoning);
+        return { entries, reasoning };
     }
 
     // Baseline: mandatory zones + perks + XP grinding, no items
-    return buildBaselineQueue(simState);
+    reasoning.runType = 'baseline';
+    reasoning.notes.push('Baseline: mandatory traversal + perk tasks + XP grinding');
+    const entries = buildBaselineQueue(simState, reasoning);
+    return { entries, reasoning };
 }
 
 /**
- * Determine whether the auto strategy would push or collect,
- * mirroring simulateRun's decision logic.
+ * @typedef {object} StrategyReasoning
+ * @property {string} strategyLevel - Strategy level used
+ * @property {string} runType - 'push' | 'collect' | 'baseline'
+ * @property {object} state - Snapshot of key state values
+ * @property {object|null} pushCollect - Push/collect decision details
+ * @property {object} reachability - Zone reachability analysis
+ * @property {object[]} perkDecisions - Per-perk task decisions
+ * @property {object[]} itemDecisions - Per-item task decisions
+ * @property {object[]} boostDecisions - Per-boost task decisions
+ * @property {object[]} bossDecisions - Per-boss task decisions
+ * @property {object} grindPlan - XP grinding plan details
+ * @property {object[]} allTasks - All tasks in reachable zones with XP/E (verbose mode)
+ * @property {object[]} itemsConsumed - Items consumed at start (push run)
+ * @property {string[]} notes - General notes/observations
  */
-export function wouldAutoPush(simState) {
+
+function createReasoning(simState, level) {
+    // Summarize skill levels using 3-letter abbreviations
+    const skillSummary = {};
+    for (const [skill, level_] of Object.entries(simState.skillLevels || {})) {
+        if (level_ > 0) {
+            const name = (SKILL_NAMES[skill] || `S${skill}`).substring(0, 3);
+            skillSummary[name] = level_;
+        }
+    }
+
+    // Summarize items
+    const itemSummary = {};
+    if (simState.items) {
+        for (const [itemType, count] of simState.items) {
+            if (count > 0) itemSummary[getItemName(itemType)] = count;
+        }
+    }
+
+    return {
+        strategyLevel: level,
+        runType: null,
+        state: {
+            maxEnergy: simState.maxEnergy,
+            currentEnergy: simState.currentEnergy,
+            highestZone: simState.highestZone,
+            highestZoneFullyCompleted: simState.highestZoneFullyCompleted,
+            perkCount: simState.perks ? simState.perks.size : 0,
+            skillLevels: skillSummary,
+            items: itemSummary,
+            itemEnergy: calcItemEnergy(simState),
+        },
+        pushCollect: null,
+        reachability: {},
+        perkDecisions: [],
+        itemDecisions: [],
+        boostDecisions: [],
+        bossDecisions: [],
+        grindPlan: { budget: 0, tasksSelected: 0, tasksConsidered: 0, tasks: [] },
+        allTasks: null,
+        itemsConsumed: [],
+        notes: [],
+    };
+}
+
+/**
+ * Analyze push/collect decision with full details.
+ */
+function analyzePushDecision(simState) {
     const energy = simState.maxEnergy;
     const itemEnergy = calcItemEnergy(simState);
-    if (itemEnergy <= 0) return false;
+
+    if (itemEnergy <= 0) {
+        return {
+            shouldPush: false,
+            reason: 'no items held',
+            energy,
+            itemEnergy,
+            nextNewZone: null,
+            totalCostToNextNewZone: null,
+            itemsCouldReachNewZone: false,
+            itemsAreRipe: false,
+        };
+    }
 
     const nextNewZone = simState.highestZone + 1;
     let totalCostToNextNewZone = 0;
@@ -101,7 +188,37 @@ export function wouldAutoPush(simState) {
 
     const itemsCouldReachNewZone = energy + itemEnergy >= totalCostToNextNewZone * 0.9;
     const itemsAreRipe = itemEnergy >= energy * 0.2;
-    return itemsCouldReachNewZone || itemsAreRipe;
+    const shouldPush = itemsCouldReachNewZone || itemsAreRipe;
+
+    const reasons = [];
+    if (itemsCouldReachNewZone) reasons.push(`items could reach zone ${nextNewZone + 1} (${fmtNum(energy + itemEnergy)} >= ${fmtNum(totalCostToNextNewZone * 0.9)} needed)`);
+    if (itemsAreRipe) reasons.push(`items are ripe (${fmtNum(itemEnergy)} >= ${fmtNum(energy * 0.2)} threshold)`);
+    if (!shouldPush) reasons.push(`items not enough (${fmtNum(itemEnergy)} energy, need ${fmtNum(totalCostToNextNewZone * 0.9)} for zone ${nextNewZone + 1})`);
+
+    return {
+        shouldPush,
+        reason: reasons.join('; '),
+        energy,
+        itemEnergy,
+        nextNewZone,
+        totalCostToNextNewZone,
+        itemsCouldReachNewZone,
+        itemsAreRipe,
+    };
+}
+
+function fmtNum(n) {
+    if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return Math.round(n).toLocaleString();
+}
+
+/**
+ * Determine whether the auto strategy would push or collect,
+ * mirroring simulateRun's decision logic.
+ */
+export function wouldAutoPush(simState) {
+    return analyzePushDecision(simState).shouldPush;
 }
 
 // ============================================================================
@@ -112,16 +229,19 @@ export function wouldAutoPush(simState) {
  * Baseline queue: mandatory zone traversal + perk tasks + XP grinding.
  * No item collection or consumption.
  */
-function buildBaselineQueue(simState) {
+function buildBaselineQueue(simState, reasoning) {
     const energy = simState.maxEnergy;
 
     // Pass 1: traverse without grind tasks to determine remaining energy
-    const plan = planZoneProgression(simState, energy, false, false);
+    const plan = planZoneProgression(simState, energy, false, false, undefined, reasoning);
 
     // Plan grind tasks with the remaining energy budget
     const grindByZone = plan.maxReachableZone >= 0
-        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy)
+        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy, reasoning)
         : new Map();
+
+    // Catalog all tasks for verbose mode
+    catalogAllTasks(simState, plan.maxReachableZone, reasoning);
 
     // Pass 2: re-traverse with grind tasks interleaved
     const finalPlan = planZoneProgression(simState, energy, false, false, grindByZone);
@@ -137,26 +257,33 @@ function buildBaselineQueue(simState) {
  * uses all items at start and collects along the way. When consumeItems=false (collect
  * run in push/collect mode), collects items but doesn't consume stockpiled ones.
  */
-function buildItemCollectionQueue(simState, consumeItems) {
+function buildItemCollectionQueue(simState, consumeItems, reasoning) {
     const entries = [];
     const energy = simState.maxEnergy;
 
     if (consumeItems) {
         // Use all stockpiled items at start of run
-        addUseAllItemEntries(entries, simState);
+        addUseAllItemEntries(entries, simState, reasoning);
     }
 
     // Calculate effective energy (with or without item energy)
     const itemEnergy = consumeItems ? calcItemEnergy(simState) : 0;
     const effectiveEnergy = energy + itemEnergy;
 
+    if (reasoning) {
+        reasoning.notes.push(`Effective energy: ${fmtNum(effectiveEnergy)} (base ${fmtNum(energy)}${itemEnergy > 0 ? ` + ${fmtNum(itemEnergy)} from items` : ''})`);
+    }
+
     // Pass 1: traverse without grind tasks to determine remaining energy
-    const plan = planZoneProgression(simState, effectiveEnergy, consumeItems, true);
+    const plan = planZoneProgression(simState, effectiveEnergy, consumeItems, true, undefined, reasoning);
 
     // Plan grind tasks with the remaining energy budget
     const grindByZone = plan.maxReachableZone >= 0
-        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy)
+        ? planXpGrindingByZone(simState, plan.maxReachableZone, plan.remainingEnergy, reasoning)
         : new Map();
+
+    // Catalog all tasks for verbose mode
+    catalogAllTasks(simState, plan.maxReachableZone, reasoning);
 
     // Pass 2: re-traverse with grind tasks interleaved
     const finalPlan = planZoneProgression(simState, effectiveEnergy, consumeItems, true, grindByZone);
@@ -178,8 +305,9 @@ function buildItemCollectionQueue(simState, consumeItems) {
  * @param {boolean} consumeItems - Whether items are being consumed (affects energy budget)
  * @param {boolean} collectItems - Whether to include item/boost collection tasks
  * @param {Map<number, QueueEntry[]>} [grindByZone] - Grind tasks grouped by zone to interleave
+ * @param {StrategyReasoning} [reasoning] - If provided, collect decision details (only on pass 1)
  */
-function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, grindByZone) {
+function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, grindByZone, reasoning) {
     const entries = [];
     let energy = totalEnergy;
     const zonesTraversed = new Set();
@@ -188,7 +316,41 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
     const reachable = getReachableZones(energy, simState);
     const maxReachable = Math.max(...reachable.filter(z => z.canComplete).map(z => z.zoneId), -1);
 
+    if (reasoning) {
+        // Record reachability details
+        const borderZone = reachable.find(z => !z.canComplete);
+        reasoning.reachability = {
+            totalEnergy,
+            maxReachableZone: maxReachable,
+            zonesReachable: reachable.filter(z => z.canComplete).length,
+            borderZone: borderZone ? {
+                zoneId: borderZone.zoneId,
+                zoneName: ZONES[borderZone.zoneId]?.name || `Zone ${borderZone.zoneId + 1}`,
+                energyAtStart: borderZone.energyAtStart,
+                mandatoryCost: borderZone.mandatoryCost,
+                deficit: borderZone.mandatoryCost - borderZone.energyAtStart,
+                nextZoneId: borderZone.zoneId + 1,
+                nextZoneName: ZONES[borderZone.zoneId + 1]?.name || `Zone ${borderZone.zoneId + 2}`,
+            } : null,
+            zones: reachable.filter(z => z.canComplete).map(z => ({
+                zoneId: z.zoneId,
+                zoneName: ZONES[z.zoneId]?.name || `Zone ${z.zoneId + 1}`,
+                mandatoryCost: z.mandatoryCost,
+                energyAfter: z.energyAfterMandatory,
+            })),
+        };
+    }
+
+    // Build traversal cost lookup: how much energy to reach each zone
+    const traversalCostTo = new Map();
+    for (const z of reachable) {
+        traversalCostTo.set(z.zoneId, totalEnergy - z.energyAtStart);
+    }
+
     if (maxReachable < 0) {
+        if (reasoning) {
+            reasoning.notes.push('Cannot reach any zone — energy too low');
+        }
         return { entries, remainingEnergy: energy, maxReachableZone: 0 };
     }
 
@@ -204,7 +366,21 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
     // Priority 1: Perks — interleaved with zone navigation
     const perkTasks = getReachablePerkTasks(reachable, simState);
     for (const pt of perkTasks) {
-        if (pt.totalEnergyNeeded > energy) continue;
+        const affordable = pt.totalEnergyNeeded <= energy;
+        if (reasoning) {
+            reasoning.perkDecisions.push({
+                task: pt.task.name,
+                zoneId: pt.zoneId,
+                zoneName: ZONES[pt.zoneId]?.name || `Zone ${pt.zoneId + 1}`,
+                traversalCost: pt.totalEnergyNeeded - pt.fullCost,
+                fullCost: pt.fullCost,
+                totalEnergyNeeded: pt.totalEnergyNeeded,
+                energyAvailable: energy,
+                queued: affordable && !tasksPlanned.has(pt.task.id),
+                reason: !affordable ? `too expensive (need ${fmtNum(pt.totalEnergyNeeded)}, have ${fmtNum(energy)})` : 'affordable',
+            });
+        }
+        if (!affordable) continue;
         // Navigate to the zone
         for (let z = 0; z < pt.zoneId; z++) {
             traverseZone(z);
@@ -221,7 +397,23 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
     if (collectItems) {
         const itemTasks = getReachableItemTasks(reachable, simState);
         for (const it of itemTasks) {
-            if (it.totalCost > energy || tasksPlanned.has(it.task.id)) continue;
+            const affordable = it.totalCost <= energy && !tasksPlanned.has(it.task.id);
+            if (reasoning) {
+                reasoning.itemDecisions.push({
+                    task: it.task.name,
+                    zoneId: it.zoneId,
+                    zoneName: ZONES[it.zoneId]?.name || `Zone ${it.zoneId + 1}`,
+                    traversalCost: it.totalCost - it.fullCost,
+                    fullCost: it.fullCost,
+                    totalCost: it.totalCost,
+                    itemValue: it.itemValue,
+                    netGain: it.netGain,
+                    energyAvailable: energy,
+                    queued: affordable,
+                    reason: !affordable ? `too expensive (need ${fmtNum(it.totalCost)}, have ${fmtNum(energy)})` : `net gain ${fmtNum(it.netGain)}`,
+                });
+            }
+            if (!affordable) continue;
             for (let z = 0; z < it.zoneId; z++) {
                 traverseZone(z);
             }
@@ -235,7 +427,23 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
     if (collectItems) {
         const boostTasks = getReachableSkillBoostTasks(reachable, simState);
         for (const bt of boostTasks) {
-            if (bt.totalCost > energy || tasksPlanned.has(bt.task.id)) continue;
+            const affordable = bt.totalCost <= energy && !tasksPlanned.has(bt.task.id);
+            if (reasoning) {
+                reasoning.boostDecisions.push({
+                    task: bt.task.name,
+                    zoneId: bt.zoneId,
+                    zoneName: ZONES[bt.zoneId]?.name || `Zone ${bt.zoneId + 1}`,
+                    traversalCost: bt.totalCost - bt.fullCost,
+                    fullCost: bt.fullCost,
+                    totalCost: bt.totalCost,
+                    totalBonusValue: bt.totalBonusValue,
+                    bonusPerEnergy: bt.bonusPerEnergy,
+                    energyAvailable: energy,
+                    queued: affordable,
+                    reason: !affordable ? `too expensive (need ${fmtNum(bt.totalCost)}, have ${fmtNum(energy)})` : `bonus/energy ${bt.bonusPerEnergy.toFixed(3)}`,
+                });
+            }
+            if (!affordable) continue;
             for (let z = 0; z < bt.zoneId; z++) {
                 traverseZone(z);
             }
@@ -248,7 +456,20 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
     // Priority 4: Bosses
     const bossTasks = getReachableBossTasks(maxReachable, simState);
     for (const bt of bossTasks) {
-        if (bt.fullCost > energy || tasksPlanned.has(bt.task.id)) continue;
+        const affordable = bt.fullCost <= energy && !tasksPlanned.has(bt.task.id);
+        if (reasoning) {
+            reasoning.bossDecisions.push({
+                task: bt.task.name,
+                zoneId: bt.zoneId,
+                zoneName: ZONES[bt.zoneId]?.name || `Zone ${bt.zoneId + 1}`,
+                traversalCost: traversalCostTo.get(bt.zoneId) || 0,
+                fullCost: bt.fullCost,
+                energyAvailable: energy,
+                queued: affordable,
+                reason: !affordable ? `too expensive (need ${fmtNum(bt.fullCost)}, have ${fmtNum(energy)})` : 'affordable',
+            });
+        }
+        if (!affordable) continue;
         entries.push(makeTaskEntry(bt.task, bt.zoneId));
         energy -= bt.fullCost;
         tasksPlanned.add(bt.task.id);
@@ -260,6 +481,10 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
         if (!zonesTraversed.has(z) && cost <= energy) {
             traverseZone(z);
         }
+    }
+
+    if (reasoning) {
+        reasoning.notes.push(`Zones traversed: ${zonesTraversed.size} (1..${maxReachable + 1}), remaining energy: ${fmtNum(energy)}`);
     }
 
     return { entries, remainingEnergy: energy, maxReachableZone: maxReachable };
@@ -274,11 +499,18 @@ function planZoneProgression(simState, totalEnergy, consumeItems, collectItems, 
  * @param {object} simState
  * @param {number} maxReachableZone
  * @param {number} energyBudget - remaining energy after mandatory traversal
+ * @param {StrategyReasoning} [reasoning]
  * @returns {Map<number, QueueEntry[]>} zoneId -> entries for that zone
  */
-function planXpGrindingByZone(simState, maxReachableZone, energyBudget) {
+function planXpGrindingByZone(simState, maxReachableZone, energyBudget, reasoning) {
     const result = new Map();
-    if (energyBudget <= 0 || maxReachableZone < 0) return result;
+    if (energyBudget <= 0 || maxReachableZone < 0) {
+        if (reasoning) {
+            reasoning.grindPlan = { budget: energyBudget, tasksSelected: 0, tasksConsidered: 0, tasks: [] };
+            if (energyBudget <= 0) reasoning.notes.push('No energy remaining for XP grinding');
+        }
+        return result;
+    }
 
     const maxZone = Math.max(maxReachableZone, 0);
     const candidates = getAllReachableGrindableTasks(maxZone, simState);
@@ -288,6 +520,7 @@ function planXpGrindingByZone(simState, maxReachableZone, energyBudget) {
     // Include the first task that exceeds the budget (we'll drain during it).
     let remaining = energyBudget;
     const seen = new Set();
+    const grindTasks = [];
 
     for (const gt of candidates) {
         if (remaining <= 0) break;
@@ -299,9 +532,69 @@ function planXpGrindingByZone(simState, maxReachableZone, energyBudget) {
         const entry = makeTaskEntry(gt.task, gt.zoneId, 1);
         if (!result.has(gt.zoneId)) result.set(gt.zoneId, []);
         result.get(gt.zoneId).push(entry);
+
+        grindTasks.push({
+            task: gt.task.name,
+            zoneId: gt.zoneId,
+            zoneName: ZONES[gt.zoneId]?.name || `Zone ${gt.zoneId + 1}`,
+            fullCost: gt.fullCost,
+            totalXpPerEnergy: gt.totalXpPerEnergy,
+            skills: gt.task.skills.map(s => (SKILL_NAMES[s] || `S${s}`).substring(0, 3)),
+            overBudget: remaining < 0,
+        });
+    }
+
+    if (reasoning) {
+        reasoning.grindPlan = {
+            budget: energyBudget,
+            tasksConsidered: candidates.length,
+            tasksSelected: grindTasks.length,
+            tasks: grindTasks,
+        };
+        if (grindTasks.length > 0) {
+            reasoning.notes.push(`XP grinding: ${grindTasks.length} tasks from ${candidates.length} candidates, budget ${fmtNum(energyBudget)}`);
+        }
     }
 
     return result;
+}
+
+const TASK_TYPE_LABELS = { [TaskType.Normal]: 'Normal', [TaskType.Travel]: 'Travel', [TaskType.Mandatory]: 'Mandatory', [TaskType.Prestige]: 'Prestige', [TaskType.Boss]: 'Boss' };
+
+/**
+ * Catalog ALL tasks in reachable zones with XP/E data for verbose strategy log.
+ * Includes mandatory, travel, perk, boss, hidden — everything.
+ */
+function catalogAllTasks(simState, maxReachableZone, reasoning) {
+    if (!reasoning || maxReachableZone < 0) return;
+    const allTasks = [];
+    for (let z = 0; z <= maxReachableZone && z < ZONES.length; z++) {
+        const zone = ZONES[z];
+        for (const task of zone.tasks) {
+            // Skip hidden tasks that haven't been unlocked
+            if (task.hidden && !simState.unlockedHiddenTasks.has(task.id)) continue;
+
+            const singleRepCost = calcTaskEnergyCostSingleRep(task, z, simState);
+            const fullCost = calcTaskEnergyCost(task, z, simState);
+            const xpPerRep = calcTaskXp(task, z, simState);
+            const totalXpValue = calcTotalXpValue(task, z, simState);
+            const xpPerEnergy = singleRepCost > 0 ? totalXpValue / singleRepCost : 0;
+
+            allTasks.push({
+                task: task.name,
+                zoneId: z,
+                zoneName: zone.name,
+                type: TASK_TYPE_LABELS[task.type] || `Type${task.type}`,
+                fullCost,
+                xpPerEnergy,
+                skills: task.skills.map(s => (SKILL_NAMES[s] || `S${s}`).substring(0, 3)),
+                hasPerk: task.perk !== null && !simState.perks.has(task.perk),
+                isBoss: task.type === TaskType.Boss,
+            });
+        }
+    }
+    allTasks.sort((a, b) => b.xpPerEnergy - a.xpPerEnergy);
+    reasoning.allTasks = allTasks;
 }
 
 // ============================================================================
@@ -315,7 +608,8 @@ function makeTaskEntry(task, zoneId, loops = 1) {
         actionType: JTAActionType.CLICK_TASK,
         actionId: task.id,
         label: task.name,
-        group: zone ? zone.name : `Zone ${zoneId}`,
+        group: zone ? zone.name : `Zone ${zoneId + 1}`,
+        zoneId,
         loops,
         disabled: false,
     };
@@ -347,7 +641,7 @@ function addZoneEntries(entries, zoneId, extraEntries = []) {
     }
 }
 
-function addUseAllItemEntries(entries, simState) {
+function addUseAllItemEntries(entries, simState, reasoning) {
     // Energy items
     for (const [itemType, count] of simState.items) {
         if (count <= 0) continue;
@@ -361,6 +655,14 @@ function addUseAllItemEntries(entries, simState) {
                 loops: 1,
                 disabled: false,
             });
+            if (reasoning) {
+                reasoning.itemsConsumed.push({
+                    name: getItemName(itemType),
+                    count,
+                    type: 'energy',
+                    energyValue: ENERGY_ITEMS[itemType] * count,
+                });
+            }
         }
     }
 
@@ -377,6 +679,14 @@ function addUseAllItemEntries(entries, simState) {
                 loops: 1,
                 disabled: false,
             });
+            if (reasoning) {
+                reasoning.itemsConsumed.push({
+                    name: getItemName(itemType),
+                    count,
+                    type: 'skillBoost',
+                    modifiers: { ...ITEM_SKILL_MODIFIERS[itemType] },
+                });
+            }
         }
     }
 }

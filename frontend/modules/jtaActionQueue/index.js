@@ -29,6 +29,14 @@ function log(level, message, ...data) {
     }
 }
 
+/** Format energy value for display in reasoning log */
+function fmtE(value) {
+    if (value === null || value === undefined) return '—';
+    if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+    if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(1) + 'K';
+    return Math.round(value).toLocaleString();
+}
+
 let moduleEventBus = null;
 let moduleId = 'jtaActionQueue';
 
@@ -138,6 +146,7 @@ class JTAActionQueuePanel {
         this.componentState = componentState;
         this.rootElement = null;
         this._unsubs = [];
+        this._lastReasoning = null;
     }
 
     getRootElement() {
@@ -151,7 +160,7 @@ class JTAActionQueuePanel {
     _createRootElement() {
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'jtaActionQueue-panel';
-        this.rootElement.style.cssText = 'display: flex; flex-direction: column; height: 100%; overflow: auto; background: #1e1e1e; color: #cccccc; padding: 8px; gap: 8px;';
+        this.rootElement.style.cssText = 'display: flex; flex-direction: column; height: 100%; overflow: auto; background: #1e1e1e; color: #cccccc; padding: 8px; gap: 8px; box-sizing: border-box;';
         this.rootElement.innerHTML = `
             <style>
                 .jtaActionQueue-panel button {
@@ -180,6 +189,7 @@ class JTAActionQueuePanel {
                     border-radius: 3px;
                     cursor: grab;
                     transition: background-color 0.1s;
+                    font-size: 1em;
                 }
                 .aq-entry:hover {
                     background: rgba(255, 255, 255, 0.05);
@@ -189,6 +199,24 @@ class JTAActionQueuePanel {
                     text-align: right;
                     opacity: 0.5;
                     font-size: 0.8em;
+                    font-family: monospace;
+                }
+                .aq-col-zone {
+                    min-width: 16px;
+                    text-align: right;
+                    opacity: 0.5;
+                    font-size: 0.8em;
+                    font-family: monospace;
+                }
+                .aq-col-name {
+                    width: 14ch;
+                    min-width: 14ch;
+                    max-width: 14ch;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    font-family: monospace;
+                    font-size: 0.85em;
                 }
                 .aq-entry-label {
                     flex: 1;
@@ -304,7 +332,7 @@ class JTAActionQueuePanel {
                     border-radius: 3px;
                     position: relative;
                     overflow: hidden;
-                    font-size: 0.9em;
+                    font-size: 1em;
                 }
                 .aq-current-entry .aq-progress-bar {
                     position: absolute;
@@ -346,16 +374,21 @@ class JTAActionQueuePanel {
                 .aq-prediction {
                     display: flex;
                     gap: 4px;
-                    font-size: 0.75em;
+                    font-size: 0.8em;
+                    font-family: monospace;
                     flex-shrink: 0;
                     margin-left: auto;
                     margin-right: 4px;
                 }
                 .aq-pred-cost {
                     opacity: 0.6;
+                    min-width: 5ch;
+                    text-align: right;
                 }
                 .aq-pred-remaining {
                     font-weight: bold;
+                    min-width: 5ch;
+                    text-align: right;
                 }
                 .aq-pred-good {
                     color: #5a5;
@@ -369,13 +402,16 @@ class JTAActionQueuePanel {
                 .aq-pred-insufficient {
                     color: #a33;
                 }
-                .aq-pred-insufficient .aq-entry-label {
+                .aq-pred-insufficient .aq-col-name {
                     text-decoration: line-through;
                 }
                 .aq-pred-skills {
                     display: flex;
                     gap: 3px;
                     opacity: 0.7;
+                    width: 18ch;
+                    min-width: 18ch;
+                    justify-content: flex-end;
                 }
                 .aq-pred-skill {
                     color: #8bf;
@@ -385,22 +421,30 @@ class JTAActionQueuePanel {
                 .aq-actuals {
                     display: flex;
                     gap: 4px;
-                    font-size: 0.75em;
+                    font-size: 0.8em;
+                    font-family: monospace;
                     flex-shrink: 0;
                     margin-left: auto;
                     margin-right: 4px;
                 }
                 .aq-actual-cost {
                     opacity: 0.7;
+                    min-width: 5ch;
+                    text-align: right;
                 }
                 .aq-actual-remaining {
                     font-weight: bold;
                     color: #8cf;
+                    min-width: 5ch;
+                    text-align: right;
                 }
                 .aq-actual-skills {
                     display: flex;
                     gap: 3px;
                     opacity: 0.7;
+                    width: 18ch;
+                    min-width: 18ch;
+                    justify-content: flex-end;
                 }
                 .aq-actual-skill {
                     color: #8bf;
@@ -444,6 +488,38 @@ class JTAActionQueuePanel {
                     font-style: italic;
                     padding: 8px;
                     text-align: center;
+                }
+
+                /* Strategy reasoning log */
+                .aq-reason-header {
+                    padding: 2px 0 4px;
+                    border-bottom: 1px solid #444;
+                    margin-bottom: 4px;
+                }
+                .aq-reason-section {
+                    margin: 4px 0;
+                }
+                .aq-reason-label {
+                    font-weight: bold;
+                    opacity: 0.7;
+                    font-size: 0.9em;
+                    margin-bottom: 2px;
+                }
+                .aq-reason-grid {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1px;
+                    padding-left: 8px;
+                }
+                .aq-reason-grid > span {
+                    line-height: 1.4;
+                }
+                .aq-reason-queued {
+                    color: #8c8;
+                }
+                .aq-reason-skipped {
+                    color: #c88;
+                    opacity: 0.8;
                 }
             </style>
             <div class="aq-controls" style="display: flex; gap: 4px; flex-wrap: wrap;">
@@ -528,10 +604,18 @@ class JTAActionQueuePanel {
                             <option value="artifactUsage" disabled>Artifact Usage</option>
                         </select>
                     </label>
+                    <label style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" class="aq-setting-verbose-log">
+                        Verbose Strategy Log
+                    </label>
                 </div>
             </details>
-            <div class="aq-actions-section" style="flex-shrink: 0;"></div>
-            <div class="aq-queue-section" style="flex: 1; min-height: 60px; overflow: auto;"></div>
+            <details class="aq-actions-section" style="flex-shrink: 0;" open></details>
+            <details class="aq-reasoning-details" style="border: 1px solid #444; border-radius: 4px; padding: 4px 8px; background: #252525; flex-shrink: 0;">
+                <summary style="cursor: pointer; user-select: none; font-weight: bold; padding: 2px 0; font-size: 0.85em;">Strategy Log</summary>
+                <div class="aq-reasoning-body" style="font-size: 0.8em; padding: 4px 0; font-family: monospace;"></div>
+            </details>
+            <div class="aq-queue-section" style="min-height: 60px;"></div>
         `;
 
         this._setupControls();
@@ -539,6 +623,7 @@ class JTAActionQueuePanel {
         this._setupSettings();
         this._setupSequencing();
         this._setupQueue();
+        this._setupCollapsibleState();
     }
 
     _setupControls() {
@@ -756,7 +841,10 @@ class JTAActionQueuePanel {
             if (executor) executor.clearSnapshot();
             loadoutManager.switchTo(select.selectedIndex, queue);
             // Regenerate if switching to a strategy-backed loadout
-            this._regenerateStrategyQueue();
+            if (!this._regenerateStrategyQueue()) {
+                this._lastReasoning = null;
+                this._refreshReasoningLog();
+            }
             this._refreshUI();
             if (queuePanelUI) queuePanelUI.refresh();
             this._refreshSequencingUI();
@@ -853,6 +941,7 @@ class JTAActionQueuePanel {
 
         // Auto-queue strategy level dropdown (disabled for now)
         const strategyLevelSelect = el.querySelector('.aq-strategy-level');
+        const verboseLogCheckbox = el.querySelector('.aq-setting-verbose-log');
 
         // Load persisted settings
         try {
@@ -881,6 +970,9 @@ class JTAActionQueuePanel {
             if (saved.strategyLevel) {
                 strategyLevelSelect.value = saved.strategyLevel;
             }
+            if (saved.verboseLog === true) {
+                verboseLogCheckbox.checked = true;
+            }
         } catch (e) { /* ignore */ }
 
         const persistSettings = () => {
@@ -893,6 +985,7 @@ class JTAActionQueuePanel {
                 showActuals: showActualsCheckbox.checked,
                 showComparison: showComparisonCheckbox.checked,
                 strategyLevel: strategyLevelSelect.value,
+                verboseLog: verboseLogCheckbox.checked,
             };
             localStorage.setItem('jta-aq-settings', JSON.stringify(settings));
             if (executor) executor.updateConfig(settings);
@@ -920,6 +1013,7 @@ class JTAActionQueuePanel {
         };
         showActualsCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
         showComparisonCheckbox.addEventListener('change', () => { persistSettings(); updateDisplayOptions(); });
+        verboseLogCheckbox.addEventListener('change', () => { persistSettings(); this._refreshReasoningLog(); });
 
         // Store ref so executor can be initialized with saved settings
         this._savedSettings = () => {
@@ -945,16 +1039,224 @@ class JTAActionQueuePanel {
         if (!strategy) return false;
 
         const strategyLevel = this._savedSettings ? this._savedSettings().strategyLevel : StrategyLevel.PUSH_COLLECT;
-        const entries = buildQueueForStrategy(lastSimState, strategy, strategyLevel);
+        const result = buildQueueForStrategy(lastSimState, strategy, strategyLevel);
         queue.clear();
-        for (const entry of entries) queue.add(entry);
+        for (const entry of result.entries) queue.add(entry);
         loadoutManager.saveActive(queue);
-        log('info', `Regenerated strategy queue: ${strategyLevel} (${entries.length} entries)`);
+        this._lastReasoning = result.reasoning;
+        this._refreshReasoningLog();
+        log('info', `Regenerated strategy queue: ${strategyLevel} (${result.entries.length} entries)`);
         return true;
+    }
+
+    _refreshReasoningLog() {
+        const body = this.rootElement?.querySelector('.aq-reasoning-body');
+        if (!body) return;
+
+        const r = this._lastReasoning;
+        if (!r) {
+            body.innerHTML = '<div style="opacity: 0.5; font-style: italic;">No strategy queue generated yet.</div>';
+            return;
+        }
+
+        // Helpers for table formatting
+        const pad = (str, len) => String(str).padEnd(len);
+        const rpad = (str, len) => String(str).padStart(len);
+        const truncName = (name, max) => name.length > max ? name.substring(0, max - 1) + '…' : name;
+        const tblRow = (cls, cols) => `<span class="${cls}">${cols}</span>`;
+        const pre = (html) => `<pre style="margin:0; font-size:inherit; font-family:inherit; white-space:pre;">${html}</pre>`;
+
+        const sections = [];
+
+        // Header: strategy level + run type
+        sections.push(`<div class="aq-reason-header"><strong>${r.strategyLevel}</strong> — ${r.runType || 'unknown'} run</div>`);
+
+        // State summary
+        const s = r.state;
+        const skillParts = Object.entries(s.skillLevels).map(([name, lvl]) => `${name}:${lvl}`).join(' ');
+        const itemParts = Object.entries(s.items).map(([name, count]) => `${name}×${count}`).join(', ');
+        sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">State</div><div class="aq-reason-grid">` +
+            `<span>Energy: ${fmtE(s.maxEnergy)}${s.currentEnergy !== undefined ? ` (current: ${fmtE(s.currentEnergy)})` : ''} | Zone: ${s.highestZone + 1} | Perks: ${s.perkCount}</span>` +
+            (skillParts ? `<span>Skills: ${skillParts}</span>` : '') +
+            (itemParts ? `<span>Items: ${itemParts} (${fmtE(s.itemEnergy)} energy)</span>` : '<span>Items: none</span>') +
+            `</div></div>`);
+
+        // Push/collect decision
+        if (r.pushCollect) {
+            const pc = r.pushCollect;
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Push/Collect Decision</div><div class="aq-reason-grid">` +
+                `<span>${pc.shouldPush ? '→ PUSH' : '→ COLLECT'}: ${pc.reason}</span>` +
+                (pc.nextNewZone !== null ? `<span>Next new zone: ${pc.nextNewZone + 1}, traversal cost: ${fmtE(pc.totalCostToNextNewZone)}</span>` : '') +
+                `<span>Energy: ${fmtE(pc.energy)}, item energy: ${fmtE(pc.itemEnergy)}</span>` +
+                `</div></div>`);
+        }
+
+        // Items consumed
+        if (r.itemsConsumed.length > 0) {
+            const itemRows = r.itemsConsumed.map(ic => {
+                if (ic.type === 'energy') return `<span class="aq-reason-queued">${ic.name} ×${ic.count} (+${fmtE(ic.energyValue)} energy)</span>`;
+                return `<span class="aq-reason-queued">${ic.name} ×${ic.count} (skill boost)</span>`;
+            }).join('');
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Items Consumed</div><div class="aq-reason-grid">${itemRows}</div></div>`);
+        }
+
+        // Reachability table
+        if (r.reachability.zones) {
+            const reach = r.reachability;
+            const NW = 22; // zone name width
+            const rows = [];
+            rows.push(`${rpad('Z', 2)} ${pad('Zone', NW)} ${rpad('Cost', 7)} ${rpad('Remain', 7)}`);
+            rows.push('─'.repeat(NW + 19));
+            for (let i = 0; i < reach.zones.length; i++) {
+                const z = reach.zones[i];
+                const prev = i > 0 ? reach.zones[i - 1] : null;
+                const cost = prev ? prev.mandatoryCost : 0;
+                const remain = prev ? prev.energyAfter : 0;
+                rows.push(`${rpad(z.zoneId + 1, 2)} ${pad(truncName(z.zoneName, NW), NW)} ${rpad(fmtE(cost), 7)} ${rpad(fmtE(remain), 7)}`);
+            }
+            if (reach.borderZone) {
+                const bz = reach.borderZone;
+                const last = reach.zones[reach.zones.length - 1];
+                const cost = last ? last.mandatoryCost : 0;
+                const remain = last ? last.energyAfter : 0;
+                rows.push(`${rpad(bz.zoneId + 1, 2)} ${pad(truncName(bz.zoneName, NW), NW)} ${rpad(fmtE(cost), 7)} ${rpad(fmtE(remain), 7)}`);
+                rows.push(`<span class="aq-reason-skipped">${rpad(bz.nextZoneId + 1, 2)} ${pad(truncName(bz.nextZoneName, NW), NW)} ${rpad(fmtE(bz.mandatoryCost), 7)} ${rpad('-' + fmtE(bz.deficit), 7)}  need ${fmtE(bz.mandatoryCost)}</span>`);
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Zone Reachability (${reach.zonesReachable} zones, ${fmtE(reach.totalEnergy)} energy)</div>${pre(rows.join('\n'))}</div>`);
+        }
+
+        // Perk decisions table
+        if (r.perkDecisions.length > 0) {
+            const NW = 22;
+            const rows = [];
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Total', 7)}  Reason`);
+            rows.push('─'.repeat(NW + 41));
+            for (const d of r.perkDecisions) {
+                const mark = d.queued ? '✓' : '✗';
+                const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
+                rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(fmtE(d.totalEnergyNeeded), 7)}  ${d.reason}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Perk Tasks (Priority 1)</div>${pre(rows.join('\n'))}</div>`);
+        }
+
+        // Item decisions table
+        if (r.itemDecisions.length > 0) {
+            const NW = 22;
+            const rows = [];
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Value', 7)} ${rpad('Net', 7)}  Reason`);
+            rows.push('─'.repeat(NW + 48));
+            for (const d of r.itemDecisions) {
+                const mark = d.queued ? '✓' : '✗';
+                const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
+                rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(fmtE(d.itemValue), 7)} ${rpad(fmtE(d.netGain), 7)}  ${d.reason}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Energy Items (Priority 2)</div>${pre(rows.join('\n'))}</div>`);
+        }
+
+        // Boost decisions table
+        if (r.boostDecisions.length > 0) {
+            const NW = 22;
+            const rows = [];
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)} ${rpad('Bon/E', 7)}  Reason`);
+            rows.push('─'.repeat(NW + 41));
+            for (const d of r.boostDecisions) {
+                const mark = d.queued ? '✓' : '✗';
+                const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
+                rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)} ${rpad(d.bonusPerEnergy.toFixed(3), 7)}  ${d.reason}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Skill Boost Items (Priority 3)</div>${pre(rows.join('\n'))}</div>`);
+        }
+
+        // Boss decisions table
+        if (r.bossDecisions.length > 0) {
+            const NW = 22;
+            const rows = [];
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Trav', 7)} ${rpad('Task', 7)}  Reason`);
+            rows.push('─'.repeat(NW + 31));
+            for (const d of r.bossDecisions) {
+                const mark = d.queued ? '✓' : '✗';
+                const cls = d.queued ? 'aq-reason-queued' : 'aq-reason-skipped';
+                rows.push(tblRow(cls, `${mark} ${rpad(d.zoneId + 1, 2)} ${pad(truncName(d.task, NW), NW)} ${rpad(fmtE(d.traversalCost), 7)} ${rpad(fmtE(d.fullCost), 7)}  ${d.reason}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Boss Tasks (Priority 4)</div>${pre(rows.join('\n'))}</div>`);
+        }
+
+        // Grind plan / All tasks table
+        const verbose = this.rootElement?.querySelector('.aq-setting-verbose-log')?.checked || false;
+        const NW = 22;
+        if (verbose && r.allTasks) {
+            const selectedNames = new Set(r.grindPlan.tasks.map(gt => gt.task));
+            const gp = r.grindPlan;
+            const rows = [];
+            rows.push(`Budget: ${fmtE(gp.budget)}, selected ${gp.tasksSelected} of ${gp.tasksConsidered} grindable`);
+            rows.push('');
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Cost', 7)} ${rpad('XP/E', 8)} ${pad('Skills', 7)} Type`);
+            rows.push('─'.repeat(NW + 38));
+            for (const t of r.allTasks) {
+                const isSelected = selectedNames.has(t.task);
+                const mark = isSelected ? '✓' : '·';
+                const cls = isSelected ? 'aq-reason-queued' : 'aq-reason-skipped';
+                const tags = [];
+                if (t.type !== 'Normal') tags.push(t.type);
+                if (t.hasPerk) tags.push('Perk');
+                const tagStr = tags.join(',');
+                rows.push(tblRow(cls, `${mark} ${rpad(t.zoneId + 1, 2)} ${pad(truncName(t.task, NW), NW)} ${rpad(fmtE(t.fullCost), 7)} ${rpad(t.xpPerEnergy.toFixed(2), 8)} ${pad(t.skills.join('/'), 7)} ${tagStr}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">All Tasks by XP/E (Priority 5)</div>${pre(rows.join('\n'))}</div>`);
+        } else if (r.grindPlan.tasksSelected > 0) {
+            const gp = r.grindPlan;
+            const rows = [];
+            rows.push(`Budget: ${fmtE(gp.budget)}, selected ${gp.tasksSelected} of ${gp.tasksConsidered} candidates`);
+            rows.push('');
+            rows.push(`  ${rpad('Z', 2)} ${pad('Task', NW)} ${rpad('Cost', 7)} ${rpad('XP/E', 8)} Skills`);
+            rows.push('─'.repeat(NW + 31));
+            for (const gt of gp.tasks) {
+                const note = gt.overBudget ? ' drain' : '';
+                rows.push(tblRow('aq-reason-queued', `✓ ${rpad(gt.zoneId + 1, 2)} ${pad(truncName(gt.task, NW), NW)} ${rpad(fmtE(gt.fullCost), 7)} ${rpad(gt.totalXpPerEnergy.toFixed(2), 8)} ${gt.skills.join('/')}${note}`));
+            }
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">XP Grinding (Priority 5)</div>${pre(rows.join('\n'))}</div>`);
+        } else if (r.grindPlan.budget !== undefined) {
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">XP Grinding</div><div class="aq-reason-grid"><span class="aq-reason-skipped">None (budget: ${fmtE(r.grindPlan.budget)}, candidates: ${r.grindPlan.tasksConsidered})</span></div></div>`);
+        }
+
+        // Notes
+        if (r.notes.length > 0) {
+            const noteRows = r.notes.map(n => `<span>${n}</span>`).join('');
+            sections.push(`<div class="aq-reason-section"><div class="aq-reason-label">Notes</div><div class="aq-reason-grid">${noteRows}</div></div>`);
+        }
+
+        body.innerHTML = sections.join('');
     }
 
     _saveLoadout() {
         if (loadoutManager && queue) loadoutManager.saveActive(queue);
+    }
+
+    _setupCollapsibleState() {
+        const sections = [
+            { selector: '.aq-settings', id: 'settings' },
+            { selector: '.aq-actions-section', id: 'actions' },
+            { selector: '.aq-reasoning-details', id: 'reasoning' },
+            { selector: '.aq-current-section', id: 'current' },
+            { selector: '.aq-next-section', id: 'next' },
+        ];
+        for (const { selector, id } of sections) {
+            const el = this.rootElement.querySelector(selector);
+            if (el) this._bindCollapsible(el, id);
+        }
+    }
+
+    _bindCollapsible(el, id) {
+        const KEY = 'jta-aq-collapsed';
+        let saved;
+        try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { saved = {}; }
+        if (saved[id] !== undefined) el.open = saved[id];
+        el.addEventListener('toggle', () => {
+            let current;
+            try { current = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { current = {}; }
+            current[id] = el.open;
+            localStorage.setItem(KEY, JSON.stringify(current));
+        });
     }
 
     _setupQueue() {

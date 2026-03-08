@@ -47,18 +47,16 @@ export class JTAActionsPanelUI {
     /** @private */
     #render() {
         this.#container.innerHTML = `
-            <details class="aq-actions-panel" open>
-                <summary style="cursor: pointer; user-select: none; font-weight: bold; padding: 2px 0;">Available Actions</summary>
-                <div class="aq-actions-body" style="display: flex; flex-direction: column; gap: 6px; padding: 4px 0; max-height: 250px; overflow-y: auto;">
-                    <div class="aq-zone-nav" style="display: flex; align-items: center; gap: 4px;">
-                        <button class="aq-zone-prev" style="min-width: 28px;">&lt;</button>
-                        <select class="aq-zone-select" style="flex: 1; text-align: center; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 2px 4px;"></select>
-                        <button class="aq-zone-next" style="min-width: 28px;">&gt;</button>
-                    </div>
-                    <div class="aq-zone-tasks"></div>
-                    <div class="aq-other-actions"></div>
+            <summary style="cursor: pointer; user-select: none; font-weight: bold; padding: 2px 0;">Available Actions</summary>
+            <div class="aq-actions-body" style="display: flex; flex-direction: column; gap: 6px; padding: 4px 0;">
+                <div class="aq-zone-nav" style="display: flex; align-items: center; gap: 4px;">
+                    <button class="aq-zone-prev" style="min-width: 28px;">&lt;</button>
+                    <select class="aq-zone-select" style="flex: 1; text-align: center; background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; padding: 2px 4px;"></select>
+                    <button class="aq-zone-next" style="min-width: 28px;">&gt;</button>
                 </div>
-            </details>
+                <div class="aq-zone-tasks"></div>
+                <div class="aq-other-actions"></div>
+            </div>
         `;
 
         // Zone navigation

@@ -72,6 +72,7 @@ export class ActionQueue {
             actionId: entry.actionId,
             label: entry.label || '',
             group: entry.group || '',
+            zoneId: entry.zoneId,
             loops: entry.loops ?? 1,
             disabled: entry.disabled ?? false,
         };
@@ -238,6 +239,7 @@ export class ActionQueue {
                     actionId: entry.actionId,
                     label: entry.label || '',
                     group: entry.group || '',
+                    zoneId: entry.zoneId,
                     loops: entry.loops ?? 1,
                     disabled: entry.disabled ?? false,
                 };
@@ -282,6 +284,7 @@ export class ActionQueue {
                 actionId: entry.actionId,
                 label: entry.label || '',
                 group: entry.group || '',
+                zoneId: entry.zoneId,
                 loops: entry.loops ?? 1,
                 disabled: entry.disabled ?? false,
             };

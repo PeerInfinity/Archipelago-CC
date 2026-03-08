@@ -82,6 +82,7 @@ export function createQueueEntry(catalogEntry, loops = 1) {
         actionId: catalogEntry.actionId,
         label: catalogEntry.label,
         group: catalogEntry.group || '',
+        zoneId: catalogEntry.zoneId,
         loops,
         disabled: false,
     };
