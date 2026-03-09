@@ -802,6 +802,28 @@
     "template_file": "Journey to Ascension.yaml",
     "world_directory": "jta"
   },
+  "Journey to Ascension Vanilla WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Journey to Ascension Vanilla WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Journey to Ascension Vanilla WorldGen.yaml",
+    "world_directory": "jta_vanilla_worldgen"
+  },
+  "Journey to Ascension WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Journey to Ascension WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Journey to Ascension WorldGen.yaml",
+    "world_directory": "jta_worldgen"
+  },
   "Kingdom Hearts": {
     "exporter_path": null,
     "exporter_size": 0,
