@@ -96,6 +96,9 @@ export class EventCoordinator {
     // Loop mode toggle
     subscribe('loops:setLoopMode', this._handleSetLoopMode);
 
+    // PlayerState path updates (keeps loops panel in sync with regions panel)
+    subscribe('playerState:pathUpdated', this._handlePathUpdated);
+
     logger.info(`Subscribed to ${this.eventSubscriptions.length} events`);
   }
 
@@ -258,6 +261,15 @@ export class EventCoordinator {
   _handleStateManagerReady(data) {
     logger.info('Received stateManager:ready - static data should be available');
     if (this.loopUI.isLoopModeActive) {
+      // If no regions are expanded yet (e.g. auto-entered loop mode before data loaded),
+      // expand the first region now that the path has real region names
+      if (this.loopUI.expansionState.expandedRegions.size === 0) {
+        const actionQueue = this.loopUI.getActionQueue();
+        const firstRegion = actionQueue.length > 0 ? actionQueue[0].region : null;
+        if (firstRegion && firstRegion !== '__initial__') {
+          this.loopUI.expansionState.setRegionExpanded(firstRegion, true);
+        }
+      }
       logger.info('Re-rendering loop panel with full static data');
       this.loopUI.renderLoopPanel();
     }
@@ -329,6 +341,18 @@ export class EventCoordinator {
   _handleExploreRepeated(data) {
     if (this.loopUI.isLoopModeActive) {
       this.loopUI.regionsInQueue.add(data.regionName);
+      this.loopUI.renderLoopPanel();
+    }
+  }
+
+  /**
+   * Handle playerState path updated event
+   * Re-renders the loops panel when the path changes (e.g., from region clicks)
+   * @private
+   */
+  _handlePathUpdated(data) {
+    if (this.loopUI.isLoopModeActive) {
+      logger.info('Received playerState:pathUpdated, re-rendering loop panel');
       this.loopUI.renderLoopPanel();
     }
   }

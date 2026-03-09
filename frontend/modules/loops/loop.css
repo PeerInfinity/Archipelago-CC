@@ -51,9 +51,8 @@
 
 .loop-fixed-area {
   flex-shrink: 0;
-  padding: 10px;
+  padding: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #2d2d2d;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -467,13 +466,20 @@
   margin-bottom: 10px;
 }
 
-.region-actions .explore-btn {
+.region-actions .explore-btn,
+.region-explore-container .explore-btn {
   padding: 5px 15px;
-  background-color: #9b59b6;
+  background-color: #2d3748;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
 }
 
-.region-actions .explore-btn:hover {
-  background-color: #8e44ad;
+.region-actions .explore-btn:hover,
+.region-explore-container .explore-btn:hover {
+  background-color: #1a202c;
 }
 
 /* Colorblind mode */

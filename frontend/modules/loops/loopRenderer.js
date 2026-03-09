@@ -92,6 +92,9 @@ export class LoopRenderer {
 
     // Render each region block
     regionGroups.forEach((actions, regionName) => {
+      // Skip the placeholder region used before game data loads
+      if (regionName === '__initial__') return;
+
       const regionStaticData = staticData?.regions?.get(regionName);
       const isStartRegion = this.loopUI?.playerStateAPI?.isStartRegion?.(regionName);
       if (!regionStaticData && !isStartRegion) {
