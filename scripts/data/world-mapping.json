@@ -791,6 +791,17 @@
     "template_file": "Jak and Daxter The Precursor Legacy.yaml",
     "world_directory": "jakanddaxter"
   },
+  "Journey to Ascension": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Journey to Ascension",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Journey to Ascension.yaml",
+    "world_directory": "jta"
+  },
   "Kingdom Hearts": {
     "exporter_path": null,
     "exporter_size": 0,
