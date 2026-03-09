@@ -193,13 +193,11 @@ export class PresetUI {
     nameGroups.forEach((group, name) => {
       const { primaryGameData, seeds, hasMultiworld } = group;
 
-      html += `
-        <div class="game-row">
-          <h4 class="game-name">${this.escapeHtml(name)}</h4>
-      `;
+      html += `<div class="game-row">`;
 
       if (hasMultiworld) {
-        // Special layout for multiworld - block format
+        // Multiworld: game-name is a direct child of game-row (closed immediately after)
+        html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         html += `</div>`; // Close the inline game-row
         html += `<div class="multiworld-container">`;
         html += `<div class="multiworld-seeds">`;
@@ -233,8 +231,9 @@ export class PresetUI {
         html += `</div>`; // Close multiworld-container
         // Don't add the closing </div> here since we already closed the game-row
       } else {
-        // Standard layout for single-player games
-        html += `<div class="game-presets">`;
+        // Flat layout: game-name first (top-left), seed buttons flow naturally,
+        // test badges last with margin-left:auto (bottom-right)
+        html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         seeds.forEach(({ gameDirectory, seedName, folderData }) => {
           const isVanilla = !!folderData.is_vanilla;
           const vanillaBadge = isVanilla
@@ -251,7 +250,6 @@ export class PresetUI {
             </button>
           `;
         });
-        html += `</div>`; // Close game-presets
         html += this.renderTestResultBadge(primaryGameData);
       }
 
@@ -269,18 +267,17 @@ export class PresetUI {
         .presets-container {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 4px;
           margin-top: 16px;
         }
         .game-row {
           background-color: rgba(0, 0, 0, 0.1);
           border-radius: 8px;
           padding: 16px;
-          margin-bottom: 16px;
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
-          gap: 16px;
-          justify-content: space-between;
+          gap: 8px;
         }
         .game-name {
           margin: 0;
@@ -295,6 +292,7 @@ export class PresetUI {
           font-weight: 600;
           color: #aaa;
           font-size: 0.85em;
+          flex-wrap: nowrap;
         }
         .game-name-header {
           min-width: 200px;
@@ -318,6 +316,7 @@ export class PresetUI {
           display: flex;
           gap: 4px;
           flex-shrink: 0;
+          margin-left: auto;
         }
         .test-badge-mini {
           display: flex;
@@ -350,8 +349,8 @@ export class PresetUI {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          flex: 1;
-          justify-content: center;
+          flex: 1 1 auto;
+          align-items: center;
         }
         .preset-button {
           background-color: rgba(0, 0, 0, 0.3);
