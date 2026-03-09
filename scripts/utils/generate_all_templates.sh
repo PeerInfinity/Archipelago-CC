@@ -455,6 +455,8 @@ if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
   generate_vanilla_seed "DepGraph"                                            # coding_adventure, seed 1
   generate_depgraph_seed "baking_adventure" 2 "  vanilla_placement: true"     # baking_adventure, seed 2
   generate_depgraph_seed "tech_tree" 3 "  vanilla_placement: true"            # tech_tree, seed 3
+  generate_depgraph_seed "skill_tree" 4 "  vanilla_placement: true"           # skill_tree, seed 4
+  generate_depgraph_seed "recipe_chain" 5 "  vanilla_placement: true"         # recipe_chain, seed 5
 fi
 
 # --- Main seeds ---
