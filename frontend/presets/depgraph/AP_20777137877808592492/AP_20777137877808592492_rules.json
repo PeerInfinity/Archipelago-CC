@@ -14,15 +14,8 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To gather_herbs",
+            "name": "To basic_tools",
             "connected_region": "Complete Node 1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To purify_water",
-            "connected_region": "Complete Node 3",
             "access_rule": {
               "rule": "True_"
             }
@@ -34,7 +27,7 @@
         "name": "Complete Node 1",
         "exits": [
           {
-            "name": "From gather_herbs to herb_extract",
+            "name": "From basic_tools to logging",
             "connected_region": "Complete Node 2",
             "access_rule": {
               "rule": "HasAll",
@@ -47,16 +40,14 @@
             }
           },
           {
-            "name": "From gather_herbs to stabilizer",
-            "connected_region": "Complete Node 6",
+            "name": "From basic_tools to mining",
+            "connected_region": "Complete Node 4",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 1",
-                  "Completed Node 3",
-                  "Node 1",
-                  "Node 3"
+                  "Node 1"
                 ]
               }
             }
@@ -68,16 +59,14 @@
         "name": "Complete Node 2",
         "exits": [
           {
-            "name": "From herb_extract to raw_tincture",
-            "connected_region": "Complete Node 5",
+            "name": "From logging to carpentry",
+            "connected_region": "Complete Node 3",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 2",
-                  "Completed Node 4",
-                  "Node 2",
-                  "Node 4"
+                  "Node 2"
                 ]
               }
             }
@@ -91,7 +80,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 2",
+              "name": "Node 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -119,29 +108,16 @@
         "name": "Complete Node 3",
         "exits": [
           {
-            "name": "From purify_water to alchemical_base",
-            "connected_region": "Complete Node 4",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Completed Node 3",
-                  "Node 3"
-                ]
-              }
-            }
-          },
-          {
-            "name": "From purify_water to stabilizer",
+            "name": "From carpentry to metalworking",
             "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 1",
                   "Completed Node 3",
-                  "Node 1",
-                  "Node 3"
+                  "Completed Node 5",
+                  "Node 3",
+                  "Node 5"
                 ]
               }
             }
@@ -155,7 +131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 3",
+              "name": "Node 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -183,15 +159,13 @@
         "name": "Complete Node 4",
         "exits": [
           {
-            "name": "From alchemical_base to raw_tincture",
+            "name": "From mining to smelting",
             "connected_region": "Complete Node 5",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 2",
                   "Completed Node 4",
-                  "Node 2",
                   "Node 4"
                 ]
               }
@@ -206,7 +180,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 6",
+              "name": "Node 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -234,16 +208,16 @@
         "name": "Complete Node 5",
         "exits": [
           {
-            "name": "From raw_tincture to refined_potion",
-            "connected_region": "Complete Node 7",
+            "name": "From smelting to metalworking",
+            "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Completed Node 3",
                   "Completed Node 5",
-                  "Completed Node 6",
-                  "Node 5",
-                  "Node 6"
+                  "Node 3",
+                  "Node 5"
                 ]
               }
             }
@@ -257,7 +231,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 5",
+              "name": "Node 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -285,15 +259,26 @@
         "name": "Complete Node 6",
         "exits": [
           {
-            "name": "From stabilizer to refined_potion",
+            "name": "From metalworking to architecture",
             "connected_region": "Complete Node 7",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 5",
                   "Completed Node 6",
-                  "Node 5",
+                  "Node 6"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From metalworking to engineering",
+            "connected_region": "Complete Node 8",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 6",
                   "Node 6"
                 ]
               }
@@ -308,7 +293,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 4",
+              "name": "Node 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -336,14 +321,16 @@
         "name": "Complete Node 7",
         "exits": [
           {
-            "name": "From refined_potion to master_elixir",
-            "connected_region": "Complete Node 8",
+            "name": "From architecture to steam_power",
+            "connected_region": "Complete Node 9",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 7",
-                  "Node 7"
+                  "Completed Node 8",
+                  "Node 7",
+                  "Node 8"
                 ]
               }
             }
@@ -357,7 +344,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 7",
+              "name": "Node 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -383,7 +370,23 @@
       },
       "Complete Node 8": {
         "name": "Complete Node 8",
-        "exits": [],
+        "exits": [
+          {
+            "name": "From engineering to steam_power",
+            "connected_region": "Complete Node 9",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 7",
+                  "Completed Node 8",
+                  "Node 7",
+                  "Node 8"
+                ]
+              }
+            }
+          }
+        ],
         "locations": [
           {
             "name": "Complete Node 8",
@@ -392,12 +395,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 8",
+              "name": "Node 7",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Completed Node 8",
@@ -407,6 +410,90 @@
             },
             "item": {
               "name": "Completed Node 8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Complete Node 9": {
+        "name": "Complete Node 9",
+        "exits": [
+          {
+            "name": "From steam_power to industrial_age",
+            "connected_region": "Complete Node 10",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 9",
+                  "Node 9"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Complete Node 9",
+            "id": 234800009,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Completed Node 9",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Complete Node 10": {
+        "name": "Complete Node 10",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Complete Node 10",
+            "id": 234800010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Node 10",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Completed Node 10",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Completed Node 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -523,7 +610,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -534,7 +621,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -1605,6 +1692,28 @@
         "type": "Event",
         "max_count": 1
       },
+      "Completed Node 9": {
+        "name": "Completed Node 9",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Completed Node 10": {
+        "name": "Completed Node 10",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Completed Node 1": {
         "name": "Completed Node 1",
         "id": null,
@@ -1625,6 +1734,7 @@
   "itempool_counts": {
     "1": {
       "Completed Node 1": 1,
+      "Completed Node 10": 1,
       "Completed Node 2": 1,
       "Completed Node 3": 1,
       "Completed Node 4": 1,
@@ -1632,14 +1742,17 @@
       "Completed Node 6": 1,
       "Completed Node 7": 1,
       "Completed Node 8": 1,
+      "Completed Node 9": 1,
       "Node 1": 1,
+      "Node 10": 1,
       "Node 2": 1,
       "Node 3": 1,
       "Node 4": 1,
       "Node 5": 1,
       "Node 6": 1,
       "Node 7": 1,
-      "Node 8": 1
+      "Node 8": 1,
+      "Node 9": 1
     }
   },
   "canonical_placements": {
@@ -1649,7 +1762,9 @@
       "Complete Node 4": "Node 4",
       "Complete Node 5": "Node 5",
       "Complete Node 6": "Node 6",
-      "Complete Node 7": "Node 7"
+      "Complete Node 7": "Node 7",
+      "Complete Node 8": "Node 8",
+      "Complete Node 9": "Node 9"
     }
   },
   "progression_mapping": {
@@ -1668,7 +1783,7 @@
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
-        "graph_file": 2,
+        "graph_file": 0,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
@@ -1698,9 +1813,11 @@
           "name_lookup": {
             "0": "tech_tree",
             "1": "skill_tree",
-            "2": "recipe_chain"
+            "2": "recipe_chain",
+            "3": "baking_adventure",
+            "4": "coding_adventure"
           },
-          "default": 0,
+          "default": 4,
           "display_name": "Graph File"
         },
         "progression_balancing": {
@@ -1735,57 +1852,67 @@
       },
       "graph_structure": {
         "label_to_index": {
-          "gather_herbs": 1,
-          "herb_extract": 2,
-          "purify_water": 3,
-          "alchemical_base": 4,
-          "raw_tincture": 5,
-          "stabilizer": 6,
-          "refined_potion": 7,
-          "master_elixir": 8
+          "basic_tools": 1,
+          "logging": 2,
+          "carpentry": 3,
+          "mining": 4,
+          "smelting": 5,
+          "metalworking": 6,
+          "architecture": 7,
+          "engineering": 8,
+          "steam_power": 9,
+          "industrial_age": 10
         },
-        "title": "Recipe Chain"
+        "title": "Tech Tree"
       },
-      "num_nodes": 8,
-      "preset_label": "recipe_chain s8",
+      "num_nodes": 10,
+      "preset_label": "tech_tree s8",
       "name_substitutions": {
         "items": {
-          "Node 1": "Gather Herbs",
-          "Completed Node 1": "Event: Gather Herbs",
-          "Node 2": "Herb Extract",
-          "Completed Node 2": "Event: Herb Extract",
-          "Node 3": "Purify Water",
-          "Completed Node 3": "Event: Purify Water",
-          "Node 4": "Alchemical Base",
-          "Completed Node 4": "Event: Alchemical Base",
-          "Node 5": "Raw Tincture",
-          "Completed Node 5": "Event: Raw Tincture",
-          "Node 6": "Stabilizer",
-          "Completed Node 6": "Event: Stabilizer",
-          "Node 7": "Refined Potion",
-          "Completed Node 7": "Event: Refined Potion",
-          "Node 8": "Master Elixir",
-          "Completed Node 8": "Event: Master Elixir"
+          "Node 1": "Basic Tools",
+          "Completed Node 1": "Event: Basic Tools",
+          "Node 2": "Logging",
+          "Completed Node 2": "Event: Logging",
+          "Node 3": "Carpentry",
+          "Completed Node 3": "Event: Carpentry",
+          "Node 4": "Mining",
+          "Completed Node 4": "Event: Mining",
+          "Node 5": "Smelting",
+          "Completed Node 5": "Event: Smelting",
+          "Node 6": "Metalworking",
+          "Completed Node 6": "Event: Metalworking",
+          "Node 7": "Architecture",
+          "Completed Node 7": "Event: Architecture",
+          "Node 8": "Engineering",
+          "Completed Node 8": "Event: Engineering",
+          "Node 9": "Steam Power",
+          "Completed Node 9": "Event: Steam Power",
+          "Node 10": "Industrial Age",
+          "Completed Node 10": "Event: Industrial Age"
         },
         "locations": {
-          "Complete Node 1": "Gather Herbs",
-          "Complete Node 2": "Herb Extract",
-          "Complete Node 3": "Purify Water",
-          "Complete Node 4": "Alchemical Base",
-          "Complete Node 5": "Raw Tincture",
-          "Complete Node 6": "Stabilizer",
-          "Complete Node 7": "Refined Potion",
-          "Complete Node 8": "Master Elixir"
+          "Complete Node 1": "Basic Tools",
+          "Complete Node 2": "Logging",
+          "Complete Node 3": "Carpentry",
+          "Complete Node 4": "Mining",
+          "Complete Node 5": "Smelting",
+          "Complete Node 6": "Metalworking",
+          "Complete Node 7": "Architecture",
+          "Complete Node 8": "Engineering",
+          "Complete Node 9": "Steam Power",
+          "Complete Node 10": "Industrial Age"
         },
         "regions": {
-          "Complete Node 1": "Gather Herbs",
-          "Complete Node 2": "Herb Extract",
-          "Complete Node 3": "Purify Water",
-          "Complete Node 4": "Alchemical Base",
-          "Complete Node 5": "Raw Tincture",
-          "Complete Node 6": "Stabilizer",
-          "Complete Node 7": "Refined Potion",
-          "Complete Node 8": "Master Elixir"
+          "Complete Node 1": "Basic Tools",
+          "Complete Node 2": "Logging",
+          "Complete Node 3": "Carpentry",
+          "Complete Node 4": "Mining",
+          "Complete Node 5": "Smelting",
+          "Complete Node 6": "Metalworking",
+          "Complete Node 7": "Architecture",
+          "Complete Node 8": "Engineering",
+          "Complete Node 9": "Steam Power",
+          "Complete Node 10": "Industrial Age"
         }
       },
       "canonical_placements": {
@@ -1794,7 +1921,9 @@
         "Complete Node 4": "Node 4",
         "Complete Node 5": "Node 5",
         "Complete Node 6": "Node 6",
-        "Complete Node 7": "Node 7"
+        "Complete Node 7": "Node 7",
+        "Complete Node 8": "Node 8",
+        "Complete Node 9": "Node 9"
       },
       "location_dependencies": {
         "Complete Node 2": [
@@ -1805,230 +1934,275 @@
           "Node 1",
           "Completed Node 1"
         ],
+        "Complete Node 3": [
+          "Node 2",
+          "Completed Node 2"
+        ],
+        "Completed Node 3": [
+          "Node 2",
+          "Completed Node 2"
+        ],
         "Complete Node 4": [
-          "Node 3",
-          "Completed Node 3"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Completed Node 4": [
-          "Node 3",
-          "Completed Node 3"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Complete Node 5": [
-          "Node 2",
-          "Completed Node 2",
           "Node 4",
           "Completed Node 4"
         ],
         "Completed Node 5": [
-          "Node 2",
-          "Completed Node 2",
           "Node 4",
           "Completed Node 4"
         ],
         "Complete Node 6": [
-          "Node 1",
-          "Completed Node 1",
           "Node 3",
-          "Completed Node 3"
+          "Completed Node 3",
+          "Node 5",
+          "Completed Node 5"
         ],
         "Completed Node 6": [
-          "Node 1",
-          "Completed Node 1",
           "Node 3",
-          "Completed Node 3"
+          "Completed Node 3",
+          "Node 5",
+          "Completed Node 5"
         ],
         "Complete Node 7": [
-          "Node 5",
-          "Completed Node 5",
           "Node 6",
           "Completed Node 6"
         ],
         "Completed Node 7": [
-          "Node 5",
-          "Completed Node 5",
           "Node 6",
           "Completed Node 6"
         ],
         "Complete Node 8": [
-          "Node 7",
-          "Completed Node 7"
+          "Node 6",
+          "Completed Node 6"
         ],
         "Completed Node 8": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "Complete Node 9": [
           "Node 7",
-          "Completed Node 7"
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "Completed Node 9": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "Complete Node 10": [
+          "Node 9",
+          "Completed Node 9"
+        ],
+        "Completed Node 10": [
+          "Node 9",
+          "Completed Node 9"
         ]
       },
       "entrance_dependencies": {
-        "From gather_herbs to herb_extract": [
+        "From basic_tools to logging": [
           "Node 1",
           "Completed Node 1"
         ],
-        "From purify_water to alchemical_base": [
-          "Node 3",
-          "Completed Node 3"
-        ],
-        "From herb_extract to raw_tincture": [
+        "From logging to carpentry": [
           "Node 2",
-          "Completed Node 2",
+          "Completed Node 2"
+        ],
+        "From basic_tools to mining": [
+          "Node 1",
+          "Completed Node 1"
+        ],
+        "From mining to smelting": [
           "Node 4",
           "Completed Node 4"
         ],
-        "From alchemical_base to raw_tincture": [
-          "Node 2",
-          "Completed Node 2",
-          "Node 4",
-          "Completed Node 4"
-        ],
-        "From gather_herbs to stabilizer": [
-          "Node 1",
-          "Completed Node 1",
+        "From carpentry to metalworking": [
           "Node 3",
-          "Completed Node 3"
-        ],
-        "From purify_water to stabilizer": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 3",
-          "Completed Node 3"
-        ],
-        "From raw_tincture to refined_potion": [
+          "Completed Node 3",
           "Node 5",
-          "Completed Node 5",
+          "Completed Node 5"
+        ],
+        "From smelting to metalworking": [
+          "Node 3",
+          "Completed Node 3",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "From metalworking to architecture": [
           "Node 6",
           "Completed Node 6"
         ],
-        "From stabilizer to refined_potion": [
-          "Node 5",
-          "Completed Node 5",
+        "From metalworking to engineering": [
           "Node 6",
           "Completed Node 6"
         ],
-        "From refined_potion to master_elixir": [
+        "From architecture to steam_power": [
           "Node 7",
-          "Completed Node 7"
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From engineering to steam_power": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From steam_power to industrial_age": [
+          "Node 9",
+          "Completed Node 9"
         ]
       },
       "exit_dependencies": {
-        "From gather_herbs to herb_extract": [
+        "From basic_tools to logging": [
           "Node 1",
           "Completed Node 1"
         ],
-        "From gather_herbs to stabilizer": [
+        "From basic_tools to mining": [
           "Node 1",
-          "Completed Node 1",
-          "Node 3",
-          "Completed Node 3"
+          "Completed Node 1"
         ],
-        "From herb_extract to raw_tincture": [
+        "From logging to carpentry": [
           "Node 2",
-          "Completed Node 2",
+          "Completed Node 2"
+        ],
+        "From carpentry to metalworking": [
+          "Node 3",
+          "Completed Node 3",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "From mining to smelting": [
           "Node 4",
           "Completed Node 4"
         ],
-        "From purify_water to alchemical_base": [
+        "From smelting to metalworking": [
           "Node 3",
-          "Completed Node 3"
-        ],
-        "From purify_water to stabilizer": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 3",
-          "Completed Node 3"
-        ],
-        "From alchemical_base to raw_tincture": [
-          "Node 2",
-          "Completed Node 2",
-          "Node 4",
-          "Completed Node 4"
-        ],
-        "From raw_tincture to refined_potion": [
+          "Completed Node 3",
           "Node 5",
-          "Completed Node 5",
+          "Completed Node 5"
+        ],
+        "From metalworking to architecture": [
           "Node 6",
           "Completed Node 6"
         ],
-        "From stabilizer to refined_potion": [
-          "Node 5",
-          "Completed Node 5",
+        "From metalworking to engineering": [
           "Node 6",
           "Completed Node 6"
         ],
-        "From refined_potion to master_elixir": [
+        "From architecture to steam_power": [
           "Node 7",
-          "Completed Node 7"
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From engineering to steam_power": [
+          "Node 7",
+          "Completed Node 7",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From steam_power to industrial_age": [
+          "Node 9",
+          "Completed Node 9"
         ]
       },
       "world_description": "Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.",
       "slot_data": {
         "graph_structure": {
           "1": {
-            "label": "gather_herbs",
-            "expression": "Gather Herbs",
+            "label": "basic_tools",
+            "expression": "Basic Tools",
             "dependencies": [],
-            "full_text": "gather_herbs: Collect medicinal herbs from the wild"
+            "full_text": "basic_tools: Craft primitive tools from stone and wood"
           },
           "2": {
-            "label": "herb_extract",
-            "expression": "Herb Extract",
+            "label": "logging",
+            "expression": "Logging",
             "dependencies": [
               1
             ],
-            "full_text": "herb_extract: Distill herbs into concentrated extract"
+            "full_text": "logging: Harvest timber from forests"
           },
           "3": {
-            "label": "purify_water",
-            "expression": "Purify Water",
-            "dependencies": [],
-            "full_text": "purify_water: Create purified water for alchemy"
+            "label": "carpentry",
+            "expression": "Carpentry",
+            "dependencies": [
+              2
+            ],
+            "full_text": "carpentry: Shape wood into useful structures"
           },
           "4": {
-            "label": "alchemical_base",
-            "expression": "Alchemical Base",
+            "label": "mining",
+            "expression": "Mining",
             "dependencies": [
-              3
+              1
             ],
-            "full_text": "alchemical_base: Prepare the foundation for potions"
+            "full_text": "mining: Extract ores from the earth"
           },
           "5": {
-            "label": "raw_tincture",
-            "expression": "Raw Tincture",
+            "label": "smelting",
+            "expression": "Smelting",
             "dependencies": [
-              2,
               4
             ],
-            "full_text": "raw_tincture: Combine extract and base into a crude tincture"
+            "full_text": "smelting: Smelt ores into metal ingots"
           },
           "6": {
-            "label": "stabilizer",
-            "expression": "Stabilizer",
+            "label": "metalworking",
+            "expression": "Metalworking",
             "dependencies": [
-              1,
-              3
+              3,
+              5
             ],
-            "full_text": "stabilizer: Create a reagent that prevents potion decay"
+            "full_text": "metalworking: Forge metal into advanced components"
           },
           "7": {
-            "label": "refined_potion",
-            "expression": "Refined Potion",
+            "label": "architecture",
+            "expression": "Architecture",
             "dependencies": [
-              5,
               6
             ],
-            "full_text": "refined_potion: Stabilize the tincture into a usable potion"
+            "full_text": "architecture: Design and construct buildings"
           },
           "8": {
-            "label": "master_elixir",
-            "expression": "Master Elixir",
+            "label": "engineering",
+            "expression": "Engineering",
             "dependencies": [
-              7
+              6
             ],
-            "full_text": "master_elixir: The ultimate alchemical creation"
+            "full_text": "engineering: Apply scientific principles to construction"
+          },
+          "9": {
+            "label": "steam_power",
+            "expression": "Steam Power",
+            "dependencies": [
+              7,
+              8
+            ],
+            "full_text": "steam_power: Harness the power of steam engines"
+          },
+          "10": {
+            "label": "industrial_age",
+            "expression": "Industrial Age",
+            "dependencies": [
+              9
+            ],
+            "full_text": "industrial_age: Enter the era of mass production"
           }
         },
         "starting_nodes": [
           1
         ],
-        "title": "Recipe Chain",
+        "title": "Tech Tree",
         "randomize_items": 1,
         "vanilla_placement": 0
       },
@@ -2055,10 +2229,10 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Completed Node 8"
+        "item": "Completed Node 10"
       }
     }
   },
   "helpers": {},
-  "preset_label": "recipe_chain s8"
+  "preset_label": "tech_tree s8"
 }

@@ -1578,9 +1578,9 @@
         "costgen_grind_with_push_collect": true,
         "costgen_item_collection": true,
         "costgen_push_collect": true,
-        "costgen_xp_grinding": true,
         "exclude_locations": [],
         "free_zones": 1,
+        "game_data_file": "",
         "goal_zone": 15,
         "item_links": [],
         "local_items": [],
@@ -1593,7 +1593,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "starting_perk_list": [],
-        "starting_perks": 0
+        "starting_perks": 0,
+        "vanilla_placement": false
       },
       "option_definitions": {
         "accessibility": {
@@ -1650,17 +1651,17 @@
           "default": true,
           "display_name": "Cost Gen: Push/Collect"
         },
-        "costgen_xp_grinding": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Cost Gen: XP Grinding"
-        },
         "free_zones": {
           "type": "range",
           "range_start": 1,
           "range_end": 15,
           "default": 1,
           "display_name": "Free Zones"
+        },
+        "game_data_file": {
+          "type": "freetext",
+          "default": "",
+          "display_name": "Game Data File"
         },
         "goal_zone": {
           "type": "range",
@@ -1689,6 +1690,11 @@
           "range_end": 15,
           "default": 0,
           "display_name": "Starting Perks"
+        },
+        "vanilla_placement": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Vanilla Placement"
         }
       },
       "world_description": "Journey to Ascension is an incremental/idle game where you progress\nthrough zones by completing tasks, leveling skills, and collecting perks.\nThis randomizer shuffles perk placements across tasks.",
