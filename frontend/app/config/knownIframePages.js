@@ -19,6 +19,12 @@ export const knownIframePages = [
         url: "./modules/a-mazing-idle-remote/index-iframe.html",
         description: "Incremental maze game with bot automation",
         shortName: "mazegame"
+    },
+    {
+        name: "Journey to Ascension",
+        url: "./modules/jta-remote/index-iframe.html",
+        description: "Incremental RPG adventure game",
+        shortName: "jta"
     }
 ];
 

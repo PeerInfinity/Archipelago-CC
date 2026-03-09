@@ -33,9 +33,7 @@ class GraphFile(Choice):
     option_tech_tree = 0
     option_skill_tree = 1
     option_recipe_chain = 2
-    option_baking_adventure = 3
-    option_coding_adventure = 4
-    default = 4
+    default = 0
 
 class RandomizeStartingNodes(Toggle):
     """Option for Randomize Starting Nodes."""

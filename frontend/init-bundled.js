@@ -106,8 +106,11 @@ import * as windowPanelModule from './modules/windowPanel/index.js';
 import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js';
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
 import * as mazeGameDataPanelModule from './modules/mazeGameDataPanel/index.js';
+import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
 import * as proofGraphModule from './modules/proofGraph/index.js';
+import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
+import * as jtaActionQueueModule from './modules/jtaActionQueue/index.js';
 
 // ============================================================================
 // STATIC TEST CASE IMPORTS - These get bundled and self-register on import
@@ -183,8 +186,11 @@ const BUNDLED_MODULES = {
   windowManagerPanel: windowManagerPanelModule,
   ruleConverter: ruleConverterModule,
   mazeGameDataPanel: mazeGameDataPanelModule,
+  jtaGameDataPanel: jtaGameDataPanelModule,
   proofQueue: proofQueueModule,
   proofGraph: proofGraphModule,
+  jtaQueueEngine: jtaQueueEngineModule,
+  jtaActionQueue: jtaActionQueueModule,
 };
 
 // Make bundled modules available globally for the module loader

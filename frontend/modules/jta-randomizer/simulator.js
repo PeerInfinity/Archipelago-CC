@@ -7,10 +7,13 @@ import {
     ZONES, PERKS, PerkType, SkillType, TaskType,
     SKILL_XP_MULT, SKILL_NAMES, PERK_NAMES, getMandatoryTasks,
     ENERGY_ITEMS, ItemType, ARTIFACTS, HASTE_MULT, MAGIC_RING_MULT,
-    BOTTLED_LIGHTNING_MULT, ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS
+    BOTTLED_LIGHTNING_MULT, ITEM_SKILL_MODIFIERS, BOSS_UNLOCKS,
+    PrestigeUnlockType, PrestigeRepeatableType,
+    GOTTA_GO_FAST_BASE, MANDATORY_SCHMANDATORY_MULT,
+    SPITE_THE_GODS_MULT, DIVINE_KNOWLEDGE_MULT, DIVINER_KNOWLEDGE_MULT,
 } from './gameData.js';
 
-// Game constants from simulation.ts
+// Game constants from simulation.ts / simulation_constants.ts
 const BASE_COST = 10;
 const ZONE_COST_EXPONENT = 2.2;
 const ZONE_SPEEDUP_BASE = 1.05;
@@ -20,7 +23,37 @@ const TICK_RATE_MS = 66.6;
 const STARTING_ENERGY = 100;
 const ENERGETIC_MEMORY_MULT = 0.1;
 const REFLECTIONS_BASE = 0.95;
+const REFLECTIONS_BOOSTED_BASE = 0.9;
 const MAJOR_TIME_COMPRESSION_EFFECT = 1.5;
+const UNIFIED_THEORY_OF_MAGIC_EFFECT = 0.02;
+const COMPULSIVE_NOTE_TAKING_AMOUNT = 2;
+const NOTE_ITEMS = [ItemType.ScrollOfHaste, ItemType.Book, ItemType.CraftingRecipe, ItemType.DivineNotes, ItemType.GriffinQuill];
+
+// Prestige state helpers
+function hasPrestigeUnlock(state, type) {
+    return state.prestigeUnlocks.has(type);
+}
+
+function getPrestigeLevel(state, type) {
+    return state.prestigeRepeatables.get(type) || 0;
+}
+
+function getReflectionsBase(state) {
+    return hasPrestigeUnlock(state, PrestigeUnlockType.LookInTheMirror)
+        ? REFLECTIONS_BOOSTED_BASE
+        : REFLECTIONS_BASE;
+}
+
+function getAttunementSkills(state) {
+    const skills = [SkillType.Magic, SkillType.Study];
+    if (hasPrestigeUnlock(state, PrestigeUnlockType.FullyAttuned)) {
+        skills.push(SkillType.Search);
+    }
+    if (hasPrestigeUnlock(state, PrestigeUnlockType.CraftingBreakthrough)) {
+        skills.push(SkillType.Crafting);
+    }
+    return skills;
+}
 
 /**
  * Calculate the base cost of a task
@@ -44,25 +77,47 @@ export function calcProgressPerTick(task, zoneId, state) {
     }
     mult *= Math.pow(skillMult, 1 / task.skills.length);
 
-    // Perk bonuses
+    // Perk bonuses + item speed modifiers (per-skill, matching game's calcSkillTaskProgressWithoutLevel)
+    const attunementSkills = getAttunementSkills(state);
+    let hasAttunementSkill = false;
     for (const skill of task.skills) {
+        // Perk skill modifiers
         for (const perkId of state.perks) {
             const perk = PERKS[perkId];
             if (perk && perk.skillModifiers[skill]) {
                 mult *= (1 + perk.skillModifiers[skill]);
             }
         }
-    }
 
-    // Skill speed modifiers from consumed items
-    // Items must be USED to provide bonuses (consumed, added to skillSpeedModifiers)
-    // These bonuses reset each run but accumulate as items are used during a run
-    for (const skill of task.skills) {
+        // Item speed modifiers (from consumed items)
         const speedMod = state.skillSpeedModifiers[skill] || 0;
         if (speedMod > 0) {
             mult *= (1 + speedMod);
         }
+
+        // Power bonus (for Combat/Fortitude)
+        if (skill === SkillType.Combat || skill === SkillType.Fortitude) {
+            mult *= (1 + state.power / 100);
+        }
+
+        // Track attunement skills (applied once after loop to avoid stacking)
+        if (attunementSkills.includes(skill)) {
+            hasAttunementSkill = true;
+        }
+
+        // Spite The Gods prestige repeatable (Ascension + Charisma)
+        if (skill === SkillType.Ascension || skill === SkillType.Charisma) {
+            mult *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.SpiteTheGods) * SPITE_THE_GODS_MULT;
+        }
     }
+
+    // Apply attunement bonus once (unconditional, matching game's calcSkillTaskProgressWithoutLevel)
+    if (hasAttunementSkill && state.attunement > 0) {
+        mult *= (1 + state.attunement / 1000);
+    }
+
+    // GottaGoFast prestige repeatable
+    mult *= Math.pow(GOTTA_GO_FAST_BASE, getPrestigeLevel(state, PrestigeRepeatableType.GottaGoFast));
 
     // Zone speedup
     mult *= Math.pow(ZONE_SPEEDUP_BASE, zoneId);
@@ -73,21 +128,15 @@ export function calcProgressPerTick(task, zoneId, state) {
         mult *= MAJOR_TIME_COMPRESSION_EFFECT;
     }
 
-    // Unified Theory of Magic - 2% per zone fully completed
+    // Unified Theory of Magic
     if (state.perks.has(PerkType.UnifiedTheoryOfMagic)) {
-        mult *= Math.pow(1.02, state.highestZoneFullyCompleted + 1);
+        mult *= Math.pow(1 + UNIFIED_THEORY_OF_MAGIC_EFFECT, state.highestZoneFullyCompleted + 1);
     }
 
-    // Power bonus (for Combat/Fortitude)
-    const powerSkills = [SkillType.Combat, SkillType.Fortitude];
-    if (task.skills.some(s => powerSkills.includes(s))) {
-        mult *= (1 + state.power / 100);
-    }
-
-    // Attunement bonus (for Magic/Study)
-    const attunementSkills = [SkillType.Magic, SkillType.Study];
-    if (state.perks.has(PerkType.Attunement) && task.skills.some(s => attunementSkills.includes(s))) {
-        mult *= (1 + state.attunement / 1000);
+    // MandatorySchmandatory prestige repeatable - bonus for mandatory/travel/prestige tasks
+    const mandatoryish = task.type === TaskType.Travel || task.type === TaskType.Mandatory || task.type === TaskType.Prestige;
+    if (mandatoryish) {
+        mult *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.MandatorySchmandatory) * MANDATORY_SCHMANDATORY_MULT;
     }
 
     // BottledLightning - 2x speed for boss tasks
@@ -122,6 +171,11 @@ export function isSingleTick(task, zoneId, state) {
 export function calcEnergyDrainPerTick(task, zoneId, state, singleTick) {
     let drain = 1;
 
+    // MasteryOfTime prestige - single tick tasks cost 0 energy
+    if (singleTick && hasPrestigeUnlock(state, PrestigeUnlockType.MasteryOfTime)) {
+        return 0;
+    }
+
     // Minor Time Compression - single tick tasks cost 80% less energy
     if (singleTick && state.perks.has(PerkType.MinorTimeCompression)) {
         drain *= 0.2;
@@ -133,10 +187,10 @@ export function calcEnergyDrainPerTick(task, zoneId, state, singleTick) {
     }
 
     // Reflections on the Journey - reduce drain based on zone difference
-    // Note: when zoneDiff <= 0, Math.pow(0.95, zoneDiff) >= 1 (increases drain for zones above highest)
+    // Base is 0.95 normally, 0.9 with LookInTheMirror prestige
     if (state.perks.has(PerkType.ReflectionsOnTheJourney)) {
         const zoneDiff = state.highestZone - zoneId;
-        drain *= Math.pow(REFLECTIONS_BASE, zoneDiff);
+        drain *= Math.pow(getReflectionsBase(state), zoneDiff);
     }
 
     // Zone scaling - later zones cost more energy per tick
@@ -189,20 +243,19 @@ export function calcXpNeeded(level, skillType) {
 /**
  * Calculate XP gained from completing a task (one rep)
  *
- * The original game awards XP every tick: xp_per_tick = progress * 8 * xpMult
- * A rep takes ceil(cost / progress) ticks to complete.
- * Total XP per rep = ticks * progress * 8 * xpMult ≈ cost * 8 * xpMult
+ * The game awards XP every tick proportional to progress made that tick.
+ * Since progress is capped at remaining cost, the sum of all progress
+ * across ticks equals exactly `cost`. So total XP per rep = cost * 8 * xpMult,
+ * independent of progress-per-tick and skill levels.
  *
  * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
 export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
-    const progress = calcProgressPerTick(task, zoneId, state);
     const cost = calcTaskCost(task, zoneId);
-    const ticks = Math.ceil(cost / progress);
 
-    // XP per tick, then multiply by ticks to get XP per rep
+    // Total XP per rep = cost * 8 * xpMult (progress cancels out across ticks)
     const XP_MULT = 8;
-    let xp = progress * XP_MULT * task.xpMult * ticks;
+    let xp = cost * XP_MULT * task.xpMult;
 
     // Writing perk - 50% more XP
     if (state.perks.has(PerkType.Writing)) {
@@ -213,6 +266,17 @@ export function calcTaskXp(task, zoneId, state, xpBoosted = false) {
     if (state.perks.has(PerkType.GazedBeyondTheVeil)) {
         xp *= 2;
     }
+
+    // Divine Inspiration prestige unlock - 1.5x XP
+    if (hasPrestigeUnlock(state, PrestigeUnlockType.DivineInspiration)) {
+        xp *= 1.5;
+    }
+
+    // Divine Knowledge prestige repeatable
+    xp *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.DivineKnowledge) * DIVINE_KNOWLEDGE_MULT;
+
+    // Diviner Knowledge prestige repeatable
+    xp *= 1 + getPrestigeLevel(state, PrestigeRepeatableType.DivinerKnowledge) * DIVINER_KNOWLEDGE_MULT;
 
     // Zone scaling
     xp *= Math.pow(1.25, zoneId);
@@ -291,7 +355,7 @@ export function getReachableZones(startingEnergy, state, maxZone = ZONES.length 
  * @param actualReps - if set, use this for XP calculation instead of task.maxReps
  * @param xpBoosted - if true, applies Magic Ring 5x XP multiplier
  */
-function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
+export function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted = false) {
     const xpPerRep = calcTaskXp(task, zoneId, state, xpBoosted);
     const repsPerCompletion = actualReps !== null ? actualReps : task.maxReps;
     const totalXp = xpPerRep * repsPerCompletion * reps;
@@ -320,7 +384,7 @@ function applyTaskXp(task, zoneId, state, reps = 1, actualReps = null, xpBoosted
  * Calculate total XP value of a task (sum across all skills it trains)
  * Weighted by skill XP multipliers so harder-to-level skills count more
  */
-function calcTotalXpValue(task, zoneId, state) {
+export function calcTotalXpValue(task, zoneId, state) {
     const xpPerRep = calcTaskXp(task, zoneId, state);
     let totalValue = 0;
     for (const skill of task.skills) {
@@ -1161,16 +1225,22 @@ export function doEnergyReset(state) {
         state.maxEnergy += gain;
     }
 
-    // Items persist at 50% across resets
-    halveItems(state);
+    // Items only persist at 50% if player has UnderstandingTheReset perk; otherwise go to 0
+    handleEnergyResetItemCounts(state);
 
     // Reset skill speed modifiers (temporary bonuses from consumed items)
     state.skillSpeedModifiers = {};
 
-    // Artifacts also persist at 50%
-    state.scrollsOfHaste = Math.ceil(state.scrollsOfHaste / 2);
-    state.magicRings = Math.ceil(state.magicRings / 2);
-    state.bottledLightnings = Math.ceil(state.bottledLightnings / 2);
+    // Artifacts follow same rules as regular items
+    if (state.perks.has(PerkType.UnderstandingTheReset)) {
+        state.scrollsOfHaste = Math.ceil(state.scrollsOfHaste / 2);
+        state.magicRings = Math.ceil(state.magicRings / 2);
+        state.bottledLightnings = Math.ceil(state.bottledLightnings / 2);
+    } else {
+        state.scrollsOfHaste = 0;
+        state.magicRings = 0;
+        state.bottledLightnings = 0;
+    }
 
     // Reset items found this reset (for Dreamcatcher)
     state.itemsFoundThisReset = [];
@@ -1211,6 +1281,9 @@ export function createInitialState() {
         bossesDefeated: new Set(),  // Set of boss task IDs that have been defeated
         unlockedHiddenTasks: new Set(), // Hidden tasks unlocked by defeating bosses
         itemsFoundThisReset: [],    // For Dreamcatcher artifact
+        // Prestige state (defaults to no prestige; set externally if prestige is active)
+        prestigeUnlocks: new Set(),       // PrestigeUnlockType values
+        prestigeRepeatables: new Map(),   // PrestigeRepeatableType -> level
     };
 }
 
@@ -1357,11 +1430,25 @@ function calcTaskEnergyCostWithHaste(task, zoneId, state, useHaste = false) {
 }
 
 /**
- * Halve all items (on energy reset)
+ * Handle item counts on energy reset (matching game's handleEnergyResetItemCounts)
+ * Items only persist at 50% with UnderstandingTheReset perk; otherwise go to 0.
+ * CompulsiveNotetaking prestige guarantees minimum NOTE_ITEMS counts.
  */
-function halveItems(state) {
+function handleEnergyResetItemCounts(state) {
+    const hasReset = state.perks.has(PerkType.UnderstandingTheReset);
     for (const [itemType, count] of state.items) {
-        state.items.set(itemType, Math.ceil(count / 2));
+        const newValue = hasReset ? Math.ceil(count / 2) : 0;
+        state.items.set(itemType, newValue);
+    }
+
+    // CompulsiveNotetaking prestige - guarantee minimum NOTE_ITEMS
+    if (hasPrestigeUnlock(state, PrestigeUnlockType.CompulsiveNotetaking)) {
+        for (const item of NOTE_ITEMS) {
+            const current = state.items.get(item) || 0;
+            if (current < COMPULSIVE_NOTE_TAKING_AMOUNT) {
+                state.items.set(item, COMPULSIVE_NOTE_TAKING_AMOUNT);
+            }
+        }
     }
 }
 
@@ -1524,6 +1611,20 @@ export function runBaselineSimulation(maxZone = 15, options = {}) {
 
 // Re-export ZONES for convenience
 export { ZONES } from './gameData.js';
+
+// Export strategy helper functions for queue builder
+export {
+    getGrindableTasks,
+    getAllReachableGrindableTasks,
+    getReachablePerkTasks,
+    getReachableItemTasks,
+    getReachableSkillBoostTasks,
+    getReachableBossTasks,
+    getBottleneckSkills,
+    getBottleneckTrainingTasks,
+    calcItemEnergy,
+    getItemType,
+};
 
 /**
  * Run a detailed simulation showing every action taken

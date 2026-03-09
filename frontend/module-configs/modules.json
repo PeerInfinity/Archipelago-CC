@@ -187,6 +187,11 @@
       "enabled": true,
       "requires": ["iframeAdapter", "iframePanel"]
     },
+    "jtaGameDataPanel": {
+      "path": "./modules/jtaGameDataPanel/index.js",
+      "enabled": true,
+      "requires": ["iframeAdapter", "iframePanel"]
+    },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
       "enabled": true
@@ -214,6 +219,21 @@
       "path": "./modules/proofGraph/index.js",
       "enabled": true,
       "requires": ["stateManager"]
+    },
+    "jtaQueueEngine": {
+      "path": "./modules/jtaQueueEngine/index.js",
+      "enabled": true,
+      "requires": ["iframeAdapter", "iframePanel"]
+    },
+    "jtaActionQueue": {
+      "path": "./modules/jtaActionQueue/index.js",
+      "enabled": true,
+      "requires": ["jtaQueueEngine"]
+    },
+    "jtaArchipelago": {
+      "path": "./modules/jtaArchipelago/index.js",
+      "enabled": true,
+      "requires": ["stateManager", "client", "iframeAdapter", "iframePanel"]
     }
   },
   "loadPriority": [
@@ -259,11 +279,15 @@
     "iframePanel",
     "iframeManagerPanel",
     "mazeGameDataPanel",
+    "jtaGameDataPanel",
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",
     "ruleConverter",
     "proofQueue",
-    "proofGraph"
+    "proofGraph",
+    "jtaQueueEngine",
+    "jtaActionQueue",
+    "jtaArchipelago"
   ]
 }

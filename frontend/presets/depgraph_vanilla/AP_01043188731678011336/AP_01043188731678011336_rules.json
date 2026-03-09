@@ -14,43 +14,8 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To electric_mixer",
+            "name": "To basic_combat",
             "connected_region": "Complete Node 1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To measuring_tools",
-            "connected_region": "Complete Node 2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To mixing_bowls",
-            "connected_region": "Complete Node 5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To preheated_oven",
-            "connected_region": "Complete Node 6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To prepared_sheets",
-            "connected_region": "Complete Node 7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "To softened_butter",
-            "connected_region": "Complete Node 8",
             "access_rule": {
               "rule": "True_"
             }
@@ -62,18 +27,27 @@
         "name": "Complete Node 1",
         "exits": [
           {
-            "name": "From electric_mixer to butter_sugar_base",
-            "connected_region": "Complete Node 9",
+            "name": "From basic_combat to agility",
+            "connected_region": "Complete Node 2",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 1",
-                  "Completed Node 5",
-                  "Completed Node 8",
-                  "Node 1",
-                  "Node 5",
-                  "Node 8"
+                  "Node 1"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From basic_combat to strength",
+            "connected_region": "Complete Node 3",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 1",
+                  "Node 1"
                 ]
               }
             }
@@ -85,14 +59,31 @@
         "name": "Complete Node 2",
         "exits": [
           {
-            "name": "From measuring_tools to measured_flour",
-            "connected_region": "Complete Node 3",
+            "name": "From agility to parry",
+            "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 2",
-                  "Node 2"
+                  "Completed Node 5",
+                  "Node 2",
+                  "Node 5"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From agility to dual_wield",
+            "connected_region": "Complete Node 9",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 2",
+                  "Completed Node 8",
+                  "Node 2",
+                  "Node 8"
                 ]
               }
             }
@@ -134,8 +125,34 @@
         "name": "Complete Node 3",
         "exits": [
           {
-            "name": "From measured_flour to flour_mixture",
+            "name": "From strength to battle_cry",
             "connected_region": "Complete Node 4",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 3",
+                  "Node 3"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From strength to shield_mastery",
+            "connected_region": "Complete Node 5",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Completed Node 3",
+                  "Node 3"
+                ]
+              }
+            }
+          },
+          {
+            "name": "From strength to sword_mastery",
+            "connected_region": "Complete Node 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -183,16 +200,16 @@
         "name": "Complete Node 4",
         "exits": [
           {
-            "name": "From flour_mixture to basic_dough",
-            "connected_region": "Complete Node 12",
+            "name": "From battle_cry to whirlwind",
+            "connected_region": "Complete Node 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 11",
                   "Completed Node 4",
-                  "Node 11",
-                  "Node 4"
+                  "Completed Node 9",
+                  "Node 4",
+                  "Node 9"
                 ]
               }
             }
@@ -234,18 +251,16 @@
         "name": "Complete Node 5",
         "exits": [
           {
-            "name": "From mixing_bowls to butter_sugar_base",
-            "connected_region": "Complete Node 9",
+            "name": "From shield_mastery to parry",
+            "connected_region": "Complete Node 6",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 1",
+                  "Completed Node 2",
                   "Completed Node 5",
-                  "Completed Node 8",
-                  "Node 1",
-                  "Node 5",
-                  "Node 8"
+                  "Node 2",
+                  "Node 5"
                 ]
               }
             }
@@ -287,15 +302,13 @@
         "name": "Complete Node 6",
         "exits": [
           {
-            "name": "From preheated_oven to baked_cookies",
-            "connected_region": "Complete Node 15",
+            "name": "From parry to counter",
+            "connected_region": "Complete Node 7",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 14",
                   "Completed Node 6",
-                  "Node 14",
                   "Node 6"
                 ]
               }
@@ -338,15 +351,15 @@
         "name": "Complete Node 7",
         "exits": [
           {
-            "name": "From prepared_sheets to shaped_cookies",
-            "connected_region": "Complete Node 14",
+            "name": "From counter to warrior_stance",
+            "connected_region": "Complete Node 11",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 13",
+                  "Completed Node 10",
                   "Completed Node 7",
-                  "Node 13",
+                  "Node 10",
                   "Node 7"
                 ]
               }
@@ -389,17 +402,15 @@
         "name": "Complete Node 8",
         "exits": [
           {
-            "name": "From softened_butter to butter_sugar_base",
+            "name": "From sword_mastery to dual_wield",
             "connected_region": "Complete Node 9",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Completed Node 1",
-                  "Completed Node 5",
+                  "Completed Node 2",
                   "Completed Node 8",
-                  "Node 1",
-                  "Node 5",
+                  "Node 2",
                   "Node 8"
                 ]
               }
@@ -442,13 +453,15 @@
         "name": "Complete Node 9",
         "exits": [
           {
-            "name": "From butter_sugar_base to egg_mixture",
+            "name": "From dual_wield to whirlwind",
             "connected_region": "Complete Node 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "Completed Node 4",
                   "Completed Node 9",
+                  "Node 4",
                   "Node 9"
                 ]
               }
@@ -491,14 +504,16 @@
         "name": "Complete Node 10",
         "exits": [
           {
-            "name": "From egg_mixture to creamed_mixture",
+            "name": "From whirlwind to warrior_stance",
             "connected_region": "Complete Node 11",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 10",
-                  "Node 10"
+                  "Completed Node 7",
+                  "Node 10",
+                  "Node 7"
                 ]
               }
             }
@@ -540,16 +555,14 @@
         "name": "Complete Node 11",
         "exits": [
           {
-            "name": "From creamed_mixture to basic_dough",
+            "name": "From warrior_stance to legendary_hero",
             "connected_region": "Complete Node 12",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
                   "Completed Node 11",
-                  "Completed Node 4",
-                  "Node 11",
-                  "Node 4"
+                  "Node 11"
                 ]
               }
             }
@@ -589,21 +602,7 @@
       },
       "Complete Node 12": {
         "name": "Complete Node 12",
-        "exits": [
-          {
-            "name": "From basic_dough to cookie_dough",
-            "connected_region": "Complete Node 13",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Completed Node 12",
-                  "Node 12"
-                ]
-              }
-            }
-          }
-        ],
+        "exits": [],
         "locations": [
           {
             "name": "Complete Node 12",
@@ -627,143 +626,6 @@
             },
             "item": {
               "name": "Completed Node 12",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Complete Node 13": {
-        "name": "Complete Node 13",
-        "exits": [
-          {
-            "name": "From cookie_dough to shaped_cookies",
-            "connected_region": "Complete Node 14",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Completed Node 13",
-                  "Completed Node 7",
-                  "Node 13",
-                  "Node 7"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Complete Node 13",
-            "id": 234800013,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Node 13",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Completed Node 13",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Completed Node 13",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Complete Node 14": {
-        "name": "Complete Node 14",
-        "exits": [
-          {
-            "name": "From shaped_cookies to baked_cookies",
-            "connected_region": "Complete Node 15",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Completed Node 14",
-                  "Completed Node 6",
-                  "Node 14",
-                  "Node 6"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Complete Node 14",
-            "id": 234800014,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Node 14",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Completed Node 14",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Completed Node 14",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Complete Node 15": {
-        "name": "Complete Node 15",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Complete Node 15",
-            "id": 234800015,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Node 15",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Completed Node 15",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Completed Node 15",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -924,7 +786,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -935,7 +797,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -946,7 +808,7 @@
           "Everything",
           "Nodes"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -2006,39 +1868,6 @@
         "type": "Event",
         "max_count": 1
       },
-      "Completed Node 13": {
-        "name": "Completed Node 13",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Completed Node 14": {
-        "name": "Completed Node 14",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Completed Node 15": {
-        "name": "Completed Node 15",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Completed Node 1": {
         "name": "Completed Node 1",
         "id": null,
@@ -2062,9 +1891,6 @@
       "Completed Node 10": 1,
       "Completed Node 11": 1,
       "Completed Node 12": 1,
-      "Completed Node 13": 1,
-      "Completed Node 14": 1,
-      "Completed Node 15": 1,
       "Completed Node 2": 1,
       "Completed Node 3": 1,
       "Completed Node 4": 1,
@@ -2077,9 +1903,6 @@
       "Node 10": 1,
       "Node 11": 1,
       "Node 12": 1,
-      "Node 13": 1,
-      "Node 14": 1,
-      "Node 15": 1,
       "Node 2": 1,
       "Node 3": 1,
       "Node 4": 1,
@@ -2101,10 +1924,7 @@
       "Complete Node 8": "Node 8",
       "Complete Node 9": "Node 9",
       "Complete Node 10": "Node 10",
-      "Complete Node 11": "Node 11",
-      "Complete Node 12": "Node 12",
-      "Complete Node 13": "Node 13",
-      "Complete Node 14": "Node 14"
+      "Complete Node 11": "Node 11"
     }
   },
   "progression_mapping": {
@@ -2123,7 +1943,7 @@
       "options": {
         "accessibility": 2,
         "exclude_locations": [],
-        "graph_file": 3,
+        "graph_file": 1,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
@@ -2153,11 +1973,9 @@
           "name_lookup": {
             "0": "tech_tree",
             "1": "skill_tree",
-            "2": "recipe_chain",
-            "3": "baking_adventure",
-            "4": "coding_adventure"
+            "2": "recipe_chain"
           },
-          "default": 4,
+          "default": 0,
           "display_name": "Graph File"
         },
         "progression_balancing": {
@@ -2192,93 +2010,78 @@
       },
       "graph_structure": {
         "label_to_index": {
-          "electric_mixer": 1,
-          "measuring_tools": 2,
-          "measured_flour": 3,
-          "flour_mixture": 4,
-          "mixing_bowls": 5,
-          "preheated_oven": 6,
-          "prepared_sheets": 7,
-          "softened_butter": 8,
-          "butter_sugar_base": 9,
-          "egg_mixture": 10,
-          "creamed_mixture": 11,
-          "basic_dough": 12,
-          "cookie_dough": 13,
-          "shaped_cookies": 14,
-          "baked_cookies": 15
+          "basic_combat": 1,
+          "agility": 2,
+          "strength": 3,
+          "battle_cry": 4,
+          "shield_mastery": 5,
+          "parry": 6,
+          "counter": 7,
+          "sword_mastery": 8,
+          "dual_wield": 9,
+          "whirlwind": 10,
+          "warrior_stance": 11,
+          "legendary_hero": 12
         },
-        "title": "Baking Adventure"
+        "title": "Skill Tree"
       },
-      "num_nodes": 15,
+      "num_nodes": 12,
       "is_vanilla": true,
-      "preset_label": "baking_adventure v",
+      "preset_label": "skill_tree v",
       "name_substitutions": {
         "items": {
-          "Node 1": "Electric Mixer",
-          "Completed Node 1": "Event: Electric Mixer",
-          "Node 2": "Measuring Tools",
-          "Completed Node 2": "Event: Measuring Tools",
-          "Node 3": "Measured Flour",
-          "Completed Node 3": "Event: Measured Flour",
-          "Node 4": "Flour Mixture",
-          "Completed Node 4": "Event: Flour Mixture",
-          "Node 5": "Mixing Bowls",
-          "Completed Node 5": "Event: Mixing Bowls",
-          "Node 6": "Preheated Oven",
-          "Completed Node 6": "Event: Preheated Oven",
-          "Node 7": "Prepared Sheets",
-          "Completed Node 7": "Event: Prepared Sheets",
-          "Node 8": "Softened Butter",
-          "Completed Node 8": "Event: Softened Butter",
-          "Node 9": "Butter Sugar Base",
-          "Completed Node 9": "Event: Butter Sugar Base",
-          "Node 10": "Egg Mixture",
-          "Completed Node 10": "Event: Egg Mixture",
-          "Node 11": "Creamed Mixture",
-          "Completed Node 11": "Event: Creamed Mixture",
-          "Node 12": "Basic Dough",
-          "Completed Node 12": "Event: Basic Dough",
-          "Node 13": "Cookie Dough",
-          "Completed Node 13": "Event: Cookie Dough",
-          "Node 14": "Shaped Cookies",
-          "Completed Node 14": "Event: Shaped Cookies",
-          "Node 15": "Baked Cookies",
-          "Completed Node 15": "Event: Baked Cookies"
+          "Node 1": "Basic Combat",
+          "Completed Node 1": "Event: Basic Combat",
+          "Node 2": "Agility",
+          "Completed Node 2": "Event: Agility",
+          "Node 3": "Strength",
+          "Completed Node 3": "Event: Strength",
+          "Node 4": "Battle Cry",
+          "Completed Node 4": "Event: Battle Cry",
+          "Node 5": "Shield Mastery",
+          "Completed Node 5": "Event: Shield Mastery",
+          "Node 6": "Parry",
+          "Completed Node 6": "Event: Parry",
+          "Node 7": "Counter",
+          "Completed Node 7": "Event: Counter",
+          "Node 8": "Sword Mastery",
+          "Completed Node 8": "Event: Sword Mastery",
+          "Node 9": "Dual Wield",
+          "Completed Node 9": "Event: Dual Wield",
+          "Node 10": "Whirlwind",
+          "Completed Node 10": "Event: Whirlwind",
+          "Node 11": "Warrior Stance",
+          "Completed Node 11": "Event: Warrior Stance",
+          "Node 12": "Legendary Hero",
+          "Completed Node 12": "Event: Legendary Hero"
         },
         "locations": {
-          "Complete Node 1": "Electric Mixer",
-          "Complete Node 2": "Measuring Tools",
-          "Complete Node 3": "Measured Flour",
-          "Complete Node 4": "Flour Mixture",
-          "Complete Node 5": "Mixing Bowls",
-          "Complete Node 6": "Preheated Oven",
-          "Complete Node 7": "Prepared Sheets",
-          "Complete Node 8": "Softened Butter",
-          "Complete Node 9": "Butter Sugar Base",
-          "Complete Node 10": "Egg Mixture",
-          "Complete Node 11": "Creamed Mixture",
-          "Complete Node 12": "Basic Dough",
-          "Complete Node 13": "Cookie Dough",
-          "Complete Node 14": "Shaped Cookies",
-          "Complete Node 15": "Baked Cookies"
+          "Complete Node 1": "Basic Combat",
+          "Complete Node 2": "Agility",
+          "Complete Node 3": "Strength",
+          "Complete Node 4": "Battle Cry",
+          "Complete Node 5": "Shield Mastery",
+          "Complete Node 6": "Parry",
+          "Complete Node 7": "Counter",
+          "Complete Node 8": "Sword Mastery",
+          "Complete Node 9": "Dual Wield",
+          "Complete Node 10": "Whirlwind",
+          "Complete Node 11": "Warrior Stance",
+          "Complete Node 12": "Legendary Hero"
         },
         "regions": {
-          "Complete Node 1": "Electric Mixer",
-          "Complete Node 2": "Measuring Tools",
-          "Complete Node 3": "Measured Flour",
-          "Complete Node 4": "Flour Mixture",
-          "Complete Node 5": "Mixing Bowls",
-          "Complete Node 6": "Preheated Oven",
-          "Complete Node 7": "Prepared Sheets",
-          "Complete Node 8": "Softened Butter",
-          "Complete Node 9": "Butter Sugar Base",
-          "Complete Node 10": "Egg Mixture",
-          "Complete Node 11": "Creamed Mixture",
-          "Complete Node 12": "Basic Dough",
-          "Complete Node 13": "Cookie Dough",
-          "Complete Node 14": "Shaped Cookies",
-          "Complete Node 15": "Baked Cookies"
+          "Complete Node 1": "Basic Combat",
+          "Complete Node 2": "Agility",
+          "Complete Node 3": "Strength",
+          "Complete Node 4": "Battle Cry",
+          "Complete Node 5": "Shield Mastery",
+          "Complete Node 6": "Parry",
+          "Complete Node 7": "Counter",
+          "Complete Node 8": "Sword Mastery",
+          "Complete Node 9": "Dual Wield",
+          "Complete Node 10": "Whirlwind",
+          "Complete Node 11": "Warrior Stance",
+          "Complete Node 12": "Legendary Hero"
         }
       },
       "canonical_placements": {
@@ -2291,19 +2094,24 @@
         "Complete Node 8": "Node 8",
         "Complete Node 9": "Node 9",
         "Complete Node 10": "Node 10",
-        "Complete Node 11": "Node 11",
-        "Complete Node 12": "Node 12",
-        "Complete Node 13": "Node 13",
-        "Complete Node 14": "Node 14"
+        "Complete Node 11": "Node 11"
       },
       "location_dependencies": {
+        "Complete Node 2": [
+          "Node 1",
+          "Completed Node 1"
+        ],
+        "Completed Node 2": [
+          "Node 1",
+          "Completed Node 1"
+        ],
         "Complete Node 3": [
-          "Node 2",
-          "Completed Node 2"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Completed Node 3": [
-          "Node 2",
-          "Completed Node 2"
+          "Node 1",
+          "Completed Node 1"
         ],
         "Complete Node 4": [
           "Node 3",
@@ -2313,368 +2121,349 @@
           "Node 3",
           "Completed Node 3"
         ],
-        "Complete Node 9": [
-          "Node 1",
-          "Completed Node 1",
+        "Complete Node 5": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "Completed Node 5": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "Complete Node 6": [
+          "Node 2",
+          "Completed Node 2",
           "Node 5",
-          "Completed Node 5",
+          "Completed Node 5"
+        ],
+        "Completed Node 6": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "Complete Node 7": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "Completed Node 7": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "Complete Node 8": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "Completed Node 8": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "Complete Node 9": [
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
         "Completed Node 9": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 5",
-          "Completed Node 5",
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
         "Complete Node 10": [
+          "Node 4",
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
         ],
         "Completed Node 10": [
+          "Node 4",
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
         ],
         "Complete Node 11": [
+          "Node 7",
+          "Completed Node 7",
           "Node 10",
           "Completed Node 10"
         ],
         "Completed Node 11": [
+          "Node 7",
+          "Completed Node 7",
           "Node 10",
           "Completed Node 10"
         ],
         "Complete Node 12": [
-          "Node 4",
-          "Completed Node 4",
           "Node 11",
           "Completed Node 11"
         ],
         "Completed Node 12": [
-          "Node 4",
-          "Completed Node 4",
           "Node 11",
           "Completed Node 11"
-        ],
-        "Complete Node 13": [
-          "Node 12",
-          "Completed Node 12"
-        ],
-        "Completed Node 13": [
-          "Node 12",
-          "Completed Node 12"
-        ],
-        "Complete Node 14": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
-        ],
-        "Completed Node 14": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
-        ],
-        "Complete Node 15": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
-        ],
-        "Completed Node 15": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
         ]
       },
       "entrance_dependencies": {
-        "From measuring_tools to measured_flour": [
-          "Node 2",
-          "Completed Node 2"
+        "From basic_combat to agility": [
+          "Node 1",
+          "Completed Node 1"
         ],
-        "From measured_flour to flour_mixture": [
+        "From basic_combat to strength": [
+          "Node 1",
+          "Completed Node 1"
+        ],
+        "From strength to battle_cry": [
           "Node 3",
           "Completed Node 3"
         ],
-        "From electric_mixer to butter_sugar_base": [
-          "Node 1",
-          "Completed Node 1",
+        "From strength to shield_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From agility to parry": [
+          "Node 2",
+          "Completed Node 2",
           "Node 5",
-          "Completed Node 5",
+          "Completed Node 5"
+        ],
+        "From shield_mastery to parry": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "From parry to counter": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "From strength to sword_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From agility to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
-        "From mixing_bowls to butter_sugar_base": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 5",
-          "Completed Node 5",
+        "From sword_mastery to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
-        "From softened_butter to butter_sugar_base": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 5",
-          "Completed Node 5",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From butter_sugar_base to egg_mixture": [
+        "From battle_cry to whirlwind": [
+          "Node 4",
+          "Completed Node 4",
           "Node 9",
           "Completed Node 9"
         ],
-        "From egg_mixture to creamed_mixture": [
+        "From dual_wield to whirlwind": [
+          "Node 4",
+          "Completed Node 4",
+          "Node 9",
+          "Completed Node 9"
+        ],
+        "From counter to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
           "Node 10",
           "Completed Node 10"
         ],
-        "From flour_mixture to basic_dough": [
-          "Node 4",
-          "Completed Node 4",
-          "Node 11",
-          "Completed Node 11"
-        ],
-        "From creamed_mixture to basic_dough": [
-          "Node 4",
-          "Completed Node 4",
-          "Node 11",
-          "Completed Node 11"
-        ],
-        "From basic_dough to cookie_dough": [
-          "Node 12",
-          "Completed Node 12"
-        ],
-        "From prepared_sheets to shaped_cookies": [
+        "From whirlwind to warrior_stance": [
           "Node 7",
           "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
+          "Node 10",
+          "Completed Node 10"
         ],
-        "From cookie_dough to shaped_cookies": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
-        ],
-        "From preheated_oven to baked_cookies": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
-        ],
-        "From shaped_cookies to baked_cookies": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
+        "From warrior_stance to legendary_hero": [
+          "Node 11",
+          "Completed Node 11"
         ]
       },
       "exit_dependencies": {
-        "From electric_mixer to butter_sugar_base": [
+        "From basic_combat to agility": [
           "Node 1",
-          "Completed Node 1",
+          "Completed Node 1"
+        ],
+        "From basic_combat to strength": [
+          "Node 1",
+          "Completed Node 1"
+        ],
+        "From agility to parry": [
+          "Node 2",
+          "Completed Node 2",
           "Node 5",
-          "Completed Node 5",
+          "Completed Node 5"
+        ],
+        "From agility to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
           "Node 8",
           "Completed Node 8"
         ],
-        "From measuring_tools to measured_flour": [
-          "Node 2",
-          "Completed Node 2"
-        ],
-        "From measured_flour to flour_mixture": [
+        "From strength to battle_cry": [
           "Node 3",
           "Completed Node 3"
         ],
-        "From flour_mixture to basic_dough": [
+        "From strength to shield_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From strength to sword_mastery": [
+          "Node 3",
+          "Completed Node 3"
+        ],
+        "From battle_cry to whirlwind": [
           "Node 4",
           "Completed Node 4",
-          "Node 11",
-          "Completed Node 11"
-        ],
-        "From mixing_bowls to butter_sugar_base": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 5",
-          "Completed Node 5",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From preheated_oven to baked_cookies": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
-        ],
-        "From prepared_sheets to shaped_cookies": [
-          "Node 7",
-          "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
-        ],
-        "From softened_butter to butter_sugar_base": [
-          "Node 1",
-          "Completed Node 1",
-          "Node 5",
-          "Completed Node 5",
-          "Node 8",
-          "Completed Node 8"
-        ],
-        "From butter_sugar_base to egg_mixture": [
           "Node 9",
           "Completed Node 9"
         ],
-        "From egg_mixture to creamed_mixture": [
+        "From shield_mastery to parry": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 5",
+          "Completed Node 5"
+        ],
+        "From parry to counter": [
+          "Node 6",
+          "Completed Node 6"
+        ],
+        "From counter to warrior_stance": [
+          "Node 7",
+          "Completed Node 7",
           "Node 10",
           "Completed Node 10"
         ],
-        "From creamed_mixture to basic_dough": [
+        "From sword_mastery to dual_wield": [
+          "Node 2",
+          "Completed Node 2",
+          "Node 8",
+          "Completed Node 8"
+        ],
+        "From dual_wield to whirlwind": [
           "Node 4",
           "Completed Node 4",
-          "Node 11",
-          "Completed Node 11"
+          "Node 9",
+          "Completed Node 9"
         ],
-        "From basic_dough to cookie_dough": [
-          "Node 12",
-          "Completed Node 12"
-        ],
-        "From cookie_dough to shaped_cookies": [
+        "From whirlwind to warrior_stance": [
           "Node 7",
           "Completed Node 7",
-          "Node 13",
-          "Completed Node 13"
+          "Node 10",
+          "Completed Node 10"
         ],
-        "From shaped_cookies to baked_cookies": [
-          "Node 6",
-          "Completed Node 6",
-          "Node 14",
-          "Completed Node 14"
+        "From warrior_stance to legendary_hero": [
+          "Node 11",
+          "Completed Node 11"
         ]
       },
       "world_description": "Turn any directed acyclic graph into an Archipelago world!\nEach node is both a location (unlocking it) and an item (ability to use it).\nNavigate dependency edges across the multiworld to reach the final node.",
       "slot_data": {
         "graph_structure": {
           "1": {
-            "label": "electric_mixer",
-            "expression": "Electric Mixer",
+            "label": "basic_combat",
+            "expression": "Basic Combat",
             "dependencies": [],
-            "full_text": "electric_mixer: Get the electric mixer ready"
+            "full_text": "basic_combat: Basic Combat"
           },
           "2": {
-            "label": "measuring_tools",
-            "expression": "Measuring Tools",
-            "dependencies": [],
-            "full_text": "measuring_tools: Find measuring cups and spoons"
+            "label": "agility",
+            "expression": "Agility",
+            "dependencies": [
+              1
+            ],
+            "full_text": "agility: Agility"
           },
           "3": {
-            "label": "measured_flour",
-            "expression": "Measured Flour",
+            "label": "strength",
+            "expression": "Strength",
             "dependencies": [
-              2
+              1
             ],
-            "full_text": "measured_flour: Measure out the flour"
+            "full_text": "strength: Strength"
           },
           "4": {
-            "label": "flour_mixture",
-            "expression": "Flour Mixture",
+            "label": "battle_cry",
+            "expression": "Battle Cry",
             "dependencies": [
               3
             ],
-            "full_text": "flour_mixture: Combine flour with baking soda and salt"
+            "full_text": "battle_cry: Battle Cry"
           },
           "5": {
-            "label": "mixing_bowls",
-            "expression": "Mixing Bowls",
-            "dependencies": [],
-            "full_text": "mixing_bowls: Gather mixing bowls from the kitchen"
+            "label": "shield_mastery",
+            "expression": "Shield Mastery",
+            "dependencies": [
+              3
+            ],
+            "full_text": "shield_mastery: Shield Mastery"
           },
           "6": {
-            "label": "preheated_oven",
-            "expression": "Preheated Oven",
-            "dependencies": [],
-            "full_text": "preheated_oven: Preheat the oven to 375F"
+            "label": "parry",
+            "expression": "Parry",
+            "dependencies": [
+              2,
+              5
+            ],
+            "full_text": "parry: Parry"
           },
           "7": {
-            "label": "prepared_sheets",
-            "expression": "Prepared Sheets",
-            "dependencies": [],
-            "full_text": "prepared_sheets: Line baking sheets with parchment paper"
+            "label": "counter",
+            "expression": "Counter",
+            "dependencies": [
+              6
+            ],
+            "full_text": "counter: Counter"
           },
           "8": {
-            "label": "softened_butter",
-            "expression": "Softened Butter",
-            "dependencies": [],
-            "full_text": "softened_butter: Soften butter to room temperature"
+            "label": "sword_mastery",
+            "expression": "Sword Mastery",
+            "dependencies": [
+              3
+            ],
+            "full_text": "sword_mastery: Sword Mastery"
           },
           "9": {
-            "label": "butter_sugar_base",
-            "expression": "Butter Sugar Base",
+            "label": "dual_wield",
+            "expression": "Dual Wield",
             "dependencies": [
-              1,
-              5,
+              2,
               8
             ],
-            "full_text": "butter_sugar_base: Cream butter and sugars until fluffy"
+            "full_text": "dual_wield: Dual Wield"
           },
           "10": {
-            "label": "egg_mixture",
-            "expression": "Egg Mixture",
-            "dependencies": [
-              9
-            ],
-            "full_text": "egg_mixture: Beat in eggs one at a time"
-          },
-          "11": {
-            "label": "creamed_mixture",
-            "expression": "Creamed Mixture",
-            "dependencies": [
-              10
-            ],
-            "full_text": "creamed_mixture: Add vanilla extract and mix well"
-          },
-          "12": {
-            "label": "basic_dough",
-            "expression": "Basic Dough",
+            "label": "whirlwind",
+            "expression": "Whirlwind",
             "dependencies": [
               4,
-              11
+              9
             ],
-            "full_text": "basic_dough: Gradually mix dry ingredients into wet"
+            "full_text": "whirlwind: Whirlwind"
           },
-          "13": {
-            "label": "cookie_dough",
-            "expression": "Cookie Dough",
-            "dependencies": [
-              12
-            ],
-            "full_text": "cookie_dough: Fold in chocolate chips"
-          },
-          "14": {
-            "label": "shaped_cookies",
-            "expression": "Shaped Cookies",
+          "11": {
+            "label": "warrior_stance",
+            "expression": "Warrior Stance",
             "dependencies": [
               7,
-              13
+              10
             ],
-            "full_text": "shaped_cookies: Scoop dough onto prepared baking sheets"
+            "full_text": "warrior_stance: Warrior Stance"
           },
-          "15": {
-            "label": "baked_cookies",
-            "expression": "Baked Cookies",
+          "12": {
+            "label": "legendary_hero",
+            "expression": "Legendary Hero",
             "dependencies": [
-              6,
-              14
+              11
             ],
-            "full_text": "baked_cookies: Bake for 9-11 minutes until golden brown"
+            "full_text": "legendary_hero: Legendary Hero"
           }
         },
         "starting_nodes": [
           1
         ],
-        "title": "Baking Adventure",
+        "title": "Skill Tree",
         "randomize_items": false,
         "vanilla_placement": 1
       },
@@ -2701,11 +2490,11 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Completed Node 15"
+        "item": "Completed Node 12"
       }
     }
   },
   "helpers": {},
   "is_vanilla": true,
-  "preset_label": "baking_adventure v"
+  "preset_label": "skill_tree v"
 }
