@@ -125,17 +125,36 @@ class JTAWorld(World):
             "Victory", self.player
         )
 
+    def generate_early(self) -> None:
+        if self.options.vanilla_placement.value:
+            self.is_vanilla = True
+
+    def pre_fill(self) -> None:
+        if self.options.vanilla_placement.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place perks at their original task locations (vanilla placement)."""
+        goal_zone = self.options.goal_zone.value
+        perk_tasks = get_perk_tasks_for_goal(goal_zone)
+        for task in perk_tasks:
+            location = self.multiworld.get_location(task.task_name, self.player)
+            item = self.create_item(task.perk_display_name)
+            location.place_locked_item(item)
+            # Remove the corresponding item from the pool
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == task.perk_display_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
+
     def create_item(self, name: str) -> JTAItem:
         data = item_table.get(name)
         if data is None:
             return JTAItem(name, ItemClassification.progression, None, self.player)
         return JTAItem(name, data.classification, data.id, self.player)
 
-    def generate_output(self, output_directory: str) -> None:
-        goal_zone = self.options.goal_zone.value
-        perk_tasks = get_perk_tasks_for_goal(goal_zone)
-
-        # Load original game data
+    def _load_base_game_data(self) -> dict:
+        """Load the base game data JSON (built-in or custom path)."""
         custom_path = str(self.options.game_data_file.value).strip()
         if custom_path:
             game_data_path = custom_path
@@ -144,7 +163,22 @@ class JTAWorld(World):
                 os.path.dirname(__file__), "jta_game_data.json"
             )
         with open(game_data_path, "r", encoding="utf-8") as f:
-            game_data = json.load(f)
+            return json.load(f)
+
+    def generate_output(self, output_directory: str) -> None:
+        game_data = self._load_base_game_data()
+        filename_base = self.multiworld.get_out_file_name_base(self.player)
+
+        if self.options.vanilla_placement.value:
+            # Vanilla: write unmodified game data as both gamedata and costs
+            for suffix in ("_gamedata.json", "_costs.json"):
+                output_path = os.path.join(output_directory, f"{filename_base}{suffix}")
+                with open(output_path, "w", encoding="utf-8") as f:
+                    json.dump(game_data, f, indent=2)
+            return
+
+        goal_zone = self.options.goal_zone.value
+        perk_tasks = get_perk_tasks_for_goal(goal_zone)
 
         # Build reverse map: perk display name -> perk type ID
         perk_name_to_id: Dict[str, int] = {}
@@ -168,7 +202,6 @@ class JTAWorld(World):
                     task["perk"] = perk_placement_by_task[task["id"]]
 
         # Write modified game data
-        filename_base = self.multiworld.get_out_file_name_base(self.player)
         output_path = os.path.join(output_directory, f"{filename_base}_gamedata.json")
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(modified_data, f, indent=2)
@@ -180,6 +213,8 @@ class JTAWorld(World):
         have both completed, so both the gamedata JSON and sphere log exist
         in output_directory.
         """
+        if self.options.vanilla_placement.value:
+            return  # Vanilla: costs already written by generate_output
         if not self.options.auto_cost_adjust.value:
             return
 

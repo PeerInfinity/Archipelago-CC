@@ -3,7 +3,7 @@ Options for Journey to Ascension.
 """
 
 from dataclasses import dataclass
-from Options import DefaultOnToggle, FreeText, ItemSet, PerGameCommonOptions, Range
+from Options import DefaultOnToggle, FreeText, ItemSet, PerGameCommonOptions, Range, Toggle
 
 
 class GoalZone(Range):
@@ -66,6 +66,13 @@ class ResetsPerSphere(Range):
 
 # --- Cost Generation Strategy Factors ---
 
+class VanillaPlacement(Toggle):
+    """Place all perks in their original locations (no randomization).
+    The output game data will be identical to the unmodified game.
+    Useful for testing or playing with vanilla JTA through Archipelago."""
+    display_name = "Vanilla Placement"
+
+
 class AutoCostAdjust(DefaultOnToggle):
     """Automatically run the cost adjustment algorithm after seed generation.
     Requires Node.js to be installed. If disabled or Node.js is not found,
@@ -125,6 +132,7 @@ class JTAOptions(PerGameCommonOptions):
     starting_perk_list: StartingPerkList
     game_data_file: GameDataFile
     resets_per_sphere: ResetsPerSphere
+    vanilla_placement: VanillaPlacement
     auto_cost_adjust: AutoCostAdjust
     # Cost generation factors
     costgen_item_collection: CostGenItemCollection
