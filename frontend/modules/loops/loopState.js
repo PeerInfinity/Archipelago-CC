@@ -117,7 +117,7 @@ export class LoopState {
     }
     // Check if the region is a start region using playerState API
     if (this.playerState?.isStartRegion) {
-      return this.playerState.isStartRegion(entry.region);
+      return this.playerState.isStartRegion(entry.destinationRegion);
     }
     // If playerState not available, can't determine start region
     return false;
@@ -299,25 +299,25 @@ export class LoopState {
     }
 
     // Map action types to playerState path entries
-    if (action.type === 'explore') {
+    if (action.type === 'customAction') {
       if (targetRegion && targetInstance) {
         // Insert at specific location
-        this.playerState.insertCustomActionAt('explore', targetRegion, targetInstance, {});
+        this.playerState.insertCustomActionAt(action.actionName, targetRegion, targetInstance, {});
       } else {
         // Add to current location
-        this.playerState.addCustomAction('explore', {});
+        this.playerState.addCustomAction(action.actionName, {});
       }
-    } else if (action.type === 'checkLocation') {
+    } else if (action.type === 'locationCheck') {
       if (targetRegion && targetInstance) {
         // Insert at specific location
-        this.playerState.insertLocationCheckAt(action.locationName, targetRegion, targetInstance, action.regionName);
+        this.playerState.insertLocationCheckAt(action.locationName, targetRegion, targetInstance, action.sourceRegion);
       } else {
         // Add to current location
-        this.playerState.addLocationCheck(action.locationName, action.regionName);
+        this.playerState.addLocationCheck(action.locationName, action.sourceRegion);
       }
-    } else if (action.type === 'moveToRegion') {
+    } else if (action.type === 'regionMove') {
       // Movement is handled by the user:regionMove event, not added here
-      log('warn', '[LoopState] moveToRegion actions should be handled via user:regionMove event');
+      log('warn', '[LoopState] regionMove actions should be handled via user:regionMove event');
     }
 
     // Get updated queue
@@ -353,7 +353,7 @@ export class LoopState {
     const actionToRemove = queue[index];
 
     // Check if this is a regionMove action (can't be removed)
-    if (actionToRemove.type === 'moveToRegion') {
+    if (actionToRemove.type === 'regionMove') {
       log('warn', '[LoopState] Cannot remove regionMove actions - they are managed by navigation');
       return false;
     }
@@ -613,7 +613,7 @@ export class LoopState {
     for (let i = firstRealActionIndex; i < queue.length; i++) {
       const action = queue[i];
       // Skip checkLocation actions for already-checked locations
-      if (action.type === 'checkLocation') {
+      if (action.type === 'locationCheck') {
         const snapshot = this.stateManager.getLatestStateSnapshot();
         const isChecked = snapshot?.checkedLocations?.includes(action.locationName);
         if (isChecked) {
@@ -787,19 +787,19 @@ export class LoopState {
       });
 
       // Continuous XP gain during action
-      if (this.currentAction.regionName) {
+      if (this.currentAction.sourceRegion) {
         // Award 1 XP per mana spent
         const xpGain = (progressIncrement / 100) * actionCost;
 
         // SIMPLIFIED XP Gain: Always award 1x XP during explore/other actions.
         // The 4x "farming" logic relied on discovery state which is now removed.
         // This logic can be reinstated later by querying DiscoveryState if needed.
-        this.addRegionXP(this.currentAction.regionName, xpGain);
+        this.addRegionXP(this.currentAction.sourceRegion, xpGain);
 
         // Notify UI about XP change even for small increments
-        const xpData = this.getRegionXP(this.currentAction.regionName);
+        const xpData = this.getRegionXP(this.currentAction.sourceRegion);
         this.eventBus.publish('loopState:xpChanged', {
-          regionName: this.currentAction.regionName,
+          regionName: this.currentAction.sourceRegion,
           xpData,
         });
       }
@@ -875,22 +875,22 @@ export class LoopState {
     });
 
     // Check if this is an explore action that just completed
-    if (this.currentAction.type === 'explore') {
-      // Get the regionName from the action
-      const regionName = this.currentAction.regionName;
+    if (this.currentAction.type === 'customAction' && this.currentAction.actionName === 'explore') {
+      // Get the region from the action
+      const regionName = this.currentAction.sourceRegion;
 
       // Get the repeat state from THIS instance's map
       const shouldRepeat = this.getRepeatExplore(regionName); // Use internal method
 
       // Get current queue to check for more explore actions
       const queue = this.getActionQueue();
-      
+
       // Check if there are already more explore actions for this region in the queue
       const hasMoreExploreActions = queue.some(
         (action, index) =>
           index > this.currentActionIndex &&
-          action.type === 'explore' &&
-          action.regionName === regionName
+          action.type === 'customAction' &&
+          action.sourceRegion === regionName
       );
 
       // Only add a new explore action if shouldRepeat is true AND there are no more explore actions for this region
@@ -921,8 +921,8 @@ export class LoopState {
     while (this.currentActionIndex < queue.length) {
       const nextAction = queue[this.currentActionIndex];
 
-      // Check if it's a checkLocation action for an already checked location
-      if (nextAction.type === 'checkLocation') {
+      // Check if it's a locationCheck action for an already checked location
+      if (nextAction.type === 'locationCheck') {
         const snapshot = this.stateManager.getLatestStateSnapshot();
         const isChecked = snapshot?.checkedLocations?.includes(nextAction.locationName);
         if (isChecked) {
@@ -995,29 +995,27 @@ export class LoopState {
     }
 
     switch (action.type) {
-      case 'explore':
+      case 'customAction':
         // Publish event for discovery module
         this.eventBus.publish('loop:exploreCompleted', {
-          regionName: action.regionName,
-          // Any other relevant data loopState knows? Probably just the region.
+          regionName: action.sourceRegion,
         });
         break;
-      case 'checkLocation':
+      case 'locationCheck':
         // Mark location as checked in stateManager (assuming this is still desired)
         this._handleLocationCheckCompletion(action);
         // Publish event for discovery module
         this.eventBus.publish('loop:locationChecked', {
           locationName: action.locationName,
-          regionName: action.regionName, // Include region for context
-          // Include item info if needed by discovery/other modules?
+          regionName: action.sourceRegion,
         });
         break;
-      case 'moveToRegion':
+      case 'regionMove':
         // Publish event for discovery module
         this.eventBus.publish('loop:moveCompleted', {
-          sourceRegion: action.regionName,
+          sourceRegion: action.sourceRegion,
           destinationRegion: action.destinationRegion,
-          exitName: action.exitName,
+          exitName: action.exitUsed,
         });
         break;
     }
@@ -1057,13 +1055,13 @@ export class LoopState {
 
     // Determine base cost by action type
     switch (action.type) {
-      case 'explore':
-        baseCost = 50; // Changed from 100 to 50
+      case 'customAction':
+        baseCost = 50;
         break;
-      case 'checkLocation':
+      case 'locationCheck':
         baseCost = 100;
         break;
-      case 'moveToRegion':
+      case 'regionMove':
         baseCost = 10;
         break;
       default:
@@ -1071,8 +1069,8 @@ export class LoopState {
     }
 
     // Apply region XP reduction if applicable
-    if (action.regionName) {
-      const xpData = this.getRegionXP(action.regionName);
+    if (action.sourceRegion) {
+      const xpData = this.getRegionXP(action.sourceRegion);
       return proposedLinearFinalCost(baseCost, xpData.level);
     }
 

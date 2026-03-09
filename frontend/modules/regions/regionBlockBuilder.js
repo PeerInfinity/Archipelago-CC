@@ -1049,7 +1049,7 @@ export class RegionBlockBuilder {
                 const isQueued = fullPath.some(entry => 
                   entry.type === 'locationCheck' && 
                   entry.locationName === locationDef.name &&
-                  entry.region === regionName
+                  entry.sourceRegion === regionName
                 );
                 
                 // Update status if queued (need to update after initial render)
@@ -1307,7 +1307,7 @@ export class RegionBlockBuilder {
         for (let i = 0; i < currentPath.length; i++) {
           const entry = currentPath[i];
           // Only consider regionMove entries
-          if (entry.type === 'regionMove' && entry.region === regionName) {
+          if (entry.type === 'regionMove' && entry.destinationRegion === regionName) {
             // Check if this matches our specific instance (by UID if available)
             if (uid && this.regionUI && this.regionUI.visitedRegions) {
               const visitedRegion = this.regionUI.visitedRegions.find(vr => vr.uid == uid);

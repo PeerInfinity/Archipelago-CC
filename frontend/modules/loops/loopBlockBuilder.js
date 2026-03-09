@@ -10,6 +10,10 @@ import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import {
+  manaColorClass,
+  formatTime,
+} from '../shared/queueAnalysis.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -50,7 +54,8 @@ export class LoopBlockBuilder {
     snapshotInterface,
     useColorblind,
     isExpanded,
-    currentActionIndex
+    currentActionIndex,
+    analysisEntries = null
   ) {
     // Create outer container
     const regionBlock = document.createElement('div');
@@ -86,7 +91,8 @@ export class LoopBlockBuilder {
       useColorblind,
       isExpanded,
       currentActionIndex,
-      isInitialMenu
+      isInitialMenu,
+      analysisEntries
     );
     regionBlock.appendChild(contentEl);
 
@@ -117,12 +123,17 @@ export class LoopBlockBuilder {
       // Calculate XP data for the region
       const xpData = loopState.getRegionXP(regionName);
       const speedBonus = xpData.level * 5;
+      const xpProgress = xpData.xpForNextLevel > 0 ? (xpData.xp / xpData.xpForNextLevel) * 100 : 0;
 
       headerEl.innerHTML = `
         <span class="loop-expand-indicator" style="margin-right: 8px;">${isExpanded ? '▼' : '▶'}</span>
         <span class="loop-region-name" style="flex: 1;">${regionName}</span>
         <span class="region-xp-level" style="margin-left: 12px;">Level ${xpData.level}</span>
-        <span class="region-xp-efficiency" style="margin-left: 12px; color: #8c8;">+${speedBonus}% efficiency</span>
+        <span class="region-xp-efficiency" style="margin-left: 8px; color: #8c8;">+${speedBonus}%</span>
+        <div class="region-header-xp-bar-container">
+          <div class="region-header-xp-bar" style="width: ${xpProgress}%"></div>
+          <span class="region-header-xp-text">${Math.floor(xpData.xp)} / ${xpData.xpForNextLevel} XP</span>
+        </div>
       `;
     }
 
@@ -159,7 +170,8 @@ export class LoopBlockBuilder {
     useColorblind,
     isExpanded,
     currentActionIndex,
-    isInitialMenu
+    isInitialMenu,
+    analysisEntries = null
   ) {
     const contentEl = document.createElement('div');
     contentEl.className = 'loop-region-content';
@@ -167,7 +179,7 @@ export class LoopBlockBuilder {
     // Add actions container (always visible, even when collapsed)
     // Skip for initial Menu since we already added the special display
     if (!isInitialMenu && actions.length > 0) {
-      this.addActions(contentEl, actions, currentActionIndex);
+      this.addActions(contentEl, actions, currentActionIndex, analysisEntries);
     }
 
     // If expanded, add region details (locations, exits, entrances, explore button)
@@ -250,13 +262,16 @@ export class LoopBlockBuilder {
    * @param {Array} actions - Array of actions
    * @param {number} currentActionIndex - Index of current action
    */
-  addActions(contentEl, actions, currentActionIndex) {
+  addActions(contentEl, actions, currentActionIndex, analysisEntries = null) {
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'region-actions-container';
 
     actions.forEach(({pathEntry, index}) => {
-      const isCurrentAction = index === currentActionIndex && loopState.isProcessing;
-      const actionEl = this.createActionBlockElement(pathEntry, index, isCurrentAction);
+      // Find corresponding analysis entry
+      const analysisEntry = analysisEntries
+        ? analysisEntries.find(e => e.index === index || e.pathIndex === pathEntry.pathIndex)
+        : null;
+      const actionEl = this.createActionEntry(pathEntry, index, analysisEntry);
       if (actionEl) {
         actionsContainer.appendChild(actionEl);
       }
@@ -804,68 +819,111 @@ export class LoopBlockBuilder {
    * @param {boolean} isCurrentAction - Whether this is the currently executing action
    * @returns {HTMLElement} The action block element
    */
-  createActionBlockElement(pathEntry, index, isCurrentAction) {
+  /**
+   * Creates a JTA-style action entry element for display in the region
+   * Format: [✕] # name cost remaining time status
+   * With a progress bar background for active/completed actions
+   * @param {Object} pathEntry - The path entry object
+   * @param {number} index - The index in the action queue (global)
+   * @param {Object|null} analysisEntry - Analysis data from shared queueAnalysis
+   * @returns {HTMLElement} The action entry element
+   */
+  createActionEntry(pathEntry, index, analysisEntry) {
     const actionDiv = document.createElement('div');
-    actionDiv.className = 'region-action-block';
+    actionDiv.className = 'loop-action-entry';
     actionDiv.dataset.actionIndex = index;
 
-    if (isCurrentAction) {
-      actionDiv.classList.add('current-action');
+    // Determine status
+    const isCurrentAction = index === (loopState.currentActionIndex || 0) && loopState.isProcessing;
+    const isCompleted = pathEntry.completed || false;
+    let status = 'pending';
+    if (isCompleted) status = 'completed';
+    else if (isCurrentAction) status = 'active';
+
+    actionDiv.classList.add(`state-${status}`);
+
+    // Progress bar width
+    let progressPct = 0;
+    if (isCompleted) {
+      progressPct = 100;
+    } else if (isCurrentAction) {
+      progressPct = pathEntry.progress || 0;
     }
 
-    // Determine action type and create appropriate display
-    let actionText = '';
-    let manaCost = 0;
+    // Get data from analysis or calculate fallback
+    let actionName, manaCost, manaRemaining, timeStr;
+    const maxMana = loopState.maxMana || 100;
 
-    if (pathEntry.type === 'regionMove') {
-      actionText = `Move to ${pathEntry.destinationRegion || pathEntry.region}`;
-      if (pathEntry.exitUsed) {
-        actionText += ` via ${pathEntry.exitUsed}`;
-      }
-      manaCost = loopState._calculateActionCost({type: 'moveToRegion', destinationRegion: pathEntry.destinationRegion || pathEntry.region});
-    } else if (pathEntry.type === 'locationCheck') {
-      actionText = `Check: ${pathEntry.locationName}`;
-      manaCost = loopState._calculateActionCost({type: 'checkLocation', locationName: pathEntry.locationName});
-    } else if (pathEntry.type === 'customAction') {
-      if (pathEntry.actionName === 'explore') {
-        actionText = 'Explore Region';
-        manaCost = loopState._calculateActionCost({type: 'explore', regionName: pathEntry.region});
+    if (analysisEntry) {
+      actionName = analysisEntry.description;
+      manaCost = analysisEntry.finalCost;
+      manaRemaining = analysisEntry.manaAfterAction;
+      timeStr = formatTime(analysisEntry.predictedTime);
+    } else {
+      // Fallback: calculate locally
+      let fullName = '';
+      if (pathEntry.type === 'regionMove') {
+        const via = pathEntry.exitUsed ? ` via ${pathEntry.exitUsed}` : '';
+        fullName = `Move: ${pathEntry.destinationRegion}${via}`;
+      } else if (pathEntry.type === 'locationCheck') {
+        fullName = `Check: ${pathEntry.locationName}`;
+      } else if (pathEntry.type === 'customAction') {
+        fullName = `Explore: ${pathEntry.sourceRegion}`;
       } else {
-        actionText = `Action: ${pathEntry.actionName}`;
+        fullName = `${pathEntry.type}`;
       }
+      actionName = fullName;
+      manaCost = loopState._calculateActionCost(pathEntry);
+      manaRemaining = null; // Can't calculate without full analysis
+      timeStr = '';
     }
 
-    // Create content: [X] action name ... mana cost
-    actionDiv.style.display = 'flex';
-    actionDiv.style.alignItems = 'center';
-    actionDiv.style.gap = '6px';
+    // Display number (1-indexed)
+    const displayIndex = index + 1;
+
+    // Format cost
+    const costStr = manaCost.toFixed(1);
+
+    // Format remaining
+    let remainingStr = '';
+    let remainingClass = '';
+    if (manaRemaining !== null) {
+      remainingStr = manaRemaining.toFixed(1);
+      remainingClass = manaColorClass(manaRemaining, maxMana);
+    }
+
+    // Build the entry HTML
     actionDiv.innerHTML = `
-      <button class="remove-action-btn" data-index="${index}">\u00d7</button>
-      <span class="action-text" style="flex: 1;">${actionText}</span>
-      <span class="action-mana">-${manaCost} Mana</span>
+      <div class="loop-action-progress-bar" style="width: ${progressPct}%"></div>
+      <button class="loop-action-cancel" data-index="${index}">✕</button>
+      <span class="loop-action-index">${displayIndex}</span>
+      <span class="loop-action-name" title="${actionName}">${actionName}</span>
+      <div class="loop-action-right-group">
+        <span class="loop-action-cost">-${costStr}</span>
+        <span class="loop-action-remaining ${remainingClass}">${remainingStr}</span>
+        <span class="loop-action-time">${timeStr}</span>
+        <span class="loop-action-status status-${status}">${status}</span>
+      </div>
     `;
 
-    // Add progress bar if this is the current action
-    if (isCurrentAction && loopState.actionProgress) {
-      const progress = loopState.actionProgress.get(index) || 0;
-      const progressBar = document.createElement('div');
-      progressBar.className = 'action-progress-bar';
-      progressBar.innerHTML = `
-        <div class="progress-fill" style="width: ${progress}%"></div>
-      `;
-      actionDiv.appendChild(progressBar);
-    }
-
-    // Add remove button handler
-    const removeBtn = actionDiv.querySelector('.remove-action-btn');
-    if (removeBtn) {
-      removeBtn.addEventListener('click', (e) => {
+    // Add cancel button handler
+    const cancelBtn = actionDiv.querySelector('.loop-action-cancel');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.removeActionAtIndex(index);
       });
     }
 
     return actionDiv;
+  }
+
+  /**
+   * Legacy method - delegates to createActionEntry
+   * @deprecated Use createActionEntry instead
+   */
+  createActionBlockElement(pathEntry, index, isCurrentAction) {
+    return this.createActionEntry(pathEntry, index, null);
   }
 
   /**

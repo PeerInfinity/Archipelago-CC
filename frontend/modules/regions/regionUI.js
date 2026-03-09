@@ -459,7 +459,7 @@ export class RegionUI {
       const expanded = isLastRegion;
 
       this.visitedRegions.push({
-        name: pathEntry.region,
+        name: pathEntry.destinationRegion,
         expanded: expanded, // Note: This property is kept for backward compatibility but not used
         uid: uid,
         exitUsed: pathEntry.exitUsed,
@@ -468,7 +468,7 @@ export class RegionUI {
 
       // Update expansion state manager
       this.expansionState.setExpanded(
-        pathEntry.region,
+        pathEntry.destinationRegion,
         expanded,
         'navigation',
         pathEntry.instanceNumber || uid

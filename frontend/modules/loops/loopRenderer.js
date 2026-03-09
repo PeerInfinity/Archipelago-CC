@@ -3,6 +3,7 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { analyzeQueue } from '../shared/queueAnalysis.js';
 
 const logger = createUniversalLogger('loopUI:Renderer');
 
@@ -87,39 +88,49 @@ export class LoopRenderer {
     const currentActionIndex = loopState.currentActionIndex || 0;
     const useLoopColorblind = this.displaySettings.getColorblindMode();
 
+    // Run queue analysis for predicted costs/remaining mana
+    const analysis = analyzeQueue(actionQueue, loopState);
+    this._lastAnalysis = analysis;
+
     // Group actions by region
     const regionGroups = this.groupActionsByRegion(actionQueue);
 
-    // Render each region block
-    regionGroups.forEach((actions, regionName) => {
-      // Skip the placeholder region used before game data loads
-      if (regionName === '__initial__') return;
+    // Check if compact view is active
+    if (this._compactView) {
+      this._renderCompactView(regionsArea, actionQueue, analysis);
+    } else {
+      // Render each region block (normal view)
+      regionGroups.forEach((actions, regionName) => {
+        // Skip the placeholder region used before game data loads
+        if (regionName === '__initial__') return;
 
-      const regionStaticData = staticData?.regions?.get(regionName);
-      const isStartRegion = this.loopUI?.playerStateAPI?.isStartRegion?.(regionName);
-      if (!regionStaticData && !isStartRegion) {
-        logger.warn(`No static data found for region: ${regionName}`);
-        return;
-      }
+        const regionStaticData = staticData?.regions?.get(regionName);
+        const isStartRegion = this.loopUI?.playerStateAPI?.isStartRegion?.(regionName);
+        if (!regionStaticData && !isStartRegion) {
+          logger.warn(`No static data found for region: ${regionName}`);
+          return;
+        }
 
-      const isExpanded = this.expansionState.isRegionExpanded(regionName);
+        const isExpanded = this.expansionState.isRegionExpanded(regionName);
 
-      // Delegate to callback for actual block construction
-      const regionBlock = this.buildRegionBlockFn(
-        regionName,
-        regionStaticData,
-        actions,
-        snapshot,
-        snapshotInterface,
-        useLoopColorblind,
-        isExpanded,
-        currentActionIndex
-      );
+        // Delegate to callback for actual block construction
+        const regionBlock = this.buildRegionBlockFn(
+          regionName,
+          regionStaticData,
+          actions,
+          snapshot,
+          snapshotInterface,
+          useLoopColorblind,
+          isExpanded,
+          currentActionIndex,
+          analysis.entries
+        );
 
-      if (regionBlock) {
-        regionsArea.appendChild(regionBlock);
-      }
-    });
+        if (regionBlock) {
+          regionsArea.appendChild(regionBlock);
+        }
+      });
+    }
 
     // Update displays
     this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
@@ -140,15 +151,30 @@ export class LoopRenderer {
     const regionGroups = new Map();
 
     actionQueue.forEach((pathEntry, index) => {
-      const regionName = pathEntry.region;
-      if (!regionGroups.has(regionName)) {
-        regionGroups.set(regionName, []);
+      // For move actions, group under the source region (where we're moving FROM)
+      // For other actions, group under the source region (where the action occurs)
+      let groupRegion;
+      if (pathEntry.type === 'regionMove') {
+        groupRegion = pathEntry.sourceRegion || pathEntry.destinationRegion;
+      } else {
+        groupRegion = pathEntry.sourceRegion;
       }
-      regionGroups.get(regionName).push({
+
+      if (!regionGroups.has(groupRegion)) {
+        regionGroups.set(groupRegion, []);
+      }
+      regionGroups.get(groupRegion).push({
         pathEntry,
         index,
         instanceNumber: pathEntry.instanceNumber || 0
       });
+
+      // Ensure destination regions of moves also have a group entry,
+      // so a region block is rendered for them (even if no actions exist there yet)
+      if (pathEntry.type === 'regionMove' && pathEntry.destinationRegion &&
+          !regionGroups.has(pathEntry.destinationRegion)) {
+        regionGroups.set(pathEntry.destinationRegion, []);
+      }
     });
 
     return regionGroups;
@@ -189,16 +215,6 @@ export class LoopRenderer {
     // Update text
     manaText.textContent = `${Math.floor(current)}/${Math.floor(max)}`;
 
-    // Add color classes based on percentage
-    manaBar.classList.remove('mana-low', 'mana-medium', 'mana-high');
-    if (percentage < 25) {
-      manaBar.classList.add('mana-low');
-    } else if (percentage < 75) {
-      manaBar.classList.add('mana-medium');
-    } else {
-      manaBar.classList.add('mana-high');
-    }
-
     logger.debug(`Mana updated: ${current}/${max} (${percentage.toFixed(1)}%)`);
   }
 
@@ -232,15 +248,14 @@ export class LoopRenderer {
     const displayIndex = loopState.currentActionIndex + 1;
     const actionName = getActionDisplayNameFn(action);
 
-    // Build HTML to match original implementation
+    const queueLength = getActionQueueFn().length;
     actionContainer.innerHTML = `
       <div class="current-action-label">
-        <span>${actionName}</span>
-        <span class="mana-cost">${Math.floor(manaCostSoFar)}/${actionCost} mana</span>
+        <span>Action ${displayIndex} of ${queueLength}: ${actionName}</span>
+        <span class="mana-cost">Progress: ${Math.floor(manaCostSoFar)} of ${actionCost} mana</span>
       </div>
       <div class="current-action-progress">
         <div class="current-action-progress-bar" style="width: ${action.progress}%"></div>
-        <span class="current-action-value">Action ${displayIndex} of ${getActionQueueFn().length}, Progress: ${Math.floor(manaCostSoFar)} of ${actionCost} mana</span>
       </div>
     `;
 
@@ -306,6 +321,66 @@ export class LoopRenderer {
     );
 
     expandCollapseBtn.textContent = allExpanded ? 'Collapse All' : 'Expand All';
+  }
+
+  /**
+   * Toggle compact view mode
+   */
+  toggleCompactView() {
+    this._compactView = !this._compactView;
+    return this._compactView;
+  }
+
+  /**
+   * Get current compact view state
+   */
+  get isCompactView() {
+    return !!this._compactView;
+  }
+
+  /**
+   * Render the compact view — flat table of all actions
+   * @param {HTMLElement} container - The regions area container
+   * @param {Array} actionQueue - Full action queue
+   * @param {Object} analysis - Queue analysis result
+   * @private
+   */
+  _renderCompactView(container, actionQueue, analysis) {
+    const table = document.createElement('div');
+    table.className = 'loop-compact-table';
+
+    // Header row
+    const header = document.createElement('div');
+    header.className = 'loop-compact-header';
+    header.innerHTML = `
+      <span class="loop-action-cancel-placeholder"></span>
+      <span class="loop-action-index">#</span>
+      <span class="loop-action-name">Action</span>
+      <div class="loop-action-right-group">
+        <span class="loop-action-cost">Cost</span>
+        <span class="loop-action-remaining">Remaining</span>
+        <span class="loop-action-time">Time</span>
+        <span class="loop-action-status">Status</span>
+      </div>
+    `;
+    table.appendChild(header);
+
+    // Use the block builder to create entries (reuses same format as region view)
+    const blockBuilder = this.loopUI?.loopBlockBuilder;
+    if (blockBuilder) {
+      for (const entry of analysis.entries) {
+        // Find the original pathEntry from actionQueue
+        const pathEntry = actionQueue[entry.index] || actionQueue.find(a => a.pathIndex === entry.pathIndex);
+        if (!pathEntry) continue;
+
+        const actionEl = blockBuilder.createActionEntry(pathEntry, entry.index, entry);
+        if (actionEl) {
+          table.appendChild(actionEl);
+        }
+      }
+    }
+
+    container.appendChild(table);
   }
 }
 

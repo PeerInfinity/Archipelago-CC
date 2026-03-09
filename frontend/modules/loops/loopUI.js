@@ -153,6 +153,7 @@ export class LoopUI {
               <button id="loop-ui-toggle-pause" class="button" disabled>Pause</button>
               <button id="loop-ui-toggle-restart" class="button" disabled>Restart</button>
               <button id="loop-ui-expand-collapse-all" class="button">Expand All</button>
+              <button id="loop-ui-compact-view" class="button">Compact View</button>
             </div>
             <div class="controls-content" style="display: none; margin-top: 8px;">
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
@@ -266,6 +267,16 @@ export class LoopUI {
       } else {
         this.collapseAllRegions();
       }
+    });
+
+    attachButtonHandler('loop-ui-compact-view', function () {
+      if (!this.loopRenderer) return;
+      const isCompact = this.loopRenderer.toggleCompactView();
+      const button = querySelector('#loop-ui-compact-view');
+      if (button) {
+        button.textContent = isCompact ? 'Normal View' : 'Compact View';
+      }
+      this.renderLoopPanel();
     });
 
     attachButtonHandler('loop-ui-clear-queue', this._handleClearQueueClick);
@@ -688,7 +699,7 @@ export class LoopUI {
     // Only add content if it's not already there
     if (!fixedArea.querySelector('.mana-container')) {
       fixedArea.innerHTML = `
-      <div class="loop-stats-container" style="display: flex; flex-wrap: wrap; justify-content: space-evenly; padding: 0 10px 10px;">
+      <div class="loop-stats-container" style="display: none; flex-wrap: wrap; justify-content: space-evenly; padding: 0 10px 10px;">
           <span class="stat-item"><span class="stat-label">Loop #:</span> <span id="loop-number" class="stat-value">1</span></span>
           <span class="stat-item"><span class="stat-label">Total XP:</span> <span id="total-xp" class="stat-value">0</span></span>
           <span class="stat-item"><span class="stat-label">Actions Completed:</span> <span id="actions-completed" class="stat-value">0</span></span>
@@ -830,19 +841,11 @@ export class LoopUI {
    * @returns {Array} The current path/action queue
    */
   getActionQueue() {
-    if (!this.playerStateAPI || !this.playerStateAPI.getPath) {
-      // Only log warning if structure is built (meaning this is happening after init)
-      // During initialization, this is expected and not a problem
-      if (this.structureBuilt) {
-        log('warn', 'LoopUI: PlayerState API not available after initialization');
-      } else {
-        log('debug', 'LoopUI: PlayerState API not yet available during initialization');
-      }
-      return [];
-    }
-    const path = this.playerStateAPI.getPath() || [];
-    log('info', `LoopUI: Got path from playerState with ${path.length} entries`, path);
-    return path;
+    // Use loopState's ActionQueueManager which maps raw path entries to action objects
+    // (e.g., regionMove → moveToRegion, locationCheck → checkLocation, customAction → explore)
+    const queue = loopState.getActionQueue();
+    log('info', `LoopUI: Got action queue with ${queue.length} entries`, queue);
+    return queue;
   }
 
   /**
@@ -868,13 +871,13 @@ export class LoopUI {
       if (entry.type === 'locationCheck' && this.playerStateAPI?.removeLocationCheckAt) {
         this.playerStateAPI.removeLocationCheckAt(
           entry.locationName,
-          entry.region,
+          entry.sourceRegion,
           entry.instanceNumber
         );
       } else if (entry.type === 'customAction' && this.playerStateAPI?.removeCustomActionAt) {
         this.playerStateAPI.removeCustomActionAt(
           entry.actionName,
-          entry.region,
+          entry.sourceRegion,
           entry.instanceNumber
         );
       }
@@ -932,13 +935,12 @@ export class LoopUI {
 
     // Add all unique regions that have actions in the queue
     for (const action of queue) {
-      if (action.type === 'moveToRegion') {
-        // For move actions, add the destination region
-        this.regionsInQueue.add(action.destinationRegion);
-      }
-      // Always add the region where the action is performed
-      if (action.regionName) {
-        this.regionsInQueue.add(action.regionName);
+      if (action.type === 'regionMove') {
+        // Add both source and destination for move actions
+        if (action.sourceRegion) this.regionsInQueue.add(action.sourceRegion);
+        if (action.destinationRegion) this.regionsInQueue.add(action.destinationRegion);
+      } else if (action.sourceRegion) {
+        this.regionsInQueue.add(action.sourceRegion);
       }
     }
 
@@ -983,6 +985,9 @@ export class LoopUI {
     // Reset progress on all action displays (scoped to this panel)
     const root = this.rootElement || document;
     root.querySelectorAll('.action-progress-bar').forEach((bar) => {
+      bar.style.width = '0%';
+    });
+    root.querySelectorAll('.loop-action-progress-bar').forEach((bar) => {
       bar.style.width = '0%';
     });
 
@@ -1064,63 +1069,54 @@ export class LoopUI {
 
     requestAnimationFrame(() => {
       try {
-        // Find by valid ID selector within rootElement
+        // Find by action index in the new entry format
+        const actionIndex = loopState.currentActionIndex;
         const actionElement = this.rootElement.querySelector(
+          `.loop-action-entry[data-action-index="${actionIndex}"]`
+        );
+
+        // Also try the old format (for backwards compatibility during transition)
+        const legacyElement = !actionElement ? this.rootElement.querySelector(
           `#action-${action.id}`
-        );
+        ) : null;
 
-        // Update individual action item within the panel
-        if (!actionElement) return; // Skip if element not found in panel
+        const element = actionElement || legacyElement;
+        if (!element) return;
 
-        const progressBar = actionElement.querySelector('.action-progress-bar');
-        const progressValue = actionElement.querySelector(
-          '.action-progress-value'
-        );
-        const statusElement = actionElement.querySelector('.action-status');
+        // Update new format entry
+        if (actionElement) {
+          const progressBar = actionElement.querySelector('.loop-action-progress-bar');
+          const statusEl = actionElement.querySelector('.loop-action-status');
 
-        if (progressBar) {
-          progressBar.style.transition = 'none';
-          void progressBar.offsetWidth;
-          progressBar.style.transition = 'width 0.1s linear';
-          progressBar.style.width = `${action.progress}%`;
-        }
-
-        if (progressValue) {
-          const actionCost = this._estimateActionCost(action);
-          const manaCostSoFar = Math.floor(
-            (action.progress / 100) * actionCost
-          );
-          let displayIndex;
-          if (action === loopState.currentAction) {
-            displayIndex = loopState.currentActionIndex + 1;
-          } else {
-            const actionQueue = this.getActionQueue();
-            const actionIndex = actionQueue.findIndex(
-              (a) => a.id === action.id
-            );
-            displayIndex = actionIndex !== -1 ? actionIndex + 1 : '?';
+          if (progressBar) {
+            progressBar.style.transition = 'none';
+            void progressBar.offsetWidth;
+            progressBar.style.transition = 'width 0.3s ease';
+            progressBar.style.width = `${action.progress}%`;
           }
-          progressValue.textContent = `Action ${displayIndex} of ${actionQueue.length}, Progress: ${manaCostSoFar} of ${actionCost} mana`;
+
+          // Update status
+          if (statusEl) {
+            const isActive = action === loopState.currentAction;
+            const isCompleted = action.completed;
+            let status = 'pending';
+            if (isCompleted) status = 'completed';
+            else if (isActive) status = 'active';
+
+            statusEl.textContent = status;
+            statusEl.className = `loop-action-status status-${status}`;
+
+            // Update entry state class
+            actionElement.classList.remove('state-pending', 'state-active', 'state-completed');
+            actionElement.classList.add(`state-${status}`);
+          }
         }
 
-        if (statusElement) {
-          if (
-            action === loopState.currentAction &&
-            !statusElement.classList.contains('active')
-          ) {
-            statusElement.textContent = 'Active';
-            statusElement.className = 'action-status active';
-          } else if (
-            action !== loopState.currentAction &&
-            statusElement.classList.contains('active')
-          ) {
-            if (action.completed) {
-              statusElement.textContent = 'Completed';
-              statusElement.className = 'action-status completed';
-            } else {
-              statusElement.textContent = 'Pending';
-              statusElement.className = 'action-status pending';
-            }
+        // Update legacy format entry
+        if (legacyElement) {
+          const progressBar = legacyElement.querySelector('.action-progress-bar');
+          if (progressBar) {
+            progressBar.style.width = `${action.progress}%`;
           }
         }
       } catch (error) {
@@ -1142,44 +1138,59 @@ export class LoopUI {
     const xpData = loopState.getRegionXP(regionName);
     const xpDisplay = regionBlock.querySelector('.region-xp-display');
 
-    if (xpDisplay && xpData) {
+    if (xpData) {
       // Calculate percentage to next level
       const percentage = (xpData.xp / xpData.xpForNextLevel) * 100;
 
       // Calculate the action speed/efficiency bonus (5% per level)
       const speedBonus = xpData.level * 5;
 
-      // Animate XP bar by removing transition first
-      const xpBar = xpDisplay.querySelector('.xp-bar');
-      if (xpBar) {
-        // Remove transition temporarily
-        xpBar.style.transition = 'none';
-        // Force a reflow
-        void xpBar.offsetWidth;
-        // Restore transition
-        xpBar.style.transition = 'width 0.3s ease';
-        // Update width
-        xpBar.style.width = `${percentage}%`;
+      // Update the header XP bar (always visible)
+      const headerXpBar = regionBlock.querySelector('.region-header-xp-bar');
+      const headerXpText = regionBlock.querySelector('.region-header-xp-text');
+      const headerLevel = regionBlock.querySelector('.region-xp-level');
+      const headerEfficiency = regionBlock.querySelector('.region-xp-efficiency');
+
+      if (headerXpBar) {
+        headerXpBar.style.width = `${percentage}%`;
+      }
+      if (headerXpText) {
+        headerXpText.textContent = `${Math.floor(xpData.xp)} / ${xpData.xpForNextLevel} XP`;
+      }
+      if (headerLevel) {
+        headerLevel.textContent = `Level ${xpData.level}`;
+      }
+      if (headerEfficiency) {
+        headerEfficiency.textContent = `+${speedBonus}%`;
       }
 
-      // Update XP text
-      const xpText = xpDisplay.querySelector('.xp-text');
-      if (xpText) {
-        xpText.innerHTML = `Level ${xpData.level} (${Math.floor(xpData.xp)}/${
-          xpData.xpForNextLevel
-        } XP) <span class="discount-text">+${speedBonus}% action efficiency</span>`;
-      } else {
-        // Re-create the entire display if needed
-        xpDisplay.innerHTML = `
-          <div class="xp-text">Level ${xpData.level} (${Math.floor(
-          xpData.xp
-        )}/${
-          xpData.xpForNextLevel
-        } XP) <span class="discount-text">+${speedBonus}% action efficiency</span></div>
-          <div class="xp-bar-container">
-            <div class="xp-bar" style="width: ${percentage}%"></div>
-          </div>
-        `;
+      // Update the expanded details XP display (if present)
+      if (xpDisplay) {
+        const xpBar = xpDisplay.querySelector('.xp-bar');
+        if (xpBar) {
+          xpBar.style.transition = 'none';
+          void xpBar.offsetWidth;
+          xpBar.style.transition = 'width 0.3s ease';
+          xpBar.style.width = `${percentage}%`;
+        }
+
+        const xpText = xpDisplay.querySelector('.xp-text');
+        if (xpText) {
+          xpText.innerHTML = `Level ${xpData.level} (${Math.floor(xpData.xp)}/${
+            xpData.xpForNextLevel
+          } XP) <span class="discount-text">+${speedBonus}% action efficiency</span>`;
+        } else {
+          xpDisplay.innerHTML = `
+            <div class="xp-text">Level ${xpData.level} (${Math.floor(
+            xpData.xp
+          )}/${
+            xpData.xpForNextLevel
+          } XP) <span class="discount-text">+${speedBonus}% action efficiency</span></div>
+            <div class="xp-bar-container">
+              <div class="xp-bar" style="width: ${percentage}%"></div>
+            </div>
+          `;
+        }
       }
     }
   }
@@ -1198,8 +1209,8 @@ export class LoopUI {
 
     const action = {
       id: `action_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-      type: 'checkLocation',
-      regionName,
+      type: 'locationCheck',
+      region: regionName,
       locationName,
       progress: 0,
       completed: false,
@@ -1227,18 +1238,18 @@ export class LoopUI {
     const actionQueue = this.getActionQueue();
     const existingMoveAction = actionQueue.find(
       (action) =>
-        action.type === 'moveToRegion' && action.regionName === regionName
+        action.type === 'regionMove' && action.sourceRegion === regionName
     );
 
     // Check if there's already a move action TO the destination region
     const existingDestinationAction = actionQueue.find(
       (action) =>
-        action.type === 'moveToRegion' &&
+        action.type === 'regionMove' &&
         action.destinationRegion === destinationRegion
     );
 
     if (existingMoveAction) {
-      log('info', 
+      log('info',
         `There's already a move action from ${regionName} to ${existingMoveAction.destinationRegion}`
       );
 
@@ -1290,12 +1301,12 @@ export class LoopUI {
 
     // If there's already a move action TO the destination region, show warning
     if (existingDestinationAction) {
-      log('info', 
-        `There's already a move action to ${destinationRegion} from ${existingDestinationAction.regionName}`
+      log('info',
+        `There's already a move action to ${destinationRegion} from ${existingDestinationAction.sourceRegion}`
       );
 
       // Create a modal message with don't show again checkbox
-      const message = `You already have a move action to ${destinationRegion} from ${existingDestinationAction.regionName}. Remove it first to add a new move action to this region.`;
+      const message = `You already have a move action to ${destinationRegion} from ${existingDestinationAction.sourceRegion}. Remove it first to add a new move action to this region.`;
 
       // Check if the user has chosen to hide this message
       if (localStorage.getItem('hideDoubleDestinationWarning') !== 'true') {
@@ -1351,10 +1362,10 @@ export class LoopUI {
 
     const action = {
       id: `action_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-      type: 'moveToRegion',
-      regionName,
-      exitName,
-      destinationRegion,
+      type: 'regionMove',
+      region: destinationRegion,
+      sourceRegion: regionName,
+      exitUsed: exitName,
       progress: 0,
       completed: false,
     };
@@ -1490,7 +1501,7 @@ export class LoopUI {
       let prevMoveInstance = null;
       for (let i = index - 1; i >= 0; i--) {
         if (actionQueue[i].type === 'regionMove') {
-          prevMoveRegion = actionQueue[i].region;
+          prevMoveRegion = actionQueue[i].destinationRegion;
           prevMoveInstance = actionQueue[i].instanceNumber;
           break;
         }
@@ -1500,10 +1511,10 @@ export class LoopUI {
         this.renderLoopPanel();
       }
     } else if (entry.type === 'locationCheck' && this.playerStateAPI?.removeLocationCheckAt) {
-      this.playerStateAPI.removeLocationCheckAt(entry.locationName, entry.region, entry.instanceNumber);
+      this.playerStateAPI.removeLocationCheckAt(entry.locationName, entry.sourceRegion, entry.instanceNumber);
       this.renderLoopPanel();
     } else if (entry.type === 'customAction' && this.playerStateAPI?.removeCustomActionAt) {
-      this.playerStateAPI.removeCustomActionAt(entry.actionName, entry.region, entry.instanceNumber);
+      this.playerStateAPI.removeCustomActionAt(entry.actionName, entry.sourceRegion, entry.instanceNumber);
       this.renderLoopPanel();
     }
   }
@@ -1524,13 +1535,13 @@ export class LoopUI {
     // Determine action name and display
     let actionName = '';
     switch (action.type) {
-      case 'explore':
-        actionName = `Explore ${action.regionName}`;
+      case 'customAction':
+        actionName = `Explore ${action.sourceRegion}`;
         break;
-      case 'checkLocation':
+      case 'locationCheck':
         actionName = `Check ${action.locationName}`;
         break;
-      case 'moveToRegion':
+      case 'regionMove':
         actionName = `Move to ${action.destinationRegion}`;
         break;
       default:
@@ -1598,7 +1609,7 @@ export class LoopUI {
         );
         if (index !== -1) {
           // If this is a move action, we need to handle dependent actions
-          if (action.type === 'moveToRegion') {
+          if (action.type === 'regionMove') {
             const destinationRegion = action.destinationRegion;
 
             // First collect all regions that will be affected
@@ -1614,8 +1625,8 @@ export class LoopUI {
               // Look through all actions to find moves from any region in our set
               actionQueue.forEach((a) => {
                 if (
-                  a.type === 'moveToRegion' &&
-                  regionsToRemove.has(a.regionName) &&
+                  a.type === 'regionMove' &&
+                  regionsToRemove.has(a.sourceRegion) &&
                   !regionsToRemove.has(a.destinationRegion)
                 ) {
                   // Found a move from one of our affected regions to a new region
@@ -1631,11 +1642,10 @@ export class LoopUI {
 
             // Remove this action and all actions in or leading to the affected regions
             const actionsToRemove = actionQueue.slice(index).filter(
-              (a) =>
-                a.id === action.id || // This action
-                regionsToRemove.has(a.regionName) || // Actions in any affected region
-                (a.type === 'moveToRegion' &&
-                  regionsToRemove.has(a.destinationRegion)) // Move actions to any affected region
+              (a) => {
+                if (a.id === action.id) return true; // This action
+                return regionsToRemove.has(a.sourceRegion); // Actions in any affected region
+              }
             );
 
             // Remove each action individually
@@ -1684,13 +1694,13 @@ export class LoopUI {
 
     // Determine base cost by action type
     switch (action.type) {
-      case 'explore':
-        baseCost = 50; // Changed from 100 to 50
+      case 'customAction':
+        baseCost = 50;
         break;
-      case 'checkLocation':
+      case 'locationCheck':
         baseCost = 100;
         break;
-      case 'moveToRegion':
+      case 'regionMove':
         baseCost = 10;
         break;
       default:
@@ -1698,8 +1708,8 @@ export class LoopUI {
     }
 
     // Apply region XP reduction if applicable
-    if (action.regionName) {
-      const xpData = loopState.getRegionXP(action.regionName);
+    if (action.sourceRegion) {
+      const xpData = loopState.getRegionXP(action.sourceRegion);
       // Use proposedLinearFinalCost formula to match loopState._calculateActionCost
       return Math.floor(proposedLinearFinalCost(baseCost, xpData.level));
     }
@@ -1786,7 +1796,7 @@ export class LoopUI {
     // If entering loop mode, expand the first region block by default
     if (this.isLoopModeActive) {
       const actionQueue = this.getActionQueue();
-      const firstRegion = actionQueue.length > 0 ? actionQueue[0].region : null;
+      const firstRegion = actionQueue.length > 0 ? actionQueue[0].sourceRegion : null;
       if (firstRegion && firstRegion !== '__initial__') {
         this.expansionState.setRegionExpanded(firstRegion, true);
       } else {
@@ -1865,11 +1875,11 @@ export class LoopUI {
   _getActionDisplayName(action) {
     if (!action) return '';
     switch (action.type) {
-      case 'explore':
-        return `Explore ${action.regionName}`;
-      case 'checkLocation':
+      case 'customAction':
+        return `Explore ${action.sourceRegion}`;
+      case 'locationCheck':
         return `Check ${action.locationName}`;
-      case 'moveToRegion':
+      case 'regionMove':
         return `Move to ${action.destinationRegion}`;
       default:
         return `${action.type}`;
