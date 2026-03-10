@@ -278,6 +278,14 @@ function handleRulesLoaded(eventData) {
   );
   try {
     discoveryStateSingleton.clearDiscovery();
+
+    // Apply onExitDiscovered cascade for start regions.
+    // state.initialize() discovers start region exits directly, but doesn't
+    // know about regionDiscoveryTrigger. If the trigger is 'onExitDiscovered',
+    // we need to discover the regions those exits lead to.
+    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered') {
+      applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
+    }
   } catch (error) {
     log('error',
       '[Discovery Module] Error clearing/initializing DiscoveryState from rulesLoaded:',
@@ -528,6 +536,7 @@ async function handleSettingsChanged({ key }) {
   if (key === '*' || key.startsWith('moduleSettings.discovery')) {
     log('info', '[Discovery Module] Settings changed, reloading...');
     const previousEnableMode = _settings.enableDiscoveryMode;
+    const previousTrigger = _settings.regionDiscoveryTrigger;
     await loadSettings();
 
     // If enableDiscoveryMode changed, publish the modeChanged event
@@ -535,6 +544,15 @@ async function handleSettingsChanged({ key }) {
       _moduleEventBus.publish('discovery:modeChanged', {
         active: _settings.enableDiscoveryMode
       });
+    }
+
+    // If regionDiscoveryTrigger changed to 'onExitDiscovered', apply cascade
+    // for all already-discovered regions (e.g. start regions whose exits are
+    // already known but whose destination regions haven't been discovered yet)
+    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && previousTrigger !== 'onExitDiscovered') {
+      if (discoveryStateSingleton) {
+        applyExitDiscoveryCascade(Array.from(discoveryStateSingleton.discoveredRegions));
+      }
     }
 
     // Always publish settingsChanged with current settings so other modules can react
@@ -600,11 +618,49 @@ function autoDiscoverExitsInRegion(regionName) {
 }
 
 /**
+ * For a set of already-discovered regions, discover the regions their exits lead to.
+ * This applies the 'onExitDiscovered' cascade without requiring autoDiscoverExits.
+ * Also discovers locations/exits in the newly discovered regions if auto-discover is on.
+ * @param {string[]} regionNames - Regions whose exits should cascade
+ */
+function applyExitDiscoveryCascade(regionNames) {
+  if (!discoveryStateSingleton || !stateManager) return;
+
+  try {
+    const staticData = stateManager.getStaticData();
+    if (!staticData || !staticData.regions) return;
+
+    for (const regionName of regionNames) {
+      const region = staticData.regions.get(regionName);
+      if (!region || !region.exits) continue;
+
+      for (const exit of region.exits) {
+        const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(exit.connected_region);
+        if (wasNewlyDiscovered) {
+          log('info', `[Discovery Module] onExitDiscovered cascade: discovered region ${exit.connected_region} via ${regionName} exit ${exit.name}`);
+          autoDiscoverLocationsInRegion(exit.connected_region);
+          autoDiscoverExitsInRegion(exit.connected_region);
+        }
+      }
+    }
+  } catch (error) {
+    log('error', '[Discovery Module] Error in applyExitDiscoveryCascade:', error);
+  }
+}
+
+/**
  * Get the current discovery settings (for use by other modules)
  * @returns {Object} Current discovery settings
  */
 export function getDiscoverySettings() {
   return { ..._settings };
 }
+
+/**
+ * Apply discovery settings directly, bypassing the global settings:changed event.
+ * Updates the internal cache, publishes discovery-specific events, and persists
+ * to settingsManager without triggering a global broadcast.
+ * @param {Object} newSettings - Partial settings object to merge
+ */
 
 // REMOVED: export { discoveryStateSingleton };

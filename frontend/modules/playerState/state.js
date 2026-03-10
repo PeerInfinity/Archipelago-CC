@@ -6,31 +6,24 @@ export class PlayerState {
     constructor(eventBus) {
         this.eventBus = eventBus;
 
-        // Placeholder region used before setStartRegions is called.
-        // Will be overwritten when game data loads.
-        this._placeholderRegion = '__initial__';
-        this.currentRegion = this._placeholderRegion;
+        // Current region — null until setStartRegions is called
+        this.currentRegion = null;
 
         // Start regions - regions where the player begins
         // These are treated specially: they are fully explored from the start
         // and custom actions like 'explore' are not needed for them
         this.startRegions = [];
 
-        // Flag to track whether setStartRegions has initialized the path
-        this._startRegionsInitialized = false;
-
         // Path data - array of player actions/movements
+        // Starts empty; the starting position is tracked by currentRegion, not a path entry.
         // Entry types:
         // - regionMove: { type: 'regionMove', sourceRegion: string|null, destinationRegion: string, exitUsed: string|null, instanceNumber: number }
         // - locationCheck: { type: 'locationCheck', locationName: string, sourceRegion: string, instanceNumber: number }
         // - customAction: { type: 'customAction', actionName: string, params: object, sourceRegion: string, instanceNumber: number }
-        this.path = [
-            { type: 'regionMove', sourceRegion: null, destinationRegion: this._placeholderRegion, exitUsed: null, instanceNumber: 1 }
-        ];
+        this.path = [];
 
         // Track instance counts for each region
         this.regionInstanceCounts = new Map();
-        this.regionInstanceCounts.set(this._placeholderRegion, 1);
 
         // Navigation behavior configuration
         // true: create loops when revisiting regions (default)
@@ -49,14 +42,9 @@ export class PlayerState {
         }
         if (Array.isArray(regions) && regions.length > 0) {
             this.startRegions = regions;
-            // Update the initial path to use the first start region
-            const firstStartRegion = regions[0];
-            if (!this._startRegionsInitialized && this.path.length === 1 && this.path[0].type === 'regionMove') {
-                this.path[0].destinationRegion = firstStartRegion;
-                this.currentRegion = firstStartRegion;
-                this.regionInstanceCounts.clear();
-                this.regionInstanceCounts.set(firstStartRegion, 1);
-                this._startRegionsInitialized = true;
+            // Set current region to the first start region if not already set
+            if (!this.currentRegion) {
+                this.currentRegion = regions[0];
             }
         }
     }
@@ -109,7 +97,8 @@ export class PlayerState {
                 return this.path[i].destinationRegion;
             }
         }
-        return null;
+        // If path is empty or has no regionMove entries, fall back to currentRegion
+        return this.currentRegion;
     }
 
     /**
@@ -628,11 +617,8 @@ export class PlayerState {
     reset() {
         const firstStartRegion = this.startRegions[0];
         this.currentRegion = firstStartRegion;
-        this.path = [
-            { type: 'regionMove', sourceRegion: null, destinationRegion: firstStartRegion, exitUsed: null, instanceNumber: 1 }
-        ];
+        this.path = [];
         this.regionInstanceCounts.clear();
-        this.regionInstanceCounts.set(firstStartRegion, 1);
 
         // Emit events for the reset
         if (this.eventBus) {

@@ -47,6 +47,17 @@ export class LoopUI {
     this.repeatExploreStates = new Map(); // Map to track repeat explore checkbox states per region
     this.settingsUnsubscribe = null; // Add property
 
+    // Discovery mode state (mirrors RegionUI pattern)
+    this.isDiscoveryModeActive = false;
+    this.discoverySettings = {
+      undiscoveredDisplay: 'hidden',
+      clickDiscoversLocation: true,
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
+      showUndiscoveredDetails: false,
+      showUndiscoveredRegionNames: false
+    };
+
     // Animation state
     this._animationFrameId = null;
     this._lastUpdateTime = 0;
@@ -131,6 +142,38 @@ export class LoopUI {
         }
       }
     );
+  }
+
+  /**
+   * Load discovery settings from settingsManager
+   */
+  async loadDiscoverySettings() {
+    try {
+      this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting(
+        'moduleSettings.discovery.undiscoveredDisplay', 'hidden'
+      );
+      this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversLocation', true
+      );
+      this.discoverySettings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false
+      );
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false
+      );
+      this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredDetails', false
+      );
+      this.discoverySettings.showUndiscoveredRegionNames = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredRegionNames', false
+      );
+      this.isDiscoveryModeActive = await settingsManager.getSetting(
+        'moduleSettings.discovery.enableDiscoveryMode', false
+      );
+      log('info', '[LoopUI] Discovery settings loaded');
+    } catch (error) {
+      log('error', '[LoopUI] Error loading discovery settings:', error);
+    }
   }
 
   createRootElement() {
@@ -598,6 +641,9 @@ export class LoopUI {
     // Initialize DisplaySettingsManager
     await this.displaySettings.initialize();
     log('info', '[LoopUI] DisplaySettingsManager initialized');
+
+    // Load discovery settings
+    await this.loadDiscoverySettings();
 
     // Sync persisted settings to loopState
     const defaultSpeed = this.displaySettings.getSetting('defaultSpeed');
@@ -1454,6 +1500,8 @@ export class LoopUI {
    * @param {string} regionName - The target region to navigate to
    */
   navigateToRegion(regionName) {
+    // Collapse all other regions when navigating to a new one
+    this.expansionState.collapseAll();
     this.expansionState.setRegionExpanded(regionName, true);
     this.renderLoopPanel();
 
@@ -1797,7 +1845,7 @@ export class LoopUI {
     if (this.isLoopModeActive) {
       const actionQueue = this.getActionQueue();
       const firstRegion = actionQueue.length > 0 ? actionQueue[0].sourceRegion : null;
-      if (firstRegion && firstRegion !== '__initial__') {
+      if (firstRegion) {
         this.expansionState.setRegionExpanded(firstRegion, true);
       } else {
         // Fallback to start region if queue is empty

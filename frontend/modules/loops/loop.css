@@ -55,7 +55,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   top: 0;
-  z-index: 10;
 }
 
 .loop-regions-area {
@@ -573,55 +572,59 @@
   flex-shrink: 0;
 }
 
-/* Locations and exits */
-.loop-region-locations-container,
-.loop-region-exits-container {
-  margin-top: 15px;
+/* Compact exit/location lists */
+.compact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.loop-region-locations-container h4,
-.loop-region-exits-container h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 5px;
-}
-
-.loop-location-wrapper,
-.loop-exit-wrapper {
-  margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 3px;
+.compact-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.loop-location-wrapper:hover,
-.loop-exit-wrapper:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.loop-location-wrapper .loop-check-loc-btn,
-.loop-exit-wrapper .loop-move-btn,
-.region-actions .explore-btn {
-  padding: 2px 8px;
-  border: none;
+  justify-content: space-between;
+  padding: 3px 8px;
   border-radius: 3px;
-  background-color: rgba(52, 152, 219, 0.8);
-  color: white;
-  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.15s ease;
 }
 
-.loop-location-wrapper .loop-check-loc-btn:hover,
-.loop-exit-wrapper .loop-move-btn:hover,
-.region-actions .explore-btn:hover {
-  background-color: rgba(52, 152, 219, 1);
+.compact-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-.loop-location-wrapper .loop-check-mark {
-  color: #2ecc71;
-  margin-left: 5px;
+.compact-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compact-item-status {
+  flex-shrink: 0;
+  font-size: 0.8em;
+  margin-left: 8px;
+  opacity: 0.7;
+}
+
+.compact-item-status.status-available { color: #5a5; }
+.compact-item-status.status-blocked { color: #d55; }
+.compact-item-status.status-locked { color: #d55; }
+.compact-item-status.status-checked { color: #888; }
+
+.compact-item.compact-available { cursor: pointer; }
+.compact-item.compact-blocked { opacity: 0.6; color: #d88; }
+.compact-item.compact-checked { opacity: 0.5; }
+.compact-item.undiscovered { opacity: 0.5; font-style: italic; cursor: default; }
+
+.loop-region-header.undiscovered .loop-region-name { font-style: italic; opacity: 0.6; }
+
+.loop-region-details h4 {
+  margin: 8px 0 2px 0;
+  font-size: 0.85em;
+  opacity: 0.6;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 2px;
 }
 
 /* Collapsed/Expanded states */
@@ -651,6 +654,21 @@
 .region-actions .explore-btn:hover,
 .region-explore-container .explore-btn:hover {
   background-color: #1a202c;
+}
+
+.region-explore-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.repeat-explore-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85em;
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 /* Colorblind mode */

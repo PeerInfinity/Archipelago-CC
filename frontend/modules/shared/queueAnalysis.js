@@ -94,22 +94,6 @@ export function truncateDescription(str, maxLen = ACTION_NAME_MAX_CHARS) {
 }
 
 /**
- * Check if an action is the initial start position (skip in analysis)
- * @param {Object} action - Action to check
- * @param {Object} loopState - Loop state for start region check
- * @returns {boolean} True if this is the initial start entry
- */
-export function isInitialStartEntry(action, loopState) {
-  if (!action || action.type !== 'regionMove' || action.exitUsed) {
-    return false;
-  }
-  if (loopState?.playerState?.isStartRegion) {
-    return loopState.playerState.isStartRegion(action.destinationRegion);
-  }
-  return false;
-}
-
-/**
  * Calculate predicted real time for an action in seconds
  * Based on loopState tick formula: progressIncrement = (deltaTime / 1000) * (20 / actionCost)
  * So total time = actionCost * 5 / gameSpeed
@@ -198,24 +182,18 @@ export function analyzeQueue(actionQueue, loopState) {
     };
   }
 
-  const startingMana = loopState.currentMana;
   const maxMana = loopState.maxMana;
   const gameSpeed = loopState.gameSpeed || 10;
+  const startingMana = maxMana;
   let currentMana = startingMana;
   let totalCost = 0;
   const entries = [];
-
-  // Track starting index (skip initial start region)
-  let startIndex = 0;
-  if (actionQueue.length > 0 && isInitialStartEntry(actionQueue[0], loopState)) {
-    startIndex = 1;
-  }
 
   // Determine active action
   const currentActionIndex = loopState.currentActionIndex || 0;
   const isProcessing = loopState.isProcessing || false;
 
-  for (let i = startIndex; i < actionQueue.length; i++) {
+  for (let i = 0; i < actionQueue.length; i++) {
     const action = actionQueue[i];
 
     // Calculate cost breakdown
@@ -236,26 +214,11 @@ export function analyzeQueue(actionQueue, loopState) {
       status = 'active';
     }
 
-    // Predicted mana after action completes
-    let manaAfterAction;
-    if (action.completed) {
-      manaAfterAction = manaBeforeAction; // Already consumed
-    } else if (action.progress > 0 && action.progress < 100) {
-      // Partially complete — remaining cost
-      const remainingCost = costData.finalCost * (1 - action.progress / 100);
-      manaAfterAction = manaBeforeAction - remainingCost;
-    } else {
-      manaAfterAction = manaBeforeAction - costData.finalCost;
-    }
+    // Mana after action: always deduct full cost so downstream values are stable
+    const manaAfterAction = manaBeforeAction - costData.finalCost;
 
-    // Update running total
-    if (!action.completed) {
-      const effectiveCost = action.progress > 0
-        ? costData.finalCost * (1 - action.progress / 100)
-        : costData.finalCost;
-      totalCost += effectiveCost;
-      currentMana = manaAfterAction;
-    }
+    totalCost += costData.finalCost;
+    currentMana = manaAfterAction;
 
     // Calculate predicted time
     const time = predictedTimeSeconds(costData.finalCost, gameSpeed);

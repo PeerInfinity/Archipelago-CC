@@ -107,23 +107,6 @@ export class LoopState {
   }
 
   /**
-   * Check if a path entry is an initial start position (first entry with no exit used)
-   * @param {Object} entry - Path entry to check
-   * @returns {boolean} True if this is an initial start position
-   */
-  isInitialStartEntry(entry) {
-    if (!entry || entry.type !== 'regionMove' || entry.exitUsed) {
-      return false;
-    }
-    // Check if the region is a start region using playerState API
-    if (this.playerState?.isStartRegion) {
-      return this.playerState.isStartRegion(entry.destinationRegion);
-    }
-    // If playerState not available, can't determine start region
-    return false;
-  }
-
-  /**
    * Sets up event listeners for game events
    */
   _setupEventListeners() {
@@ -460,28 +443,15 @@ export class LoopState {
       return;
     }
 
-    // Check if we have any real actions to process (not just the initial start region)
-    let firstActionIndex = 0;
-    if (queue.length > 0) {
-      const firstEntry = queue[0];
-      log('info', 'First queue entry:', firstEntry);
-      if (this.isInitialStartEntry(firstEntry)) {
-        // First entry is the initial start position, real actions start at index 1
-        firstActionIndex = 1;
-        log('info', 'First entry is initial start region, skipping to index 1');
-      }
-    }
-
-    // If there are no real actions, don't start processing
-    if (firstActionIndex >= queue.length) {
+    // If there are no actions, don't start processing
+    if (queue.length === 0) {
       return;
     }
 
     this.isProcessing = true;
 
     // Always reset currentActionIndex when starting fresh
-    // This ensures we start from the beginning of the queue
-    this.currentActionIndex = firstActionIndex;
+    this.currentActionIndex = 0;
 
     // Make sure the index is valid
     if (this.currentActionIndex >= queue.length) {
@@ -597,20 +567,14 @@ export class LoopState {
       return false;
     }
 
-    // Find the first real action index (skip initial start region)
-    let firstRealActionIndex = 0;
-    if (this.isInitialStartEntry(queue[0])) {
-      firstRealActionIndex = 1;
-    }
-
-    // If there are no real actions, no need to reset
-    if (firstRealActionIndex >= queue.length) {
+    // If there are no actions, no need to reset
+    if (queue.length === 0) {
       return false;
     }
 
-    // Check if all real actions are completed
+    // Check if all actions are completed
     let allCompleted = true;
-    for (let i = firstRealActionIndex; i < queue.length; i++) {
+    for (let i = 0; i < queue.length; i++) {
       const action = queue[i];
       // Skip checkLocation actions for already-checked locations
       if (action.type === 'locationCheck') {
@@ -728,19 +692,8 @@ export class LoopState {
 
         // Try to recover by finding a valid action
         if (queue.length > 0) {
-          // Skip initial start region if present
           this.currentActionIndex = 0;
-          if (this.isInitialStartEntry(queue[0])) {
-            this.currentActionIndex = 1;
-          }
-
-          if (this.currentActionIndex < queue.length) {
-            this.currentAction = queue[this.currentActionIndex];
-          } else {
-            // Only start region in queue, no real actions
-            this.stopProcessing();
-            return;
-          }
+          this.currentAction = queue[this.currentActionIndex];
         } else {
           // No actions left, stop processing
           this.stopProcessing();
@@ -951,11 +904,7 @@ export class LoopState {
     if (this.currentActionIndex >= queue.length) {
       // Reset to beginning if auto-restart is enabled
       if (this.autoRestartQueue) {
-        // Skip initial start region if present
         this.currentActionIndex = 0;
-        if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
-          this.currentActionIndex = 1;
-        }
         this._resetActionsProgress();
       } else {
         // Queue completed
@@ -1159,21 +1108,11 @@ export class LoopState {
     // Reset all action progress
     this._resetActionsProgress();
 
-    // Get queue to check for initial start region
     const queue = this.getActionQueue();
 
-    // Reset to first real action (skip initial start region if present)
+    // Reset to first action
     this.currentActionIndex = 0;
-    if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
-      this.currentActionIndex = 1;
-    }
-
-    // Update current action reference
-    if (this.currentActionIndex < queue.length) {
-      this.currentAction = queue[this.currentActionIndex];
-    } else {
-      this.currentAction = null;
-    }
+    this.currentAction = queue.length > 0 ? queue[0] : null;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {
@@ -1235,14 +1174,8 @@ export class LoopState {
       this.stopProcessing();
     }
 
-    // Get queue to check for initial start region
-    const queue = this.getActionQueue();
-
-    // Reset to beginning, skipping initial start region if present
+    // Reset to beginning
     this.currentActionIndex = 0;
-    if (queue.length > 0 && this.isInitialStartEntry(queue[0])) {
-      this.currentActionIndex = 1;
-    }
 
     // Reset progress on all actions
     this._resetActionsProgress();

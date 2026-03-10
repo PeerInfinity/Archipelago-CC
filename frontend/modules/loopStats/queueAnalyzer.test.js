@@ -103,23 +103,6 @@ describe('QueueAnalyzer', () => {
     });
   });
 
-  describe('isInitialStartEntry', () => {
-    it('identifies Menu region as initial start', () => {
-      const action = { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(true);
-    });
-
-    it('does not identify non-Menu region as initial start', () => {
-      const action = { type: 'regionMove', sourceRegion: null, destinationRegion: 'Forest', exitUsed: null };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(false);
-    });
-
-    it('does not identify move with exit as initial start', () => {
-      const action = { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: 'Door' };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(false);
-    });
-  });
-
   describe('analyze', () => {
     it('returns empty analysis for null input', () => {
       const result = analyzer.analyze(null, null);
@@ -127,9 +110,8 @@ describe('QueueAnalyzer', () => {
       expect(result.totalCost).toBe(0);
     });
 
-    it('skips initial Menu entry', () => {
+    it('analyzes a single action', () => {
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
         { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest' },
       ];
 
@@ -140,9 +122,8 @@ describe('QueueAnalyzer', () => {
 
     it('calculates mana correctly for multiple actions', () => {
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
-        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Forest', exitUsed: 'Door', pathIndex: 1 },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 2 },
+        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Forest', exitUsed: 'Door', pathIndex: 0 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -159,8 +140,7 @@ describe('QueueAnalyzer', () => {
       mockLoopState.currentMana = 30; // Not enough for explore (50)
 
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -169,9 +149,8 @@ describe('QueueAnalyzer', () => {
 
     it('handles completed actions correctly', () => {
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1, completed: true },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 2 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0, completed: true },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -185,8 +164,7 @@ describe('QueueAnalyzer', () => {
   describe('archiveCurrentAnalysis', () => {
     it('archives current analysis as previous', () => {
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       analyzer.analyze(queue, mockLoopState);
@@ -200,8 +178,7 @@ describe('QueueAnalyzer', () => {
   describe('getSerializableState', () => {
     it('returns serializable state object', () => {
       const queue = [
-        { type: 'regionMove', sourceRegion: null, destinationRegion: 'Menu', exitUsed: null },
-        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       analyzer.analyze(queue, mockLoopState);

@@ -73,14 +73,6 @@ export class LoopRenderer {
     // Clear regions area
     regionsArea.innerHTML = '';
 
-    // If queue is empty, show message
-    if (actionQueue.length === 0) {
-      regionsArea.innerHTML = '<div class="no-actions-message">No actions queued. Navigate to regions to queue actions.</div>';
-      this.updateManaDisplay(loopState.currentMana, loopState.maxMana);
-      this.updateCurrentActionDisplay(loopState.currentAction, loopState);
-      return;
-    }
-
     // Get snapshot and static data for rendering
     const snapshot = stateManager.getSnapshot();
     const staticData = stateManager.getStaticData();
@@ -92,8 +84,14 @@ export class LoopRenderer {
     const analysis = analyzeQueue(actionQueue, loopState);
     this._lastAnalysis = analysis;
 
-    // Group actions by region
+    // Group actions by region, ensuring the start region always has an entry
     const regionGroups = this.groupActionsByRegion(actionQueue);
+    const startRegion = this.loopUI?.getPrimaryStartRegion?.();
+    if (startRegion && !regionGroups.has(startRegion)) {
+      regionGroups.set(startRegion, []);
+      // Auto-expand the start region so the user can immediately queue actions
+      this.expansionState.setRegionExpanded(startRegion, true);
+    }
 
     // Check if compact view is active
     if (this._compactView) {
@@ -101,9 +99,6 @@ export class LoopRenderer {
     } else {
       // Render each region block (normal view)
       regionGroups.forEach((actions, regionName) => {
-        // Skip the placeholder region used before game data loads
-        if (regionName === '__initial__') return;
-
         const regionStaticData = staticData?.regions?.get(regionName);
         const isStartRegion = this.loopUI?.playerStateAPI?.isStartRegion?.(regionName);
         if (!regionStaticData && !isStartRegion) {

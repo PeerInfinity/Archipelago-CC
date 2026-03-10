@@ -29,6 +29,11 @@
             },
             {
               "type": "component",
+              "componentType": "loopStatsPanel",
+              "title": "Loop Stats"
+            },
+            {
+              "type": "component",
               "componentType": "spoilerChecklistPanel",
               "title": "Spoiler Checklist"
             },
@@ -163,16 +168,6 @@
             },
             {
               "type": "component",
-              "componentType": "helpersPanel",
-              "title": "Helpers"
-            },
-            {
-              "type": "component",
-              "componentType": "dungeonsPanel",
-              "title": "Dungeons"
-            },
-            {
-              "type": "component",
               "componentType": "loopsPanel",
               "title": "Loops"
             },
@@ -180,6 +175,16 @@
               "type": "component",
               "componentType": "textAdventurePanel",
               "title": "Text Adventure"
+            },
+            {
+              "type": "component",
+              "componentType": "helpersPanel",
+              "title": "Helpers"
+            },
+            {
+              "type": "component",
+              "componentType": "dungeonsPanel",
+              "title": "Dungeons"
             },
             {
               "type": "component",
@@ -200,11 +205,6 @@
               "type": "component",
               "componentType": "proofQueuePanel",
               "title": "Proof Queue"
-            },
-            {
-              "type": "component",
-              "componentType": "loopStatsPanel",
-              "title": "Loop Stats"
             }
           ]
         }

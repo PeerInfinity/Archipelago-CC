@@ -440,7 +440,7 @@ export class RegionUI {
    */
   updateFromPlayerStatePath(path, regionCounts) {
     if (!path || path.length === 0) {
-      log('warn', '[RegionUI] Received empty path from playerState');
+      // Path is empty before any moves are made — this is normal at startup
       return;
     }
     

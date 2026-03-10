@@ -1,5 +1,6 @@
 // eventCoordinator.js
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 const logger = createUniversalLogger('loopUI:EventCoordinator');
 
@@ -20,6 +21,8 @@ export class EventCoordinator {
     this.eventBus = eventBus;
     this.loopUI = loopUI; // Reference to LoopUI instance for callbacks
     this.eventSubscriptions = [];
+    this._stateManagerReady = false;
+    this._savedDiscoverySettings = null; // Settings saved before loop mode override
 
     logger.debug('EventCoordinator constructed');
   }
@@ -75,14 +78,20 @@ export class EventCoordinator {
     // Queue completed
     subscribe('loopState:queueCompleted', this._handleQueueCompleted);
 
-    // State manager ready
+    // State manager events
     subscribe('stateManager:ready', this._handleStateManagerReady);
+    subscribe('stateManager:snapshotUpdated', this._handleSnapshotUpdated);
+    subscribe('stateManager:rulesLoaded', this._handleRulesLoaded);
 
     // Discovery events
     subscribe('discovery:locationDiscovered', this._handleDiscoveryChanged);
     subscribe('discovery:exitDiscovered', this._handleDiscoveryChanged);
     subscribe('discovery:regionDiscovered', this._handleDiscoveryChanged);
     subscribe('discovery:changed', this._handleDiscoveryChanged);
+
+    // Discovery mode and settings changes
+    subscribe('discovery:modeChanged', this._handleDiscoveryModeChanged);
+    subscribe('discovery:settingsChanged', this._handleDiscoverySettingsChanged);
 
     // Loop reset
     subscribe('loopState:loopReset', this._handleLoopReset);
@@ -259,14 +268,15 @@ export class EventCoordinator {
    * @private
    */
   _handleStateManagerReady(data) {
-    logger.info('Received stateManager:ready - static data should be available');
+    this._stateManagerReady = true;
     if (this.loopUI.isLoopModeActive) {
+      this._enableDiscoveryForLoopMode();
       // If no regions are expanded yet (e.g. auto-entered loop mode before data loaded),
       // expand the first region now that the path has real region names
       if (this.loopUI.expansionState.expandedRegions.size === 0) {
         const actionQueue = this.loopUI.getActionQueue();
-        const firstRegion = actionQueue.length > 0 ? actionQueue[0].region : null;
-        if (firstRegion && firstRegion !== '__initial__') {
+        const firstRegion = actionQueue.length > 0 ? actionQueue[0].sourceRegion : null;
+        if (firstRegion) {
           this.loopUI.expansionState.setRegionExpanded(firstRegion, true);
         }
       }
@@ -276,12 +286,67 @@ export class EventCoordinator {
   }
 
   /**
+   * Handle snapshot updated event — re-render to reflect accessibility changes
+   * @private
+   */
+  _handleSnapshotUpdated(data) {
+    if (this.loopUI.isLoopModeActive) {
+      this.loopUI.renderLoopPanel();
+    }
+  }
+
+  /**
+   * Handle rules loaded event — reset UI for new game/seed
+   * @private
+   */
+  _handleRulesLoaded(data) {
+    logger.info('Received stateManager:rulesLoaded - resetting loops UI');
+    this.loopUI.renderLoopPanel();
+  }
+
+  /**
    * Handle discovery changed events
    * @private
    */
   _handleDiscoveryChanged(data) {
     if (this.loopUI.isLoopModeActive) {
       this.loopUI.renderLoopPanel();
+    }
+  }
+
+  /**
+   * Handle discovery mode changed event
+   * @private
+   */
+  _handleDiscoveryModeChanged(data) {
+    if (data && typeof data.active === 'boolean') {
+      this.loopUI.isDiscoveryModeActive = data.active;
+      logger.info(`Discovery mode changed: ${this.loopUI.isDiscoveryModeActive}`);
+      if (this.loopUI.isLoopModeActive) {
+        this.loopUI.renderLoopPanel();
+      }
+    }
+  }
+
+  /**
+   * Handle discovery settings changed event
+   * @private
+   */
+  _handleDiscoverySettingsChanged(data) {
+    if (data && data.settings) {
+      this.loopUI.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
+      this.loopUI.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+      this.loopUI.discoverySettings.clickDiscoversRegion = data.settings.clickDiscoversRegion ?? false;
+      this.loopUI.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
+      this.loopUI.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
+      this.loopUI.discoverySettings.showUndiscoveredRegionNames = data.settings.showUndiscoveredRegionNames ?? false;
+      if (typeof data.settings.enableDiscoveryMode === 'boolean') {
+        this.loopUI.isDiscoveryModeActive = data.settings.enableDiscoveryMode;
+      }
+      logger.info('Discovery settings updated');
+      if (this.loopUI.isLoopModeActive) {
+        this.loopUI.renderLoopPanel();
+      }
     }
   }
 
@@ -404,6 +469,67 @@ export class EventCoordinator {
         }
         break;
     }
+
+    // Apply or restore discovery settings based on loop mode state
+    if (this.loopUI.isLoopModeActive && this._stateManagerReady) {
+      this._enableDiscoveryForLoopMode();
+    } else if (!this.loopUI.isLoopModeActive && this._savedDiscoverySettings) {
+      this._restoreDiscoverySettings();
+    }
+  }
+
+  /**
+   * Enable discovery mode with loop-appropriate settings
+   * Saves the current settings first so they can be restored on exit
+   * @private
+   */
+  async _enableDiscoveryForLoopMode() {
+    const prefix = 'moduleSettings.discovery.';
+
+    // Save current settings before overwriting
+    this._savedDiscoverySettings = {
+      enableDiscoveryMode: await settingsManager.getSetting(`${prefix}enableDiscoveryMode`, false),
+      regionDiscoveryTrigger: await settingsManager.getSetting(`${prefix}regionDiscoveryTrigger`, 'onEnter'),
+      autoDiscoverLocations: await settingsManager.getSetting(`${prefix}autoDiscoverLocations`, true),
+      autoDiscoverExits: await settingsManager.getSetting(`${prefix}autoDiscoverExits`, true),
+      undiscoveredDisplay: await settingsManager.getSetting(`${prefix}undiscoveredDisplay`, 'hidden'),
+      showUndiscoveredRegionNames: await settingsManager.getSetting(`${prefix}showUndiscoveredRegionNames`, false),
+      clickDiscoversRegion: await settingsManager.getSetting(`${prefix}clickDiscoversRegion`, false),
+      disableLocationCheckUI: await settingsManager.getSetting(`${prefix}disableLocationCheckUI`, false),
+    };
+    logger.info('Saved pre-loop discovery settings');
+
+    // Apply loop mode settings
+    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, true);
+    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, 'onExitDiscovered');
+    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, false);
+    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, false);
+    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, 'placeholder');
+    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, false);
+    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, false);
+    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, true);
+    logger.info('Discovery mode enabled with loop settings');
+  }
+
+  /**
+   * Restore discovery settings to what they were before loop mode was entered
+   * @private
+   */
+  async _restoreDiscoverySettings() {
+    const prefix = 'moduleSettings.discovery.';
+    const saved = this._savedDiscoverySettings;
+
+    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, saved.enableDiscoveryMode);
+    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, saved.regionDiscoveryTrigger);
+    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, saved.autoDiscoverLocations);
+    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, saved.autoDiscoverExits);
+    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, saved.undiscoveredDisplay);
+    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, saved.showUndiscoveredRegionNames);
+    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, saved.clickDiscoversRegion);
+    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, saved.disableLocationCheckUI);
+
+    this._savedDiscoverySettings = null;
+    logger.info('Discovery settings restored to pre-loop values');
   }
 }
 

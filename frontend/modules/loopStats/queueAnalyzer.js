@@ -9,12 +9,11 @@ import {
   calculateActionCost,
   getActionDescription,
   truncateDescription,
-  isInitialStartEntry,
   analyzeQueue,
 } from '../shared/queueAnalysis.js';
 
 // Re-export shared functions for backwards compatibility
-export { calculateActionCost, getActionDescription, truncateDescription, isInitialStartEntry };
+export { calculateActionCost, getActionDescription, truncateDescription };
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -74,13 +73,6 @@ export class QueueAnalyzer {
    */
   truncateDescription(str, maxLen = 20) {
     return truncateDescription(str, maxLen);
-  }
-
-  /**
-   * Check if an action is the initial start position (delegates to shared module)
-   */
-  isInitialStartEntry(action, loopState) {
-    return isInitialStartEntry(action, loopState);
   }
 
   /**
