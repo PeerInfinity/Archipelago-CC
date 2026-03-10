@@ -150,6 +150,11 @@
   color: #aaf;
 }
 
+.cd-phase-defaults {
+  background: #4a3a2a;
+  color: #da8;
+}
+
 /* Detail view */
 .cd-detail-container {
   border-top: 1px solid #555;

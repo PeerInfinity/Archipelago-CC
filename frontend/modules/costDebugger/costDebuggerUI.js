@@ -57,6 +57,7 @@ export class CostDebuggerUI {
       <div class="cd-controls">
         <button class="cd-btn-load" title="Load sphere log data">Load</button>
         <button class="cd-btn-plan-step" disabled title="Plan next action queue">Plan Step</button>
+        <button class="cd-btn-plan-sphere" disabled title="Plan remaining steps for current sphere entry">Plan Sphere</button>
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
         <span class="cd-status">No sphere log loaded</span>
@@ -99,6 +100,7 @@ export class CostDebuggerUI {
   _attachControlListeners(el) {
     el.querySelector('.cd-btn-load').addEventListener('click', () => this._handleLoad());
     el.querySelector('.cd-btn-plan-step').addEventListener('click', () => this._handlePlanStep());
+    el.querySelector('.cd-btn-plan-sphere').addEventListener('click', () => this._handlePlanSphere());
     el.querySelector('.cd-btn-plan-all').addEventListener('click', () => this._handlePlanAll());
     el.querySelector('.cd-btn-reset').addEventListener('click', () => this._handleReset());
   }
@@ -143,11 +145,11 @@ export class CostDebuggerUI {
   }
 
   _handleStepPlannedEvent(data) {
+    this.selectedStepIndex = data.stepIndex;
     this._refreshStepList();
     this._updateSummary();
     this._updateStatus();
     this._updateButtons();
-    this.selectedStepIndex = data.stepIndex;
     this._refreshDetailView();
     this._scrollToStep(data.stepIndex);
   }
@@ -202,6 +204,12 @@ export class CostDebuggerUI {
     planner.planNextStep();
   }
 
+  _handlePlanSphere() {
+    const planner = getCostPlanner();
+    if (!planner || !planner.isLoaded() || planner.isComplete()) return;
+    planner.planCurrentSphere();
+  }
+
   _handlePlanAll() {
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded() || planner.isComplete()) return;
@@ -245,10 +253,12 @@ export class CostDebuggerUI {
     const hasSteps = (planner?.getPlannedSteps().length || 0) > 0;
 
     const btnPlanStep = this.rootElement.querySelector('.cd-btn-plan-step');
+    const btnPlanSphere = this.rootElement.querySelector('.cd-btn-plan-sphere');
     const btnPlanAll = this.rootElement.querySelector('.cd-btn-plan-all');
     const btnReset = this.rootElement.querySelector('.cd-btn-reset');
 
     if (btnPlanStep) btnPlanStep.disabled = !loaded || complete;
+    if (btnPlanSphere) btnPlanSphere.disabled = !loaded || complete;
     if (btnPlanAll) btnPlanAll.disabled = !loaded || complete;
     if (btnReset) btnReset.disabled = !loaded || !hasSteps;
   }
@@ -295,28 +305,37 @@ export class CostDebuggerUI {
       const hasWarning = step.notes.some(n => !n.includes('fully explored') && !n.includes('discovered') && !n.includes('Ready'));
       const warnClass = hasDeficit ? ' cd-has-error' : hasWarning ? ' cd-has-warning' : '';
 
-      const phaseBadge = step.phase === 'EXPLORE'
-        ? '<span class="cd-phase-badge cd-phase-explore">EXP</span>'
-        : '<span class="cd-phase-badge cd-phase-check">CHK</span>';
+      let phaseBadge, detail, truncName, sphereLabel;
 
-      let detail = '';
-      if (step.phase === 'EXPLORE' && step.exploreProgress) {
-        const p = step.exploreProgress;
-        detail = `<span class="cd-step-progress">${p.discovered}/${p.total}</span>`;
-      } else if (step.phase === 'CHECK') {
-        detail = `<span class="cd-step-new-costs">cost=${step.costAssignments.find(a => a.type === 'location')?.cost || '?'}</span>`;
+      if (step.phase === 'DEFAULTS') {
+        phaseBadge = '<span class="cd-phase-badge cd-phase-defaults">DEF</span>';
+        const count = step.costAssignments.length;
+        detail = `<span class="cd-step-new-costs">${count} assigned</span>`;
+        truncName = 'Default Costs';
+        sphereLabel = '';
+      } else {
+        phaseBadge = step.phase === 'EXPLORE'
+          ? '<span class="cd-phase-badge cd-phase-explore">EXP</span>'
+          : '<span class="cd-phase-badge cd-phase-check">CHK</span>';
+        detail = '';
+        if (step.phase === 'EXPLORE' && step.exploreProgress) {
+          const p = step.exploreProgress;
+          detail = `<span class="cd-step-progress">${p.discovered}/${p.total}</span>`;
+        } else if (step.phase === 'CHECK') {
+          detail = `<span class="cd-step-new-costs">cost=${step.costAssignments.find(a => a.type === 'location')?.cost || '?'}</span>`;
+        }
+        truncName = step.phase === 'EXPLORE'
+          ? truncate(step.targetRegion, 24)
+          : truncate(step.locationName, 24);
+        sphereLabel = `S${step.sphereIndex}`;
       }
-
-      const truncName = step.phase === 'EXPLORE'
-        ? truncate(step.targetRegion, 24)
-        : truncate(step.locationName, 24);
 
       return `
         <div class="cd-step-row${selected}${warnClass}" data-index="${step.stepIndex}">
           <span class="cd-step-index">${step.stepIndex + 1}</span>
-          <span class="cd-step-sphere">S${step.sphereIndex}</span>
+          <span class="cd-step-sphere">${sphereLabel}</span>
           ${phaseBadge}
-          <span class="cd-step-name" title="${escapeHtml(step.phase === 'EXPLORE' ? step.targetRegion : step.locationName)}">${escapeHtml(truncName)}</span>
+          <span class="cd-step-name" title="${escapeHtml(step.phase === 'DEFAULTS' ? 'Default Costs' : (step.phase === 'EXPLORE' ? step.targetRegion : step.locationName))}">${escapeHtml(truncName)}</span>
           <span class="cd-step-summary">${detail}</span>
         </div>
       `;
@@ -363,15 +382,19 @@ export class CostDebuggerUI {
     const pre = (html) => `<pre style="margin:0; font-size:inherit; font-family:inherit; white-space:pre;">${html}</pre>`;
 
     // Header
-    const phaseLabel = step.phase === 'EXPLORE' ? 'Explore' : 'Check';
-    const target = step.phase === 'EXPLORE' ? step.targetRegion : step.locationName;
-    sections.push(`<div class="cd-reason-header">Step ${step.stepIndex + 1} [${phaseLabel}]: ${escapeHtml(target)}</div>`);
+    if (step.phase === 'DEFAULTS') {
+      sections.push(`<div class="cd-reason-header">Step ${step.stepIndex + 1} [Defaults]: Assign costs to unvisited regions &amp; locations</div>`);
+    } else {
+      const phaseLabel = step.phase === 'EXPLORE' ? 'Explore' : 'Check';
+      const target = step.phase === 'EXPLORE' ? step.targetRegion : step.locationName;
+      sections.push(`<div class="cd-reason-header">Step ${step.stepIndex + 1} [${phaseLabel}]: ${escapeHtml(target)}</div>`);
 
-    // Sphere entry context
-    const entryIdx = step.sphereEntryIndex != null ? step.sphereEntryIndex + 1 : '?';
-    const planner = getCostPlanner();
-    const totalEntries = planner?.getTotalEntries() || '?';
-    sections.push(`<div class="cd-reason-subheader">Sphere entry ${entryIdx}/${totalEntries} (sphere ${step.sphereIndex}): ${escapeHtml(step.locationName)}</div>`);
+      // Sphere entry context
+      const entryIdx = step.sphereEntryIndex != null ? step.sphereEntryIndex + 1 : '?';
+      const planner = getCostPlanner();
+      const totalEntries = planner?.getTotalEntries() || '?';
+      sections.push(`<div class="cd-reason-subheader">Sphere entry ${entryIdx}/${totalEntries} (sphere ${step.sphereIndex}): ${escapeHtml(step.locationName)}</div>`);
+    }
 
     // State before
     const s = step.stateBefore;

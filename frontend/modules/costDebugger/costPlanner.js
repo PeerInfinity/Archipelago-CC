@@ -187,6 +187,7 @@ export class CostPlanner {
     this._regionsToExplore = [];
     this._currentExploreRegionIdx = 0;
     this._pendingCostAssignments = []; // Cost assignments for next step's reasoning
+    this._defaultsAssigned = false;
   }
 
   loadSphereLog(sphereLog) {
@@ -222,7 +223,13 @@ export class CostPlanner {
 
     // Start a new sphere entry if needed (skip entries with missing locations/paths)
     while (!this._currentEntry) {
-      if (this._currentEntryIndex >= this._entries.length) return null;
+      if (this._currentEntryIndex >= this._entries.length) {
+        // All entries done — assign defaults if not yet done
+        if (!this._defaultsAssigned) {
+          return this._planDefaultsStep();
+        }
+        return null;
+      }
       this._beginEntry(this._entries[this._currentEntryIndex]);
     }
 
@@ -242,6 +249,27 @@ export class CostPlanner {
     }
 
     return step;
+  }
+
+  /**
+   * Plan all remaining steps for the current sphere entry.
+   * That means all EXPLORE loops plus the final CHECK loop.
+   */
+  planCurrentSphere() {
+    if (!this._isLoaded || this.isComplete()) return [];
+
+    const newSteps = [];
+    let guard = 1000;
+
+    while (guard-- > 0) {
+      const step = this.planNextStep();
+      if (!step) break;
+      newSteps.push(step);
+      // CHECK is always the last step for a sphere entry
+      if (step.phase === 'CHECK') break;
+    }
+
+    return newSteps;
   }
 
   planAll() {
@@ -271,6 +299,7 @@ export class CostPlanner {
     this._currentPath = null;
     this._regionsToExplore = [];
     this._pendingCostAssignments = [];
+    this._defaultsAssigned = false;
 
     const staticData = this.stateManager.getStaticData();
     this._simState = new SimulatedState(this._startRegion, 100, staticData);
@@ -281,7 +310,7 @@ export class CostPlanner {
   getPlannedSteps() { return this._plannedSteps; }
   getCurrentStepIndex() { return this._plannedSteps.length; }
   getTotalEntries() { return this._entries.length; }
-  isComplete() { return this._currentEntryIndex >= this._entries.length && !this._currentEntry; }
+  isComplete() { return this._currentEntryIndex >= this._entries.length && !this._currentEntry && this._defaultsAssigned; }
   isLoaded() { return this._isLoaded; }
   getSimulatedState() { return this._simState?.snapshot() || null; }
 
@@ -293,8 +322,8 @@ export class CostPlanner {
       generatedFrom: 'costDebugger',
       regions: {},
       locations: {},
-      defaultRegionCost: 10,
-      defaultLocationCost: 10,
+      defaultRegionCost: 50,
+      defaultLocationCost: 100,
     };
     for (const [region, data] of this._simState.assignedRegionCosts) {
       costs.regions[region] = { moveCost: data.moveCost };
@@ -302,7 +331,87 @@ export class CostPlanner {
     for (const [location, cost] of this._simState.assignedLocationCosts) {
       costs.locations[location] = cost;
     }
+
+    // If defaults haven't been assigned via planning yet, do it now
+    if (!this._defaultsAssigned) {
+      this._assignDefaultCosts(costs);
+    }
+
     return costs;
+  }
+
+  /**
+   * Assign costs to regions and locations not visited during planning.
+   *
+   * Regions: BFS flood-fill from costed regions through the adjacency graph.
+   * Each uncosted region gets the cost of its nearest costed neighbor.
+   *
+   * Locations: Use their containing region's moveCost × 2, matching the
+   * explore cost ratio. Falls back to defaultLocationCost.
+   */
+  _assignDefaultCosts(costs) {
+    const staticData = this.stateManager.getStaticData();
+    if (!staticData) return;
+
+    // --- Assign uncosted regions using highest costed neighbor ---
+    if (staticData.regions && this._adjacencyMap) {
+      // Build full (bidirectional) neighbor set per region
+      const allNeighbors = new Map();
+      for (const regionName of staticData.regions.keys()) {
+        allNeighbors.set(regionName, new Set());
+      }
+      for (const [regionName, neighbors] of this._adjacencyMap.entries()) {
+        for (const neighbor of neighbors) {
+          if (!allNeighbors.has(regionName)) allNeighbors.set(regionName, new Set());
+          if (!allNeighbors.has(neighbor.region)) allNeighbors.set(neighbor.region, new Set());
+          allNeighbors.get(regionName).add(neighbor.region);
+          allNeighbors.get(neighbor.region).add(regionName);
+        }
+      }
+
+      // Iteratively assign: each pass assigns uncosted regions that have
+      // at least one costed neighbor, using the highest neighbor cost.
+      // Repeat until no more assignments are made.
+      let changed = true;
+      while (changed) {
+        changed = false;
+        for (const regionName of staticData.regions.keys()) {
+          if (costs.regions[regionName]) continue;
+
+          let highestCost = 0;
+          for (const neighborName of (allNeighbors.get(regionName) || [])) {
+            const neighborCost = costs.regions[neighborName]?.moveCost;
+            if (neighborCost != null && neighborCost > highestCost) {
+              highestCost = neighborCost;
+            }
+          }
+
+          if (highestCost > 0) {
+            costs.regions[regionName] = { moveCost: highestCost };
+            changed = true;
+          }
+        }
+      }
+
+      // Any remaining disconnected regions get the default
+      for (const regionName of staticData.regions.keys()) {
+        if (!costs.regions[regionName]) {
+          costs.regions[regionName] = { moveCost: costs.defaultRegionCost };
+        }
+      }
+    }
+
+    // --- Assign uncosted locations based on their region's cost ---
+    if (staticData.locations) {
+      for (const [locationName, locData] of staticData.locations.entries()) {
+        if (costs.locations[locationName] != null) continue;
+
+        const regionName = locData.parent_region || locData.region;
+        const regionCost = costs.regions[regionName]?.moveCost ?? costs.defaultRegionCost;
+        // Location cost ~ 2× region cost, matching explore cost ratio
+        costs.locations[locationName] = Math.max(1, regionCost * 2);
+      }
+    }
   }
 
   // =========================================================================
@@ -572,6 +681,7 @@ export class CostPlanner {
     }
 
     this._simState.checkedLocations.add(entry.locationName);
+    this._simState.maxMana += 10;
     this._simState.resetManaToMax();
 
     // Advance to next sphere entry
@@ -600,6 +710,83 @@ export class CostPlanner {
       stateAfter: this._simState.snapshot(),
       notes,
     };
+  }
+
+  // =========================================================================
+  // Defaults step: assign costs to unvisited regions/locations
+  // =========================================================================
+
+  _planDefaultsStep() {
+    const stateBefore = this._simState.snapshot();
+    const costAssignments = [];
+
+    // Build a temporary costs object with current assignments
+    const currentCosts = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 100 };
+    for (const [region, data] of this._simState.assignedRegionCosts) {
+      currentCosts.regions[region] = { moveCost: data.moveCost };
+    }
+    for (const [location, cost] of this._simState.assignedLocationCosts) {
+      currentCosts.locations[location] = cost;
+    }
+
+    // Run the default assignment logic on the temp object
+    this._assignDefaultCosts(currentCosts);
+
+    // Record new region assignments and apply to simState
+    for (const [regionName, data] of Object.entries(currentCosts.regions)) {
+      if (!this._simState.assignedRegionCosts.has(regionName)) {
+        this._simState.assignedRegionCosts.set(regionName, { moveCost: data.moveCost });
+        costAssignments.push({
+          type: 'region', name: regionName, cost: data.moveCost,
+          formula: `highest neighbor cost or default (${currentCosts.defaultRegionCost})`,
+        });
+      }
+    }
+
+    // Assign uncosted locations and apply to simState
+    const staticData = this.stateManager.getStaticData();
+    if (staticData?.locations) {
+      for (const [locationName, locData] of staticData.locations.entries()) {
+        if (this._simState.assignedLocationCosts.has(locationName)) continue;
+        const regionName = locData.parent_region || locData.region;
+        const regionCost = currentCosts.regions[regionName]?.moveCost ?? currentCosts.defaultRegionCost;
+        const locationCost = Math.max(1, regionCost * 2);
+        this._simState.assignedLocationCosts.set(locationName, locationCost);
+        costAssignments.push({
+          type: 'location', name: locationName, cost: locationCost,
+          formula: `region cost (${regionCost}) × 2`,
+        });
+      }
+    }
+
+    this._defaultsAssigned = true;
+
+    const notes = [];
+    const regionCount = costAssignments.filter(a => a.type === 'region').length;
+    const locationCount = costAssignments.filter(a => a.type === 'location').length;
+    if (regionCount > 0) notes.push(`Assigned default costs to ${regionCount} unvisited regions`);
+    if (locationCount > 0) notes.push(`Assigned default costs to ${locationCount} unvisited locations`);
+    if (costAssignments.length === 0) notes.push('All regions and locations already have costs assigned');
+
+    const step = {
+      stepIndex: this._plannedSteps.length,
+      sphereIndex: null,
+      sphereEntryIndex: null,
+      phase: 'DEFAULTS',
+      locationName: null,
+      targetRegion: null,
+      stateBefore,
+      path: null,
+      costAssignments,
+      queue: [],
+      simulatedResults: { manaConsumed: 0, manaRemaining: 0, xpGained: {} },
+      stateAfter: this._simState.snapshot(),
+      notes,
+    };
+
+    this._plannedSteps.push(step);
+    this.eventBus?.publish('costDebugger:stepPlanned', { step, stepIndex: step.stepIndex });
+    return step;
   }
 
   // =========================================================================

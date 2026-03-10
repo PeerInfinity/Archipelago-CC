@@ -86,7 +86,7 @@ export class GraphDataManager {
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
 
-    if (!snapshot || !staticData) {
+    if (!snapshot || !staticData || !regionData) {
       return { checked: 0, accessible: 0, inaccessible: 0, total: 0 };
     }
 

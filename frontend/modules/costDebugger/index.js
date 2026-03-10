@@ -60,6 +60,7 @@ export function register(registrationApi) {
   registrationApi.registerPublicFunction(moduleInfo.name, 'getCostData', () =>
     costPlannerInstance?.getCostData() || null
   );
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getSphereLog', getSphereLog);
 
   // Register event publishers
   registrationApi.registerEventBusPublisher('costDebugger:stepPlanned');

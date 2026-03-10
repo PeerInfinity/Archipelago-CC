@@ -102,6 +102,12 @@ function handleRulesLoaded(eventData) {
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
   }
 
+  // Clear cost data so the user is prompted to regenerate for the new rules
+  if (_costDataManager) {
+    _costDataManager.clear();
+    log('info', '[Loops Module] Cost data cleared for new rules');
+  }
+
   // Full reset of loop state for new rules (clears XP, mana, explore states, etc.)
   if (
     loopStateSingleton &&
@@ -341,124 +347,9 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     log('info', '[Loops Module] Cost generation components initialized');
 
-    // Expose cost generation tools on window for console access
+    // Expose cost data manager on window for console debugging
     if (typeof window !== 'undefined') {
-      window.costGenerator = _costGenerator;
       window.costDataManager = _costDataManager;
-
-      // Add convenience function for console use
-      // Options: { forceRegenerate: boolean, rulesPath: string }
-      window.generateCosts = async (options = {}) => {
-        if (!_costGenerator) {
-          console.error('Cost generator not initialized');
-          return null;
-        }
-
-        const { forceRegenerate = false } = options;
-        let { rulesPath } = options;
-
-        // Try to get rulesPath from URL if not provided
-        if (!rulesPath) {
-          const urlParams = new URLSearchParams(window.location.search);
-          rulesPath = urlParams.get('rules');
-        }
-
-        // If we have a rulesPath and not forcing regeneration, try to load existing costs
-        if (rulesPath && !forceRegenerate) {
-          console.log('Checking for existing costs file...');
-          const existingCosts = await _costDataManager.tryLoadFromPreset(rulesPath);
-          if (existingCosts) {
-            console.log('Loaded existing costs file!');
-            console.log(`Regions: ${Object.keys(existingCosts.regions).length}`);
-            console.log(`Locations: ${Object.keys(existingCosts.locations).length}`);
-            return existingCosts;
-          }
-          console.log('No existing costs file found, generating...');
-        }
-
-        // Get sphere log from sphereState module
-        let sphereLog = null;
-
-        // First try stateManager snapshot (legacy path)
-        const snapshot = stateManager.getLatestStateSnapshot();
-        sphereLog = snapshot?.sphereLog;
-
-        // If not in snapshot, try sphereState module
-        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
-          const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
-          if (getSphereData) {
-            const sphereData = getSphereData();
-            // getSphereData returns processed sphere data, convert to raw format
-            if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
-              // Convert sphereData to the format expected by cost generator
-              sphereLog = sphereData.map((sphere, index) => ({
-                type: 'state_update',
-                sphere_index: index + 1,
-                player_data: {
-                  '1': {
-                    sphere_locations: sphere.locations || [],
-                    new_accessible_regions: sphere.newRegions || [],
-                  }
-                }
-              }));
-              console.log(`Using sphereState data: ${sphereLog.length} spheres`);
-            }
-          }
-        }
-
-        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
-          console.error('No sphere log available. Load a rules file first or provide a sphere log array.');
-          return null;
-        }
-
-        console.log('Starting cost generation...');
-        const costs = await _costGenerator.generate(sphereLog, rulesPath || 'console');
-
-        if (costs) {
-          console.log('Cost generation complete!');
-          console.log(`Regions: ${Object.keys(costs.regions).length}`);
-          console.log(`Locations: ${Object.keys(costs.locations).length}`);
-
-          // Store the rulesPath for later saving
-          if (rulesPath) {
-            costs._rulesPath = rulesPath;
-            const saveInfo = _costDataManager.getCostDataForSaving(rulesPath);
-            console.log(`To save, call: window.saveCosts() or manually save to: ${saveInfo.path}`);
-
-            // Expose the cost data for external saving (e.g., by Playwright)
-            window.__generatedCostData__ = saveInfo;
-          } else {
-            console.log('Use window.costDataManager.downloadCostData() to download the costs file.');
-          }
-        }
-
-        return costs;
-      };
-
-      // Add function to save costs to preset directory (triggers download in browser)
-      window.saveCosts = () => {
-        const costs = _costDataManager.getCostData();
-        if (!costs) {
-          console.error('No cost data to save. Run generateCosts() first.');
-          return null;
-        }
-
-        const rulesPath = costs._rulesPath;
-        if (!rulesPath) {
-          // Fall back to URL param
-          const urlParams = new URLSearchParams(window.location.search);
-          const urlRulesPath = urlParams.get('rules');
-          if (urlRulesPath) {
-            return _costDataManager.saveCostsToPreset(urlRulesPath);
-          }
-          console.error('No rules path available. Provide rulesPath or use downloadCostData().');
-          return null;
-        }
-
-        return _costDataManager.saveCostsToPreset(rulesPath);
-      };
-
-      log('info', '[Loops Module] Console commands available: window.generateCosts(), window.costGenerator, window.costDataManager');
     }
   } catch (error) {
     log('error', '[Loops Module] Error initializing cost generation components:', error);
@@ -525,9 +416,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     // Clear window references
     if (typeof window !== 'undefined') {
-      delete window.costGenerator;
       delete window.costDataManager;
-      delete window.generateCosts;
     }
 
     // Call dispose on loopStateSingleton if it exists

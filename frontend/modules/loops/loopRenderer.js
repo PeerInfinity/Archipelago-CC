@@ -4,6 +4,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { analyzeQueue } from '../shared/queueAnalysis.js';
+import { getCostDataManager } from './index.js';
 
 const logger = createUniversalLogger('loopUI:Renderer');
 
@@ -45,6 +46,14 @@ export class LoopRenderer {
       logger.error('Container rootElement not found');
       return;
     }
+
+    // Check if cost data is loaded (takes priority over all other states)
+    const costDataManager = getCostDataManager();
+    if (costDataManager && !costDataManager.isLoaded()) {
+      this._showNoCostDataMessage();
+      return;
+    }
+    this._hideNoCostDataMessage();
 
     // Manage visibility based on loop mode
     if (!isLoopModeActive) {
@@ -261,6 +270,81 @@ export class LoopRenderer {
    * Show inactive message and hide active areas
    * @private
    */
+  /**
+   * Show "no cost data" message with Generate/Accept buttons,
+   * replacing the entire panel content.
+   * @private
+   */
+  _showNoCostDataMessage() {
+    const controls = this.rootElement.querySelector('.loop-controls');
+    const fixedArea = this.rootElement.querySelector('#loop-fixed-area');
+    const regionsArea = this.rootElement.querySelector('#loop-regions-area');
+
+    if (controls) controls.style.display = 'none';
+    if (fixedArea) fixedArea.style.display = 'none';
+    if (regionsArea) regionsArea.style.display = 'none';
+
+    // Don't recreate if already showing
+    if (this.rootElement.querySelector('.loop-no-costs-message')) return;
+
+    const msg = document.createElement('div');
+    msg.className = 'loop-no-costs-message';
+    msg.style.cssText = 'padding: 24px; text-align: center; color: #bbb; flex: 1;';
+    msg.innerHTML = `
+      <div style="font-size: 1.1em; margin-bottom: 12px; color: #e0e0e0;">
+        No cost data loaded
+      </div>
+      <div style="margin-bottom: 16px; font-size: 0.9em; color: #999; line-height: 1.5;">
+        Cost data determines mana costs for moving between regions and checking locations.<br>
+        Generate costs from the sphere log, or accept default costs (regions: 50, locations: 100).
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+        <button id="loop-ui-generate-costs-inline" class="button" style="padding: 6px 16px;">Generate Costs</button>
+        <button id="loop-ui-accept-defaults" class="button" style="padding: 6px 16px;">Accept Defaults</button>
+      </div>
+      <div id="loop-ui-cost-progress" style="display: none; margin-top: 12px;">
+        <div style="margin-bottom: 4px; font-size: 0.85em; color: #aaa;">
+          <span id="loop-ui-cost-progress-label">Generating...</span>
+        </div>
+        <div style="background: #333; border-radius: 3px; height: 6px; overflow: hidden;">
+          <div id="loop-ui-cost-progress-bar" style="background: #6a6; height: 100%; width: 0%; transition: width 0.2s;"></div>
+        </div>
+      </div>
+    `;
+
+    // Insert after controls (or prepend if controls missing)
+    if (controls) {
+      controls.insertAdjacentElement('afterend', msg);
+    } else {
+      this.rootElement.prepend(msg);
+    }
+
+    // Wire up buttons via loopUI callbacks
+    msg.querySelector('#loop-ui-generate-costs-inline')?.addEventListener('click', () => {
+      this.loopUI?._handleGenerateCostsInline();
+    });
+    msg.querySelector('#loop-ui-accept-defaults')?.addEventListener('click', () => {
+      this.loopUI?._handleAcceptDefaults();
+    });
+  }
+
+  /**
+   * Hide the "no cost data" message and restore normal panel content.
+   * @private
+   */
+  _hideNoCostDataMessage() {
+    const msg = this.rootElement.querySelector('.loop-no-costs-message');
+    if (msg) msg.remove();
+
+    const controls = this.rootElement.querySelector('.loop-controls');
+    const fixedArea = this.rootElement.querySelector('#loop-fixed-area');
+    const regionsArea = this.rootElement.querySelector('#loop-regions-area');
+
+    if (controls) controls.style.display = '';
+    if (fixedArea) fixedArea.style.display = '';
+    if (regionsArea) regionsArea.style.display = '';
+  }
+
   _showInactiveMessage() {
     const fixedArea = this.rootElement.querySelector('#loop-fixed-area');
     const regionsArea = this.rootElement.querySelector('#loop-regions-area');
