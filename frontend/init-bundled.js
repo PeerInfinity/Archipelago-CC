@@ -88,6 +88,7 @@ import * as playerStateModule from './modules/playerState/index.js';
 import * as playerStatePanelModule from './modules/playerStatePanel/index.js';
 import * as loopsModule from './modules/loops/index.js';
 import * as loopStatsModule from './modules/loopStats/index.js';
+import * as costDebuggerModule from './modules/costDebugger/index.js';
 import * as presetsModule from './modules/presets/index.js';
 import * as spoilerTestModule from './modules/spoilerTest/index.js';
 import * as sphereStateModule from './modules/sphereState/index.js';
@@ -168,6 +169,7 @@ const BUNDLED_MODULES = {
   playerStatePanel: playerStatePanelModule,
   loops: loopsModule,
   loopStats: loopStatsModule,
+  costDebugger: costDebuggerModule,
   presets: presetsModule,
   spoilerTest: spoilerTestModule,
   sphereState: sphereStateModule,

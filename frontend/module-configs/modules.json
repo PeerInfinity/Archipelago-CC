@@ -122,6 +122,11 @@
       "enabled": true,
       "requires": ["loops"]
     },
+    "costDebugger": {
+      "path": "./modules/costDebugger/index.js",
+      "enabled": true,
+      "requires": ["loops", "sphereState"]
+    },
     "presets": {
       "path": "./modules/presets/index.js",
       "enabled": true
@@ -265,6 +270,7 @@
     "playerStatePanel",
     "loops",
     "loopStats",
+    "costDebugger",
     "presets",
     "spoilerTest",
     "sphereState",

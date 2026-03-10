@@ -168,6 +168,11 @@
             },
             {
               "type": "component",
+              "componentType": "costDebuggerPanel",
+              "title": "Cost Debugger"
+            },
+            {
+              "type": "component",
               "componentType": "loopsPanel",
               "title": "Loops"
             },
