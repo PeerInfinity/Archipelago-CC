@@ -720,8 +720,8 @@ export class LoopState {
       let progressIncrement;
       const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
 
-      if (this.instantMode) {
-        // In instant mode, complete action in one frame
+      if (actionCost === 0 || this.instantMode) {
+        // Zero-cost or instant mode: complete action in one frame
         progressIncrement = 100 - currentProgress;
       } else {
         // Slow down the action for better visibility - use 20 instead of 100

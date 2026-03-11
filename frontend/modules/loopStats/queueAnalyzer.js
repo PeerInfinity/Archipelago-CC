@@ -37,11 +37,11 @@ export class QueueAnalyzer {
     // Current analysis cache
     this.currentAnalysis = null;
 
-    // Base costs for each action type
+    // Fallback base costs for each action type
     this.baseCosts = {
       customAction: 50,
       locationCheck: 100,
-      regionMove: 10,
+      regionMove: 50,
     };
   }
 

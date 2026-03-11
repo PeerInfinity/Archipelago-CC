@@ -31,6 +31,7 @@ export class DisplaySettingsManager {
       // Loop-specific settings (persisted)
       defaultSpeed: 10,
       autoRestart: false,
+      instantMode: false,
       loopModeEnabled: false,
     };
 
@@ -116,6 +117,15 @@ export class DisplaySettingsManager {
     const autoRestartCheckbox = this.rootElement.querySelector('#loop-ui-toggle-auto-restart');
     if (autoRestartCheckbox) {
       autoRestartCheckbox.checked = this.settings.autoRestart;
+    }
+
+    // Update instant mode checkbox and slider disabled state
+    const instantCheckbox = this.rootElement.querySelector('#loop-ui-toggle-instant');
+    if (instantCheckbox) {
+      instantCheckbox.checked = this.settings.instantMode;
+      if (speedSlider) {
+        speedSlider.disabled = this.settings.instantMode;
+      }
     }
 
     logger.debug('Settings synced to UI');
@@ -235,6 +245,7 @@ export class DisplaySettingsManager {
       const data = {
         defaultSpeed: this.settings.defaultSpeed,
         autoRestart: this.settings.autoRestart,
+        instantMode: this.settings.instantMode,
       };
       localStorage.setItem(LOOP_SETTINGS_STORAGE_KEY, JSON.stringify(data));
     } catch (e) {
@@ -252,6 +263,9 @@ export class DisplaySettingsManager {
       }
       if (typeof data.autoRestart === 'boolean') {
         this.settings.autoRestart = data.autoRestart;
+      }
+      if (typeof data.instantMode === 'boolean') {
+        this.settings.instantMode = data.instantMode;
       }
       logger.debug('Loaded loop settings from localStorage', data);
     } catch (e) {

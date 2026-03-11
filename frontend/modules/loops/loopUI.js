@@ -192,7 +192,6 @@ export class LoopUI {
                 <span class="collapse-indicator" style="margin-right: 5px; transition: transform 0.3s; transform: rotate(-90deg);">▼</span>
                 <span style="font-weight: bold;">Controls</span>
               </div>
-              <button id="loop-ui-toggle-loop-mode" class="button">Enter Loop Mode</button>
               <button id="loop-ui-toggle-pause" class="button" disabled>Pause</button>
               <button id="loop-ui-toggle-restart" class="button" disabled>Restart</button>
               <button id="loop-ui-expand-collapse-all" class="button">Expand All</button>
@@ -205,6 +204,7 @@ export class LoopUI {
                   <input type="range" id="loop-ui-game-speed" min="0.5" max="100" step="0.5" value="1" />
                   <span id="loop-ui-speed-value">1.0x</span>
                 </div>
+                <label class="instant-mode-label"><input type="checkbox" id="loop-ui-toggle-instant" /> Instant</label>
                 <label class="auto-restart-label"><input type="checkbox" id="loop-ui-toggle-auto-restart" /> Auto-restart when queue complete</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
@@ -214,6 +214,7 @@ export class LoopUI {
                 <label for="loop-ui-state-import" class="button">Import</label>
                 <input type="file" id="loop-ui-state-import" class="hidden" accept=".json" />
                 <button id="loop-ui-hard-reset" class="button">Hard Reset</button>
+                <button id="loop-ui-toggle-loop-mode" class="button">Enter Loop Mode</button>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
                 <button id="loop-ui-clear-queue" class="button">Clear Queue</button>
@@ -382,6 +383,25 @@ export class LoopUI {
       });
     } else {
       log('warn', 'LoopUI: Speed slider or value span not found.');
+    }
+
+    // Instant mode checkbox
+    const instantCheckbox = querySelector('#loop-ui-toggle-instant');
+    if (instantCheckbox) {
+      const currentSpeedSlider = querySelector('#loop-ui-game-speed');
+      instantCheckbox.checked = loopState.instantMode;
+      if (currentSpeedSlider) {
+        currentSpeedSlider.disabled = loopState.instantMode;
+      }
+      instantCheckbox.addEventListener('change', async () => {
+        const enabled = instantCheckbox.checked;
+        loopState.setInstantMode(enabled);
+        const slider = querySelector('#loop-ui-game-speed');
+        if (slider) {
+          slider.disabled = enabled;
+        }
+        await this.displaySettings.setSetting('instantMode', enabled, true);
+      });
     }
 
     log('info', 'LoopUI: Internal listeners attached.');
@@ -580,6 +600,11 @@ export class LoopUI {
 
       // Re-render (will now show region blocks since costs are loaded)
       this.renderLoopPanel();
+
+      // Auto-enter loop mode
+      if (!this.isLoopModeActive) {
+        this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
+      }
     } catch (error) {
       log('error', 'Cost generation failed:', error);
       alert(`Cost generation failed: ${error.message}`);
@@ -620,6 +645,11 @@ export class LoopUI {
     costDataManager.setCostData(costData, 'defaults');
     log('info', 'Accepted default costs');
     this.renderLoopPanel();
+
+    // Auto-enter loop mode
+    if (!this.isLoopModeActive) {
+      this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
+    }
   }
 
   getRootElement() {
@@ -675,6 +705,10 @@ export class LoopUI {
     }
     if (autoRestart !== undefined) {
       loopState.setAutoRestartQueue(autoRestart);
+    }
+    const instantMode = this.displaySettings.getSetting('instantMode');
+    if (instantMode !== undefined) {
+      loopState.setInstantMode(instantMode);
     }
 
     // Get and set the playerState API
@@ -1757,29 +1791,43 @@ export class LoopUI {
   _estimateActionCost(action) {
     if (!action) return 0;
 
-    // Use similar logic to loopState._calculateActionCost
+    const costDataManager = getCostDataManager();
     let baseCost;
 
-    // Determine base cost by action type
-    switch (action.type) {
-      case 'customAction':
-        baseCost = 50;
-        break;
-      case 'locationCheck':
-        baseCost = 100;
-        break;
-      case 'regionMove':
-        baseCost = 50;
-        break;
-      default:
-        baseCost = 50;
+    if (costDataManager?.isLoaded()) {
+      switch (action.type) {
+        case 'regionMove':
+          baseCost = costDataManager.getRegionCost(action.sourceRegion);
+          break;
+        case 'locationCheck':
+          baseCost = costDataManager.getLocationCost(action.locationName);
+          break;
+        case 'customAction':
+          baseCost = costDataManager.getRegionCost(action.sourceRegion) * 2;
+          break;
+        default:
+          baseCost = 50;
+      }
+    } else {
+      switch (action.type) {
+        case 'customAction':
+          baseCost = 50;
+          break;
+        case 'locationCheck':
+          baseCost = 100;
+          break;
+        case 'regionMove':
+          baseCost = 50;
+          break;
+        default:
+          baseCost = 50;
+      }
     }
 
     // Apply region XP reduction if applicable
     if (action.sourceRegion) {
       const xpData = loopState.getRegionXP(action.sourceRegion);
-      // Use proposedLinearFinalCost formula to match loopState._calculateActionCost
-      return Math.floor(proposedLinearFinalCost(baseCost, xpData.level));
+      return proposedLinearFinalCost(baseCost, xpData.level);
     }
 
     return baseCost;

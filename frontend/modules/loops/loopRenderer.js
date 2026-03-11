@@ -298,6 +298,9 @@ export class LoopRenderer {
         Cost data determines mana costs for moving between regions and checking locations.<br>
         Generate costs from the sphere log, or accept default costs (regions: 50, locations: 100).
       </div>
+      <div style="margin-bottom: 8px; font-size: 0.85em; color: #aaa; text-align: center;">
+        Either button will automatically enter Loop mode. To exit later, expand the Controls section and click Exit Loop Mode.
+      </div>
       <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
         <button id="loop-ui-generate-costs-inline" class="button" style="padding: 6px 16px;">Generate Costs</button>
         <button id="loop-ui-accept-defaults" class="button" style="padding: 6px 16px;">Accept Defaults</button>

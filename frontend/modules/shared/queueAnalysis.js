@@ -9,24 +9,40 @@ import {
   proposedLinearReduction,
   proposedLinearFinalCost,
 } from '../loops/xpFormulas.js';
+import { getCostDataManager } from '../loops/index.js';
 
 /** Maximum characters for truncated action names */
 export const ACTION_NAME_MAX_CHARS = 30;
 
-/** Base costs for each action type */
+/** Fallback base costs when no cost data is loaded */
 export const BASE_COSTS = {
   customAction: 50,
   locationCheck: 100,
-  regionMove: 10,
+  regionMove: 50,
 };
 
 /**
- * Get base cost for an action type
- * @param {string} actionType - The type of action
+ * Get base cost for an action, using costDataManager when available
+ * @param {Object} action - The action to calculate cost for
  * @returns {number} Base mana cost
  */
-export function getBaseCost(actionType) {
-  return BASE_COSTS[actionType] || 50;
+export function getBaseCost(action) {
+  const costDataManager = getCostDataManager();
+
+  if (costDataManager?.isLoaded()) {
+    switch (action.type) {
+      case 'regionMove':
+        return costDataManager.getRegionCost(action.sourceRegion);
+      case 'locationCheck':
+        return costDataManager.getLocationCost(action.locationName);
+      case 'customAction':
+        return costDataManager.getRegionCost(action.sourceRegion) * 2;
+      default:
+        return 50;
+    }
+  }
+
+  return BASE_COSTS[action.type] || 50;
 }
 
 /**
@@ -36,7 +52,7 @@ export function getBaseCost(actionType) {
  * @returns {Object} Cost breakdown: { baseCost, levelDiscount, itemPenalties, finalCost, level }
  */
 export function calculateActionCost(action, loopState) {
-  const baseCost = getBaseCost(action.type);
+  const baseCost = getBaseCost(action);
 
   let levelDiscount = 0;
   let finalCost = baseCost;
