@@ -221,6 +221,11 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 
+  // Register dispatcher sender for loop action events (consumed by discovery module)
+  registrationApi.registerDispatcherSender('loop:exploreCompleted', 'bottom');
+  registrationApi.registerDispatcherSender('loop:moveCompleted', 'bottom');
+  registrationApi.registerDispatcherSender('loop:locationChecked', 'bottom');
+
   // Register events that loops publishes
   registrationApi.registerEventBusPublisher('loopState:actionCompleted');
   registrationApi.registerEventBusPublisher('loopState:autoRestartChanged');
@@ -376,23 +381,10 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       }
     };
 
-    subscribe('settings:changed', (eventData) => {
-      // Use getModuleSettings again to be sure, or trust eventData?
-      // For now, trust eventData if it looks right
-      const loopSettings = eventData?.settings?.moduleSettings?.loops;
-      if (loopSettings && loopStateSingleton) {
-        log('info', 
-          '[Loops Module] Reacting to settings:changed',
-          loopSettings
-        );
-        if (loopSettings.defaultSpeed !== undefined) {
-          loopStateSingleton.setGameSpeed(loopSettings.defaultSpeed);
-        }
-        if (loopSettings.autoRestart !== undefined) {
-          loopStateSingleton.setAutoRestartQueue(loopSettings.autoRestart);
-        }
-      }
-    });
+    // Note: defaultSpeed and autoRestart are managed by DisplaySettingsManager
+    // in loopUI.js which persists them to localStorage. The settings:changed
+    // handler was removed here because settingsManager doesn't persist, so
+    // its values would reset localStorage-saved settings on every event.
 
     // Subscribe to stateManager:rulesLoaded to reset loop state when rules change
     loopUnsubscribeHandles.push(

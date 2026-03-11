@@ -4,13 +4,14 @@
 
 import loopState from './loopStateSingleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { getLoopsModuleDispatcher } from './index.js';
+import { getLoopsModuleDispatcher, getCostDataManager } from './index.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   manaColorClass,
   formatTime,
 } from '../shared/queueAnalysis.js';
+import { proposedLinearFinalCost } from './xpFormulas.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -256,6 +257,24 @@ export class LoopBlockBuilder {
     repeatLabel.appendChild(document.createTextNode(' Repeat'));
     exploreContainer.appendChild(repeatLabel);
 
+    // Explore mana cost — placed after repeat checkbox to align with cost column
+    const exploreCostSpan = document.createElement('span');
+    exploreCostSpan.className = 'compact-item-cost';
+    const exploreCostDataManager = getCostDataManager();
+    const exploreRegionCost = exploreCostDataManager?.isLoaded()
+      ? exploreCostDataManager.getRegionCost(regionName)
+      : 50;
+    const exploreBaseCost = exploreRegionCost * 2;
+    const exploreXpData = loopState.getRegionXP(regionName);
+    const exploreFinalCost = proposedLinearFinalCost(exploreBaseCost, exploreXpData.level);
+    exploreCostSpan.textContent = exploreFinalCost.toFixed(1);
+    exploreContainer.appendChild(exploreCostSpan);
+
+    // Spacer to match the status column width in compact-item rows
+    const statusSpacer = document.createElement('span');
+    statusSpacer.className = 'compact-item-status';
+    exploreContainer.appendChild(statusSpacer);
+
     detailsEl.appendChild(exploreContainer);
   }
 
@@ -329,6 +348,18 @@ export class LoopBlockBuilder {
       nameSpan.className = 'compact-item-name';
       nameSpan.textContent = `${exitNameDisplay} \u2192 ${destDisplay}`;
       li.appendChild(nameSpan);
+
+      // Mana cost
+      const costSpan = document.createElement('span');
+      costSpan.className = 'compact-item-cost';
+      const costDataManager = getCostDataManager();
+      const moveBaseCost = costDataManager?.isLoaded()
+        ? costDataManager.getRegionCost(regionName)
+        : 50;
+      const xpData = loopState.getRegionXP(regionName);
+      const moveFinalCost = proposedLinearFinalCost(moveBaseCost, xpData.level);
+      costSpan.textContent = moveFinalCost.toFixed(1);
+      li.appendChild(costSpan);
 
       // Status badge
       const statusSpan = document.createElement('span');
@@ -439,6 +470,18 @@ export class LoopBlockBuilder {
       nameSpan.className = 'compact-item-name';
       nameSpan.textContent = locationNameDisplay;
       li.appendChild(nameSpan);
+
+      // Mana cost
+      const costSpan = document.createElement('span');
+      costSpan.className = 'compact-item-cost';
+      const locCostDataManager = getCostDataManager();
+      const locBaseCost = locCostDataManager?.isLoaded()
+        ? locCostDataManager.getLocationCost(locationDef.name)
+        : 100;
+      const locXpData = loopState.getRegionXP(regionName);
+      const locFinalCost = proposedLinearFinalCost(locBaseCost, locXpData.level);
+      costSpan.textContent = locFinalCost.toFixed(1);
+      li.appendChild(costSpan);
 
       // Status badge
       const statusSpan = document.createElement('span');

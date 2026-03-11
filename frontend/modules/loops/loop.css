@@ -600,9 +600,20 @@
   white-space: nowrap;
 }
 
+.compact-item-cost {
+  flex-shrink: 0;
+  font-family: monospace;
+  font-style: normal;
+  min-width: 5ch;
+  text-align: right;
+  margin-left: 8px;
+  opacity: 0.6;
+}
+
 .compact-item-status {
   flex-shrink: 0;
-  font-size: 0.8em;
+  width: 5.5em;
+  text-align: right;
   margin-left: 8px;
   opacity: 0.7;
 }
@@ -659,7 +670,24 @@
 .region-explore-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  padding: 3px 8px;
+  font-size: 0.9em;
+}
+
+.region-explore-container > .explore-btn {
+  margin-right: 10px;
+}
+
+.region-explore-container > .repeat-explore-label {
+  margin-right: 0;
+}
+
+.region-explore-container > .compact-item-cost {
+  margin-left: auto;
+}
+
+.region-explore-container > .compact-item-status {
+  margin-left: 8px;
 }
 
 .repeat-explore-label {

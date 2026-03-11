@@ -33,6 +33,7 @@ export class LoopState {
     // Injected dependencies (will be set via setDependencies)
     this.eventBus = null;
     this.stateManager = null;
+    this.dispatcher = null;
     this.playerState = null; // NEW: playerState API
     this.costDataManager = null; // Cost data for per-region/per-location costs
 
@@ -95,6 +96,7 @@ export class LoopState {
     log('info', '[LoopState] Setting dependencies...');
     this.eventBus = dependencies.eventBus;
     this.stateManager = dependencies.stateManager;
+    this.dispatcher = dependencies.dispatcher || null;
     this.playerState = dependencies.playerState; // Store playerState API
 
     // Initialize ActionQueueManager now that we have playerState
@@ -160,8 +162,8 @@ export class LoopState {
     // Set up auto-save timer
     this._setupAutoSave();
 
-    // Try to load saved state
-    this.loadFromStorage(); // Load saved mana/xp etc AFTER setting listeners
+    // Automatic loading disabled — use the Load Game button in the UI instead
+    // this.loadFromStorage();
   }
 
   /**
@@ -944,34 +946,33 @@ export class LoopState {
    * @param {Object} action - The completed action
    */
   _applyActionEffects(action) {
-    // Ensure eventBus dependency is set
-    if (!this.eventBus) {
+    if (!this.dispatcher) {
       log(
         'warn',
-        '[LoopState] Cannot apply action effects: eventBus dependency missing.'
+        '[LoopState] Cannot apply action effects: dispatcher dependency missing.'
       );
       return;
     }
 
     switch (action.type) {
       case 'customAction':
-        // Publish event for discovery module
-        this.eventBus.publish('loop:exploreCompleted', {
+        // Publish event for discovery module via dispatcher
+        this.dispatcher.publish('loop:exploreCompleted', {
           regionName: action.sourceRegion,
         });
         break;
       case 'locationCheck':
-        // Mark location as checked in stateManager (assuming this is still desired)
+        // Mark location as checked in stateManager
         this._handleLocationCheckCompletion(action);
-        // Publish event for discovery module
-        this.eventBus.publish('loop:locationChecked', {
+        // Publish event for discovery module via dispatcher
+        this.dispatcher.publish('loop:locationChecked', {
           locationName: action.locationName,
           regionName: action.sourceRegion,
         });
         break;
       case 'regionMove':
-        // Publish event for discovery module
-        this.eventBus.publish('loop:moveCompleted', {
+        // Publish event for discovery module via dispatcher
+        this.dispatcher.publish('loop:moveCompleted', {
           sourceRegion: action.sourceRegion,
           destinationRegion: action.destinationRegion,
           exitName: action.exitUsed,
@@ -1042,7 +1043,7 @@ export class LoopState {
           baseCost = 100;
           break;
         case 'regionMove':
-          baseCost = 10;
+          baseCost = 50;
           break;
         default:
           baseCost = 50;

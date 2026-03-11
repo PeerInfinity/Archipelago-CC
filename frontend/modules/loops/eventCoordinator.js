@@ -191,13 +191,11 @@ export class EventCoordinator {
    */
   _handleAutoRestartChanged(data) {
     if (!this.loopUI.isLoopModeActive) return;
-    const autoRestartBtn = this.loopUI.rootElement?.querySelector(
+    const autoRestartCheckbox = this.loopUI.rootElement?.querySelector(
       '#loop-ui-toggle-auto-restart'
     );
-    if (autoRestartBtn) {
-      autoRestartBtn.textContent = data.autoRestart
-        ? 'Restart when queue complete'
-        : 'Pause when queue complete';
+    if (autoRestartCheckbox) {
+      autoRestartCheckbox.checked = data.autoRestart;
     }
   }
 
@@ -381,13 +379,11 @@ export class EventCoordinator {
     this.loopUI._updatePauseButtonState(loopState.isPaused);
 
     // Update auto-restart button
-    const autoRestartBtn = this.loopUI.rootElement.querySelector(
+    const autoRestartCheckbox = this.loopUI.rootElement.querySelector(
       '#loop-ui-toggle-auto-restart'
     );
-    if (autoRestartBtn) {
-      autoRestartBtn.textContent = loopState.autoRestartQueue
-        ? 'Restart when queue complete'
-        : 'Pause when queue complete';
+    if (autoRestartCheckbox) {
+      autoRestartCheckbox.checked = loopState.autoRestartQueue;
     }
 
     // Update speed slider
@@ -490,8 +486,8 @@ export class EventCoordinator {
     this._savedDiscoverySettings = {
       enableDiscoveryMode: await settingsManager.getSetting(`${prefix}enableDiscoveryMode`, false),
       regionDiscoveryTrigger: await settingsManager.getSetting(`${prefix}regionDiscoveryTrigger`, 'onEnter'),
-      autoDiscoverLocations: await settingsManager.getSetting(`${prefix}autoDiscoverLocations`, true),
-      autoDiscoverExits: await settingsManager.getSetting(`${prefix}autoDiscoverExits`, true),
+      autoDiscoverLocations: await settingsManager.getSetting(`${prefix}autoDiscoverLocations`, false),
+      autoDiscoverExits: await settingsManager.getSetting(`${prefix}autoDiscoverExits`, false),
       undiscoveredDisplay: await settingsManager.getSetting(`${prefix}undiscoveredDisplay`, 'hidden'),
       showUndiscoveredRegionNames: await settingsManager.getSetting(`${prefix}showUndiscoveredRegionNames`, false),
       clickDiscoversRegion: await settingsManager.getSetting(`${prefix}clickDiscoversRegion`, false),

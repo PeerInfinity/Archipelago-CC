@@ -272,10 +272,11 @@ export class DiscoveryPanelUI {
     // Subscribe to events
     this.subscribeToEvents();
 
+    // Mark initialized before buildUI so updateDataDisplay() doesn't bail out
+    this.isInitialized = true;
+
     // Build the UI
     this.buildUI();
-
-    this.isInitialized = true;
     log('info', '[DiscoveryPanelUI] Initialization complete.');
   }
 

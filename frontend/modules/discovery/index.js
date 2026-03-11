@@ -301,9 +301,51 @@ function handleExploreCompleted(eventData) {
   if (eventData.regionName) {
     const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(eventData.regionName);
 
-    // If region was newly discovered and we have auto-discover settings
+    // Each explore action discovers one random undiscovered location or exit
+    // in the region. Build a pool of undiscovered candidates and pick one.
+    try {
+      const staticData = stateManager?.getStaticData();
+      const region = staticData?.regions?.get(eventData.regionName);
+      if (region) {
+        const candidates = [];
+
+        if (region.locations) {
+          for (const location of region.locations) {
+            if (!discoveryStateSingleton.isLocationDiscovered(location.name)) {
+              candidates.push({ type: 'location', name: location.name });
+            }
+          }
+        }
+
+        if (region.exits) {
+          for (const exit of region.exits) {
+            if (!discoveryStateSingleton.isExitDiscovered(eventData.regionName, exit.name)) {
+              candidates.push({ type: 'exit', name: exit.name, connectedRegion: exit.connected_region });
+            }
+          }
+        }
+
+        if (candidates.length > 0) {
+          const pick = candidates[Math.floor(Math.random() * candidates.length)];
+          if (pick.type === 'location') {
+            discoveryStateSingleton.discoverLocation(pick.name);
+            log('info', `[Discovery Module] Explore discovered location: ${pick.name}`);
+          } else {
+            discoveryStateSingleton.discoverExit(eventData.regionName, pick.name);
+            log('info', `[Discovery Module] Explore discovered exit: ${pick.name}`);
+            // If trigger is 'onExitDiscovered', also discover the connected region
+            if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && pick.connectedRegion) {
+              discoveryStateSingleton.discoverRegion(pick.connectedRegion);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      log('error', '[Discovery Module] Error discovering from explore:', error);
+    }
+
+    // Auto-discover exits only if the region is newly discovered
     if (wasNewlyDiscovered) {
-      autoDiscoverLocationsInRegion(eventData.regionName);
       autoDiscoverExitsInRegion(eventData.regionName);
     }
   }
@@ -547,11 +589,15 @@ async function handleSettingsChanged({ key }) {
     }
 
     // If regionDiscoveryTrigger changed to 'onExitDiscovered', apply cascade
-    // for all already-discovered regions (e.g. start regions whose exits are
-    // already known but whose destination regions haven't been discovered yet)
+    // from start regions to discover regions their exits lead to.
+    // We cascade from start regions (not all discovered regions) because when
+    // multiple concurrent settings changes fire this handler, cascading from
+    // all discovered regions causes amplification: the first cascade discovers
+    // new regions, then the second cascade expands from the larger set.
+    // Cascading from start regions is idempotent and matches handleRulesLoaded.
     if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && previousTrigger !== 'onExitDiscovered') {
       if (discoveryStateSingleton) {
-        applyExitDiscoveryCascade(Array.from(discoveryStateSingleton.discoveredRegions));
+        applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
       }
     }
 

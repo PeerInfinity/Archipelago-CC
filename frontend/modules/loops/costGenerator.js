@@ -87,7 +87,7 @@ export class CostGenerator {
           [startRegion]: { moveCost: 0 },
         },
         locations: {},
-        defaultRegionCost: 10,
+        defaultRegionCost: 50,
         defaultLocationCost: 10,
       };
 

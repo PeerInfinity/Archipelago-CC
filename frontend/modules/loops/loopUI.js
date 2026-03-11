@@ -205,10 +205,11 @@ export class LoopUI {
                   <input type="range" id="loop-ui-game-speed" min="0.5" max="100" step="0.5" value="1" />
                   <span id="loop-ui-speed-value">1.0x</span>
                 </div>
-                <button id="loop-ui-toggle-auto-restart" class="button">Pause when queue complete</button>
+                <label class="auto-restart-label"><input type="checkbox" id="loop-ui-toggle-auto-restart" /> Auto-restart when queue complete</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button">Save Game</button>
+                <button id="loop-ui-load-state" class="button">Load Game</button>
                 <button id="loop-ui-export-state" class="button">Export</button>
                 <label for="loop-ui-state-import" class="button">Import</label>
                 <input type="file" id="loop-ui-state-import" class="hidden" accept=".json" />
@@ -288,18 +289,15 @@ export class LoopUI {
 
     attachButtonHandler('loop-ui-toggle-restart', this._handleRestartClick);
 
-    attachButtonHandler('loop-ui-toggle-auto-restart', async function () {
-      const newState = !loopState.autoRestartQueue;
-      loopState.setAutoRestartQueue(newState);
-      const button = querySelector('#loop-ui-toggle-auto-restart');
-      if (button) {
-        button.textContent = newState
-          ? 'Restart when queue complete'
-          : 'Pause when queue complete';
-      }
-      // Persist auto-restart setting via DisplaySettingsManager
-      await this.displaySettings.setSetting('autoRestart', newState, true);
-    });
+    const autoRestartCheckbox = querySelector('#loop-ui-toggle-auto-restart');
+    if (autoRestartCheckbox) {
+      autoRestartCheckbox.checked = loopState.autoRestartQueue;
+      autoRestartCheckbox.addEventListener('change', async () => {
+        const newState = autoRestartCheckbox.checked;
+        loopState.setAutoRestartQueue(newState);
+        await this.displaySettings.setSetting('autoRestart', newState, true);
+      });
+    }
 
     attachButtonHandler('loop-ui-expand-collapse-all', function () {
       const button = querySelector('#loop-ui-expand-collapse-all');
@@ -324,6 +322,8 @@ export class LoopUI {
     attachButtonHandler('loop-ui-clear-queue', this._handleClearQueueClick);
 
     attachButtonHandler('loop-ui-save-state', this._handleSaveStateClick);
+
+    attachButtonHandler('loop-ui-load-state', this._handleLoadStateClick);
 
     attachButtonHandler('loop-ui-export-state', this._exportState);
 
@@ -454,8 +454,17 @@ export class LoopUI {
 
   _handleSaveStateClick() {
     loopState.saveToStorage();
-    // Use console.info instead of window.consoleManager
     console.info('Game saved!');
+  }
+
+  _handleLoadStateClick() {
+    const loaded = loopState.loadFromStorage();
+    if (loaded) {
+      console.info('Game loaded!');
+      this.renderLoopPanel();
+    } else {
+      console.info('No saved game found.');
+    }
   }
 
   _handleHardResetClick() {
@@ -733,11 +742,9 @@ export class LoopUI {
     this._updatePauseButtonState(loopState.isPaused);
 
     // Update auto-restart button state
-    const autoRestartBtn = this.rootElement.querySelector('#loop-ui-toggle-auto-restart');
-    if (autoRestartBtn) {
-      autoRestartBtn.textContent = loopState.autoRestartQueue
-        ? 'Auto-restart enabled'
-        : 'Pause when queue complete';
+    const autoRestartCheckbox = this.rootElement.querySelector('#loop-ui-toggle-auto-restart');
+    if (autoRestartCheckbox) {
+      autoRestartCheckbox.checked = loopState.autoRestartQueue;
     }
 
     // Mark structure as built
@@ -1762,7 +1769,7 @@ export class LoopUI {
         baseCost = 100;
         break;
       case 'regionMove':
-        baseCost = 10;
+        baseCost = 50;
         break;
       default:
         baseCost = 50;
