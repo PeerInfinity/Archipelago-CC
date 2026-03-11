@@ -212,8 +212,8 @@ export function register(registrationApi) {
   );
 
   // Register dispatcher receiver for user:exitClicked
-  // When loop mode is active, this handler intercepts the event
-  // When loop mode is not active, it propagates to the next handler (regions module)
+  // When loop mode is active, this handler intercepts the event (blocks both discovery and move)
+  // When loop mode is not active, it propagates to discovery module, then regions module
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,
     'user:exitClicked',
@@ -283,7 +283,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     getCurrentRegion: initializationApi.getModuleFunction('playerState', 'getCurrentRegion'),
     getRegionCounts: initializationApi.getModuleFunction('playerState', 'getRegionCounts'),
     setStartRegions: initializationApi.getModuleFunction('playerState', 'setStartRegions'),
-    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion')
+    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion'),
+    reset: initializationApi.getModuleFunction('playerState', 'reset')
   };
   
   // Store the API for access by loopUI

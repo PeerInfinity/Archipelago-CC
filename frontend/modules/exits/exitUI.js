@@ -337,9 +337,10 @@ export class ExitUI {
 
   /**
    * Handle click on an exit card
-   * Publishes user:exitClicked via dispatcher. The event will be handled by:
-   * - Loops module (if loop mode is active) - intercepts and handles
-   * - Regions module (default) - performs the region move if not intercepted
+   * Publishes user:exitClicked via dispatcher. The event chain is:
+   * - Loops module: if loop mode active, intercepts (queues moves/explore)
+   * - Discovery module: if discovery mode active, discovers the exit, then blocks
+   * - Regions module: performs the region move (only reached when neither loop nor discovery mode active)
    * @param {Object} exit - The exit data
    */
   handleExitClick(exit) {
@@ -348,14 +349,6 @@ export class ExitUI {
 
     log('info', `[ExitUI] Exit clicked: ${exit.name} in ${sourceRegion} -> ${connectedRegion}`);
 
-    // Publish click event for Discovery module to handle
-    this.eventBus.publish('ui:exitClicked', {
-      exitName: exit.name,
-      sourceRegion,
-      destinationRegion: connectedRegion
-    });
-
-    // Publish via dispatcher - handlers can intercept or let it propagate to the default handler
     import('./index.js').then(({ getExitsModuleDispatcher }) => {
       const dispatcher = getExitsModuleDispatcher();
       if (dispatcher) {
@@ -367,7 +360,7 @@ export class ExitUI {
           isDiscovered: discoveryStateSingleton.isExitDiscovered(sourceRegion, exit.name)
         });
       } else {
-        log('warn', '[ExitUI] Dispatcher not available for publishing user:exitClicked');
+        log('warn', '[ExitUI] Dispatcher not available for publishing exit click events');
       }
     }).catch(error => {
       log('error', '[ExitUI] Error importing exits module for dispatcher:', error);
@@ -675,7 +668,9 @@ export class ExitUI {
         exit._showAsPlaceholder = shouldShowAsPlaceholder;
 
         // Apply "Show Undiscovered" filter
-        if (shouldShowAsPlaceholder && !showUndiscovered) {
+        // Only filter out exits in undiscovered regions.
+        // Exits in discovered regions should always be visible (as clickable ??? cards).
+        if (shouldShowAsPlaceholder && !showUndiscovered && !isParentRegionDiscovered) {
           return false;
         }
 
@@ -990,9 +985,12 @@ export class ExitUI {
         // Check if this should be shown as a placeholder (undiscovered)
         const showAsPlaceholder = exit._showAsPlaceholder === true;
         const showFullDetails = this.discoverySettings.showUndiscoveredDetails;
+        const parentRegionIsDiscovered = this.isDiscoveryModeActive &&
+          discoveryStateSingleton.isRegionDiscovered(parentRegionName);
 
-        // Add undiscovered class for styling
-        if (showAsPlaceholder) {
+        // Add undiscovered class for styling, but not when region is discovered
+        // (exits in discovered regions should look clickable, not grayed out)
+        if (showAsPlaceholder && !parentRegionIsDiscovered) {
           card.classList.add('undiscovered-exit');
         }
 
@@ -1002,7 +1000,14 @@ export class ExitUI {
           exitNameSpan.className = 'exit-name exit-placeholder';
           exitNameSpan.textContent = '???';
           exitNameSpan.style.fontStyle = 'italic';
-          exitNameSpan.style.color = '#888';
+          if (parentRegionIsDiscovered) {
+            // Region is discovered - card is clickable (queues explore)
+            exitNameSpan.style.color = '#ccc';
+            card.title = 'Click to explore this region';
+            card.style.cursor = 'pointer';
+          } else {
+            exitNameSpan.style.color = '#888';
+          }
           card.appendChild(exitNameSpan);
         } else {
           const exitNameSpan = document.createElement('span');
@@ -1016,13 +1021,20 @@ export class ExitUI {
           // Minimal placeholder: just show origin region
           const originDiv = document.createElement('div');
           originDiv.className = 'text-sm';
-          originDiv.textContent = `From: `;
-          const originRegionLink = commonUI.createRegionLink(
-            parentRegionName,
-            useColorblind,
-            snapshot
-          );
-          originDiv.appendChild(originRegionLink);
+          if (this.isDiscoveryModeActive && parentRegionName && !discoveryStateSingleton.isRegionDiscovered(parentRegionName)) {
+            // Region is undiscovered - mask the name
+            originDiv.textContent = 'From: ???';
+            originDiv.style.fontStyle = 'italic';
+            originDiv.style.color = '#888';
+          } else {
+            originDiv.textContent = `From: `;
+            const originRegionLink = commonUI.createRegionLink(
+              parentRegionName,
+              useColorblind,
+              snapshot
+            );
+            originDiv.appendChild(originRegionLink);
+          }
           card.appendChild(originDiv);
 
           // Status: Unknown for undiscovered
@@ -1041,20 +1053,27 @@ export class ExitUI {
           }
 
           // Origin Region
-          const originRegionLink = commonUI.createRegionLink(
-            parentRegionName,
-            useColorblind,
-            snapshot
-          );
           const originDiv = document.createElement('div');
           originDiv.className = 'text-sm';
-          originDiv.textContent = `From: `;
-          originDiv.appendChild(originRegionLink);
-          originDiv.appendChild(
-            document.createTextNode(
-              ` (${parentRegionReachable ? 'Accessible' : 'Inaccessible'})`
-            )
-          );
+          if (this.isDiscoveryModeActive && parentRegionName && !discoveryStateSingleton.isRegionDiscovered(parentRegionName)) {
+            // Region is undiscovered - mask the name
+            originDiv.textContent = 'From: ???';
+            originDiv.style.fontStyle = 'italic';
+            originDiv.style.color = '#888';
+          } else {
+            const originRegionLink = commonUI.createRegionLink(
+              parentRegionName,
+              useColorblind,
+              snapshot
+            );
+            originDiv.textContent = `From: `;
+            originDiv.appendChild(originRegionLink);
+            originDiv.appendChild(
+              document.createTextNode(
+                ` (${parentRegionReachable ? 'Accessible' : 'Inaccessible'})`
+              )
+            );
+          }
           card.appendChild(originDiv);
 
           // Destination Region

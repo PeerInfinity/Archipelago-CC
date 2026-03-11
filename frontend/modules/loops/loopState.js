@@ -395,7 +395,7 @@ export class LoopState {
       log('error', '[LoopState] Cannot clear queue: playerState not available');
       return;
     }
-    
+
     // Stop processing
     if (this.isProcessing) {
       this.stopProcessing();
@@ -406,11 +406,47 @@ export class LoopState {
       this.actionQueueManager.clearQueue();
     }
     this.currentActionIndex = 0;
-    
+
     // Get updated queue
     const queue = this.getActionQueue();
-    
+
     // Notify queue updated
+    this.eventBus.publish('loopState:queueUpdated', {
+      queue: queue,
+    });
+  }
+
+  /**
+   * Atomically reset the entire queue: stop processing, clear all path entries
+   * (including regionMoves), clear tracking, and emit a single queue update.
+   * Use this before building a new queue from scratch.
+   */
+  resetQueue() {
+    // Stop processing
+    if (this.isProcessing) {
+      this.stopProcessing();
+    }
+
+    // Clear tracking in ActionQueueManager (progress, completion)
+    if (this.actionQueueManager) {
+      this.actionQueueManager.actionProgress.clear();
+      this.actionQueueManager.actionCompleted.clear();
+    }
+    this.currentActionIndex = 0;
+
+    // Clear the entire playerState path
+    if (this.playerState) {
+      this.playerState.removeAllActionsOfType('locationCheck');
+      this.playerState.removeAllActionsOfType('customAction');
+      if (this.playerState.reset) {
+        this.playerState.reset();
+      } else {
+        this.playerState.trimPath();
+      }
+    }
+
+    // Emit single queue update with the now-empty queue
+    const queue = this.getActionQueue();
     this.eventBus.publish('loopState:queueUpdated', {
       queue: queue,
     });
@@ -1221,6 +1257,9 @@ export class LoopState {
       current: this.currentMana,
       max: this.maxMana,
     });
+
+    // Get queue from playerState
+    const queue = this.getActionQueue();
 
     // Notify about queue update (so UI can refresh)
     this.eventBus.publish('loopState:queueUpdated', {
