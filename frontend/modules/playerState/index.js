@@ -141,6 +141,16 @@ export async function register(registrationApi) {
         const playerState = getPlayerStateSingleton();
         return playerState.isStartRegion(regionName);
     });
+
+    registrationApi.registerPublicFunction(moduleId, 'setPath', (pathArray, startRegion) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.setPath(pathArray, startRegion);
+    });
+
+    registrationApi.registerPublicFunction(moduleId, 'reset', () => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.reset();
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {

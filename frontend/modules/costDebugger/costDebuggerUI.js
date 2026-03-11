@@ -30,6 +30,9 @@ export class CostDebuggerUI {
 
     this.selectedStepIndex = -1;
     this.subscriptions = [];
+    this.isVerifying = false;
+    this.verificationResults = [];
+    this._verifyCancelled = false;
 
     this.rootElement = this._createRootElement();
     this.container.element.appendChild(this.rootElement);
@@ -56,6 +59,7 @@ export class CostDebuggerUI {
     el.innerHTML = `
       <div class="cd-controls">
         <button class="cd-btn-load" title="Load sphere log data">Load</button>
+        <button class="cd-btn-verify" title="Verify loaded cost data against sphere log">Verify</button>
         <button class="cd-btn-plan-step" disabled title="Plan next action queue">Plan Step</button>
         <button class="cd-btn-plan-sphere" disabled title="Plan remaining steps for current sphere entry">Plan Sphere</button>
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
@@ -99,6 +103,7 @@ export class CostDebuggerUI {
 
   _attachControlListeners(el) {
     el.querySelector('.cd-btn-load').addEventListener('click', () => this._handleLoad());
+    el.querySelector('.cd-btn-verify').addEventListener('click', () => this._handleVerify());
     el.querySelector('.cd-btn-plan-step').addEventListener('click', () => this._handlePlanStep());
     el.querySelector('.cd-btn-plan-sphere').addEventListener('click', () => this._handlePlanSphere());
     el.querySelector('.cd-btn-plan-all').addEventListener('click', () => this._handlePlanAll());
@@ -190,12 +195,164 @@ export class CostDebuggerUI {
     const result = planner.loadSphereLog(sphereLog);
     log('info', `Loaded sphere log: ${result.entryCount} entries, start region: ${result.startRegion}`);
 
+    this.verificationResults = [];
     this.selectedStepIndex = -1;
     this._refreshStepList();
     this._refreshDetailView();
     this._updateSummary();
     this._updateStatus();
     this._updateButtons();
+  }
+
+  async _handleVerify() {
+    const planner = getCostPlanner();
+    if (!planner) {
+      log('warn', 'CostPlanner not available');
+      return;
+    }
+
+    const steps = planner.getPlannedSteps();
+    if (steps.length === 0) {
+      this._setStatus('No steps planned. Click Load, then Plan All first.');
+      return;
+    }
+
+    // Get game APIs via centralRegistry
+    const getLoopState = window.centralRegistry?.getPublicFunction?.('loops', 'getLoopState');
+    const getPlayerState = window.centralRegistry?.getPublicFunction?.('playerState', 'getState');
+    const loopState = getLoopState?.();
+    const playerState = getPlayerState?.();
+
+    if (!loopState || !playerState) {
+      this._setStatus('Game APIs not available. Ensure loops and playerState modules are loaded.');
+      return;
+    }
+
+    // Initialize verification state
+    this.isVerifying = true;
+    this.verificationResults = [];
+    this._verifyCancelled = false;
+    this._updateButtons();
+
+    // Save current settings to restore after verification
+    const savedInstantMode = loopState.instantMode;
+    const savedNoManaReset = loopState.noManaDepletionReset;
+    const savedAutoRestart = loopState.autoRestartQueue;
+
+    try {
+      // Reset game state for a fresh playthrough
+      loopState.resetForNewRules();
+      playerState.reset();
+
+      // Get start region
+      const startRegion = playerState.getCurrentRegion();
+
+      // Configure loopState for verification
+      loopState.setAutoRestartQueue(false);
+      loopState.setInstantMode(true);
+      loopState.setNoManaDepletionReset(true);
+
+      // Filter to executable steps (skip DEFAULTS)
+      const executableSteps = steps.filter(s => s.phase !== 'DEFAULTS');
+
+      for (let i = 0; i < executableSteps.length; i++) {
+        if (this._verifyCancelled) break;
+
+        const step = executableSteps[i];
+        const label = step.phase === 'EXPLORE' ? step.targetRegion : step.locationName;
+        this._setStatus(`Verifying ${i + 1}/${executableSteps.length}: ${step.phase} ${label || ''}`);
+
+        // Record XP state before
+        const xpBefore = new Map();
+        for (const [region, data] of loopState.regionXP) {
+          xpBefore.set(region, { ...data });
+        }
+
+        // Reset mana for this loop (simulate loop reset between steps)
+        loopState.currentMana = loopState.maxMana;
+        loopState.manaDebt = 0;
+        loopState.resetManaDebt();
+        const manaAtStart = loopState.currentMana;
+        const maxManaAtStart = loopState.maxMana;
+
+        // Convert step queue to playerState path format and set it
+        const path = this._convertQueueToPath(step.queue);
+        playerState.setPath(path, startRegion);
+
+        // Reset action progress for the new queue
+        loopState._resetActionsProgress();
+        loopState.isPaused = false;
+
+        // Execute the queue through the real game engine
+        if (path.length > 0) {
+          await this._executeQueue(loopState);
+        }
+
+        // Record state after
+        const manaAfter = loopState.currentMana;
+        const maxManaAfter = loopState.maxMana;
+        const actualManaConsumed = manaAtStart - manaAfter + loopState.manaDebt;
+
+        // Calculate XP gained (use totalXP to account for level-up resets)
+        const xpGained = {};
+        for (const [region, afterData] of loopState.regionXP) {
+          const beforeData = xpBefore.get(region);
+          const xpDelta = totalXP(afterData) - totalXP(beforeData);
+          if (xpDelta > 0) xpGained[region] = xpDelta;
+        }
+
+        // Store result
+        this.verificationResults.push({
+          stepIndex: step.stepIndex,
+          phase: step.phase,
+          completed: true,
+          actual: {
+            manaAtStart,
+            maxManaAtStart,
+            manaConsumed: actualManaConsumed,
+            manaRemaining: manaAfter,
+            maxManaAfter,
+            manaDebt: loopState.manaDebt,
+            xpGained,
+          },
+          predicted: {
+            manaConsumed: step.simulatedResults.manaConsumed,
+            manaRemaining: step.simulatedResults.manaRemaining,
+            maxMana: step.stateAfter.maxMana,
+          },
+        });
+
+        // Update UI after each step
+        this.selectedStepIndex = step.stepIndex;
+        this._refreshStepList();
+        this._refreshDetailView();
+        this._updateSummary();
+
+        // Yield to browser to allow UI updates
+        await new Promise(r => setTimeout(r, 0));
+      }
+
+      // Final status
+      const tolerance = 5;
+      const matched = this.verificationResults.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      ).length;
+      this._setStatus(`Verification complete: ${executableSteps.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+
+    } catch (error) {
+      console.error('[CostDebuggerUI] Verification error:', error);
+      this._setStatus(`Verification error: ${error.message}`);
+    } finally {
+      // Restore loopState settings
+      loopState.setInstantMode(savedInstantMode);
+      loopState.setNoManaDepletionReset(savedNoManaReset);
+      loopState.setAutoRestartQueue(savedAutoRestart);
+      loopState.manaDebt = 0;
+
+      this.isVerifying = false;
+      this._updateButtons();
+      this._updateSummary();
+    }
   }
 
   _handlePlanStep() {
@@ -220,6 +377,74 @@ export class CostDebuggerUI {
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded()) return;
     planner.reset();
+    this.verificationResults = [];
+  }
+
+  /**
+   * Convert a CostPlanner step queue to playerState path format
+   */
+  _convertQueueToPath(stepQueue) {
+    const path = [];
+    const instanceCounts = new Map();
+
+    for (const action of stepQueue) {
+      if (action.type === 'move') {
+        const instNum = (instanceCounts.get(action.to) || 0) + 1;
+        instanceCounts.set(action.to, instNum);
+        path.push({
+          type: 'regionMove',
+          sourceRegion: action.from,
+          destinationRegion: action.to,
+          exitUsed: action.exitUsed || null,
+          instanceNumber: instNum,
+        });
+      } else if (action.type === 'explore') {
+        const instNum = instanceCounts.get(action.region) || 1;
+        path.push({
+          type: 'customAction',
+          actionName: 'explore',
+          params: {},
+          sourceRegion: action.region,
+          instanceNumber: instNum,
+        });
+      } else if (action.type === 'locationCheck') {
+        const instNum = instanceCounts.get(action.region) || 1;
+        path.push({
+          type: 'locationCheck',
+          locationName: action.location,
+          sourceRegion: action.region,
+          instanceNumber: instNum,
+        });
+      }
+    }
+
+    return path;
+  }
+
+  /**
+   * Execute a queue through the real game engine and wait for completion
+   */
+  _executeQueue(loopState) {
+    return new Promise((resolve, reject) => {
+      const queue = loopState.getActionQueue();
+      if (queue.length === 0) {
+        resolve();
+        return;
+      }
+
+      const timeout = setTimeout(() => {
+        unsub();
+        reject(new Error('Queue execution timed out after 30s'));
+      }, 30000);
+
+      const unsub = this.eventBus.subscribe('loopState:queueCompleted', () => {
+        clearTimeout(timeout);
+        unsub();
+        resolve();
+      });
+
+      loopState.startProcessing();
+    });
   }
 
   // =========================================================================
@@ -232,14 +457,22 @@ export class CostDebuggerUI {
   }
 
   _updateStatus() {
+    if (this.isVerifying) return; // Status managed by verify loop
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded()) {
       this._setStatus('No sphere log loaded');
       return;
     }
     const steps = planner.getPlannedSteps().length;
-    const entries = planner.getTotalEntries();
-    if (planner.isComplete()) {
+    const entries = planner.getTotalEntries() - (planner.getSkippedEventEntries() || 0);
+
+    if (this.verificationResults.length > 0) {
+      const tolerance = 5;
+      const matched = this.verificationResults.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      ).length;
+      this._setStatus(`Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+    } else if (planner.isComplete()) {
       this._setStatus(`Complete: ${steps} loops, ${entries} entries`);
     } else {
       this._setStatus(`${steps} loops planned`);
@@ -252,11 +485,25 @@ export class CostDebuggerUI {
     const complete = planner?.isComplete() || false;
     const hasSteps = (planner?.getPlannedSteps().length || 0) > 0;
 
+    const btnLoad = this.rootElement.querySelector('.cd-btn-load');
+    const btnVerify = this.rootElement.querySelector('.cd-btn-verify');
     const btnPlanStep = this.rootElement.querySelector('.cd-btn-plan-step');
     const btnPlanSphere = this.rootElement.querySelector('.cd-btn-plan-sphere');
     const btnPlanAll = this.rootElement.querySelector('.cd-btn-plan-all');
     const btnReset = this.rootElement.querySelector('.cd-btn-reset');
 
+    if (this.isVerifying) {
+      if (btnLoad) btnLoad.disabled = true;
+      if (btnVerify) btnVerify.disabled = true;
+      if (btnPlanStep) btnPlanStep.disabled = true;
+      if (btnPlanSphere) btnPlanSphere.disabled = true;
+      if (btnPlanAll) btnPlanAll.disabled = true;
+      if (btnReset) btnReset.disabled = true;
+      return;
+    }
+
+    if (btnLoad) btnLoad.disabled = false;
+    if (btnVerify) btnVerify.disabled = !hasSteps;
     if (btnPlanStep) btnPlanStep.disabled = !loaded || complete;
     if (btnPlanSphere) btnPlanSphere.disabled = !loaded || complete;
     if (btnPlanAll) btnPlanAll.disabled = !loaded || complete;
@@ -267,6 +514,7 @@ export class CostDebuggerUI {
     const planner = getCostPlanner();
     const steps = planner?.getPlannedSteps() || [];
     const totalEntries = planner?.getTotalEntries() || 0;
+    const skippedEvents = planner?.getSkippedEventEntries() || 0;
 
     const stepsEl = this.rootElement.querySelector('.cd-summary-steps');
     const entriesEl = this.rootElement.querySelector('.cd-summary-entries');
@@ -275,13 +523,39 @@ export class CostDebuggerUI {
 
     if (stepsEl) stepsEl.textContent = String(steps.length);
 
-    // Count completed sphere entries (CHECK steps)
+    // Count completed sphere entries (CHECK steps), excluding skipped event locations
+    const checkableEntries = totalEntries - skippedEvents;
     const completedEntries = steps.filter(s => s.phase === 'CHECK').length;
-    if (entriesEl) entriesEl.textContent = `${completedEntries} / ${totalEntries}`;
+    if (entriesEl) entriesEl.textContent = `${completedEntries} / ${checkableEntries}`;
 
-    const costData = planner?.getCostData();
-    if (regionsEl) regionsEl.textContent = costData ? Object.keys(costData.regions).length : '0';
-    if (locationsEl) locationsEl.textContent = costData ? Object.keys(costData.locations).length : '0';
+    // Update labels and values based on mode
+    const regionsLabel = this.rootElement.querySelector('.cd-summary-regions')?.previousElementSibling;
+    const locationsLabel = this.rootElement.querySelector('.cd-summary-locations')?.previousElementSibling;
+
+    if (this.verificationResults.length > 0) {
+      // Verification summary
+      if (regionsLabel) regionsLabel.textContent = 'Matched:';
+      if (locationsLabel) locationsLabel.textContent = 'Max \u0394:';
+
+      const tolerance = 5;
+      const matched = this.verificationResults.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      ).length;
+      if (regionsEl) regionsEl.textContent = `${matched}/${this.verificationResults.length}`;
+
+      const maxDelta = this.verificationResults.length > 0
+        ? Math.max(...this.verificationResults.map(r =>
+            Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed)
+          ))
+        : 0;
+      if (locationsEl) locationsEl.textContent = maxDelta.toFixed(1);
+    } else {
+      if (regionsLabel) regionsLabel.textContent = 'Regions:';
+      if (locationsLabel) locationsLabel.textContent = 'Locations:';
+      const costData = planner?.getCostData();
+      if (regionsEl) regionsEl.textContent = costData ? Object.keys(costData.regions).length : '0';
+      if (locationsEl) locationsEl.textContent = costData ? Object.keys(costData.locations).length : '0';
+    }
   }
 
   _refreshStepList() {
@@ -292,9 +566,12 @@ export class CostDebuggerUI {
     const steps = planner?.getPlannedSteps() || [];
 
     if (steps.length === 0) {
-      const msg = planner?.isLoaded()
-        ? 'Sphere log loaded. Click "Plan Step" to begin.'
-        : 'Click "Load" to load sphere log data, then "Plan Step" to begin.';
+      let msg;
+      if (planner?.isLoaded()) {
+        msg = 'Sphere log loaded. Click "Plan Step" to begin.';
+      } else {
+        msg = 'Click "Load" to plan costs, or "Verify" to verify after planning.';
+      }
       listEl.innerHTML = `<div class="cd-step-list-empty">${msg}</div>`;
       return;
     }
@@ -322,12 +599,30 @@ export class CostDebuggerUI {
           const p = step.exploreProgress;
           detail = `<span class="cd-step-progress">${p.discovered}/${p.total}</span>`;
         } else if (step.phase === 'CHECK') {
-          detail = `<span class="cd-step-new-costs">cost=${step.costAssignments.find(a => a.type === 'location')?.cost || '?'}</span>`;
+          const locAssignment = step.costAssignments.find(a => a.type === 'location');
+          if (step.mode === 'verify' && locAssignment?.verification) {
+            const v = locAssignment.verification;
+            const deltaClass = v.delta === 0 ? 'cd-verify-exact' : Math.abs(v.delta) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+            const sign = v.delta > 0 ? '+' : '';
+            detail = `<span class="${deltaClass}">${sign}${v.delta}</span>`;
+          } else {
+            detail = `<span class="cd-step-new-costs">cost=${locAssignment?.cost || '?'}</span>`;
+          }
         }
         truncName = step.phase === 'EXPLORE'
           ? truncate(step.targetRegion, 24)
           : truncate(step.locationName, 24);
         sphereLabel = `S${step.sphereIndex}`;
+      }
+
+      // Override detail with verification result if available
+      const vResult = this.verificationResults.find(r => r.stepIndex === step.stepIndex);
+      if (vResult) {
+        const delta = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+        const absD = Math.abs(delta);
+        const cls = absD <= 1 ? 'cd-verify-exact' : absD <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+        const sign = delta > 0 ? '+' : '';
+        detail = `<span class="${cls}">\u0394${sign}${delta.toFixed(1)}</span>`;
       }
 
       return `
@@ -382,18 +677,19 @@ export class CostDebuggerUI {
     const pre = (html) => `<pre style="margin:0; font-size:inherit; font-family:inherit; white-space:pre;">${html}</pre>`;
 
     // Header
+    const modePrefix = step.mode === 'verify' ? 'Verify ' : '';
     if (step.phase === 'DEFAULTS') {
       sections.push(`<div class="cd-reason-header">Step ${step.stepIndex + 1} [Defaults]: Assign costs to unvisited regions &amp; locations</div>`);
     } else {
       const phaseLabel = step.phase === 'EXPLORE' ? 'Explore' : 'Check';
       const target = step.phase === 'EXPLORE' ? step.targetRegion : step.locationName;
-      sections.push(`<div class="cd-reason-header">Step ${step.stepIndex + 1} [${phaseLabel}]: ${escapeHtml(target)}</div>`);
+      sections.push(`<div class="cd-reason-header">${modePrefix}Step ${step.stepIndex + 1} [${phaseLabel}]: ${escapeHtml(target)}</div>`);
 
       // Sphere entry context
       const entryIdx = step.sphereEntryIndex != null ? step.sphereEntryIndex + 1 : '?';
       const planner = getCostPlanner();
-      const totalEntries = planner?.getTotalEntries() || '?';
-      sections.push(`<div class="cd-reason-subheader">Sphere entry ${entryIdx}/${totalEntries} (sphere ${step.sphereIndex}): ${escapeHtml(step.locationName)}</div>`);
+      const totalEntries = (planner?.getTotalEntries() || 0) - (planner?.getSkippedEventEntries() || 0);
+      sections.push(`<div class="cd-reason-subheader">Sphere entry ${entryIdx}/${totalEntries || '?'} (sphere ${step.sphereIndex}): ${escapeHtml(step.locationName)}</div>`);
     }
 
     // State before
@@ -436,17 +732,38 @@ export class CostDebuggerUI {
     if (step.costAssignments && step.costAssignments.length > 0) {
       const NW = 28;
       const rows = [];
-      rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Cost', 6)}  Formula`);
-      rows.push('\u2500'.repeat(NW + 50));
 
-      for (const ca of step.costAssignments) {
-        const cls = 'cd-reason-new';
-        const name = truncate(ca.name, NW - 2);
-        const typeLabel = ca.type === 'region' ? 'region' : 'location';
-        rows.push(`<span class="${cls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 6)}  ${ca.formula}</span>`);
+      if (step.mode === 'verify') {
+        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Loaded', 8)} ${rpad('Simulated', 10)} ${rpad('Delta', 8)}`);
+        rows.push('\u2500'.repeat(NW + 38));
+
+        for (const ca of step.costAssignments) {
+          const name = truncate(ca.name, NW - 2);
+          const typeLabel = ca.type === 'region' ? 'region' : 'location';
+          const v = ca.verification;
+          if (v) {
+            const cls = v.delta === 0 ? 'cd-verify-exact' : Math.abs(v.delta) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+            const sign = v.delta > 0 ? '+' : '';
+            rows.push(`<span class="${cls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(v.loadedCost, 8)} ${rpad(v.simulatedCost, 10)} ${rpad(sign + v.delta, 8)}</span>`);
+          } else {
+            rows.push(`<span class="cd-reason-new">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 8)}</span>`);
+          }
+        }
+
+        sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Verification (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
+      } else {
+        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Cost', 6)}  Formula`);
+        rows.push('\u2500'.repeat(NW + 50));
+
+        for (const ca of step.costAssignments) {
+          const cls = 'cd-reason-new';
+          const name = truncate(ca.name, NW - 2);
+          const typeLabel = ca.type === 'region' ? 'region' : 'location';
+          rows.push(`<span class="${cls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 6)}  ${ca.formula}</span>`);
+        }
+
+        sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Assignments (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
       }
-
-      sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Assignments (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
     }
 
     // Simulated Queue
@@ -515,6 +832,50 @@ export class CostDebuggerUI {
       sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Notes</div><div class="cd-reason-grid">${noteRows}</div></div>`);
     }
 
+    // Verification Results (if available)
+    const vResult = this.verificationResults.find(r => r.stepIndex === step.stepIndex);
+    if (vResult) {
+      const NW = 20;
+      const vRows = [];
+      vRows.push(`${pad('Metric', NW)} ${rpad('Predicted', 10)} ${rpad('Actual', 10)} ${rpad('Delta', 8)}`);
+      vRows.push('\u2500'.repeat(NW + 32));
+
+      const manaD = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+      const manaCls = Math.abs(manaD) <= 1 ? 'cd-verify-exact' : Math.abs(manaD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+      vRows.push(`<span class="${manaCls}">${pad('Mana Consumed', NW)} ${rpad(vResult.predicted.manaConsumed.toFixed(1), 10)} ${rpad(vResult.actual.manaConsumed.toFixed(1), 10)} ${rpad((manaD > 0 ? '+' : '') + manaD.toFixed(1), 8)}</span>`);
+
+      const remD = vResult.actual.manaRemaining - vResult.predicted.manaRemaining;
+      const remCls = Math.abs(remD) <= 1 ? 'cd-verify-exact' : Math.abs(remD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+      vRows.push(`<span class="${remCls}">${pad('Mana Remaining', NW)} ${rpad(vResult.predicted.manaRemaining.toFixed(1), 10)} ${rpad(vResult.actual.manaRemaining.toFixed(1), 10)} ${rpad((remD > 0 ? '+' : '') + remD.toFixed(1), 8)}</span>`);
+
+      const maxD = vResult.actual.maxManaAfter - vResult.predicted.maxMana;
+      const maxCls = Math.abs(maxD) <= 1 ? 'cd-verify-exact' : Math.abs(maxD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+      vRows.push(`<span class="${maxCls}">${pad('Max Mana (after)', NW)} ${rpad(vResult.predicted.maxMana.toFixed(1), 10)} ${rpad(vResult.actual.maxManaAfter.toFixed(1), 10)} ${rpad((maxD > 0 ? '+' : '') + maxD.toFixed(1), 8)}</span>`);
+
+      if (vResult.actual.manaDebt > 0) {
+        vRows.push(`<span class="cd-verify-far">${pad('Mana Debt', NW)} ${rpad('-', 10)} ${rpad(vResult.actual.manaDebt.toFixed(1), 10)}</span>`);
+      }
+
+      // XP comparison
+      const allRegions = new Set([
+        ...Object.keys(step.simulatedResults.xpGained),
+        ...Object.keys(vResult.actual.xpGained)
+      ]);
+      if (allRegions.size > 0) {
+        vRows.push('');
+        vRows.push(`${pad('XP Region', NW)} ${rpad('Predicted', 10)} ${rpad('Actual', 10)} ${rpad('Delta', 8)}`);
+        for (const region of allRegions) {
+          const predXP = step.simulatedResults.xpGained[region] || 0;
+          const actXP = vResult.actual.xpGained[region] || 0;
+          const d = actXP - predXP;
+          const cls = Math.abs(d) <= 1 ? 'cd-verify-exact' : Math.abs(d) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
+          vRows.push(`<span class="${cls}">${pad(truncate(region, NW - 2), NW)} ${rpad(predXP.toFixed(1), 10)} ${rpad(actXP.toFixed(1), 10)} ${rpad((d > 0 ? '+' : '') + d.toFixed(1), 8)}</span>`);
+        }
+      }
+
+      sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Verification: Actual vs Predicted</div>${pre(vRows.join('\n'))}</div>`);
+    }
+
     return sections.join('');
   }
 
@@ -548,6 +909,11 @@ function fmtMana(n) {
 function truncate(str, maxLen) {
   if (!str) return '';
   return str.length > maxLen ? str.substring(0, maxLen - 1) + '\u2026' : str;
+}
+
+function totalXP(data) {
+  if (!data) return 0;
+  return 10 * data.level * data.level + 90 * data.level + data.xp;
 }
 
 export default CostDebuggerUI;

@@ -34,6 +34,7 @@ export class LoopState {
     this.eventBus = null;
     this.stateManager = null;
     this.playerState = null; // NEW: playerState API
+    this.costDataManager = null; // Cost data for per-region/per-location costs
 
     // Action queue manager (will be initialized after playerState is set)
     this.actionQueueManager = null;
@@ -104,6 +105,15 @@ export class LoopState {
 
     // Re-setup listeners that depend on the event bus
     this._setupEventListeners();
+  }
+
+  /**
+   * Set the cost data manager for per-region/per-location cost lookups.
+   * Called after costDataManager is created (it's initialized after loopState).
+   */
+  setCostDataManager(costDataManager) {
+    this.costDataManager = costDataManager;
+    log('info', '[LoopState] CostDataManager set');
   }
 
   /**
@@ -995,26 +1005,48 @@ export class LoopState {
   }
 
   /**
-   * Calculate the mana cost of an action
+   * Calculate the mana cost of an action.
+   * Uses per-region/per-location costs from costDataManager when available,
+   * falling back to hardcoded defaults.
    * @param {Object} action - The action
    * @returns {number} - Mana cost
    */
   _calculateActionCost(action) {
     let baseCost;
 
-    // Determine base cost by action type
-    switch (action.type) {
-      case 'customAction':
-        baseCost = 50;
-        break;
-      case 'locationCheck':
-        baseCost = 100;
-        break;
-      case 'regionMove':
-        baseCost = 10;
-        break;
-      default:
-        baseCost = 50;
+    if (this.costDataManager?.isLoaded()) {
+      // Use per-region/per-location costs from cost data
+      switch (action.type) {
+        case 'regionMove':
+          // Move cost = source region's moveCost
+          baseCost = this.costDataManager.getRegionCost(action.sourceRegion);
+          break;
+        case 'locationCheck':
+          // Location check cost = per-location cost
+          baseCost = this.costDataManager.getLocationCost(action.locationName);
+          break;
+        case 'customAction':
+          // Explore cost = 2x region's moveCost
+          baseCost = this.costDataManager.getRegionCost(action.sourceRegion) * 2;
+          break;
+        default:
+          baseCost = 50;
+      }
+    } else {
+      // Fallback to hardcoded defaults when no cost data is loaded
+      switch (action.type) {
+        case 'customAction':
+          baseCost = 50;
+          break;
+        case 'locationCheck':
+          baseCost = 100;
+          break;
+        case 'regionMove':
+          baseCost = 10;
+          break;
+        default:
+          baseCost = 50;
+      }
     }
 
     // Apply region XP reduction if applicable

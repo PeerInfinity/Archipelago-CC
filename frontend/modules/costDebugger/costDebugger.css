@@ -251,6 +251,24 @@
   font-weight: bold;
 }
 
+/* Verification mode colors */
+.cd-verify-exact {
+  color: #5a5;
+}
+
+.cd-verify-close {
+  color: #da5;
+}
+
+.cd-verify-far {
+  color: #d55;
+}
+
+.cd-phase-verify {
+  background: #2a3a4a;
+  color: #6af;
+}
+
 /* Pre-formatted tables */
 .cd-detail-inner pre {
   margin: 0;

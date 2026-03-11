@@ -188,6 +188,11 @@ export class CostPlanner {
     this._currentExploreRegionIdx = 0;
     this._pendingCostAssignments = []; // Cost assignments for next step's reasoning
     this._defaultsAssigned = false;
+    this._skippedEventEntries = 0;    // Count of event locations skipped (auto-collected)
+
+    // Verification mode
+    this._mode = 'plan';              // 'plan' or 'verify'
+    this._loadedCostData = null;      // Cost data to verify against
   }
 
   loadSphereLog(sphereLog) {
@@ -196,6 +201,10 @@ export class CostPlanner {
     this._currentEntryIndex = 0;
     this._currentEntry = null;
     this._phase = null;
+    this._mode = 'plan';
+    this._loadedCostData = null;
+    this._defaultsAssigned = false;
+    this._skippedEventEntries = 0;
 
     // Get start region from snapshot (proxy doesn't expose getStartRegions)
     const snapshot = this.stateManager.getLatestStateSnapshot?.();
@@ -216,6 +225,35 @@ export class CostPlanner {
   }
 
   /**
+   * Load sphere log in verification mode.
+   * Uses provided cost data for all mana calculations instead of generating costs.
+   * Each step compares loaded costs against what the formula would have assigned.
+   * @param {Array} sphereLog - Raw sphere log data
+   * @param {Object} costData - Cost data to verify (from costDataManager)
+   * @returns {Object} Load result
+   */
+  loadSphereLogForVerification(sphereLog, costData) {
+    const result = this.loadSphereLog(sphereLog);
+    this._mode = 'verify';
+    this._loadedCostData = costData;
+
+    // In verify mode, pre-load ALL region costs from the cost data into simState
+    // so mana calculations use the loaded costs throughout
+    if (costData?.regions) {
+      for (const [regionName, data] of Object.entries(costData.regions)) {
+        if (!this._simState.assignedRegionCosts.has(regionName)) {
+          this._simState.assignedRegionCosts.set(regionName, { moveCost: data.moveCost });
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /** @returns {'plan'|'verify'} Current operating mode */
+  getMode() { return this._mode; }
+
+  /**
    * Plan one action queue (one loop). Returns StepReasoning or null if done.
    */
   planNextStep() {
@@ -224,8 +262,12 @@ export class CostPlanner {
     // Start a new sphere entry if needed (skip entries with missing locations/paths)
     while (!this._currentEntry) {
       if (this._currentEntryIndex >= this._entries.length) {
-        // All entries done — assign defaults if not yet done
+        // All entries done — assign defaults if not yet done (skip in verify mode)
         if (!this._defaultsAssigned) {
+          if (this._mode === 'verify') {
+            this._defaultsAssigned = true;
+            return null;
+          }
           return this._planDefaultsStep();
         }
         return null;
@@ -304,15 +346,83 @@ export class CostPlanner {
     const staticData = this.stateManager.getStaticData();
     this._simState = new SimulatedState(this._startRegion, 100, staticData);
 
+    // Re-apply loaded costs in verify mode
+    if (this._mode === 'verify' && this._loadedCostData?.regions) {
+      for (const [regionName, data] of Object.entries(this._loadedCostData.regions)) {
+        if (!this._simState.assignedRegionCosts.has(regionName)) {
+          this._simState.assignedRegionCosts.set(regionName, { moveCost: data.moveCost });
+        }
+      }
+      // Reset verify tracking
+      this._simState._verifyAssigned = new Set();
+    }
+
     this.eventBus?.publish('costDebugger:reset', {});
   }
 
   getPlannedSteps() { return this._plannedSteps; }
   getCurrentStepIndex() { return this._plannedSteps.length; }
   getTotalEntries() { return this._entries.length; }
-  isComplete() { return this._currentEntryIndex >= this._entries.length && !this._currentEntry && this._defaultsAssigned; }
+  getSkippedEventEntries() { return this._skippedEventEntries; }
+  isComplete() {
+    const entriesDone = this._currentEntryIndex >= this._entries.length && !this._currentEntry;
+    return entriesDone && (this._defaultsAssigned || this._mode === 'verify');
+  }
   isLoaded() { return this._isLoaded; }
   getSimulatedState() { return this._simState?.snapshot() || null; }
+
+  /**
+   * Get aggregate verification statistics across all planned steps.
+   * Only meaningful in verify mode.
+   */
+  getVerificationSummary() {
+    if (this._mode !== 'verify') return null;
+
+    const comparisons = [];
+    let manaDeficitCount = 0;
+    let totalRegionDelta = 0;
+    let totalLocationDelta = 0;
+    let regionCompareCount = 0;
+    let locationCompareCount = 0;
+
+    for (const step of this._plannedSteps) {
+      if (step.simulatedResults.manaRemaining < 0) manaDeficitCount++;
+
+      for (const ca of (step.costAssignments || [])) {
+        if (!ca.verification) continue;
+        const v = ca.verification;
+        const absDelta = Math.abs(v.delta);
+        const pct = v.simulatedCost > 0 ? (absDelta / v.simulatedCost * 100) : 0;
+
+        comparisons.push({ ...ca, deltaPct: pct });
+
+        if (ca.type === 'region') {
+          totalRegionDelta += absDelta;
+          regionCompareCount++;
+        } else {
+          totalLocationDelta += absDelta;
+          locationCompareCount++;
+        }
+      }
+    }
+
+    const avgRegionDelta = regionCompareCount > 0 ? totalRegionDelta / regionCompareCount : 0;
+    const avgLocationDelta = locationCompareCount > 0 ? totalLocationDelta / locationCompareCount : 0;
+    const exactMatches = comparisons.filter(c => c.verification.delta === 0).length;
+    const closeMatches = comparisons.filter(c => Math.abs(c.verification.delta) <= 5 && c.verification.delta !== 0).length;
+    const farMatches = comparisons.filter(c => Math.abs(c.verification.delta) > 5).length;
+
+    return {
+      totalComparisons: comparisons.length,
+      exactMatches,
+      closeMatches,
+      farMatches,
+      avgRegionDelta,
+      avgLocationDelta,
+      manaDeficitCount,
+      comparisons,
+    };
+  }
 
   getCostData() {
     if (!this._simState) return null;
@@ -405,6 +515,8 @@ export class CostPlanner {
     if (staticData.locations) {
       for (const [locationName, locData] of staticData.locations.entries()) {
         if (costs.locations[locationName] != null) continue;
+        // Skip event locations — they are auto-collected for free
+        if (staticData.eventLocations?.[locationName]) continue;
 
         const regionName = locData.parent_region || locData.region;
         const regionCost = costs.regions[regionName]?.moveCost ?? costs.defaultRegionCost;
@@ -426,6 +538,18 @@ export class CostPlanner {
 
     if (!targetRegion) {
       // Skip - location not found
+      this._currentEntryIndex++;
+      return;
+    }
+
+    // Skip event locations — they are auto-collected for free when their region
+    // is accessible, so no action queue is needed. Still update sim state so
+    // max mana reflects the collected item.
+    if (staticData?.eventLocations?.[entry.locationName]) {
+      this._simState.checkedLocations.add(entry.locationName);
+      this._simState.maxMana += 10;
+      this._simState.resetManaToMax();
+      this._skippedEventEntries++;
       this._currentEntryIndex++;
       return;
     }
@@ -510,7 +634,28 @@ export class CostPlanner {
     }
 
     // Assign cost to explore region just-in-time (after traversal costs deducted)
-    if (this._simState.getRegionCost(exploreRegion) === null) {
+    if (this._mode === 'verify') {
+      // In verify mode, region cost was pre-loaded. Compute what formula would have assigned.
+      // Only compare once per region (first encounter).
+      if (!this._simState._verifyAssigned) this._simState._verifyAssigned = new Set();
+      if (!this._simState._verifyAssigned.has(exploreRegion)) {
+        const loadedCost = this._simState.getRegionCost(exploreRegion) || 0;
+        const fullPathRegions = this._currentPath.steps.map(s => s.region);
+        const uncostedRemaining = fullPathRegions.filter(r =>
+          r !== this._startRegion && !this._simState._verifyAssigned.has(r)
+        ).length || 1;
+        const simulatedCost = Math.max(1, Math.floor(manaRemaining / 2 / uncostedRemaining));
+
+        this._simState._verifyAssigned.add(exploreRegion);
+
+        costAssignments.push({
+          type: 'region', name: exploreRegion,
+          cost: loadedCost,
+          formula: `loaded: ${loadedCost} (formula would assign: ${simulatedCost})`,
+          verification: { loadedCost, simulatedCost, delta: loadedCost - simulatedCost },
+        });
+      }
+    } else if (this._simState.getRegionCost(exploreRegion) === null) {
       // Count uncosted regions remaining in the full path (from here onward)
       const fullPathRegions = this._currentPath.steps.map(s => s.region);
       const uncostedRemaining = fullPathRegions.filter(r =>
@@ -584,6 +729,7 @@ export class CostPlanner {
       sphereIndex: entry.sphereIndex,
       sphereEntryIndex: this._currentEntryIndex,
       phase: 'EXPLORE',
+      mode: this._mode,
       locationName: entry.locationName,
       targetRegion: exploreRegion,
       stateBefore,
@@ -650,14 +796,28 @@ export class CostPlanner {
       }
     }
 
-    // Assign location cost after traversal = floor(remaining mana)
-    const locationCost = Math.max(1, Math.floor(manaRemaining));
-    const locationFormula = `max(1, floor(${fmtNum(manaRemaining)})) = ${locationCost}`;
-    this._simState.assignedLocationCosts.set(entry.locationName, locationCost);
-    costAssignments.push({
-      type: 'location', name: entry.locationName,
-      cost: locationCost, formula: locationFormula,
-    });
+    // Assign location cost after traversal
+    let locationCost;
+    if (this._mode === 'verify') {
+      // Use loaded cost, compare against what formula would have assigned
+      locationCost = this._loadedCostData?.locations?.[entry.locationName] ?? Math.max(1, Math.floor(manaRemaining));
+      const simulatedCost = Math.max(1, Math.floor(manaRemaining));
+      this._simState.assignedLocationCosts.set(entry.locationName, locationCost);
+      costAssignments.push({
+        type: 'location', name: entry.locationName,
+        cost: locationCost,
+        formula: `loaded: ${locationCost} (formula would assign: ${simulatedCost})`,
+        verification: { loadedCost: locationCost, simulatedCost, delta: locationCost - simulatedCost },
+      });
+    } else {
+      locationCost = Math.max(1, Math.floor(manaRemaining));
+      const locationFormula = `max(1, floor(${fmtNum(manaRemaining)})) = ${locationCost}`;
+      this._simState.assignedLocationCosts.set(entry.locationName, locationCost);
+      costAssignments.push({
+        type: 'location', name: entry.locationName,
+        cost: locationCost, formula: locationFormula,
+      });
+    }
 
     // Check location
     const regionXP = this._simState.getRegionXP(targetRegion);
@@ -692,6 +852,7 @@ export class CostPlanner {
       sphereIndex: entry.sphereIndex,
       sphereEntryIndex: this._currentEntryIndex - 1,
       phase: 'CHECK',
+      mode: this._mode,
       locationName: entry.locationName,
       targetRegion,
       stateBefore,
@@ -748,6 +909,8 @@ export class CostPlanner {
     if (staticData?.locations) {
       for (const [locationName, locData] of staticData.locations.entries()) {
         if (this._simState.assignedLocationCosts.has(locationName)) continue;
+        // Skip event locations — they are auto-collected for free
+        if (staticData.eventLocations?.[locationName]) continue;
         const regionName = locData.parent_region || locData.region;
         const regionCost = currentCosts.regions[regionName]?.moveCost ?? currentCosts.defaultRegionCost;
         const locationCost = Math.max(1, regionCost * 2);

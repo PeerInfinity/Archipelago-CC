@@ -345,6 +345,11 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       playerStateAPI: playerStateAPI,
     });
 
+    // Inject costDataManager into loopState for per-region/per-location cost lookups
+    if (loopStateSingleton && typeof loopStateSingleton.setCostDataManager === 'function') {
+      loopStateSingleton.setCostDataManager(_costDataManager);
+    }
+
     log('info', '[Loops Module] Cost generation components initialized');
 
     // Expose cost data manager on window for console debugging

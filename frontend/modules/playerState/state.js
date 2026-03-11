@@ -631,6 +631,32 @@ export class PlayerState {
     }
 
     /**
+     * Set the entire path directly (for programmatic queue loading).
+     * Rebuilds instance counts from the path data.
+     * @param {Array} pathArray - Array of path entries
+     * @param {string} startRegion - Starting region for this queue (sets currentRegion)
+     */
+    setPath(pathArray, startRegion = null) {
+        this.path = [...pathArray];
+
+        // Rebuild regionInstanceCounts from path
+        this.regionInstanceCounts = new Map();
+        for (const entry of this.path) {
+            if (entry.type === 'regionMove') {
+                const count = (this.regionInstanceCounts.get(entry.destinationRegion) || 0) + 1;
+                this.regionInstanceCounts.set(entry.destinationRegion, count);
+            }
+        }
+
+        // Set current region to start region (where the player begins this queue)
+        if (startRegion) {
+            this.currentRegion = startRegion;
+        }
+
+        this.emitPathUpdated();
+    }
+
+    /**
      * Serialize state for potential future persistence
      * @returns {Object} Serialized state
      */
