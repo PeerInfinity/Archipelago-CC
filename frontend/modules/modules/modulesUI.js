@@ -1,5 +1,6 @@
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { getInitializationApi, getModuleEventBus } from './index.js';
+import { debounce } from '../commonUI/index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -88,6 +89,11 @@ const CSS = `
     color: #777;
     border: 1px solid #4a4a4a;
 }
+.modules-search-controls {
+    border-bottom: 1px solid #666;
+    flex-shrink: 0;
+    padding-bottom: 0.5rem;
+}
 `;
 
 export class ModulesPanel {
@@ -147,7 +153,24 @@ export class ModulesPanel {
     // Create container for buttons
     this.buttonContainer = document.createElement('div');
     this.buttonContainer.className = 'modules-panel-buttons';
+    this.buttonContainer.style.paddingBottom = '0.5rem';
     this.rootElement.appendChild(this.buttonContainer);
+
+    // Create search controls
+    const searchControls = document.createElement('div');
+    searchControls.className = 'control-group modules-search-controls';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'search';
+    searchInput.id = 'module-search';
+    searchInput.placeholder = 'Search modules...';
+    searchInput.style.width = '100%';
+    searchInput.style.boxSizing = 'border-box';
+    searchInput.addEventListener(
+      'input',
+      debounce(() => this._renderModules(), 250)
+    );
+    searchControls.appendChild(searchInput);
+    this.rootElement.appendChild(searchControls);
 
     // Create container for the module list
     this.moduleListContainer = document.createElement('div');
@@ -242,6 +265,11 @@ export class ModulesPanel {
       return;
     }
 
+    // Get search term for filtering
+    const searchTerm = this.rootElement
+      .querySelector('#module-search')
+      ?.value.toLowerCase() || '';
+
     // Render modules in the current load priority order
     this.loadPriority.forEach((moduleId, index) => {
       // log('info', 
@@ -256,6 +284,15 @@ export class ModulesPanel {
         // );
         return;
       }
+      // Filter by search term
+      if (searchTerm) {
+        const title = (state.definition.title || moduleId).toLowerCase();
+        const description = (state.definition.description || '').toLowerCase();
+        if (!title.includes(searchTerm) && !description.includes(searchTerm) && !moduleId.toLowerCase().includes(searchTerm)) {
+          return;
+        }
+      }
+
       const module = state.definition;
       const isEnabled = state.enabled;
       const isCoreModule =

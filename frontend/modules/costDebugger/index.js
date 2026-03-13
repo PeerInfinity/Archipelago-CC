@@ -10,6 +10,8 @@ import { CostDebuggerUI } from './costDebuggerUI.js';
 import { CostPlanner } from './costPlanner.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -135,15 +137,17 @@ export function getSphereLog() {
   }
 
   // Try 2: Get parsed sphere data and convert to raw format
-  const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
+  const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
   if (getSphereData) {
     const sphereData = getSphereData();
     if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
+      const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
+      const playerId = getIdFn?.() || DEFAULT_PLAYER_ID;
       return sphereData.map((sphere) => ({
         type: 'state_update',
         sphere_index: sphere.sphereIndex ?? sphere.integerSphere ?? 0,
         player_data: {
-          '1': {
+          [String(playerId)]: {
             sphere_locations: sphere.locations || [],
             new_accessible_regions: sphere.accessibleRegions || [],
           },

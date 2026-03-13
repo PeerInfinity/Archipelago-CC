@@ -358,8 +358,63 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     log('info', '[Loops Module] Cost generation components initialized');
 
-    // Expose cost data manager on window for console debugging
+    // Expose loops game data on window for console debugging/editing
     if (typeof window !== 'undefined') {
+      window.loops = {
+        // Core state
+        get state() { return loopStateSingleton; },
+        get costData() { return _costDataManager; },
+        get costGenerator() { return _costGenerator; },
+        get pathFinder() { return _pathFinder; },
+        get playerState() { return _playerStateAPI; },
+
+        // Convenience accessors
+        get mana() { return loopStateSingleton.currentMana; },
+        set mana(v) {
+          loopStateSingleton.currentMana = v;
+          _moduleEventBus?.publish('loopState:manaChanged', { current: v, max: loopStateSingleton.maxMana });
+        },
+        get maxMana() { return loopStateSingleton.maxMana; },
+        set maxMana(v) {
+          loopStateSingleton.maxMana = v;
+          _moduleEventBus?.publish('loopState:manaChanged', { current: loopStateSingleton.currentMana, max: v });
+        },
+        get speed() { return loopStateSingleton.gameSpeed; },
+        set speed(v) { loopStateSingleton.setGameSpeed(v); },
+        get instant() { return loopStateSingleton.instantMode; },
+        set instant(v) { loopStateSingleton.setInstantMode(v); },
+        get paused() { return loopStateSingleton.isPaused; },
+        set paused(v) { loopStateSingleton.setPaused(v); },
+
+        // XP helpers
+        getXP(region) { return loopStateSingleton.getRegionXP(region); },
+        addXP(region, amount) { loopStateSingleton.addRegionXP(region, amount); },
+
+        // Queue
+        get queue() { return loopStateSingleton.getActionQueue(); },
+
+        // Summary
+        help() {
+          console.log(`
+loops.state          - Full LoopState object
+loops.costData       - CostDataManager (region/location costs)
+loops.costGenerator  - CostGenerator instance
+loops.pathFinder     - PathFinder instance
+loops.playerState    - PlayerState API
+
+loops.mana           - Get/set current mana
+loops.maxMana        - Get/set max mana
+loops.speed          - Get/set game speed
+loops.instant        - Get/set instant mode
+loops.paused         - Get/set paused state
+
+loops.getXP(region)  - Get XP data for a region
+loops.addXP(region, amount) - Add XP to a region
+loops.queue          - Current action queue
+          `.trim());
+        },
+      };
+      // Keep legacy reference
       window.costDataManager = _costDataManager;
     }
   } catch (error) {
@@ -414,6 +469,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     // Clear window references
     if (typeof window !== 'undefined') {
+      delete window.loops;
       delete window.costDataManager;
     }
 

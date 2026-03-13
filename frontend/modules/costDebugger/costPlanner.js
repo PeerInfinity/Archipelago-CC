@@ -21,6 +21,8 @@ import {
   levelFromXP,
   calculateXPGain,
 } from '../loops/xpFormulas.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 // =========================================================================
 // SimulatedState
@@ -531,24 +533,41 @@ export class CostPlanner {
   // =========================================================================
 
   _beginEntry(entry) {
+    // Phantom entry: no location to check, just apply mana boost from received items
+    if (!entry.locationName) {
+      if (entry.itemsReceived > 0) {
+        this._simState.maxMana += entry.itemsReceived * 10;
+        this._simState.resetManaToMax();
+      }
+      this._currentEntryIndex++;
+      return;
+    }
+
     const staticData = this.stateManager.getStaticData();
     const locationData = staticData?.locations?.get(entry.locationName);
     const targetRegion = locationData?.parent_region || locationData?.region || null;
     entry._targetRegion = targetRegion;
 
     if (!targetRegion) {
-      // Skip - location not found
+      // Location not in this game's static data (belongs to another player) — skip
+      // but still apply any mana boost from items received
+      if (entry.itemsReceived > 0) {
+        this._simState.maxMana += entry.itemsReceived * 10;
+        this._simState.resetManaToMax();
+      }
       this._currentEntryIndex++;
       return;
     }
 
     // Skip event locations — they are auto-collected for free when their region
     // is accessible, so no action queue is needed. Still update sim state so
-    // max mana reflects the collected item.
+    // max mana reflects items received.
     if (staticData?.eventLocations?.[entry.locationName]) {
       this._simState.checkedLocations.add(entry.locationName);
-      this._simState.maxMana += 10;
-      this._simState.resetManaToMax();
+      if (entry.itemsReceived > 0) {
+        this._simState.maxMana += entry.itemsReceived * 10;
+        this._simState.resetManaToMax();
+      }
       this._skippedEventEntries++;
       this._currentEntryIndex++;
       return;
@@ -841,7 +860,10 @@ export class CostPlanner {
     }
 
     this._simState.checkedLocations.add(entry.locationName);
-    this._simState.maxMana += 10;
+    // Mana boost from items received (may be 0 if item went to another player)
+    if (entry.itemsReceived > 0) {
+      this._simState.maxMana += entry.itemsReceived * 10;
+    }
     this._simState.resetManaToMax();
 
     // Advance to next sphere entry
@@ -958,26 +980,51 @@ export class CostPlanner {
 
   _extractLocationEntries(sphereLog) {
     const entries = [];
+    const playerId = this._getCurrentPlayerId();
 
     for (const logEntry of sphereLog) {
       if (logEntry.type !== 'state_update') continue;
 
-      const playerData = logEntry.player_data?.['1'];
+      const playerData = logEntry.player_data?.[playerId];
       if (!playerData) continue;
 
       const sphereLocations = playerData.sphere_locations || [];
       const newRegions = playerData.new_accessible_regions || [];
 
-      for (const locationName of sphereLocations) {
+      // Count items received by this player in this sphere (from any source)
+      const baseItems = playerData.new_inventory_details?.base_items || {};
+      const itemsReceived = Object.values(baseItems).reduce((sum, count) => sum + count, 0);
+
+      for (let i = 0; i < sphereLocations.length; i++) {
         entries.push({
           sphereIndex: logEntry.sphere_index,
-          locationName,
+          locationName: sphereLocations[i],
           newAccessibleRegions: newRegions,
+          // Distribute items received across the locations in this sphere;
+          // grant all on the last location so mana boost happens after all checks
+          itemsReceived: (i === sphereLocations.length - 1) ? itemsReceived : 0,
+        });
+      }
+
+      // If this player received items but checked no locations in this sphere
+      // (items came from other players), create a phantom entry for the mana boost
+      if (sphereLocations.length === 0 && itemsReceived > 0) {
+        entries.push({
+          sphereIndex: logEntry.sphere_index,
+          locationName: null,
+          newAccessibleRegions: newRegions,
+          itemsReceived,
         });
       }
     }
 
     return entries;
+  }
+
+  _getCurrentPlayerId() {
+    const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
+    const id = getIdFn?.();
+    return id ? String(id) : DEFAULT_PLAYER_ID;
   }
 
   // =========================================================================
