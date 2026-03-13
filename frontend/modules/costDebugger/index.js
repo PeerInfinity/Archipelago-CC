@@ -143,16 +143,35 @@ export function getSphereLog() {
     if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
       const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
       const playerId = getIdFn?.() || DEFAULT_PLAYER_ID;
-      return sphereData.map((sphere) => ({
-        type: 'state_update',
-        sphere_index: sphere.sphereIndex ?? sphere.integerSphere ?? 0,
-        player_data: {
-          [String(playerId)]: {
-            sphere_locations: sphere.locations || [],
-            new_accessible_regions: sphere.accessibleRegions || [],
+      // sphereData.inventoryDetails is CUMULATIVE (accumulated by sphereState).
+      // Convert to incremental deltas to match the raw JSONL new_inventory_details format.
+      let previousBaseItems = {};
+      return sphereData.map((sphere) => {
+        const currentBaseItems = sphere.inventoryDetails?.base_items || {};
+
+        // Compute incremental delta from cumulative
+        const deltaItems = {};
+        for (const [item, count] of Object.entries(currentBaseItems)) {
+          const prev = previousBaseItems[item] || 0;
+          if (count > prev) {
+            deltaItems[item] = count - prev;
+          }
+        }
+        previousBaseItems = { ...currentBaseItems };
+
+        const hasNewItems = Object.keys(deltaItems).length > 0;
+        return {
+          type: 'state_update',
+          sphere_index: sphere.sphereIndex ?? sphere.integerSphere ?? 0,
+          player_data: {
+            [String(playerId)]: {
+              sphere_locations: sphere.locations || [],
+              new_accessible_regions: sphere.accessibleRegions || [],
+              new_inventory_details: hasNewItems ? { base_items: deltaItems } : {},
+            },
           },
-        },
-      }));
+        };
+      });
     }
   }
 

@@ -6,6 +6,9 @@
  */
 
 import { getCostPlanner, getModuleEventBus, getSphereLog } from './index.js';
+import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -252,6 +255,17 @@ export class CostDebuggerUI {
       loopState.setInstantMode(true);
       loopState.setNoManaDepletionReset(true);
 
+      // Pre-compute cross-player items per sphere (multiworld support).
+      // In multiworld, checkLocation skips items belonging to other players.
+      // We grant those items before checking locations that require them.
+      // Items may arrive at phantom spheres (e.g., 0.41) with no locations,
+      // while the first planned step is at a later sphere (e.g., 0.98), so we
+      // use a sorted cursor and grant all items up to the current step's sphere.
+      const crossPlayerItemsBySphere = this._computeCrossPlayerItemsBySphere();
+      const sortedCrossPlayerItems = [...crossPlayerItemsBySphere.entries()]
+        .sort((a, b) => compareSphereIndex(a[0], b[0]));
+      let crossPlayerCursor = 0;
+
       // Filter to executable steps (skip DEFAULTS)
       const executableSteps = steps.filter(s => s.phase !== 'DEFAULTS');
 
@@ -259,6 +273,27 @@ export class CostDebuggerUI {
         if (this._verifyCancelled) break;
 
         const step = executableSteps[i];
+
+        // Grant cross-player items for all spheres up to this step's sphere.
+        // Batch the grants so only one snapshot cascade fires per transition.
+        if (crossPlayerCursor < sortedCrossPlayerItems.length &&
+            compareSphereIndex(sortedCrossPlayerItems[crossPlayerCursor][0], step.sphereIndex) <= 0) {
+          await stateManagerProxySingleton.beginBatchUpdate();
+          let grantCount = 0;
+          while (crossPlayerCursor < sortedCrossPlayerItems.length &&
+                 compareSphereIndex(sortedCrossPlayerItems[crossPlayerCursor][0], step.sphereIndex) <= 0) {
+            const [sphereIdx, items] = sortedCrossPlayerItems[crossPlayerCursor];
+            for (const itemName of items) {
+              await stateManagerProxySingleton.addItemToInventory(itemName, 1);
+              grantCount++;
+            }
+            crossPlayerCursor++;
+          }
+          await stateManagerProxySingleton.commitBatchUpdate();
+          log('info', `[Verify] Granted ${grantCount} cross-player items (batch), cursor at ${crossPlayerCursor}/${sortedCrossPlayerItems.length}`);
+          // Let the single snapshot cascade settle before proceeding
+          await new Promise(r => setTimeout(r, 50));
+        }
         const label = step.phase === 'EXPLORE' ? step.targetRegion : step.locationName;
         this._setStatus(`Verifying ${i + 1}/${executableSteps.length}: ${step.phase} ${label || ''}`);
 
@@ -275,18 +310,10 @@ export class CostDebuggerUI {
         const manaAtStart = loopState.currentMana;
         const maxManaAtStart = loopState.maxMana;
 
-        // Convert step queue to playerState path format and set it
-        const path = this._convertQueueToPath(step.queue);
-        playerState.setPath(path, startRegion);
-
-        // Reset action progress for the new queue
-        loopState._resetActionsProgress();
-        loopState.isPaused = false;
-
-        // Execute the queue through the real game engine
-        if (path.length > 0) {
-          await this._executeQueue(loopState);
-        }
+        // Execute queue actions directly, awaiting each checkLocation to avoid
+        // flooding the worker. loopState.startProcessing() fires all actions in
+        // one frame (instant mode), which overwhelms the worker command queue.
+        await this._executeStepDirect(loopState, step.queue);
 
         // Record state after
         const manaAfter = loopState.currentMana;
@@ -445,6 +472,50 @@ export class CostDebuggerUI {
 
       loopState.startProcessing();
     });
+  }
+
+  /**
+   * Execute a step's action queue directly, bypassing loopState.startProcessing().
+   * Processes actions sequentially, awaiting each checkLocation so the worker
+   * is never flooded. Updates loopState mana/XP to match what _processFrame does.
+   */
+  async _executeStepDirect(loopState, stepQueue) {
+    for (const action of stepQueue) {
+      // Calculate mana cost (same as loopState._processFrame in instant mode)
+      const actionCost = loopState._calculateActionCost({
+        type: action.type === 'locationCheck' ? 'locationCheck'
+            : action.type === 'move' ? 'regionMove'
+            : 'customAction',
+        sourceRegion: action.region || action.from,
+        destinationRegion: action.to,
+        locationName: action.location,
+        exitUsed: action.exitUsed,
+      });
+
+      // Deduct mana
+      const newMana = loopState.currentMana - actionCost;
+      if (newMana < 0 && loopState.noManaDepletionReset) {
+        loopState.manaDebt = Math.max(loopState.manaDebt, Math.abs(newMana));
+        loopState.currentMana = newMana;
+      } else {
+        loopState.currentMana = Math.max(0, newMana);
+      }
+
+      // XP gain (1 XP per mana spent, same as loopState)
+      const sourceRegion = action.region || action.from;
+      if (sourceRegion) {
+        loopState.addRegionXP(sourceRegion, actionCost);
+      }
+
+      // For locationCheck, await the worker to avoid flooding
+      if (action.type === 'locationCheck' && action.location) {
+        try {
+          await stateManagerProxySingleton.checkLocation(action.location);
+        } catch (e) {
+          log('warn', `[Verify] checkLocation failed: ${action.location}: ${e.message}`);
+        }
+      }
+    }
   }
 
   // =========================================================================
@@ -880,6 +951,91 @@ export class CostDebuggerUI {
   }
 
   // =========================================================================
+  // Multiworld: cross-player item granting for Verify
+  // =========================================================================
+
+  /**
+   * Pre-compute cross-player items that need to be granted at each sphere
+   * transition during verification. In multiworld, checkLocation skips items
+   * belonging to other players, so we must grant them explicitly.
+   *
+   * Uses sphereState.getSphereData() which has inventoryDetails.base_items
+   * (unlike getSphereLog() which loses this data in its Try 2 fallback path).
+   *
+   * Dedup pattern mirrors workerSpoilerTest: calculate which items
+   * checkLocation will add (same-player items at our locations), subtract
+   * those from the sphere's base_items, grant the remainder.
+   *
+   * @returns {Map<string, string[]>} sphereIndex → array of item names to grant
+   */
+  _computeCrossPlayerItemsBySphere() {
+    const staticData = stateManagerProxySingleton.getStaticData();
+    const locations = staticData?.locations;
+    if (!locations) return new Map();
+
+    const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
+    const playerId = String(getIdFn?.() || DEFAULT_PLAYER_ID);
+
+    const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
+    if (!getSphereData) return new Map();
+    const sphereData = getSphereData();
+    if (!sphereData || !Array.isArray(sphereData)) return new Map();
+
+    const result = new Map();
+
+    for (const sphere of sphereData) {
+      const sphereIndex = sphere.sphereIndex;
+
+      // Skip sphere 0 base — starting items are handled by stateManager init
+      const isSphere0Base = (sphere.integerSphere === 0) &&
+        (sphere.fractionalSphere === 0 || sphere.fractionalSphere == null);
+      if (isSphere0Base) continue;
+
+      const baseItems = sphere.inventoryDetails?.base_items || {};
+      const sphereLocations = sphere.locations || [];
+
+      if (Object.keys(baseItems).length === 0) continue;
+
+      // Calculate items checkLocation will add (same-player items at our locations)
+      const itemsFromOwnLocations = {};
+      for (const locName of sphereLocations) {
+        const locData = locations.get?.(locName);
+        if (locData?.item?.name) {
+          const itemPlayer = String(locData.item.player ?? playerId);
+          if (itemPlayer === playerId) {
+            const name = locData.item.name;
+            itemsFromOwnLocations[name] = (itemsFromOwnLocations[name] || 0) + 1;
+          }
+        }
+      }
+
+      // Expand base_items to array
+      const allItems = [];
+      for (const [name, count] of Object.entries(baseItems)) {
+        for (let i = 0; i < count; i++) allItems.push(name);
+      }
+
+      // Subtract own-location items (spoiler test dedup pattern)
+      const itemsToGrant = [...allItems];
+      for (const [name, count] of Object.entries(itemsFromOwnLocations)) {
+        let remaining = count;
+        for (let i = itemsToGrant.length - 1; i >= 0 && remaining > 0; i--) {
+          if (itemsToGrant[i] === name) {
+            itemsToGrant.splice(i, 1);
+            remaining--;
+          }
+        }
+      }
+
+      if (itemsToGrant.length > 0) {
+        result.set(sphereIndex, itemsToGrant);
+      }
+    }
+
+    return result;
+  }
+
+  // =========================================================================
   // Cleanup
   // =========================================================================
 
@@ -914,6 +1070,18 @@ function truncate(str, maxLen) {
 function totalXP(data) {
   if (!data) return 0;
   return 10 * data.level * data.level + 90 * data.level + data.xp;
+}
+
+/**
+ * Compare sphere index strings like "0", "0.41", "0.100", "1.31".
+ * Format is "major.minor" where both parts are integers.
+ * "0.100" > "0.98" (100 > 98), unlike numeric comparison (0.1 < 0.98).
+ */
+function compareSphereIndex(a, b) {
+  const [aMajor, aMinor = 0] = String(a).split('.').map(Number);
+  const [bMajor, bMinor = 0] = String(b).split('.').map(Number);
+  if (aMajor !== bMajor) return aMajor - bMajor;
+  return aMinor - bMinor;
 }
 
 export default CostDebuggerUI;
