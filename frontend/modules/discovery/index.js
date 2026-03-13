@@ -127,12 +127,6 @@ export function register(registrationApi) {
     handleMoveCompleted,
     null
   );
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'loop:locationChecked',
-    handleLocationChecked,
-    null
-  );
 
   // Register dispatcher receiver for user:exitClicked
   // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → Regions (moves)
@@ -423,24 +417,6 @@ function handleMoveCompleted(eventData) {
   }
 }
 
-function handleLocationChecked(eventData) {
-  log('info', '[Discovery Module] Handling loop:locationChecked', eventData);
-  if (!eventData || !discoveryStateSingleton) return; // <<< Use singleton
-
-  if (eventData?.locationName) {
-    discoveryStateSingleton.discoverLocation(eventData.locationName);
-    if (eventData.regionName) {
-      const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(eventData.regionName);
-
-      // If region was newly discovered, trigger auto-discovery
-      if (wasNewlyDiscovered) {
-        autoDiscoverLocationsInRegion(eventData.regionName);
-        autoDiscoverExitsInRegion(eventData.regionName);
-      }
-    }
-  }
-}
-
 // --- UI Click Event Handlers ---
 
 /**
@@ -467,26 +443,14 @@ function handleRegionClicked(eventData) {
 
 /**
  * Handle user:locationCheck for discovery purposes.
- * If discovery mode is active: discovers the location, then blocks propagation
- * (playerState/stateManager should not perform a check when discovery mode is active).
- * If discovery mode is NOT active: propagates to the next handler (playerState).
+ * If discovery mode is active, discovers the location before propagating.
+ * Always propagates to the next handler (playerState → stateManager) — the
+ * UI layer (locationUI, regionGraph) is responsible for blocking clicks that
+ * shouldn't produce events during discovery mode.
  */
 function handleLocationCheckForDiscovery(eventData) {
-  if (!_settings.enableDiscoveryMode) {
-    // Discovery mode not active - propagate to playerState
-    if (_moduleDispatcher) {
-      _moduleDispatcher.publishToNextModule(
-        moduleInfo.name,
-        'user:locationCheck',
-        eventData,
-        { direction: 'up' }
-      );
-    }
-    return;
-  }
-
   // Discovery mode is active - discover the location if settings allow
-  if (_settings.clickDiscoversLocation && discoveryStateSingleton) {
+  if (_settings.enableDiscoveryMode && _settings.clickDiscoversLocation && discoveryStateSingleton) {
     const { locationName, regionName } = eventData || {};
     if (locationName) {
       if (!discoveryStateSingleton.isLocationDiscovered(locationName)) {
@@ -504,7 +468,15 @@ function handleLocationCheckForDiscovery(eventData) {
     }
   }
 
-  // Block propagation - don't let playerState/stateManager perform a check in discovery mode
+  // Always propagate to playerState → stateManager
+  if (_moduleDispatcher) {
+    _moduleDispatcher.publishToNextModule(
+      moduleInfo.name,
+      'user:locationCheck',
+      eventData,
+      { direction: 'up' }
+    );
+  }
 }
 
 /**

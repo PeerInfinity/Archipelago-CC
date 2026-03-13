@@ -559,10 +559,13 @@ export class CostPlanner {
       return;
     }
 
-    // Skip event locations — they are auto-collected for free when their region
-    // is accessible, so no action queue is needed. Still update sim state so
-    // max mana reflects items received.
-    if (staticData?.eventLocations?.[entry.locationName]) {
+    // Skip auto-collected locations — event locations (item has event flag) and
+    // local item locations (id: null/0, e.g. dungeon prizes, activation spots)
+    // are auto-collected for free when their region is accessible, so no action
+    // queue is needed. Still update sim state so max mana reflects items received.
+    const isAutoCollected = staticData?.eventLocations?.[entry.locationName]
+      || locationData?.id === null || locationData?.id === 0;
+    if (isAutoCollected) {
       this._simState.checkedLocations.add(entry.locationName);
       if (entry.itemsReceived > 0) {
         this._simState.maxMana += entry.itemsReceived * 10;

@@ -224,18 +224,15 @@ export function register(registrationApi) {
   // Register dispatcher sender for loop action events (consumed by discovery module)
   registrationApi.registerDispatcherSender('loop:exploreCompleted', 'bottom');
   registrationApi.registerDispatcherSender('loop:moveCompleted', 'bottom');
-  registrationApi.registerDispatcherSender('loop:locationChecked', 'bottom');
 
   // Register events that loops publishes
   registrationApi.registerEventBusPublisher('loopState:actionCompleted');
   registrationApi.registerEventBusPublisher('loopState:autoRestartChanged');
-  registrationApi.registerEventBusPublisher('loopState:paused');
   registrationApi.registerEventBusPublisher('loopState:pauseStateChanged');
   registrationApi.registerEventBusPublisher('loopState:processingStopped');
   registrationApi.registerEventBusPublisher('loopState:progressUpdated');
   registrationApi.registerEventBusPublisher('loopState:queueCompleted');
   registrationApi.registerEventBusPublisher('loopState:queueUpdated');
-  registrationApi.registerEventBusPublisher('loopState:resumed');
   registrationApi.registerEventBusPublisher('loopState:speedChanged');
   registrationApi.registerEventBusPublisher('loopState:stateLoaded');
   registrationApi.registerEventBusPublisher('loopState:xpChanged');

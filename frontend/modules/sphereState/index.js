@@ -2,6 +2,13 @@
 
 import { createSphereStateSingleton, getSphereStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import {
+  compareSphereIndex,
+  computeCrossPlayerItems,
+  computeGrantDelta,
+  getCumulativeBaseItems,
+  grantUpToSphere,
+} from './crossPlayerItems.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -121,6 +128,17 @@ export async function register(registrationApi) {
     const sphereState = getSphereStateSingleton();
     return sphereState.getLogHeader();
   });
+
+  // Cross-player item computation (used by costDebugger verify, spoilerChecklist sync)
+  registrationApi.registerPublicFunction(moduleId, 'compareSphereIndex', compareSphereIndex);
+  registrationApi.registerPublicFunction(moduleId, 'computeCrossPlayerItems',
+    (upToSphere, inclusive) => computeCrossPlayerItems(upToSphere, inclusive));
+  registrationApi.registerPublicFunction(moduleId, 'computeGrantDelta',
+    (crossPlayerItems, currentInventory) => computeGrantDelta(crossPlayerItems, currentInventory));
+  registrationApi.registerPublicFunction(moduleId, 'getCumulativeBaseItems',
+    (upToSphere, inclusive) => getCumulativeBaseItems(upToSphere, inclusive));
+  registrationApi.registerPublicFunction(moduleId, 'grantItemsUpToSphere',
+    (sphereIndex) => grantUpToSphere(sphereIndex));
 
   // Register event publishers
   registrationApi.registerEventBusPublisher('sphereState:dataLoaded');

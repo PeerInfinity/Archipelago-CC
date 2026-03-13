@@ -242,7 +242,7 @@ export class LoopRenderer {
     }
 
     if (!action) {
-      actionContainer.innerHTML = `<div class="no-action-message">No action in progress</div>`;
+      actionContainer.innerHTML = `<div class="no-action-message">Queue ready</div>`;
       return;
     }
 

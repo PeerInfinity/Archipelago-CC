@@ -283,9 +283,13 @@ export class LoopUI {
     });
 
     attachButtonHandler('loop-ui-toggle-pause', function () {
-      const newPauseState = !loopState.isPaused;
-      loopState.setPaused(newPauseState);
-      this._updatePauseButtonState(newPauseState); // Update button state locally
+      const state = loopState.getProcessingState();
+      if (state === 'running') {
+        loopState.setPaused(true);   // Pause → paused
+      } else {
+        loopState.setPaused(false);  // Start or Resume → running
+      }
+      // Button update is handled by the loopState:pauseStateChanged event
     });
 
     attachButtonHandler('loop-ui-toggle-restart', this._handleRestartClick);
@@ -464,7 +468,7 @@ export class LoopUI {
       '#current-action-container'
     );
     if (actionContainer)
-      actionContainer.innerHTML = `<div class="no-action-message">No action in progress</div>`;
+      actionContainer.innerHTML = `<div class="no-action-message">Queue ready</div>`;
     this._updateManaDisplay(loopState.currentMana, loopState.maxMana);
     this.eventBus.publish('loopState:queueUpdated', {
       queue: this.getActionQueue(),
@@ -728,12 +732,28 @@ export class LoopUI {
     this.buildInitialStructure();
     this.attachInternalListeners(); // Attach listeners for the newly built structure
 
-    // Check if we should automatically enter loop mode based on settings
+    // Check if we should automatically enter loop mode based on settings or URL
     const loopModeEnabled = this.displaySettings.getSetting('loopModeEnabled');
-    log('info', `[LoopUI] loopModeEnabled setting value: ${loopModeEnabled}, isLoopModeActive: ${this.isLoopModeActive}`);
-    if (loopModeEnabled && !this.isLoopModeActive) {
-      log('info', '[LoopUI] Auto-entering loop mode based on loopModeEnabled setting');
-      this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlModeIsLoops = urlParams.get('mode') === 'loops';
+    log('info', `[LoopUI] loopModeEnabled setting: ${loopModeEnabled}, URL mode=loops: ${urlModeIsLoops}, isLoopModeActive: ${this.isLoopModeActive}`);
+
+    if ((loopModeEnabled || urlModeIsLoops) && !this.isLoopModeActive) {
+      const costDataManager = getCostDataManager();
+      if (costDataManager && !costDataManager.isLoaded()) {
+        // Cost data not loaded yet — wait for sphere log to become available,
+        // then auto-generate costs and enter loop mode.
+        log('info', '[LoopUI] No cost data loaded — waiting for sphereState:dataLoaded to auto-generate costs');
+        const unsubscribe = this.eventBus.subscribe('sphereState:dataLoaded', async () => {
+          unsubscribe();
+          log('info', '[LoopUI] sphereState:dataLoaded received — auto-generating costs');
+          await this._handleGenerateCostsInline();
+          // _handleGenerateCostsInline enables loop mode on success
+        });
+      } else {
+        log('info', '[LoopUI] Auto-entering loop mode');
+        this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
+      }
     }
   }
 
@@ -814,7 +834,7 @@ export class LoopUI {
           </div>
         </div>
         <div class="current-action-container" id="current-action-container">
-          <div class="no-action-message">No action in progress</div>
+          <div class="no-action-message">Queue ready</div>
         </div>
       </div>
     `;
@@ -1133,16 +1153,37 @@ export class LoopUI {
    * @param {number} max - Maximum mana
    */
   /**
-   * Update the pause button text to reflect the current state
-   * @param {boolean} isPaused - Whether the system is currently paused
+   * Update the pause button text and status line to reflect the current state
+   * @param {boolean} isPaused - Whether the system is currently paused (legacy, used as fallback)
+   * @param {string} [processingState] - 'idle', 'running', 'paused', or 'completed'
    */
-  _updatePauseButtonState(isPaused) {
-    // Update the button text within this panel's scope
-    const pauseBtn = this.rootElement?.querySelector('#loop-ui-toggle-pause'); // Use optional chaining
+  _updatePauseButtonState(isPaused, processingState) {
+    // Derive state from loopState if not provided explicitly
+    if (!processingState) {
+      processingState = loopState.getProcessingState();
+    }
+
+    const pauseBtn = this.rootElement?.querySelector('#loop-ui-toggle-pause');
     if (pauseBtn) {
-      pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
-      // Also disable/enable based on loop mode activity
+      const labels = { idle: 'Start', running: 'Pause', paused: 'Resume', completed: 'Restart' };
+      pauseBtn.textContent = labels[processingState] || 'Start';
       pauseBtn.disabled = !this.isLoopModeActive;
+    }
+
+    // Update the status line in the action container
+    if (processingState !== 'running') {
+      const actionContainer = this.rootElement?.querySelector('#current-action-container');
+      if (actionContainer) {
+        const statusMessages = {
+          idle: 'Queue ready',
+          paused: 'Paused',
+          completed: 'Queue complete',
+        };
+        const msg = statusMessages[processingState];
+        if (msg) {
+          actionContainer.innerHTML = `<div class="no-action-message">${msg}</div>`;
+        }
+      }
     }
     // Ensure restart button state is also updated
     const restartBtn = this.rootElement?.querySelector(

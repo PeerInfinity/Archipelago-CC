@@ -52,7 +52,8 @@ export class LoopState {
     this.currentActionIndex = 0; // Index in the playerState path
     this.currentAction = null; // Current action being processed
     this.isProcessing = false;
-    this.isPaused = true; // Start paused by default
+    this.isPaused = false; // Not paused — idle (no queue started yet)
+    this._queueCompleted = false; // True after queue runs to the end (distinct from idle)
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.gameSpeed = 10; // Multiplier for processing speed
 
@@ -426,6 +427,7 @@ export class LoopState {
     if (this.isProcessing) {
       this.stopProcessing();
     }
+    this._queueCompleted = false;
 
     // Clear tracking in ActionQueueManager (progress, completion)
     if (this.actionQueueManager) {
@@ -497,6 +499,7 @@ export class LoopState {
     }
 
     this.isProcessing = true;
+    this._queueCompleted = false;
 
     // Always reset currentActionIndex when starting fresh
     this.currentActionIndex = 0;
@@ -577,7 +580,6 @@ export class LoopState {
 
     if (isPaused) {
       this.stopProcessing();
-      this.eventBus.publish('loopState:paused', { isPaused: true });
     } else {
       const queue = this.getActionQueue();
       if (queue.length > 0) {
@@ -588,20 +590,32 @@ export class LoopState {
         if (needsReset) {
           // Reset loop to refill mana and reset action progress
           this._resetLoop();
-          // _resetLoop will pause if autoRestartQueue is false,
-          // so we need to unpause again
-          this.isPaused = false;
         }
 
         this.startProcessing();
-        this.eventBus.publish('loopState:resumed', { isPaused: false });
-      } else {
-        // Even if there are no actions, still publish the state change
-        this.eventBus.publish('loopState:pauseStateChanged', {
-          isPaused: this.isPaused,
-        });
       }
     }
+
+    // Single authoritative event after all state has settled
+    this.eventBus.publish('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
+  }
+
+  /**
+   * Get the current processing state as one of four values:
+   *   'idle'      — queue not started or empty; button: "Start"
+   *   'running'   — actively processing actions; button: "Pause"
+   *   'paused'    — user paused mid-queue; button: "Resume"
+   *   'completed' — queue ran to the end; button: "Restart"
+   * @returns {'idle'|'running'|'paused'|'completed'}
+   */
+  getProcessingState() {
+    if (this.isProcessing) return 'running';
+    if (this.isPaused) return 'paused';
+    if (this._queueCompleted) return 'completed';
+    return 'idle';
   }
 
   /**
@@ -818,12 +832,30 @@ export class LoopState {
       if (this.currentAction.progress >= 100) {
         //log('info', 'Action completed:', this.currentAction);
         this._completeCurrentAction();
+
+        // _completeCurrentAction may have stopped processing (queue finished
+        // or paused). Don't fall through to the mana check — it would
+        // overwrite the idle/paused state with a spurious _resetLoop.
+        if (!this.isProcessing) return;
       }
 
       // Check for loop reset (out of mana)
       if (this.currentMana <= 0 && !this.noManaDepletionReset) {
         //log('info', 'Loop reset: out of mana');
         this._resetLoop();
+
+        if (!this.autoRestartQueue) {
+          // Pause at end of loop — user must click Resume to go again
+          this.isPaused = true;
+          this.stopProcessing();
+          this.eventBus.publish('loopState:pauseStateChanged', {
+            isPaused: true,
+            processingState: this.getProcessingState(),
+          });
+          return;
+        }
+
+        // Auto-restart: continue processing
         this._animationFrameId = requestAnimationFrame(
           this._processFrame.bind(this)
         );
@@ -955,10 +987,16 @@ export class LoopState {
         this.currentActionIndex = 0;
         this._resetActionsProgress();
       } else {
-        // Queue completed
+        // Queue completed — transition to completed state
         this.currentAction = null;
         this.isProcessing = false;
+        this.isPaused = false;
+        this._queueCompleted = true;
         this.eventBus.publish('loopState:queueCompleted', {});
+        this.eventBus.publish('loopState:pauseStateChanged', {
+          isPaused: this.isPaused,
+          processingState: this.getProcessingState(),
+        });
         return;
       }
     }
@@ -998,13 +1036,16 @@ export class LoopState {
         });
         break;
       case 'locationCheck':
-        // Mark location as checked in stateManager
-        this._handleLocationCheckCompletion(action);
-        // Publish event for discovery module via dispatcher
-        this.dispatcher.publish('loop:locationChecked', {
+        // Propagate user:locationCheck through the normal dispatcher chain
+        // (discovery → playerState → stateManager), the same way it flows
+        // when loop mode is inactive. The fromLoop flag tells playerState
+        // to skip adding a duplicate path entry since the loop already
+        // added it when the queue was built.
+        this.dispatcher.publishToNextModule('loops', 'user:locationCheck', {
           locationName: action.locationName,
           regionName: action.sourceRegion,
-        });
+          fromLoop: true,
+        }, { direction: 'up' });
         break;
       case 'regionMove':
         // Publish event for discovery module via dispatcher
@@ -1015,30 +1056,6 @@ export class LoopState {
         });
         break;
     }
-  }
-
-  /**
-   * Handle completion of a location check action (Internal State Update Only)
-   * NOTE: This *only* updates the core game state (checked status, inventory).
-   * The discovery aspect is now handled by publishing 'loop:locationChecked'.
-   * @param {Object} action - The location check action
-   */
-  _handleLocationCheckCompletion(action) {
-    // Ensure dependencies are set
-    if (!this.stateManager) {
-      log(
-        'warn',
-        '[LoopState] Cannot handle location check: stateManager dependency missing.'
-      );
-      return;
-    }
-    // Mark location as checked via stateManager proxy
-    const locationName = action.locationName;
-    // The checkLocation method on the proxy handles both marking as checked
-    // and adding items to inventory (when addItems=true, which is default)
-    this.stateManager.checkLocation(locationName);
-
-    // No XP bonus on completion - XP is awarded continuously during the action
   }
 
   /**
@@ -1129,8 +1146,9 @@ export class LoopState {
     // Reset action progress
     this._resetActionsProgress();
 
-    // Pause
-    this.isPaused = true;
+    // Reset to idle (not paused, not processing, not completed)
+    this.isPaused = false;
+    this._queueCompleted = false;
 
     // Notify about the reset
     if (this.eventBus) {
@@ -1145,43 +1163,21 @@ export class LoopState {
   }
 
   /**
-   * Reset the loop when running out of mana
+   * Reset the loop: refill mana, reset action progress, reset to first action.
+   * Does NOT modify pause state — the caller decides whether to pause or continue.
    */
   _resetLoop() {
     // Restore mana to full
     this.currentMana = this.maxMana;
 
-    // Always reset action progress tracking when loop resets
-    // This ensures a fresh start when the queue is rebuilt
+    // Reset action progress tracking
     this._resetActionsProgress();
-
-    // If autoRestartQueue is false (pause when queue complete mode),
-    // just pause processing instead of continuing
-    if (!this.autoRestartQueue) {
-      // Pause processing
-      this.setPaused(true);
-
-      // Notify loop reset
-      this.eventBus.publish('loopState:loopReset', {
-        mana: {
-          current: this.currentMana,
-          max: this.maxMana,
-        },
-        paused: true,
-      });
-
-      return;
-    }
-
-    // Otherwise, do a full reset (this is the original behavior)
-    // Reset all action progress
-    this._resetActionsProgress();
-
-    const queue = this.getActionQueue();
 
     // Reset to first action
+    const queue = this.getActionQueue();
     this.currentActionIndex = 0;
     this.currentAction = queue.length > 0 ? queue[0] : null;
+    this._queueCompleted = false;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {
@@ -1189,7 +1185,6 @@ export class LoopState {
         current: this.currentMana,
         max: this.maxMana,
       },
-      paused: false,
     });
   }
 

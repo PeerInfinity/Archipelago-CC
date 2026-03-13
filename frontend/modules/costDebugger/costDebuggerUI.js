@@ -66,8 +66,8 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-sphere" disabled title="Plan remaining steps for current sphere entry">Plan Sphere</button>
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
-        <span class="cd-status">No sphere log loaded</span>
       </div>
+      <div class="cd-status-bar"><span class="cd-status">No sphere log loaded</span></div>
       <div class="cd-step-list-container">
         <div class="cd-step-list">
           <div class="cd-step-list-empty">Click "Load" to load sphere log data, then "Plan Step" to begin.</div>
@@ -254,10 +254,10 @@ export class CostDebuggerUI {
       loopState.setInstantMode(true);
       loopState.setNoManaDepletionReset(true);
 
-      // Get cross-player item sync for multiworld support.
+      // Get cross-player item grant for multiworld support.
       // In multiworld, checkLocation skips items belonging to other players.
       // We grant those items before checking locations that require them.
-      const grantItemsUpToSphere = centralRegistry.getPublicFunction('spoilerChecklist', 'grantItemsUpToSphere');
+      const grantItemsUpToSphere = centralRegistry.getPublicFunction('sphereState', 'grantItemsUpToSphere');
       let lastGrantedSphere = null;
 
       // Filter to executable steps (skip DEFAULTS)

@@ -55,9 +55,7 @@ export class EventCoordinator {
     // XP changes
     subscribe('loopState:xpChanged', this._handleXPChanged);
 
-    // Pause state changes
-    subscribe('loopState:paused', this._handlePaused);
-    subscribe('loopState:resumed', this._handleResumed);
+    // Pause state changes (single authoritative event)
     subscribe('loopState:pauseStateChanged', this._handlePauseStateChanged);
 
     // Queue updates
@@ -145,32 +143,12 @@ export class EventCoordinator {
   }
 
   /**
-   * Handle paused event
-   * @private
-   */
-  _handlePaused(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updatePauseButtonState(true);
-    }
-  }
-
-  /**
-   * Handle resumed event
-   * @private
-   */
-  _handleResumed(data) {
-    if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updatePauseButtonState(false);
-    }
-  }
-
-  /**
    * Handle pause state changed event
    * @private
    */
   _handlePauseStateChanged(data) {
     if (this.loopUI.isLoopModeActive) {
-      this.loopUI._updatePauseButtonState(data.isPaused);
+      this.loopUI._updatePauseButtonState(data.isPaused, data.processingState);
     }
   }
 
@@ -254,11 +232,8 @@ export class EventCoordinator {
    * @private
    */
   _handleQueueCompleted(data) {
-    if (!this.loopUI.isLoopModeActive) return;
-    const actionContainer = this.loopUI.rootElement.querySelector('#current-action-container');
-    if (actionContainer) {
-      actionContainer.innerHTML = `<div class="no-action-message">No action in progress</div>`;
-    }
+    // Status line is now updated by _handlePauseStateChanged via the
+    // loopState:pauseStateChanged event published after queue completion.
   }
 
   /**
