@@ -55,6 +55,7 @@ export class LoopState {
     this.isPaused = false; // Not paused — idle (no queue started yet)
     this._queueCompleted = false; // True after queue runs to the end (distinct from idle)
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
+    this.autoResumeOnNewAction = false; // Flag to auto-resume when a new action is added after completion
     this.gameSpeed = 10; // Multiplier for processing speed
 
     // Test mode flags
@@ -318,14 +319,16 @@ export class LoopState {
 
     // Get updated queue
     const queue = this.getActionQueue();
-    
+
     //log('info', 'Action queued:', action);
     this.eventBus.publish('loopState:queueUpdated', {
       queue: queue,
     });
 
-    // Start processing if not already running
-    if (!this.isProcessing && !this.isPaused) {
+    // Start processing if not already running.
+    // Auto-resume from waiting state is handled by EventCoordinator
+    // listening to playerState:pathUpdated.
+    if (!this.isProcessing && !this.isPaused && !this._queueCompleted) {
       this.startProcessing();
     }
   }
@@ -550,6 +553,56 @@ export class LoopState {
   }
 
   /**
+   * Resume processing from the current action index.
+   * Unlike startProcessing() which resets to the beginning, this continues
+   * from where processing left off. Used by auto-resume on new action.
+   */
+  resumeProcessing() {
+    const queue = this.getActionQueue();
+
+    if (this.isPaused || this.isProcessing) {
+      return;
+    }
+
+    if (queue.length === 0 || this.currentActionIndex >= queue.length) {
+      return;
+    }
+
+    this.isProcessing = true;
+    this._queueCompleted = false;
+
+    this.currentAction = queue[this.currentActionIndex];
+
+    if (!this.currentAction) {
+      log('error', '[LoopState] No valid action at index', this.currentActionIndex);
+      this.isProcessing = false;
+      return;
+    }
+
+    // Initialize progress if not tracked yet
+    if (!this.actionQueueManager.getProgress(this.currentAction.pathIndex)) {
+      this.actionQueueManager.setProgress(this.currentAction.pathIndex, 0);
+    }
+    this.currentAction.progress = this.actionQueueManager.getProgress(this.currentAction.pathIndex);
+
+    // Cancel any existing animation frame
+    if (this._animationFrameId) {
+      cancelAnimationFrame(this._animationFrameId);
+      this._animationFrameId = null;
+    }
+
+    this._lastFrameTime = null;
+    this._animationFrameId = requestAnimationFrame(
+      this._processFrame.bind(this)
+    );
+
+    this.eventBus.publish('loopState:pauseStateChanged', {
+      isPaused: false,
+      processingState: this.getProcessingState(),
+    });
+  }
+
+  /**
    * Stop processing the current action
    */
   stopProcessing() {
@@ -604,17 +657,20 @@ export class LoopState {
   }
 
   /**
-   * Get the current processing state as one of four values:
+   * Get the current processing state:
    *   'idle'      — queue not started or empty; button: "Start"
    *   'running'   — actively processing actions; button: "Pause"
    *   'paused'    — user paused mid-queue; button: "Resume"
    *   'completed' — queue ran to the end; button: "Restart"
-   * @returns {'idle'|'running'|'paused'|'completed'}
+   *   'waiting'   — queue completed, auto-resume enabled, waiting for new actions
+   * @returns {'idle'|'running'|'paused'|'completed'|'waiting'}
    */
   getProcessingState() {
     if (this.isProcessing) return 'running';
     if (this.isPaused) return 'paused';
-    if (this._queueCompleted) return 'completed';
+    if (this._queueCompleted) {
+      return this.autoResumeOnNewAction ? 'waiting' : 'completed';
+    }
     return 'idle';
   }
 
@@ -1197,6 +1253,16 @@ export class LoopState {
     this.eventBus.publish('loopState:autoRestartChanged', {
       autoRestart: this.autoRestartQueue,
     });
+  }
+
+  /**
+   * Set auto-resume on new action mode.
+   * When enabled, the queue automatically resumes from where it left off
+   * when a new action is added after the queue has completed.
+   * @param {boolean} autoResume - Whether to enable auto-resume
+   */
+  setAutoResumeOnNewAction(autoResume) {
+    this.autoResumeOnNewAction = autoResume;
   }
 
   /**

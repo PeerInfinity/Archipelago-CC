@@ -193,7 +193,7 @@ export class LoopUI {
                 <span style="font-weight: bold;">Controls</span>
               </div>
               <button id="loop-ui-toggle-pause" class="button" disabled>Pause</button>
-              <button id="loop-ui-toggle-restart" class="button" disabled>Restart</button>
+              <button id="loop-ui-clear-queue" class="button" disabled>Clear Queue</button>
               <button id="loop-ui-expand-collapse-all" class="button">Expand All</button>
               <button id="loop-ui-compact-view" class="button">Compact View</button>
             </div>
@@ -206,6 +206,7 @@ export class LoopUI {
                 </div>
                 <label class="instant-mode-label"><input type="checkbox" id="loop-ui-toggle-instant" /> Instant</label>
                 <label class="auto-restart-label"><input type="checkbox" id="loop-ui-toggle-auto-restart" /> Auto-restart when queue complete</label>
+                <label class="auto-resume-label"><input type="checkbox" id="loop-ui-toggle-auto-resume" /> Auto-resume on new action</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button">Save Game</button>
@@ -217,7 +218,7 @@ export class LoopUI {
                 <button id="loop-ui-toggle-loop-mode" class="button">Enter Loop Mode</button>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
-                <button id="loop-ui-clear-queue" class="button">Clear Queue</button>
+                <button id="loop-ui-toggle-restart" class="button" disabled>Restart</button>
                 <button id="loop-ui-clear-explore" class="button">Clear Explore Actions</button>
               </div>
             </div>
@@ -295,12 +296,35 @@ export class LoopUI {
     attachButtonHandler('loop-ui-toggle-restart', this._handleRestartClick);
 
     const autoRestartCheckbox = querySelector('#loop-ui-toggle-auto-restart');
+    const autoResumeCheckbox = querySelector('#loop-ui-toggle-auto-resume');
+
     if (autoRestartCheckbox) {
       autoRestartCheckbox.checked = loopState.autoRestartQueue;
       autoRestartCheckbox.addEventListener('change', async () => {
         const newState = autoRestartCheckbox.checked;
         loopState.setAutoRestartQueue(newState);
         await this.displaySettings.setSetting('autoRestart', newState, true);
+        // Mutually exclusive: disable auto-resume when auto-restart is enabled
+        if (newState && loopState.autoResumeOnNewAction) {
+          loopState.setAutoResumeOnNewAction(false);
+          await this.displaySettings.setSetting('autoResumeOnNewAction', false, true);
+          if (autoResumeCheckbox) autoResumeCheckbox.checked = false;
+        }
+      });
+    }
+
+    if (autoResumeCheckbox) {
+      autoResumeCheckbox.checked = loopState.autoResumeOnNewAction;
+      autoResumeCheckbox.addEventListener('change', async () => {
+        const newState = autoResumeCheckbox.checked;
+        loopState.setAutoResumeOnNewAction(newState);
+        await this.displaySettings.setSetting('autoResumeOnNewAction', newState, true);
+        // Mutually exclusive: disable auto-restart when auto-resume is enabled
+        if (newState && loopState.autoRestartQueue) {
+          loopState.setAutoRestartQueue(false);
+          await this.displaySettings.setSetting('autoRestart', false, true);
+          if (autoRestartCheckbox) autoRestartCheckbox.checked = false;
+        }
       });
     }
 
@@ -454,24 +478,22 @@ export class LoopUI {
   }
 
   _handleClearQueueClick() {
-    // Use playerState API to trim the path to just the initial Menu
-    if (this.playerStateAPI?.trimPath) {
-      this.playerStateAPI.trimPath(1); // Keep only the first entry (Menu)
-    }
-    loopState.currentAction = null;
-    loopState.currentActionIndex = 0;
-    loopState.isProcessing = false;
+    // Use resetQueue which handles stopping processing, clearing path,
+    // clearing tracking, and publishing queueUpdated
+    loopState.resetQueue();
+
+    // Reset to idle state
+    loopState.isPaused = false;
+    loopState._queueCompleted = false;
     loopState.currentMana = loopState.maxMana;
+
     this.regionsInQueue.clear();
-    // Use rootElement to find the container
-    const actionContainer = this.rootElement.querySelector(
-      '#current-action-container'
-    );
-    if (actionContainer)
-      actionContainer.innerHTML = `<div class="no-action-message">Queue ready</div>`;
     this._updateManaDisplay(loopState.currentMana, loopState.maxMana);
-    this.eventBus.publish('loopState:queueUpdated', {
-      queue: this.getActionQueue(),
+
+    // Publish state change so button updates to "Start"
+    this.eventBus.publish('loopState:pauseStateChanged', {
+      isPaused: false,
+      processingState: loopState.getProcessingState(),
     });
     this.renderLoopPanel();
   }
@@ -713,6 +735,10 @@ export class LoopUI {
     const instantMode = this.displaySettings.getSetting('instantMode');
     if (instantMode !== undefined) {
       loopState.setInstantMode(instantMode);
+    }
+    const autoResumeOnNewAction = this.displaySettings.getSetting('autoResumeOnNewAction');
+    if (autoResumeOnNewAction !== undefined) {
+      loopState.setAutoResumeOnNewAction(autoResumeOnNewAction);
     }
 
     // Get and set the playerState API
@@ -1165,9 +1191,9 @@ export class LoopUI {
 
     const pauseBtn = this.rootElement?.querySelector('#loop-ui-toggle-pause');
     if (pauseBtn) {
-      const labels = { idle: 'Start', running: 'Pause', paused: 'Resume', completed: 'Restart' };
+      const labels = { idle: 'Start', running: 'Pause', paused: 'Resume', completed: 'Restart', waiting: 'Waiting' };
       pauseBtn.textContent = labels[processingState] || 'Start';
-      pauseBtn.disabled = !this.isLoopModeActive;
+      pauseBtn.disabled = !this.isLoopModeActive || processingState === 'waiting';
     }
 
     // Update the status line in the action container
@@ -1178,6 +1204,7 @@ export class LoopUI {
           idle: 'Queue ready',
           paused: 'Paused',
           completed: 'Queue complete',
+          waiting: 'Waiting for new actions...',
         };
         const msg = statusMessages[processingState];
         if (msg) {
@@ -1198,6 +1225,20 @@ export class LoopUI {
     );
     if (autoRestartBtn) {
       autoRestartBtn.disabled = !this.isLoopModeActive;
+    }
+    // And auto-resume button
+    const autoResumeBtn = this.rootElement?.querySelector(
+      '#loop-ui-toggle-auto-resume'
+    );
+    if (autoResumeBtn) {
+      autoResumeBtn.disabled = !this.isLoopModeActive;
+    }
+    // And clear queue button
+    const clearQueueBtn = this.rootElement?.querySelector(
+      '#loop-ui-clear-queue'
+    );
+    if (clearQueueBtn) {
+      clearQueueBtn.disabled = !this.isLoopModeActive;
     }
   }
 

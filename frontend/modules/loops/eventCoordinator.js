@@ -382,15 +382,26 @@ export class EventCoordinator {
   }
 
   /**
-   * Handle playerState path updated event
-   * Re-renders the loops panel when the path changes (e.g., from region clicks)
+   * Handle playerState path updated event.
+   * Re-renders the loops panel when the path changes, and triggers
+   * auto-resume when in the waiting state and new actions are appended.
    * @private
    */
   _handlePathUpdated(data) {
-    if (this.loopUI.isLoopModeActive) {
-      logger.info('Received playerState:pathUpdated, re-rendering loop panel');
-      this.loopUI.renderLoopPanel();
+    if (!this.loopUI.isLoopModeActive) return;
+
+    // Check for auto-resume before re-rendering
+    const loopState = this.loopUI.getLoopState?.();
+    if (loopState && loopState.getProcessingState() === 'waiting') {
+      const queue = loopState.getActionQueue();
+      if (queue.length > loopState.currentActionIndex) {
+        loopState.resumeProcessing();
+        return; // resumeProcessing will trigger its own UI updates
+      }
     }
+
+    logger.info('Received playerState:pathUpdated, re-rendering loop panel');
+    this.loopUI.renderLoopPanel();
   }
 
   /**
