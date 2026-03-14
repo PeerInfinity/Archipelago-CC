@@ -380,12 +380,16 @@ export class MetaGameLogic {
     // Activate the iframe panel to show the maze game
     this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
 
-    // Set the biome for this challenge (triggers iframe reload)
-    // Also passes upgrades if configured (applied alongside the biome change)
+    // Set the biome for this challenge (triggers iframe reload).
+    // Upgrades are written directly to save data; disableBiomeCheck zeros out
+    // the game's biome requirements so upgrades take effect at any biome level.
     if (typeof config.biome === 'number') {
       const setBiomeData = { biome: config.biome };
       if (config.upgrades) {
         setBiomeData.upgrades = config.upgrades;
+      }
+      if (config.disableBiomeCheck) {
+        setBiomeData.disableBiomeCheck = true;
       }
       this.eventBus.publish('amazingIdle:setBiome', setBiomeData);
     }

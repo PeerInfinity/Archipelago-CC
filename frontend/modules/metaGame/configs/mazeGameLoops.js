@@ -68,6 +68,7 @@ export const metaGameConfiguration = {
           challengeId: 'regionMoveMaze',
           config: {
             biome: 0,
+            disableBiomeCheck: true,
             preserveScore: true,
             upgrades: mazeUpgrades,
             completionActions: [
@@ -85,7 +86,8 @@ export const metaGameConfiguration = {
           type: 'startMazeChallenge',
           challengeId: 'locationCheckMaze',
           config: {
-            biome: 1,
+            biome: 0,
+            disableBiomeCheck: true,
             preserveScore: true,
             upgrades: mazeUpgrades,
             completionActions: [
@@ -121,6 +123,7 @@ export const metaGameConfiguration = {
           challengeId: 'exploreMaze',
           config: {
             biome: 0,
+            disableBiomeCheck: true,
             preserveScore: true,
             upgrades: mazeUpgrades,
             completionActions: [

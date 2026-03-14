@@ -47,6 +47,11 @@
         // We can't usefully capture it via Map.prototype.set.
         var origMapSet = Map.prototype.set;
         Map.prototype.set = function(key, value) {
+            // Capture BIOME_UPGRADE_UNLOCKS map: first entry is ("BIOME", 0)
+            if (key === 'BIOME' && value === 0 && this.size === 0) {
+                window.__biomeUpgradeUnlocks = this;
+                console.log(LOG, 'Captured BIOME_UPGRADE_UNLOCKS map');
+            }
             if (key === 'TOTAL_MAZES_COMPLETED' && typeof value === 'number') {
                 // Always update ref — later Maps replace earlier ones (step 3 replaces step 2)
                 if (window.__statsMap !== this) {

@@ -255,8 +255,12 @@ function injectPoints(data) {
 /**
  * Set the biome in the current save and reload
  * @param {object} data - Must contain { biome: number }
+ *   Optional: { upgrades: { KEY: level, ... }, disableBiomeCheck: boolean }
  */
+const DISABLE_BIOME_CHECK_KEY = 'a-mazing-idle-disable-biome-check';
+
 function setBiome(data) {
+    console.log(`${LOG_PREFIX} setBiome received data:`, JSON.stringify(data));
     const biome = data?.biome;
     if (typeof biome !== 'number' || biome < 0) {
         console.error(`${LOG_PREFIX} setBiome: invalid biome value`, biome);
@@ -292,10 +296,15 @@ function setBiome(data) {
         console.log(`${LOG_PREFIX} Applied ${Object.keys(data.upgrades).length} upgrades`);
     }
 
+    // Store flag so biome check is disabled after reload
+    const origSetItem = localStorage.setItem.bind(localStorage);
+    if (data.disableBiomeCheck) {
+        origSetItem(DISABLE_BIOME_CHECK_KEY, '1');
+    }
+
     const newSaveJson = JSON.stringify(save);
 
     // Block the game's own saves during write
-    const origSetItem = localStorage.setItem.bind(localStorage);
     localStorage.setItem = function() {};
 
     // Write modified save
@@ -303,6 +312,22 @@ function setBiome(data) {
 
     // Reload to apply
     location.reload();
+}
+
+/**
+ * Zero out all biome requirements in the game's BIOME_UPGRADE_UNLOCKS map,
+ * so upgrades take effect regardless of the current biome level.
+ * Requires the pre-bundle hook in index-iframe.html to have captured the map.
+ */
+function disableBiomeCheck() {
+    if (window.__biomeUpgradeUnlocks) {
+        for (const key of window.__biomeUpgradeUnlocks.keys()) {
+            window.__biomeUpgradeUnlocks.set(key, 0);
+        }
+        console.log(`${LOG_PREFIX} Biome check disabled (${window.__biomeUpgradeUnlocks.size} upgrades unlocked)`);
+    } else {
+        console.warn(`${LOG_PREFIX} BIOME_UPGRADE_UNLOCKS map not captured, cannot disable biome check`);
+    }
 }
 
 /**
@@ -332,6 +357,11 @@ function setupSaveSubscriptions(client) {
     // Listen for biome set requests from the parent
     client.subscribeEventBus('amazingIdle:setBiome', (data) => {
         setBiome(data);
+    });
+
+    // Listen for biome check disable requests from the parent
+    client.subscribeEventBus('amazingIdle:disableBiomeCheck', () => {
+        disableBiomeCheck();
     });
 
     // Listen for new maze requests from the parent
@@ -364,6 +394,23 @@ async function initialize() {
 
         // 1. Wait for game DOM ready
         await waitForGameReady();
+
+        // Disable biome check if flagged by a prior setBiome call
+        if (localStorage.getItem(DISABLE_BIOME_CHECK_KEY)) {
+            localStorage.removeItem(DISABLE_BIOME_CHECK_KEY);
+            disableBiomeCheck();
+            // Simulate SWDA keypresses to activate upgrades — the game's bot
+            // doesn't pick up upgrade changes until at least one player move.
+            setTimeout(() => {
+                const keyCodes = [83, 87, 68, 65]; // S, W, D, A
+                for (const kc of keyCodes) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', {
+                        keyCode: kc, which: kc, bubbles: true
+                    }));
+                }
+                console.log(`${LOG_PREFIX} Simulated SWDA keypresses to activate upgrades`);
+            }, 200);
+        }
 
         updateConnectionStatus('Connecting to Archipelago...');
 
