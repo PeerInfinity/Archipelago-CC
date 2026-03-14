@@ -26,6 +26,7 @@ Parameters are processed during application initialization and can override conf
 | `playerName` | Player name for connection | `?playerName=Player1` |
 | `reset` | Reset to defaults | `?reset=true` |
 | `panel` | Focus specific panel(s) | `?panel=inventoryPanel,regionsPanel` |
+| `loadModule` | Load external module(s) by URL | `?loadModule=https://example.com/module/index.js` |
 
 ## Supported Parameters
 
@@ -243,6 +244,26 @@ These parameters control automatic connection to an Archipelago server.
 - If a panel is in a tabbed stack, it will be brought to the front
 - Each panel is activated in whichever stack contains it (order in the URL does not matter)
 
+#### `loadModule`
+
+**Purpose:** Automatically load one or more external modules by URL on application start, as if the user had clicked "Add External Module" and entered the URL.
+
+**Usage:** `?loadModule=<url_to_module>` (repeatable for multiple modules)
+
+**Valid Values:** Any URL or path to a module's `index.js` file
+
+**Examples:**
+- `?loadModule=./modules/testModule/index.js` - Load the built-in test module
+- `?loadModule=https://example.com/my-module/index.js` - Load a single external module
+- `?loadModule=./modules/custom/index.js&loadModule=https://cdn.example.com/another/index.js` - Load two external modules
+
+**Details:**
+- Modules are loaded after the panel manager is initialized, ensuring panels can be created
+- Uses the same loading mechanism as the "Add External Module" button in the Modules panel
+- Each URL generates a unique module ID based on the sanitized URL
+- Multiple modules can be loaded by repeating the `loadModule` parameter
+- Load failures are logged but do not prevent other modules from loading
+
 ---
 
 ### Window/Iframe Parameters
@@ -358,7 +379,7 @@ URL parameters are processed in multiple locations during initialization:
 |------|---------------------|
 | `frontend/app/mode/modeManager.js` | `mode`, `reset` |
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
-| `frontend/app/initialization/index.js` | `mode`, `panel` |
+| `frontend/app/initialization/index.js` | `mode`, `panel`, `loadModule` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
 | `frontend/modules/window-base/windowClient.js` | `windowId`, `windowName`, `heartbeatInterval` |
 | `frontend/modules/iframe-base/iframeClient.js` | `iframeId`, `iframeName`, `heartbeatInterval` |

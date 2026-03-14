@@ -581,6 +581,31 @@ export async function initializeApplication(dependencies) {
     }
   }
 
+  // Handle ?loadModule= parameter: load external module(s) by URL
+  const loadModuleParams = urlParams.getAll('loadModule');
+  if (loadModuleParams.length > 0) {
+    eventBus.registerPublisher('module:loadExternalRequest', 'core');
+    const loadExternalModules = () => {
+      for (const modulePath of loadModuleParams) {
+        const trimmed = modulePath.trim();
+        if (!trimmed) continue;
+        const sanitizedPath = trimmed.replace(/[^a-zA-Z0-9]/g, '_');
+        const moduleId = `external_${sanitizedPath}_url`;
+        logger.info('init', `Loading external module from URL parameter: ${trimmed}`);
+        eventBus.publish('module:loadExternalRequest', { moduleId, modulePath: trimmed }, 'core');
+      }
+    };
+
+    // Wait for panelManager to be initialized before loading external modules
+    if (panelManagerInstance.isInitialized) {
+      loadExternalModules();
+    } else {
+      eventBus.subscribe('panelManager:initialized', () => {
+        loadExternalModules();
+      }, 'core');
+    }
+  }
+
   // Subscribe to files:jsonLoaded event
   eventBus.subscribe('files:jsonLoaded', async (eventData) => {
     logger.info(
