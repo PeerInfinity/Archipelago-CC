@@ -98,8 +98,10 @@ export class LoopRenderer {
     const startRegion = this.loopUI?.getPrimaryStartRegion?.();
     if (startRegion && !regionGroups.has(startRegion)) {
       regionGroups.set(startRegion, []);
-      // Auto-expand the start region so the user can immediately queue actions
-      this.expansionState.setRegionExpanded(startRegion, true);
+      // Note: Do NOT auto-expand the start region here. The renderer should not
+      // mutate expansion state during rendering, as it overrides user actions like
+      // Collapse All and header click toggles. Initial expansion is handled by
+      // toggleLoopMode() when loop mode is first entered.
     }
 
     // Check if compact view is active
@@ -256,7 +258,7 @@ export class LoopRenderer {
     actionContainer.innerHTML = `
       <div class="current-action-label">
         <span>Action ${displayIndex} of ${queueLength}: ${actionName}</span>
-        <span class="mana-cost">Progress: ${Math.floor(manaCostSoFar)} of ${actionCost} mana</span>
+        <span class="mana-cost">Progress: ${Math.floor(manaCostSoFar)} of ${parseFloat(actionCost.toFixed(1))} mana</span>
       </div>
       <div class="current-action-progress">
         <div class="current-action-progress-bar" style="width: ${action.progress}%"></div>

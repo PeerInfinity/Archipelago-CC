@@ -234,6 +234,13 @@ export class EventCoordinator {
   _handleQueueCompleted(data) {
     // Status line is now updated by _handlePauseStateChanged via the
     // loopState:pauseStateChanged event published after queue completion.
+
+    // Auto-remove completed actions when the loop ends
+    const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+    if (loopState?.autoRemoveCompleted) {
+      loopState.removeCompletedActions();
+      this.loopUI.renderLoopPanel();
+    }
   }
 
   /**
@@ -264,6 +271,11 @@ export class EventCoordinator {
    */
   _handleSnapshotUpdated(data) {
     if (this.loopUI.isLoopModeActive) {
+      // Auto-remove completed actions if enabled
+      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+      if (loopState?.autoRemoveCompleted) {
+        loopState.removeCompletedActions();
+      }
       this.loopUI.renderLoopPanel();
     }
   }
@@ -283,6 +295,13 @@ export class EventCoordinator {
    */
   _handleDiscoveryChanged(data) {
     if (this.loopUI.isLoopModeActive) {
+      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+      if (loopState?.autoRemoveCompleted) {
+        // Disable repeat-explore for any regions that are now fully explored
+        loopState.disableRepeatForExploredRegions();
+        // Remove completed actions from the queue
+        loopState.removeCompletedActions();
+      }
       this.loopUI.renderLoopPanel();
     }
   }
@@ -329,6 +348,12 @@ export class EventCoordinator {
    */
   _handleLoopReset(data) {
     if (this.loopUI.isLoopModeActive) {
+      // Auto-remove completed actions when the loop resets
+      const loopState = this.loopUI.getLoopState ? this.loopUI.getLoopState() : null;
+      if (loopState?.autoRemoveCompleted) {
+        loopState.removeCompletedActions();
+      }
+
       this.loopUI._handleLoopReset(data);
       if (data.mana) {
         this.loopUI._updateManaDisplay(data.mana.current, data.mana.max);

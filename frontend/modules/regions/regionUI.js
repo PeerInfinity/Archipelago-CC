@@ -450,7 +450,19 @@ export class RegionUI {
     this.nextUID = 1;
     
     const regionMoves = getRegionMovesFromPath(path);
-    
+
+    // Include the start region (source of the first move) so the full path is shown
+    if (regionMoves.length > 0 && regionMoves[0].sourceRegion) {
+      const startRegion = regionMoves[0].sourceRegion;
+      const uid = this.nextUID++;
+      this.visitedRegions.push({
+        name: startRegion,
+        expanded: false,
+        uid: uid,
+      });
+      this.expansionState.setExpanded(startRegion, false, 'navigation', uid);
+    }
+
     regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
       const isLastRegion = index === regionMoves.length - 1;

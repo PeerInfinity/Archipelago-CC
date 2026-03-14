@@ -201,12 +201,13 @@ export class LoopUI {
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <div class="speed-controls">
                   <label for="loop-ui-game-speed">Speed:</label>
-                  <input type="range" id="loop-ui-game-speed" min="0.5" max="100" step="0.5" value="1" />
+                  <input type="range" id="loop-ui-game-speed" min="0.5" max="1000" step="0.5" value="100" />
                   <span id="loop-ui-speed-value">1.0x</span>
                 </div>
                 <label class="instant-mode-label"><input type="checkbox" id="loop-ui-toggle-instant" /> Instant</label>
                 <label class="auto-restart-label"><input type="checkbox" id="loop-ui-toggle-auto-restart" /> Auto-restart when queue complete</label>
                 <label class="auto-resume-label"><input type="checkbox" id="loop-ui-toggle-auto-resume" /> Auto-resume on new action</label>
+                <label class="auto-remove-label"><input type="checkbox" id="loop-ui-toggle-auto-remove" /> Auto-remove completed actions</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button">Save Game</button>
@@ -325,6 +326,16 @@ export class LoopUI {
           await this.displaySettings.setSetting('autoRestart', false, true);
           if (autoRestartCheckbox) autoRestartCheckbox.checked = false;
         }
+      });
+    }
+
+    const autoRemoveCheckbox = querySelector('#loop-ui-toggle-auto-remove');
+    if (autoRemoveCheckbox) {
+      autoRemoveCheckbox.checked = loopState.autoRemoveCompleted;
+      autoRemoveCheckbox.addEventListener('change', async () => {
+        const newState = autoRemoveCheckbox.checked;
+        loopState.setAutoRemoveCompleted(newState);
+        await this.displaySettings.setSetting('autoRemoveCompleted', newState, true);
       });
     }
 
@@ -739,6 +750,10 @@ export class LoopUI {
     const autoResumeOnNewAction = this.displaySettings.getSetting('autoResumeOnNewAction');
     if (autoResumeOnNewAction !== undefined) {
       loopState.setAutoResumeOnNewAction(autoResumeOnNewAction);
+    }
+    const autoRemoveCompleted = this.displaySettings.getSetting('autoRemoveCompleted');
+    if (autoRemoveCompleted !== undefined) {
+      loopState.autoRemoveCompleted = autoRemoveCompleted; // Don't call setter here to avoid premature removal
     }
 
     // Get and set the playerState API
@@ -1776,7 +1791,7 @@ export class LoopUI {
             actionIndex + 1 // Now always display the actual queue position
           } of ${actionQueue.length}, Progress: ${Math.floor(
       manaCostSoFar
-    )} of ${actionCost} mana</span>
+    )} of ${parseFloat(actionCost.toFixed(1))} mana</span>
         </div>
         <button class="remove-action-btn">✖</button>
       </div>

@@ -16,6 +16,7 @@ import {
   proposedLinearFinalCost,
 } from './xpFormulas.js';
 import { ActionQueueManager } from './actionQueueManager.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -56,7 +57,8 @@ export class LoopState {
     this._queueCompleted = false; // True after queue runs to the end (distinct from idle)
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.autoResumeOnNewAction = false; // Flag to auto-resume when a new action is added after completion
-    this.gameSpeed = 10; // Multiplier for processing speed
+    this.autoRemoveCompleted = false; // Flag to auto-remove completed actions from queue
+    this.gameSpeed = 100; // Multiplier for processing speed
 
     // Test mode flags
     this.instantMode = false; // When true, actions complete in one frame
@@ -1263,6 +1265,109 @@ export class LoopState {
    */
   setAutoResumeOnNewAction(autoResume) {
     this.autoResumeOnNewAction = autoResume;
+  }
+
+  /**
+   * Set auto-remove completed actions mode.
+   * When enabled, completed actions are automatically removed from the queue:
+   * - locationCheck actions for already-checked locations
+   * - explore actions for fully-explored regions (all locations discovered)
+   * @param {boolean} enabled - Whether to enable auto-removal
+   */
+  setAutoRemoveCompleted(enabled) {
+    this.autoRemoveCompleted = enabled;
+    if (enabled) {
+      this.removeCompletedActions();
+    }
+  }
+
+  /**
+   * Remove completed actions from the queue.
+   * Removes locationCheck actions for already-checked locations,
+   * and explore actions for fully-explored regions (all locations and exits discovered).
+   */
+  removeCompletedActions() {
+    if (!this.actionQueueManager) return;
+
+    const queue = this.getActionQueue();
+    if (queue.length === 0) return;
+
+    const snapshot = this.stateManager?.getLatestStateSnapshot();
+    const staticData = this.stateManager?.getStaticData();
+    const checkedLocations = snapshot?.checkedLocations || [];
+
+    // Collect indices to remove (in reverse order to avoid index shifting)
+    const indicesToRemove = [];
+
+    for (let i = queue.length - 1; i >= 0; i--) {
+      const action = queue[i];
+
+      // Skip the currently processing action
+      if (i === this.currentActionIndex && this.isProcessing) continue;
+
+      if (action.type === 'locationCheck') {
+        if (checkedLocations.includes(action.locationName)) {
+          indicesToRemove.push(i);
+        }
+      } else if (action.type === 'customAction' && action.actionName === 'explore') {
+        if (this._isRegionFullyExplored(action.sourceRegion, staticData)) {
+          indicesToRemove.push(i);
+        }
+      }
+    }
+
+    if (indicesToRemove.length === 0) return;
+
+    log('info', `[LoopState] Auto-removing ${indicesToRemove.length} completed actions`);
+
+    // Remove in reverse order (indices are already sorted descending)
+    for (const index of indicesToRemove) {
+      this.removeAction(index);
+    }
+  }
+
+  /**
+   * Check if a region is fully explored (all locations and exits discovered).
+   * @param {string} regionName - The region name
+   * @param {Object} [staticData] - Static data (optional, will be fetched if not provided)
+   * @returns {boolean} True if the region has nothing left to discover
+   * @private
+   */
+  _isRegionFullyExplored(regionName, staticData) {
+    if (!staticData) staticData = this.stateManager?.getStaticData();
+    const regionData = staticData?.regions?.get(regionName);
+    if (!regionData) return false;
+
+    const locations = regionData.locations || [];
+    const exits = regionData.exits || [];
+
+    // A region with nothing to discover is not considered "fully explored"
+    // (it was never explorable in the first place)
+    if (locations.length === 0 && exits.length === 0) return false;
+
+    const allLocationsDiscovered = locations.every(loc =>
+      discoveryStateSingleton.isLocationDiscovered(loc.name)
+    );
+    const allExitsDiscovered = exits.every(exit =>
+      discoveryStateSingleton.isExitDiscovered(regionName, exit.name)
+    );
+
+    return allLocationsDiscovered && allExitsDiscovered;
+  }
+
+  /**
+   * Disable repeat-explore for any regions that are now fully explored.
+   * Safe to call during queue processing since it only modifies the
+   * repeatExploreStates map, not the queue itself.
+   */
+  disableRepeatForExploredRegions() {
+    const staticData = this.stateManager?.getStaticData();
+    for (const [regionName, repeat] of this.repeatExploreStates) {
+      if (repeat && this._isRegionFullyExplored(regionName, staticData)) {
+        this.repeatExploreStates.set(regionName, false);
+        log('info', `[LoopState] Disabled repeat-explore for fully explored region: ${regionName}`);
+      }
+    }
   }
 
   /**

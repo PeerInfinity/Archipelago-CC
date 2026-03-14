@@ -100,3 +100,5 @@ See the [Project Roadmap](/docs/json/project-roadmap.md) for the latest status, 
 - Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
 - APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
 - APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
+- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth
+- Iframe integration of [A-Mazing-Idle](https://imgreghenry.github.io/A-Mazing-Idle/) by ImGregHenry
