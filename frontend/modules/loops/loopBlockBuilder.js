@@ -489,8 +489,10 @@ export class LoopBlockBuilder {
       statusSpan.textContent = statusText;
       li.appendChild(statusSpan);
 
-      // Click handler - queue location check (disabled for placeholders and when locationCheckUI disabled)
-      if (locAccessible && !locChecked && !showAsPlaceholder && !(isDiscoveryModeActive && disableLocationCheckUI)) {
+      // Click handler - queue location check (disabled for placeholders and already-checked locations)
+      // Note: disableLocationCheckUI is intentionally NOT checked here — it controls the
+      // Regions panel, but the Loops panel always allows queuing location checks.
+      if (locAccessible && !locChecked && !showAsPlaceholder) {
         li.style.cursor = 'pointer';
         li.addEventListener('click', () => {
           if (this.loopUI.playerStateAPI?.addLocationCheck) {

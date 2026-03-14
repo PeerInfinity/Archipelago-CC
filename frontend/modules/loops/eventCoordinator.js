@@ -1,6 +1,8 @@
 // eventCoordinator.js
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { getCostDataManager } from './index.js';
 
 const logger = createUniversalLogger('loopUI:EventCoordinator');
 
@@ -443,7 +445,37 @@ export class EventCoordinator {
     switch (action) {
       case 'enable':
         if (!this.loopUI.isLoopModeActive) {
-          this.loopUI.toggleLoopMode();
+          // Check if cost data needs to be generated first
+          const costDataManager = getCostDataManager();
+          if (costDataManager && !costDataManager.isLoaded()) {
+            // Cost data not loaded — check if sphere log is already available
+            // (sphereState:dataLoaded may have already fired before this handler ran)
+            const generateCosts = async () => {
+              logger.info('Auto-generating costs before entering loop mode');
+              await this.loopUI._handleGenerateCostsInline();
+              // _handleGenerateCostsInline enables loop mode on success
+            };
+
+            const getSphereLogFn = centralRegistry.getPublicFunction('costDebugger', 'getSphereLog')
+              || (() => null);
+            const sphereLog = getSphereLogFn();
+
+            if (sphereLog && sphereLog.length > 0) {
+              // Sphere data already available — generate costs immediately
+              logger.info('Sphere data already available — generating costs now');
+              generateCosts();
+            } else {
+              // Wait for sphere log to become available
+              logger.info('No cost data loaded — waiting for sphereState:dataLoaded to auto-generate costs');
+              const unsubscribe = this.eventBus.subscribe('sphereState:dataLoaded', async () => {
+                unsubscribe();
+                logger.info('sphereState:dataLoaded received — auto-generating costs');
+                await generateCosts();
+              });
+            }
+          } else {
+            this.loopUI.toggleLoopMode();
+          }
           // Activate the loops panel when entering loop mode
           if (panelManagerInstance) {
             try {

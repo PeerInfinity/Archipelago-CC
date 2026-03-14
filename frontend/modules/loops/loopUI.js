@@ -780,21 +780,10 @@ export class LoopUI {
     log('info', `[LoopUI] loopModeEnabled setting: ${loopModeEnabled}, URL mode=loops: ${urlModeIsLoops}, isLoopModeActive: ${this.isLoopModeActive}`);
 
     if ((loopModeEnabled || urlModeIsLoops) && !this.isLoopModeActive) {
-      const costDataManager = getCostDataManager();
-      if (costDataManager && !costDataManager.isLoaded()) {
-        // Cost data not loaded yet — wait for sphere log to become available,
-        // then auto-generate costs and enter loop mode.
-        log('info', '[LoopUI] No cost data loaded — waiting for sphereState:dataLoaded to auto-generate costs');
-        const unsubscribe = this.eventBus.subscribe('sphereState:dataLoaded', async () => {
-          unsubscribe();
-          log('info', '[LoopUI] sphereState:dataLoaded received — auto-generating costs');
-          await this._handleGenerateCostsInline();
-          // _handleGenerateCostsInline enables loop mode on success
-        });
-      } else {
-        log('info', '[LoopUI] Auto-entering loop mode');
-        this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
-      }
+      // Cost generation and loop mode entry are handled by _handleSetLoopMode
+      // in the EventCoordinator, which checks for cost data and auto-generates if needed.
+      log('info', '[LoopUI] Auto-entering loop mode via event');
+      this.eventBus.publish('loops:setLoopMode', { action: 'enable' });
     }
   }
 

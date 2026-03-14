@@ -284,6 +284,14 @@ function setBiome(data) {
     save.upgrades.upgradeMap.BIOME = biome;
     console.log(`${LOG_PREFIX} Setting biome to ${biome}`);
 
+    // Apply additional upgrades if provided
+    if (data.upgrades && typeof data.upgrades === 'object') {
+        for (const [key, value] of Object.entries(data.upgrades)) {
+            save.upgrades.upgradeMap[key] = value;
+        }
+        console.log(`${LOG_PREFIX} Applied ${Object.keys(data.upgrades).length} upgrades`);
+    }
+
     const newSaveJson = JSON.stringify(save);
 
     // Block the game's own saves during write
