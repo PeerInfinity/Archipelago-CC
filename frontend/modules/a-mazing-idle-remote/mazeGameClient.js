@@ -182,11 +182,13 @@ function exportSave(client) {
     }
 }
 
+const DISABLE_BIOME_CHECK_KEY = 'a-mazing-idle-disable-biome-check';
+
 /**
  * Import a save by blocking the game's setItem, writing directly, and reloading
  * @param {string} saveJson - JSON string of the save data
  */
-function importSave(saveJson) {
+function importSave(saveJson, disableBiomeCheck = false) {
     console.log(`${LOG_PREFIX} Importing save (${saveJson.length} chars)`);
 
     // Validate JSON
@@ -199,6 +201,9 @@ function importSave(saveJson) {
 
     // Block the game's own saves during import
     const origSetItem = localStorage.setItem.bind(localStorage);
+    if (disableBiomeCheck) {
+        origSetItem(DISABLE_BIOME_CHECK_KEY, '1');
+    }
     localStorage.setItem = function() {};
 
     // Write the save data directly
@@ -243,6 +248,9 @@ function injectPoints(data) {
 
     // Block the game's own saves during write
     const origSetItem = localStorage.setItem.bind(localStorage);
+    if (data.disableBiomeCheck) {
+        origSetItem(DISABLE_BIOME_CHECK_KEY, '1');
+    }
     localStorage.setItem = function() {};
 
     // Write modified save
@@ -257,8 +265,6 @@ function injectPoints(data) {
  * @param {object} data - Must contain { biome: number }
  *   Optional: { upgrades: { KEY: level, ... }, disableBiomeCheck: boolean }
  */
-const DISABLE_BIOME_CHECK_KEY = 'a-mazing-idle-disable-biome-check';
-
 function setBiome(data) {
     console.log(`${LOG_PREFIX} setBiome received data:`, JSON.stringify(data));
     const biome = data?.biome;
@@ -343,7 +349,7 @@ function setupSaveSubscriptions(client) {
     // Listen for save import requests from the parent
     client.subscribeEventBus('amazingIdle:importSave', (data) => {
         if (data && data.saveJson) {
-            importSave(data.saveJson);
+            importSave(data.saveJson, data.disableBiomeCheck);
         } else {
             console.warn(`${LOG_PREFIX} importSave event received without saveJson`);
         }
