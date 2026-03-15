@@ -100,7 +100,7 @@
 
 .jta-cd-step-row {
     display: grid;
-    grid-template-columns: 30px 42px 1fr 50px 24px 30px auto;
+    grid-template-columns: 30px 42px 1fr 50px 24px 30px 55px 40px;
     gap: 4px;
     padding: 4px 8px;
     border-bottom: 1px solid #2a2a2a;

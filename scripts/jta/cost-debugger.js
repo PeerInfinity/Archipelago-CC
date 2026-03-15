@@ -35,6 +35,12 @@ function parseArgs(argv) {
             args.bossAttempts = parseInt(argv[++i]);
         } else if (arg === '--player' || arg === '-p') {
             args.player = parseInt(argv[++i]);
+        } else if (arg === '--traversal-attempts') {
+            args.traversalAttempts = parseInt(argv[++i]);
+        } else if (arg === '--traversal-cost-scale') {
+            args.traversalCostScale = parseFloat(argv[++i]);
+        } else if (arg === '--adjust-xp') {
+            args.adjustXpMult = true;
         } else if (arg === '--help' || arg === '-h') {
             args.help = true;
         }
@@ -57,6 +63,7 @@ Options:
   --perk-attempts <n>           Attempts for perk tasks (default: 5)
   --boss-attempts <n>           Attempts for boss tasks (default: 5)
   -p, --player <n>              Player number in sphere log (default: 1)
+  --adjust-xp                   Adjust xpMult on grinding tasks to hit exact attempt counts
   -h, --help                    Show this help
 
 Example:
@@ -85,10 +92,13 @@ const gameDataJson = JSON.parse(readFileSync(args.gamedata, 'utf-8'));
 const sphereLogContent = readFileSync(args.spherelog, 'utf-8');
 
 const settings = {
-    normalAttempts: args.normalAttempts || 1,
-    perkAttempts: args.perkAttempts || 5,
-    bossAttempts: args.bossAttempts || 5,
-    playerNumber: args.player || 1,
+    normalAttempts: args.normalAttempts ?? 1,
+    perkAttempts: args.perkAttempts ?? 5,
+    bossAttempts: args.bossAttempts ?? 5,
+    traversalAttempts: args.traversalAttempts ?? 5,
+    traversalCostScale: args.traversalCostScale ?? 0.5,
+    playerNumber: args.player ?? 1,
+    adjustXpMult: args.adjustXpMult ?? false,
 };
 
 console.log(`Loading game data from: ${args.gamedata}`);
@@ -136,6 +146,23 @@ for (const step of steps) {
         `E: ${step.energyBudget.toFixed(0)}->${step.energyRemaining.toFixed(1).padStart(5)} | ` +
         `${step.targetTask}${costInfo}`
     );
+}
+
+// Print grinding efficiency for first step that has a grind plan
+const firstGrindStep = steps.find(s => s.grindPlan);
+if (firstGrindStep) {
+    console.log('\n--- XP Grinding Efficiency (Step ' + firstGrindStep.stepIndex + ') ---\n');
+    console.log('  Task                                Zone                 Skills          Cost      XP    XP/E  Sel');
+    console.log('  ' + '-'.repeat(105));
+    for (const gt of firstGrindStep.grindPlan.tasks) {
+        console.log(
+            `  ${gt.taskName.padEnd(36)} ${(gt.zoneName || '').padEnd(20)} ` +
+            `${gt.skills.join(',').padEnd(14)} ` +
+            `${gt.cost.toFixed(1).padStart(6)} ${gt.xp.toFixed(0).padStart(7)} ` +
+            `${gt.xpPerEnergy.toFixed(1).padStart(7)}  ${gt.selected ? 'Y' : ''}`
+        );
+    }
+    console.log(`  Budget: ${firstGrindStep.grindPlan.budget.toFixed(1)} | Selected: ${firstGrindStep.grindPlan.tasksSelected}/${firstGrindStep.grindPlan.candidatesConsidered}`);
 }
 
 // Print cost assignments table

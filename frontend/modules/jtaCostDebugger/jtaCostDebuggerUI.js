@@ -76,6 +76,12 @@ export class JTACostDebuggerUI {
                 <label title="Attempts for boss tasks">
                     Bosses: <input type="number" class="jta-cd-boss-attempts" value="5" min="1" max="20">
                 </label>
+                <label title="Attempts for traversal (mandatory/travel) tasks">
+                    Travel: <input type="number" class="jta-cd-traversal-attempts" value="5" min="1" max="20">
+                </label>
+                <label title="Adjust xpMult on grinding tasks to hit exact attempt counts">
+                    <input type="checkbox" class="jta-cd-adjust-xp"> Adjust XP
+                </label>
             </div>
             <div class="jta-cd-status-bar"><span class="jta-cd-status">No data loaded</span></div>
             <div class="jta-cd-step-list-container">
@@ -220,6 +226,8 @@ export class JTACostDebuggerUI {
             normalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-normal-attempts').value) || 1,
             perkAttempts: parseInt(this.rootElement.querySelector('.jta-cd-perk-attempts').value) || 5,
             bossAttempts: parseInt(this.rootElement.querySelector('.jta-cd-boss-attempts').value) || 5,
+            traversalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-traversal-attempts').value) || 5,
+            adjustXpMult: this.rootElement.querySelector('.jta-cd-adjust-xp')?.checked || false,
         };
 
         this._setStatus('Generating costs...');
@@ -491,8 +499,8 @@ export class JTACostDebuggerUI {
                 <span class="jta-cd-step-attempt">A${step.attemptNumber}/${step.targetAttempts}</span>
                 <span class="jta-cd-step-status ${statusClass}">${statusIcon}</span>
                 <span class="jta-cd-step-sphere">S${step.sphereIndex}</span>
-                ${step.costAssignment ? `<span class="jta-cd-step-cost" title="costMult=${step.costAssignment.costMult.toFixed(4)}">C:${step.costAssignment.costMult.toFixed(2)}</span>` : ''}
-                ${verifyIndicator}
+                <span class="jta-cd-step-cost">${step.costAssignment ? `<span title="costMult=${step.costAssignment.costMult.toFixed(4)}">C:${step.costAssignment.costMult.toFixed(2)}</span>` : ''}</span>
+                <span>${verifyIndicator}</span>
             `;
 
             row.addEventListener('click', () => {
@@ -557,6 +565,33 @@ export class JTACostDebuggerUI {
                     </table>
                 </div>
             `;
+        }
+
+        // Grind plan
+        if (step.grindPlan) {
+            const gp = step.grindPlan;
+            html += `
+                <div class="jta-cd-detail-section">
+                    <div class="jta-cd-detail-section-title">XP Grinding Plan (${gp.tasksSelected}/${gp.candidatesConsidered} tasks, budget: ${gp.budget.toFixed(1)})</div>
+                    <table class="jta-cd-queue-table">
+                        <thead><tr>
+                            <th>Task</th><th>Zone</th><th>Skills</th>
+                            <th>Cost</th><th>XP</th><th>XP/E</th><th>Selected</th>
+                        </tr></thead><tbody>
+            `;
+            for (const gt of gp.tasks) {
+                const selClass = gt.selected ? 'jta-cd-completed' : 'jta-cd-skipped';
+                html += `<tr class="${selClass}">
+                    <td>${this._truncate(gt.taskName, 25)}</td>
+                    <td>${gt.zoneName || ''}</td>
+                    <td>${gt.skills.join(', ')}</td>
+                    <td>${gt.cost.toFixed(1)}</td>
+                    <td>${gt.xp.toFixed(0)}</td>
+                    <td>${gt.xpPerEnergy.toFixed(1)}</td>
+                    <td>${gt.selected ? '\u2713' : ''}</td>
+                </tr>`;
+            }
+            html += `</tbody></table></div>`;
         }
 
         // Action queue

@@ -267,28 +267,27 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
 }
 
 /**
- * Solve for costMult that makes a task require exactly `targetAttempts` attempts.
+ * Solve for costMult (and optionally xpMult) that makes a task require
+ * exactly `targetAttempts` attempts.
  *
- * Uses binary search with actual simulation: for each candidate costMult, runs
- * the same queue-walking logic as the main planner loop — including trial-costing
- * of new tasks encountered during attempts — to count how many attempts it
- * actually takes.
+ * Phase 1: Binary search costMult alone.
+ * Phase 2: If no costMult gives exactly targetAttempts (discrete jump),
+ *          fix costMult at the boundary and binary search an xpMult
+ *          multiplier on all tasks in zones 0..zoneId to fine-tune
+ *          the XP gain rate.
  *
  * @param {Map} assignedCosts - Already-assigned costs (from prior steps)
  * @param {object} settings - Planner settings (energyMargin, attempt counts)
+ * @returns {{ costMult: number, xpAdjustments: Array|null }}
  */
 function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings) {
     if (targetAttempts <= 1) {
-        return solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx);
+        return { costMult: solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx), xpAdjustments: null };
     }
 
     const savedCost = task.costMult;
 
-    // Binary search on log scale for costMult.
-    // The attempt count is discrete (integer), so an exact match may not exist
-    // (e.g., attempts may jump from 4 to 6, skipping 5). We track the best
-    // candidate: the highest costMult where attempts <= targetAttempts.
-    // This gives maximum difficulty while ensuring completability within target.
+    // Phase 1: Binary search costMult alone.
     let logLo = Math.log(0.01);
     let logHi = Math.log(100000);
     let bestCost = null;
@@ -302,19 +301,105 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
         const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings);
 
         if (attempts <= targetAttempts) {
-            // Completable within target — track highest costMult that works
             if (bestCost === null || candidateCost > bestCost) {
                 bestCost = candidateCost;
                 bestAttempts = attempts;
             }
-            logLo = logMid; // Try higher cost
+            logLo = logMid;
         } else {
-            logHi = logMid; // Too hard, lower cost
+            logHi = logMid;
         }
     }
 
+    const finalCostMult = Math.max(0.01, bestCost ?? 0.01);
+
+    // If costMult alone gives the exact target, or xpMult adjustment is disabled, done
+    if (bestAttempts === targetAttempts || !settings?.adjustXpMult) {
+        task.costMult = savedCost;
+        return { costMult: finalCostMult, xpAdjustments: null };
+    }
+
+    // Phase 2: costMult alone can't produce exactly targetAttempts
+    // (bestAttempts < targetAttempts due to discrete attempt count jumps).
+    // Strategy: keep the phase 1 bestCost and REDUCE xpMult on uncosted
+    // grinding tasks to slow XP gain, increasing the attempt count.
+    // Less XP → slower skill improvement → cost stays high longer → more attempts.
+    task.costMult = finalCostMult;
+
+    // Collect tasks whose xpMult we'll adjust.
+    // Only adjust tasks that haven't been costed yet — already-assigned tasks
+    // have finalized xpMult values that shouldn't be modified retroactively.
+    const xpTasks = [];
+    for (let z = 0; z <= zoneId && z < ctx.ZONES.length; z++) {
+        for (const t of ctx.ZONES[z].tasks) {
+            if (t.name !== task.name && !assignedCosts.has(t.name)) {
+                xpTasks.push({ task: t, origXpMult: t.xpMult });
+            }
+        }
+    }
+
+    if (xpTasks.length === 0) {
+        task.costMult = savedCost;
+        return { costMult: finalCostMult, xpAdjustments: null };
+    }
+
+    // Binary search for xpMult multiplier M (0 < M < 1) that reduces XP
+    // just enough to increase attempt count to targetAttempts.
+    // We want the HIGHEST M (least reduction) where attempts >= targetAttempts.
+    let xpLogLo = Math.log(0.0001);
+    let xpLogHi = Math.log(1.0);
+    let bestXpMult = null;
+
+    for (let iter = 0; iter < 30; iter++) {
+        const logMid = (xpLogLo + xpLogHi) / 2;
+        const mid = Math.exp(logMid);
+        for (const entry of xpTasks) {
+            entry.task.xpMult = entry.origXpMult * mid;
+        }
+
+        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings);
+
+        if (attempts >= targetAttempts) {
+            // Enough attempts — track highest M (least reduction)
+            bestXpMult = mid;
+            xpLogLo = logMid; // try less reduction
+        } else {
+            // Too few attempts — need more reduction
+            xpLogHi = logMid;
+        }
+    }
+
+    if (bestXpMult === null) {
+        // Even extreme reduction doesn't help — fall back to phase 1
+        for (const entry of xpTasks) {
+            entry.task.xpMult = entry.origXpMult;
+        }
+        task.costMult = savedCost;
+        return { costMult: finalCostMult, xpAdjustments: null };
+    }
+
+    // Build xpAdjustments list, but RESTORE xpMult on task objects.
+    // The adjustments are applied during the focus task's attempt execution
+    // (in the caller) and restored afterward to avoid cascading effects.
+    const xpAdjustments = [];
+    for (const entry of xpTasks) {
+        const newXpMult = entry.origXpMult * bestXpMult;
+        if (Math.abs(newXpMult - entry.origXpMult) > 0.0001) {
+            xpAdjustments.push({
+                taskName: entry.task.name,
+                origXpMult: entry.origXpMult,
+                newXpMult,
+                multiplier: bestXpMult,
+            });
+        }
+        entry.task.xpMult = entry.origXpMult; // always restore
+    }
+
     task.costMult = savedCost;
-    return Math.max(0.01, bestCost ?? 0.01);
+    return {
+        costMult: finalCostMult,
+        xpAdjustments: xpAdjustments.length > 0 ? xpAdjustments : null,
+    };
 }
 
 /**
@@ -346,7 +431,7 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         // Build queue using both real and trial costs for the isCosted check
         const effectiveCosts = new Map([...assignedCosts, ...trialCosts]);
-        const queue = buildActionQueue(task, zoneId, sim, ctx, effectiveCosts);
+        const { queue } = buildActionQueue(task, zoneId, sim, ctx, effectiveCosts);
         let energy = sim.maxEnergy;
         let completed = false;
         let firstNewCosted = false;
@@ -470,7 +555,77 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
         }
     }
 
-    // Target task
+    // XP grinding: select tasks by XP/energy efficiency to fill the energy budget.
+    // Placed BEFORE the target task so the player grinds first, then attempts the
+    // target with whatever energy remains.
+    //
+    // Calculate remaining energy after traversal to determine grinding budget.
+    let grindBudget = state.maxEnergy;
+    for (const entry of queue) {
+        if (assignedCosts.has(entry.task.name)) {
+            grindBudget -= calcTaskEnergyCost(entry.task, entry.zoneId, state, ctx);
+        }
+    }
+
+    // Collect grinding candidates from all reachable zones, compute XP efficiency.
+    // Only include tasks that already have costs assigned — uncosted tasks should
+    // wait to become the focus and get their cost assigned properly.
+    const grindCandidates = [];
+    for (let z = targetZoneId; z >= 0; z--) {
+        const zone = ctx.ZONES[z];
+        for (const task of getNormalTasks(zone, ctx)) {
+            if (task.name === targetTask.name) continue;
+            if (task.type === ctx.TaskType.Boss) continue;
+            if (!assignedCosts.has(task.name)) continue;
+            const cost = calcTaskEnergyCost(task, z, state, ctx);
+            if (cost <= 0) continue;
+            const xp = calcTaskXp(task, z, state, ctx) * task.maxReps;
+            const skills = task.skills.map(s => ctx.SKILL_NAMES?.[s] || `S${s}`);
+            grindCandidates.push({
+                task, zoneId: z, zoneName: zone.name,
+                cost, xp, xpPerEnergy: xp / cost, skills,
+            });
+        }
+    }
+
+    // Sort by XP/energy efficiency (best first)
+    grindCandidates.sort((a, b) => b.xpPerEnergy - a.xpPerEnergy);
+
+    // Fill the grinding budget with the most efficient tasks
+    let grindRemaining = grindBudget;
+    const selectedGrind = [];
+    for (const gc of grindCandidates) {
+        if (grindRemaining <= 0) break;
+        queue.push({
+            task: gc.task,
+            zoneId: gc.zoneId,
+            zoneName: gc.zoneName,
+            type: 'grinding',
+            isCosted: assignedCosts.has(gc.task.name),
+        });
+        selectedGrind.push(gc);
+        grindRemaining -= gc.cost;
+        // Include the first task that exceeds the budget (player runs out during it)
+    }
+
+    // Build grinding plan report
+    const grindPlan = {
+        budget: grindBudget,
+        candidatesConsidered: grindCandidates.length,
+        tasksSelected: selectedGrind.length,
+        tasks: grindCandidates.map(gc => ({
+            taskName: gc.task.name,
+            zoneName: gc.zoneName,
+            zoneId: gc.zoneId,
+            cost: gc.cost,
+            xp: gc.xp,
+            xpPerEnergy: gc.xpPerEnergy,
+            skills: gc.skills,
+            selected: selectedGrind.includes(gc),
+        })),
+    };
+
+    // Target task (after grinding — attempt with whatever energy remains)
     queue.push({
         task: targetTask,
         zoneId: targetZoneId,
@@ -479,22 +634,7 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
         isCosted: assignedCosts.has(targetTask.name),
     });
 
-    // XP grinding: normal tasks in reachable zones (highest zone first for better XP)
-    for (let z = targetZoneId; z >= 0; z--) {
-        const zone = ctx.ZONES[z];
-        for (const task of getNormalTasks(zone, ctx)) {
-            if (task.name === targetTask.name) continue;
-            queue.push({
-                task,
-                zoneId: z,
-                zoneName: zone.name,
-                type: 'grinding',
-                isCosted: assignedCosts.has(task.name),
-            });
-        }
-    }
-
-    return queue;
+    return { queue, grindPlan };
 }
 
 function getTaskCategory(task, ctx) {
@@ -508,6 +648,7 @@ function getTargetAttempts(task, ctx, settings) {
     const category = getTaskCategory(task, ctx);
     if (category === 'perk') return settings.perkAttempts;
     if (category === 'boss') return settings.bossAttempts;
+    if (category === 'traversal') return settings.traversalAttempts ?? settings.normalAttempts;
     return settings.normalAttempts;
 }
 
@@ -522,8 +663,12 @@ export const DEFAULT_SETTINGS = {
     normalAttempts: 1,     // Regular tasks completable on 1st try
     perkAttempts: 5,       // Perk tasks completable on 5th try
     bossAttempts: 5,       // Boss tasks completable on 5th try
+    traversalAttempts: 5,  // Traversal (mandatory/travel) tasks
     playerNumber: 1,
-    energyMargin: 0.95,    // Leave 5% margin on energy calculations
+    energyMargin: 0.90,    // Leave 10% margin on energy calculations
+    normalCostScale: 0.5,  // Scale normal task costs down after solving
+    traversalCostScale: 0.5, // Scale traversal task costs down after solving
+    adjustXpMult: false,   // Whether to adjust xpMult on grinding tasks to hit exact attempt counts
 };
 
 /**
@@ -606,15 +751,75 @@ export class JTACostPlanner {
 
                 while (!sphereTargetCompleted && safetyCounter++ < maxSteps) {
                     // Build queue for the sphere target
-                    const queue = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                    const { queue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
 
-                    // Find the first uncosted task — this becomes the "focus" of the next step(s)
+                    // Find the focus task. Priority:
+                    // 1. First uncosted traversal/mandatory task (needed to reach target)
+                    // 2. Any uncosted Normal task in reachable zones (cost these before
+                    //    perk/boss tasks so they're available as grinding tasks)
+                    // 3. First uncosted non-Normal task (perk/boss/travel in target zone)
                     let focusEntry = null;
+                    let firstUncostedNonNormal = null;
+
                     for (const entry of queue) {
-                        if (!assignedCosts.has(entry.task.name)) {
+                        if (assignedCosts.has(entry.task.name)) continue;
+
+                        const cat = getTaskCategory(entry.task, ctx);
+                        if (cat === 'traversal') {
+                            // Traversal tasks always take priority — needed to progress
                             focusEntry = entry;
                             break;
                         }
+                        if (cat === 'normal') {
+                            // Normal task — cost it before perk/boss tasks
+                            focusEntry = entry;
+                            break;
+                        }
+                        // Non-normal, non-traversal (perk/boss) — remember it but
+                        // check for uncosted Normal tasks first
+                        if (!firstUncostedNonNormal) {
+                            firstUncostedNonNormal = entry;
+                        }
+                    }
+
+                    // If no traversal or normal tasks need costing, check for uncosted
+                    // Normal tasks in reachable zones (they might not be in the queue
+                    // because the queue only includes grinding tasks that fit the budget).
+                    // A zone is reachable if all its preceding traversal tasks are costed
+                    // AND affordable with current energy.
+                    if (!focusEntry && firstUncostedNonNormal) {
+                        for (let z = 0; z <= sphereTargetZoneId && z < ctx.ZONES.length; z++) {
+                            // Check if zone z is reachable: all traversal in zones before z must be costed
+                            let zoneReachable = true;
+                            for (let pz = 0; pz < z; pz++) {
+                                const pzone = ctx.ZONES[pz];
+                                for (const t of getMandatoryTasks(pzone, ctx)) {
+                                    if (!assignedCosts.has(t.name)) {
+                                        zoneReachable = false;
+                                        break;
+                                    }
+                                }
+                                if (!zoneReachable) break;
+                            }
+                            if (!zoneReachable) break; // can't reach this or any later zone
+
+                            const zone = ctx.ZONES[z];
+                            for (const task of getNormalTasks(zone, ctx)) {
+                                if (!assignedCosts.has(task.name) && task.name !== sphereTarget.name) {
+                                    focusEntry = {
+                                        task, zoneId: z, zoneName: zone.name,
+                                        type: 'normal', isCosted: false,
+                                    };
+                                    break;
+                                }
+                            }
+                            if (focusEntry) break;
+                        }
+                    }
+
+                    // If still no Normal tasks to cost, use the perk/boss task
+                    if (!focusEntry) {
+                        focusEntry = firstUncostedNonNormal;
                     }
 
                     if (!focusEntry) {
@@ -655,7 +860,7 @@ export class JTACostPlanner {
                     // skills will reduce preceding costs on the next reset.
                     if (energyAtFocus <= 0) {
                         const stateBefore = snapshotState(state);
-                        const stepQueue = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                        const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
 
                         let energy = state.maxEnergy;
                         const queueResults = [];
@@ -693,6 +898,8 @@ export class JTACostPlanner {
                         plannedSteps.push({
                             stepIndex: globalStepIndex,
                             sphereIndex,
+                            sphereTargetTask: sphereTargetName,
+                            sphereTargetZoneId: sphereTargetZoneId,
                             targetTask: focusTask.name,
                             targetZone: focusZoneName,
                             targetZoneId: focusZoneId,
@@ -719,15 +926,29 @@ export class JTACostPlanner {
                     // Use stateAtFocus for 1-attempt tasks (matches execution state)
                     // Use stateBeforeCost for multi-attempt tasks (simulation re-walks full queue)
                     let newCostMult;
+                    let xpAdjustments = null;
                     if (focusAttempts <= 1) {
-                        newCostMult = solveCostMultForEnergy(
-                            focusTask, focusZoneId, energyAtFocus, stateAtFocus, ctx, settings.energyMargin
+                        const result = solveCostMultForAttempts(
+                            focusTask, focusZoneId, focusAttempts, energyAtFocus,
+                            stateAtFocus, ctx, assignedCosts, settings
                         );
+                        newCostMult = result.costMult;
                     } else {
-                        newCostMult = solveCostMultForAttempts(
+                        const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
                             stateBeforeCost, ctx, assignedCosts, settings
                         );
+                        newCostMult = result.costMult;
+                        xpAdjustments = result.xpAdjustments;
+                    }
+
+                    // Scale down costs by category to leave more energy for
+                    // subsequent tasks in the queue
+                    const costScale =
+                        focusCategory === 'traversal' ? (settings.traversalCostScale ?? 1) :
+                        focusCategory === 'normal' ? (settings.normalCostScale ?? 1) : 1;
+                    if (costScale < 1) {
+                        newCostMult = Math.max(0.01, newCostMult * costScale);
                     }
 
                     focusTask.costMult = newCostMult;
@@ -741,6 +962,19 @@ export class JTACostPlanner {
                         zoneId: focusZoneId,
                     });
 
+                    // xpAdjustments are recorded in the report but NOT persisted to task
+                    // objects — they only affect the binary search simulation for this
+                    // focus task, not future steps.
+
+                    let formula;
+                    if (focusAttempts <= 1) {
+                        formula = `costMult solved for energyCost = ${(energyAtFocus * settings.energyMargin).toFixed(1)} (${(settings.energyMargin * 100).toFixed(0)}% of ${energyAtFocus.toFixed(1)} remaining)`;
+                    } else if (xpAdjustments) {
+                        formula = `costMult=${newCostMult.toFixed(4)} + xpMult adjusted on ${xpAdjustments.length} tasks (x${xpAdjustments[0]?.multiplier.toFixed(4)}) for ${focusAttempts} attempts`;
+                    } else {
+                        formula = `costMult solved for ${focusAttempts} attempts (binary search with actual simulation)`;
+                    }
+
                     const costAssignment = {
                         taskName: focusTask.name,
                         zoneName: focusZoneName,
@@ -750,16 +984,24 @@ export class JTACostPlanner {
                         xpMult: focusTask.xpMult,
                         targetAttempts: focusAttempts,
                         energyAvailable: energyAtFocus,
-                        formula: focusAttempts <= 1
-                            ? `costMult solved for energyCost = ${(energyAtFocus * settings.energyMargin).toFixed(1)} (${(settings.energyMargin * 100).toFixed(0)}% of ${energyAtFocus.toFixed(1)} remaining)`
-                            : `costMult solved for ${focusAttempts} attempts (binary search with actual simulation)`,
+                        formula,
+                        xpAdjustments,
                     };
+
+                    // Apply xpMult adjustments during the focus task's attempts
+                    // (restored after the attempts loop completes)
+                    if (xpAdjustments) {
+                        for (const adj of xpAdjustments) {
+                            const info = taskByName.get(adj.taskName);
+                            if (info) info.task.xpMult = adj.newXpMult;
+                        }
+                    }
 
                     // Run attempts for the focus task
                     let focusCompleted = false;
                     for (let attempt = 1; attempt <= focusAttempts + 20 && !focusCompleted; attempt++) {
                         const stateBefore = snapshotState(state);
-                        const stepQueue = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                        const { queue: stepQueue, grindPlan: stepGrindPlan } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
 
                         let energy = state.maxEnergy;
                         const queueResults = [];
@@ -813,6 +1055,8 @@ export class JTACostPlanner {
                         plannedSteps.push({
                             stepIndex: globalStepIndex,
                             sphereIndex,
+                            sphereTargetTask: sphereTargetName,
+                            sphereTargetZoneId: sphereTargetZoneId,
                             targetTask: focusTask.name,
                             targetZone: focusZoneName,
                             targetZoneId: focusZoneId,
@@ -821,6 +1065,7 @@ export class JTACostPlanner {
                             attemptNumber: attempt,
                             targetCompleted: focusCompleted,
                             costAssignment: attempt === 1 ? costAssignment : null,
+                            grindPlan: attempt === 1 ? stepGrindPlan : null,
                             queue: queueResults,
                             stateBefore,
                             stateAfter,
@@ -837,6 +1082,14 @@ export class JTACostPlanner {
 
                         if (!focusCompleted) {
                             doReset(state, ctx);
+                        }
+                    }
+
+                    // Restore xpMult adjustments after focus task attempts complete
+                    if (xpAdjustments) {
+                        for (const adj of xpAdjustments) {
+                            const info = taskByName.get(adj.taskName);
+                            if (info) info.task.xpMult = adj.origXpMult;
                         }
                     }
                 }
@@ -892,152 +1145,35 @@ export class JTACostPlanner {
      * @returns {{ verifySteps: Array, comparison: Array }}
      */
     verifyCosts(gameDataJson, sphereLogContent, plannedCosts, settingsOverride = {}) {
-        const settings = { ...this._settings, ...settingsOverride };
-
-        const steps = parseSphereLog(sphereLogContent, settings.playerNumber);
-        const adjustedData = JSON.parse(JSON.stringify(gameDataJson));
-        const ctx = loadGameDataFromJson(adjustedData);
-
-        // Build lookups
-        const taskByName = new Map();
-        for (const zone of ctx.ZONES) {
-            for (const task of zone.tasks) {
-                taskByName.set(task.name, { task, zoneId: zone.id });
-            }
-        }
-        const perkNameToId = new Map();
-        for (const [idStr, perk] of Object.entries(ctx.PERKS)) {
-            perkNameToId.set(perk.name, parseInt(idStr));
-        }
-
-        // Convert plannedCosts to Map if needed, and pre-apply all costs
+        // Delegate to stepVerify and derive per-task comparison from annotated steps
+        const { annotatedSteps } = this.stepVerify(gameDataJson, sphereLogContent);
         const costsMap = plannedCosts instanceof Map ? plannedCosts : new Map(Object.entries(plannedCosts));
-        for (const [taskName, costInfo] of costsMap) {
-            const info = taskByName.get(taskName);
-            if (info) {
-                info.task.costMult = costInfo.costMult;
-                if (costInfo.xpMult !== undefined) info.task.xpMult = costInfo.xpMult;
+
+        // Count planned and actual (verify) attempts per task from the annotated steps
+        const plannedAttemptCounts = new Map(); // from plan step data
+        const verifyAttemptCounts = new Map();  // from verify completion status
+        for (const step of annotatedSteps) {
+            const taskName = step.targetTask;
+            const attemptNum = step.attemptNumber || 0;
+            if (attemptNum > 0) {
+                // Planned: highest attempt number the planner generated
+                plannedAttemptCounts.set(taskName, Math.max(
+                    plannedAttemptCounts.get(taskName) || 0, attemptNum
+                ));
+            }
+            // Verify: count steps where the verify says the task wasn't completed
+            const v = step.verification;
+            if (v) {
+                const prev = verifyAttemptCounts.get(taskName) || 0;
+                verifyAttemptCounts.set(taskName, prev + 1);
             }
         }
 
-        // All tasks are pre-costed — assignedCosts starts fully populated
-        const assignedCosts = new Map(costsMap);
-
-        const state = createSimState(ctx);
-        const verifySteps = [];
-        let globalStepIndex = 0;
-
-        // Track actual attempts per task: how many resets before first completion
-        const taskFirstCompleted = new Map(); // taskName → stepIndex when first completed
-        const taskAttemptCounts = new Map();  // taskName → number of steps where task was attempted
-
-        for (const sphereStep of steps) {
-            const sphereIndex = sphereStep.sphereIndex;
-
-            const tasksToComplete = [];
-            for (const locName of sphereStep.locationsChecked) {
-                if (locName === 'Reach Goal Zone') continue;
-                const info = taskByName.get(locName);
-                if (info) tasksToComplete.push({ name: locName, ...info });
-            }
-
-            for (const targetInfo of tasksToComplete) {
-                const { task: sphereTarget, zoneId: sphereTargetZoneId, name: sphereTargetName } = targetInfo;
-                let sphereTargetCompleted = false;
-                const maxSteps = 200;
-                let safetyCounter = 0;
-
-                while (!sphereTargetCompleted && safetyCounter++ < maxSteps) {
-                    const queue = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
-
-                    let energy = state.maxEnergy;
-                    const queueResults = [];
-                    let failedTask = null;
-                    const tasksAttemptedThisStep = new Set();
-                    const tasksCompletedThisStep = new Set();
-
-                    for (const entry of queue) {
-                        const { task, zoneId, zoneName, type } = entry;
-
-                        // Track that this task was attempted (appeared in queue and was reachable)
-                        tasksAttemptedThisStep.add(task.name);
-
-                        const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
-                        if (energyCost > energy) {
-                            queueResults.push({
-                                taskName: task.name, zoneName, zoneId, type,
-                                status: 'cannot_afford',
-                                energyBefore: energy, energyCost, energyAfter: energy,
-                            });
-                            failedTask = task.name;
-                            break;
-                        }
-
-                        energy -= energyCost;
-                        applyTaskXp(task, zoneId, state, ctx);
-
-                        if (zoneId > state.highestZone) state.highestZone = zoneId;
-                        state.currentZone = zoneId;
-
-                        queueResults.push({
-                            taskName: task.name, zoneName, zoneId, type,
-                            status: 'completed',
-                            energyBefore: energy + energyCost, energyCost, energyAfter: energy,
-                        });
-
-                        tasksCompletedThisStep.add(task.name);
-
-                        if (task.name === sphereTargetName) {
-                            sphereTargetCompleted = true;
-                        }
-                    }
-
-                    // Count attempts for tasks that were attempted this step
-                    // but haven't been completed yet (or were just completed for the first time)
-                    for (const name of tasksAttemptedThisStep) {
-                        if (!taskFirstCompleted.has(name)) {
-                            taskAttemptCounts.set(name, (taskAttemptCounts.get(name) || 0) + 1);
-                            if (tasksCompletedThisStep.has(name)) {
-                                taskFirstCompleted.set(name, globalStepIndex);
-                            }
-                        }
-                    }
-
-                    const focusName = failedTask || sphereTargetName;
-
-                    verifySteps.push({
-                        stepIndex: globalStepIndex,
-                        sphereIndex,
-                        targetTask: focusName,
-                        targetCompleted: sphereTargetCompleted || !failedTask,
-                        queue: queueResults,
-                        energyBudget: state.maxEnergy,
-                        energyUsed: state.maxEnergy - energy,
-                        energyRemaining: energy,
-                    });
-
-                    globalStepIndex++;
-
-                    if (!sphereTargetCompleted) {
-                        doReset(state, ctx);
-                    }
-                }
-            }
-
-            // Grant perks
-            for (const perkName of sphereStep.perksReceived) {
-                const perkId = perkNameToId.get(perkName);
-                if (perkId !== undefined) {
-                    grantPerk(state, perkId, ctx);
-                }
-            }
-        }
-
-        // Build comparison: planned vs actual attempt counts
+        // Build comparison: planned attempts (from plan) vs verify attempts
         const comparison = [];
         for (const [taskName, costInfo] of costsMap) {
-            const plannedAttempts = costInfo.targetAttempts || 1;
-            const actual = taskAttemptCounts.get(taskName) || 0;
+            const plannedAttempts = plannedAttemptCounts.get(taskName) || (costInfo.targetAttempts || 1);
+            const actual = verifyAttemptCounts.get(taskName) || 0;
             const delta = actual - plannedAttempts;
             comparison.push({
                 taskName,
@@ -1051,9 +1187,10 @@ export class JTACostPlanner {
             });
         }
 
-        const results = { verifySteps, comparison, taskAttemptCounts };
+        const results = { verifySteps: annotatedSteps, comparison, plannedAttemptCounts, verifyAttemptCounts };
         this._verificationResults = results;
         return results;
+
     }
 
     /**
@@ -1100,90 +1237,119 @@ export class JTACostPlanner {
 
         const assignedCosts = new Map(costsMap);
         const state = createSimState(ctx);
+        const stepVerifyData = []; // one entry per planned step
+
+        // Walk through the PLANNED steps directly. Each step tells us
+        // exactly what the focus task was — no need to guess.
+        let lastSphereIndex = null;
         const steps = parseSphereLog(sphereLogContent, settings.playerNumber);
+        const perkNameToIdForGrant = new Map(Object.entries(ctx.PERKS).map(
+            ([idStr, p]) => [p.name, parseInt(idStr)]
+        ));
 
-        // Walk through sphere steps, executing queues and tracking per-step results
-        let verifyStepIndex = 0;
-        const stepVerifyData = []; // one entry per verify step
-
+        // Build a sphere perk grant schedule from the sphere log
+        const spherePerks = new Map(); // sphereIndex → perkNames[]
         for (const sphereStep of steps) {
-            const tasksToComplete = [];
-            for (const locName of sphereStep.locationsChecked) {
-                if (locName === 'Reach Goal Zone') continue;
-                const info = taskByName.get(locName);
-                if (info) tasksToComplete.push({ name: locName, ...info });
+            spherePerks.set(sphereStep.sphereIndex, sphereStep.perksReceived || []);
+        }
+
+        for (const planned of plannedSteps) {
+            // Grant perks when we transition to a new sphere
+            if (lastSphereIndex !== null && planned.sphereIndex !== lastSphereIndex) {
+                const perksToGrant = spherePerks.get(lastSphereIndex) || [];
+                for (const perkName of perksToGrant) {
+                    const perkId = perkNameToIdForGrant.get(perkName);
+                    if (perkId !== undefined) grantPerk(state, perkId, ctx);
+                }
             }
+            lastSphereIndex = planned.sphereIndex;
 
-            for (const targetInfo of tasksToComplete) {
-                const { task: sphereTarget, zoneId: sphereTargetZoneId, name: sphereTargetName } = targetInfo;
-                let sphereTargetCompleted = false;
-                let safetyCounter = 0;
+            const focusName = planned.targetTask;
 
-                while (!sphereTargetCompleted && safetyCounter++ < 300) {
-                    const queue = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
-                    const stateBefore = snapshotState(state);
+            // Use the SPHERE target (not the focus task) to build the queue,
+            // so it includes the correct traversal + grinding + target structure
+            const sphereTargetInfo = taskByName.get(planned.sphereTargetTask || focusName);
+            if (!sphereTargetInfo) {
+                stepVerifyData.push(null);
+                continue;
+            }
+            const sphereTarget = sphereTargetInfo.task;
+            const sphereTargetZoneId = planned.sphereTargetZoneId ?? sphereTargetInfo.zoneId;
 
-                    let energy = state.maxEnergy;
-                    const queueResults = [];
-                    let failedTask = null;
+            const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+            const stateBefore = snapshotState(state);
 
-                    for (const entry of queue) {
-                        const { task, zoneId, zoneName, type } = entry;
+            // Determine the cost scale for the focus task — the verify should
+            // check affordability at the same fraction the planner used
+            const focusInfo = taskByName.get(focusName);
+            const focusCat = focusInfo ? getTaskCategory(focusInfo.task, ctx) : 'normal';
+            const focusCostScale =
+                focusCat === 'traversal' ? (settings.traversalCostScale ?? 1) :
+                focusCat === 'normal' ? (settings.normalCostScale ?? 1) : 1;
 
-                        const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
-                        if (energyCost > energy) {
-                            queueResults.push({
-                                taskName: task.name, zoneName, zoneId, type,
-                                status: 'cannot_afford',
-                                energyBefore: energy, energyCost, energyAfter: energy,
-                            });
-                            failedTask = task.name;
-                            break;
-                        }
+            let energy = state.maxEnergy;
+            const queueResults = [];
+            let focusCompleted = false;
 
-                        energy -= energyCost;
-                        applyTaskXp(task, zoneId, state, ctx);
-                        if (zoneId > state.highestZone) state.highestZone = zoneId;
-                        state.currentZone = zoneId;
+            for (const entry of stepQueue) {
+                const { task, zoneId, zoneName, type } = entry;
 
-                        queueResults.push({
-                            taskName: task.name, zoneName, zoneId, type,
-                            status: 'completed',
-                            energyBefore: energy + energyCost, energyCost, energyAfter: energy,
-                        });
+                const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
 
-                        if (task.name === sphereTargetName) {
-                            sphereTargetCompleted = true;
-                        }
-                    }
+                // For the focus task, check affordability against the scaled energy
+                // budget (matching the planner's cost scale). For other tasks, check
+                // against the full remaining energy.
+                const isFocus = task.name === focusName;
+                const budget = isFocus ? energy * focusCostScale : energy;
 
-                    stepVerifyData.push({
-                        verifyStepIndex,
-                        sphereIndex: sphereStep.sphereIndex,
-                        focusTask: failedTask || sphereTargetName,
-                        completed: !failedTask,
-                        queue: queueResults,
-                        stateBefore,
-                        stateAfter: snapshotState(state),
-                        energyBudget: state.maxEnergy,
-                        energyUsed: state.maxEnergy - energy,
-                        energyRemaining: energy,
+                if (energyCost > budget) {
+                    queueResults.push({
+                        taskName: task.name, zoneName, zoneId, type,
+                        status: 'cannot_afford',
+                        energyBefore: energy, energyCost, energyAfter: energy,
                     });
-
-                    verifyStepIndex++;
-
-                    if (!sphereTargetCompleted) {
-                        doReset(state, ctx);
-                    }
+                    if (isFocus) break; // focus task can't afford within budget — count as failed attempt
+                    break; // preceding task can't afford — queue stops
                 }
+
+                energy -= energyCost;
+                applyTaskXp(task, zoneId, state, ctx);
+                if (zoneId > state.highestZone) state.highestZone = zoneId;
+                state.currentZone = zoneId;
+
+                queueResults.push({
+                    taskName: task.name, zoneName, zoneId, type,
+                    status: 'completed',
+                    energyBefore: energy + energyCost, energyCost, energyAfter: energy,
+                });
+
+                if (isFocus) focusCompleted = true;
             }
 
-            // Grant perks
-            for (const perkName of sphereStep.perksReceived) {
-                const perkId = perkNameToId.get(perkName);
-                if (perkId !== undefined) {
-                    grantPerk(state, perkId, ctx);
-                }
+            stepVerifyData.push({
+                verifyStepIndex: stepVerifyData.length,
+                sphereIndex: planned.sphereIndex,
+                focusTask: focusName,
+                completed: focusCompleted,
+                queue: queueResults,
+                stateBefore,
+                stateAfter: snapshotState(state),
+                energyBudget: state.maxEnergy,
+                energyUsed: state.maxEnergy - energy,
+                energyRemaining: energy,
+            });
+
+            if (!focusCompleted) {
+                doReset(state, ctx);
+            }
+        }
+
+        // Grant perks for the last sphere
+        if (lastSphereIndex !== null) {
+            const perksToGrant = spherePerks.get(lastSphereIndex) || [];
+            for (const perkName of perksToGrant) {
+                const perkId = perkNameToIdForGrant.get(perkName);
+                if (perkId !== undefined) grantPerk(state, perkId, ctx);
             }
         }
 
