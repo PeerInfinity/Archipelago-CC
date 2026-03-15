@@ -291,9 +291,15 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
  *
  * @param {Map} assignedCosts - Already-assigned costs (from prior steps)
  * @param {object} settings - Planner settings (energyMargin, attempt counts)
+ * @param {object} [queueContext] - Sphere target context for queue building.
+ *   When provided, the solver builds the same traversal chain as the main loop
+ *   (including preceding mandatory tasks). Without it, the solver targets
+ *   the focus task directly (no traversal overhead).
+ * @param {object} [queueContext.sphereTarget] - The sphere target task
+ * @param {number} [queueContext.sphereTargetZoneId] - The sphere target's zone
  * @returns {{ costMult: number, xpAdjustments: Array|null }}
  */
-function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings, debugLog = null, expandIter = null) {
+function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings, debugLog = null, expandIter = null, queueContext = null) {
     if (targetAttempts <= 1) {
         return { costMult: solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx, undefined, debugLog), xpAdjustments: null };
     }
@@ -313,7 +319,7 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
 
         const isExpandedIter = expandIter && expandIter.phase === 1 && expandIter.iteration === iter;
         const substepLog = isExpandedIter ? [] : null;
-        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog);
+        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog, queueContext);
 
         const decision = attempts <= targetAttempts ? 'lo=mid' : 'hi=mid';
         if (debugLog) {
@@ -392,7 +398,7 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
 
         const isExpandedIter2 = expandIter && expandIter.phase === 2 && expandIter.iteration === iter;
         const substepLog2 = isExpandedIter2 ? [] : null;
-        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog2);
+        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog2, queueContext);
 
         const decision = attempts >= targetAttempts ? 'lo=mid' : 'hi=mid';
         if (debugLog) {
@@ -463,7 +469,7 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
  * Returns the 1-based attempt number on which the task is completed.
  * (1 = first try, 5 = fifth try, maxAttempts+1 = never completed)
  */
-function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAttempts, settings, substepLog = null) {
+function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAttempts, settings, substepLog = null, queueContext = null) {
     const sim = cloneState(state);
     const margin = settings?.energyMargin ?? 0.95;
 
@@ -472,10 +478,25 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
     // Save original costMults for tasks we modify, so we can restore them
     const savedCostMults = new Map();
 
+    // When queueContext is provided, build the queue the same way the main loop
+    // does: target the sphere target (so the traversal chain includes all
+    // mandatory tasks preceding the focus task), and pass focusSkills/focusTaskName
+    // so grinding is scoped to the focus task's skills.
+    const useQueueContext = queueContext && queueContext.sphereTarget;
+    const queueTarget = useQueueContext ? queueContext.sphereTarget : task;
+    const queueTargetZoneId = useQueueContext ? queueContext.sphereTargetZoneId : zoneId;
+
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        // Build queue using both real and trial costs for the isCosted check
+        // Build queue using both real and trial costs for the isCosted check.
+        // Include the target task so buildActionQueue can check its affordability
+        // and skip grinding when the target is already affordable.
         const effectiveCosts = new Map([...assignedCosts, ...trialCosts]);
-        const { queue } = buildActionQueue(task, zoneId, sim, ctx, effectiveCosts, settings);
+        effectiveCosts.set(task.name, { costMult: task.costMult });
+        const { queue } = buildActionQueue(
+            queueTarget, queueTargetZoneId, sim, ctx, effectiveCosts, settings,
+            useQueueContext ? task.skills : undefined,
+            useQueueContext ? task.name : undefined
+        );
         let energy = sim.maxEnergy;
         let completed = false;
         let firstNewCosted = false;
@@ -665,13 +686,36 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
 
     // Check if the target task is already affordable without grinding.
     // If so, skip grinding and go straight to the target (saves energy).
-    // Only skip for 1-attempt tasks — multi-attempt tasks (perks/bosses) need
-    // grinding as part of their XP progression between failed attempts.
-    const targetAttemptCount = getTargetAttempts(targetTask, ctx, settings || DEFAULT_SETTINGS);
-    const targetCost = assignedCosts.has(targetTask.name)
+    // The target's cost is known if it's in assignedCosts OR if the caller
+    // (e.g. simulateActualAttempts) has set its costMult directly via the
+    // effectiveCosts map passed as assignedCosts.
+    const targetCostKnown = assignedCosts.has(targetTask.name);
+    const targetCost = targetCostKnown
         ? calcTaskEnergyCost(targetTask, targetZoneId, state, ctx)
         : Infinity;
-    const targetAffordable = targetAttemptCount <= 1 && targetCost <= energyAfterTraversal;
+    const targetAffordable = targetCost <= energyAfterTraversal;
+
+    // Also check if the focus task (if different from the target) is affordable.
+    // When the focus task is already affordable after traversal, inserting
+    // grinding tasks before it wastes energy and prevents completion.
+    let focusAffordable = false;
+    if (!targetAffordable && focusTaskName) {
+        // Check queue first (focus may be in traversal section)
+        const focusQueueEntry = queue.find(e => e.task.name === focusTaskName);
+        if (focusQueueEntry && assignedCosts.has(focusQueueEntry.task.name)) {
+            const focusCost = calcTaskEnergyCost(focusQueueEntry.task, focusQueueEntry.zoneId, state, ctx);
+            focusAffordable = focusCost <= energyAfterTraversal;
+        } else if (assignedCosts.has(focusTaskName)) {
+            // Focus not in queue (e.g. normal/perk task found via reachability scan).
+            // Look it up from game data and check affordability.
+            const focusInfo = findTaskByName(focusTaskName, ctx);
+            if (focusInfo) {
+                const focusCost = calcTaskEnergyCost(focusInfo.task, focusInfo.zoneId, state, ctx);
+                focusAffordable = focusCost <= energyAfterTraversal;
+            }
+        }
+    }
+    const skipGrinding = targetAffordable || focusAffordable;
 
     // Identify which skills need grinding — use focusSkills if provided
     // (the actual focus task's skills), otherwise fall back to target task's skills
@@ -680,7 +724,7 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
     // Collect grinding candidates from all reachable zones.
     // Only include tasks that already have costs assigned.
     const grindCandidates = [];
-    if (!targetAffordable) {
+    if (!skipGrinding) {
         for (let z = targetZoneId; z >= 0; z--) {
             const zone = ctx.ZONES[z];
             for (const task of getNormalTasks(zone, ctx)) {
@@ -706,16 +750,15 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
 
     }
 
-    // Prefer tasks that train the focus's skills; fall back to all tasks
-    // if no relevant ones are available
-    const relevantCandidates = grindCandidates.filter(gc => gc.trainsTargetSkill);
-    const candidatesToUse = relevantCandidates.length > 0 ? relevantCandidates : grindCandidates;
+    // Only grind tasks that train the focus task's skills.
+    // Grinding irrelevant skills wastes energy without reducing the focus task's cost.
+    const candidatesToUse = grindCandidates.filter(gc => gc.trainsTargetSkill);
     candidatesToUse.sort((a, b) => b.effectiveXpPerEnergy - a.effectiveXpPerEnergy);
 
     // Fill the grinding budget with the most efficient tasks.
     // Insert grinding tasks BEFORE the focus task in the queue so the player
     // grinds XP before attempting the expensive focus task.
-    const grindBudget = targetAffordable ? 0 : energyAfterTraversal;
+    const grindBudget = skipGrinding ? 0 : energyAfterTraversal;
     let grindRemaining = grindBudget;
     const selectedGrind = [];
     const grindEntries = [];
@@ -749,6 +792,7 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
     const grindPlan = {
         budget: grindBudget,
         targetAffordable,
+        focusAffordable,
         targetSkills: [...targetSkills].map(s => ctx.SKILL_NAMES?.[s] || `S${s}`),
         candidatesConsidered: grindCandidates.length,
         tasksSelected: selectedGrind.length,
@@ -765,6 +809,22 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
             selected: selectedGrind.includes(gc),
         })),
     };
+
+    // Ensure the focus task is always in the queue (it's what we're trying
+    // to complete). It may not be present if it's a Normal task and grinding
+    // was skipped or it wasn't selected as a grinding candidate.
+    if (focusTaskName && !queue.some(e => e.task.name === focusTaskName) && focusTaskName !== targetTask.name) {
+        const focusInfo = findTaskByName(focusTaskName, ctx);
+        if (focusInfo && assignedCosts.has(focusTaskName)) {
+            queue.push({
+                task: focusInfo.task,
+                zoneId: focusInfo.zoneId,
+                zoneName: ctx.ZONES[focusInfo.zoneId]?.name || `Zone ${focusInfo.zoneId}`,
+                type: getTaskCategory(focusInfo.task, ctx),
+                isCosted: true,
+            });
+        }
+    }
 
     // Target task (after grinding — attempt with whatever energy remains)
     queue.push({
@@ -977,14 +1037,24 @@ export class JTACostPlanner {
                     const focusCategory = getTaskCategory(focusTask, ctx);
                     const focusAttempts = getTargetAttempts(focusTask, ctx, settings);
 
-                    // Simulate the queue up to the focus task to get accurate energy
+                    // Simulate traversal up to the focus task to get accurate energy
                     // and state (with XP from preceding tasks applied).
-                    // This ensures the solver sees the same state execution will see.
+                    //
+                    // Only count traversal-type entries — grinding entries are not
+                    // prerequisites and shouldn't reduce the energy budget.
+                    // If the focus task isn't in the queue (found via reachability scan),
+                    // also skip traversal for zones at or beyond the focus zone (those
+                    // are for leaving the zone, not reaching it).
                     const stateBeforeCost = cloneState(state);
                     const stateAtFocus = cloneState(state);
                     let energyAtFocus = state.maxEnergy;
+                    const focusInQueue = queue.some(e => e.task.name === focusTask.name);
                     for (const entry of queue) {
                         if (entry.task.name === focusTask.name) break;
+                        // Skip non-traversal entries (grinding, perk, etc.)
+                        if (entry.type !== 'traversal') continue;
+                        // If focus isn't in the queue, skip traversal at/above focus zone
+                        if (!focusInQueue && entry.zoneId >= focusZoneId) continue;
                         if (assignedCosts.has(entry.task.name)) {
                             const cost = calcTaskEnergyCost(entry.task, entry.zoneId, stateAtFocus, ctx);
                             if (cost <= energyAtFocus) {
@@ -1079,16 +1149,23 @@ export class JTACostPlanner {
 
                     let newCostMult;
                     let xpAdjustments = null;
+                    // Pass sphere target context so the solver builds the same
+                    // traversal chain as the main loop (including mandatory tasks
+                    // that precede the focus task).
+                    const queueContext = {
+                        sphereTarget: sphereTarget,
+                        sphereTargetZoneId: sphereTargetZoneId,
+                    };
                     if (focusAttempts <= 1) {
                         const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
-                            stateAtFocus, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep
+                            stateAtFocus, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep, queueContext
                         );
                         newCostMult = result.costMult;
                     } else {
                         const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
-                            stateBeforeCost, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep
+                            stateBeforeCost, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep, queueContext
                         );
                         newCostMult = result.costMult;
                         xpAdjustments = result.xpAdjustments;
