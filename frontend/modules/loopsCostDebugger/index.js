@@ -1,7 +1,7 @@
 /**
- * Cost Debugger Module
+ * Loops Cost Debugger Module
  *
- * Step-through debugger for the loop cost generation algorithm.
+ * Step-through debugger for the Loops cost generation algorithm.
  * Plans cost generation steps from a sphere log and displays
  * detailed reasoning for each step.
  */
@@ -15,21 +15,21 @@ import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('costDebugger', message, ...data);
+    window.logger[level]('loopsCostDebugger', message, ...data);
   } else {
     const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[costDebugger] ${message}`, ...data);
+    consoleMethod(`[loopsCostDebugger] ${message}`, ...data);
   }
 }
 
 // --- Module Info ---
 export const moduleInfo = {
-  name: 'costDebugger',
-  title: 'Cost Debugger',
-  componentType: 'costDebuggerPanel',
+  name: 'loopsCostDebugger',
+  title: 'Loops Cost Debugger',
+  componentType: 'loopsCostDebuggerPanel',
   icon: '',
   column: 1,
-  description: 'Step-through debugger for cost generation algorithm.',
+  description: 'Step-through debugger for Loops cost generation algorithm.',
 };
 
 // Module-level references
@@ -48,11 +48,11 @@ export function register(registrationApi) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.type = 'text/css';
-  link.href = 'modules/costDebugger/costDebugger.css';
+  link.href = 'modules/loopsCostDebugger/costDebugger.css';
   document.head.appendChild(link);
 
   // Register panel component
-  registrationApi.registerPanelComponent('costDebuggerPanel', CostDebuggerUI);
+  registrationApi.registerPanelComponent('loopsCostDebuggerPanel', CostDebuggerUI);
 
   // Register public functions
   registrationApi.registerPublicFunction(moduleInfo.name, 'getCostPlanner', () => costPlannerInstance);
@@ -65,9 +65,9 @@ export function register(registrationApi) {
   registrationApi.registerPublicFunction(moduleInfo.name, 'getSphereLog', getSphereLog);
 
   // Register event publishers
-  registrationApi.registerEventBusPublisher('costDebugger:stepPlanned');
-  registrationApi.registerEventBusPublisher('costDebugger:allPlanned');
-  registrationApi.registerEventBusPublisher('costDebugger:reset');
+  registrationApi.registerEventBusPublisher('loopsCostDebugger:stepPlanned');
+  registrationApi.registerEventBusPublisher('loopsCostDebugger:allPlanned');
+  registrationApi.registerEventBusPublisher('loopsCostDebugger:reset');
 
   log('info', `[${moduleInfo.name}] Registration complete.`);
 }
@@ -118,9 +118,9 @@ export function getModuleEventBus() {
   if (moduleEventBus) return moduleEventBus;
   // Fallback wrapper before initialize() runs
   return {
-    publish: (event, data) => eventBus.publish(event, data, 'costDebugger'),
-    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'costDebugger'),
-    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'costDebugger'),
+    publish: (event, data) => eventBus.publish(event, data, 'loopsCostDebugger'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'loopsCostDebugger'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'loopsCostDebugger'),
   };
 }
 

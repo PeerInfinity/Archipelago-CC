@@ -88,7 +88,7 @@ import * as playerStateModule from './modules/playerState/index.js';
 import * as playerStatePanelModule from './modules/playerStatePanel/index.js';
 import * as loopsModule from './modules/loops/index.js';
 import * as loopStatsModule from './modules/loopStats/index.js';
-import * as costDebuggerModule from './modules/costDebugger/index.js';
+import * as loopsCostDebuggerModule from './modules/loopsCostDebugger/index.js';
 import * as presetsModule from './modules/presets/index.js';
 import * as spoilerTestModule from './modules/spoilerTest/index.js';
 import * as sphereStateModule from './modules/sphereState/index.js';
@@ -108,6 +108,7 @@ import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
 import * as mazeGameDataPanelModule from './modules/mazeGameDataPanel/index.js';
 import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
+import * as jtaCostDebuggerModule from './modules/jtaCostDebugger/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
 import * as proofGraphModule from './modules/proofGraph/index.js';
 import * as jtaQueueEngineModule from './modules/jtaQueueEngine/index.js';
@@ -169,7 +170,7 @@ const BUNDLED_MODULES = {
   playerStatePanel: playerStatePanelModule,
   loops: loopsModule,
   loopStats: loopStatsModule,
-  costDebugger: costDebuggerModule,
+  loopsCostDebugger: loopsCostDebuggerModule,
   presets: presetsModule,
   spoilerTest: spoilerTestModule,
   sphereState: sphereStateModule,
@@ -189,6 +190,7 @@ const BUNDLED_MODULES = {
   ruleConverter: ruleConverterModule,
   mazeGameDataPanel: mazeGameDataPanelModule,
   jtaGameDataPanel: jtaGameDataPanelModule,
+  jtaCostDebugger: jtaCostDebuggerModule,
   proofQueue: proofQueueModule,
   proofGraph: proofGraphModule,
   jtaQueueEngine: jtaQueueEngineModule,

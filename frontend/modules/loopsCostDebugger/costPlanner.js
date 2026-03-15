@@ -286,7 +286,7 @@ export class CostPlanner {
 
     if (step) {
       this._plannedSteps.push(step);
-      this.eventBus?.publish('costDebugger:stepPlanned', {
+      this.eventBus?.publish('loopsCostDebugger:stepPlanned', {
         step,
         stepIndex: step.stepIndex,
       });
@@ -325,7 +325,7 @@ export class CostPlanner {
       newSteps.push(step);
     }
 
-    this.eventBus?.publish('costDebugger:allPlanned', {
+    this.eventBus?.publish('loopsCostDebugger:allPlanned', {
       steps: this._plannedSteps,
       total: this._entries.length,
     });
@@ -359,7 +359,7 @@ export class CostPlanner {
       this._simState._verifyAssigned = new Set();
     }
 
-    this.eventBus?.publish('costDebugger:reset', {});
+    this.eventBus?.publish('loopsCostDebugger:reset', {});
   }
 
   getPlannedSteps() { return this._plannedSteps; }
@@ -431,7 +431,7 @@ export class CostPlanner {
     const costs = {
       version: '1.0',
       generatedAt: new Date().toISOString(),
-      generatedFrom: 'costDebugger',
+      generatedFrom: 'loopsCostDebugger',
       regions: {},
       locations: {},
       defaultRegionCost: 50,
@@ -973,7 +973,7 @@ export class CostPlanner {
     };
 
     this._plannedSteps.push(step);
-    this.eventBus?.publish('costDebugger:stepPlanned', { step, stepIndex: step.stepIndex });
+    this.eventBus?.publish('loopsCostDebugger:stepPlanned', { step, stepIndex: step.stepIndex });
     return step;
   }
 

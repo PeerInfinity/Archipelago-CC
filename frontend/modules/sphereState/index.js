@@ -129,7 +129,7 @@ export async function register(registrationApi) {
     return sphereState.getLogHeader();
   });
 
-  // Cross-player item computation (used by costDebugger verify, spoilerChecklist sync)
+  // Cross-player item computation (used by loopsCostDebugger verify, spoilerChecklist sync)
   registrationApi.registerPublicFunction(moduleId, 'compareSphereIndex', compareSphereIndex);
   registrationApi.registerPublicFunction(moduleId, 'computeCrossPlayerItems',
     (upToSphere, inclusive) => computeCrossPlayerItems(upToSphere, inclusive));

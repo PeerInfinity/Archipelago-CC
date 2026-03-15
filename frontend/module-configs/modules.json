@@ -122,8 +122,8 @@
       "enabled": true,
       "requires": ["loops"]
     },
-    "costDebugger": {
-      "path": "./modules/costDebugger/index.js",
+    "loopsCostDebugger": {
+      "path": "./modules/loopsCostDebugger/index.js",
       "enabled": true,
       "requires": ["loops", "sphereState"]
     },
@@ -196,6 +196,11 @@
       "path": "./modules/jtaGameDataPanel/index.js",
       "enabled": true,
       "requires": ["iframeAdapter", "iframePanel"]
+    },
+    "jtaCostDebugger": {
+      "path": "./modules/jtaCostDebugger/index.js",
+      "enabled": true,
+      "requires": ["jtaGameDataPanel"]
     },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
@@ -270,7 +275,7 @@
     "playerStatePanel",
     "loops",
     "loopStats",
-    "costDebugger",
+    "loopsCostDebugger",
     "presets",
     "spoilerTest",
     "sphereState",
@@ -286,6 +291,7 @@
     "iframeManagerPanel",
     "mazeGameDataPanel",
     "jtaGameDataPanel",
+    "jtaCostDebugger",
     "windowAdapter",
     "windowPanel",
     "windowManagerPanel",

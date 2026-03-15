@@ -11,10 +11,10 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('costDebuggerUI', message, ...data);
+    window.logger[level]('loopsCostDebuggerUI', message, ...data);
   } else {
     const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
-    consoleMethod(`[costDebuggerUI] ${message}`, ...data);
+    consoleMethod(`[loopsCostDebuggerUI] ${message}`, ...data);
   }
 }
 
@@ -146,9 +146,9 @@ export class CostDebuggerUI {
       this.subscriptions.push(unsub);
     };
 
-    subscribe('costDebugger:stepPlanned', this._handleStepPlannedEvent);
-    subscribe('costDebugger:allPlanned', this._handleAllPlannedEvent);
-    subscribe('costDebugger:reset', this._handleResetEvent);
+    subscribe('loopsCostDebugger:stepPlanned', this._handleStepPlannedEvent);
+    subscribe('loopsCostDebugger:allPlanned', this._handleAllPlannedEvent);
+    subscribe('loopsCostDebugger:reset', this._handleResetEvent);
   }
 
   _handleStepPlannedEvent(data) {

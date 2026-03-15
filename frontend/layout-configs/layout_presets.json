@@ -136,6 +136,11 @@
             },
             {
               "type": "component",
+              "componentType": "jtaCostDebuggerPanel",
+              "title": "JTA Cost Debugger"
+            },
+            {
+              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },

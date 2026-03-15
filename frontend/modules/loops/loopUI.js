@@ -562,7 +562,7 @@ export class LoopUI {
 
   /**
    * Handle Generate Costs from the inline "no cost data" prompt.
-   * Uses the CostPlanner from the costDebugger module.
+   * Uses the CostPlanner from the loopsCostDebugger module.
    */
   async _handleGenerateCostsInline() {
     const costDataManager = getCostDataManager();
@@ -572,16 +572,16 @@ export class LoopUI {
     }
 
     // Get CostPlanner via centralRegistry
-    const getCostPlannerFn = centralRegistry.getPublicFunction('costDebugger', 'getCostPlanner');
+    const getCostPlannerFn = centralRegistry.getPublicFunction('loopsCostDebugger', 'getCostPlanner');
     const costPlanner = getCostPlannerFn?.();
     if (!costPlanner) {
-      log('error', 'CostPlanner not available. Is the costDebugger module loaded?');
-      alert('Cost planner not available. Ensure the Cost Debugger module is loaded.');
+      log('error', 'CostPlanner not available. Is the loopsCostDebugger module loaded?');
+      alert('Cost planner not available. Ensure the Loops Cost Debugger module is loaded.');
       return;
     }
 
     // Get sphere log
-    const getSphereLogFn = centralRegistry.getPublicFunction('costDebugger', 'getSphereLog');
+    const getSphereLogFn = centralRegistry.getPublicFunction('loopsCostDebugger', 'getSphereLog');
     const sphereLog = getSphereLogFn?.();
     if (!sphereLog || sphereLog.length === 0) {
       alert('No sphere log available. Load a game with sphere data first.');

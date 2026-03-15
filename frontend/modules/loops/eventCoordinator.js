@@ -456,7 +456,7 @@ export class EventCoordinator {
               // _handleGenerateCostsInline enables loop mode on success
             };
 
-            const getSphereLogFn = centralRegistry.getPublicFunction('costDebugger', 'getSphereLog')
+            const getSphereLogFn = centralRegistry.getPublicFunction('loopsCostDebugger', 'getSphereLog')
               || (() => null);
             const sphereLog = getSphereLogFn();
 
