@@ -221,7 +221,7 @@ function doReset(state, ctx) {
  *
  * We solve approximately then verify with ceil.
  */
-function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin = 0.95) {
+function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin = 0.95, debugLog = null) {
     const exp = task.type === ctx.TaskType.Boss
         ? ctx.BOSS_COST_EXPONENT
         : ctx.ZONE_COST_EXPONENT;
@@ -242,6 +242,10 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
     task.costMult = approxCostMult;
     let actualCost = calcTaskEnergyCost(task, zoneId, state, ctx);
 
+    if (debugLog) {
+        debugLog.push({ type: 'energy_initial_approx', approxCostMult, actualCost, target: targetEnergy * margin, targetEnergy, margin, progress, drain, maxReps });
+    }
+
     // Binary refine if needed (3 iterations)
     let lo = approxCostMult * 0.5;
     let hi = approxCostMult * 2.0;
@@ -251,6 +255,10 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
         const mid = (lo + hi) / 2;
         task.costMult = mid;
         actualCost = calcTaskEnergyCost(task, zoneId, state, ctx);
+        const decision = actualCost > target ? 'hi=mid' : 'lo=mid';
+        if (debugLog) {
+            debugLog.push({ type: 'energy_iteration', iteration: i, lo, hi, mid, actualCost, target, decision });
+        }
         if (actualCost > target) {
             hi = mid;
         } else {
@@ -263,6 +271,11 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
     // (lo+hi)/2 can land on the wrong side of a step boundary.
     const result = Math.max(0.01, lo);
     task.costMult = savedCost;
+
+    if (debugLog) {
+        debugLog.push({ type: 'energy_result', finalCostMult: result, totalIterations: 20 });
+    }
+
     return result;
 }
 
@@ -280,9 +293,9 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
  * @param {object} settings - Planner settings (energyMargin, attempt counts)
  * @returns {{ costMult: number, xpAdjustments: Array|null }}
  */
-function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings) {
+function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings, debugLog = null, expandIter = null) {
     if (targetAttempts <= 1) {
-        return { costMult: solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx), xpAdjustments: null };
+        return { costMult: solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx, undefined, debugLog), xpAdjustments: null };
     }
 
     const savedCost = task.costMult;
@@ -298,7 +311,19 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
         const candidateCost = Math.exp(logMid);
         task.costMult = candidateCost;
 
-        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings);
+        const isExpandedIter = expandIter && expandIter.phase === 1 && expandIter.iteration === iter;
+        const substepLog = isExpandedIter ? [] : null;
+        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog);
+
+        const decision = attempts <= targetAttempts ? 'lo=mid' : 'hi=mid';
+        if (debugLog) {
+            debugLog.push({
+                type: 'attempts_phase1', phase: 1, iteration: iter,
+                logLo, logHi, logMid, candidateCost, attempts,
+                bestCost, bestAttempts, decision,
+                substeps: substepLog,
+            });
+        }
 
         if (attempts <= targetAttempts) {
             if (bestCost === null || candidateCost > bestCost) {
@@ -312,6 +337,10 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
     }
 
     const finalCostMult = Math.max(0.01, bestCost ?? 0.01);
+
+    if (debugLog) {
+        debugLog.push({ type: 'attempts_phase1_result', finalCostMult, bestAttempts, targetAttempts });
+    }
 
     // If costMult alone gives the exact target, or xpMult adjustment is disabled, done
     if (bestAttempts === targetAttempts || !settings?.adjustXpMult) {
@@ -343,6 +372,10 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
         return { costMult: finalCostMult, xpAdjustments: null };
     }
 
+    if (debugLog) {
+        debugLog.push({ type: 'phase_separator', phase: 2, taskCount: xpTasks.length });
+    }
+
     // Binary search for xpMult multiplier M (0 < M < 1) that reduces XP
     // just enough to increase attempt count to targetAttempts.
     // We want the HIGHEST M (least reduction) where attempts >= targetAttempts.
@@ -357,7 +390,18 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
             entry.task.xpMult = entry.origXpMult * mid;
         }
 
-        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings);
+        const isExpandedIter2 = expandIter && expandIter.phase === 2 && expandIter.iteration === iter;
+        const substepLog2 = isExpandedIter2 ? [] : null;
+        const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog2);
+
+        const decision = attempts >= targetAttempts ? 'lo=mid' : 'hi=mid';
+        if (debugLog) {
+            debugLog.push({
+                type: 'attempts_phase2', phase: 2, iteration: iter,
+                xpMultiplier: mid, attempts, bestXpMult, decision,
+                substeps: substepLog2,
+            });
+        }
 
         if (attempts >= targetAttempts) {
             // Enough attempts — track highest M (least reduction)
@@ -419,7 +463,7 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
  * Returns the 1-based attempt number on which the task is completed.
  * (1 = first try, 5 = fifth try, maxAttempts+1 = never completed)
  */
-function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAttempts, settings) {
+function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAttempts, settings, substepLog = null) {
     const sim = cloneState(state);
     const margin = settings?.energyMargin ?? 0.95;
 
@@ -435,6 +479,9 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
         let energy = sim.maxEnergy;
         let completed = false;
         let firstNewCosted = false;
+
+        const stateBefore = substepLog ? snapshotState(sim) : null;
+        const queueResults = substepLog ? [] : null;
 
         for (const entry of queue) {
             const isTarget = entry.task.name === task.name;
@@ -454,30 +501,80 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
                         );
                         entry.task.costMult = trialCostMult;
                         trialCosts.set(entry.task.name, { costMult: trialCostMult });
-                        // Fall through to execute it
+                        // Fall through to execute it — record as trial_costed
+                        if (queueResults) {
+                            // Will be updated below after energy check
+                        }
                     } else {
                         // Multi-attempt task encountered during simulation — skip to avoid recursion
+                        if (queueResults) {
+                            queueResults.push({
+                                taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
+                                type: entry.type, status: 'uncosted_skipped',
+                                energyBefore: energy, energyCost: 0, energyAfter: energy,
+                            });
+                        }
                         continue;
                     }
                 } else {
+                    if (queueResults) {
+                        queueResults.push({
+                            taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
+                            type: entry.type, status: 'uncosted_skipped',
+                            energyBefore: energy, energyCost: 0, energyAfter: energy,
+                        });
+                    }
                     continue;
                 }
             }
 
             const energyCost = calcTaskEnergyCost(entry.task, entry.zoneId, sim, ctx);
             if (energyCost > energy) {
+                if (queueResults) {
+                    queueResults.push({
+                        taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
+                        type: entry.type, status: 'cannot_afford',
+                        energyBefore: energy, energyCost, energyAfter: energy,
+                    });
+                }
                 break;
             }
 
             energy -= energyCost;
+            const xpGained = substepLog ? calcTaskXp(entry.task, entry.zoneId, sim, ctx) * entry.task.maxReps : 0;
             applyTaskXp(entry.task, entry.zoneId, sim, ctx);
 
             if (entry.zoneId > sim.highestZone) sim.highestZone = entry.zoneId;
             sim.currentZone = entry.zoneId;
 
+            if (queueResults) {
+                queueResults.push({
+                    taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
+                    type: entry.type, status: 'completed',
+                    energyBefore: energy + energyCost, energyCost, energyAfter: energy,
+                    xpGained,
+                });
+            }
+
             if (isTarget) {
                 completed = true;
             }
+        }
+
+        if (substepLog) {
+            substepLog.push({
+                substep: true,
+                attemptNumber: attempt,
+                targetTask: task.name,
+                targetCompleted: completed,
+                queue: queueResults,
+                stateBefore,
+                stateAfter: snapshotState(sim),
+                energyBudget: sim.maxEnergy,
+                energyUsed: sim.maxEnergy - energy,
+                energyRemaining: energy,
+                trialCosts: [...trialCosts.entries()].map(([name, info]) => ({ name, costMult: info.costMult })),
+            });
         }
 
         if (completed) {
@@ -713,6 +810,9 @@ export const DEFAULT_SETTINGS = {
     normalCostScale: 0.5,  // Scale normal task costs down after solving
     traversalCostScale: 0.5, // Scale traversal task costs down after solving
     adjustXpMult: false,   // Whether to adjust xpMult on grinding tasks to hit exact attempt counts
+    captureSolverDebug: false,  // Capture binary search iteration data in costAssignment.solverDebug
+    solverDebugSteps: null,     // number[] | null — only capture solver debug for these step indices
+    expandSolverIteration: null, // { stepIndex, iteration, phase } — capture inner sim substeps for this iteration
 };
 
 /**
@@ -969,22 +1069,33 @@ export class JTACostPlanner {
                     // Assign cost to the focus task
                     // Use stateAtFocus for 1-attempt tasks (matches execution state)
                     // Use stateBeforeCost for multi-attempt tasks (simulation re-walks full queue)
+                    const expandIterSetting = settings.expandSolverIteration;
+                    const shouldCaptureSolver = (settings.captureSolverDebug &&
+                        (settings.solverDebugSteps === null || settings.solverDebugSteps.includes(globalStepIndex))) ||
+                        (expandIterSetting && expandIterSetting.stepIndex === globalStepIndex);
+                    const solverDebugLog = shouldCaptureSolver ? [] : null;
+                    const expandForThisStep = expandIterSetting && expandIterSetting.stepIndex === globalStepIndex
+                        ? expandIterSetting : null;
+
                     let newCostMult;
                     let xpAdjustments = null;
                     if (focusAttempts <= 1) {
                         const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
-                            stateAtFocus, ctx, assignedCosts, settings
+                            stateAtFocus, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep
                         );
                         newCostMult = result.costMult;
                     } else {
                         const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
-                            stateBeforeCost, ctx, assignedCosts, settings
+                            stateBeforeCost, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep
                         );
                         newCostMult = result.costMult;
                         xpAdjustments = result.xpAdjustments;
                     }
+
+                    // Capture pre-scale costMult before scaling
+                    const preSolvedCostMult = newCostMult;
 
                     // Scale down costs by category to leave more energy for
                     // subsequent tasks in the queue
@@ -1030,6 +1141,9 @@ export class JTACostPlanner {
                         energyAvailable: energyAtFocus,
                         formula,
                         xpAdjustments,
+                        costScale,
+                        preSolvedCostMult,
+                        solverDebug: solverDebugLog,
                     };
 
                     // Apply xpMult adjustments during the focus task's attempts
@@ -1172,6 +1286,55 @@ export class JTACostPlanner {
         const result = { costData, steps: plannedSteps, adjustedData, assignedCosts };
         this._lastPlanResult = result;
         this._verificationResults = null;
+        return result;
+    }
+
+    /**
+     * Re-run cost planning with solver iteration expansion.
+     *
+     * Calls planCosts with settings that capture substeps for a specific
+     * binary search iteration, then inserts those substeps into the step list.
+     *
+     * @param {object} gameDataJson - Raw game data JSON
+     * @param {string} sphereLogContent - JSONL sphere log content
+     * @param {object} settingsOverride - Base settings
+     * @param {number} stepIndex - Which step's solver to expand
+     * @param {number} iteration - Which binary search iteration to expand
+     * @param {number} [phase=1] - Which solver phase (1 or 2)
+     * @returns {object} Same as planCosts, with substeps inserted
+     */
+    planCostsWithExpansion(gameDataJson, sphereLogContent, settingsOverride, stepIndex, iteration, phase = 1) {
+        const result = this.planCosts(gameDataJson, sphereLogContent, {
+            ...settingsOverride,
+            captureSolverDebug: true,
+            solverDebugSteps: [stepIndex],
+            expandSolverIteration: { stepIndex, iteration, phase },
+        });
+
+        // Find the step and extract substeps from the matching debug log entry
+        const targetStep = result.steps.find(s => s.stepIndex === stepIndex && s.costAssignment?.solverDebug);
+        if (targetStep) {
+            const phaseType = phase === 1 ? 'attempts_phase1' : 'attempts_phase2';
+            const debugEntry = targetStep.costAssignment.solverDebug.find(
+                e => e.type === phaseType && e.iteration === iteration && e.substeps
+            );
+            if (debugEntry && debugEntry.substeps.length > 0) {
+                const insertIdx = result.steps.indexOf(targetStep);
+                const substepsWithIndex = debugEntry.substeps.map((sub, i) => ({
+                    ...sub,
+                    stepIndex: targetStep.stepIndex,
+                    substepIteration: iteration,
+                    substepPhase: phase,
+                    substepNumber: i + 1,
+                    displayIndex: `${stepIndex}.${iteration}.${i + 1}`,
+                    sphereIndex: targetStep.sphereIndex,
+                    targetCategory: targetStep.targetCategory,
+                    targetAttempts: debugEntry.attempts,
+                }));
+                result.steps.splice(insertIdx, 0, ...substepsWithIndex);
+            }
+        }
+
         return result;
     }
 

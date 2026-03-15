@@ -46,15 +46,49 @@
     cursor: default;
 }
 
+/* Collapsible settings */
+.jta-cd-settings-details {
+    border-bottom: 1px solid #444;
+    flex-shrink: 0;
+}
+
+.jta-cd-settings-summary {
+    padding: 4px 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.85em;
+    color: #999;
+    list-style: none;
+}
+
+.jta-cd-settings-summary::-webkit-details-marker {
+    display: none;
+}
+
+.jta-cd-settings-summary::before {
+    content: '\25B6';
+    font-size: 0.8em;
+    color: #61afef;
+    margin-right: 6px;
+}
+
+.jta-cd-settings-details[open] > .jta-cd-settings-summary::before {
+    content: '\25BC';
+}
+
+.jta-cd-settings-summary:hover {
+    color: #ccc;
+}
+
 /* Settings row */
 .jta-cd-settings {
     display: flex;
     gap: 12px;
     padding: 4px 8px;
-    border-bottom: 1px solid #444;
     flex-shrink: 0;
     font-size: 0.85em;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .jta-cd-settings label {
@@ -111,6 +145,35 @@
 
 .jta-cd-step-row:hover {
     background: #2a2a3a;
+}
+
+/* Substep rows (solver iteration inner simulation) */
+.jta-cd-substep-row {
+    padding-left: 24px;
+    background: #1a2a1a;
+    border-left: 2px solid #4a7a4a;
+    font-size: 0.8em;
+}
+
+.jta-cd-substep-row:hover {
+    background: #1a2a2a;
+}
+
+/* Expand iteration button in solver debug tables */
+.jta-cd-btn-expand-iter {
+    background: none;
+    border: 1px solid #555;
+    color: #8ab4f8;
+    cursor: pointer;
+    padding: 0 4px;
+    font-size: 0.85em;
+    border-radius: 2px;
+    line-height: 1;
+}
+
+.jta-cd-btn-expand-iter:hover {
+    background: #3a4a5a;
+    border-color: #8ab4f8;
 }
 
 .jta-cd-step-selected {
@@ -245,6 +308,32 @@
     margin-bottom: 4px;
     font-size: 0.9em;
     text-transform: uppercase;
+}
+
+/* Solver debug collapsible within step detail */
+.jta-cd-solver-debug-details {
+    margin-bottom: 6px;
+}
+
+.jta-cd-solver-debug-details > summary {
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+}
+
+.jta-cd-solver-debug-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.jta-cd-solver-debug-details > summary::before {
+    content: '\25B6';
+    font-size: 0.7em;
+    color: #61afef;
+    margin-right: 6px;
+}
+
+.jta-cd-solver-debug-details[open] > summary::before {
+    content: '\25BC';
 }
 
 /* Tables */

@@ -66,23 +66,29 @@ export class JTACostDebuggerUI {
                 <button class="jta-cd-btn-download" disabled title="Download cost data as JSON">Download</button>
                 <button class="jta-cd-btn-reset" disabled title="Reset planner">Reset</button>
             </div>
-            <div class="jta-cd-settings">
-                <label title="Attempts for regular tasks">
-                    Normal: <input type="number" class="jta-cd-normal-attempts" value="1" min="1" max="20">
-                </label>
-                <label title="Attempts for perk unlock tasks">
-                    Perks: <input type="number" class="jta-cd-perk-attempts" value="5" min="1" max="20">
-                </label>
-                <label title="Attempts for boss tasks">
-                    Bosses: <input type="number" class="jta-cd-boss-attempts" value="5" min="1" max="20">
-                </label>
-                <label title="Attempts for traversal (mandatory/travel) tasks">
-                    Travel: <input type="number" class="jta-cd-traversal-attempts" value="5" min="1" max="20">
-                </label>
-                <label title="Adjust xpMult on grinding tasks to hit exact attempt counts">
-                    <input type="checkbox" class="jta-cd-adjust-xp"> Adjust XP
-                </label>
-            </div>
+            <details class="jta-cd-settings-details" open>
+                <summary class="jta-cd-settings-summary">Settings</summary>
+                <div class="jta-cd-settings">
+                    <label title="Attempts for regular tasks">
+                        Normal: <input type="number" class="jta-cd-normal-attempts" value="1" min="1" max="20">
+                    </label>
+                    <label title="Attempts for perk unlock tasks">
+                        Perks: <input type="number" class="jta-cd-perk-attempts" value="5" min="1" max="20">
+                    </label>
+                    <label title="Attempts for boss tasks">
+                        Bosses: <input type="number" class="jta-cd-boss-attempts" value="5" min="1" max="20">
+                    </label>
+                    <label title="Attempts for traversal (mandatory/travel) tasks">
+                        Travel: <input type="number" class="jta-cd-traversal-attempts" value="5" min="1" max="20">
+                    </label>
+                    <label title="Adjust xpMult on grinding tasks to hit exact attempt counts">
+                        <input type="checkbox" class="jta-cd-adjust-xp"> Adjust XP
+                    </label>
+                    <label title="Capture binary search solver debug data for step detail view">
+                        <input type="checkbox" class="jta-cd-solver-debug"> Solver Debug
+                    </label>
+                </div>
+            </details>
             <div class="jta-cd-status-bar"><span class="jta-cd-status">No data loaded</span></div>
             <div class="jta-cd-step-list-container">
                 <div class="jta-cd-step-list">
@@ -228,6 +234,7 @@ export class JTACostDebuggerUI {
             bossAttempts: parseInt(this.rootElement.querySelector('.jta-cd-boss-attempts').value) || 5,
             traversalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-traversal-attempts').value) || 5,
             adjustXpMult: this.rootElement.querySelector('.jta-cd-adjust-xp')?.checked || false,
+            captureSolverDebug: this.rootElement.querySelector('.jta-cd-solver-debug')?.checked || false,
         };
 
         this._setStatus('Generating costs...');
@@ -474,7 +481,7 @@ export class JTACostDebuggerUI {
         for (const step of steps) {
             const row = document.createElement('div');
             row.className = 'jta-cd-step-row';
-            if (step.stepIndex === this.selectedStepIndex) {
+            if ((step.displayIndex ?? step.stepIndex) === this.selectedStepIndex) {
                 row.classList.add('jta-cd-step-selected');
             }
 
@@ -492,8 +499,14 @@ export class JTACostDebuggerUI {
                 verifyIndicator = `<span class="jta-cd-step-cost ${cls}" title="Verify energy delta">${ok ? '\u2714' : '\u0394'}${delta}</span>`;
             }
 
+            const displayNum = step.displayIndex ?? step.stepIndex;
+            const stepId = step.displayIndex ?? step.stepIndex;
+            if (step.substep) {
+                row.classList.add('jta-cd-substep-row');
+            }
+
             row.innerHTML = `
-                <span class="jta-cd-step-num">${step.stepIndex}</span>
+                <span class="jta-cd-step-num">${displayNum}</span>
                 <span class="jta-cd-step-badge ${badge.cssClass}">${badge.label}</span>
                 <span class="jta-cd-step-target" title="${step.targetTask}">${step.targetTask}</span>
                 <span class="jta-cd-step-attempt">A${step.attemptNumber}/${step.targetAttempts}</span>
@@ -504,7 +517,7 @@ export class JTACostDebuggerUI {
             `;
 
             row.addEventListener('click', () => {
-                this.selectedStepIndex = step.stepIndex;
+                this.selectedStepIndex = stepId;
                 this._renderStepList(steps);
                 this._renderStepDetail(step);
             });
@@ -529,9 +542,12 @@ export class JTACostDebuggerUI {
         let html = `<div class="jta-cd-detail">`;
 
         // Header
+        const headerLabel = step.substep
+            ? `<strong>Substep ${step.displayIndex}</strong> | Solver iteration ${step.substepIteration}, inner attempt ${step.substepNumber}`
+            : `<strong>Step ${step.stepIndex}</strong>`;
         html += `
             <div class="jta-cd-detail-header">
-                <strong>Step ${step.stepIndex}</strong> | Sphere ${step.sphereIndex} |
+                ${headerLabel} | Sphere ${step.sphereIndex} |
                 Target: <em>${step.targetTask}</em> (${step.targetCategory}) |
                 Attempt ${step.attemptNumber}/${step.targetAttempts} |
                 ${step.targetCompleted ? '<span class="jta-cd-completed">COMPLETED</span>' : '<span class="jta-cd-incomplete">NOT COMPLETED</span>'}
@@ -562,9 +578,23 @@ export class JTACostDebuggerUI {
                         <tr><td>Target Attempts</td><td>${ca.targetAttempts}</td></tr>
                         <tr><td>Energy Available</td><td>${ca.energyAvailable.toFixed(2)}</td></tr>
                         <tr><td>Formula</td><td>${ca.formula}</td></tr>
+                        <tr><td>Cost Scale</td><td>${ca.costScale?.toFixed(2) ?? '1.00'} (${ca.category})</td></tr>
+                        <tr><td>Pre-scale costMult</td><td>${ca.preSolvedCostMult?.toFixed(6) ?? '-'}</td></tr>
                     </table>
                 </div>
             `;
+
+            // Solver debug (collapsible)
+            if (ca.solverDebug && ca.solverDebug.length > 0) {
+                html += `
+                    <div class="jta-cd-detail-section">
+                        <details class="jta-cd-solver-debug-details">
+                            <summary class="jta-cd-detail-section-title">Solver Debug (${ca.solverDebug.length} entries)</summary>
+                            ${this._renderSolverDebug(ca.solverDebug, step.stepIndex)}
+                        </details>
+                    </div>
+                `;
+            }
         }
 
         // Grind plan
@@ -617,6 +647,7 @@ export class JTACostDebuggerUI {
                             <th>Energy Before</th>
                             <th>Cost</th>
                             <th>Energy After</th>
+                            <th>XP</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -635,6 +666,7 @@ export class JTACostDebuggerUI {
                     <td>${entry.energyBefore?.toFixed(1) ?? '-'}</td>
                     <td>${entry.energyCost?.toFixed(1) ?? '-'}</td>
                     <td>${entry.energyAfter?.toFixed(1) ?? '-'}</td>
+                    <td>${entry.xpGained?.toFixed(0) ?? '-'}</td>
                 </tr>
             `;
         }
@@ -745,6 +777,141 @@ export class JTACostDebuggerUI {
 
         html += `</div>`;
         detailEl.innerHTML = html;
+
+        // Attach expand-iteration button handlers
+        for (const btn of detailEl.querySelectorAll('.jta-cd-btn-expand-iter')) {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const stepIdx = parseInt(btn.dataset.step);
+                const iter = parseInt(btn.dataset.iter);
+                const phase = parseInt(btn.dataset.phase);
+                this._handleExpandIteration(stepIdx, iter, phase);
+            });
+        }
+    }
+
+    _handleExpandIteration(stepIndex, iteration, phase) {
+        const planner = getCostPlanner();
+        if (!planner || !this._gameData || !this._sphereLogContent) return;
+
+        // Read current settings from UI
+        const settings = {
+            normalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-normal-attempts').value) || 1,
+            perkAttempts: parseInt(this.rootElement.querySelector('.jta-cd-perk-attempts').value) || 5,
+            bossAttempts: parseInt(this.rootElement.querySelector('.jta-cd-boss-attempts').value) || 5,
+            traversalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-traversal-attempts').value) || 5,
+            adjustXpMult: this.rootElement.querySelector('.jta-cd-adjust-xp')?.checked || false,
+            captureSolverDebug: true,
+        };
+
+        this._setStatus(`Expanding step ${stepIndex}, iteration ${iteration}...`);
+
+        setTimeout(() => {
+            try {
+                const result = planner.planCostsWithExpansion(
+                    this._gameData, this._sphereLogContent, settings,
+                    stepIndex, iteration, phase
+                );
+                this._lastResult = result;
+                this._renderStepList(result.steps);
+                this._updateSummary(result);
+
+                // Select the first substep
+                const firstSubstep = result.steps.find(s => s.substep && s.stepIndex === stepIndex);
+                if (firstSubstep) {
+                    this.selectedStepIndex = firstSubstep.displayIndex;
+                    this._renderStepList(result.steps);
+                    this._renderStepDetail(firstSubstep);
+                }
+
+                this._setStatus(`Expanded: step ${stepIndex}, solver iteration ${iteration} (phase ${phase})`);
+            } catch (err) {
+                log('error', 'Expansion failed:', err);
+                this._setStatus(`Error: ${err.message}`);
+            }
+        }, 10);
+    }
+
+    _renderSolverDebug(solverDebug, stepIndex) {
+        let html = '';
+
+        // Energy solver entries
+        const energyEntries = solverDebug.filter(e => e.type?.startsWith('energy_'));
+        if (energyEntries.length > 0) {
+            const approx = energyEntries.find(e => e.type === 'energy_initial_approx');
+            const result = energyEntries.find(e => e.type === 'energy_result');
+            const iters = energyEntries.filter(e => e.type === 'energy_iteration');
+
+            html += `<div style="margin-bottom: 8px;">
+                <strong>Energy Solver</strong>`;
+            if (approx) {
+                html += `<div style="color:#999; margin:2px 0;">Initial approx: costMult=${approx.approxCostMult.toFixed(6)}, actualCost=${approx.actualCost.toFixed(2)}, target=${approx.target.toFixed(2)}</div>`;
+                html += `<div style="color:#999; margin:2px 0;">targetEnergy=${approx.targetEnergy.toFixed(2)}, margin=${approx.margin}, progress=${approx.progress.toFixed(4)}, drain=${approx.drain.toFixed(4)}, maxReps=${approx.maxReps}</div>`;
+            }
+            if (iters.length > 0) {
+                html += `<table class="jta-cd-queue-table">
+                    <thead><tr><th>Iter</th><th>lo</th><th>hi</th><th>mid</th><th>actualCost</th><th>target</th><th>Decision</th></tr></thead>
+                    <tbody>`;
+                for (const e of iters) {
+                    html += `<tr>
+                        <td>${e.iteration}</td><td>${e.lo.toFixed(6)}</td><td>${e.hi.toFixed(6)}</td>
+                        <td>${e.mid.toFixed(6)}</td><td>${e.actualCost.toFixed(4)}</td>
+                        <td>${e.target.toFixed(4)}</td><td>${e.decision}</td>
+                    </tr>`;
+                }
+                html += `</tbody></table>`;
+            }
+            if (result) {
+                html += `<div style="color:#6cba6c; margin:2px 0;">Result: costMult=${result.finalCostMult.toFixed(6)} (${result.totalIterations} iterations)</div>`;
+            }
+            html += `</div>`;
+        }
+
+        // Phase 1: attempts solver
+        const phase1 = solverDebug.filter(e => e.type === 'attempts_phase1');
+        const phase1Result = solverDebug.find(e => e.type === 'attempts_phase1_result');
+        if (phase1.length > 0) {
+            html += `<div style="margin-bottom: 8px;">
+                <strong>Phase 1: costMult binary search (target: ${phase1Result?.targetAttempts ?? '?'} attempts)</strong>
+                <table class="jta-cd-queue-table">
+                    <thead><tr><th>Iter</th><th>costMult</th><th>Attempts</th><th>Best</th><th>Best Att.</th><th>Decision</th><th></th></tr></thead>
+                    <tbody>`;
+            for (const e of phase1) {
+                html += `<tr>
+                    <td>${e.iteration}</td><td>${e.candidateCost.toFixed(4)}</td>
+                    <td>${e.attempts}</td><td>${e.bestCost?.toFixed(4) ?? '-'}</td>
+                    <td>${e.bestAttempts}</td><td>${e.decision}</td>
+                    <td><button class="jta-cd-btn-expand-iter" data-step="${stepIndex}" data-iter="${e.iteration}" data-phase="1" title="Show inner simulation substeps">\u25B6</button></td>
+                </tr>`;
+            }
+            html += `</tbody></table>`;
+            if (phase1Result) {
+                html += `<div style="color:#6cba6c; margin:2px 0;">Result: costMult=${phase1Result.finalCostMult.toFixed(6)}, bestAttempts=${phase1Result.bestAttempts}/${phase1Result.targetAttempts}</div>`;
+            }
+            html += `</div>`;
+        }
+
+        // Phase 2: xpMult solver
+        const separator = solverDebug.find(e => e.type === 'phase_separator');
+        const phase2 = solverDebug.filter(e => e.type === 'attempts_phase2');
+        if (phase2.length > 0) {
+            html += `<div style="margin-bottom: 8px;">
+                <strong>Phase 2: xpMult binary search (${separator?.taskCount ?? '?'} tasks)</strong>
+                <table class="jta-cd-queue-table">
+                    <thead><tr><th>Iter</th><th>xpMult</th><th>Attempts</th><th>Best xpMult</th><th>Decision</th><th></th></tr></thead>
+                    <tbody>`;
+            for (const e of phase2) {
+                html += `<tr>
+                    <td>${e.iteration}</td><td>${e.xpMultiplier.toFixed(6)}</td>
+                    <td>${e.attempts}</td><td>${e.bestXpMult?.toFixed(6) ?? '-'}</td>
+                    <td>${e.decision}</td>
+                    <td><button class="jta-cd-btn-expand-iter" data-step="${stepIndex}" data-iter="${e.iteration}" data-phase="2" title="Show inner simulation substeps">\u25B6</button></td>
+                </tr>`;
+            }
+            html += `</tbody></table></div>`;
+        }
+
+        return html || '<div style="color:#999;">No solver debug data</div>';
     }
 
     _renderState(state) {

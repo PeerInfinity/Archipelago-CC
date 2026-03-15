@@ -18,7 +18,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { JTACostPlanner } from '../../frontend/modules/jtaCostDebugger/jtaCostPlanner.js';
 
 function parseArgs(argv) {
-    const args = {};
+    const args = { verbose: 0 };
     for (let i = 2; i < argv.length; i++) {
         const arg = argv[i];
         if (arg === '--gamedata' || arg === '-g') {
@@ -41,6 +41,19 @@ function parseArgs(argv) {
             args.traversalCostScale = parseFloat(argv[++i]);
         } else if (arg === '--adjust-xp') {
             args.adjustXpMult = true;
+        } else if (arg === '-v' || arg === '--verbose') {
+            args.verbose++;
+        } else if (arg === '-vv') {
+            args.verbose = 2;
+        } else if (arg === '--debug-solver') {
+            args.debugSolver = true;
+        } else if (arg === '--debug-solver-step') {
+            args.debugSolverStep = parseInt(argv[++i]);
+            args.debugSolver = true;
+        } else if (arg === '--debug-solver-iter') {
+            args.debugSolverIter = parseInt(argv[++i]);
+        } else if (arg === '--queue-all') {
+            args.queueAll = true;
         } else if (arg === '--help' || arg === '-h') {
             args.help = true;
         }
@@ -66,6 +79,14 @@ Options:
   --adjust-xp                   Adjust xpMult on grinding tasks to hit exact attempt counts
   -h, --help                    Show this help
 
+Verbosity:
+  -v, --verbose                 Level 1: formula, notes, cost scale, queue on cost-assignment steps
+  -vv                           Level 2: state snapshots, XP per queue entry, all grinding tables
+  --queue-all                   Show queue breakdown for every step (not just cost-assignment steps)
+  --debug-solver                Show binary search convergence data for cost solving
+  --debug-solver-step <n>       Show solver debug only for step N (implies --debug-solver)
+  --debug-solver-iter <n>       Expand inner simulation for iteration N (requires --debug-solver-step)
+
 Example:
   node scripts/jta/cost-debugger.js \\
     -g frontend/presets/jta/AP_14089154938208861744/AP_14089154938208861744_P1_Player1_gamedata.json \\
@@ -74,7 +95,162 @@ Example:
 `);
 }
 
+// ============================================================================
+// Verbose output helpers
+// ============================================================================
+
+function printStepVerbose(step, verbose, queueAll) {
+    const showQueue = queueAll || !!step.costAssignment;
+    if (!showQueue && verbose < 2) return;
+
+    // Cost assignment details
+    if (step.costAssignment) {
+        const ca = step.costAssignment;
+        console.log(`    Formula: ${ca.formula}`);
+        if (ca.costScale !== undefined && ca.costScale !== 1) {
+            console.log(`    Cost scale: ${ca.costScale.toFixed(2)} (${ca.category}), preSolved=${ca.preSolvedCostMult?.toFixed(6) ?? '-'}, final=${ca.costMult.toFixed(6)}`);
+        }
+    }
+
+    // Notes
+    if (step.notes && step.notes.length > 0) {
+        for (const note of step.notes) {
+            console.log(`    Note: ${note}`);
+        }
+    }
+
+    // Queue breakdown
+    if (showQueue && step.queue && step.queue.length > 0) {
+        const showXp = verbose >= 2;
+        const xpHeader = showXp ? '     XP' : '';
+        const xpSep = showXp ? '-------' : '';
+        console.log(`    Queue (${step.queue.length} entries):`);
+        console.log(`      ${'Task'.padEnd(32)} ${'Type'.padEnd(10)} ${'Status'.padEnd(16)} ${'E.Before'.padStart(8)} ${'Cost'.padStart(7)} ${'E.After'.padStart(8)}${xpHeader}`);
+        console.log(`      ${'-'.repeat(32)} ${'-'.repeat(10)} ${'-'.repeat(16)} ${'-'.repeat(8)} ${'-'.repeat(7)} ${'-'.repeat(8)} ${xpSep}`);
+        for (const entry of step.queue) {
+            const name = entry.taskName.length > 32 ? entry.taskName.substring(0, 31) + '\u2026' : entry.taskName;
+            const xpCol = showXp ? `${(entry.xpGained?.toFixed(0) ?? '-').padStart(7)}` : '';
+            console.log(
+                `      ${name.padEnd(32)} ${(entry.type || '').padEnd(10)} ${entry.status.padEnd(16)} ` +
+                `${(entry.energyBefore?.toFixed(1) ?? '-').padStart(8)} ${(entry.energyCost?.toFixed(1) ?? '-').padStart(7)} ` +
+                `${(entry.energyAfter?.toFixed(1) ?? '-').padStart(8)} ${xpCol}`
+            );
+        }
+    }
+
+    // State snapshots (level 2)
+    if (verbose >= 2) {
+        printStateSnapshot(step.stateBefore, 'Before');
+        printStateSnapshot(step.stateAfter, 'After');
+    }
+}
+
+function printStateSnapshot(state, label) {
+    if (!state) return;
+    const skills = Object.entries(state.skillLevels || {})
+        .filter(([, v]) => v > 0)
+        .map(([k, v]) => `${k}:${v}`)
+        .join(', ');
+    const perks = Array.isArray(state.perks) ? state.perks.length : 0;
+    console.log(`    ${label}: maxE=${state.maxEnergy?.toFixed(1)} highestZone=${state.highestZone ?? '?'} perks=${perks} skills={${skills || 'none'}}`);
+}
+
+function printGrindingTable(step) {
+    const gp = step.grindPlan;
+    if (!gp || gp.tasks.length === 0) return;
+    console.log(`\n--- XP Grinding Efficiency (Step ${step.stepIndex}: "${step.targetTask}") ---\n`);
+    console.log(`  Target skills: ${gp.targetSkills?.join(', ') || 'none'}`);
+    console.log('  Task                                Zone                 Skills          Cost      XP    XP/E   Eff  Rel Sel');
+    console.log('  ' + '-'.repeat(115));
+    for (const gt of gp.tasks) {
+        console.log(
+            `  ${gt.taskName.padEnd(36)} ${(gt.zoneName || '').padEnd(20)} ` +
+            `${gt.skills.join(',').padEnd(14)} ` +
+            `${gt.cost.toFixed(1).padStart(6)} ${gt.xp.toFixed(0).padStart(7)} ` +
+            `${gt.xpPerEnergy.toFixed(1).padStart(7)} ` +
+            `${(gt.effectiveXpPerEnergy?.toFixed(1) || '-').padStart(5)}  ` +
+            `${gt.trainsTargetSkill ? 'Y' : ' '}   ${gt.selected ? 'Y' : ''}`
+        );
+    }
+    console.log(`  Budget: ${gp.budget.toFixed(1)} | Selected: ${gp.tasksSelected}/${gp.candidatesConsidered}${gp.targetAffordable ? ' (target affordable, grinding skipped)' : ''}`);
+}
+
+function printSolverDebug(step) {
+    const sd = step.costAssignment?.solverDebug;
+    if (!sd || sd.length === 0) return;
+
+    console.log(`\n    --- Solver Debug (Step ${step.stepIndex}: "${step.costAssignment.taskName}") ---`);
+
+    // Energy solver entries
+    const energyEntries = sd.filter(e => e.type?.startsWith('energy_'));
+    if (energyEntries.length > 0) {
+        const approx = energyEntries.find(e => e.type === 'energy_initial_approx');
+        const result = energyEntries.find(e => e.type === 'energy_result');
+        const iters = energyEntries.filter(e => e.type === 'energy_iteration');
+
+        console.log('    Energy solver (solveCostMultForEnergy):');
+        if (approx) {
+            console.log(`      Initial approx: costMult=${approx.approxCostMult.toFixed(6)}, actualCost=${approx.actualCost.toFixed(2)}, target=${approx.target.toFixed(2)}`);
+            console.log(`      Parameters: targetEnergy=${approx.targetEnergy.toFixed(2)}, margin=${approx.margin}, progress=${approx.progress.toFixed(4)}, drain=${approx.drain.toFixed(4)}, maxReps=${approx.maxReps}`);
+        }
+        if (iters.length > 0) {
+            console.log(`      ${'Iter'.padStart(6)} ${'lo'.padStart(12)} ${'hi'.padStart(12)} ${'mid'.padStart(12)} ${'actualCost'.padStart(12)} ${'target'.padStart(12)} ${'decision'.padEnd(8)}`);
+            console.log(`      ${'-'.repeat(6)} ${'-'.repeat(12)} ${'-'.repeat(12)} ${'-'.repeat(12)} ${'-'.repeat(12)} ${'-'.repeat(12)} ${'-'.repeat(8)}`);
+            for (const e of iters) {
+                console.log(
+                    `      ${String(e.iteration).padStart(6)} ${e.lo.toFixed(6).padStart(12)} ${e.hi.toFixed(6).padStart(12)} ` +
+                    `${e.mid.toFixed(6).padStart(12)} ${e.actualCost.toFixed(4).padStart(12)} ${e.target.toFixed(4).padStart(12)} ${e.decision}`
+                );
+            }
+        }
+        if (result) {
+            console.log(`      Result: costMult=${result.finalCostMult.toFixed(6)} (${result.totalIterations} iterations)`);
+        }
+    }
+
+    // Phase 1: attempts solver
+    const phase1 = sd.filter(e => e.type === 'attempts_phase1');
+    const phase1Result = sd.find(e => e.type === 'attempts_phase1_result');
+    if (phase1.length > 0) {
+        console.log(`    Phase 1: Binary search costMult for ${phase1Result?.targetAttempts ?? '?'} attempts`);
+        console.log(`      ${'Iter'.padStart(6)} ${'costMult'.padStart(12)} ${'attempts'.padStart(10)} ${'best'.padStart(12)} ${'bestAttempts'.padStart(13)} ${'decision'.padEnd(8)}`);
+        console.log(`      ${'-'.repeat(6)} ${'-'.repeat(12)} ${'-'.repeat(10)} ${'-'.repeat(12)} ${'-'.repeat(13)} ${'-'.repeat(8)}`);
+        for (const e of phase1) {
+            console.log(
+                `      ${String(e.iteration).padStart(6)} ${e.candidateCost.toFixed(4).padStart(12)} ` +
+                `${String(e.attempts).padStart(10)} ${(e.bestCost?.toFixed(4) ?? '-').padStart(12)} ` +
+                `${String(e.bestAttempts).padStart(13)} ${e.decision}`
+            );
+        }
+        if (phase1Result) {
+            console.log(`      Result: costMult=${phase1Result.finalCostMult.toFixed(6)}, bestAttempts=${phase1Result.bestAttempts}/${phase1Result.targetAttempts}`);
+        }
+    }
+
+    // Phase 2: xpMult solver
+    const separator = sd.find(e => e.type === 'phase_separator');
+    const phase2 = sd.filter(e => e.type === 'attempts_phase2');
+    if (phase2.length > 0) {
+        console.log(`    Phase 2: xpMult binary search (${separator?.taskCount ?? '?'} tasks)`);
+        console.log(`      ${'Iter'.padStart(6)} ${'xpMult'.padStart(12)} ${'attempts'.padStart(10)} ${'bestXpMult'.padStart(12)} ${'decision'.padEnd(8)}`);
+        console.log(`      ${'-'.repeat(6)} ${'-'.repeat(12)} ${'-'.repeat(10)} ${'-'.repeat(12)} ${'-'.repeat(8)}`);
+        for (const e of phase2) {
+            console.log(
+                `      ${String(e.iteration).padStart(6)} ${e.xpMultiplier.toFixed(6).padStart(12)} ` +
+                `${String(e.attempts).padStart(10)} ${(e.bestXpMult?.toFixed(6) ?? '-').padStart(12)} ${e.decision}`
+            );
+        }
+    }
+
+    console.log('');
+}
+
+// ============================================================================
+// Main
+// ============================================================================
+
 const args = parseArgs(process.argv);
+const verbose = args.verbose;
 
 if (args.help) {
     printUsage();
@@ -101,21 +277,33 @@ const settings = {
     adjustXpMult: args.adjustXpMult ?? false,
 };
 
+// Map debug flags to planner settings
+if (args.debugSolver) {
+    settings.captureSolverDebug = true;
+    if (args.debugSolverStep !== undefined) {
+        settings.solverDebugSteps = [args.debugSolverStep];
+    }
+}
+
 console.log(`Loading game data from: ${args.gamedata}`);
 console.log(`Loading sphere log from: ${args.spherelog}`);
 console.log(`Settings: normal=${settings.normalAttempts}, perk=${settings.perkAttempts}, boss=${settings.bossAttempts}, player=${settings.playerNumber}`);
+if (verbose > 0) console.log(`Verbosity: level ${verbose}${args.debugSolver ? `, debug-solver${args.debugSolverStep !== undefined ? ` (step ${args.debugSolverStep})` : ''}` : ''}${args.queueAll ? ', queue-all' : ''}`);
 console.log('');
 
 // Run cost debugger
 const startTime = Date.now();
 const planner = new JTACostPlanner();
-const result = planner.planCosts(gameDataJson, sphereLogContent, settings);
+const useExpansion = args.debugSolverStep !== undefined && args.debugSolverIter !== undefined;
+const result = useExpansion
+    ? planner.planCostsWithExpansion(gameDataJson, sphereLogContent, settings, args.debugSolverStep, args.debugSolverIter)
+    : planner.planCosts(gameDataJson, sphereLogContent, settings);
 const elapsed = Date.now() - startTime;
 
 // Summary
 const { steps, assignedCosts, costData } = result;
 const spheres = new Set(steps.map(s => s.sphereIndex));
-const costAssignments = steps.filter(s => s.costAssignment);
+const costAssignmentSteps = steps.filter(s => s.costAssignment);
 const completedSteps = steps.filter(s => s.targetCompleted);
 const failedSteps = steps.filter(s => !s.targetCompleted);
 const grindingSteps = steps.filter(s => s.attemptNumber === 0);
@@ -124,7 +312,7 @@ console.log(`Cost generation complete in ${elapsed}ms`);
 console.log(`Total steps: ${steps.length}`);
 console.log(`Spheres: ${spheres.size}`);
 console.log(`Tasks costed: ${assignedCosts.size}`);
-console.log(`Cost assignments: ${costAssignments.length}`);
+console.log(`Cost assignments: ${costAssignmentSteps.length}`);
 console.log(`Completed: ${completedSteps.length}, Failed/grinding: ${failedSteps.length}`);
 if (grindingSteps.length > 0) {
     console.log(`Grinding steps (focus unreachable): ${grindingSteps.length}`);
@@ -140,33 +328,41 @@ for (const step of steps) {
     const attempt = step.attemptNumber === 0
         ? 'grind'
         : `${step.attemptNumber}/${step.targetAttempts}`;
+    const stepNum = step.displayIndex ?? String(step.stepIndex);
+    const substepSuffix = step.substep
+        ? ` (solver iter ${step.substepIteration}, inner ${step.substepNumber})`
+        : '';
     console.log(
-        `  Step ${String(step.stepIndex).padStart(3)} | S${step.sphereIndex} | ` +
+        `  Step ${String(stepNum).padStart(7)} | S${step.sphereIndex} | ` +
         `${status.padEnd(5)} | ${attempt.padEnd(5)} | ` +
         `E: ${step.energyBudget.toFixed(0)}->${step.energyRemaining.toFixed(1).padStart(5)} | ` +
-        `${step.targetTask}${costInfo}`
+        `${step.targetTask}${costInfo}${substepSuffix}`
     );
+
+    // Verbose step details
+    if (verbose >= 1) {
+        printStepVerbose(step, verbose, args.queueAll);
+    }
+
+    // Solver debug
+    if (args.debugSolver && step.costAssignment?.solverDebug) {
+        printSolverDebug(step);
+    }
 }
 
-// Print grinding efficiency for first step that has a grind plan
-const firstGrindStep = steps.find(s => s.grindPlan && s.grindPlan.tasks.length > 0);
-if (firstGrindStep) {
-    const gp = firstGrindStep.grindPlan;
-    console.log('\n--- XP Grinding Efficiency (Step ' + firstGrindStep.stepIndex + ') ---\n');
-    console.log(`  Target skills: ${gp.targetSkills?.join(', ') || 'none'}`);
-    console.log('  Task                                Zone                 Skills          Cost      XP    XP/E   Eff  Rel Sel');
-    console.log('  ' + '-'.repeat(115));
-    for (const gt of gp.tasks) {
-        console.log(
-            `  ${gt.taskName.padEnd(36)} ${(gt.zoneName || '').padEnd(20)} ` +
-            `${gt.skills.join(',').padEnd(14)} ` +
-            `${gt.cost.toFixed(1).padStart(6)} ${gt.xp.toFixed(0).padStart(7)} ` +
-            `${gt.xpPerEnergy.toFixed(1).padStart(7)} ` +
-            `${(gt.effectiveXpPerEnergy?.toFixed(1) || '-').padStart(5)}  ` +
-            `${gt.trainsTargetSkill ? 'Y' : ' '}   ${gt.selected ? 'Y' : ''}`
-        );
+// Print grinding efficiency tables
+if (verbose >= 2) {
+    // Level 2: show all grinding tables
+    const grindSteps = steps.filter(s => s.grindPlan && s.grindPlan.tasks.length > 0);
+    for (const step of grindSteps) {
+        printGrindingTable(step);
     }
-    console.log(`  Budget: ${gp.budget.toFixed(1)} | Selected: ${gp.tasksSelected}/${gp.candidatesConsidered}${gp.targetAffordable ? ' (target affordable, grinding skipped)' : ''}`);
+} else {
+    // Level 0-1: first grinding step only
+    const firstGrindStep = steps.find(s => s.grindPlan && s.grindPlan.tasks.length > 0);
+    if (firstGrindStep) {
+        printGrindingTable(firstGrindStep);
+    }
 }
 
 // Print cost assignments table
