@@ -431,7 +431,7 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         // Build queue using both real and trial costs for the isCosted check
         const effectiveCosts = new Map([...assignedCosts, ...trialCosts]);
-        const { queue } = buildActionQueue(task, zoneId, sim, ctx, effectiveCosts);
+        const { queue } = buildActionQueue(task, zoneId, sim, ctx, effectiveCosts, settings);
         let energy = sim.maxEnergy;
         let completed = false;
         let firstNewCosted = false;
@@ -522,7 +522,7 @@ function findTaskByName(name, ctx) {
  * The player starts in zone 0, so no traversal is needed for zone 0 tasks.
  * Mandatory/travel tasks in a zone are required to LEAVE that zone for the next one.
  */
-function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
+function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, settings, focusSkills, focusTaskName) {
     const queue = [];
 
     // Zone traversal: mandatory/travel tasks for zones BEFORE targetZoneId
@@ -555,48 +555,76 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
         }
     }
 
-    // XP grinding: select tasks by XP/energy efficiency to fill the energy budget.
-    // Placed BEFORE the target task so the player grinds first, then attempts the
-    // target with whatever energy remains.
-    //
-    // Calculate remaining energy after traversal to determine grinding budget.
-    let grindBudget = state.maxEnergy;
+    // Calculate remaining energy after traversal, excluding the focus task
+    // (its cost shouldn't reduce the grinding budget — it's what we're grinding FOR)
+    let energyAfterTraversal = state.maxEnergy;
     for (const entry of queue) {
+        if (entry.task.name === targetTask.name) continue;
+        if (focusTaskName && entry.task.name === focusTaskName) continue;
         if (assignedCosts.has(entry.task.name)) {
-            grindBudget -= calcTaskEnergyCost(entry.task, entry.zoneId, state, ctx);
+            energyAfterTraversal -= calcTaskEnergyCost(entry.task, entry.zoneId, state, ctx);
         }
     }
 
-    // Collect grinding candidates from all reachable zones, compute XP efficiency.
-    // Only include tasks that already have costs assigned — uncosted tasks should
-    // wait to become the focus and get their cost assigned properly.
+    // Check if the target task is already affordable without grinding.
+    // If so, skip grinding and go straight to the target (saves energy).
+    // Only skip for 1-attempt tasks — multi-attempt tasks (perks/bosses) need
+    // grinding as part of their XP progression between failed attempts.
+    const targetAttemptCount = getTargetAttempts(targetTask, ctx, settings || DEFAULT_SETTINGS);
+    const targetCost = assignedCosts.has(targetTask.name)
+        ? calcTaskEnergyCost(targetTask, targetZoneId, state, ctx)
+        : Infinity;
+    const targetAffordable = targetAttemptCount <= 1 && targetCost <= energyAfterTraversal;
+
+    // Identify which skills need grinding — use focusSkills if provided
+    // (the actual focus task's skills), otherwise fall back to target task's skills
+    const targetSkills = new Set(focusSkills || targetTask.skills || []);
+
+    // Collect grinding candidates from all reachable zones.
+    // Only include tasks that already have costs assigned.
     const grindCandidates = [];
-    for (let z = targetZoneId; z >= 0; z--) {
-        const zone = ctx.ZONES[z];
-        for (const task of getNormalTasks(zone, ctx)) {
-            if (task.name === targetTask.name) continue;
-            if (task.type === ctx.TaskType.Boss) continue;
-            if (!assignedCosts.has(task.name)) continue;
-            const cost = calcTaskEnergyCost(task, z, state, ctx);
-            if (cost <= 0) continue;
-            const xp = calcTaskXp(task, z, state, ctx) * task.maxReps;
-            const skills = task.skills.map(s => ctx.SKILL_NAMES?.[s] || `S${s}`);
-            grindCandidates.push({
-                task, zoneId: z, zoneName: zone.name,
-                cost, xp, xpPerEnergy: xp / cost, skills,
-            });
+    if (!targetAffordable) {
+        for (let z = targetZoneId; z >= 0; z--) {
+            const zone = ctx.ZONES[z];
+            for (const task of getNormalTasks(zone, ctx)) {
+                if (task.name === targetTask.name) continue;
+                if (task.type === ctx.TaskType.Boss) continue;
+                if (!assignedCosts.has(task.name)) continue;
+                const cost = calcTaskEnergyCost(task, z, state, ctx);
+                if (cost <= 0) continue;
+                const xp = calcTaskXp(task, z, state, ctx) * task.maxReps;
+                const skills = task.skills.map(s => ctx.SKILL_NAMES?.[s] || `S${s}`);
+
+                // Check if task trains any of the focus's skills
+                const trainsTargetSkill = task.skills.some(s => targetSkills.has(s));
+                const effectiveXpPerEnergy = xp / cost;
+
+                grindCandidates.push({
+                    task, zoneId: z, zoneName: zone.name,
+                    cost, xp, xpPerEnergy: xp / cost,
+                    effectiveXpPerEnergy, trainsTargetSkill, skills,
+                });
+            }
         }
+
     }
 
-    // Sort by XP/energy efficiency (best first)
-    grindCandidates.sort((a, b) => b.xpPerEnergy - a.xpPerEnergy);
+    // Prefer tasks that train the focus's skills; fall back to all tasks
+    // if no relevant ones are available
+    const relevantCandidates = grindCandidates.filter(gc => gc.trainsTargetSkill);
+    const candidatesToUse = relevantCandidates.length > 0 ? relevantCandidates : grindCandidates;
+    candidatesToUse.sort((a, b) => b.effectiveXpPerEnergy - a.effectiveXpPerEnergy);
 
-    // Fill the grinding budget with the most efficient tasks
+    // Fill the grinding budget with the most efficient tasks.
+    // Insert grinding tasks BEFORE the focus task in the queue so the player
+    // grinds XP before attempting the expensive focus task.
+    const grindBudget = targetAffordable ? 0 : energyAfterTraversal;
     let grindRemaining = grindBudget;
     const selectedGrind = [];
-    for (const gc of grindCandidates) {
+    const grindEntries = [];
+    for (const gc of candidatesToUse) {
         if (grindRemaining <= 0) break;
-        queue.push({
+        grindEntries.push({
             task: gc.task,
             zoneId: gc.zoneId,
             zoneName: gc.zoneName,
@@ -605,12 +633,26 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
         });
         selectedGrind.push(gc);
         grindRemaining -= gc.cost;
-        // Include the first task that exceeds the budget (player runs out during it)
+    }
+
+    // Insert grinding entries before the focus task in the queue
+    if (grindEntries.length > 0 && focusTaskName) {
+        const focusIdx = queue.findIndex(e => e.task.name === focusTaskName);
+        if (focusIdx >= 0) {
+            queue.splice(focusIdx, 0, ...grindEntries);
+        } else {
+            // Focus not in traversal section — append before target
+            queue.push(...grindEntries);
+        }
+    } else {
+        queue.push(...grindEntries);
     }
 
     // Build grinding plan report
     const grindPlan = {
         budget: grindBudget,
+        targetAffordable,
+        targetSkills: [...targetSkills].map(s => ctx.SKILL_NAMES?.[s] || `S${s}`),
         candidatesConsidered: grindCandidates.length,
         tasksSelected: selectedGrind.length,
         tasks: grindCandidates.map(gc => ({
@@ -620,6 +662,8 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts) {
             cost: gc.cost,
             xp: gc.xp,
             xpPerEnergy: gc.xpPerEnergy,
+            effectiveXpPerEnergy: gc.effectiveXpPerEnergy,
+            trainsTargetSkill: gc.trainsTargetSkill,
             skills: gc.skills,
             selected: selectedGrind.includes(gc),
         })),
@@ -751,7 +795,7 @@ export class JTACostPlanner {
 
                 while (!sphereTargetCompleted && safetyCounter++ < maxSteps) {
                     // Build queue for the sphere target
-                    const { queue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                    const { queue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts, settings);
 
                     // Find the focus task. Priority:
                     // 1. First uncosted traversal/mandatory task (needed to reach target)
@@ -860,7 +904,7 @@ export class JTACostPlanner {
                     // skills will reduce preceding costs on the next reset.
                     if (energyAtFocus <= 0) {
                         const stateBefore = snapshotState(state);
-                        const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                        const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts, settings, focusTask.skills, focusTask.name);
 
                         let energy = state.maxEnergy;
                         const queueResults = [];
@@ -1001,7 +1045,7 @@ export class JTACostPlanner {
                     let focusCompleted = false;
                     for (let attempt = 1; attempt <= focusAttempts + 20 && !focusCompleted; attempt++) {
                         const stateBefore = snapshotState(state);
-                        const { queue: stepQueue, grindPlan: stepGrindPlan } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+                        const { queue: stepQueue, grindPlan: stepGrindPlan } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts, settings, focusTask.skills, focusTask.name);
 
                         let energy = state.maxEnergy;
                         const queueResults = [];
@@ -1276,7 +1320,7 @@ export class JTACostPlanner {
             const sphereTarget = sphereTargetInfo.task;
             const sphereTargetZoneId = planned.sphereTargetZoneId ?? sphereTargetInfo.zoneId;
 
-            const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts);
+            const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts, settings);
             const stateBefore = snapshotState(state);
 
             // Determine the cost scale for the focus task — the verify should

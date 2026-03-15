@@ -570,28 +570,37 @@ export class JTACostDebuggerUI {
         // Grind plan
         if (step.grindPlan) {
             const gp = step.grindPlan;
+            const targetSkillsStr = gp.targetSkills?.join(', ') || 'none';
+            const affordStr = gp.targetAffordable ? ' (target affordable, grinding skipped)' : '';
             html += `
                 <div class="jta-cd-detail-section">
-                    <div class="jta-cd-detail-section-title">XP Grinding Plan (${gp.tasksSelected}/${gp.candidatesConsidered} tasks, budget: ${gp.budget.toFixed(1)})</div>
-                    <table class="jta-cd-queue-table">
+                    <div class="jta-cd-detail-section-title">XP Grinding Plan (${gp.tasksSelected}/${gp.candidatesConsidered} tasks, budget: ${gp.budget.toFixed(1)}${affordStr})</div>
+                    <div style="margin-bottom: 4px; color: #999;">Target skills: ${targetSkillsStr}</div>
+            `;
+            if (gp.tasks.length > 0) {
+                html += `<table class="jta-cd-queue-table">
                         <thead><tr>
                             <th>Task</th><th>Zone</th><th>Skills</th>
-                            <th>Cost</th><th>XP</th><th>XP/E</th><th>Selected</th>
-                        </tr></thead><tbody>
-            `;
-            for (const gt of gp.tasks) {
-                const selClass = gt.selected ? 'jta-cd-completed' : 'jta-cd-skipped';
-                html += `<tr class="${selClass}">
-                    <td>${this._truncate(gt.taskName, 25)}</td>
-                    <td>${gt.zoneName || ''}</td>
-                    <td>${gt.skills.join(', ')}</td>
-                    <td>${gt.cost.toFixed(1)}</td>
-                    <td>${gt.xp.toFixed(0)}</td>
-                    <td>${gt.xpPerEnergy.toFixed(1)}</td>
-                    <td>${gt.selected ? '\u2713' : ''}</td>
-                </tr>`;
+                            <th>Cost</th><th>XP</th><th>XP/E</th><th>Eff.</th><th>Rel</th><th>Sel</th>
+                        </tr></thead><tbody>`;
+                for (const gt of gp.tasks) {
+                    const selClass = gt.selected ? 'jta-cd-completed' : 'jta-cd-skipped';
+                    const relIcon = gt.trainsTargetSkill ? '\u2713' : '';
+                    html += `<tr class="${selClass}">
+                        <td>${this._truncate(gt.taskName, 25)}</td>
+                        <td>${gt.zoneName || ''}</td>
+                        <td>${gt.skills.join(', ')}</td>
+                        <td>${gt.cost.toFixed(1)}</td>
+                        <td>${gt.xp.toFixed(0)}</td>
+                        <td>${gt.xpPerEnergy.toFixed(1)}</td>
+                        <td>${gt.effectiveXpPerEnergy?.toFixed(1) ?? '-'}</td>
+                        <td>${relIcon}</td>
+                        <td>${gt.selected ? '\u2713' : ''}</td>
+                    </tr>`;
+                }
+                html += `</tbody></table>`;
             }
-            html += `</tbody></table></div>`;
+            html += `</div>`;
         }
 
         // Action queue

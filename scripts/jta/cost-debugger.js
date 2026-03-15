@@ -149,20 +149,24 @@ for (const step of steps) {
 }
 
 // Print grinding efficiency for first step that has a grind plan
-const firstGrindStep = steps.find(s => s.grindPlan);
+const firstGrindStep = steps.find(s => s.grindPlan && s.grindPlan.tasks.length > 0);
 if (firstGrindStep) {
+    const gp = firstGrindStep.grindPlan;
     console.log('\n--- XP Grinding Efficiency (Step ' + firstGrindStep.stepIndex + ') ---\n');
-    console.log('  Task                                Zone                 Skills          Cost      XP    XP/E  Sel');
-    console.log('  ' + '-'.repeat(105));
-    for (const gt of firstGrindStep.grindPlan.tasks) {
+    console.log(`  Target skills: ${gp.targetSkills?.join(', ') || 'none'}`);
+    console.log('  Task                                Zone                 Skills          Cost      XP    XP/E   Eff  Rel Sel');
+    console.log('  ' + '-'.repeat(115));
+    for (const gt of gp.tasks) {
         console.log(
             `  ${gt.taskName.padEnd(36)} ${(gt.zoneName || '').padEnd(20)} ` +
             `${gt.skills.join(',').padEnd(14)} ` +
             `${gt.cost.toFixed(1).padStart(6)} ${gt.xp.toFixed(0).padStart(7)} ` +
-            `${gt.xpPerEnergy.toFixed(1).padStart(7)}  ${gt.selected ? 'Y' : ''}`
+            `${gt.xpPerEnergy.toFixed(1).padStart(7)} ` +
+            `${(gt.effectiveXpPerEnergy?.toFixed(1) || '-').padStart(5)}  ` +
+            `${gt.trainsTargetSkill ? 'Y' : ' '}   ${gt.selected ? 'Y' : ''}`
         );
     }
-    console.log(`  Budget: ${firstGrindStep.grindPlan.budget.toFixed(1)} | Selected: ${firstGrindStep.grindPlan.tasksSelected}/${firstGrindStep.grindPlan.candidatesConsidered}`);
+    console.log(`  Budget: ${gp.budget.toFixed(1)} | Selected: ${gp.tasksSelected}/${gp.candidatesConsidered}${gp.targetAffordable ? ' (target affordable, grinding skipped)' : ''}`);
 }
 
 // Print cost assignments table
