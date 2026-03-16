@@ -62,6 +62,18 @@ window.resetTasks = resetTasks;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.updateGamestate = updateGamestate;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.doHeadlessReset = () => {
+    // Clean energy reset for headless verification: resets zone, tasks,
+    // and energy without side effects (no maxEnergy change, no saves,
+    // no rendering). Skills and perks persist across resets.
+    GAMESTATE.current_zone = 0;
+    GAMESTATE.active_task = null;
+    resetTasks();
+    GAMESTATE.current_energy = GAMESTATE.max_energy;
+    GAMESTATE.is_in_energy_reset = false;
+    GAMESTATE.is_at_end_of_content = false;
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.clickTask = clickTask;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.clickItem = clickItem;

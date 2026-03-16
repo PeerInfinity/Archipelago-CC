@@ -328,16 +328,9 @@ try {
         lastSphereIndex = planned.sphereIndex;
 
         // Each step starts with fresh energy (matching the planner, which
-        // always begins each step with energy = maxEnergy). Reset zone to 0
-        // and restore energy so the queue can execute from scratch.
-        await page.evaluate(() => {
-            const gs = window.getGamestate;
-            gs.current_energy = gs.max_energy;
-            gs.current_zone = 0;
-            gs.is_in_energy_reset = false;
-            // Reset task completion state for this cycle
-            window.resetTasks();
-        });
+        // always begins each step with energy = maxEnergy). doHeadlessReset
+        // resets zone, tasks, and energy while preserving skills/perks.
+        await page.evaluate(() => window.doHeadlessReset());
 
         // Execute each task in the planned queue using the real game engine
         const stepResult = await page.evaluate(({ queue, focusName, taskIdByName }) => {
