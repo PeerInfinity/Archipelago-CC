@@ -81,24 +81,67 @@ class AutoCostAdjust(DefaultOnToggle):
     display_name = "Auto Cost Adjust"
 
 
+class CostGenMode(Range):
+    """Which cost generation algorithm to use:
+    0 = Legacy (jtaCostGenerator.adjustCosts — fast, simple heuristic)
+    1 = Planner (JTACostPlanner — simulated playthrough with binary search solver)
+    2 = Planner with two-pass (finds optimal xpMult, then re-solves)
+    The planner produces more accurate costs but takes longer (~16 seconds)."""
+    display_name = "Cost Gen Mode"
+    range_start = 0
+    range_end = 2
+    default = 2
+
+
+class CostGenNormalAttempts(Range):
+    """Target number of attempts for regular (non-perk/boss/traversal) tasks.
+    Only used with the planner (modes 1-2). Higher = more expensive tasks."""
+    display_name = "Cost Gen: Normal Attempts"
+    range_start = 1
+    range_end = 10
+    default = 2
+
+
+class CostGenPerkAttempts(Range):
+    """Target number of attempts for perk tasks.
+    Only used with the planner (modes 1-2). Higher = more grinding per perk."""
+    display_name = "Cost Gen: Perk Attempts"
+    range_start = 1
+    range_end = 20
+    default = 5
+
+
+class CostGenTraversalAttempts(Range):
+    """Target number of attempts for mandatory/travel zone traversal tasks.
+    Only used with the planner (modes 1-2)."""
+    display_name = "Cost Gen: Traversal Attempts"
+    range_start = 1
+    range_end = 20
+    default = 5
+
+
 class CostGenItemCollection(DefaultOnToggle):
-    """Cost generator assumes the player collects items during runs."""
+    """Cost generator assumes the player collects items during runs.
+    Only used with legacy mode (mode 0)."""
     display_name = "Cost Gen: Item Collection"
 
 
 class CostGenPushCollect(DefaultOnToggle):
     """Cost generator assumes the player alternates between collection
-    runs (save items) and push runs (consume all items)."""
+    runs (save items) and push runs (consume all items).
+    Only used with legacy mode (mode 0)."""
     display_name = "Cost Gen: Push/Collect"
 
 
 class CostGenGrindWithPushCollect(DefaultOnToggle):
-    """Cost generator assumes push/collect alternation during XP grinding."""
+    """Cost generator assumes push/collect alternation during XP grinding.
+    Only used with legacy mode (mode 0)."""
     display_name = "Cost Gen: Grind with Push/Collect"
 
 
 class CostGenArtifacts(DefaultOnToggle):
-    """Cost generator assumes strategic artifact usage."""
+    """Cost generator assumes strategic artifact usage.
+    Only used with legacy mode (mode 0)."""
     display_name = "Cost Gen: Artifact Usage"
 
 
@@ -134,7 +177,12 @@ class JTAOptions(PerGameCommonOptions):
     resets_per_sphere: ResetsPerSphere
     vanilla_placement: VanillaPlacement
     auto_cost_adjust: AutoCostAdjust
-    # Cost generation factors
+    costgen_mode: CostGenMode
+    # Cost generation factors (planner modes 1-2)
+    costgen_normal_attempts: CostGenNormalAttempts
+    costgen_perk_attempts: CostGenPerkAttempts
+    costgen_traversal_attempts: CostGenTraversalAttempts
+    # Cost generation factors (legacy mode 0)
     costgen_item_collection: CostGenItemCollection
     costgen_push_collect: CostGenPushCollect
     costgen_grind_with_push_collect: CostGenGrindWithPushCollect
