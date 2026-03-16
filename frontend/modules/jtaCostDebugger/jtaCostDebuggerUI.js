@@ -253,12 +253,31 @@ export class JTACostDebuggerUI {
             captureSolverDebug: this.rootElement.querySelector('.jta-cd-solver-debug')?.checked || false,
         };
 
-        this._setStatus(twoPass ? 'Pass 1: generating with xpMult adjustment...' : 'Generating costs...');
+        const passLabel = twoPass ? 'Pass 1' : 'Generating';
+        this._setStatus(`${passLabel}: starting...`);
 
-        // Run async to allow UI to update
-        setTimeout(() => {
+        // Helper to yield to browser for UI updates
+        const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
+
+        // Run async so progress updates render
+        (async () => {
             try {
-                let result = planner.planCosts(this._gameData, this._sphereLogContent, settings);
+                await yieldToUI();
+
+                let lastProgressUpdate = Date.now();
+                const progressCallback = ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
+                    // Throttle to avoid excessive DOM updates
+                    const now = Date.now();
+                    if (now - lastProgressUpdate > 200) {
+                        lastProgressUpdate = now;
+                        this._setStatus(`${passLabel}: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
+                    }
+                };
+
+                let result = planner.planCosts(this._gameData, this._sphereLogContent, {
+                    ...settings,
+                    onProgress: progressCallback,
+                });
 
                 // Track which game data the final pass used (for verification)
                 this._verifyGameData = this._gameData;
@@ -276,6 +295,8 @@ export class JTACostDebuggerUI {
 
                     if (xpMultOverrides.size > 0) {
                         this._setStatus(`Pass 2: re-solving with ${xpMultOverrides.size} baked xpMult values...`);
+                        await yieldToUI();
+
                         const pass2GameData = JSON.parse(JSON.stringify(this._gameData));
                         for (const zone of pass2GameData.zones) {
                             for (const task of zone.tasks) {
@@ -285,8 +306,18 @@ export class JTACostDebuggerUI {
                             }
                         }
                         const pass2Settings = { ...settings, adjustXpMult: false };
+                        lastProgressUpdate = Date.now();
                         const pass2Planner = getCostPlanner();
-                        result = pass2Planner.planCosts(pass2GameData, this._sphereLogContent, pass2Settings);
+                        result = pass2Planner.planCosts(pass2GameData, this._sphereLogContent, {
+                            ...pass2Settings,
+                            onProgress: ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
+                                const now = Date.now();
+                                if (now - lastProgressUpdate > 200) {
+                                    lastProgressUpdate = now;
+                                    this._setStatus(`Pass 2: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
+                                }
+                            },
+                        });
                         this._verifyGameData = pass2GameData;
                     }
                 }
@@ -307,7 +338,7 @@ export class JTACostDebuggerUI {
                 log('error', 'Cost generation failed', err);
                 this._setStatus(`Error: ${err.message}`);
             }
-        }, 50);
+        })();
     }
 
     _handleVerify() {

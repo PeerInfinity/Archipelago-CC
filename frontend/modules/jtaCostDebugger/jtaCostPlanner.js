@@ -979,8 +979,13 @@ export class JTACostPlanner {
      * @param {object} [settingsOverride] - Override default settings
      * @returns {{ costData: object, steps: Array, adjustedData: object }}
      */
+    /**
+     * @param {Function} [settingsOverride.onProgress] - Optional callback
+     *   called after each sphere: onProgress({ sphereIndex, totalSpheres, stepsGenerated })
+     */
     planCosts(gameDataJson, sphereLogContent, settingsOverride = {}) {
         const settings = { ...this._settings, ...settingsOverride };
+        const onProgress = settingsOverride.onProgress || null;
 
         // Parse inputs
         const steps = parseSphereLog(sphereLogContent, settings.playerNumber);
@@ -1399,6 +1404,16 @@ export class JTACostPlanner {
                 if (perkId !== undefined) {
                     grantPerk(state, perkId, ctx);
                 }
+            }
+
+            if (onProgress) {
+                onProgress({
+                    sphereIndex,
+                    totalSpheres: steps.length,
+                    sphereNum: steps.indexOf(sphereStep) + 1,
+                    stepsGenerated: globalStepIndex,
+                    tasksCosted: assignedCosts.size,
+                });
             }
         }
 
