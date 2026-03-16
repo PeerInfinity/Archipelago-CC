@@ -176,14 +176,16 @@ function calcTaskEnergyCost(task, zoneId, state, ctx) {
     const baseCost = calcTaskBaseCost(task, zoneId, ctx);
     let totalEnergy = 0;
     let repsCompleted = 0;
-    let progress = 0;
+    // Game starts each rep with 0.01 progress (applyTaskRepStartEffects)
+    let progress = 0.01;
 
     for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
         // Calculate progress and drain for this tick using current skills
         const progressPerTick = calcProgressMult(task, zoneId, simState, ctx);
         const addedProgress = Math.min(progressPerTick, baseCost - progress);
         progress += addedProgress;
-        const isSingle = progressPerTick >= baseCost;
+        // Game uses capped progress for isSingleTick check, not raw progressPerTick
+        const isSingle = addedProgress >= baseCost;
         const drain = calcDrainPerTick(task, zoneId, simState, ctx);
         totalEnergy += drain;
 
@@ -206,7 +208,7 @@ function calcTaskEnergyCost(task, zoneId, state, ctx) {
         // Check if rep completed
         if (progress >= baseCost) {
             repsCompleted++;
-            progress = 0;
+            progress = 0.01; // Game resets to 0.01 via applyTaskRepStartEffects
         }
     }
 
@@ -266,7 +268,7 @@ function applyTaskXp(task, zoneId, state, ctx) {
 
     const baseCost = calcTaskBaseCost(task, zoneId, ctx);
     let repsCompleted = 0;
-    let progress = 0;
+    let progress = 0.01; // Game starts each rep with 0.01 progress
 
     for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
         const progressPerTick = calcProgressMult(task, zoneId, state, ctx);
@@ -291,7 +293,7 @@ function applyTaskXp(task, zoneId, state, ctx) {
 
         if (progress >= baseCost) {
             repsCompleted++;
-            progress = 0;
+            progress = 0.01; // Game resets to 0.01 via applyTaskRepStartEffects
         }
     }
 }

@@ -327,6 +327,18 @@ try {
         }
         lastSphereIndex = planned.sphereIndex;
 
+        // Each step starts with fresh energy (matching the planner, which
+        // always begins each step with energy = maxEnergy). Reset zone to 0
+        // and restore energy so the queue can execute from scratch.
+        await page.evaluate(() => {
+            const gs = window.getGamestate;
+            gs.current_energy = gs.max_energy;
+            gs.current_zone = 0;
+            gs.is_in_energy_reset = false;
+            // Reset task completion state for this cycle
+            window.resetTasks();
+        });
+
         // Execute each task in the planned queue using the real game engine
         const stepResult = await page.evaluate(({ queue, focusName, taskIdByName }) => {
             const gs = window.getGamestate;
@@ -396,22 +408,7 @@ try {
             );
         }
 
-        // Reset if focus didn't complete
-        if (!stepResult.focusCompleted) {
-            await page.evaluate(() => {
-                const gs = window.getGamestate;
-                if (!gs.is_in_energy_reset) {
-                    // Force energy depletion so doEnergyReset works
-                    gs.current_energy = 0;
-                    gs.is_in_energy_reset = true;
-                }
-                window.doEnergyReset();
-            });
-            // Re-pause game loop (doEnergyReset calls setTickRate which restarts it)
-            await page.evaluate(() => {
-                if (window.jta?.pauseGameLoop) window.jta.pauseGameLoop();
-            });
-        }
+        // (Reset happens at the start of each step, not here)
 
         // Progress update
         if (i > 0 && i % 50 === 0) {
