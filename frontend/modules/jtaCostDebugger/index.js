@@ -74,6 +74,7 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jta:resumeGameLoop');
     registrationApi.registerEventBusPublisher('jta:saveGameState');
     registrationApi.registerEventBusPublisher('jta:restoreGameState');
+    registrationApi.registerEventBusPublisher('jta:resetToFreshState');
 
     log('info', `[${moduleInfo.name}] Registration complete.`);
 }

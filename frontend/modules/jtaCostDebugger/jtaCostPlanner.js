@@ -1989,14 +1989,17 @@ export class JTACostPlanner {
         // 2. Pause the game loop to prevent conflicts during verification
         await sendAndWait('jta:pauseGameLoop', {}, 'jta:gameLoopPaused').catch(() => {});
 
-        // 2. Enable instant mode
+        // 3. Enable instant mode
         const imResult = await sendAndWait('jta:setInstantMode', { enabled: true }, 'jta:instantModeSet');
         if (imResult.error) {
             await sendAndWait('jta:resumeGameLoop', {}, 'jta:gameLoopResumed').catch(() => {});
             throw new Error('Failed to enable instant mode: ' + imResult.error);
         }
 
-        // 3. Load ONLY costMult/xpMult changes into the game.
+        // 4. Reset game to fresh state (clear skills, perks, items from previous play)
+        await sendAndWait('jta:resetToFreshState', {}, 'jta:freshStateReady');
+
+        // 5. Load ONLY costMult/xpMult changes into the game.
         // Sending the full adjustedData corrupts other task properties
         // (item/perk refs) that the game's rendering code depends on.
         const costsOnlyData = this._buildCostsOnlyData(gameDataJson);

@@ -1076,6 +1076,54 @@ function setupSubscriptions(client) {
         setTimeout(() => { location.reload(); }, 100);
     });
 
+    // Reset game to fresh state (for verification — clears skills, perks, items, etc.)
+    client.subscribeEventBus('jta:resetToFreshState', () => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:freshStateReady', { success: false, error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        // Reset all persistent state
+        gs.current_zone = 0;
+        gs.highest_zone = 0;
+        gs.highest_zone_fully_completed = -1;
+        gs.highest_zone_ever = 0;
+        gs.highest_zone_fully_completed_ever = -1;
+        gs.energy_reset_count = 0;
+        gs.current_energy = gs.max_energy;
+        gs.max_energy = 100;
+        gs.is_in_energy_reset = false;
+        gs.is_at_end_of_content = false;
+        gs.active_task = null;
+        gs.power = 0;
+        gs.attunement = 0;
+        gs.bottled_lightnings = 0;
+        // Clear perks
+        if (gs.perks instanceof Map) gs.perks.clear();
+        // Clear items
+        if (gs.items instanceof Map) gs.items.clear();
+        if (gs.used_items instanceof Map) gs.used_items.clear();
+        gs.items_found_this_energy_reset = [];
+        // Clear prestige
+        if (gs.prestige_unlocks instanceof Map) gs.prestige_unlocks.clear();
+        if (gs.prestige_repeatables instanceof Map) gs.prestige_repeatables.clear();
+        gs.prestige_available = false;
+        gs.prestige_layers_unlocked = [];
+        // Reset skills to level 0
+        for (const skill of gs.skills) {
+            skill.level = 0;
+            skill.progress = 0;
+            skill.speed_modifier = 1;
+        }
+        gs.skills_at_start_of_reset = gs.skills.map(() => 0);
+        gs.unlocked_skills = [0]; // Charisma is always unlocked
+        gs.unlocked_tasks = [];
+        // Reset tasks for zone 0
+        if (window.resetTasks) window.resetTasks();
+        log.info('Game state reset to fresh');
+        client.publishEventBus('jta:freshStateReady', { success: true, timestamp: Date.now() });
+    });
+
     // --- Instant mode APIs (for cost debugger verification) ---
 
     // Lazily inject the instant mode wrapper script into the game context.
