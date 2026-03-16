@@ -301,7 +301,13 @@ function solveCostMultForEnergy(task, zoneId, targetEnergy, state, ctx, margin =
  */
 function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyAtTask, state, ctx, assignedCosts, settings, debugLog = null, expandIter = null, queueContext = null) {
     if (targetAttempts <= 1) {
-        return { costMult: solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx, undefined, debugLog), xpAdjustments: null };
+        const costMult = solveCostMultForEnergy(task, zoneId, remainingEnergyAtTask, state, ctx, undefined, debugLog);
+        // If costMult hit the floor and xpMult adjustment is enabled,
+        // fall through to Phase 3 to try boosting XP instead.
+        if (!(costMult <= 0.01 && settings?.adjustXpMult)) {
+            return { costMult, xpAdjustments: null };
+        }
+        // Fall through — Phase 1 will confirm the floor, then Phase 3 activates
     }
 
     const savedCost = task.costMult;
@@ -354,22 +360,27 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
         return { costMult: finalCostMult, xpAdjustments: null };
     }
 
-    // Phase 2: costMult alone can't produce exactly targetAttempts
-    // (bestAttempts < targetAttempts due to discrete attempt count jumps).
-    // Strategy: keep the phase 1 bestCost and REDUCE xpMult on uncosted
-    // grinding tasks to slow XP gain, increasing the attempt count.
-    // Less XP → slower skill improvement → cost stays high longer → more attempts.
+    // Determine whether we need to increase or decrease attempts.
+    // Check the actual attempt count at the costMult floor.
     task.costMult = finalCostMult;
+    const attemptsAtFloor = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, null, queueContext);
+    const needMoreAttempts = attemptsAtFloor < targetAttempts;
+    const needFewerAttempts = attemptsAtFloor > targetAttempts;
 
     // Collect tasks whose xpMult we'll adjust.
-    // Only adjust tasks that haven't been costed yet — already-assigned tasks
-    // have finalized xpMult values that shouldn't be modified retroactively.
+    // Phase 2 (need more attempts): adjust uncosted tasks only — reducing their
+    //   XP slows skill growth, keeping costs high longer.
+    // Phase 3 (need fewer attempts): adjust only costed tasks that are actually
+    //   executed in the queue (traversal + grinding). These provide the XP that
+    //   drives skill growth. Uncosted tasks aren't executed so adjusting them
+    //   has no effect.
     const xpTasks = [];
     for (let z = 0; z <= zoneId && z < ctx.ZONES.length; z++) {
         for (const t of ctx.ZONES[z].tasks) {
-            if (t.name !== task.name && !assignedCosts.has(t.name)) {
-                xpTasks.push({ task: t, origXpMult: t.xpMult });
-            }
+            if (t.name === task.name) continue;
+            if (needMoreAttempts && assignedCosts.has(t.name)) continue; // Phase 2: uncosted only
+            if (needFewerAttempts && !assignedCosts.has(t.name)) continue; // Phase 3: costed only
+            xpTasks.push({ task: t, origXpMult: t.xpMult });
         }
     }
 
@@ -378,16 +389,26 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
         return { costMult: finalCostMult, xpAdjustments: null };
     }
 
+    const phase = needFewerAttempts ? 3 : 2;
     if (debugLog) {
-        debugLog.push({ type: 'phase_separator', phase: 2, taskCount: xpTasks.length });
+        debugLog.push({ type: 'phase_separator', phase, taskCount: xpTasks.length, attemptsAtFloor, needMoreAttempts, needFewerAttempts });
     }
 
-    // Binary search for xpMult multiplier M (0 < M < 1) that reduces XP
-    // just enough to increase attempt count to targetAttempts.
-    // We want the HIGHEST M (least reduction) where attempts >= targetAttempts.
-    let xpLogLo = Math.log(0.0001);
-    let xpLogHi = Math.log(1.0);
+    // Binary search for xpMult multiplier M.
+    // Phase 2 (M < 1): reduce XP to increase attempts. Want HIGHEST M where attempts >= target.
+    // Phase 3 (M > 1): increase XP to decrease attempts. Want LOWEST M where attempts <= target.
+    let xpLogLo, xpLogHi;
     let bestXpMult = null;
+
+    if (needFewerAttempts) {
+        // Phase 3: search M > 1 (increase XP)
+        xpLogLo = Math.log(1.0);
+        xpLogHi = Math.log(10000);
+    } else {
+        // Phase 2: search M < 1 (decrease XP)
+        xpLogLo = Math.log(0.0001);
+        xpLogHi = Math.log(1.0);
+    }
 
     for (let iter = 0; iter < 30; iter++) {
         const logMid = (xpLogLo + xpLogHi) / 2;
@@ -396,31 +417,42 @@ function solveCostMultForAttempts(task, zoneId, targetAttempts, remainingEnergyA
             entry.task.xpMult = entry.origXpMult * mid;
         }
 
-        const isExpandedIter2 = expandIter && expandIter.phase === 2 && expandIter.iteration === iter;
+        const isExpandedIter2 = expandIter && expandIter.phase === phase && expandIter.iteration === iter;
         const substepLog2 = isExpandedIter2 ? [] : null;
         const attempts = simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, targetAttempts + 10, settings, substepLog2, queueContext);
 
-        const decision = attempts >= targetAttempts ? 'lo=mid' : 'hi=mid';
+        let decision;
+        if (needFewerAttempts) {
+            // Phase 3: want attempts <= target
+            decision = attempts <= targetAttempts ? 'hi=mid' : 'lo=mid';
+            if (attempts <= targetAttempts) {
+                if (bestXpMult === null || mid < bestXpMult) bestXpMult = mid;
+                xpLogHi = logMid; // try less boost
+            } else {
+                xpLogLo = logMid; // need more boost
+            }
+        } else {
+            // Phase 2: want attempts >= target
+            decision = attempts >= targetAttempts ? 'lo=mid' : 'hi=mid';
+            if (attempts >= targetAttempts) {
+                if (bestXpMult === null || mid > bestXpMult) bestXpMult = mid;
+                xpLogLo = logMid; // try less reduction
+            } else {
+                xpLogHi = logMid;
+            }
+        }
+
         if (debugLog) {
             debugLog.push({
-                type: 'attempts_phase2', phase: 2, iteration: iter,
+                type: `attempts_phase${phase}`, phase, iteration: iter,
                 xpMultiplier: mid, attempts, bestXpMult, decision,
                 substeps: substepLog2,
             });
         }
-
-        if (attempts >= targetAttempts) {
-            // Enough attempts — track highest M (least reduction)
-            bestXpMult = mid;
-            xpLogLo = logMid; // try less reduction
-        } else {
-            // Too few attempts — need more reduction
-            xpLogHi = logMid;
-        }
     }
 
     if (bestXpMult === null) {
-        // Even extreme reduction doesn't help — fall back to phase 1
+        // Adjustment didn't help — fall back to phase 1
         for (const entry of xpTasks) {
             entry.task.xpMult = entry.origXpMult;
         }
@@ -839,9 +871,12 @@ function buildActionQueue(targetTask, targetZoneId, state, ctx, assignedCosts, s
 }
 
 function getTaskCategory(task, ctx) {
+    // Mandatory/Travel type takes priority — a task's role in the traversal
+    // chain is fundamental. Having a perk is incidental and shouldn't change
+    // cost scaling (e.g. Find an Amulet is Mandatory + perk).
+    if (task.type === ctx.TaskType.Mandatory || task.type === ctx.TaskType.Travel) return 'traversal';
     if (task.perk !== null && task.perk !== undefined) return 'perk';
     if (task.type === ctx.TaskType.Boss) return 'boss';
-    if (task.type === ctx.TaskType.Mandatory || task.type === ctx.TaskType.Travel) return 'traversal';
     return 'normal';
 }
 
@@ -861,7 +896,7 @@ function getTargetAttempts(task, ctx, settings) {
  * Default settings for the JTA Cost Planner.
  */
 export const DEFAULT_SETTINGS = {
-    normalAttempts: 1,     // Regular tasks completable on 1st try
+    normalAttempts: 2,     // Regular tasks completable on 2nd try
     perkAttempts: 5,       // Perk tasks completable on 5th try
     bossAttempts: 5,       // Boss tasks completable on 5th try
     traversalAttempts: 5,  // Traversal (mandatory/travel) tasks
@@ -1042,19 +1077,13 @@ export class JTACostPlanner {
                     //
                     // Only count traversal-type entries — grinding entries are not
                     // prerequisites and shouldn't reduce the energy budget.
-                    // If the focus task isn't in the queue (found via reachability scan),
-                    // also skip traversal for zones at or beyond the focus zone (those
-                    // are for leaving the zone, not reaching it).
                     const stateBeforeCost = cloneState(state);
                     const stateAtFocus = cloneState(state);
                     let energyAtFocus = state.maxEnergy;
-                    const focusInQueue = queue.some(e => e.task.name === focusTask.name);
                     for (const entry of queue) {
                         if (entry.task.name === focusTask.name) break;
                         // Skip non-traversal entries (grinding, perk, etc.)
                         if (entry.type !== 'traversal') continue;
-                        // If focus isn't in the queue, skip traversal at/above focus zone
-                        if (!focusInQueue && entry.zoneId >= focusZoneId) continue;
                         if (assignedCosts.has(entry.task.name)) {
                             const cost = calcTaskEnergyCost(entry.task, entry.zoneId, stateAtFocus, ctx);
                             if (cost <= energyAtFocus) {
@@ -1162,6 +1191,7 @@ export class JTACostPlanner {
                             stateAtFocus, ctx, assignedCosts, settings, solverDebugLog, expandForThisStep, queueContext
                         );
                         newCostMult = result.costMult;
+                        xpAdjustments = result.xpAdjustments;
                     } else {
                         const result = solveCostMultForAttempts(
                             focusTask, focusZoneId, focusAttempts, energyAtFocus,
@@ -1175,10 +1205,14 @@ export class JTACostPlanner {
                     const preSolvedCostMult = newCostMult;
 
                     // Scale down costs by category to leave more energy for
-                    // subsequent tasks in the queue
-                    const costScale =
-                        focusCategory === 'traversal' ? (settings.traversalCostScale ?? 1) :
-                        focusCategory === 'normal' ? (settings.normalCostScale ?? 1) : 1;
+                    // subsequent tasks in the queue. Only apply for single-attempt
+                    // tasks (energy-based solver) — multi-attempt tasks use
+                    // simulation that already finds the exact costMult, and
+                    // scaling afterward would break the calibrated result.
+                    const costScale = focusAttempts <= 1
+                        ? (focusCategory === 'traversal' ? (settings.traversalCostScale ?? 1) :
+                           focusCategory === 'normal' ? (settings.normalCostScale ?? 1) : 1)
+                        : 1;
                     if (costScale < 1) {
                         newCostMult = Math.max(0.01, newCostMult * costScale);
                     }
@@ -1199,7 +1233,7 @@ export class JTACostPlanner {
                     // focus task, not future steps.
 
                     let formula;
-                    if (focusAttempts <= 1) {
+                    if (focusAttempts <= 1 && !xpAdjustments) {
                         formula = `costMult solved for energyCost = ${(energyAtFocus * settings.energyMargin).toFixed(1)} (${(settings.energyMargin * 100).toFixed(0)}% of ${energyAtFocus.toFixed(1)} remaining)`;
                     } else if (xpAdjustments) {
                         formula = `costMult=${newCostMult.toFixed(4)} + xpMult adjusted on ${xpAdjustments.length} tasks (x${xpAdjustments[0]?.multiplier.toFixed(4)}) for ${focusAttempts} attempts`;

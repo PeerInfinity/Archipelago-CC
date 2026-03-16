@@ -41,6 +41,9 @@ function parseArgs(argv) {
             args.traversalCostScale = parseFloat(argv[++i]);
         } else if (arg === '--adjust-xp') {
             args.adjustXpMult = true;
+        } else if (arg === '--two-pass') {
+            args.twoPass = true;
+            args.adjustXpMult = true; // first pass needs xp adjustment
         } else if (arg === '-v' || arg === '--verbose') {
             args.verbose++;
         } else if (arg === '-vv') {
@@ -72,11 +75,13 @@ Options:
   -g, --gamedata <path>         Randomized game data JSON (required)
   -s, --spherelog <path>        Sphere log JSONL (required)
   -o, --output <path>           Output path for report JSON (default: stdout summary only)
-  --normal-attempts <n>         Attempts for regular tasks (default: 1)
+  --normal-attempts <n>         Attempts for regular tasks (default: 2)
   --perk-attempts <n>           Attempts for perk tasks (default: 5)
   --boss-attempts <n>           Attempts for boss tasks (default: 5)
   -p, --player <n>              Player number in sphere log (default: 1)
   --adjust-xp                   Adjust xpMult on grinding tasks to hit exact attempt counts
+  --two-pass                    Two-pass mode: first pass with xpMult adjustment, second pass
+                                  uses the xpMult values from the first pass (implies --adjust-xp)
   -h, --help                    Show this help
 
 Verbosity:
@@ -109,6 +114,19 @@ function printStepVerbose(step, verbose, queueAll) {
         console.log(`    Formula: ${ca.formula}`);
         if (ca.costScale !== undefined && ca.costScale !== 1) {
             console.log(`    Cost scale: ${ca.costScale.toFixed(2)} (${ca.category}), preSolved=${ca.preSolvedCostMult?.toFixed(6) ?? '-'}, final=${ca.costMult.toFixed(6)}`);
+        }
+        if (ca.xpAdjustments && ca.xpAdjustments.length > 0) {
+            const mult = ca.xpAdjustments[0].multiplier;
+            const dir = mult > 1 ? 'increased' : 'reduced';
+            console.log(`    XP adjustment: ${ca.xpAdjustments.length} tasks ${dir} by x${mult.toFixed(4)}`);
+            if (verbose >= 2) {
+                for (const adj of ca.xpAdjustments.slice(0, 10)) {
+                    console.log(`      ${adj.taskName.padEnd(36)} xpMult: ${adj.origXpMult.toFixed(4)} -> ${adj.newXpMult.toFixed(4)}`);
+                }
+                if (ca.xpAdjustments.length > 10) {
+                    console.log(`      ... and ${ca.xpAdjustments.length - 10} more`);
+                }
+            }
         }
     }
 
@@ -227,14 +245,19 @@ function printSolverDebug(step) {
         }
     }
 
-    // Phase 2: xpMult solver
+    // Phase 2/3: xpMult solver
     const separator = sd.find(e => e.type === 'phase_separator');
     const phase2 = sd.filter(e => e.type === 'attempts_phase2');
-    if (phase2.length > 0) {
-        console.log(`    Phase 2: xpMult binary search (${separator?.taskCount ?? '?'} tasks)`);
+    const phase3 = sd.filter(e => e.type === 'attempts_phase3');
+    const xpPhaseEntries = phase3.length > 0 ? phase3 : phase2;
+    if (xpPhaseEntries.length > 0) {
+        const phaseNum = phase3.length > 0 ? 3 : 2;
+        const direction = phase3.length > 0 ? 'increase XP to reduce attempts' : 'reduce XP to increase attempts';
+        const extra = separator?.attemptsAtFloor !== undefined ? `, attempts at floor=${separator.attemptsAtFloor}` : '';
+        console.log(`    Phase ${phaseNum}: xpMult binary search — ${direction} (${separator?.taskCount ?? '?'} tasks${extra})`);
         console.log(`      ${'Iter'.padStart(6)} ${'xpMult'.padStart(12)} ${'attempts'.padStart(10)} ${'bestXpMult'.padStart(12)} ${'decision'.padEnd(8)}`);
         console.log(`      ${'-'.repeat(6)} ${'-'.repeat(12)} ${'-'.repeat(10)} ${'-'.repeat(12)} ${'-'.repeat(8)}`);
-        for (const e of phase2) {
+        for (const e of xpPhaseEntries) {
             console.log(
                 `      ${String(e.iteration).padStart(6)} ${e.xpMultiplier.toFixed(6).padStart(12)} ` +
                 `${String(e.attempts).padStart(10)} ${(e.bestXpMult?.toFixed(6) ?? '-').padStart(12)} ${e.decision}`
@@ -268,7 +291,7 @@ const gameDataJson = JSON.parse(readFileSync(args.gamedata, 'utf-8'));
 const sphereLogContent = readFileSync(args.spherelog, 'utf-8');
 
 const settings = {
-    normalAttempts: args.normalAttempts ?? 1,
+    normalAttempts: args.normalAttempts ?? 2,
     perkAttempts: args.perkAttempts ?? 5,
     bossAttempts: args.bossAttempts ?? 5,
     traversalAttempts: args.traversalAttempts ?? 5,
@@ -295,9 +318,49 @@ console.log('');
 const startTime = Date.now();
 const planner = new JTACostPlanner();
 const useExpansion = args.debugSolverStep !== undefined && args.debugSolverIter !== undefined;
-const result = useExpansion
+let result = useExpansion
     ? planner.planCostsWithExpansion(gameDataJson, sphereLogContent, settings, args.debugSolverStep, args.debugSolverIter)
     : planner.planCosts(gameDataJson, sphereLogContent, settings);
+
+// Two-pass mode: collect xpMult adjustments from pass 1, bake them into
+// the game data, then re-run without adjustXpMult.
+if (args.twoPass) {
+    const pass1Elapsed = Date.now() - startTime;
+    const xpMultOverrides = new Map();
+
+    // Collect all xpMult adjustments from pass 1 cost assignments
+    for (const step of result.steps) {
+        const xa = step.costAssignment?.xpAdjustments;
+        if (!xa) continue;
+        for (const adj of xa) {
+            // Later adjustments override earlier ones (more context available)
+            xpMultOverrides.set(adj.taskName, adj.newXpMult);
+        }
+    }
+
+    if (xpMultOverrides.size > 0) {
+        console.log(`Pass 1 complete in ${pass1Elapsed}ms — ${xpMultOverrides.size} tasks with xpMult adjustments`);
+
+        // Apply xpMult overrides to a fresh copy of game data
+        const pass2GameData = JSON.parse(JSON.stringify(gameDataJson));
+        for (const zone of pass2GameData.zones) {
+            for (const task of zone.tasks) {
+                if (xpMultOverrides.has(task.name)) {
+                    task.xpMult = xpMultOverrides.get(task.name);
+                }
+            }
+        }
+
+        // Re-run without adjustXpMult, using the baked-in xpMult values
+        const pass2Settings = { ...settings, adjustXpMult: false };
+        const pass2Planner = new JTACostPlanner();
+        result = pass2Planner.planCosts(pass2GameData, sphereLogContent, pass2Settings);
+        console.log('Pass 2 complete — re-solved with baked xpMult values');
+    } else {
+        console.log(`Pass 1 complete in ${pass1Elapsed}ms — no xpMult adjustments needed`);
+    }
+}
+
 const elapsed = Date.now() - startTime;
 
 // Summary
@@ -363,6 +426,33 @@ if (verbose >= 2) {
     if (firstGrindStep) {
         printGrindingTable(firstGrindStep);
     }
+}
+
+// Report tasks that took more than expected attempts
+const taskAttemptCounts = new Map();
+for (const step of steps) {
+    if (step.attemptNumber === 0) continue; // skip grinding steps
+    const key = `${step.stepIndex - step.attemptNumber + 1}:${step.targetTask}`;
+    if (!taskAttemptCounts.has(key)) {
+        taskAttemptCounts.set(key, { taskName: step.targetTask, targetAttempts: step.targetAttempts, actualAttempts: 0, completed: false, startStep: step.stepIndex });
+    }
+    const entry = taskAttemptCounts.get(key);
+    entry.actualAttempts = step.attemptNumber;
+    if (step.targetCompleted) entry.completed = true;
+}
+const overTarget = [...taskAttemptCounts.values()].filter(e => e.actualAttempts > e.targetAttempts);
+if (overTarget.length > 0) {
+    console.log(`\n--- Tasks Over Target Attempts (${overTarget.length}) ---\n`);
+    console.log('  Task                                    Target  Actual  Delta  Step');
+    console.log('  ' + '-'.repeat(70));
+    for (const e of overTarget) {
+        console.log(
+            `  ${e.taskName.padEnd(40)} ${String(e.targetAttempts).padStart(6)}  ${String(e.actualAttempts).padStart(6)}  ` +
+            `${(`+${e.actualAttempts - e.targetAttempts}`).padStart(5)}  ${e.startStep}`
+        );
+    }
+} else {
+    console.log('\nAll tasks completed within target attempts.');
 }
 
 // Print cost assignments table

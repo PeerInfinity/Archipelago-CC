@@ -70,7 +70,7 @@ export class JTACostDebuggerUI {
                 <summary class="jta-cd-settings-summary">Settings</summary>
                 <div class="jta-cd-settings">
                     <label title="Attempts for regular tasks">
-                        Normal: <input type="number" class="jta-cd-normal-attempts" value="1" min="1" max="20">
+                        Normal: <input type="number" class="jta-cd-normal-attempts" value="2" min="1" max="20">
                     </label>
                     <label title="Attempts for perk unlock tasks">
                         Perks: <input type="number" class="jta-cd-perk-attempts" value="5" min="1" max="20">
@@ -83,6 +83,9 @@ export class JTACostDebuggerUI {
                     </label>
                     <label title="Adjust xpMult on grinding tasks to hit exact attempt counts">
                         <input type="checkbox" class="jta-cd-adjust-xp"> Adjust XP
+                    </label>
+                    <label title="Two-pass: first pass finds xpMult adjustments, second pass re-solves with those values baked in">
+                        <input type="checkbox" class="jta-cd-two-pass"> Two-Pass
                     </label>
                     <label title="Capture binary search solver debug data for step detail view">
                         <input type="checkbox" class="jta-cd-solver-debug"> Solver Debug
@@ -129,6 +132,16 @@ export class JTACostDebuggerUI {
         el.querySelector('.jta-cd-btn-apply').addEventListener('click', () => this._handleApply());
         el.querySelector('.jta-cd-btn-download').addEventListener('click', () => this._handleDownload());
         el.querySelector('.jta-cd-btn-reset').addEventListener('click', () => this._handleReset());
+
+        // Adjust XP and Two-Pass are mutually exclusive
+        const adjustXpCb = el.querySelector('.jta-cd-adjust-xp');
+        const twoPassCb = el.querySelector('.jta-cd-two-pass');
+        adjustXpCb.addEventListener('change', () => {
+            if (adjustXpCb.checked) twoPassCb.checked = false;
+        });
+        twoPassCb.addEventListener('change', () => {
+            if (twoPassCb.checked) adjustXpCb.checked = false;
+        });
     }
 
     _attachResizeHandle(el) {
@@ -228,25 +241,55 @@ export class JTACostDebuggerUI {
         }
 
         // Read settings from UI
+        const twoPass = this.rootElement.querySelector('.jta-cd-two-pass')?.checked || false;
         const settings = {
-            normalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-normal-attempts').value) || 1,
+            normalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-normal-attempts').value) || 2,
             perkAttempts: parseInt(this.rootElement.querySelector('.jta-cd-perk-attempts').value) || 5,
             bossAttempts: parseInt(this.rootElement.querySelector('.jta-cd-boss-attempts').value) || 5,
             traversalAttempts: parseInt(this.rootElement.querySelector('.jta-cd-traversal-attempts').value) || 5,
-            adjustXpMult: this.rootElement.querySelector('.jta-cd-adjust-xp')?.checked || false,
+            adjustXpMult: twoPass || (this.rootElement.querySelector('.jta-cd-adjust-xp')?.checked || false),
             captureSolverDebug: this.rootElement.querySelector('.jta-cd-solver-debug')?.checked || false,
         };
 
-        this._setStatus('Generating costs...');
+        this._setStatus(twoPass ? 'Pass 1: generating with xpMult adjustment...' : 'Generating costs...');
 
         // Run async to allow UI to update
         setTimeout(() => {
             try {
-                const result = planner.planCosts(this._gameData, this._sphereLogContent, settings);
+                let result = planner.planCosts(this._gameData, this._sphereLogContent, settings);
+
+                // Two-pass: collect xpMult adjustments, bake into game data, re-solve
+                if (twoPass) {
+                    const xpMultOverrides = new Map();
+                    for (const step of result.steps) {
+                        const xa = step.costAssignment?.xpAdjustments;
+                        if (!xa) continue;
+                        for (const adj of xa) {
+                            xpMultOverrides.set(adj.taskName, adj.newXpMult);
+                        }
+                    }
+
+                    if (xpMultOverrides.size > 0) {
+                        this._setStatus(`Pass 2: re-solving with ${xpMultOverrides.size} baked xpMult values...`);
+                        const pass2GameData = JSON.parse(JSON.stringify(this._gameData));
+                        for (const zone of pass2GameData.zones) {
+                            for (const task of zone.tasks) {
+                                if (xpMultOverrides.has(task.name)) {
+                                    task.xpMult = xpMultOverrides.get(task.name);
+                                }
+                            }
+                        }
+                        const pass2Settings = { ...settings, adjustXpMult: false };
+                        const pass2Planner = getCostPlanner();
+                        result = pass2Planner.planCosts(pass2GameData, this._sphereLogContent, pass2Settings);
+                    }
+                }
+
                 this._lastResult = result;
                 this._renderStepList(result.steps);
                 this._updateSummary(result);
-                this._setStatus(`Done: ${result.steps.length} steps, ${result.assignedCosts.size} tasks costed.`);
+                const passInfo = twoPass ? ' (two-pass)' : '';
+                this._setStatus(`Done${passInfo}: ${result.steps.length} steps, ${result.assignedCosts.size} tasks costed.`);
                 this.rootElement.querySelector('.jta-cd-btn-verify').disabled = false;
                 this.rootElement.querySelector('.jta-cd-btn-step-verify').disabled = false;
                 this.rootElement.querySelector('.jta-cd-btn-apply').disabled = false;
@@ -581,6 +624,20 @@ export class JTACostDebuggerUI {
                         <tr><td>Cost Scale</td><td>${ca.costScale?.toFixed(2) ?? '1.00'} (${ca.category})</td></tr>
                         <tr><td>Pre-scale costMult</td><td>${ca.preSolvedCostMult?.toFixed(6) ?? '-'}</td></tr>
                     </table>
+                    ${ca.xpAdjustments && ca.xpAdjustments.length > 0 ? (() => {
+                        const mult = ca.xpAdjustments[0].multiplier;
+                        const dir = mult > 1 ? 'increased' : 'reduced';
+                        let xpHtml = `<details class="jta-cd-xp-adjust-details" style="margin-top: 6px;">
+                            <summary style="cursor:pointer; color:#d4a64a;">${ca.xpAdjustments.length} tasks xpMult ${dir} by x${mult.toFixed(4)}</summary>
+                            <table class="jta-cd-queue-table" style="margin-top: 4px;">
+                                <thead><tr><th>Task</th><th>Original</th><th>Adjusted</th></tr></thead>
+                                <tbody>`;
+                        for (const adj of ca.xpAdjustments) {
+                            xpHtml += `<tr><td>${adj.taskName}</td><td>${adj.origXpMult.toFixed(4)}</td><td>${adj.newXpMult.toFixed(4)}</td></tr>`;
+                        }
+                        xpHtml += `</tbody></table></details>`;
+                        return xpHtml;
+                    })() : ''}
                 </div>
             `;
 
@@ -891,21 +948,26 @@ export class JTACostDebuggerUI {
             html += `</div>`;
         }
 
-        // Phase 2: xpMult solver
+        // Phase 2/3: xpMult solver
         const separator = solverDebug.find(e => e.type === 'phase_separator');
         const phase2 = solverDebug.filter(e => e.type === 'attempts_phase2');
-        if (phase2.length > 0) {
+        const phase3 = solverDebug.filter(e => e.type === 'attempts_phase3');
+        const xpPhaseEntries = phase3.length > 0 ? phase3 : phase2;
+        if (xpPhaseEntries.length > 0) {
+            const phaseNum = phase3.length > 0 ? 3 : 2;
+            const direction = phase3.length > 0 ? 'increase XP to reduce attempts' : 'reduce XP to increase attempts';
+            const extra = separator?.attemptsAtFloor !== undefined ? `, attempts at floor=${separator.attemptsAtFloor}` : '';
             html += `<div style="margin-bottom: 8px;">
-                <strong>Phase 2: xpMult binary search (${separator?.taskCount ?? '?'} tasks)</strong>
+                <strong>Phase ${phaseNum}: xpMult binary search &mdash; ${direction} (${separator?.taskCount ?? '?'} tasks${extra})</strong>
                 <table class="jta-cd-queue-table">
                     <thead><tr><th>Iter</th><th>xpMult</th><th>Attempts</th><th>Best xpMult</th><th>Decision</th><th></th></tr></thead>
                     <tbody>`;
-            for (const e of phase2) {
+            for (const e of xpPhaseEntries) {
                 html += `<tr>
                     <td>${e.iteration}</td><td>${e.xpMultiplier.toFixed(6)}</td>
                     <td>${e.attempts}</td><td>${e.bestXpMult?.toFixed(6) ?? '-'}</td>
                     <td>${e.decision}</td>
-                    <td><button class="jta-cd-btn-expand-iter" data-step="${stepIndex}" data-iter="${e.iteration}" data-phase="2" title="Show inner simulation substeps">\u25B6</button></td>
+                    <td><button class="jta-cd-btn-expand-iter" data-step="${stepIndex}" data-iter="${e.iteration}" data-phase="${phaseNum}" title="Show inner simulation substeps">\u25B6</button></td>
                 </tr>`;
             }
             html += `</tbody></table></div>`;
