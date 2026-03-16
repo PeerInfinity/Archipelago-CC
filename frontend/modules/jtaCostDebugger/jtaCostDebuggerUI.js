@@ -832,7 +832,7 @@ export class JTACostDebuggerUI {
                     <table class="jta-cd-table">
                         ${v.focusMatch !== undefined ? `<tr><td>Focus Match</td><td class="${focusColor}">${v.focusMatch ? 'Yes' : `No (actual: ${v.focusTask})`}</td></tr>` : ''}
                         <tr><td>Completed Match</td><td class="${complColor}">${v.completedMatch ? 'Yes' : `No (actual: ${v.completed})`}</td></tr>
-                        <tr><td>Verify Energy</td><td>${v.energyBudget.toFixed(1)} budget | ${v.energyUsed.toFixed(1)} used | ${v.energyRemaining.toFixed(1)} remaining</td></tr>
+                        <tr><td>Verify Energy</td><td>${v.energyBudget?.toFixed(1) ?? '?'} budget${v.energyUsed != null ? ` | ${v.energyUsed.toFixed(1)} used` : ''} | ${v.energyRemaining?.toFixed(1) ?? '?'} remaining</td></tr>
                         <tr><td>Energy Delta</td><td class="${eDeltaColor}">${eDeltaStr} (verify - planned)</td></tr>
                     </table>
                 </div>
