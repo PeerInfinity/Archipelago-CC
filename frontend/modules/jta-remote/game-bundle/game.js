@@ -60,6 +60,8 @@ window.TASK_LOOKUP = TASK_LOOKUP;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.resetTasks = resetTasks;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.updateGamestate = updateGamestate;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.clickTask = clickTask;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.clickItem = clickItem;

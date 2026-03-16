@@ -248,40 +248,26 @@ try {
     });
     const page = await browser.newPage();
 
-    // Navigate to the game iframe page and inject the instant mode wrapper
+    // Navigate to the game iframe page
     const gameUrl = `http://localhost:${args.port}/frontend/modules/jta-remote/index-iframe.html`;
     console.log(`Loading game from ${gameUrl}...`);
     await page.goto(gameUrl);
 
-    // Wait for the game to initialize (GAMESTATE available)
+    // Wait for the game to initialize (GAMESTATE + updateGamestate available)
     await page.waitForFunction(
-        () => !!window.getGamestate,
+        () => !!window.getGamestate && typeof window.updateGamestate === 'function' && typeof window.clickTask === 'function',
         { timeout: 30000 }
     );
+    console.log('Game loaded');
 
-    // Inject the instant mode wrapper
-    const wrapperPath = join(FRONTEND_DIR, 'modules/jta-randomizer/jta-instant-mode-wrapper.js');
-    const wrapperCode = readFileSync(wrapperPath, 'utf-8');
-    await page.evaluate((code) => {
-        // eslint-disable-next-line no-eval
-        (0, eval)(code);
-    }, wrapperCode);
-
-    // Wait for wrapper APIs to be available
-    await page.waitForFunction(
-        () => typeof window.getFullState === 'function',
-        { timeout: 5000 }
-    );
-    console.log('Game loaded, instant mode wrapper ready');
-
-    // Pause game loop, enable instant mode
-    await page.evaluate(() => {
-        if (window.jta?.pauseGameLoop) window.jta.pauseGameLoop();
-        window.setInstantMode(true);
-    });
-
-    // Load our cost data into the game
+    // Pause the game loop and load our cost data
     await page.evaluate((data) => {
+        // Pause game loop by clearing its interval
+        // (intercepted by wrapper if loaded, otherwise find it)
+        if (window.jta?.pauseGameLoop) {
+            window.jta.pauseGameLoop();
+        }
+
         // Update task definitions with our planned costs
         const taskLookup = window.TASK_LOOKUP;
         if (!taskLookup) throw new Error('TASK_LOOKUP not available');
@@ -297,9 +283,11 @@ try {
 
     console.log('Cost data loaded into game\n');
 
-    // Step 4: Replay planned steps through the real game
+    // Step 4: Replay planned steps through the REAL GAME ENGINE.
+    // For each task: clickTask to activate it, then call updateGamestate()
+    // in a loop until the task completes (all reps done) or energy runs out.
+    // This uses the game's actual formulas, not a simulator.
     const startTime = Date.now();
-    const stepResults = [];
     let lastSphereIndex = null;
     let stepsMatched = 0;
     let energyMismatches = 0;
@@ -320,7 +308,6 @@ try {
                 await page.evaluate((perkNames) => {
                     const gs = window.getGamestate;
                     if (!gs || !gs.perks) return;
-                    // Look up perk IDs from names
                     const perkDefs = window.PERKS;
                     if (!perkDefs) return;
                     for (const name of perkNames) {
@@ -336,40 +323,61 @@ try {
         }
         lastSphereIndex = planned.sphereIndex;
 
-        // Get state before
-        const beforeState = await page.evaluate(() => window.getFullState());
+        // Execute each task in the planned queue using the real game engine
+        const stepResult = await page.evaluate(({ queue, focusName, taskIdByName }) => {
+            const gs = window.getGamestate;
+            let focusCompleted = false;
+            const energyBefore = gs.current_energy;
 
-        // Execute each task in the planned queue
-        let focusCompleted = false;
-        let finalEnergy = beforeState.currentEnergy;
+            for (const pEntry of queue) {
+                if (pEntry.status === 'uncosted_skipped') continue;
 
-        for (const pEntry of (planned.queue || [])) {
-            if (pEntry.status === 'uncosted_skipped') continue;
+                const taskId = taskIdByName[pEntry.taskName];
+                if (taskId === undefined) continue;
 
-            const taskId = taskIdByName.get(pEntry.taskName);
-            if (taskId === undefined) continue;
+                // Find the task in the current zone's tasks
+                const task = gs.tasks?.find(t => t.task_definition?.id === taskId);
+                if (!task || !task.enabled) continue;
 
-            const taskResult = await page.evaluate(({ taskId }) => {
-                const result = window.performTask(taskId);
-                if (!result.success) return { success: false, error: result.error };
-                const tick = window.stepTick();
-                const state = window.getFullState();
-                return {
-                    success: true,
-                    energy: state.currentEnergy,
-                    isInEnergyReset: tick.isInEnergyReset || state.isInEnergyReset,
-                };
-            }, { taskId });
+                const maxReps = task.task_definition.max_reps;
+                if (maxReps > 0 && task.reps >= maxReps) continue;
 
-            if (!taskResult.success) break;
+                // Activate the task
+                window.clickTask(task);
 
-            finalEnergy = taskResult.energy;
-            if (pEntry.taskName === focusName) focusCompleted = true;
-            if (taskResult.isInEnergyReset) break;
-        }
+                // Run the game engine tick by tick until this task completes or energy runs out
+                const repsBefore = task.reps;
+                let ticks = 0;
+                const MAX_TICKS = 100000;
+                while (ticks < MAX_TICKS) {
+                    if (gs.is_in_energy_reset) break;
+                    if (gs.active_task !== task) break; // task finished
+                    window.updateGamestate();
+                    ticks++;
+                }
 
-        const energyDelta = finalEnergy - planned.energyRemaining;
-        const completedMatch = focusCompleted === planned.targetCompleted;
+                const completed = task.reps >= maxReps;
+                if (pEntry.taskName === focusName && completed) {
+                    focusCompleted = true;
+                }
+
+                if (gs.is_in_energy_reset) break;
+                if (gs.current_energy <= 0) break;
+            }
+
+            return {
+                focusCompleted,
+                energyRemaining: gs.current_energy,
+                isInEnergyReset: gs.is_in_energy_reset || false,
+            };
+        }, {
+            queue: planned.queue || [],
+            focusName,
+            taskIdByName: Object.fromEntries(taskIdByName),
+        });
+
+        const energyDelta = stepResult.energyRemaining - planned.energyRemaining;
+        const completedMatch = stepResult.focusCompleted === planned.targetCompleted;
 
         if (completedMatch) stepsMatched++;
         if (Math.abs(energyDelta) > 1) energyMismatches++;
@@ -379,23 +387,25 @@ try {
             console.log(
                 `Step ${String(i).padStart(4)} | ${focusName.padEnd(35)} | ` +
                 `plan=${planned.energyRemaining.toFixed(1).padStart(6)} ` +
-                `game=${finalEnergy.toFixed(1).padStart(6)} ` +
+                `game=${stepResult.energyRemaining.toFixed(1).padStart(6)} ` +
                 `delta=${energyDelta.toFixed(1).padStart(6)} | ${status}`
             );
         }
 
         // Reset if focus didn't complete
-        if (!focusCompleted) {
+        if (!stepResult.focusCompleted) {
             await page.evaluate(() => {
                 const gs = window.getGamestate;
-                if (gs && gs.is_in_energy_reset) {
-                    window.doEnergyReset();
-                } else if (gs) {
-                    // Force energy reset
+                if (!gs.is_in_energy_reset) {
+                    // Force energy depletion so doEnergyReset works
                     gs.current_energy = 0;
                     gs.is_in_energy_reset = true;
-                    window.doEnergyReset();
                 }
+                window.doEnergyReset();
+            });
+            // Re-pause game loop (doEnergyReset calls setTickRate which restarts it)
+            await page.evaluate(() => {
+                if (window.jta?.pauseGameLoop) window.jta.pauseGameLoop();
             });
         }
 
@@ -403,16 +413,6 @@ try {
         if (i > 0 && i % 50 === 0) {
             console.log(`  ... ${i}/${steps.length} steps completed`);
         }
-    }
-
-    // Grant perks for the last sphere
-    if (lastSphereIndex !== null) {
-        const perksToGrant = [];
-        for (const si of sphereIndices) {
-            if (si < lastSphereIndex) continue;
-            perksToGrant.push(...(spherePerkSchedule.get(si) || []));
-        }
-        // (not strictly needed for verification, but keeps parity)
     }
 
     const elapsed = Date.now() - startTime;
