@@ -264,20 +264,11 @@ export class JTACostDebuggerUI {
             try {
                 await yieldToUI();
 
-                let lastProgressUpdate = Date.now();
                 const progressCallback = ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
-                    // Throttle to avoid excessive DOM updates
-                    const now = Date.now();
-                    if (now - lastProgressUpdate > 200) {
-                        lastProgressUpdate = now;
-                        this._setStatus(`${passLabel}: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
-                    }
+                    this._setStatus(`${passLabel}: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
                 };
 
-                let result = planner.planCosts(this._gameData, this._sphereLogContent, {
-                    ...settings,
-                    onProgress: progressCallback,
-                });
+                let result = await planner.planCostsAsync(this._gameData, this._sphereLogContent, settings, progressCallback);
 
                 // Track which game data the final pass used (for verification)
                 this._verifyGameData = this._gameData;
@@ -306,18 +297,12 @@ export class JTACostDebuggerUI {
                             }
                         }
                         const pass2Settings = { ...settings, adjustXpMult: false };
-                        lastProgressUpdate = Date.now();
                         const pass2Planner = getCostPlanner();
-                        result = pass2Planner.planCosts(pass2GameData, this._sphereLogContent, {
-                            ...pass2Settings,
-                            onProgress: ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
-                                const now = Date.now();
-                                if (now - lastProgressUpdate > 200) {
-                                    lastProgressUpdate = now;
-                                    this._setStatus(`Pass 2: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
-                                }
-                            },
-                        });
+                        result = await pass2Planner.planCostsAsync(pass2GameData, this._sphereLogContent, pass2Settings,
+                            ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
+                                this._setStatus(`Pass 2: sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
+                            }
+                        );
                         this._verifyGameData = pass2GameData;
                     }
                 }

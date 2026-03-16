@@ -980,12 +980,75 @@ export class JTACostPlanner {
      * @returns {{ costData: object, steps: Array, adjustedData: object }}
      */
     /**
-     * @param {Function} [settingsOverride.onProgress] - Optional callback
-     *   called after each sphere: onProgress({ sphereIndex, totalSpheres, stepsGenerated })
+     * @param {Function} [settingsOverride.onProgress] - Optional async callback
+     *   called after each sphere: onProgress({ sphereIndex, totalSpheres, stepsGenerated }).
+     *   When provided, planCosts returns a Promise (yields between spheres for UI updates).
+     *   When omitted, runs synchronously and returns the result directly.
+     */
+    /**
+     * Plan costs synchronously. Use planCostsAsync for UI with progress updates.
      */
     planCosts(gameDataJson, sphereLogContent, settingsOverride = {}) {
         const settings = { ...this._settings, ...settingsOverride };
-        const onProgress = settingsOverride.onProgress || null;
+        return this._planCostsCore(gameDataJson, sphereLogContent, settings);
+    }
+
+    /**
+     * Plan costs asynchronously, yielding between spheres for UI updates.
+     * Processes one sphere at a time with setTimeout yields so the browser
+     * can repaint between spheres.
+     *
+     * @param {Function} [onProgress] - Called after each sphere
+     * @returns {Promise<object>} Same result as planCosts
+     */
+    async planCostsAsync(gameDataJson, sphereLogContent, settingsOverride = {}, onProgress = null) {
+        const settings = { ...this._settings, ...settingsOverride };
+
+        // --- Setup (same as _planCostsCore) ---
+        const steps = parseSphereLog(sphereLogContent, settings.playerNumber);
+        const adjustedData = JSON.parse(JSON.stringify(gameDataJson));
+        const ctx = loadGameDataFromJson(adjustedData);
+        const taskByName = new Map();
+        for (const zone of ctx.ZONES) {
+            for (const task of zone.tasks) taskByName.set(task.name, { task, zoneId: zone.id });
+        }
+        const perkNameToId = new Map();
+        for (const [idStr, perk] of Object.entries(ctx.PERKS)) perkNameToId.set(perk.name, parseInt(idStr));
+
+        const state = createSimState(ctx);
+        const assignedCosts = new Map();
+        const plannedSteps = [];
+        let globalStepIndex = 0;
+
+        // --- Process spheres with yields ---
+        for (let si = 0; si < steps.length; si++) {
+            const sphereStep = steps[si];
+
+            // Process this sphere's tasks (reuse _planCostsCore's sphere body).
+            // We pass the shared mutable state; the sphere processing mutates it.
+            globalStepIndex = this._processSphereInPlace(
+                sphereStep, steps, state, ctx, assignedCosts, taskByName, perkNameToId,
+                plannedSteps, globalStepIndex, settings
+            );
+
+            // Report progress and yield to browser
+            if (onProgress) {
+                onProgress({
+                    sphereIndex: sphereStep.sphereIndex,
+                    totalSpheres: steps.length,
+                    sphereNum: si + 1,
+                    stepsGenerated: globalStepIndex,
+                    tasksCosted: assignedCosts.size,
+                });
+            }
+            await new Promise(resolve => setTimeout(resolve, 0));
+        }
+
+        return this._finalizePlan(plannedSteps, assignedCosts, adjustedData, taskByName, ctx);
+    }
+
+    /** @private */
+    _planCostsCore(gameDataJson, sphereLogContent, settings, onProgress) {
 
         // Parse inputs
         const steps = parseSphereLog(sphereLogContent, settings.playerNumber);
@@ -1012,6 +1075,30 @@ export class JTACostPlanner {
 
         // Process each sphere
         for (const sphereStep of steps) {
+            globalStepIndex = this._processSphereInPlace(
+                sphereStep, steps, state, ctx, assignedCosts, taskByName, perkNameToId,
+                plannedSteps, globalStepIndex, settings
+            );
+            if (onProgress) {
+                onProgress({
+                    sphereIndex: sphereStep.sphereIndex,
+                    totalSpheres: steps.length,
+                    sphereNum: steps.indexOf(sphereStep) + 1,
+                    stepsGenerated: globalStepIndex,
+                    tasksCosted: assignedCosts.size,
+                });
+            }
+        }
+
+        return this._finalizePlan(plannedSteps, assignedCosts, adjustedData, taskByName, ctx);
+    }
+
+    /**
+     * Process a single sphere's tasks. Mutates state, assignedCosts, plannedSteps in place.
+     * @returns {number} Updated globalStepIndex
+     * @private
+     */
+    _processSphereInPlace(sphereStep, steps, state, ctx, assignedCosts, taskByName, perkNameToId, plannedSteps, globalStepIndex, settings) {
             const sphereIndex = sphereStep.sphereIndex;
 
             // Tasks to complete this sphere
@@ -1406,17 +1493,11 @@ export class JTACostPlanner {
                 }
             }
 
-            if (onProgress) {
-                onProgress({
-                    sphereIndex,
-                    totalSpheres: steps.length,
-                    sphereNum: steps.indexOf(sphereStep) + 1,
-                    stepsGenerated: globalStepIndex,
-                    tasksCosted: assignedCosts.size,
-                });
-            }
-        }
+        return globalStepIndex;
+    }
 
+    /** @private Finalize the plan result after all spheres are processed. */
+    _finalizePlan(plannedSteps, assignedCosts, adjustedData, taskByName, ctx) {
         // Build cost data output (matching the format expected by the game)
         const costData = buildCostOutput(adjustedData, assignedCosts, ctx);
 
