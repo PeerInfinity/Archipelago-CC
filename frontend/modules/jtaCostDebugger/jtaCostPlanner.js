@@ -188,7 +188,7 @@ function calcTaskEnergyCost(task, zoneId, state, ctx) {
         totalEnergy += drain;
 
         // Apply XP for this tick (matching game's per-tick XP grant)
-        const xpPerTick = calcTaskXp(task, zoneId, simState, ctx);
+        const xpPerTick = calcTickXp(task, zoneId, addedProgress, simState, ctx);
         for (const skill of task.skills) {
             if (simLevels[skill] === undefined) {
                 simLevels[skill] = 0;
@@ -225,6 +225,22 @@ function getNormalTasks(zone, ctx) {
 
 // --- XP Calculations ---
 
+/**
+ * Calculate XP gained per tick, matching the real game's calcSkillXp.
+ * The game uses (progressThisTick * 8 * xpMult * ...), NOT (baseCost * 8 * ...).
+ * @param {number} progressThisTick - The progress made this tick (calcProgressMult result)
+ */
+function calcTickXp(task, zoneId, progressThisTick, state, ctx) {
+    let xp = progressThisTick * 8 * task.xpMult;
+    if (state.perks.has(ctx.PerkType.Writing)) xp *= 1.5;
+    xp *= Math.pow(1.25, zoneId);
+    return xp;
+}
+
+/**
+ * Approximate total XP for a full task execution (all reps).
+ * Used for display/grinding calculations, not for tick-by-tick simulation.
+ */
 function calcTaskXp(task, zoneId, state, ctx) {
     const cost = calcTaskBaseCost(task, zoneId, ctx);
     let xp = cost * 8 * task.xpMult;
@@ -254,10 +270,11 @@ function applyTaskXp(task, zoneId, state, ctx) {
 
     for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
         const progressPerTick = calcProgressMult(task, zoneId, state, ctx);
-        progress += Math.min(progressPerTick, baseCost - progress);
+        const addedProgress = Math.min(progressPerTick, baseCost - progress);
+        progress += addedProgress;
 
-        // Apply XP for this tick
-        const xpPerTick = calcTaskXp(task, zoneId, state, ctx);
+        // Apply XP for this tick using actual progress (matching game)
+        const xpPerTick = calcTickXp(task, zoneId, addedProgress, state, ctx);
         for (const skill of task.skills) {
             if (state.skillLevels[skill] === undefined) {
                 state.skillLevels[skill] = 0;
