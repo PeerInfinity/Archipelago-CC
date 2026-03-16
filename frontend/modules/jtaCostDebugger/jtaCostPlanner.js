@@ -149,51 +149,7 @@ function calcDrainPerTick(task, zoneId, state, ctx) {
 }
 
 /**
- * Execute a task using the best available engine.
- * When window.gameCalc is available (browser with game loaded), uses the
- * real game engine for exact formula parity. Otherwise uses the shared module.
- */
-function executeTaskBestEngine(taskDef, zoneId, state, ctx, energyBudget) {
-    const gameCalc = (typeof window !== 'undefined') ? window.gameCalc : null;
-    if (gameCalc) {
-        return executeTaskViaGameCalc(taskDef, zoneId, state, ctx, energyBudget, gameCalc);
-    }
-    return sharedExecuteTask(taskDef, zoneId, state, ctx, energyBudget);
-}
-
-/**
- * Execute a task using window.gameCalc.executeTask (real game engine).
- * Runs the full tick loop in one call for performance.
- */
-function executeTaskViaGameCalc(taskDef, zoneId, state, ctx, energyBudget, gameCalc) {
-    const gameState = {
-        skillLevels: state.skillLevels,
-        skillXp: state.skillXp,
-        perks: [...(state.perks || [])],
-        highestZone: state.highestZone || 0,
-        highestZoneFullyCompleted: state.highestZoneFullyCompleted ?? -1,
-        power: state.power || 0,
-        attunement: state.attunement || 0,
-        prestigeUnlocks: Array.isArray(state.prestigeUnlocks) ? state.prestigeUnlocks : [...(state.prestigeUnlocks || [])],
-        prestigeRepeatables: state.prestigeRepeatables instanceof Map ? state.prestigeRepeatables : new Map(),
-    };
-
-    const result = gameCalc.executeTask(taskDef.id, gameState, energyBudget);
-    if (!result) return sharedExecuteTask(taskDef, zoneId, state, ctx, energyBudget);
-
-    // Sync updated skills back to state
-    for (const [skillId, level] of Object.entries(result.updatedLevels)) {
-        state.skillLevels[skillId] = level;
-    }
-    for (const [skillId, xp] of Object.entries(result.updatedXp)) {
-        state.skillXp[skillId] = xp;
-    }
-
-    return { energyUsed: result.energyUsed, completed: result.completed };
-}
-
-/**
- * Calculate energy cost for a task.
+ * Calculate energy cost for a task using the shared game calculation module.
  * Uses a cloned state so the caller's state isn't modified.
  */
 function calcTaskEnergyCost(task, zoneId, state, ctx) {
@@ -202,8 +158,8 @@ function calcTaskEnergyCost(task, zoneId, state, ctx) {
         skillLevels: { ...state.skillLevels },
         skillXp: { ...state.skillXp },
     };
-    const { energyUsed } = executeTaskBestEngine(
-        { id: task.id, costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+    const { energyUsed } = sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
         zoneId, clonedState, ctx, Infinity
     );
     return energyUsed;
@@ -260,8 +216,8 @@ function calcXpNeeded(level, skillType, ctx) {
  * @returns {{ energyUsed: number, completed: boolean }}
  */
 function executeTaskWithBudget(task, zoneId, state, ctx, energyBudget) {
-    return executeTaskBestEngine(
-        { id: task.id, costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+    return sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
         zoneId, state, ctx, energyBudget
     );
 }
@@ -270,8 +226,8 @@ function executeTaskWithBudget(task, zoneId, state, ctx, energyBudget) {
  * Apply XP from a full task execution (all reps).
  */
 function applyTaskXp(task, zoneId, state, ctx) {
-    executeTaskBestEngine(
-        { id: task.id, costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+    sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
         zoneId, state, ctx, Infinity
     );
 }
