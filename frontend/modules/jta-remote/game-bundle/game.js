@@ -1,5 +1,5 @@
 import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset, tryAddPerk } from "./simulation.js";
+import { Gamestate, Skill, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset, tryAddPerk, calcTaskCost, calcTaskProgressPerTick, calcEnergyDrainPerTick, calcSkillXp, addSkillXp, calcSkillXpNeededAtLevel } from "./simulation.js";
 import { ZONES, TASK_LOOKUP } from "./zones.js";
 import { ITEMS, ARTIFACTS } from "./items.js";
 import { SKILL_DEFINITIONS } from "./skills.js";
@@ -105,4 +105,112 @@ window.tryAddPerk = tryAddPerk;
 window.patchRenderingConstants = patchRenderingConstants;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 window.readRenderingConstants = readRenderingConstants;
+
+// Expose game calculation functions for the cost debugger's simulator.
+// These use the real game formulas with the live GAMESTATE.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+window.gameCalc = {
+    /**
+     * Simulate one tick of a task using the real game engine formulas.
+     * Sets up GAMESTATE properties from the provided state, runs the
+     * calculation, and returns the results without mutating GAMESTATE.
+     *
+     * @param {number} taskId - Task definition ID
+     * @param {object} state - { skillLevels: {id: level}, perks: [id, ...], highestZone, currentZone }
+     * @param {number} currentProgress - Current progress within the rep
+     * @returns {{ progressPerTick, addedProgress, energyDrain, xpPerSkill, isSingleTick, repCompleted, cost }}
+     */
+    calcTick(taskId, state, currentProgress) {
+        // Find the task in the current zone's tasks (or create a temp one)
+        const taskDef = TASK_LOOKUP.get(taskId);
+        if (!taskDef) return null;
+
+        // Save GAMESTATE and set up our state
+        const savedSkills = GAMESTATE.skills;
+        const savedPerks = GAMESTATE.perks;
+        const savedHighestZone = GAMESTATE.highest_zone;
+        const savedHighestZoneFC = GAMESTATE.highest_zone_fully_completed;
+        const savedPower = GAMESTATE.power;
+        const savedAttunement = GAMESTATE.attunement;
+        const savedPrestigeUnlocks = GAMESTATE.prestige_unlocks;
+        const savedPrestigeRepeatables = GAMESTATE.prestige_repeatables;
+
+        // Set up skills from state
+        const tempSkills = [];
+        for (let i = 0; i < SKILL_DEFINITIONS.length; i++) {
+            const s = new Skill(i, state.skillLevels?.[i] || 0);
+            s.progress = state.skillXp?.[i] || 0;
+            tempSkills.push(s);
+        }
+        GAMESTATE.skills = tempSkills;
+        GAMESTATE.perks = new Map((state.perks || []).map(p => [p, true]));
+        GAMESTATE.highest_zone = state.highestZone || 0;
+        GAMESTATE.highest_zone_fully_completed = state.highestZoneFullyCompleted ?? -1;
+        GAMESTATE.power = state.power || 0;
+        GAMESTATE.attunement = state.attunement || 0;
+        GAMESTATE.prestige_unlocks = state.prestigeUnlocks instanceof Map ? state.prestigeUnlocks : new Map();
+        GAMESTATE.prestige_repeatables = state.prestigeRepeatables instanceof Map ? state.prestigeRepeatables : new Map();
+
+        // Create a temporary Task object
+        const tempTask = new Task(taskDef);
+        tempTask.progress = currentProgress;
+
+        try {
+            const cost = calcTaskCost(tempTask);
+            const progressPerTick = calcTaskProgressPerTick(tempTask);
+            const addedProgress = Math.min(progressPerTick, cost - tempTask.progress);
+            tempTask.progress += addedProgress;
+            const isSingleTick = progressPerTick >= cost;
+            const energyDrain = calcEnergyDrainPerTick(tempTask, isSingleTick);
+
+            // Calculate XP per skill
+            const xpPerSkill = {};
+            for (const skillType of taskDef.skills) {
+                xpPerSkill[skillType] = calcSkillXp(tempTask, addedProgress);
+            }
+
+            // Apply XP to temp skills to get updated levels
+            for (const skillType of taskDef.skills) {
+                addSkillXp(skillType, xpPerSkill[skillType]);
+            }
+            const updatedLevels = {};
+            const updatedXp = {};
+            for (let i = 0; i < tempSkills.length; i++) {
+                if (tempSkills[i].level > 0 || (state.skillLevels?.[i] || 0) > 0) {
+                    updatedLevels[i] = tempSkills[i].level;
+                    updatedXp[i] = tempSkills[i].progress;
+                }
+            }
+
+            const repCompleted = tempTask.progress >= cost;
+
+            return {
+                cost,
+                progressPerTick,
+                addedProgress,
+                energyDrain,
+                isSingleTick,
+                repCompleted,
+                xpPerSkill,
+                updatedLevels,
+                updatedXp,
+            };
+        } finally {
+            // Restore GAMESTATE
+            GAMESTATE.skills = savedSkills;
+            GAMESTATE.perks = savedPerks;
+            GAMESTATE.highest_zone = savedHighestZone;
+            GAMESTATE.highest_zone_fully_completed = savedHighestZoneFC;
+            GAMESTATE.power = savedPower;
+            GAMESTATE.attunement = savedAttunement;
+            GAMESTATE.prestige_unlocks = savedPrestigeUnlocks;
+            GAMESTATE.prestige_repeatables = savedPrestigeRepeatables;
+        }
+    },
+
+    /** Get the XP needed for a specific skill level */
+    calcSkillXpNeeded(level, skillType) {
+        return calcSkillXpNeededAtLevel(level, skillType);
+    },
+};
 //# sourceMappingURL=game.js.map

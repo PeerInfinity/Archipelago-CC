@@ -19,6 +19,15 @@
 
 import { loadGameDataFromJson } from '../jta-randomizer/jtaGameDataLoader.js';
 import { parseSphereLog } from '../jta-randomizer/jtaCostGenerator.js';
+import {
+    executeTask as sharedExecuteTask,
+    calcTaskCost as sharedCalcTaskCost,
+    calcTaskProgressPerTick as sharedCalcProgress,
+    calcEnergyDrainPerTick as sharedCalcDrain,
+    calcSkillXpPerTick as sharedCalcXp,
+    calcSkillXpNeeded as sharedCalcXpNeeded,
+    isSingleTick as sharedIsSingleTick,
+} from '../shared/jtaGameCalc.js';
 
 // ============================================================================
 // Simulation Helpers (mirror jtaCostGenerator's internal functions)
@@ -140,79 +149,20 @@ function calcDrainPerTick(task, zoneId, state, ctx) {
 }
 
 /**
- * Calculate energy cost for a task, simulating tick-by-tick XP gain.
- *
- * The real game applies XP each tick, so skill levels increase during
- * execution, making later ticks faster (more progress per tick).
- * This function replicates that by simulating each tick: calculating
- * progress based on current skills, applying XP, and tracking when
- * reps complete. Uses a temporary state clone so the caller's state
- * isn't modified.
+ * Calculate energy cost for a task using the shared game calculation module.
+ * Uses a cloned state so the caller's state isn't modified.
  */
 function calcTaskEnergyCost(task, zoneId, state, ctx) {
-    // For single-tick tasks (progress >= cost in one tick), the simple formula is exact
-    const initialTicks = calcTicks(task, zoneId, state, ctx);
-    if (initialTicks <= 1) {
-        const drain = calcDrainPerTick(task, zoneId, state, ctx);
-        return drain * task.maxReps;
-    }
-
-    // For tasks with no skills, XP gain doesn't change ticks, so simple formula works
-    if (task.skills.length === 0) {
-        const drain = calcDrainPerTick(task, zoneId, state, ctx);
-        return initialTicks * drain * task.maxReps;
-    }
-
-    // Full tick-by-tick simulation matching the real game engine.
-    // Clone only the skill state (lightweight).
-    const simLevels = { ...state.skillLevels };
-    const simXp = { ...state.skillXp };
-    const simState = {
+    const clonedState = {
         ...state,
-        skillLevels: simLevels,
-        skillXp: simXp,
+        skillLevels: { ...state.skillLevels },
+        skillXp: { ...state.skillXp },
     };
-
-    const baseCost = calcTaskBaseCost(task, zoneId, ctx);
-    let totalEnergy = 0;
-    let repsCompleted = 0;
-    // Game starts each rep with 0.01 progress (applyTaskRepStartEffects)
-    let progress = 0.01;
-
-    for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
-        // Calculate progress and drain for this tick using current skills
-        const progressPerTick = calcProgressMult(task, zoneId, simState, ctx);
-        const addedProgress = Math.min(progressPerTick, baseCost - progress);
-        progress += addedProgress;
-        // Game uses capped progress for isSingleTick check, not raw progressPerTick
-        const isSingle = addedProgress >= baseCost;
-        const drain = calcDrainPerTick(task, zoneId, simState, ctx);
-        totalEnergy += drain;
-
-        // Apply XP for this tick (matching game's per-tick XP grant)
-        const xpPerTick = calcTickXp(task, zoneId, addedProgress, simState, ctx);
-        for (const skill of task.skills) {
-            if (simLevels[skill] === undefined) {
-                simLevels[skill] = 0;
-                simXp[skill] = 0;
-            }
-            simXp[skill] += xpPerTick;
-            let needed = calcXpNeeded(simLevels[skill], skill, ctx);
-            while (simXp[skill] >= needed) {
-                simXp[skill] -= needed;
-                simLevels[skill]++;
-                needed = calcXpNeeded(simLevels[skill], skill, ctx);
-            }
-        }
-
-        // Check if rep completed
-        if (progress >= baseCost) {
-            repsCompleted++;
-            progress = 0.01; // Game resets to 0.01 via applyTaskRepStartEffects
-        }
-    }
-
-    return totalEnergy;
+    const { energyUsed } = sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+        zoneId, clonedState, ctx, Infinity
+    );
+    return energyUsed;
 }
 
 function getMandatoryTasks(zone, ctx) {
@@ -259,72 +209,28 @@ function calcXpNeeded(level, skillType, ctx) {
 /**
  * Execute a task tick-by-tick with an energy budget, applying XP to state.
  *
- * Matches the real game engine: runs as many ticks as the energy budget
- * allows, applying XP each tick. If energy runs out mid-task, the partial
- * ticks still grant XP (this is how the real game works).
+ * Delegates to the shared jtaGameCalc module which has the canonical
+ * formulas matching the real game engine exactly.
  *
  * @param {number} energyBudget - Available energy for this task
  * @returns {{ energyUsed: number, completed: boolean }}
  */
 function executeTaskWithBudget(task, zoneId, state, ctx, energyBudget) {
-    const baseCost = calcTaskBaseCost(task, zoneId, ctx);
-    let energyUsed = 0;
-    let repsCompleted = 0;
-    let progress = 0.01;
-
-    for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
-        const progressPerTick = calcProgressMult(task, zoneId, state, ctx);
-        const addedProgress = Math.min(progressPerTick, baseCost - progress);
-        progress += addedProgress;
-        const isSingle = addedProgress >= baseCost;
-        const drain = calcDrainPerTick(task, zoneId, state, ctx);
-
-        // Check if we can afford this tick
-        if (energyUsed + drain > energyBudget) {
-            // Can't afford — but XP for THIS tick is still applied
-            // (the game processes the tick, then checks energy)
-            // Actually in the real game, energy is deducted and can go
-            // negative/zero triggering reset. We apply XP but stop.
-            break;
-        }
-        energyUsed += drain;
-
-        // Apply XP for this tick
-        if (task.skills.length > 0) {
-            const xpPerTick = calcTickXp(task, zoneId, addedProgress, state, ctx);
-            for (const skill of task.skills) {
-                if (state.skillLevels[skill] === undefined) {
-                    state.skillLevels[skill] = 0;
-                    state.skillXp[skill] = 0;
-                }
-                state.skillXp[skill] += xpPerTick;
-                let needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
-                while (state.skillXp[skill] >= needed) {
-                    state.skillXp[skill] -= needed;
-                    state.skillLevels[skill]++;
-                    needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
-                }
-            }
-        }
-
-        if (progress >= baseCost) {
-            repsCompleted++;
-            progress = 0.01;
-        }
-    }
-
-    return {
-        energyUsed,
-        completed: repsCompleted >= task.maxReps,
-    };
+    return sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+        zoneId, state, ctx, energyBudget
+    );
 }
 
 /**
  * Apply XP from a full task execution (all reps).
- * Convenience wrapper around executeTaskWithBudget with unlimited energy.
+ * Delegates to the shared module with unlimited energy budget.
  */
 function applyTaskXp(task, zoneId, state, ctx) {
-    executeTaskWithBudget(task, zoneId, state, ctx, Infinity);
+    sharedExecuteTask(
+        { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type },
+        zoneId, state, ctx, Infinity
+    );
 }
 
 // --- State Management ---
