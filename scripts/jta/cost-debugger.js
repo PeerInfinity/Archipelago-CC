@@ -316,11 +316,12 @@ console.log('');
 
 // Run cost debugger
 const startTime = Date.now();
-const planner = new JTACostPlanner();
+let planner = new JTACostPlanner();
 const useExpansion = args.debugSolverStep !== undefined && args.debugSolverIter !== undefined;
 let result = useExpansion
     ? planner.planCostsWithExpansion(gameDataJson, sphereLogContent, settings, args.debugSolverStep, args.debugSolverIter)
     : planner.planCosts(gameDataJson, sphereLogContent, settings);
+let verifyGameData = gameDataJson;
 
 // Two-pass mode: collect xpMult adjustments from pass 1, bake them into
 // the game data, then re-run without adjustXpMult.
@@ -353,8 +354,9 @@ if (args.twoPass) {
 
         // Re-run without adjustXpMult, using the baked-in xpMult values
         const pass2Settings = { ...settings, adjustXpMult: false };
-        const pass2Planner = new JTACostPlanner();
-        result = pass2Planner.planCosts(pass2GameData, sphereLogContent, pass2Settings);
+        planner = new JTACostPlanner();
+        result = planner.planCosts(pass2GameData, sphereLogContent, pass2Settings);
+        verifyGameData = pass2GameData;
         console.log('Pass 2 complete — re-solved with baked xpMult values');
     } else {
         console.log(`Pass 1 complete in ${pass1Elapsed}ms — no xpMult adjustments needed`);
@@ -471,7 +473,7 @@ for (const [taskName, info] of assignedCosts) {
 // Run verification
 console.log('\n--- Verification ---\n');
 const verifyStart = Date.now();
-const verifyResult = planner.verifyCosts(gameDataJson, sphereLogContent, assignedCosts, settings);
+const verifyResult = planner.verifyCosts(verifyGameData, sphereLogContent, assignedCosts, settings);
 const verifyElapsed = Date.now() - verifyStart;
 
 const { comparison, verifySteps } = verifyResult;

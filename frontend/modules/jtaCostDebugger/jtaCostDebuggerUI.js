@@ -62,6 +62,7 @@ export class JTACostDebuggerUI {
                 <button class="jta-cd-btn-plan" disabled title="Run cost generation">Generate Costs</button>
                 <button class="jta-cd-btn-verify" disabled title="Verify costs by re-running simulation">Verify</button>
                 <button class="jta-cd-btn-step-verify" disabled title="Step-by-step verify: annotate each step with actual vs planned">Step Verify</button>
+                <button class="jta-cd-btn-game-verify" disabled title="Verify using real game engine via instant mode">Game Verify</button>
                 <button class="jta-cd-btn-apply" disabled title="Apply generated costs to game">Apply</button>
                 <button class="jta-cd-btn-download" disabled title="Download cost data as JSON">Download</button>
                 <button class="jta-cd-btn-reset" disabled title="Reset planner">Reset</button>
@@ -129,6 +130,7 @@ export class JTACostDebuggerUI {
         el.querySelector('.jta-cd-btn-plan').addEventListener('click', () => this._handlePlan());
         el.querySelector('.jta-cd-btn-verify').addEventListener('click', () => this._handleVerify());
         el.querySelector('.jta-cd-btn-step-verify').addEventListener('click', () => this._handleStepVerify());
+        el.querySelector('.jta-cd-btn-game-verify').addEventListener('click', () => this._handleGameVerify());
         el.querySelector('.jta-cd-btn-apply').addEventListener('click', () => this._handleApply());
         el.querySelector('.jta-cd-btn-download').addEventListener('click', () => this._handleDownload());
         el.querySelector('.jta-cd-btn-reset').addEventListener('click', () => this._handleReset());
@@ -258,6 +260,9 @@ export class JTACostDebuggerUI {
             try {
                 let result = planner.planCosts(this._gameData, this._sphereLogContent, settings);
 
+                // Track which game data the final pass used (for verification)
+                this._verifyGameData = this._gameData;
+
                 // Two-pass: collect xpMult adjustments, bake into game data, re-solve
                 if (twoPass) {
                     const xpMultOverrides = new Map();
@@ -282,6 +287,7 @@ export class JTACostDebuggerUI {
                         const pass2Settings = { ...settings, adjustXpMult: false };
                         const pass2Planner = getCostPlanner();
                         result = pass2Planner.planCosts(pass2GameData, this._sphereLogContent, pass2Settings);
+                        this._verifyGameData = pass2GameData;
                     }
                 }
 
@@ -292,6 +298,7 @@ export class JTACostDebuggerUI {
                 this._setStatus(`Done${passInfo}: ${result.steps.length} steps, ${result.assignedCosts.size} tasks costed.`);
                 this.rootElement.querySelector('.jta-cd-btn-verify').disabled = false;
                 this.rootElement.querySelector('.jta-cd-btn-step-verify').disabled = false;
+                this.rootElement.querySelector('.jta-cd-btn-game-verify').disabled = false;
                 this.rootElement.querySelector('.jta-cd-btn-apply').disabled = false;
                 this.rootElement.querySelector('.jta-cd-btn-download').disabled = false;
 
@@ -320,7 +327,7 @@ export class JTACostDebuggerUI {
         setTimeout(() => {
             try {
                 const result = planner.verifyCosts(
-                    this._gameData, this._sphereLogContent,
+                    this._verifyGameData || this._gameData, this._sphereLogContent,
                     this._lastResult.assignedCosts
                 );
 
@@ -420,7 +427,7 @@ export class JTACostDebuggerUI {
         setTimeout(() => {
             try {
                 const { annotatedSteps, summary } = planner.stepVerify(
-                    this._gameData, this._sphereLogContent
+                    this._verifyGameData || this._gameData, this._sphereLogContent
                 );
 
                 // Re-render step list with verification indicators
@@ -435,6 +442,47 @@ export class JTACostDebuggerUI {
                 this._setStatus(`Step verify error: ${err.message}`);
             }
         }, 50);
+    }
+
+    async _handleGameVerify() {
+        if (!this._lastResult || !this._gameData) {
+            this._setStatus('Generate costs first before game verification.');
+            return;
+        }
+
+        const planner = getCostPlanner();
+        if (!planner) {
+            this._setStatus('Cost planner not available.');
+            return;
+        }
+
+        this._setStatus('Game Verify: enabling instant mode...');
+
+        try {
+            const gameData = this._lastResult.adjustedData;
+            console.log('[GameVerify] Starting real-game verification...');
+            const { annotatedSteps, summary } = await planner.realGameVerify(
+                this.eventBus,
+                gameData,
+                ({ step, total, taskName }) => {
+                    if (step % 50 === 0) {
+                        console.log(`[GameVerify] Step ${step}/${total}: ${taskName}`);
+                        this._setStatus(`Game Verify: step ${step}/${total} (${taskName})...`);
+                    }
+                }
+            );
+
+            console.log('[GameVerify] Complete:', JSON.stringify(summary));
+            this._renderStepList(annotatedSteps);
+            this._setStatus(
+                `Game Verify: ${summary.stepsMatched}/${summary.totalPlannedSteps} match, ` +
+                `${summary.energyMismatches} energy mismatches`
+            );
+        } catch (err) {
+            console.error('[GameVerify] Failed:', err);
+            log('error', 'Game verification failed', err);
+            this._setStatus(`Game verify error: ${err.message}`);
+        }
     }
 
     _handleApply() {
@@ -468,6 +516,7 @@ export class JTACostDebuggerUI {
         if (planner) planner.reset();
 
         this._lastResult = null;
+        this._verifyGameData = null;
         this.selectedStepIndex = -1;
         this._gameData = null;
         this._sphereLogContent = null;

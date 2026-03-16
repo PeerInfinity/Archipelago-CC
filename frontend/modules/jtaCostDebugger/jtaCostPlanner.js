@@ -1544,16 +1544,11 @@ export class JTACostPlanner {
             perkNameToId.set(perk.name, parseInt(idStr));
         }
 
-        // Pre-apply all costs
-        for (const [taskName, costInfo] of costsMap) {
-            const info = taskByName.get(taskName);
-            if (info) {
-                info.task.costMult = costInfo.costMult;
-                if (costInfo.xpMult !== undefined) info.task.xpMult = costInfo.xpMult;
-            }
-        }
-
-        const assignedCosts = new Map(costsMap);
+        // Don't pre-apply costs — set costMult/xpMult on task objects
+        // progressively as cost assignments are encountered, exactly like
+        // the planner does. This ensures energy and XP calculations match
+        // the planner's state at each step.
+        const assignedCosts = new Map();
         const state = createSimState(ctx);
         const stepVerifyData = []; // one entry per planned step
 
@@ -1571,13 +1566,28 @@ export class JTACostPlanner {
             spherePerks.set(sphereStep.sphereIndex, sphereStep.perksReceived || []);
         }
 
+        // Track active xpMult adjustments across the entire focus task
+        // attempt sequence (the planner applies them before the attempt loop
+        // and restores after, so all attempts see the adjusted values).
+        let activeXpAdj = null;
+
+        // Build ordered list of sphere indices for perk granting
+        const sphereIndices = [...spherePerks.keys()].sort((a, b) => a - b);
+
         for (const planned of plannedSteps) {
-            // Grant perks when we transition to a new sphere
+            // Grant perks when we transition to a new sphere.
+            // Grant perks for ALL spheres between the old and new index,
+            // not just the last one — some spheres may have no planned steps
+            // (their tasks were costed during an earlier sphere's processing).
             if (lastSphereIndex !== null && planned.sphereIndex !== lastSphereIndex) {
-                const perksToGrant = spherePerks.get(lastSphereIndex) || [];
-                for (const perkName of perksToGrant) {
-                    const perkId = perkNameToIdForGrant.get(perkName);
-                    if (perkId !== undefined) grantPerk(state, perkId, ctx);
+                for (const si of sphereIndices) {
+                    if (si < lastSphereIndex) continue;    // already granted
+                    if (si >= planned.sphereIndex) break;   // not yet
+                    const perksToGrant = spherePerks.get(si) || [];
+                    for (const perkName of perksToGrant) {
+                        const perkId = perkNameToIdForGrant.get(perkName);
+                        if (perkId !== undefined) grantPerk(state, perkId, ctx);
+                    }
                 }
             }
             lastSphereIndex = planned.sphereIndex;
@@ -1585,7 +1595,9 @@ export class JTACostPlanner {
             const focusName = planned.targetTask;
 
             // Use the SPHERE target (not the focus task) to build the queue,
-            // so it includes the correct traversal + grinding + target structure
+            // so it includes the correct traversal + grinding + target structure.
+            // Pass focusTask skills and name so the queue matches the planner's
+            // queue (including focus task in queue, scoped grinding, affordability skip).
             const sphereTargetInfo = taskByName.get(planned.sphereTargetTask || focusName);
             if (!sphereTargetInfo) {
                 stepVerifyData.push(null);
@@ -1593,41 +1605,82 @@ export class JTACostPlanner {
             }
             const sphereTarget = sphereTargetInfo.task;
             const sphereTargetZoneId = planned.sphereTargetZoneId ?? sphereTargetInfo.zoneId;
-
-            const { queue: stepQueue } = buildActionQueue(sphereTarget, sphereTargetZoneId, state, ctx, assignedCosts, settings);
-            const stateBefore = snapshotState(state);
-
-            // Determine the cost scale for the focus task — the verify should
-            // check affordability at the same fraction the planner used
             const focusInfo = taskByName.get(focusName);
-            const focusCat = focusInfo ? getTaskCategory(focusInfo.task, ctx) : 'normal';
-            const focusCostScale =
-                focusCat === 'traversal' ? (settings.traversalCostScale ?? 1) :
-                focusCat === 'normal' ? (settings.normalCostScale ?? 1) : 1;
+
+            // Progressively add to assignedCosts and set task object costMult/xpMult
+            // when we encounter a cost assignment, matching the planner's state.
+            if (planned.costAssignment) {
+                const ca = planned.costAssignment;
+                assignedCosts.set(ca.taskName, {
+                    costMult: ca.costMult,
+                    xpMult: ca.xpMult,
+                    category: ca.category,
+                    targetAttempts: ca.targetAttempts,
+                    energyAtAssignment: ca.energyAvailable,
+                    zoneId: ca.zoneId,
+                });
+                // Set on task object so calcTaskEnergyCost/calcTaskXp see the right values
+                const caInfo = taskByName.get(ca.taskName);
+                if (caInfo) {
+                    caInfo.task.costMult = ca.costMult;
+                    if (ca.xpMult !== undefined) caInfo.task.xpMult = ca.xpMult;
+                }
+            }
+
+            // Manage xpMult adjustments: apply when a new costAssignment has them,
+            // restore when the focus task completes or changes.
+            const newXpAdj = planned.costAssignment?.xpAdjustments;
+            if (newXpAdj) {
+                // Restore any previous adjustments before applying new ones
+                if (activeXpAdj) {
+                    for (const adj of activeXpAdj) {
+                        const info = taskByName.get(adj.taskName);
+                        if (info) info.task.xpMult = adj.origXpMult;
+                    }
+                }
+                activeXpAdj = newXpAdj;
+                for (const adj of activeXpAdj) {
+                    const info = taskByName.get(adj.taskName);
+                    if (info) info.task.xpMult = adj.newXpMult;
+                }
+            }
+
+            // Replay the planner's recorded queue entries instead of rebuilding
+            // the queue. This guarantees the same task ordering and selection
+            // as the planner — only energy costs may differ due to state.
+            const plannedQueue = planned.queue || [];
+            const stateBefore = snapshotState(state);
 
             let energy = state.maxEnergy;
             const queueResults = [];
             let focusCompleted = false;
 
-            for (const entry of stepQueue) {
-                const { task, zoneId, zoneName, type } = entry;
+            for (const pEntry of plannedQueue) {
+                const info = taskByName.get(pEntry.taskName);
+                if (!info) continue;
+                const { task } = info;
+                const zoneId = pEntry.zoneId;
+                const zoneName = pEntry.zoneName;
+                const type = pEntry.type;
+
+                if (pEntry.status === 'uncosted_skipped') {
+                    queueResults.push({
+                        taskName: task.name, zoneName, zoneId, type,
+                        status: 'uncosted_skipped',
+                        energyBefore: energy, energyCost: 0, energyAfter: energy,
+                    });
+                    continue;
+                }
 
                 const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
 
-                // For the focus task, check affordability against the scaled energy
-                // budget (matching the planner's cost scale). For other tasks, check
-                // against the full remaining energy.
-                const isFocus = task.name === focusName;
-                const budget = isFocus ? energy * focusCostScale : energy;
-
-                if (energyCost > budget) {
+                if (energyCost > energy) {
                     queueResults.push({
                         taskName: task.name, zoneName, zoneId, type,
                         status: 'cannot_afford',
                         energyBefore: energy, energyCost, energyAfter: energy,
                     });
-                    if (isFocus) break; // focus task can't afford within budget — count as failed attempt
-                    break; // preceding task can't afford — queue stops
+                    break;
                 }
 
                 energy -= energyCost;
@@ -1641,7 +1694,16 @@ export class JTACostPlanner {
                     energyBefore: energy + energyCost, energyCost, energyAfter: energy,
                 });
 
-                if (isFocus) focusCompleted = true;
+                if (task.name === focusName) focusCompleted = true;
+            }
+
+            // Restore xpMult adjustments when the focus task completes
+            if (focusCompleted && activeXpAdj) {
+                for (const adj of activeXpAdj) {
+                    const info = taskByName.get(adj.taskName);
+                    if (info) info.task.xpMult = adj.origXpMult;
+                }
+                activeXpAdj = null;
             }
 
             stepVerifyData.push({
@@ -1660,6 +1722,15 @@ export class JTACostPlanner {
             if (!focusCompleted) {
                 doReset(state, ctx);
             }
+        }
+
+        // Restore any dangling xpMult adjustments
+        if (activeXpAdj) {
+            for (const adj of activeXpAdj) {
+                const info = taskByName.get(adj.taskName);
+                if (info) info.task.xpMult = adj.origXpMult;
+            }
+            activeXpAdj = null;
         }
 
         // Grant perks for the last sphere
@@ -1723,6 +1794,7 @@ export class JTACostPlanner {
                     energyRemaining: verify.energyRemaining,
                     stateBefore: verify.stateBefore,
                     stateAfter: verify.stateAfter,
+                    verifyQueue: verify.queue,
                     queueComparison,
                     energyDelta: verify.energyRemaining - planned.energyRemaining,
                     focusMatch: verify.focusTask === planned.targetTask,
@@ -1753,12 +1825,257 @@ export class JTACostPlanner {
 
     getStepVerifyResults() { return this._stepVerifyResults; }
 
+    /**
+     * Real-game verification: replays planned steps using the actual game
+     * engine via instant mode. Requires the game iframe to be loaded with
+     * the instant mode wrapper.
+     *
+     * @param {object} eventBus - Event bus for communicating with the game iframe
+     * @param {object} gameDataJson - Game data to load into the game
+     * @param {Function} [onProgress] - Called with { step, total, taskName } for each step
+     * @returns {Promise<{ annotatedSteps: Array, summary: object }>}
+     */
+    async realGameVerify(eventBus, gameDataJson, onProgress = null) {
+        if (!this._lastPlanResult) {
+            throw new Error('No plan to verify. Run planCosts first.');
+        }
+
+        const plannedSteps = this._lastPlanResult.steps;
+
+        // Helper: publish and wait for response
+        function sendAndWait(publishEvent, publishData, responseEvent, timeoutMs = 5000) {
+            return new Promise((resolve, reject) => {
+                const timer = setTimeout(() => {
+                    unsub();
+                    reject(new Error(`Timeout waiting for ${responseEvent}`));
+                }, timeoutMs);
+                const unsub = eventBus.subscribe(responseEvent, (data) => {
+                    clearTimeout(timer);
+                    unsub();
+                    resolve(data);
+                });
+                eventBus.publish(publishEvent, publishData || {});
+            });
+        }
+
+        // 1. Save game state so we can restore after verification
+        await sendAndWait('jta:saveGameState', {}, 'jta:gameStateSaved');
+
+        // 2. Pause the game loop to prevent conflicts during verification
+        await sendAndWait('jta:pauseGameLoop', {}, 'jta:gameLoopPaused').catch(() => {});
+
+        // 2. Enable instant mode
+        const imResult = await sendAndWait('jta:setInstantMode', { enabled: true }, 'jta:instantModeSet');
+        if (imResult.error) {
+            await sendAndWait('jta:resumeGameLoop', {}, 'jta:gameLoopResumed').catch(() => {});
+            throw new Error('Failed to enable instant mode: ' + imResult.error);
+        }
+
+        // 3. Load ONLY costMult/xpMult changes into the game.
+        // Sending the full adjustedData corrupts other task properties
+        // (item/perk refs) that the game's rendering code depends on.
+        const costsOnlyData = this._buildCostsOnlyData(gameDataJson);
+        await sendAndWait('jta:replaceGameData', costsOnlyData, 'jta:gameDataReplaced', 10000);
+
+        // 4. Get initial state
+        const initialState = await sendAndWait('jta:getFullState', {}, 'jta:fullState');
+
+        // 4. Replay each planned step
+        const stepResults = [];
+        let lastSphereIndex = null;
+
+        // Build sphere perk schedule from planned steps
+        const spherePerksGranted = new Set();
+
+        for (let i = 0; i < plannedSteps.length; i++) {
+            const planned = plannedSteps[i];
+            const focusName = planned.targetTask;
+
+            if (onProgress) {
+                onProgress({ step: i, total: plannedSteps.length, taskName: focusName });
+            }
+
+            // Get state before this step
+            const beforeState = await sendAndWait('jta:getFullState', {}, 'jta:fullState');
+            const stateBefore = beforeState.state;
+
+            // Execute each task in the planned queue
+            const queueResults = [];
+            let focusCompleted = false;
+
+            for (const pEntry of (planned.queue || [])) {
+                if (pEntry.status === 'uncosted_skipped') {
+                    queueResults.push({
+                        taskName: pEntry.taskName,
+                        zoneName: pEntry.zoneName,
+                        zoneId: pEntry.zoneId,
+                        type: pEntry.type,
+                        status: 'uncosted_skipped',
+                        energyBefore: stateBefore?.currentEnergy,
+                        energyCost: 0,
+                        energyAfter: stateBefore?.currentEnergy,
+                    });
+                    continue;
+                }
+
+                // Look up the task ID from the game data
+                const taskId = this._findTaskId(gameDataJson, pEntry.taskName);
+                if (taskId === null) {
+                    queueResults.push({
+                        taskName: pEntry.taskName, type: pEntry.type,
+                        status: 'error', error: 'Task ID not found',
+                        energyCost: 0,
+                    });
+                    continue;
+                }
+
+                // Perform the task instantly via the game engine
+                const result = await sendAndWait(
+                    'jta:performTaskInstant', { taskId },
+                    'jta:taskPerformedInstant'
+                );
+
+                if (!result.success) {
+                    queueResults.push({
+                        taskName: pEntry.taskName,
+                        zoneName: pEntry.zoneName,
+                        zoneId: pEntry.zoneId,
+                        type: pEntry.type,
+                        status: result.alreadyCompleted ? 'already_completed' : 'cannot_afford',
+                        error: result.error,
+                        energyBefore: result.state?.currentEnergy,
+                        energyCost: pEntry.energyCost,
+                        energyAfter: result.state?.currentEnergy,
+                    });
+                    break;
+                }
+
+                const energyAfter = result.state?.currentEnergy ?? result.energy;
+                queueResults.push({
+                    taskName: pEntry.taskName,
+                    zoneName: pEntry.zoneName,
+                    zoneId: pEntry.zoneId,
+                    type: pEntry.type,
+                    status: 'completed',
+                    energyBefore: (energyAfter + (pEntry.energyCost || 0)),
+                    energyCost: pEntry.energyCost, // planned cost (actual computed by game)
+                    energyAfter,
+                    gameEnergy: energyAfter,
+                });
+
+                if (pEntry.taskName === focusName) {
+                    focusCompleted = true;
+                }
+
+                // Check if energy reset triggered
+                if (result.isInEnergyReset) break;
+            }
+
+            // Get state after this step
+            const afterStateResponse = await sendAndWait('jta:getFullState', {}, 'jta:fullState');
+            const stateAfter = afterStateResponse.state;
+
+            stepResults.push({
+                stepIndex: i,
+                sphereIndex: planned.sphereIndex,
+                focusTask: focusName,
+                completed: focusCompleted,
+                queue: queueResults,
+                stateBefore,
+                stateAfter,
+                energyBudget: stateBefore?.maxEnergy,
+                energyRemaining: stateAfter?.currentEnergy,
+            });
+
+            // If focus not completed, dismiss game over (energy reset)
+            if (!focusCompleted) {
+                // The game may or may not be in energy reset state.
+                // If it is, dismiss it. If not, force a reset.
+                try {
+                    await sendAndWait('jta:dismissGameOver', {}, 'jta:gameOverDismissed', 2000);
+                } catch {
+                    // Not in energy reset — may need to drain remaining energy
+                    // For now, just continue (instant mode handles this)
+                }
+            }
+        }
+
+        // 5. Restore game state (reloads the game iframe from saved state)
+        await sendAndWait('jta:restoreGameState', {}, 'jta:gameStateRestoring').catch(() => {});
+
+        // 6. Annotate planned steps with real game results
+        const annotatedSteps = plannedSteps.map((planned, i) => {
+            const verify = stepResults[i] || null;
+            if (!verify) return { ...planned, realGameVerification: null };
+
+            return {
+                ...planned,
+                realGameVerification: {
+                    completed: verify.completed,
+                    energyBudget: verify.energyBudget,
+                    energyRemaining: verify.energyRemaining,
+                    energyDelta: (verify.energyRemaining ?? 0) - planned.energyRemaining,
+                    completedMatch: verify.completed === planned.targetCompleted,
+                    queue: verify.queue,
+                    stateBefore: verify.stateBefore,
+                    stateAfter: verify.stateAfter,
+                },
+            };
+        });
+
+        const totalSteps = annotatedSteps.length;
+        const matched = annotatedSteps.filter(s =>
+            s.realGameVerification?.completedMatch
+        ).length;
+        const energyMismatches = annotatedSteps.filter(s =>
+            s.realGameVerification && Math.abs(s.realGameVerification.energyDelta) > 1
+        ).length;
+
+        const summary = {
+            totalPlannedSteps: totalSteps,
+            totalVerifySteps: stepResults.length,
+            stepsMatched: matched,
+            stepsMismatched: totalSteps - matched,
+            energyMismatches,
+            mode: 'realGame',
+        };
+
+        this._realGameVerifyResults = { annotatedSteps, summary };
+        return { annotatedSteps, summary };
+    }
+
+    getRealGameVerifyResults() { return this._realGameVerifyResults; }
+
+    _buildCostsOnlyData(gameDataJson) {
+        // Build a minimal data object with only the fields replaceGameData
+        // needs to update costs — avoids corrupting item/perk/rendering data.
+        return {
+            zones: (gameDataJson.zones || []).map(zone => ({
+                tasks: (zone.tasks || []).map(task => ({
+                    id: task.id,
+                    costMult: task.costMult,
+                    xpMult: task.xpMult,
+                })),
+            })),
+        };
+    }
+
+    _findTaskId(gameDataJson, taskName) {
+        for (const zone of gameDataJson.zones || []) {
+            for (const task of zone.tasks || []) {
+                if (task.name === taskName) return task.id;
+            }
+        }
+        return null;
+    }
+
     reset() {
         this._steps = [];
         this._costData = null;
         this._lastPlanResult = null;
         this._verificationResults = null;
         this._stepVerifyResults = null;
+        this._realGameVerifyResults = null;
     }
 }
 

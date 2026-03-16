@@ -64,6 +64,17 @@ export function register(registrationApi) {
     registrationApi.registerEventBusPublisher('jtaCostDebugger:planned');
     registrationApi.registerEventBusPublisher('jtaCostDebugger:reset');
 
+    // Game communication events for real-game verification
+    registrationApi.registerEventBusPublisher('jta:setInstantMode');
+    registrationApi.registerEventBusPublisher('jta:performTaskInstant');
+    registrationApi.registerEventBusPublisher('jta:getFullState');
+    registrationApi.registerEventBusPublisher('jta:dismissGameOver');
+    registrationApi.registerEventBusPublisher('jta:replaceGameData');
+    registrationApi.registerEventBusPublisher('jta:pauseGameLoop');
+    registrationApi.registerEventBusPublisher('jta:resumeGameLoop');
+    registrationApi.registerEventBusPublisher('jta:saveGameState');
+    registrationApi.registerEventBusPublisher('jta:restoreGameState');
+
     log('info', `[${moduleInfo.name}] Registration complete.`);
 }
 

@@ -1055,6 +1055,136 @@ function setupSubscriptions(client) {
         });
     });
 
+    // --- Game state save/restore (for verification) ---
+
+    // Save game state to localStorage (so we can restore after verification)
+    client.subscribeEventBus('jta:saveGameState', () => {
+        triggerManualSave();
+        const saved = localStorage.getItem(SAVE_KEY);
+        client.publishEventBus('jta:gameStateSaved', {
+            success: !!saved,
+            saveSize: saved ? saved.length : 0,
+            timestamp: Date.now()
+        });
+    });
+
+    // Restore game state by reloading the page (restores from localStorage save)
+    client.subscribeEventBus('jta:restoreGameState', () => {
+        log.info('Restoring game state — reloading page');
+        client.publishEventBus('jta:gameStateRestoring', { timestamp: Date.now() });
+        // Small delay to let the response get sent
+        setTimeout(() => { location.reload(); }, 100);
+    });
+
+    // --- Instant mode APIs (for cost debugger verification) ---
+
+    // Lazily inject the instant mode wrapper script into the game context.
+    // Can't use <script src> because the <base> tag redirects relative URLs
+    // to the remote game server. Instead, fetch and eval on first use.
+    let _instantWrapperLoaded = !!(window.jta?.setInstantMode || window.setInstantMode);
+    async function ensureInstantWrapper() {
+        if (_instantWrapperLoaded) return true;
+        try {
+            // Resolve path relative to this module, not the <base> tag
+            const resp = await fetch(new URL('../jta-randomizer/jta-instant-mode-wrapper.js', import.meta.url).href);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const code = await resp.text();
+            // eslint-disable-next-line no-eval
+            (0, eval)(code);
+            _instantWrapperLoaded = true;
+            log.info('Instant mode wrapper injected');
+            return true;
+        } catch (err) {
+            log.error('Failed to inject instant mode wrapper:', err);
+            return false;
+        }
+    }
+
+    // Enable/disable instant mode (tasks complete in one tick)
+    client.subscribeEventBus('jta:setInstantMode', async (data) => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.setInstantMode || window.setInstantMode;
+        if (fn) {
+            fn(!!data.enabled);
+            log.info(`setInstantMode: ${data.enabled}`);
+            client.publishEventBus('jta:instantModeSet', { enabled: !!data.enabled, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:instantModeSet', { success: false, error: 'Instant mode wrapper not loaded', timestamp: Date.now() });
+        }
+    });
+
+    // Perform a task instantly: click it, step tick to complete, return state
+    client.subscribeEventBus('jta:performTaskInstant', async (data) => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const performFn = window.jta?.performTask || window.performTask;
+        const stepFn = window.jta?.stepTick || window.stepTick;
+        const stateFn = window.jta?.getFullState || window.getFullState;
+
+        if (!performFn || !stepFn) {
+            client.publishEventBus('jta:taskPerformedInstant', {
+                success: false, error: 'Instant mode wrapper not loaded', timestamp: Date.now()
+            });
+            return;
+        }
+
+        const result = performFn(data.taskId);
+        if (!result.success) {
+            client.publishEventBus('jta:taskPerformedInstant', {
+                success: false, taskId: data.taskId, error: result.error, timestamp: Date.now()
+            });
+            return;
+        }
+
+        // Step tick to complete the task instantly
+        const tickResult = stepFn();
+
+        client.publishEventBus('jta:taskPerformedInstant', {
+            success: true,
+            taskId: data.taskId,
+            taskName: result.taskName,
+            energy: tickResult.energy,
+            isInEnergyReset: tickResult.isInEnergyReset || false,
+            state: stateFn ? stateFn() : null,
+            timestamp: Date.now()
+        });
+    });
+
+    // Pause/resume game loop (prevents conflicts during verification)
+    client.subscribeEventBus('jta:pauseGameLoop', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.pauseGameLoop || window.pauseGameLoop;
+        if (fn) {
+            fn();
+            log.info('Game loop paused');
+            client.publishEventBus('jta:gameLoopPaused', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:gameLoopPaused', { success: false, error: 'pauseGameLoop not available', timestamp: Date.now() });
+        }
+    });
+
+    client.subscribeEventBus('jta:resumeGameLoop', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.resumeGameLoop || window.resumeGameLoop;
+        if (fn) {
+            fn();
+            log.info('Game loop resumed');
+            client.publishEventBus('jta:gameLoopResumed', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:gameLoopResumed', { success: false, error: 'resumeGameLoop not available', timestamp: Date.now() });
+        }
+    });
+
+    // Get full game state (detailed snapshot for verification)
+    client.subscribeEventBus('jta:getFullState', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.getFullState || window.getFullState;
+        if (fn) {
+            client.publishEventBus('jta:fullState', { state: fn(), timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:fullState', { state: null, error: 'Instant mode wrapper not loaded', timestamp: Date.now() });
+        }
+    });
+
     // Grant perks from Archipelago (incrementally via tryAddPerk)
     client.subscribeEventBus('jta:grantPerks', (data) => {
         if (!Array.isArray(data.perkTypes)) return;
