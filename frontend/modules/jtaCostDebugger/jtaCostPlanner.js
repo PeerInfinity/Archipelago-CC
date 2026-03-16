@@ -257,45 +257,74 @@ function calcXpNeeded(level, skillType, ctx) {
 }
 
 /**
- * Apply XP from a task execution, matching the tick-by-tick simulation.
+ * Execute a task tick-by-tick with an energy budget, applying XP to state.
  *
- * Simulates each tick's XP grant with skill leveling, matching
- * calcTaskEnergyCost's tick-by-tick model. This ensures the state
- * after execution matches what the real game would produce.
+ * Matches the real game engine: runs as many ticks as the energy budget
+ * allows, applying XP each tick. If energy runs out mid-task, the partial
+ * ticks still grant XP (this is how the real game works).
+ *
+ * @param {number} energyBudget - Available energy for this task
+ * @returns {{ energyUsed: number, completed: boolean }}
  */
-function applyTaskXp(task, zoneId, state, ctx) {
-    if (task.skills.length === 0) return;
-
+function executeTaskWithBudget(task, zoneId, state, ctx, energyBudget) {
     const baseCost = calcTaskBaseCost(task, zoneId, ctx);
+    let energyUsed = 0;
     let repsCompleted = 0;
-    let progress = 0.01; // Game starts each rep with 0.01 progress
+    let progress = 0.01;
 
     for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
         const progressPerTick = calcProgressMult(task, zoneId, state, ctx);
         const addedProgress = Math.min(progressPerTick, baseCost - progress);
         progress += addedProgress;
+        const isSingle = addedProgress >= baseCost;
+        const drain = calcDrainPerTick(task, zoneId, state, ctx);
 
-        // Apply XP for this tick using actual progress (matching game)
-        const xpPerTick = calcTickXp(task, zoneId, addedProgress, state, ctx);
-        for (const skill of task.skills) {
-            if (state.skillLevels[skill] === undefined) {
-                state.skillLevels[skill] = 0;
-                state.skillXp[skill] = 0;
-            }
-            state.skillXp[skill] += xpPerTick;
-            let needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
-            while (state.skillXp[skill] >= needed) {
-                state.skillXp[skill] -= needed;
-                state.skillLevels[skill]++;
-                needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+        // Check if we can afford this tick
+        if (energyUsed + drain > energyBudget) {
+            // Can't afford — but XP for THIS tick is still applied
+            // (the game processes the tick, then checks energy)
+            // Actually in the real game, energy is deducted and can go
+            // negative/zero triggering reset. We apply XP but stop.
+            break;
+        }
+        energyUsed += drain;
+
+        // Apply XP for this tick
+        if (task.skills.length > 0) {
+            const xpPerTick = calcTickXp(task, zoneId, addedProgress, state, ctx);
+            for (const skill of task.skills) {
+                if (state.skillLevels[skill] === undefined) {
+                    state.skillLevels[skill] = 0;
+                    state.skillXp[skill] = 0;
+                }
+                state.skillXp[skill] += xpPerTick;
+                let needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+                while (state.skillXp[skill] >= needed) {
+                    state.skillXp[skill] -= needed;
+                    state.skillLevels[skill]++;
+                    needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+                }
             }
         }
 
         if (progress >= baseCost) {
             repsCompleted++;
-            progress = 0.01; // Game resets to 0.01 via applyTaskRepStartEffects
+            progress = 0.01;
         }
     }
+
+    return {
+        energyUsed,
+        completed: repsCompleted >= task.maxReps,
+    };
+}
+
+/**
+ * Apply XP from a full task execution (all reps).
+ * Convenience wrapper around executeTaskWithBudget with unlimited energy.
+ */
+function applyTaskXp(task, zoneId, state, ctx) {
+    executeTaskWithBudget(task, zoneId, state, ctx, Infinity);
 }
 
 // --- State Management ---
@@ -690,21 +719,11 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
                 }
             }
 
-            const energyCost = calcTaskEnergyCost(entry.task, entry.zoneId, sim, ctx);
-            if (energyCost > energy) {
-                if (queueResults) {
-                    queueResults.push({
-                        taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
-                        type: entry.type, status: 'cannot_afford',
-                        energyBefore: energy, energyCost, energyAfter: energy,
-                    });
-                }
-                break;
-            }
-
-            energy -= energyCost;
-            const xpGained = substepLog ? calcTaskXp(entry.task, entry.zoneId, sim, ctx) * entry.task.maxReps : 0;
-            applyTaskXp(entry.task, entry.zoneId, sim, ctx);
+            const { energyUsed, completed: taskDone } = executeTaskWithBudget(
+                entry.task, entry.zoneId, sim, ctx, energy
+            );
+            const eBefore = energy;
+            energy -= energyUsed;
 
             if (entry.zoneId > sim.highestZone) sim.highestZone = entry.zoneId;
             sim.currentZone = entry.zoneId;
@@ -712,15 +731,17 @@ function simulateActualAttempts(task, zoneId, state, ctx, assignedCosts, maxAtte
             if (queueResults) {
                 queueResults.push({
                     taskName: entry.task.name, zoneName: entry.zoneName, zoneId: entry.zoneId,
-                    type: entry.type, status: 'completed',
-                    energyBefore: energy + energyCost, energyCost, energyAfter: energy,
-                    xpGained,
+                    type: entry.type,
+                    status: taskDone ? 'completed' : (energyUsed > 0 ? 'partial' : 'cannot_afford'),
+                    energyBefore: eBefore, energyCost: energyUsed, energyAfter: energy,
                 });
             }
 
-            if (isTarget) {
+            if (taskDone && isTarget) {
                 completed = true;
             }
+
+            if (!taskDone) break;
         }
 
         if (substepLog) {
@@ -1227,24 +1248,19 @@ export class JTACostPlanner {
                                 });
                                 continue;
                             }
-                            const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
-                            if (energyCost > energy) {
-                                queueResults.push({
-                                    taskName: task.name, zoneName, zoneId, type,
-                                    status: 'cannot_afford',
-                                    energyBefore: energy, energyCost, energyAfter: energy,
-                                });
-                                break;
-                            }
-                            energy -= energyCost;
-                            applyTaskXp(task, zoneId, state, ctx);
+                            const { energyUsed, completed: taskDone } = executeTaskWithBudget(
+                                task, zoneId, state, ctx, energy
+                            );
+                            const eBefore = energy;
+                            energy -= energyUsed;
                             if (zoneId > state.highestZone) state.highestZone = zoneId;
                             state.currentZone = zoneId;
                             queueResults.push({
                                 taskName: task.name, zoneName, zoneId, type,
-                                status: 'completed',
-                                energyBefore: energy + energyCost, energyCost, energyAfter: energy,
+                                status: taskDone ? 'completed' : (energyUsed > 0 ? 'partial' : 'cannot_afford'),
+                                energyBefore: eBefore, energyCost: energyUsed, energyAfter: energy,
                             });
+                            if (!taskDone) break;
                         }
 
                         plannedSteps.push({
@@ -1397,35 +1413,33 @@ export class JTACostPlanner {
                                 continue;
                             }
 
-                            const energyCost = calcTaskEnergyCost(task, zoneId, state, ctx);
-                            if (energyCost > energy) {
-                                queueResults.push({
-                                    taskName: task.name, zoneName, zoneId, type,
-                                    status: 'cannot_afford',
-                                    energyBefore: energy, energyCost, energyAfter: energy,
-                                });
-                                break;
-                            }
-
-                            energy -= energyCost;
-                            applyTaskXp(task, zoneId, state, ctx);
+                            // Execute task with available energy (supports partial execution).
+                            // The real game runs tasks tick-by-tick and gains XP even if
+                            // the task can't fully complete within the energy budget.
+                            const { energyUsed, completed: taskCompleted } = executeTaskWithBudget(
+                                task, zoneId, state, ctx, energy
+                            );
+                            const energyBefore = energy;
+                            energy -= energyUsed;
 
                             if (zoneId > state.highestZone) state.highestZone = zoneId;
                             state.currentZone = zoneId;
 
                             queueResults.push({
                                 taskName: task.name, zoneName, zoneId, type,
-                                status: 'completed',
-                                energyBefore: energy + energyCost, energyCost, energyAfter: energy,
-                                xpGained: calcTaskXp(task, zoneId, state, ctx) * task.maxReps,
+                                status: taskCompleted ? 'completed' : (energyUsed > 0 ? 'partial' : 'cannot_afford'),
+                                energyBefore, energyCost: energyUsed, energyAfter: energy,
+                                xpGained: taskCompleted ? calcTaskXp(task, zoneId, state, ctx) * task.maxReps : 0,
                             });
 
-                            if (task.name === focusTask.name) {
+                            if (taskCompleted && task.name === focusTask.name) {
                                 focusCompleted = true;
                             }
-                            if (task.name === sphereTargetName) {
+                            if (taskCompleted && task.name === sphereTargetName) {
                                 sphereTargetCompleted = true;
                             }
+
+                            if (!taskCompleted) break;
                         }
 
                         const stateAfter = snapshotState(state);
