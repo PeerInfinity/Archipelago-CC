@@ -251,14 +251,18 @@ try {
     // Navigate to the game iframe page
     const gameUrl = `http://localhost:${args.port}/frontend/modules/jta-remote/index-iframe.html`;
     console.log(`Loading game from ${gameUrl}...`);
+
+    // Clear saved game state so the game starts fresh (no accumulated skills)
     await page.goto(gameUrl);
+    await page.evaluate(() => localStorage.removeItem('incrementalGameSave'));
+    await page.reload();
 
     // Wait for the game to initialize (GAMESTATE + updateGamestate available)
     await page.waitForFunction(
         () => !!window.getGamestate && typeof window.updateGamestate === 'function' && typeof window.clickTask === 'function',
         { timeout: 30000 }
     );
-    console.log('Game loaded');
+    console.log('Game loaded (fresh state, no saved progress)');
 
     // Pause the game loop and load our cost data
     await page.evaluate((data) => {
