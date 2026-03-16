@@ -2057,10 +2057,10 @@ export class JTACostPlanner {
                     continue;
                 }
 
-                // Perform the task instantly via the game engine
+                // Execute the task using the real game engine (tick by tick)
                 const result = await sendAndWait(
-                    'jta:performTaskInstant', { taskId },
-                    'jta:taskPerformedInstant'
+                    'jta:executeTaskReal', { taskId },
+                    'jta:taskExecutedReal'
                 );
 
                 if (!result.success) {
@@ -2071,32 +2071,28 @@ export class JTACostPlanner {
                         type: pEntry.type,
                         status: result.alreadyCompleted ? 'already_completed' : 'cannot_afford',
                         error: result.error,
-                        energyBefore: result.state?.currentEnergy,
-                        energyCost: pEntry.energyCost,
-                        energyAfter: result.state?.currentEnergy,
+                        energyCost: 0,
                     });
                     break;
                 }
 
-                const energyAfter = result.state?.currentEnergy ?? result.energy;
                 queueResults.push({
                     taskName: pEntry.taskName,
                     zoneName: pEntry.zoneName,
                     zoneId: pEntry.zoneId,
                     type: pEntry.type,
-                    status: 'completed',
-                    energyBefore: (energyAfter + (pEntry.energyCost || 0)),
-                    energyCost: pEntry.energyCost, // planned cost (actual computed by game)
-                    energyAfter,
-                    gameEnergy: energyAfter,
+                    status: result.completed ? 'completed' : 'partial',
+                    energyCost: result.ticks, // energy = ticks (1 drain/tick at zone 0 baseline)
+                    energyAfter: result.energy,
+                    gameEnergy: result.energy,
                 });
 
-                if (pEntry.taskName === focusName) {
+                if (result.completed && pEntry.taskName === focusName) {
                     focusCompleted = true;
                 }
 
                 // Check if energy reset triggered
-                if (result.isInEnergyReset) break;
+                if (result.isInEnergyReset || result.energy <= 0) break;
             }
 
             // Get state after this step
@@ -2115,17 +2111,9 @@ export class JTACostPlanner {
                 energyRemaining: stateAfter?.currentEnergy,
             });
 
-            // If focus not completed, dismiss game over (energy reset)
-            if (!focusCompleted) {
-                // The game may or may not be in energy reset state.
-                // If it is, dismiss it. If not, force a reset.
-                try {
-                    await sendAndWait('jta:dismissGameOver', {}, 'jta:gameOverDismissed', 2000);
-                } catch {
-                    // Not in energy reset — may need to drain remaining energy
-                    // For now, just continue (instant mode handles this)
-                }
-            }
+            // Reset for next step: restore energy, zone, tasks (skills persist).
+            // Matches the planner's model where each step starts fresh.
+            await sendAndWait('jta:doHeadlessReset', {}, 'jta:headlessResetDone', 2000).catch(() => {});
         }
 
         // 5. Restore game state (reloads the game iframe from saved state)

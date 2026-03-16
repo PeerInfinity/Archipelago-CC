@@ -1076,6 +1076,16 @@ function setupSubscriptions(client) {
         setTimeout(() => { location.reload(); }, 100);
     });
 
+    // Headless reset: reset zone, tasks, energy but keep skills/perks (matches doHeadlessReset)
+    client.subscribeEventBus('jta:doHeadlessReset', () => {
+        if (window.doHeadlessReset) {
+            window.doHeadlessReset();
+            client.publishEventBus('jta:headlessResetDone', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:headlessResetDone', { success: false, error: 'doHeadlessReset not available', timestamp: Date.now() });
+        }
+    });
+
     // Reset game to fresh state (for verification — clears skills, perks, items, etc.)
     client.subscribeEventBus('jta:resetToFreshState', () => {
         const gs = window.getGamestate;
@@ -1220,6 +1230,49 @@ function setupSubscriptions(client) {
         } else {
             client.publishEventBus('jta:gameLoopResumed', { success: false, error: 'resumeGameLoop not available', timestamp: Date.now() });
         }
+    });
+
+    // Execute a task using the REAL game engine (clickTask + updateGamestate loop).
+    // Unlike performTaskInstant, this respects energy limits and uses actual game formulas.
+    client.subscribeEventBus('jta:executeTaskReal', (data) => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:taskExecutedReal', { success: false, error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        const taskId = data.taskId;
+        const task = gs.tasks?.find(t => t.task_definition?.id === taskId);
+        if (!task || !task.enabled) {
+            client.publishEventBus('jta:taskExecutedReal', {
+                success: false, taskId, error: task ? 'Task not enabled' : 'Task not found', timestamp: Date.now()
+            });
+            return;
+        }
+        if (task.reps >= task.task_definition.max_reps) {
+            client.publishEventBus('jta:taskExecutedReal', {
+                success: false, taskId, alreadyCompleted: true, error: 'Already completed', timestamp: Date.now()
+            });
+            return;
+        }
+        // Click the task to activate it
+        window.clickTask(task);
+        // Run updateGamestate tick by tick until task completes or energy runs out
+        let ticks = 0;
+        while (ticks < 100000 && gs.active_task === task && !gs.is_in_energy_reset) {
+            window.updateGamestate();
+            ticks++;
+        }
+        const completed = task.reps >= task.task_definition.max_reps;
+        client.publishEventBus('jta:taskExecutedReal', {
+            success: true,
+            taskId,
+            taskName: task.task_definition.name,
+            ticks,
+            completed,
+            energy: gs.current_energy,
+            isInEnergyReset: gs.is_in_energy_reset || false,
+            timestamp: Date.now()
+        });
     });
 
     // Get full game state (detailed snapshot for verification)
