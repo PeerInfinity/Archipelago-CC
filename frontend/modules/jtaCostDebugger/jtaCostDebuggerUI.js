@@ -597,14 +597,15 @@ export class JTACostDebuggerUI {
             const statusIcon = step.targetCompleted ? '\u2713' : '\u2717';
             const statusClass = step.targetCompleted ? 'jta-cd-completed' : 'jta-cd-incomplete';
 
-            // Verification indicator
+            // Verification indicator (supports both Step Verify and Game Verify)
             let verifyIndicator = '';
-            if (step.verification) {
-                const v = step.verification;
-                const ok = v.focusMatch && v.completedMatch && Math.abs(v.energyDelta) <= 1;
-                const cls = ok ? 'jta-cd-completed' : Math.abs(v.energyDelta) <= 5 ? '' : 'jta-cd-cannot-afford';
-                const delta = v.energyDelta >= 0 ? `+${v.energyDelta.toFixed(0)}` : v.energyDelta.toFixed(0);
-                verifyIndicator = `<span class="jta-cd-step-cost ${cls}" title="Verify energy delta">${ok ? '\u2714' : '\u0394'}${delta}</span>`;
+            const vData = step.verification || step.realGameVerification;
+            if (vData) {
+                const ok = (vData.focusMatch ?? true) && vData.completedMatch && Math.abs(vData.energyDelta) <= 1;
+                const cls = ok ? 'jta-cd-completed' : Math.abs(vData.energyDelta) <= 5 ? '' : 'jta-cd-cannot-afford';
+                const delta = vData.energyDelta >= 0 ? `+${vData.energyDelta.toFixed(0)}` : vData.energyDelta.toFixed(0);
+                const label = step.realGameVerification ? 'Game' : 'Sim';
+                verifyIndicator = `<span class="jta-cd-step-cost ${cls}" title="${label} verify energy delta">${ok ? '\u2714' : '\u0394'}${delta}</span>`;
             }
 
             const displayNum = step.displayIndex ?? step.stepIndex;
@@ -812,9 +813,11 @@ export class JTACostDebuggerUI {
             </div>
         `;
 
-        // Verification data (added by Step Verify)
-        if (step.verification) {
-            const v = step.verification;
+        // Verification data (added by Step Verify or Game Verify)
+        const verifyData = step.verification || step.realGameVerification;
+        if (verifyData) {
+            const v = verifyData;
+            const isGameVerify = !!step.realGameVerification;
             const focusColor = v.focusMatch ? 'jta-cd-completed' : 'jta-cd-cannot-afford';
             const complColor = v.completedMatch ? 'jta-cd-completed' : 'jta-cd-cannot-afford';
             const eDelta = v.energyDelta;
@@ -822,11 +825,12 @@ export class JTACostDebuggerUI {
             const eDeltaColor = Math.abs(eDelta) <= 1 ? 'jta-cd-completed'
                 : Math.abs(eDelta) <= 5 ? '' : 'jta-cd-cannot-afford';
 
+            const verifyLabel = isGameVerify ? 'Game Verification' : `Verification (Step ${v.verifyStepIndex})`;
             html += `
                 <div class="jta-cd-detail-section">
-                    <div class="jta-cd-detail-section-title">Verification (Step ${v.verifyStepIndex})</div>
+                    <div class="jta-cd-detail-section-title">${verifyLabel}</div>
                     <table class="jta-cd-table">
-                        <tr><td>Focus Match</td><td class="${focusColor}">${v.focusMatch ? 'Yes' : `No (actual: ${v.focusTask})`}</td></tr>
+                        ${v.focusMatch !== undefined ? `<tr><td>Focus Match</td><td class="${focusColor}">${v.focusMatch ? 'Yes' : `No (actual: ${v.focusTask})`}</td></tr>` : ''}
                         <tr><td>Completed Match</td><td class="${complColor}">${v.completedMatch ? 'Yes' : `No (actual: ${v.completed})`}</td></tr>
                         <tr><td>Verify Energy</td><td>${v.energyBudget.toFixed(1)} budget | ${v.energyUsed.toFixed(1)} used | ${v.energyRemaining.toFixed(1)} remaining</td></tr>
                         <tr><td>Energy Delta</td><td class="${eDeltaColor}">${eDeltaStr} (verify - planned)</td></tr>

@@ -318,9 +318,21 @@ console.log('');
 const startTime = Date.now();
 let planner = new JTACostPlanner();
 const useExpansion = args.debugSolverStep !== undefined && args.debugSolverIter !== undefined;
+
+// Progress callback for CLI
+let lastProgressTime = Date.now();
+const cliProgress = ({ sphereNum, totalSpheres, stepsGenerated, tasksCosted }) => {
+    const now = Date.now();
+    if (now - lastProgressTime > 1000) {
+        lastProgressTime = now;
+        process.stdout.write(`\r  Sphere ${sphereNum}/${totalSpheres}, ${stepsGenerated} steps, ${tasksCosted} tasks...`);
+    }
+};
+
 let result = useExpansion
     ? planner.planCostsWithExpansion(gameDataJson, sphereLogContent, settings, args.debugSolverStep, args.debugSolverIter)
-    : planner.planCosts(gameDataJson, sphereLogContent, settings);
+    : planner.planCosts(gameDataJson, sphereLogContent, { ...settings, onProgress: cliProgress });
+if (lastProgressTime > startTime + 1000) process.stdout.write('\r' + ' '.repeat(60) + '\r'); // clear progress line
 let verifyGameData = gameDataJson;
 
 // Two-pass mode: collect xpMult adjustments from pass 1, bake them into
@@ -355,7 +367,9 @@ if (args.twoPass) {
         // Re-run without adjustXpMult, using the baked-in xpMult values
         const pass2Settings = { ...settings, adjustXpMult: false };
         planner = new JTACostPlanner();
-        result = planner.planCosts(pass2GameData, sphereLogContent, pass2Settings);
+        lastProgressTime = Date.now();
+        result = planner.planCosts(pass2GameData, sphereLogContent, { ...pass2Settings, onProgress: cliProgress });
+        if (lastProgressTime > Date.now() - 5000) process.stdout.write('\r' + ' '.repeat(60) + '\r');
         verifyGameData = pass2GameData;
         console.log('Pass 2 complete — re-solved with baked xpMult values');
     } else {
