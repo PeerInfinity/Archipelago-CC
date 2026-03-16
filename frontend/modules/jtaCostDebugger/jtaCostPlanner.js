@@ -139,10 +139,78 @@ function calcDrainPerTick(task, zoneId, state, ctx) {
     return drain;
 }
 
+/**
+ * Calculate energy cost for a task, simulating tick-by-tick XP gain.
+ *
+ * The real game applies XP each tick, so skill levels increase during
+ * execution, making later ticks faster (more progress per tick).
+ * This function replicates that by simulating each tick: calculating
+ * progress based on current skills, applying XP, and tracking when
+ * reps complete. Uses a temporary state clone so the caller's state
+ * isn't modified.
+ */
 function calcTaskEnergyCost(task, zoneId, state, ctx) {
-    const ticks = calcTicks(task, zoneId, state, ctx);
-    const drain = calcDrainPerTick(task, zoneId, state, ctx);
-    return ticks * drain * task.maxReps;
+    // For single-tick tasks (progress >= cost in one tick), the simple formula is exact
+    const initialTicks = calcTicks(task, zoneId, state, ctx);
+    if (initialTicks <= 1) {
+        const drain = calcDrainPerTick(task, zoneId, state, ctx);
+        return drain * task.maxReps;
+    }
+
+    // For tasks with no skills, XP gain doesn't change ticks, so simple formula works
+    if (task.skills.length === 0) {
+        const drain = calcDrainPerTick(task, zoneId, state, ctx);
+        return initialTicks * drain * task.maxReps;
+    }
+
+    // Full tick-by-tick simulation matching the real game engine.
+    // Clone only the skill state (lightweight).
+    const simLevels = { ...state.skillLevels };
+    const simXp = { ...state.skillXp };
+    const simState = {
+        ...state,
+        skillLevels: simLevels,
+        skillXp: simXp,
+    };
+
+    const baseCost = calcTaskBaseCost(task, zoneId, ctx);
+    let totalEnergy = 0;
+    let repsCompleted = 0;
+    let progress = 0;
+
+    for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
+        // Calculate progress and drain for this tick using current skills
+        const progressPerTick = calcProgressMult(task, zoneId, simState, ctx);
+        const addedProgress = Math.min(progressPerTick, baseCost - progress);
+        progress += addedProgress;
+        const isSingle = progressPerTick >= baseCost;
+        const drain = calcDrainPerTick(task, zoneId, simState, ctx);
+        totalEnergy += drain;
+
+        // Apply XP for this tick (matching game's per-tick XP grant)
+        const xpPerTick = calcTaskXp(task, zoneId, simState, ctx);
+        for (const skill of task.skills) {
+            if (simLevels[skill] === undefined) {
+                simLevels[skill] = 0;
+                simXp[skill] = 0;
+            }
+            simXp[skill] += xpPerTick;
+            let needed = calcXpNeeded(simLevels[skill], skill, ctx);
+            while (simXp[skill] >= needed) {
+                simXp[skill] -= needed;
+                simLevels[skill]++;
+                needed = calcXpNeeded(simLevels[skill], skill, ctx);
+            }
+        }
+
+        // Check if rep completed
+        if (progress >= baseCost) {
+            repsCompleted++;
+            progress = 0;
+        }
+    }
+
+    return totalEnergy;
 }
 
 function getMandatoryTasks(zone, ctx) {
@@ -170,21 +238,43 @@ function calcXpNeeded(level, skillType, ctx) {
     return Math.pow(ctx.SKILL_XP_EXPONENT, level) * 10 * skillMult;
 }
 
+/**
+ * Apply XP from a task execution, matching the tick-by-tick simulation.
+ *
+ * Simulates each tick's XP grant with skill leveling, matching
+ * calcTaskEnergyCost's tick-by-tick model. This ensures the state
+ * after execution matches what the real game would produce.
+ */
 function applyTaskXp(task, zoneId, state, ctx) {
-    const xpPerRep = calcTaskXp(task, zoneId, state, ctx);
-    const totalXp = xpPerRep * task.maxReps;
+    if (task.skills.length === 0) return;
 
-    for (const skill of task.skills) {
-        if (state.skillLevels[skill] === undefined) {
-            state.skillLevels[skill] = 0;
-            state.skillXp[skill] = 0;
+    const baseCost = calcTaskBaseCost(task, zoneId, ctx);
+    let repsCompleted = 0;
+    let progress = 0;
+
+    for (let tick = 0; tick < 100000 && repsCompleted < task.maxReps; tick++) {
+        const progressPerTick = calcProgressMult(task, zoneId, state, ctx);
+        progress += Math.min(progressPerTick, baseCost - progress);
+
+        // Apply XP for this tick
+        const xpPerTick = calcTaskXp(task, zoneId, state, ctx);
+        for (const skill of task.skills) {
+            if (state.skillLevels[skill] === undefined) {
+                state.skillLevels[skill] = 0;
+                state.skillXp[skill] = 0;
+            }
+            state.skillXp[skill] += xpPerTick;
+            let needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+            while (state.skillXp[skill] >= needed) {
+                state.skillXp[skill] -= needed;
+                state.skillLevels[skill]++;
+                needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+            }
         }
-        state.skillXp[skill] += totalXp;
-        let needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
-        while (state.skillXp[skill] >= needed) {
-            state.skillXp[skill] -= needed;
-            state.skillLevels[skill]++;
-            needed = calcXpNeeded(state.skillLevels[skill], skill, ctx);
+
+        if (progress >= baseCost) {
+            repsCompleted++;
+            progress = 0;
         }
     }
 }
