@@ -148,7 +148,7 @@ window.gameCalc = {
         GAMESTATE.highest_zone_fully_completed = state.highestZoneFullyCompleted ?? -1;
         GAMESTATE.power = state.power || 0;
         GAMESTATE.attunement = state.attunement || 0;
-        GAMESTATE.prestige_unlocks = state.prestigeUnlocks instanceof Map ? state.prestigeUnlocks : new Map();
+        GAMESTATE.prestige_unlocks = Array.isArray(state.prestigeUnlocks) ? state.prestigeUnlocks : [];
         GAMESTATE.prestige_repeatables = state.prestigeRepeatables instanceof Map ? state.prestigeRepeatables : new Map();
 
         // Create a temporary Task object
@@ -211,6 +211,92 @@ window.gameCalc = {
     /** Get the XP needed for a specific skill level */
     calcSkillXpNeeded(level, skillType) {
         return calcSkillXpNeededAtLevel(level, skillType);
+    },
+
+    /**
+     * Execute an entire task (all reps) with an energy budget using the real
+     * game engine. Sets up GAMESTATE once, runs the full tick loop, returns
+     * the result. Much faster than calling calcTick per-tick.
+     *
+     * @param {number} taskId
+     * @param {object} state - { skillLevels, skillXp, perks, highestZone, ... }
+     * @param {number} energyBudget
+     * @returns {{ energyUsed, completed, updatedLevels, updatedXp }}
+     */
+    executeTask(taskId, state, energyBudget) {
+        const taskDef = TASK_LOOKUP.get(taskId);
+        if (!taskDef) return null;
+
+        // Save skill state in-place (avoid creating new Skill objects)
+        const savedLevels = new Array(GAMESTATE.skills.length);
+        const savedXp = new Array(GAMESTATE.skills.length);
+        for (let i = 0; i < GAMESTATE.skills.length; i++) {
+            savedLevels[i] = GAMESTATE.skills[i].level;
+            savedXp[i] = GAMESTATE.skills[i].progress;
+            GAMESTATE.skills[i].level = state.skillLevels?.[i] || 0;
+            GAMESTATE.skills[i].progress = state.skillXp?.[i] || 0;
+        }
+
+        // Save and set scalar state
+        const savedEnergy = GAMESTATE.current_energy;
+        const savedMaxEnergy = GAMESTATE.max_energy;
+        const savedReset = GAMESTATE.is_in_energy_reset;
+        const savedActiveTask = GAMESTATE.active_task;
+        const savedZone = GAMESTATE.current_zone;
+        const savedTasks = GAMESTATE.tasks;
+        const savedHighestZone = GAMESTATE.highest_zone;
+        const savedHighestZoneFC = GAMESTATE.highest_zone_fully_completed;
+
+        // Save and set perks (modify existing Map in-place)
+        const savedPerks = new Map(GAMESTATE.perks);
+        GAMESTATE.perks.clear();
+        for (const p of (state.perks || [])) GAMESTATE.perks.set(p, true);
+
+        GAMESTATE.highest_zone = state.highestZone || 0;
+        GAMESTATE.highest_zone_fully_completed = state.highestZoneFullyCompleted ?? -1;
+        GAMESTATE.current_energy = energyBudget;
+        GAMESTATE.max_energy = energyBudget;
+        GAMESTATE.is_in_energy_reset = false;
+        GAMESTATE.current_zone = taskDef.zone_id;
+
+        // Create task and run
+        const task = new Task(taskDef);
+        GAMESTATE.tasks = [task];
+        GAMESTATE.active_task = task;
+
+        let ticks = 0;
+        while (ticks < 100000 && GAMESTATE.active_task === task && !GAMESTATE.is_in_energy_reset) {
+            updateGamestate();
+            ticks++;
+        }
+
+        const energyUsed = energyBudget - Math.max(0, GAMESTATE.current_energy);
+        const completed = task.reps >= taskDef.max_reps;
+
+        // Extract updated skill state BEFORE restoring
+        const updatedLevels = {}, updatedXp = {};
+        for (let i = 0; i < GAMESTATE.skills.length; i++) {
+            updatedLevels[i] = GAMESTATE.skills[i].level;
+            updatedXp[i] = GAMESTATE.skills[i].progress;
+        }
+
+        // Restore all state
+        for (let i = 0; i < GAMESTATE.skills.length; i++) {
+            GAMESTATE.skills[i].level = savedLevels[i];
+            GAMESTATE.skills[i].progress = savedXp[i];
+        }
+        GAMESTATE.perks.clear();
+        for (const [k, v] of savedPerks) GAMESTATE.perks.set(k, v);
+        GAMESTATE.current_energy = savedEnergy;
+        GAMESTATE.max_energy = savedMaxEnergy;
+        GAMESTATE.is_in_energy_reset = savedReset;
+        GAMESTATE.active_task = savedActiveTask;
+        GAMESTATE.current_zone = savedZone;
+        GAMESTATE.tasks = savedTasks;
+        GAMESTATE.highest_zone = savedHighestZone;
+        GAMESTATE.highest_zone_fully_completed = savedHighestZoneFC;
+
+        return { energyUsed, completed, updatedLevels, updatedXp };
     },
 };
 //# sourceMappingURL=game.js.map
