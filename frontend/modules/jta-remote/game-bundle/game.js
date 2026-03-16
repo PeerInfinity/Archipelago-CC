@@ -1,6 +1,6 @@
 import { handleHotkeyPressed, handleHotkeyReleased, Rendering, updateRendering } from "./rendering.js";
 import { Gamestate, Skill, saveGame, updateGamestate, resetTasks, calcTickRate, clickTask, clickItem, doPrestige, doEnergyReset, tryAddPerk, calcTaskCost, calcTaskProgressPerTick, calcEnergyDrainPerTick, calcSkillXp, addSkillXp, calcSkillXpNeededAtLevel } from "./simulation.js";
-import { ZONES, TASK_LOOKUP } from "./zones.js";
+import { Task, ZONES, TASK_LOOKUP } from "./zones.js";
 import { ITEMS, ARTIFACTS } from "./items.js";
 import { SKILL_DEFINITIONS } from "./skills.js";
 import { PERKS } from "./perks.js";
