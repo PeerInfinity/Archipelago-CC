@@ -24,6 +24,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 import { JTACostPlanner } from '../../frontend/modules/jtaCostDebugger/jtaCostPlanner.js';
+import { executeTask as sharedExecuteTask } from '../../frontend/modules/shared/jtaGameCalc.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -295,6 +296,22 @@ try {
     let lastSphereIndex = null;
     let stepsMatched = 0;
     let energyMismatches = 0;
+    let correctedMismatches = 0; // mismatches using drift-corrected prediction
+
+    // Build task lookup for shared module recalculation
+    const taskDefByName = new Map();
+    for (const zone of result.adjustedData.zones) {
+        for (const task of zone.tasks) {
+            taskDefByName.set(task.name, { costMult: task.costMult, xpMult: task.xpMult, maxReps: task.maxReps, skills: task.skills, type: task.type, zoneId: zone.id ?? 0 });
+        }
+    }
+    // Track skill XP multipliers for the shared module
+    const skillXpMult = {};
+    for (const zone of result.adjustedData.zones) {
+        for (const task of zone.tasks) {
+            for (const s of task.skills) { if (!(s in skillXpMult)) skillXpMult[s] = 1; }
+        }
+    }
 
     for (let i = 0; i < steps.length; i++) {
         const planned = steps[i];
@@ -331,6 +348,21 @@ try {
         // always begins each step with energy = maxEnergy). doHeadlessReset
         // resets zone, tasks, and energy while preserving skills/perks.
         await page.evaluate(() => window.doHeadlessReset());
+
+        // Read game's skill state BEFORE execution (for drift-corrected comparison)
+        const preStepSkills = await page.evaluate(() => {
+            const gs = window.getGamestate;
+            const levels = {}, xp = {};
+            for (const s of gs.skills) {
+                if (s.level > 0) levels[s.type] = s.level;
+                if (s.progress > 0) xp[s.type] = s.progress;
+            }
+            const perks = [];
+            if (gs.perks instanceof Map) {
+                for (const [id, active] of gs.perks) { if (active) perks.push(id); }
+            }
+            return { levels, xp, perks, highestZone: gs.highest_zone };
+        });
 
         // Execute each task in the planned queue using the real game engine
         const stepResult = await page.evaluate(({ queue, focusName, taskIdByName }) => {
@@ -385,11 +417,33 @@ try {
             taskIdByName: Object.fromEntries(taskIdByName),
         });
 
+        // Drift-corrected prediction: use game's actual pre-step skills to recalculate
+        // what the shared module would predict for this step's queue.
+        // This eliminates accumulated drift — any delta is from per-step formula differences only.
+        let correctedEnergy = 100; // maxEnergy
+        const correctedState = {
+            skillLevels: { ...preStepSkills.levels },
+            skillXp: { ...preStepSkills.xp },
+            perks: new Set(preStepSkills.perks),
+            highestZone: preStepSkills.highestZone,
+        };
+        const ctx = { SKILL_XP_MULT: skillXpMult };
+        for (const pEntry of (planned.queue || [])) {
+            if (pEntry.status === 'uncosted_skipped') continue;
+            const td = taskDefByName.get(pEntry.taskName);
+            if (!td) continue;
+            const { energyUsed } = sharedExecuteTask(td, td.zoneId, correctedState, ctx, correctedEnergy);
+            correctedEnergy -= energyUsed;
+            if (correctedEnergy <= 0) break;
+        }
+
         const energyDelta = stepResult.energyRemaining - planned.energyRemaining;
+        const correctedDelta = stepResult.energyRemaining - correctedEnergy;
         const completedMatch = stepResult.focusCompleted === planned.targetCompleted;
 
         if (completedMatch) stepsMatched++;
         if (Math.abs(energyDelta) > 1) energyMismatches++;
+        if (Math.abs(correctedDelta) > 1) correctedMismatches++;
 
         if (args.verbose || !completedMatch) {
             const status = completedMatch ? 'OK' : 'MISMATCH';
@@ -397,7 +451,8 @@ try {
                 `Step ${String(i).padStart(4)} | ${focusName.padEnd(35)} | ` +
                 `plan=${planned.energyRemaining.toFixed(1).padStart(6)} ` +
                 `game=${stepResult.energyRemaining.toFixed(1).padStart(6)} ` +
-                `delta=${energyDelta.toFixed(1).padStart(6)} | ${status}`
+                `delta=${energyDelta.toFixed(1).padStart(6)} ` +
+                `corr=${correctedDelta.toFixed(1).padStart(6)} | ${status}`
             );
         }
 
@@ -417,6 +472,7 @@ try {
     console.log(`  Steps matched: ${stepsMatched}/${steps.length}`);
     console.log(`  Steps mismatched: ${steps.length - stepsMatched}`);
     console.log(`  Energy mismatches (>1): ${energyMismatches}`);
+    console.log(`  Drift-corrected mismatches (>1): ${correctedMismatches}`);
 
 } catch (err) {
     console.error('Error:', err.message);
