@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class JTAWeb(WebWorld):
     theme = "ocean"
-    game_info_languages = []
+    game_info_languages = ['en']
     tutorials = [Tutorial(
         "Setup Guide",
         "A guide to setting up Journey to Ascension for Archipelago multiworld.",

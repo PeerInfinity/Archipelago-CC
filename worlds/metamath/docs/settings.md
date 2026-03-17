@@ -151,6 +151,26 @@ auto_download_database: true   # Auto-download if needed
 auto_download_database: false  # Never download, use fallbacks only
 ```
 
+---
+
+### entrance_rule_mode
+**Type**: Choice
+**Default**: `relaxed_items`
+
+Controls how entrance rules handle convergence steps (proof steps with multiple dependencies). This affects whether multiworld generation can succeed with complex proofs.
+
+```yaml
+entrance_rule_mode: strict          # All events + all items required (original)
+entrance_rule_mode: relaxed_items   # All events required, only source item (default)
+entrance_rule_mode: relaxed_events  # All items required, only source event
+entrance_rule_mode: fully_relaxed   # Only source event + item required
+```
+
+- **strict**: Every entrance requires both events and items for ALL dependencies. Faithful to the original proof logic but may fail to generate in multiworld with complex proofs.
+- **relaxed_items**: Each entrance requires proof completion events for ALL dependencies but only the source step's item. Preserves the requirement to visit all prerequisites while giving the fill algorithm flexibility at convergence points. Recommended for multiworld.
+- **relaxed_events**: Each entrance requires items for ALL dependencies but only the source step's event. The inverse of relaxed_items.
+- **fully_relaxed**: Each entrance only requires the source step's event and item. Convergence steps can be entered from any single completed branch.
+
 ## Example Configurations
 
 ### Easy Mode
@@ -203,6 +223,7 @@ Metamath:
 1. **New Players**: Set `randomize_starting_statements: false` and higher `starting_statements`
 2. **Database**: Keep `auto_download_database: true` unless you have bandwidth concerns
 3. **Linear Progression**: Set `randomize_items: false` for a more predictable experience
+4. **Multiworld**: Keep `entrance_rule_mode: relaxed_items` (default) for reliable generation with complex proofs
 
 ## Troubleshooting Settings
 
@@ -213,3 +234,5 @@ Metamath:
 **"Too easy"**: Decrease `starting_statements`, enable `randomize_starting_statements`, or choose a harder theorem
 
 **"Takes too long to generate"**: The first generation with a new theorem needs to parse the database (5-10 seconds). This is normal.
+
+**"Fill failed in multiworld"**: Try `entrance_rule_mode: relaxed_items` (the default) or `fully_relaxed`. The `strict` mode may fail with complex proofs in multiworld.

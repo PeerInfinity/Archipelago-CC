@@ -60,15 +60,18 @@ class ProofStructure:
                     provable.add(stmt_index)
         return provable
 
-def set_metamath_rules(world, proof_structure: ProofStructure):
+def set_metamath_rules(world, proof_structure: ProofStructure, entrance_rule_mode: int = 1):
     """Set access rules for metamath regions based on proof dependencies.
 
-    Entrance rules require both:
-    - "Proved Statement K" events (proof step was actually completed)
-    - "Statement K" items (item was received from the randomizer)
-    for each dependency K. This separates item possession from proof completion.
+    entrance_rule_mode is a 2-bit field (bit 0 = relaxed items, bit 1 = relaxed events):
+        0 (strict):         All events + all items required for every entrance.
+        1 (relaxed_items):  All events required, but only source step's item.
+        2 (relaxed_events): All items required, but only source step's event.
+        3 (fully_relaxed):  Only source step's event and item required.
     """
     player = world.player
+    relax_items = bool(entrance_rule_mode & 1)
+    relax_events = bool(entrance_rule_mode & 2)
 
     # Use the world's reverse lookup to map region names back to statement indices
     region_name_to_index = getattr(world, '_region_name_to_index', {})
@@ -82,20 +85,42 @@ def set_metamath_rules(world, proof_structure: ProofStructure):
         if stmt_num in proof_structure.dependency_graph:
             dependencies = proof_structure.dependency_graph[stmt_num]
 
-            if dependencies:  # Only set rule if there are dependencies
-                # Require both the proof events AND the dependency items
-                required_names = set()
-                for d in dependencies:
-                    required_names.add(world.get_item_name(d))          # "Statement K"
-                    required_names.add(f"Proved Statement {d}")         # "Proved Statement K"
+            if dependencies:
+                if not relax_items and not relax_events:
+                    # Strict: one shared rule with all events + all items
+                    required_names = frozenset(
+                        name
+                        for d in dependencies
+                        for name in (world.get_item_name(d), f"Proved Statement {d}")
+                    )
+                    access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                    for entrance in region.entrances:
+                        add_rule(entrance, access_rule)
+                else:
+                    # Per-entrance rules based on source node
+                    for entrance in region.entrances:
+                        source_index = region_name_to_index.get(entrance.parent_region.name)
+                        is_valid_source = source_index is not None and source_index in dependencies
 
-                # Create the access rule lambda
-                access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                        required_names = set()
 
-                # Set access rules on all entrances to this region
-                # Locations are accessible once you can enter the region
-                for entrance in region.entrances:
-                    add_rule(entrance, access_rule)
+                        # Events: source only if relaxed, all otherwise
+                        if relax_events and is_valid_source:
+                            required_names.add(f"Proved Statement {source_index}")
+                        else:
+                            for d in dependencies:
+                                required_names.add(f"Proved Statement {d}")
+
+                        # Items: source only if relaxed, all otherwise
+                        if relax_items and is_valid_source:
+                            required_names.add(world.get_item_name(source_index))
+                        else:
+                            for d in dependencies:
+                                required_names.add(world.get_item_name(d))
+
+                        required_names = frozenset(required_names)
+                        access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                        add_rule(entrance, access_rule)
 
 def download_metamath_database(target_path: str) -> bool:
     """Download the metamath database if it doesn't exist."""

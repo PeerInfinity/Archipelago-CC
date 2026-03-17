@@ -40,7 +40,7 @@ describe('QueueAnalyzer', () => {
     });
 
     it('returns correct base cost for regionMove action', () => {
-      expect(analyzer.getBaseCost('regionMove')).toBe(10);
+      expect(analyzer.getBaseCost('regionMove')).toBe(50);
     });
 
     it('returns default cost for unknown action type', () => {
@@ -128,23 +128,26 @@ describe('QueueAnalyzer', () => {
 
       const result = analyzer.analyze(queue, mockLoopState);
 
-      // Move: 10 mana, Explore: 50 mana
-      // Starting 100, after move: 90, after explore: 40
-      expect(result.entries[0].manaAfterAction).toBe(90);
-      expect(result.entries[1].manaAfterAction).toBe(40);
-      expect(result.totalCost).toBe(60);
-      expect(result.finalMana).toBe(40);
+      // Move: 50 mana, Explore: 50 mana
+      // Starting 100, after move: 50, after explore: 0
+      expect(result.entries[0].manaAfterAction).toBe(50);
+      expect(result.entries[1].manaAfterAction).toBe(0);
+      expect(result.totalCost).toBe(100);
+      expect(result.finalMana).toBe(0);
     });
 
     it('marks insufficient mana correctly', () => {
-      mockLoopState.currentMana = 30; // Not enough for explore (50)
-
       const queue = [
         { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 2 },
       ];
 
+      // 3 explores at 50 each = 150, but maxMana is 100
       const result = analyzer.analyze(queue, mockLoopState);
-      expect(result.entries[0].hasInsufficientMana).toBe(true);
+      expect(result.entries[0].hasInsufficientMana).toBe(false);
+      expect(result.entries[1].hasInsufficientMana).toBe(false);
+      expect(result.entries[2].hasInsufficientMana).toBe(true);
     });
 
     it('handles completed actions correctly', () => {
@@ -155,9 +158,9 @@ describe('QueueAnalyzer', () => {
 
       const result = analyzer.analyze(queue, mockLoopState);
 
-      // Completed actions don't affect mana
+      // Completed actions still deduct mana for stable downstream values
       expect(result.entries[0].isCompleted).toBe(true);
-      expect(result.entries[1].manaBeforeAction).toBe(100);
+      expect(result.entries[1].manaBeforeAction).toBe(50);
     });
   });
 

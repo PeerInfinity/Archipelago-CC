@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
+from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
 
 
 class GraphFileSelection(TextChoice):
@@ -57,6 +57,33 @@ class StartingNodes(Range):
     default = 0
 
 
+class EntranceRuleMode(Choice):
+    """
+    Controls how entrance rules handle convergence nodes (nodes with multiple dependencies).
+
+    Strict: Every entrance requires both events and items for ALL dependencies.
+    Faithful to the original graph logic but may fail to generate in multiworld.
+
+    Relaxed Items: Each entrance requires completion events for ALL dependencies but only
+    the source node's item. Preserves the requirement to visit all prerequisites while
+    giving the fill algorithm flexibility at convergence points.
+
+    Relaxed Events: Each entrance requires items for ALL dependencies but only the
+    source node's event. The inverse of relaxed_items.
+
+    Fully Relaxed: Each entrance only requires the source node's event and item.
+    Convergence nodes can be entered from any single completed branch.
+    """
+    display_name = "Entrance Rule Mode"
+
+    option_strict = 0
+    option_relaxed_items = 1
+    option_relaxed_events = 2
+    option_fully_relaxed = 3
+
+    default = 1
+
+
 @dataclass
 class DepGraphOptions(PerGameCommonOptions):
     graph_file: GraphFileSelection
@@ -64,6 +91,7 @@ class DepGraphOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     randomize_starting_nodes: RandomizeStartingNodes
     starting_nodes: StartingNodes
+    entrance_rule_mode: EntranceRuleMode
 
 
 depgraph_option_groups = [
@@ -73,5 +101,6 @@ depgraph_option_groups = [
         RandomizeItems,
         RandomizeStartingNodes,
         StartingNodes,
+        EntranceRuleMode,
     ])
 ]

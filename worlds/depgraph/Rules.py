@@ -340,15 +340,18 @@ def parse_depgraph(graph_key: str) -> GraphStructure:
         raise ValueError(f"Unsupported graph file format '{ext}'. Use .json, .dot, .gv, or .csv")
 
 
-def set_depgraph_rules(world, graph_structure: GraphStructure):
+def set_depgraph_rules(world, graph_structure: GraphStructure, entrance_rule_mode: int = 1):
     """Set access rules for depgraph regions based on node dependencies.
 
-    Entrance rules require both:
-    - "Completed Node K" events (node was actually completed)
-    - "Node K" items (item was received from the randomizer)
-    for each dependency K.
+    entrance_rule_mode is a 2-bit field (bit 0 = relaxed items, bit 1 = relaxed events):
+        0 (strict):         All events + all items required for every entrance.
+        1 (relaxed_items):  All events required, but only source node's item.
+        2 (relaxed_events): All items required, but only source node's event.
+        3 (fully_relaxed):  Only source node's event and item required.
     """
     player = world.player
+    relax_items = bool(entrance_rule_mode & 1)
+    relax_events = bool(entrance_rule_mode & 2)
 
     region_name_to_index = getattr(world, '_region_name_to_index', {})
 
@@ -361,12 +364,38 @@ def set_depgraph_rules(world, graph_structure: GraphStructure):
             dependencies = graph_structure.dependency_graph[stmt_num]
 
             if dependencies:
-                required_names = set()
-                for d in dependencies:
-                    required_names.add(world.get_item_name(d))
-                    required_names.add(f"Completed Node {d}")
+                if not relax_items and not relax_events:
+                    # Strict: one shared rule with all events + all items
+                    required_names = frozenset(
+                        name
+                        for d in dependencies
+                        for name in (world.get_item_name(d), f"Completed Node {d}")
+                    )
+                    access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                    for entrance in region.entrances:
+                        add_rule(entrance, access_rule)
+                else:
+                    # Per-entrance rules based on source node
+                    for entrance in region.entrances:
+                        source_index = region_name_to_index.get(entrance.parent_region.name)
+                        is_valid_source = source_index is not None and source_index in dependencies
 
-                access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                        required_names = set()
 
-                for entrance in region.entrances:
-                    add_rule(entrance, access_rule)
+                        # Events: source only if relaxed, all otherwise
+                        if relax_events and is_valid_source:
+                            required_names.add(f"Completed Node {source_index}")
+                        else:
+                            for d in dependencies:
+                                required_names.add(f"Completed Node {d}")
+
+                        # Items: source only if relaxed, all otherwise
+                        if relax_items and is_valid_source:
+                            required_names.add(world.get_item_name(source_index))
+                        else:
+                            for d in dependencies:
+                                required_names.add(world.get_item_name(d))
+
+                        required_names = frozenset(required_names)
+                        access_rule = lambda state, p=player, items=required_names: state.has_all(items, p)
+                        add_rule(entrance, access_rule)
