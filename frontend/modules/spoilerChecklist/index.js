@@ -1,6 +1,7 @@
 // frontend/modules/spoilerChecklist/index.js
 
 import { SpoilerChecklistUI } from './spoilerChecklistUI.js';
+import { CrossPlayerItemSync } from './crossPlayerItemSync.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging
@@ -15,6 +16,7 @@ function log(level, message, ...data) {
 
 // --- Module Scope Variables ---
 let _moduleEventBus = null;
+const crossPlayerItemSync = new CrossPlayerItemSync();
 
 export function getModuleEventBus() {
   if (_moduleEventBus) return _moduleEventBus;
@@ -28,6 +30,10 @@ export function getModuleEventBus() {
     getAllSubscribers: () => eventBus.getAllSubscribers(),
     getAllPublishCounts: () => eventBus.getAllPublishCounts(),
   };
+}
+
+export function getCrossPlayerItemSync() {
+  return crossPlayerItemSync;
 }
 
 // --- Module Info ---
@@ -52,6 +58,16 @@ export function register(registrationApi) {
 
   // Declare that this module sends 'user:locationCheck' via the dispatcher
   // (We use the locations module's dispatcher, so we don't need to register as sender)
+
+  // Register checklist-specific public functions.
+  // Sphere-inventory computation (computeCrossPlayerItems, grantItemsUpToSphere, etc.)
+  // is registered by the sphereState module.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getCrossPlayerItemSync', () => crossPlayerItemSync);
+  registrationApi.registerPublicFunction(moduleInfo.name, 'syncReceivedItems',
+    () => crossPlayerItemSync.sync());
+
+  // Register event publisher for sync completion
+  registrationApi.registerEventBusPublisher('spoilerChecklist:itemsSynced');
 
   log('info', '[spoilerChecklist Module] Registration complete.');
 }

@@ -40,8 +40,8 @@ export function register(registrationApi) {
   // Register as event publisher for the same events as region links
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('ui:navigateToRegion');
-  registrationApi.registerEventBusPublisher('user:regionMove');
-  registrationApi.registerEventBusPublisher('user:locationCheck');
+  registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+  registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
   registrationApi.registerEventBusPublisher('regionGraph:nodeSelected');
 }
 

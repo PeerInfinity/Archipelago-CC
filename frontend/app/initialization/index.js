@@ -523,17 +523,38 @@ export async function initializeApplication(dependencies) {
 
   // Handle panel URL parameter (comma-separated to activate one panel per stack)
   // Uses event bus so both desktop PanelManager and MobileLayoutManager can respond
-  const panelParam = urlParams.get('panel');
+  const panelParam = urlParams.get('focusPanel');
   const iframeParam = urlParams.get('iframe');
   const metagameParam = urlParams.get('metagame');
+  // ?movePanel=componentType:stackId,... — move panels to specific stacks before activating
+  const moveParam = urlParams.get('movePanel');
+  if (moveParam) {
+    eventBus.registerPublisher('ui:movePanel', 'core');
+  }
   if (iframeParam) {
     eventBus.registerPublisher('iframe:loadUrl', 'core');
   }
   if (metagameParam) {
     eventBus.registerPublisher('metaGame:loadFromUrl', 'core');
   }
-  if (panelParam || iframeParam || metagameParam) {
+  if (panelParam || iframeParam || metagameParam || moveParam) {
     const activatePanelsAndAutoLoad = () => {
+      // Handle ?move= parameter first (before panel activation)
+      if (moveParam) {
+        const movePairs = moveParam.split(',').map(s => s.trim()).filter(Boolean);
+        logger.info('init', `Moving panels from URL parameter: ${movePairs.join(', ')}`);
+
+        for (const pair of movePairs) {
+          const [componentType, targetStackId] = pair.split(':').map(s => s.trim());
+          if (componentType && targetStackId) {
+            logger.info('init', `Publishing panel move: ${componentType} -> ${targetStackId}`);
+            eventBus.publish('ui:movePanel', { componentType, targetStackId }, 'core');
+          } else {
+            logger.warn('init', `Invalid move pair (expected "componentType:stackId"): "${pair}"`);
+          }
+        }
+      }
+
       if (panelParam) {
         const panelIds = panelParam.split(',').map(s => s.trim()).filter(Boolean);
         logger.info('init', `Activating panels from URL parameter: ${panelIds.join(', ')}`);
@@ -577,6 +598,31 @@ export async function initializeApplication(dependencies) {
     } else {
       eventBus.subscribe('panelManager:initialized', () => {
         activatePanelsAndAutoLoad();
+      }, 'core');
+    }
+  }
+
+  // Handle ?loadModule= parameter: load external module(s) by URL
+  const loadModuleParams = urlParams.getAll('loadModule');
+  if (loadModuleParams.length > 0) {
+    eventBus.registerPublisher('module:loadExternalRequest', 'core');
+    const loadExternalModules = () => {
+      for (const modulePath of loadModuleParams) {
+        const trimmed = modulePath.trim();
+        if (!trimmed) continue;
+        const sanitizedPath = trimmed.replace(/[^a-zA-Z0-9]/g, '_');
+        const moduleId = `external_${sanitizedPath}_url`;
+        logger.info('init', `Loading external module from URL parameter: ${trimmed}`);
+        eventBus.publish('module:loadExternalRequest', { moduleId, modulePath: trimmed }, 'core');
+      }
+    };
+
+    // Wait for panelManager to be initialized before loading external modules
+    if (panelManagerInstance.isInitialized) {
+      loadExternalModules();
+    } else {
+      eventBus.subscribe('panelManager:initialized', () => {
+        loadExternalModules();
       }, 'core');
     }
   }

@@ -174,6 +174,15 @@ export class MazeGameDataPanelUI {
                             font-size: 11px;
                         ">Generate New Maze</button>
                     </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; cursor: pointer;">
+                            <input type="checkbox" class="mgd-disable-biome-check-cb">
+                            Disable biome check (unlock all upgrades)
+                        </label>
+                        <div style="font-size: 10px; color: #777; margin-top: 2px; margin-left: 20px;">
+                            Zeroes out biome requirements so upgrades take effect at any biome level. Resets on reload.
+                        </div>
+                    </div>
                     <div class="mgd-action-feedback" style="
                         font-size: 11px; margin-top: 6px; min-height: 16px;
                     "></div>
@@ -260,6 +269,7 @@ export class MazeGameDataPanelUI {
         this._biomeSelect = q('.mgd-biome-select');
         this._advanceBtn = q('.mgd-advance-btn');
         this._newMazeBtn = q('.mgd-new-maze-btn');
+        this._disableBiomeCheckCb = q('.mgd-disable-biome-check-cb');
         this._actionFeedback = q('.mgd-action-feedback');
 
         // Save editor
@@ -315,7 +325,9 @@ export class MazeGameDataPanelUI {
                     this._showFeedback('Enter a valid positive number', true);
                     return;
                 }
-                this.eventBus.publish('amazingIdle:injectPoints', { points });
+                const data = { points };
+                if (this._disableBiomeCheckCb?.checked) data.disableBiomeCheck = true;
+                this.eventBus.publish('amazingIdle:injectPoints', data);
                 this._showFeedback(`Injecting ${points.toLocaleString()} points...`);
             });
         }
@@ -324,7 +336,9 @@ export class MazeGameDataPanelUI {
         if (this._advanceBtn) {
             this._advanceBtn.addEventListener('click', () => {
                 const targetBiome = parseInt(this._biomeSelect.value, 10);
-                this.eventBus.publish('amazingIdle:setBiome', { biome: targetBiome });
+                const data = { biome: targetBiome };
+                if (this._disableBiomeCheckCb?.checked) data.disableBiomeCheck = true;
+                this.eventBus.publish('amazingIdle:setBiome', data);
                 this._showFeedback(`Setting biome to ${targetBiome}...`);
             });
         }
@@ -334,6 +348,33 @@ export class MazeGameDataPanelUI {
             this._newMazeBtn.addEventListener('click', () => {
                 this.eventBus.publish('amazingIdle:newMaze', {});
                 this._showFeedback('Generating new maze...');
+            });
+        }
+
+        // Disable biome check checkbox
+        if (this._disableBiomeCheckCb) {
+            this._disableBiomeCheckCb.addEventListener('change', () => {
+                if (this._disableBiomeCheckCb.checked) {
+                    const targetBiome = parseInt(this._biomeSelect.value, 10) || 0;
+                    this.eventBus.publish('amazingIdle:setBiome', {
+                        biome: targetBiome,
+                        disableBiomeCheck: true,
+                        upgrades: {
+                            AUTO_MOVE: 1,
+                            BOT_MOVEMENT_SPEED: 5,
+                            AVOID_REVISIT_LAST_POSITION: 1,
+                            PRIORITIZE_UNVISITED: 1,
+                            AUTO_EXIT_MAZE: 5,
+                            BOT_REMEMBER_DEADEND_TILES: 5,
+                            PLAYER_MOVE_INDEPENDENTLY: 1,
+                            CLICK_TO_MOVE_UPGRADE: 1,
+                            CLICK_TO_MOVE_SPEED_MULTIPLIER_UPGRADE: 5,
+                        }
+                    });
+                    this._showFeedback('Disabling biome check & applying upgrades (reloading)...');
+                } else {
+                    this._showFeedback('Biome check re-enabled on next reload');
+                }
             });
         }
 
@@ -359,7 +400,9 @@ export class MazeGameDataPanelUI {
                     this._setEditorStatus('Invalid JSON: ' + e.message, true);
                     return;
                 }
-                this.eventBus.publish('amazingIdle:importSave', { saveJson: content });
+                const data = { saveJson: content };
+                if (this._disableBiomeCheckCb?.checked) data.disableBiomeCheck = true;
+                this.eventBus.publish('amazingIdle:importSave', data);
                 this._setEditorStatus('Importing...');
             });
         }
@@ -687,6 +730,7 @@ export class MazeGameDataPanelUI {
         this._biomeSelect = null;
         this._advanceBtn = null;
         this._newMazeBtn = null;
+        this._disableBiomeCheckCb = null;
         this._actionFeedback = null;
         this._exportBtn = null;
         this._importBtn = null;

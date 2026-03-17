@@ -29,6 +29,11 @@
             },
             {
               "type": "component",
+              "componentType": "loopStatsPanel",
+              "title": "Loop Stats"
+            },
+            {
+              "type": "component",
               "componentType": "spoilerChecklistPanel",
               "title": "Spoiler Checklist"
             },
@@ -131,6 +136,11 @@
             },
             {
               "type": "component",
+              "componentType": "jtaCostDebuggerPanel",
+              "title": "JTA Cost Debugger"
+            },
+            {
+              "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
             },
@@ -163,13 +173,8 @@
             },
             {
               "type": "component",
-              "componentType": "helpersPanel",
-              "title": "Helpers"
-            },
-            {
-              "type": "component",
-              "componentType": "dungeonsPanel",
-              "title": "Dungeons"
+              "componentType": "costDebuggerPanel",
+              "title": "Cost Debugger"
             },
             {
               "type": "component",
@@ -180,6 +185,16 @@
               "type": "component",
               "componentType": "textAdventurePanel",
               "title": "Text Adventure"
+            },
+            {
+              "type": "component",
+              "componentType": "helpersPanel",
+              "title": "Helpers"
+            },
+            {
+              "type": "component",
+              "componentType": "dungeonsPanel",
+              "title": "Dungeons"
             },
             {
               "type": "component",
@@ -200,11 +215,6 @@
               "type": "component",
               "componentType": "proofQueuePanel",
               "title": "Proof Queue"
-            },
-            {
-              "type": "component",
-              "componentType": "loopStatsPanel",
-              "title": "Loop Stats"
             }
           ]
         }

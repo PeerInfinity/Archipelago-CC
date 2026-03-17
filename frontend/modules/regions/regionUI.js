@@ -440,7 +440,7 @@ export class RegionUI {
    */
   updateFromPlayerStatePath(path, regionCounts) {
     if (!path || path.length === 0) {
-      log('warn', '[RegionUI] Received empty path from playerState');
+      // Path is empty before any moves are made — this is normal at startup
       return;
     }
     
@@ -450,7 +450,19 @@ export class RegionUI {
     this.nextUID = 1;
     
     const regionMoves = getRegionMovesFromPath(path);
-    
+
+    // Include the start region (source of the first move) so the full path is shown
+    if (regionMoves.length > 0 && regionMoves[0].sourceRegion) {
+      const startRegion = regionMoves[0].sourceRegion;
+      const uid = this.nextUID++;
+      this.visitedRegions.push({
+        name: startRegion,
+        expanded: false,
+        uid: uid,
+      });
+      this.expansionState.setExpanded(startRegion, false, 'navigation', uid);
+    }
+
     regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
       const isLastRegion = index === regionMoves.length - 1;
@@ -459,7 +471,7 @@ export class RegionUI {
       const expanded = isLastRegion;
 
       this.visitedRegions.push({
-        name: pathEntry.region,
+        name: pathEntry.destinationRegion,
         expanded: expanded, // Note: This property is kept for backward compatibility but not used
         uid: uid,
         exitUsed: pathEntry.exitUsed,
@@ -468,7 +480,7 @@ export class RegionUI {
 
       // Update expansion state manager
       this.expansionState.setExpanded(
-        pathEntry.region,
+        pathEntry.destinationRegion,
         expanded,
         'navigation',
         pathEntry.instanceNumber || uid

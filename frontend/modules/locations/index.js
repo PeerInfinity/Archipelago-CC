@@ -71,7 +71,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('stateManager:locationCollectionChanged');
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('ui:navigateToDungeon');
-  registrationApi.registerEventBusPublisher('ui:locationClicked');
+  // ui:locationClicked removed - discovery is handled via dispatcher on user:locationCheck
 }
 
 export function initialize(mId, priorityIndex, initializationApi) {

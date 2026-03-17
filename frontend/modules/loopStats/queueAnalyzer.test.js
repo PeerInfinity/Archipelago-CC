@@ -31,16 +31,16 @@ describe('QueueAnalyzer', () => {
   });
 
   describe('getBaseCost', () => {
-    it('returns correct base cost for explore action', () => {
-      expect(analyzer.getBaseCost('explore')).toBe(50);
+    it('returns correct base cost for customAction (explore)', () => {
+      expect(analyzer.getBaseCost('customAction')).toBe(50);
     });
 
-    it('returns correct base cost for checkLocation action', () => {
-      expect(analyzer.getBaseCost('checkLocation')).toBe(100);
+    it('returns correct base cost for locationCheck action', () => {
+      expect(analyzer.getBaseCost('locationCheck')).toBe(100);
     });
 
-    it('returns correct base cost for moveToRegion action', () => {
-      expect(analyzer.getBaseCost('moveToRegion')).toBe(10);
+    it('returns correct base cost for regionMove action', () => {
+      expect(analyzer.getBaseCost('regionMove')).toBe(10);
     });
 
     it('returns default cost for unknown action type', () => {
@@ -50,7 +50,7 @@ describe('QueueAnalyzer', () => {
 
   describe('calculateActionCost', () => {
     it('calculates base cost without XP reduction at level 0', () => {
-      const action = { type: 'explore', regionName: 'TestRegion' };
+      const action = { type: 'customAction', actionName: 'explore', sourceRegion: 'TestRegion' };
       const result = analyzer.calculateActionCost(action, mockLoopState);
 
       expect(result.baseCost).toBe(50);
@@ -62,7 +62,7 @@ describe('QueueAnalyzer', () => {
       // Set region level to 10
       mockLoopState.regionXP.set('TestRegion', { level: 10, xp: 0, xpForNextLevel: 300 });
 
-      const action = { type: 'explore', regionName: 'TestRegion' };
+      const action = { type: 'customAction', actionName: 'explore', sourceRegion: 'TestRegion' };
       const result = analyzer.calculateActionCost(action, mockLoopState);
 
       // Level 10 = 1 + 10*0.05 = 1.5 reduction factor
@@ -75,17 +75,17 @@ describe('QueueAnalyzer', () => {
 
   describe('getActionDescription', () => {
     it('returns correct description for explore action', () => {
-      const action = { type: 'explore', regionName: 'Forest' };
+      const action = { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest' };
       expect(analyzer.getActionDescription(action)).toBe('Explore: Forest');
     });
 
-    it('returns correct description for checkLocation action', () => {
-      const action = { type: 'checkLocation', locationName: 'Chest 1', regionName: 'Forest' };
+    it('returns correct description for locationCheck action', () => {
+      const action = { type: 'locationCheck', locationName: 'Chest 1', sourceRegion: 'Forest' };
       expect(analyzer.getActionDescription(action)).toBe('Check: Chest 1');
     });
 
-    it('returns correct description for moveToRegion action', () => {
-      const action = { type: 'moveToRegion', destinationRegion: 'Village', regionName: 'Forest' };
+    it('returns correct description for regionMove action', () => {
+      const action = { type: 'regionMove', sourceRegion: 'Forest', destinationRegion: 'Village' };
       expect(analyzer.getActionDescription(action)).toBe('Move: Village');
     });
   });
@@ -103,23 +103,6 @@ describe('QueueAnalyzer', () => {
     });
   });
 
-  describe('isInitialStartEntry', () => {
-    it('identifies Menu region as initial start', () => {
-      const action = { type: 'moveToRegion', regionName: 'Menu', exitUsed: null };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(true);
-    });
-
-    it('does not identify non-Menu region as initial start', () => {
-      const action = { type: 'moveToRegion', regionName: 'Forest', exitUsed: null };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(false);
-    });
-
-    it('does not identify move with exit as initial start', () => {
-      const action = { type: 'moveToRegion', regionName: 'Menu', exitUsed: 'Door' };
-      expect(analyzer.isInitialStartEntry(action, mockLoopState)).toBe(false);
-    });
-  });
-
   describe('analyze', () => {
     it('returns empty analysis for null input', () => {
       const result = analyzer.analyze(null, null);
@@ -127,22 +110,20 @@ describe('QueueAnalyzer', () => {
       expect(result.totalCost).toBe(0);
     });
 
-    it('skips initial Menu entry', () => {
+    it('analyzes a single action', () => {
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'explore', regionName: 'Forest' },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest' },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
       expect(result.entries).toHaveLength(1);
-      expect(result.entries[0].type).toBe('explore');
+      expect(result.entries[0].type).toBe('customAction');
     });
 
     it('calculates mana correctly for multiple actions', () => {
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'moveToRegion', regionName: 'Forest', exitUsed: 'Door', pathIndex: 1 },
-        { type: 'explore', regionName: 'Forest', pathIndex: 2 },
+        { type: 'regionMove', sourceRegion: 'Menu', destinationRegion: 'Forest', exitUsed: 'Door', pathIndex: 0 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -159,8 +140,7 @@ describe('QueueAnalyzer', () => {
       mockLoopState.currentMana = 30; // Not enough for explore (50)
 
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'explore', regionName: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -169,9 +149,8 @@ describe('QueueAnalyzer', () => {
 
     it('handles completed actions correctly', () => {
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'explore', regionName: 'Forest', pathIndex: 1, completed: true },
-        { type: 'explore', regionName: 'Forest', pathIndex: 2 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0, completed: true },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 1 },
       ];
 
       const result = analyzer.analyze(queue, mockLoopState);
@@ -185,8 +164,7 @@ describe('QueueAnalyzer', () => {
   describe('archiveCurrentAnalysis', () => {
     it('archives current analysis as previous', () => {
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'explore', regionName: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       analyzer.analyze(queue, mockLoopState);
@@ -200,8 +178,7 @@ describe('QueueAnalyzer', () => {
   describe('getSerializableState', () => {
     it('returns serializable state object', () => {
       const queue = [
-        { type: 'moveToRegion', regionName: 'Menu', exitUsed: null },
-        { type: 'explore', regionName: 'Forest', pathIndex: 1 },
+        { type: 'customAction', actionName: 'explore', sourceRegion: 'Forest', pathIndex: 0 },
       ];
 
       analyzer.analyze(queue, mockLoopState);
@@ -210,7 +187,7 @@ describe('QueueAnalyzer', () => {
       expect(state).toHaveProperty('currentAnalysis');
       expect(state).toHaveProperty('previousAnalysis');
       expect(state).toHaveProperty('baseCosts');
-      expect(state.baseCosts.explore).toBe(50);
+      expect(state.baseCosts.customAction).toBe(50);
     });
   });
 });

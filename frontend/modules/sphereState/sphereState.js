@@ -538,6 +538,32 @@ export class SphereState {
   }
 
   /**
+   * Get incremental items received by the current player per sphere.
+   * Extracted from the raw sphere log's new_inventory_details.
+   * @returns {Map<string, object>} sphereIndex → { base_items: {itemName: count} }
+   */
+  getPerSphereReceivedItems() {
+    const result = new Map();
+    if (!this.rawData || !this.rawData.length) return result;
+
+    const pid = String(this.currentPlayerId);
+
+    for (const entry of this.rawData) {
+      if (!entry.sphere_index || !entry.player_data) continue;
+
+      const playerData = entry.player_data[pid];
+      if (!playerData) continue;
+
+      const newItems = playerData.new_inventory_details?.base_items;
+      if (newItems && Object.keys(newItems).length > 0) {
+        result.set(entry.sphere_index, { base_items: newItems });
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Get current sphere info
    */
   getCurrentSphere() {

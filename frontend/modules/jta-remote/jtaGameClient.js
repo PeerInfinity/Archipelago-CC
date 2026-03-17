@@ -1055,6 +1055,237 @@ function setupSubscriptions(client) {
         });
     });
 
+    // --- Game state save/restore (for verification) ---
+
+    // Save game state to localStorage (so we can restore after verification)
+    client.subscribeEventBus('jta:saveGameState', () => {
+        triggerManualSave();
+        const saved = localStorage.getItem(SAVE_KEY);
+        client.publishEventBus('jta:gameStateSaved', {
+            success: !!saved,
+            saveSize: saved ? saved.length : 0,
+            timestamp: Date.now()
+        });
+    });
+
+    // Restore game state by reloading the page (restores from localStorage save)
+    client.subscribeEventBus('jta:restoreGameState', () => {
+        log.info('Restoring game state — reloading page');
+        client.publishEventBus('jta:gameStateRestoring', { timestamp: Date.now() });
+        // Small delay to let the response get sent
+        setTimeout(() => { location.reload(); }, 100);
+    });
+
+    // Headless reset: reset zone, tasks, energy but keep skills/perks (matches doHeadlessReset)
+    client.subscribeEventBus('jta:doHeadlessReset', () => {
+        if (window.doHeadlessReset) {
+            window.doHeadlessReset();
+            client.publishEventBus('jta:headlessResetDone', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:headlessResetDone', { success: false, error: 'doHeadlessReset not available', timestamp: Date.now() });
+        }
+    });
+
+    // Reset game to fresh state (for verification — clears skills, perks, items, etc.)
+    client.subscribeEventBus('jta:resetToFreshState', () => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:freshStateReady', { success: false, error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        // Reset all persistent state
+        gs.current_zone = 0;
+        gs.highest_zone = 0;
+        gs.highest_zone_fully_completed = -1;
+        gs.highest_zone_ever = 0;
+        gs.highest_zone_fully_completed_ever = -1;
+        gs.energy_reset_count = 0;
+        gs.current_energy = gs.max_energy;
+        gs.max_energy = 100;
+        gs.is_in_energy_reset = false;
+        gs.is_at_end_of_content = false;
+        gs.active_task = null;
+        gs.power = 0;
+        gs.attunement = 0;
+        gs.bottled_lightnings = 0;
+        // Clear perks
+        if (gs.perks instanceof Map) gs.perks.clear();
+        // Clear items
+        if (gs.items instanceof Map) gs.items.clear();
+        if (gs.used_items instanceof Map) gs.used_items.clear();
+        gs.items_found_this_energy_reset = [];
+        // Clear prestige
+        if (gs.prestige_unlocks instanceof Map) gs.prestige_unlocks.clear();
+        if (gs.prestige_repeatables instanceof Map) gs.prestige_repeatables.clear();
+        gs.prestige_available = false;
+        gs.prestige_layers_unlocked = [];
+        // Reset skills to level 0
+        for (const skill of gs.skills) {
+            skill.level = 0;
+            skill.progress = 0;
+            skill.speed_modifier = 1;
+        }
+        gs.skills_at_start_of_reset = gs.skills.map(() => 0);
+        gs.unlocked_skills = [0]; // Charisma is always unlocked
+        gs.unlocked_tasks = [];
+        // Reset tasks for zone 0
+        if (window.resetTasks) window.resetTasks();
+        log.info('Game state reset to fresh');
+        client.publishEventBus('jta:freshStateReady', { success: true, timestamp: Date.now() });
+    });
+
+    // --- Instant mode APIs (for cost debugger verification) ---
+
+    // Lazily inject the instant mode wrapper script into the game context.
+    // Can't use <script src> because the <base> tag redirects relative URLs
+    // to the remote game server. Instead, fetch and eval on first use.
+    let _instantWrapperLoaded = !!(window.jta?.setInstantMode || window.setInstantMode);
+    async function ensureInstantWrapper() {
+        if (_instantWrapperLoaded) return true;
+        try {
+            // Resolve path relative to this module, not the <base> tag
+            const resp = await fetch(new URL('../jta-randomizer/jta-instant-mode-wrapper.js', import.meta.url).href);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const code = await resp.text();
+            // eslint-disable-next-line no-eval
+            (0, eval)(code);
+            _instantWrapperLoaded = true;
+            log.info('Instant mode wrapper injected');
+            return true;
+        } catch (err) {
+            log.error('Failed to inject instant mode wrapper:', err);
+            return false;
+        }
+    }
+
+    // Enable/disable instant mode (tasks complete in one tick)
+    client.subscribeEventBus('jta:setInstantMode', async (data) => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.setInstantMode || window.setInstantMode;
+        if (fn) {
+            fn(!!data.enabled);
+            log.info(`setInstantMode: ${data.enabled}`);
+            client.publishEventBus('jta:instantModeSet', { enabled: !!data.enabled, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:instantModeSet', { success: false, error: 'Instant mode wrapper not loaded', timestamp: Date.now() });
+        }
+    });
+
+    // Perform a task instantly: click it, step tick to complete, return state
+    client.subscribeEventBus('jta:performTaskInstant', async (data) => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const performFn = window.jta?.performTask || window.performTask;
+        const stepFn = window.jta?.stepTick || window.stepTick;
+        const stateFn = window.jta?.getFullState || window.getFullState;
+
+        if (!performFn || !stepFn) {
+            client.publishEventBus('jta:taskPerformedInstant', {
+                success: false, error: 'Instant mode wrapper not loaded', timestamp: Date.now()
+            });
+            return;
+        }
+
+        const result = performFn(data.taskId);
+        if (!result.success) {
+            client.publishEventBus('jta:taskPerformedInstant', {
+                success: false, taskId: data.taskId, error: result.error, timestamp: Date.now()
+            });
+            return;
+        }
+
+        // Step tick to complete the task instantly
+        const tickResult = stepFn();
+
+        client.publishEventBus('jta:taskPerformedInstant', {
+            success: true,
+            taskId: data.taskId,
+            taskName: result.taskName,
+            energy: tickResult.energy,
+            isInEnergyReset: tickResult.isInEnergyReset || false,
+            state: stateFn ? stateFn() : null,
+            timestamp: Date.now()
+        });
+    });
+
+    // Pause/resume game loop (prevents conflicts during verification)
+    client.subscribeEventBus('jta:pauseGameLoop', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.pauseGameLoop || window.pauseGameLoop;
+        if (fn) {
+            fn();
+            log.info('Game loop paused');
+            client.publishEventBus('jta:gameLoopPaused', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:gameLoopPaused', { success: false, error: 'pauseGameLoop not available', timestamp: Date.now() });
+        }
+    });
+
+    client.subscribeEventBus('jta:resumeGameLoop', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.resumeGameLoop || window.resumeGameLoop;
+        if (fn) {
+            fn();
+            log.info('Game loop resumed');
+            client.publishEventBus('jta:gameLoopResumed', { success: true, timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:gameLoopResumed', { success: false, error: 'resumeGameLoop not available', timestamp: Date.now() });
+        }
+    });
+
+    // Execute a task using the REAL game engine (clickTask + updateGamestate loop).
+    // Unlike performTaskInstant, this respects energy limits and uses actual game formulas.
+    client.subscribeEventBus('jta:executeTaskReal', (data) => {
+        const gs = window.getGamestate;
+        if (!gs) {
+            client.publishEventBus('jta:taskExecutedReal', { success: false, error: 'No GAMESTATE', timestamp: Date.now() });
+            return;
+        }
+        const taskId = data.taskId;
+        const task = gs.tasks?.find(t => t.task_definition?.id === taskId);
+        if (!task || !task.enabled) {
+            client.publishEventBus('jta:taskExecutedReal', {
+                success: false, taskId, error: task ? 'Task not enabled' : 'Task not found', timestamp: Date.now()
+            });
+            return;
+        }
+        if (task.reps >= task.task_definition.max_reps) {
+            client.publishEventBus('jta:taskExecutedReal', {
+                success: false, taskId, alreadyCompleted: true, error: 'Already completed', timestamp: Date.now()
+            });
+            return;
+        }
+        // Click the task to activate it
+        window.clickTask(task);
+        // Run updateGamestate tick by tick until task completes or energy runs out
+        let ticks = 0;
+        while (ticks < 100000 && gs.active_task === task && !gs.is_in_energy_reset) {
+            window.updateGamestate();
+            ticks++;
+        }
+        const completed = task.reps >= task.task_definition.max_reps;
+        client.publishEventBus('jta:taskExecutedReal', {
+            success: true,
+            taskId,
+            taskName: task.task_definition.name,
+            ticks,
+            completed,
+            energy: gs.current_energy,
+            isInEnergyReset: gs.is_in_energy_reset || false,
+            timestamp: Date.now()
+        });
+    });
+
+    // Get full game state (detailed snapshot for verification)
+    client.subscribeEventBus('jta:getFullState', async () => {
+        if (!_instantWrapperLoaded) await ensureInstantWrapper();
+        const fn = window.jta?.getFullState || window.getFullState;
+        if (fn) {
+            client.publishEventBus('jta:fullState', { state: fn(), timestamp: Date.now() });
+        } else {
+            client.publishEventBus('jta:fullState', { state: null, error: 'Instant mode wrapper not loaded', timestamp: Date.now() });
+        }
+    });
+
     // Grant perks from Archipelago (incrementally via tryAddPerk)
     client.subscribeEventBus('jta:grantPerks', (data) => {
         if (!Array.isArray(data.perkTypes)) return;

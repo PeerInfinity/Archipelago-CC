@@ -632,16 +632,14 @@ export class LocationUI {
     const locationName = locationData.name;
     const regionName = locationData.region || locationData.parent_region;
 
-    // Publish click event for Discovery module to handle
-    this.eventBus.publish('ui:locationClicked', {
-      locationName,
-      regionName
-    });
-
-    // Discovery mode: if location checks are disabled, don't perform the check
+    // Discovery mode: if location checks are disabled, only block clicks in undiscovered regions
+    // Locations in discovered regions remain clickable (for loop mode explore)
     if (this.isDiscoveryModeActive && this.discoverySettings.disableLocationCheckUI) {
-      log('info', `[LocationUI] Location check disabled by discovery settings, skipping: ${locationName}`);
-      return;
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+      if (!isRegionDiscovered) {
+        log('info', `[LocationUI] Location check disabled (region ${regionName} not discovered), skipping: ${locationName}`);
+        return;
+      }
     }
 
     // ADDED: Add to pending set and update UI
@@ -681,6 +679,8 @@ export class LocationUI {
       regionName: locationData.region, // Ensure regionName is correctly passed
       originator: 'LocationCardClick',
       originalDOMEvent: true, // Assuming this is a direct user click
+      isLocationDiscovered: !this.isDiscoveryModeActive || discoveryStateSingleton.isLocationDiscovered(locationName),
+      isRegionDiscovered: !this.isDiscoveryModeActive || discoveryStateSingleton.isRegionDiscovered(regionName),
     };
 
     const currentDispatcher = getDispatcher(); // Re-fetch dispatcher instance when needed
@@ -956,7 +956,9 @@ export class LocationUI {
           loc._showAsPlaceholder = shouldShowAsPlaceholder;
 
           // Apply "Show Undiscovered" filter
-          if (shouldShowAsPlaceholder && !showUndiscovered) {
+          // Only filter out locations in undiscovered regions.
+          // Locations in discovered regions should always be visible (as clickable ??? cards).
+          if (shouldShowAsPlaceholder && !showUndiscovered && !isRegionDiscovered) {
             return false;
           }
         } else {
@@ -1332,9 +1334,12 @@ export class LocationUI {
         // Check if this should be shown as a placeholder (undiscovered)
         const showAsPlaceholder = location._showAsPlaceholder === true;
         const showFullDetails = this.discoverySettings.showUndiscoveredDetails;
+        const parentRegionIsDiscovered = this.isDiscoveryModeActive &&
+          discoveryStateSingleton.isRegionDiscovered(parentRegionName);
 
-        // Add undiscovered class for styling
-        if (showAsPlaceholder) {
+        // Add undiscovered class for styling, but not when region is discovered
+        // (locations in discovered regions should look clickable, not grayed out)
+        if (showAsPlaceholder && !parentRegionIsDiscovered) {
           locationCard.classList.add('undiscovered-location');
         }
 
@@ -1351,9 +1356,16 @@ export class LocationUI {
           placeholderDiv.className = 'location-name location-placeholder';
           placeholderDiv.textContent = '???';
           placeholderDiv.style.fontStyle = 'italic';
-          placeholderDiv.style.color = '#888';
+          if (parentRegionIsDiscovered) {
+            // Region is discovered - card is clickable (queues explore)
+            placeholderDiv.style.color = '#ccc';
+            locationTextContainer.title = 'Click to explore this region';
+            locationCard.style.cursor = 'pointer';
+          } else {
+            placeholderDiv.style.color = '#888';
+            locationTextContainer.title = 'Undiscovered location';
+          }
           locationTextContainer.appendChild(placeholderDiv);
-          locationTextContainer.title = 'Undiscovered location';
         } else {
           // Get display elements based on enabled settings
           const displayElements = this.getLocationDisplayElements(location);
@@ -1382,7 +1394,12 @@ export class LocationUI {
           const regionNameForLink = location.parent_region || location.region;
           const regionInfoDiv = document.createElement('div');
           regionInfoDiv.className = 'text-sm location-card-region-link';
-          if (regionNameForLink) {
+          if (this.isDiscoveryModeActive && regionNameForLink && !discoveryStateSingleton.isRegionDiscovered(regionNameForLink)) {
+            // Region is undiscovered - mask the name
+            regionInfoDiv.textContent = 'Region: ???';
+            regionInfoDiv.style.fontStyle = 'italic';
+            regionInfoDiv.style.color = '#888';
+          } else if (regionNameForLink) {
             const regionLink = commonUI.createRegionLink(
               regionNameForLink,
               this.colorblindSettings,
@@ -1423,7 +1440,12 @@ export class LocationUI {
           const regionNameForLink = location.parent_region || location.region;
           const regionInfoDiv = document.createElement('div');
           regionInfoDiv.className = 'text-sm location-card-region-link';
-          if (regionNameForLink) {
+          if (this.isDiscoveryModeActive && regionNameForLink && !discoveryStateSingleton.isRegionDiscovered(regionNameForLink)) {
+            // Region is undiscovered - mask the name
+            regionInfoDiv.textContent = 'Region: ???';
+            regionInfoDiv.style.fontStyle = 'italic';
+            regionInfoDiv.style.color = '#888';
+          } else if (regionNameForLink) {
             const regionLink = commonUI.createRegionLink(
               regionNameForLink,
               this.colorblindSettings,

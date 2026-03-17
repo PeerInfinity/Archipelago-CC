@@ -36,6 +36,9 @@ export class LoopStatsUI {
     // Expansion state for action rows
     this.expandedRows = new Set();
 
+    // Clean analysis from the start of the current loop (before mana is spent)
+    this._loopStartAnalysis = null;
+
     // Reference to loopState singleton
     this.loopState = loopStateSingleton;
 
@@ -219,9 +222,17 @@ export class LoopStatsUI {
    * Handle loop reset event
    */
   _handleLoopReset() {
-    log('info', 'LoopStatsUI: Loop reset, archiving analysis');
-    queueAnalyzer.archiveCurrentAnalysis();
+    log('info', 'LoopStatsUI: Loop reset, archiving start-of-loop analysis');
+    // Archive the start-of-loop snapshot as "previous" for comparison.
+    // This has clean predictions (full mana, no completed actions) rather than
+    // the end-of-loop state where mana is depleted and all values are near zero.
+    if (this._loopStartAnalysis) {
+      queueAnalyzer.previousAnalysis = this._loopStartAnalysis;
+    }
+    // Re-render with the freshly reset state
     this._renderPanel();
+    // Capture this fresh analysis as the start of the new loop
+    this._loopStartAnalysis = queueAnalyzer.currentAnalysis;
   }
 
   /**
@@ -256,6 +267,11 @@ export class LoopStatsUI {
     const actionQueue = this.loopState.getActionQueue();
     const analysis = queueAnalyzer.analyze(actionQueue, this.loopState);
     const previousAnalysis = queueAnalyzer.getPreviousAnalysis();
+
+    // Capture start-of-loop analysis on first render with actions
+    if (!this._loopStartAnalysis && analysis.entries.length > 0) {
+      this._loopStartAnalysis = analysis;
+    }
 
     this._renderActionList(analysis, previousAnalysis);
     this._updateSummary(analysis);
@@ -305,14 +321,14 @@ export class LoopStatsUI {
     let currValue = '—';
 
     if (this.showManaCost && this.showRemainingMana) {
-      prevValue = prevEntry ? `${prevEntry.finalCost} / ${prevEntry.manaAfterAction}` : '—';
-      currValue = `${entry.finalCost} / ${entry.manaAfterAction}`;
+      prevValue = prevEntry ? `${prevEntry.finalCost.toFixed(1)} / ${prevEntry.manaAfterAction.toFixed(1)}` : '—';
+      currValue = `${entry.finalCost.toFixed(1)} / ${entry.manaAfterAction.toFixed(1)}`;
     } else if (this.showManaCost) {
-      prevValue = prevEntry ? `${prevEntry.finalCost}` : '—';
-      currValue = `${entry.finalCost}`;
+      prevValue = prevEntry ? `${prevEntry.finalCost.toFixed(1)}` : '—';
+      currValue = `${entry.finalCost.toFixed(1)}`;
     } else if (this.showRemainingMana) {
-      prevValue = prevEntry ? `${prevEntry.manaAfterAction}` : '—';
-      currValue = `${entry.manaAfterAction}`;
+      prevValue = prevEntry ? `${prevEntry.manaAfterAction.toFixed(1)}` : '—';
+      currValue = `${entry.manaAfterAction.toFixed(1)}`;
     }
 
     // Status classes
@@ -345,7 +361,7 @@ export class LoopStatsUI {
         <div class="loop-stats-details" style="padding: 0.5rem 1rem; background: #1a1a1a; border-bottom: 1px solid #333;">
           <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.25rem;">
             <span>Base cost:</span>
-            <span>${entry.baseCost}</span>
+            <span>${entry.baseCost.toFixed(1)}</span>
             <span>Level ${entry.level} discount:</span>
             <span>-${entry.levelDiscount.toFixed(1)}</span>
             ${entry.itemPenalties.length > 0 ? entry.itemPenalties.map(p => `
@@ -353,9 +369,9 @@ export class LoopStatsUI {
               <span>+${p.penalty.toFixed(1)}</span>
             `).join('') : ''}
             <span style="font-weight: bold;">Final cost:</span>
-            <span style="font-weight: bold;">${entry.finalCost}</span>
+            <span style="font-weight: bold;">${entry.finalCost.toFixed(1)}</span>
             <span style="border-top: 1px solid #444; padding-top: 0.25rem;">Remaining:</span>
-            <span style="border-top: 1px solid #444; padding-top: 0.25rem; ${entry.hasInsufficientMana ? 'color: #ff6666;' : ''}">${entry.manaAfterAction}</span>
+            <span style="border-top: 1px solid #444; padding-top: 0.25rem; ${entry.hasInsufficientMana ? 'color: #ff6666;' : ''}">${entry.manaAfterAction.toFixed(1)}</span>
           </div>
         </div>
       `;
@@ -399,12 +415,12 @@ export class LoopStatsUI {
     const finalManaEl = this.rootElement.querySelector('#loop-stats-final-mana');
 
     if (totalCostEl) {
-      totalCostEl.textContent = `${analysis.totalCost}`;
+      totalCostEl.textContent = `${analysis.totalCost.toFixed(1)}`;
     }
 
     if (finalManaEl) {
       const manaColor = analysis.finalMana < 0 ? '#ff6666' : '#66ff66';
-      finalManaEl.innerHTML = `<span style="color: ${manaColor}">${analysis.finalMana}</span> / ${analysis.maxMana}`;
+      finalManaEl.innerHTML = `<span style="color: ${manaColor}">${analysis.finalMana.toFixed(1)}</span> / ${analysis.maxMana.toFixed(1)}`;
     }
   }
 

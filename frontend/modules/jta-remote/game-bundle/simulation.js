@@ -53,7 +53,7 @@ export function calcSkillXpNeededAtLevel(level, skill_type) {
     const skill_modifier = SKILL_DEFINITIONS[skill_type].xp_needed_mult;
     return Math.pow(exponent_base, level) * base_amount * skill_modifier;
 }
-function addSkillXp(skill, xp) {
+export function addSkillXp(skill, xp) {
     const skill_entry = getSkill(skill);
     skill_entry.progress += xp;
     let xp_to_level_up = calcSkillXpNeeded(skill_entry);
@@ -181,7 +181,7 @@ export function calcTaskProgressMultiplier(task, override_haste = null, override
     }
     return mult * task_progress_mult;
 }
-function calcTaskProgressPerTick(task) {
+export function calcTaskProgressPerTick(task) {
     return calcTaskProgressMultiplier(task);
 }
 export function calcTaskTicks(progress_per_tick, cost) {

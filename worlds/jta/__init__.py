@@ -232,23 +232,43 @@ class JTAWorld(World):
             logger.warning(f"JTA: sphere log not found at {sphere_log_path}, skipping cost adjust")
             return
 
-        # Find the cost-adjust.js script relative to project root
+        # Find scripts relative to project root
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        script_path = os.path.join(project_root, "scripts", "jta", "cost-adjust.js")
+        costgen_mode = self.options.costgen_mode.value
 
-        if not os.path.exists(script_path):
-            logger.warning(f"JTA: cost-adjust.js not found at {script_path}")
-            return
-
-        resets = self.options.resets_per_sphere.value
-        cmd = [
-            "node", script_path,
-            "--gamedata", gamedata_path,
-            "--spherelog", sphere_log_path,
-            "--output", costs_path,
-            "--resets-per-sphere", str(resets),
-            "--player", str(self.player),
-        ]
+        if costgen_mode == 0:
+            # Legacy mode: use cost-adjust.js with jtaCostGenerator
+            script_path = os.path.join(project_root, "scripts", "jta", "cost-adjust.js")
+            if not os.path.exists(script_path):
+                logger.warning(f"JTA: cost-adjust.js not found at {script_path}")
+                return
+            resets = self.options.resets_per_sphere.value
+            cmd = [
+                "node", script_path,
+                "--gamedata", gamedata_path,
+                "--spherelog", sphere_log_path,
+                "--output", costs_path,
+                "--resets-per-sphere", str(resets),
+                "--player", str(self.player),
+            ]
+        else:
+            # Planner mode (1 or 2): use cost-plan.js with JTACostPlanner
+            script_path = os.path.join(project_root, "scripts", "jta", "cost-plan.js")
+            if not os.path.exists(script_path):
+                logger.warning(f"JTA: cost-plan.js not found at {script_path}")
+                return
+            cmd = [
+                "node", script_path,
+                "--gamedata", gamedata_path,
+                "--spherelog", sphere_log_path,
+                "--output", costs_path,
+                "--player", str(self.player),
+                "--normal-attempts", str(self.options.costgen_normal_attempts.value),
+                "--perk-attempts", str(self.options.costgen_perk_attempts.value),
+                "--traversal-attempts", str(self.options.costgen_traversal_attempts.value),
+            ]
+            if costgen_mode == 2:
+                cmd.append("--two-pass")
 
         try:
             result = subprocess.run(
@@ -270,7 +290,7 @@ class JTAWorld(World):
                 "JTA: Node.js not found. Install Node.js to enable automatic "
                 "cost adjustment, or run manually:\n"
                 f"  node {script_path} -g {gamedata_path} -s {sphere_log_path} "
-                f"-o {costs_path} -r {resets}"
+                f"-o {costs_path}"
             )
         except subprocess.TimeoutExpired:
             logger.warning("JTA: cost adjustment timed out after 60 seconds")

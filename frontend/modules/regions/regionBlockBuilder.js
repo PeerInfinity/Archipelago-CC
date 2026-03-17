@@ -322,7 +322,7 @@ export class RegionBlockBuilder {
     for (const section of sections) {
       switch (section) {
         case 'entrances':
-          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext);
+          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext, isDiscoveryModeActive, discoverySettings);
           break;
         case 'exits':
           this.addExits(
@@ -420,7 +420,7 @@ export class RegionBlockBuilder {
   /**
    * Adds entrances list to the content element
    */
-  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext = null) {
+  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext = null, isDiscoveryModeActive = false, discoverySettings = {}) {
     const entrancesList = document.createElement('ul');
     entrancesList.classList.add('region-entrances-list');
     
@@ -499,16 +499,31 @@ export class RegionBlockBuilder {
           headerRow.insertBefore(this.createPathUsedBadge(), headerRow.firstChild);
         }
 
-        // Create entrance info span
+        // Create entrance info span with discovery checks
         const entranceInfo = document.createElement('span');
         entranceInfo.style.flex = '1';
-        const regionLink = commonUI.createRegionLink(
-          entrance.sourceRegion,
-          useColorblind,
-          snapshot
-        );
-        entranceInfo.appendChild(regionLink);
-        entranceInfo.appendChild(document.createTextNode(` - ${entrance.exitName}`));
+        const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
+        const sourceRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(entrance.sourceRegion);
+        const sourceExitDiscovered = discoveryStateSingleton.isExitDiscovered(entrance.sourceRegion, entrance.exitName);
+        const hideSourceName = isDiscoveryModeActive && !sourceRegionDiscovered && !showFullDetails;
+        const hideExitName = isDiscoveryModeActive && (!sourceRegionDiscovered || !sourceExitDiscovered) && !showFullDetails;
+
+        if (hideSourceName) {
+          const placeholderSpan = document.createElement('span');
+          placeholderSpan.textContent = '???';
+          placeholderSpan.style.fontStyle = 'italic';
+          placeholderSpan.style.opacity = '0.6';
+          entranceInfo.appendChild(placeholderSpan);
+        } else {
+          const regionLink = commonUI.createRegionLink(
+            entrance.sourceRegion,
+            useColorblind,
+            snapshot
+          );
+          entranceInfo.appendChild(regionLink);
+        }
+        const exitNameDisplay = hideExitName ? '???' : entrance.exitName;
+        entranceInfo.appendChild(document.createTextNode(` - ${exitNameDisplay}`));
         headerRow.appendChild(entranceInfo);
         
         // Evaluate entrance accessibility
@@ -654,10 +669,12 @@ export class RegionBlockBuilder {
         }
         
         // Apply classes based on status
+        const entranceUndiscovered = isDiscoveryModeActive && (!sourceRegionDiscovered || !sourceExitDiscovered);
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
         li.classList.toggle('bidirectional', entrance.isBidirectional);
-        
+        li.classList.toggle('undiscovered', entranceUndiscovered);
+
         li.appendChild(entranceWrapper);
         entrancesList.appendChild(li);
       });
@@ -769,13 +786,24 @@ export class RegionBlockBuilder {
         const exitInfo = document.createElement('span');
         exitInfo.style.flex = '1';
         exitInfo.appendChild(document.createTextNode(`${exitNameDisplay} → `));
-        exitInfo.appendChild(
-          commonUI.createRegionLink(
-            connectedRegionName,
-            useColorblind,
-            snapshot
-          )
-        );
+        // Hide connected region name if exit is placeholder or connected region is undiscovered
+        const connectedRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(connectedRegionName);
+        const hideConnectedName = showAsPlaceholder || (isDiscoveryModeActive && !connectedRegionDiscovered && !showFullDetails);
+        if (hideConnectedName) {
+          const placeholderSpan = document.createElement('span');
+          placeholderSpan.textContent = '???';
+          placeholderSpan.style.fontStyle = 'italic';
+          placeholderSpan.style.opacity = '0.6';
+          exitInfo.appendChild(placeholderSpan);
+        } else {
+          exitInfo.appendChild(
+            commonUI.createRegionLink(
+              connectedRegionName,
+              useColorblind,
+              snapshot
+            )
+          );
+        }
         headerRow.appendChild(exitInfo);
 
         // Add status indicator
@@ -1049,7 +1077,7 @@ export class RegionBlockBuilder {
                 const isQueued = fullPath.some(entry => 
                   entry.type === 'locationCheck' && 
                   entry.locationName === locationDef.name &&
-                  entry.region === regionName
+                  entry.sourceRegion === regionName
                 );
                 
                 // Update status if queued (need to update after initial render)
@@ -1307,7 +1335,7 @@ export class RegionBlockBuilder {
         for (let i = 0; i < currentPath.length; i++) {
           const entry = currentPath[i];
           // Only consider regionMove entries
-          if (entry.type === 'regionMove' && entry.region === regionName) {
+          if (entry.type === 'regionMove' && entry.destinationRegion === regionName) {
             // Check if this matches our specific instance (by UID if available)
             if (uid && this.regionUI && this.regionUI.visitedRegions) {
               const visitedRegion = this.regionUI.visitedRegions.find(vr => vr.uid == uid);

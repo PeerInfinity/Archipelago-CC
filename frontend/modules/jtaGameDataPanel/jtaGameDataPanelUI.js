@@ -228,6 +228,11 @@ export class JTAGameDataPanelUI {
                             border: 1px solid #3a8a3a; border-radius: 3px; cursor: pointer;
                             font-size: 11px;
                         ">Run Cost Adjustment</button>
+                        <button class="jta-min-costs-btn" style="
+                            padding: 5px 10px; background: #6a4a2a; color: #ccc;
+                            border: 1px solid #8a6a3a; border-radius: 3px; cursor: pointer;
+                            font-size: 11px;
+                        ">Set Min Costs</button>
                     </div>
                     <div class="jta-cost-status" style="font-size: 11px; color: #999; min-height: 14px;"></div>
                     <div class="jta-cost-results" style="
@@ -354,6 +359,7 @@ export class JTAGameDataPanelUI {
         this._costActions = q('.jta-cost-actions');
         this._applyCostsBtn = q('.jta-apply-costs-btn');
         this._downloadCostsBtn = q('.jta-download-costs-btn');
+        this._minCostsBtn = q('.jta-min-costs-btn');
 
         // Save editor
         this._exportBtn = q('.jta-export-btn');
@@ -471,6 +477,9 @@ export class JTAGameDataPanelUI {
         }
         if (this._applyCostsBtn) {
             this._applyCostsBtn.addEventListener('click', () => this._applyCostsToGame());
+        }
+        if (this._minCostsBtn) {
+            this._minCostsBtn.addEventListener('click', () => this._setMinCosts());
         }
         if (this._downloadCostsBtn) {
             this._downloadCostsBtn.addEventListener('click', () => this._downloadCosts());
@@ -1396,6 +1405,30 @@ export class JTAGameDataPanelUI {
         this._costResults.innerHTML = html;
     }
 
+    _setMinCosts() {
+        if (!this._loadedGameData) {
+            if (this._costStatus) {
+                this._costStatus.textContent = 'No game data loaded. Load game data first.';
+                this._costStatus.style.color = '#f44336';
+            }
+            return;
+        }
+        const minData = JSON.parse(JSON.stringify(this._loadedGameData));
+        let count = 0;
+        for (const zone of minData.zones) {
+            for (const task of zone.tasks) {
+                task.costMult = 0.01;
+                count++;
+            }
+        }
+        this._applyGameData(minData, 'minimum costs');
+        this._setLoadedDataStatus('minimum costs', 'all costs set to minimum');
+        if (this._costStatus) {
+            this._costStatus.textContent = `Set ${count} tasks to minimum costMult (0.01)`;
+            this._costStatus.style.color = '#4CAF50';
+        }
+    }
+
     _applyCostsToGame() {
         if (!this._lastAdjustedData) {
             if (this._costStatus) {
@@ -1503,6 +1536,7 @@ export class JTAGameDataPanelUI {
         this._costActions = null;
         this._applyCostsBtn = null;
         this._downloadCostsBtn = null;
+        this._minCostsBtn = null;
         this._lastAdjustedData = null;
         this._lastAdjustmentLog = null;
         this._lastMandatoryLog = null;

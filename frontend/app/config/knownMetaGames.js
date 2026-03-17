@@ -11,6 +11,11 @@ export const knownMetaGames = [
         name: 'Maze Game',
         path: './configs/mazeGame.js',
         shortName: 'mazegame'
+    },
+    {
+        name: 'Maze Game (Loops)',
+        path: './configs/mazeGameLoops.js',
+        shortName: 'mazegameloops'
     }
 ];
 

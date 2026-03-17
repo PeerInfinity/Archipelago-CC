@@ -141,6 +141,16 @@ export async function register(registrationApi) {
         const playerState = getPlayerStateSingleton();
         return playerState.isStartRegion(regionName);
     });
+
+    registrationApi.registerPublicFunction(moduleId, 'setPath', (pathArray, startRegion) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.setPath(pathArray, startRegion);
+    });
+
+    registrationApi.registerPublicFunction(moduleId, 'reset', () => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.reset();
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
@@ -283,11 +293,15 @@ function handleLocationCheck(data, propagationOptions) {
 
     const playerState = getPlayerStateSingleton();
     if (data && data.locationName) {
-        // Get staticData for region lookup
-        const staticData = stateManagerProxySingleton.getStaticData();
-        playerState.addLocationCheck(data.locationName, data.regionName, staticData);
+        // Skip adding to path when the event comes from the loops module's
+        // action queue completion — the path entry was already added when
+        // the loop queue was initially built.
+        if (!data.fromLoop) {
+            const staticData = stateManagerProxySingleton.getStaticData();
+            playerState.addLocationCheck(data.locationName, data.regionName, staticData);
+        }
     }
-    
+
     // Propagate event to the next module (up direction)
     if (moduleDispatcher) {
         moduleDispatcher.publishToNextModule(

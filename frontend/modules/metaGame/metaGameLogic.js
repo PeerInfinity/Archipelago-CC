@@ -127,51 +127,37 @@ export class MetaGameLogic {
     console.log('Processing configuration with data:', this.configuration);
     this.logger.info('metaGame', 'Processing configuration...');
     
-    // Register event dispatcher receivers now that we have configuration (only if not already registered)
+    // Register event dispatcher receivers for all events in the configuration
     if (this.registrationApi && this.registeredDispatcherReceivers.length === 0) {
-      // Create handler functions that call our methods
-      const regionMoveHandler = (eventData, context) => {
-        return this.handleRegionMoveEvent(eventData, context);
-      };
-      
-      const locationCheckHandler = (eventData, context) => {
-        return this.handleLocationCheckEvent(eventData, context);
-      };
-      
-      this.registrationApi.registerDispatcherReceiver(
-        'metaGame',
-        'user:regionMove',
-        regionMoveHandler,
-        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
-      );
-      
-      this.registrationApi.registerDispatcherReceiver(
-        'metaGame',
-        'user:locationCheck',
-        locationCheckHandler,
-        { direction: 'up', condition: 'unconditional', timing: 'immediate' }
-      );
-      
-      // Track registered receivers for cleanup
-      this.registeredDispatcherReceivers.push(
-        { moduleName: 'metaGame', eventName: 'user:regionMove', handler: regionMoveHandler },
-        { moduleName: 'metaGame', eventName: 'user:locationCheck', handler: locationCheckHandler }
-      );
-      
-      this.logger.info('metaGame', 'Event dispatcher receivers registered after configuration loading');
-    } else if (this.registeredDispatcherReceivers.length > 0) {
-      this.logger.debug('metaGame', 'Event dispatcher receivers already registered, skipping duplicate registration');
-    }
-    
-    // Process eventDispatcher configuration
-    if (this.configuration.eventDispatcher) {
-      for (const [eventName, eventConfig] of Object.entries(this.configuration.eventDispatcher)) {
-        this.logger.debug('metaGame', `Processing dispatcher configuration for: ${eventName}`);
-        
-        if (!eventConfig.actions) {
-          this.logger.warn('metaGame', `No actions defined for event: ${eventName}`);
+      if (this.configuration.eventDispatcher) {
+        for (const [eventName, eventConfig] of Object.entries(this.configuration.eventDispatcher)) {
+          if (!eventConfig.actions) {
+            this.logger.warn('metaGame', `No actions defined for event: ${eventName}`);
+            continue;
+          }
+
+          const handler = (eventData, context) => {
+            return this.handleDispatcherEvent(eventName, eventData, context);
+          };
+
+          this.registrationApi.registerDispatcherReceiver(
+            'metaGame',
+            eventName,
+            handler,
+            { direction: 'up', condition: 'unconditional', timing: 'immediate' }
+          );
+
+          this.registeredDispatcherReceivers.push(
+            { moduleName: 'metaGame', eventName, handler }
+          );
+
+          this.logger.debug('metaGame', `Registered dispatcher receiver for: ${eventName}`);
         }
       }
+
+      this.logger.info('metaGame', `Event dispatcher receivers registered: ${this.registeredDispatcherReceivers.length} events`);
+    } else if (this.registeredDispatcherReceivers.length > 0) {
+      this.logger.debug('metaGame', 'Event dispatcher receivers already registered, skipping duplicate registration');
     }
     
     // Process eventBus configuration
@@ -394,9 +380,18 @@ export class MetaGameLogic {
     // Activate the iframe panel to show the maze game
     this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
 
-    // Set the biome for this challenge (triggers iframe reload)
+    // Set the biome for this challenge (triggers iframe reload).
+    // Upgrades are written directly to save data; disableBiomeCheck zeros out
+    // the game's biome requirements so upgrades take effect at any biome level.
     if (typeof config.biome === 'number') {
-      this.eventBus.publish('amazingIdle:setBiome', { biome: config.biome });
+      const setBiomeData = { biome: config.biome };
+      if (config.upgrades) {
+        setBiomeData.upgrades = config.upgrades;
+      }
+      if (config.disableBiomeCheck) {
+        setBiomeData.disableBiomeCheck = true;
+      }
+      this.eventBus.publish('amazingIdle:setBiome', setBiomeData);
     }
 
     // Focus the iframe so keyboard input goes to the maze game
@@ -523,65 +518,39 @@ export class MetaGameLogic {
   }
   
   async handleRegionMoveEvent(eventData, context) {
-    this.logger.debug('metaGame', 'Handling user:regionMove event', eventData);
-
-    // First, immediately forward the event up unless configuration instructs otherwise
-    let shouldForward = true;
-
-    if (this.configuration && this.configuration.eventDispatcher) {
-      const eventConfig = this.configuration.eventDispatcher['user:regionMove'];
-      if (eventConfig) {
-        // If a condition function is defined, evaluate it first
-        if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
-          this.logger.debug('metaGame', 'Condition returned false for user:regionMove, forwarding immediately');
-          this.dispatcher.publishToNextModule('metaGame', 'user:regionMove', eventData, { direction: 'up' });
-          return { action: 'continue' };
-        }
-
-        // Execute the configured actions
-        if (eventConfig.actions) {
-          await this.executeActions(eventConfig.actions, eventData, 'user:regionMove');
-        }
-
-        // Check if configuration says not to forward
-        if (eventConfig.stopPropagation) {
-          shouldForward = false;
-        }
-      }
-    }
-
-    if (shouldForward) {
-      // Immediately forward the event up to the next module
-      this.dispatcher.publishToNextModule(
-        'metaGame',
-        'user:regionMove',
-        eventData,
-        { direction: 'up' }
-      );
-    }
-
-    return { action: shouldForward ? 'continue' : 'stop' };
+    return this.handleDispatcherEvent('user:regionMove', eventData, context);
   }
-  
-  async handleLocationCheckEvent(eventData, context) {
-    this.logger.debug('metaGame', 'Handling user:locationCheck event', eventData);
 
-    // First, immediately forward the event up unless configuration instructs otherwise
+  async handleLocationCheckEvent(eventData, context) {
+    return this.handleDispatcherEvent('user:locationCheck', eventData, context);
+  }
+
+  /**
+   * Generic dispatcher event handler. Looks up the event in the configuration,
+   * evaluates conditions, executes actions, and controls propagation.
+   * @param {string} eventName - The event name
+   * @param {Object} eventData - The event data
+   * @param {Object} context - The dispatcher context
+   * @returns {Object} Action result ({ action: 'continue' | 'stop' })
+   */
+  async handleDispatcherEvent(eventName, eventData, context) {
+    this.logger.debug('metaGame', `Handling dispatcher event: ${eventName}`, eventData);
+
     let shouldForward = true;
 
     if (this.configuration && this.configuration.eventDispatcher) {
-      const eventConfig = this.configuration.eventDispatcher['user:locationCheck'];
+      const eventConfig = this.configuration.eventDispatcher[eventName];
       if (eventConfig) {
         // If a condition function is defined, evaluate it first
         if (typeof eventConfig.condition === 'function' && !eventConfig.condition(eventData)) {
-          this.logger.debug('metaGame', 'Condition returned false for user:locationCheck, forwarding immediately');
-          this.dispatcher.publishToNextModule('metaGame', 'user:locationCheck', eventData, { direction: 'up' });
+          this.logger.debug('metaGame', `Condition returned false for ${eventName}, forwarding immediately`);
+          this.dispatcher.publishToNextModule('metaGame', eventName, eventData, { direction: 'up' });
           return { action: 'continue' };
         }
 
         // Execute the configured actions
         if (eventConfig.actions) {
-          await this.executeActions(eventConfig.actions, eventData, 'user:locationCheck');
+          await this.executeActions(eventConfig.actions, eventData, eventName);
         }
 
         // Check if configuration says not to forward
@@ -592,13 +561,7 @@ export class MetaGameLogic {
     }
 
     if (shouldForward) {
-      // Immediately forward the event up to the next module
-      this.dispatcher.publishToNextModule(
-        'metaGame',
-        'user:locationCheck',
-        eventData,
-        { direction: 'up' }
-      );
+      this.dispatcher.publishToNextModule('metaGame', eventName, eventData, { direction: 'up' });
     }
 
     return { action: shouldForward ? 'continue' : 'stop' };

@@ -127,11 +127,23 @@ export function register(registrationApi) {
     handleMoveCompleted,
     null
   );
+
+  // Register dispatcher receiver for user:exitClicked
+  // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → Regions (moves)
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,
-    'loop:locationChecked',
-    handleLocationChecked,
-    null
+    'user:exitClicked',
+    handleExitClickedForDiscovery,
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
+  );
+
+  // Register dispatcher receiver for user:locationCheck
+  // Chain: Loops (intercepts if loop mode) → Discovery (discovers + blocks if discovery mode) → PlayerState → StateManager
+  registrationApi.registerDispatcherReceiver(
+    moduleInfo.name,
+    'user:locationCheck',
+    handleLocationCheckForDiscovery,
+    { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 }
 
@@ -214,8 +226,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     _unsubscribeHandles.push(
       _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked),
       _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked),
-      _moduleEventBus.subscribe('ui:locationClicked', handleLocationClicked),
-      _moduleEventBus.subscribe('ui:exitClicked', handleExitClicked),
+      // user:locationCheck and user:exitClicked are handled via dispatcher chains
       _moduleEventBus.subscribe('playerState:regionChanged', handlePlayerRegionChanged)
     );
   } else {
@@ -278,6 +289,14 @@ function handleRulesLoaded(eventData) {
   );
   try {
     discoveryStateSingleton.clearDiscovery();
+
+    // Apply onExitDiscovered cascade for start regions.
+    // state.initialize() discovers start region exits directly, but doesn't
+    // know about regionDiscoveryTrigger. If the trigger is 'onExitDiscovered',
+    // we need to discover the regions those exits lead to.
+    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered') {
+      applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
+    }
   } catch (error) {
     log('error',
       '[Discovery Module] Error clearing/initializing DiscoveryState from rulesLoaded:',
@@ -293,9 +312,51 @@ function handleExploreCompleted(eventData) {
   if (eventData.regionName) {
     const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(eventData.regionName);
 
-    // If region was newly discovered and we have auto-discover settings
+    // Each explore action discovers one random undiscovered location or exit
+    // in the region. Build a pool of undiscovered candidates and pick one.
+    try {
+      const staticData = stateManager?.getStaticData();
+      const region = staticData?.regions?.get(eventData.regionName);
+      if (region) {
+        const candidates = [];
+
+        if (region.locations) {
+          for (const location of region.locations) {
+            if (!discoveryStateSingleton.isLocationDiscovered(location.name)) {
+              candidates.push({ type: 'location', name: location.name });
+            }
+          }
+        }
+
+        if (region.exits) {
+          for (const exit of region.exits) {
+            if (!discoveryStateSingleton.isExitDiscovered(eventData.regionName, exit.name)) {
+              candidates.push({ type: 'exit', name: exit.name, connectedRegion: exit.connected_region });
+            }
+          }
+        }
+
+        if (candidates.length > 0) {
+          const pick = candidates[Math.floor(Math.random() * candidates.length)];
+          if (pick.type === 'location') {
+            discoveryStateSingleton.discoverLocation(pick.name);
+            log('info', `[Discovery Module] Explore discovered location: ${pick.name}`);
+          } else {
+            discoveryStateSingleton.discoverExit(eventData.regionName, pick.name);
+            log('info', `[Discovery Module] Explore discovered exit: ${pick.name}`);
+            // If trigger is 'onExitDiscovered', also discover the connected region
+            if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && pick.connectedRegion) {
+              discoveryStateSingleton.discoverRegion(pick.connectedRegion);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      log('error', '[Discovery Module] Error discovering from explore:', error);
+    }
+
+    // Auto-discover exits only if the region is newly discovered
     if (wasNewlyDiscovered) {
-      autoDiscoverLocationsInRegion(eventData.regionName);
       autoDiscoverExitsInRegion(eventData.regionName);
     }
   }
@@ -356,24 +417,6 @@ function handleMoveCompleted(eventData) {
   }
 }
 
-function handleLocationChecked(eventData) {
-  log('info', '[Discovery Module] Handling loop:locationChecked', eventData);
-  if (!eventData || !discoveryStateSingleton) return; // <<< Use singleton
-
-  if (eventData?.locationName) {
-    discoveryStateSingleton.discoverLocation(eventData.locationName);
-    if (eventData.regionName) {
-      const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(eventData.regionName);
-
-      // If region was newly discovered, trigger auto-discovery
-      if (wasNewlyDiscovered) {
-        autoDiscoverLocationsInRegion(eventData.regionName);
-        autoDiscoverExitsInRegion(eventData.regionName);
-      }
-    }
-  }
-}
-
 // --- UI Click Event Handlers ---
 
 /**
@@ -399,53 +442,83 @@ function handleRegionClicked(eventData) {
 }
 
 /**
- * Handle location click from locations panel.
- * Discovers the location (and its region) if clickDiscoversLocation is enabled.
+ * Handle user:locationCheck for discovery purposes.
+ * If discovery mode is active, discovers the location before propagating.
+ * Always propagates to the next handler (playerState → stateManager) — the
+ * UI layer (locationUI, regionGraph) is responsible for blocking clicks that
+ * shouldn't produce events during discovery mode.
  */
-function handleLocationClicked(eventData) {
-  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversLocation) return;
-  if (!discoveryStateSingleton) return;
+function handleLocationCheckForDiscovery(eventData) {
+  // Discovery mode is active - discover the location if settings allow
+  if (_settings.enableDiscoveryMode && _settings.clickDiscoversLocation && discoveryStateSingleton) {
+    const { locationName, regionName } = eventData || {};
+    if (locationName) {
+      if (!discoveryStateSingleton.isLocationDiscovered(locationName)) {
+        log('info', `[Discovery Module] Discovering location via click: ${locationName}`);
+        discoveryStateSingleton.discoverLocation(locationName);
+      }
 
-  const { locationName, regionName } = eventData || {};
-  if (!locationName) return;
-
-  if (!discoveryStateSingleton.isLocationDiscovered(locationName)) {
-    log('info', `[Discovery Module] Discovering location via click: ${locationName}`);
-    discoveryStateSingleton.discoverLocation(locationName);
+      if (regionName && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
+        const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
+        if (wasNewlyDiscovered) {
+          autoDiscoverLocationsInRegion(regionName);
+          autoDiscoverExitsInRegion(regionName);
+        }
+      }
+    }
   }
 
-  if (regionName && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
-    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
-    if (wasNewlyDiscovered) {
-      autoDiscoverLocationsInRegion(regionName);
-      autoDiscoverExitsInRegion(regionName);
-    }
+  // Always propagate to playerState → stateManager
+  if (_moduleDispatcher) {
+    _moduleDispatcher.publishToNextModule(
+      moduleInfo.name,
+      'user:locationCheck',
+      eventData,
+      { direction: 'up' }
+    );
   }
 }
 
 /**
- * Handle exit click from exits panel.
- * Discovers the exit (and its source region) if clickDiscoversLocation is enabled.
+ * Handle user:exitClicked for discovery purposes.
+ * If discovery mode is active: discovers the exit, then blocks propagation
+ * (regions module should not perform a move when discovery mode is active).
+ * If discovery mode is NOT active: propagates to the next handler (regions module).
  */
-function handleExitClicked(eventData) {
-  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversLocation) return;
-  if (!discoveryStateSingleton) return;
-
-  const { exitName, sourceRegion } = eventData || {};
-  if (!exitName || !sourceRegion) return;
-
-  if (!discoveryStateSingleton.isExitDiscovered(sourceRegion, exitName)) {
-    log('info', `[Discovery Module] Discovering exit via click: ${exitName} in ${sourceRegion}`);
-    discoveryStateSingleton.discoverExit(sourceRegion, exitName);
+function handleExitClickedForDiscovery(eventData) {
+  if (!_settings.enableDiscoveryMode) {
+    // Discovery mode not active - propagate to regions module
+    if (_moduleDispatcher) {
+      _moduleDispatcher.publishToNextModule(
+        moduleInfo.name,
+        'user:exitClicked',
+        eventData,
+        { direction: 'up' }
+      );
+    }
+    return;
   }
 
-  if (!discoveryStateSingleton.isRegionDiscovered(sourceRegion)) {
-    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(sourceRegion);
-    if (wasNewlyDiscovered) {
-      autoDiscoverLocationsInRegion(sourceRegion);
-      autoDiscoverExitsInRegion(sourceRegion);
+  // Discovery mode is active - discover the exit if settings allow
+  if (_settings.clickDiscoversLocation && discoveryStateSingleton) {
+    const { exitName, sourceRegion } = eventData || {};
+    if (exitName && sourceRegion) {
+      if (!discoveryStateSingleton.isExitDiscovered(sourceRegion, exitName)) {
+        log('info', `[Discovery Module] Discovering exit via click: ${exitName} in ${sourceRegion}`);
+        discoveryStateSingleton.discoverExit(sourceRegion, exitName);
+      }
+
+      if (!discoveryStateSingleton.isRegionDiscovered(sourceRegion)) {
+        const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(sourceRegion);
+        if (wasNewlyDiscovered) {
+          autoDiscoverLocationsInRegion(sourceRegion);
+          autoDiscoverExitsInRegion(sourceRegion);
+        }
+      }
     }
   }
+
+  // Block propagation - don't let regions module perform a move in discovery mode
 }
 
 /**
@@ -528,6 +601,7 @@ async function handleSettingsChanged({ key }) {
   if (key === '*' || key.startsWith('moduleSettings.discovery')) {
     log('info', '[Discovery Module] Settings changed, reloading...');
     const previousEnableMode = _settings.enableDiscoveryMode;
+    const previousTrigger = _settings.regionDiscoveryTrigger;
     await loadSettings();
 
     // If enableDiscoveryMode changed, publish the modeChanged event
@@ -535,6 +609,19 @@ async function handleSettingsChanged({ key }) {
       _moduleEventBus.publish('discovery:modeChanged', {
         active: _settings.enableDiscoveryMode
       });
+    }
+
+    // If regionDiscoveryTrigger changed to 'onExitDiscovered', apply cascade
+    // from start regions to discover regions their exits lead to.
+    // We cascade from start regions (not all discovered regions) because when
+    // multiple concurrent settings changes fire this handler, cascading from
+    // all discovered regions causes amplification: the first cascade discovers
+    // new regions, then the second cascade expands from the larger set.
+    // Cascading from start regions is idempotent and matches handleRulesLoaded.
+    if (_settings.regionDiscoveryTrigger === 'onExitDiscovered' && previousTrigger !== 'onExitDiscovered') {
+      if (discoveryStateSingleton) {
+        applyExitDiscoveryCascade(discoveryStateSingleton.getStartRegions());
+      }
     }
 
     // Always publish settingsChanged with current settings so other modules can react
@@ -600,11 +687,49 @@ function autoDiscoverExitsInRegion(regionName) {
 }
 
 /**
+ * For a set of already-discovered regions, discover the regions their exits lead to.
+ * This applies the 'onExitDiscovered' cascade without requiring autoDiscoverExits.
+ * Also discovers locations/exits in the newly discovered regions if auto-discover is on.
+ * @param {string[]} regionNames - Regions whose exits should cascade
+ */
+function applyExitDiscoveryCascade(regionNames) {
+  if (!discoveryStateSingleton || !stateManager) return;
+
+  try {
+    const staticData = stateManager.getStaticData();
+    if (!staticData || !staticData.regions) return;
+
+    for (const regionName of regionNames) {
+      const region = staticData.regions.get(regionName);
+      if (!region || !region.exits) continue;
+
+      for (const exit of region.exits) {
+        const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(exit.connected_region);
+        if (wasNewlyDiscovered) {
+          log('info', `[Discovery Module] onExitDiscovered cascade: discovered region ${exit.connected_region} via ${regionName} exit ${exit.name}`);
+          autoDiscoverLocationsInRegion(exit.connected_region);
+          autoDiscoverExitsInRegion(exit.connected_region);
+        }
+      }
+    }
+  } catch (error) {
+    log('error', '[Discovery Module] Error in applyExitDiscoveryCascade:', error);
+  }
+}
+
+/**
  * Get the current discovery settings (for use by other modules)
  * @returns {Object} Current discovery settings
  */
 export function getDiscoverySettings() {
   return { ..._settings };
 }
+
+/**
+ * Apply discovery settings directly, bypassing the global settings:changed event.
+ * Updates the internal cache, publishes discovery-specific events, and persists
+ * to settingsManager without triggering a global broadcast.
+ * @param {Object} newSettings - Partial settings object to merge
+ */
 
 // REMOVED: export { discoveryStateSingleton };

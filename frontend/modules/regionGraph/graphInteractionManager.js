@@ -441,8 +441,8 @@ export class GraphInteractionManager {
 
       // Highlight edges between consecutive regions in the path (regionMove entries)
       for (let i = 0; i < this.ui.currentPath.length - 1; i++) {
-        const source = this.ui.currentPath[i].region;
-        const target = this.ui.currentPath[i + 1].region;
+        const source = this.ui.currentPath[i].destinationRegion;
+        const target = this.ui.currentPath[i + 1].destinationRegion;
 
         // Find edge between source and target (consider both directions)
         const edge = this.ui.cy.edges(`[source="${source}"][target="${target}"], [source="${target}"][target="${source}"]`);
@@ -455,12 +455,12 @@ export class GraphInteractionManager {
       if (this.ui.locationsVisible) {
         fullPath.forEach(entry => {
           if (entry.type === 'locationCheck') {
-            const locationNodeId = `loc_${entry.region}_${entry.locationName}`;
+            const locationNodeId = `loc_${entry.sourceRegion}_${entry.locationName}`;
             const locationNode = this.ui.cy.getElementById(locationNodeId);
 
             if (locationNode && locationNode.length > 0) {
               // Highlight the edge from region to location
-              const edge = this.ui.cy.edges(`[source="${entry.region}"][target="${locationNodeId}"]`);
+              const edge = this.ui.cy.edges(`[source="${entry.sourceRegion}"][target="${locationNodeId}"]`);
               if (edge && edge.length > 0) {
                 edge.addClass('in-path');
               }

@@ -88,17 +88,23 @@
 
     // Helper: check if gamestate has a perk
     function hasPerk(gs, perkType) {
-        return gs.perks?.get(perkType) === true;
+        const perks = gs.perks;
+        if (perks instanceof Map) return perks.get(perkType) === true;
+        return false;
     }
 
     // Helper: check prestige unlock
     function hasPrestigeUnlockGS(gs, type) {
-        return gs.prestige_unlocks?.get(type) === true;
+        const unlocks = gs.prestige_unlocks;
+        if (unlocks instanceof Map) return unlocks.get(type) === true;
+        return false;
     }
 
     // Helper: get prestige repeatable level
     function getPrestigeLevelGS(gs, type) {
-        return gs.prestige_repeatables?.get(type) ?? 0;
+        const reps = gs.prestige_repeatables;
+        if (reps instanceof Map) return reps.get(type) ?? 0;
+        return 0;
     }
 
     // Helper: get attunement skills based on prestige
@@ -449,6 +455,30 @@
         return window.getGamestate;
     }
 
+    // Captured game loop callback and delay for pause/resume
+    let _gameLoopFn = null;
+    let _gameLoopDelay = 0;
+    const _origSetInterval = window.setInterval.bind(window);
+
+    /**
+     * Intercept setInterval to capture the game loop interval ID,
+     * callback, and delay. The game calls setInterval(gameLoop, calcTickRate())
+     * in setTickRate().
+     */
+    function setupIntervalCapture() {
+        window.setInterval = function(fn, delay) {
+            const args = Array.prototype.slice.call(arguments);
+            const id = _origSetInterval.apply(window, args);
+            // The game loop runs at ~66ms intervals; capture anything in that range
+            if (typeof fn === 'function' && delay > 10 && delay < 200) {
+                _gameLoopInterval = id;
+                _gameLoopFn = fn;
+                _gameLoopDelay = delay;
+            }
+            return id;
+        };
+    }
+
     /**
      * Set up interception for GAMESTATE updates
      */
@@ -507,6 +537,9 @@
         if (_initialized) return;
 
         console.log('[JTA Wrapper] Initializing...');
+
+        // Capture setInterval calls to get the game loop interval ID
+        setupIntervalCapture();
 
         // Set up GAMESTATE interception
         setupGamestateInterception();
@@ -669,23 +702,24 @@
             return { current: gs.current_energy, max: gs.max_energy };
         };
 
-        // Pause/resume game loop
+        // Pause/resume game loop by clearing/restoring the interval
         window.jta.pauseGameLoop = function() {
-            // Try to use the game's own pause if available
-            if (window.pauseGameLoop) {
-                return window.pauseGameLoop();
+            if (_gameLoopInterval !== null) {
+                clearInterval(_gameLoopInterval);
+                console.log('[JTA Wrapper] Game loop paused');
+                return true;
             }
-            // Otherwise try to clear the interval ourselves
-            // This is tricky without access to the game's internal interval ID
-            console.warn('[JTA Wrapper] Cannot pause - game pauseGameLoop not available');
+            console.warn('[JTA Wrapper] Cannot pause - game loop interval not captured');
             return false;
         };
 
         window.jta.resumeGameLoop = function() {
-            if (window.resumeGameLoop) {
-                return window.resumeGameLoop();
+            if (_gameLoopFn) {
+                _gameLoopInterval = _origSetInterval(_gameLoopFn, _gameLoopDelay);
+                console.log('[JTA Wrapper] Game loop resumed');
+                return true;
             }
-            console.warn('[JTA Wrapper] Cannot resume - game resumeGameLoop not available');
+            console.warn('[JTA Wrapper] Cannot resume - game loop callback not captured');
             return false;
         };
 

@@ -150,10 +150,10 @@ export class NavigationManager {
       logger.verbose('Last path entry', { lastPathEntry });
 
       // If player's current region is the last region in path AND we have exit info
-      if (lastPathEntry.region === regionName && lastPathEntry.exitUsed) {
+      if (lastPathEntry.destinationRegion === regionName && lastPathEntry.exitUsed) {
         // Find the previous region in the path to determine the incoming edge
         const previousRegion = this.ui.currentPath.length > 1 ?
-          this.ui.currentPath[this.ui.currentPath.length - 2].region : null;
+          this.ui.currentPath[this.ui.currentPath.length - 2].destinationRegion : null;
 
         logger.verbose(`Previous region in path: ${previousRegion}`);
 
@@ -401,7 +401,7 @@ export class NavigationManager {
     }
 
     // Start from the last region in the current path
-    const startRegion = currentPath[currentPath.length - 1].region;
+    const startRegion = currentPath[currentPath.length - 1].destinationRegion;
 
     if (startRegion === targetRegion) {
       logger.debug(`Target region ${targetRegion} is already at end of path`);

@@ -541,7 +541,7 @@ class JTAActionQueuePanel {
     _wireEngine() {
         const engine = getEngine();
         if (!engine) {
-            log('warn', 'Engine not available yet — will poll until ready');
+            log('info', 'Engine not available yet — will poll until ready');
             // GL creates panels before module init phase, so engine doesn't exist yet.
             // Poll until it's available, then do late binding.
             this._engineRetryTimer = setInterval(() => {

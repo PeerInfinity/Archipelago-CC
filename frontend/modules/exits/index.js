@@ -60,9 +60,6 @@ export function register(registrationApi) {
   // Uses 'bottom' so that modules loaded later (like loops) get first chance to handle
   registrationApi.registerDispatcherSender('user:exitClicked', 'bottom', 'first');
 
-  // Register eventBus publisher for UI exit click notifications
-  registrationApi.registerEventBusPublisher('ui:exitClicked');
-
   // Register settings schema if needed
   // No specific settings schema for Exits registration.
 }

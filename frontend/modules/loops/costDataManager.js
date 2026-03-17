@@ -211,7 +211,7 @@ export class CostDataManager {
       return regionData.moveCost;
     }
 
-    return this.costData.defaultRegionCost || 10;
+    return this.costData.defaultRegionCost || 50;
   }
 
   /**
@@ -229,7 +229,7 @@ export class CostDataManager {
       return locationCost;
     }
 
-    return this.costData.defaultLocationCost || 10;
+    return this.costData.defaultLocationCost || 100;
   }
 
   /**
@@ -237,7 +237,7 @@ export class CostDataManager {
    * @returns {number} Default region move cost
    */
   getDefaultRegionCost() {
-    return this.costData?.defaultRegionCost || 10;
+    return this.costData?.defaultRegionCost || 50;
   }
 
   /**
@@ -245,7 +245,7 @@ export class CostDataManager {
    * @returns {number} Default location check cost
    */
   getDefaultLocationCost() {
-    return this.costData?.defaultLocationCost || 10;
+    return this.costData?.defaultLocationCost || 100;
   }
 
   /**
