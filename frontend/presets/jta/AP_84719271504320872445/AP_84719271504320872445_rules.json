@@ -1577,7 +1577,11 @@
         "costgen_artifacts": true,
         "costgen_grind_with_push_collect": true,
         "costgen_item_collection": true,
+        "costgen_mode": 2,
+        "costgen_normal_attempts": 2,
+        "costgen_perk_attempts": 5,
         "costgen_push_collect": true,
+        "costgen_traversal_attempts": 5,
         "exclude_locations": [],
         "free_zones": 1,
         "game_data_file": "",
@@ -1646,10 +1650,38 @@
           "default": true,
           "display_name": "Cost Gen: Item Collection"
         },
+        "costgen_mode": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 2,
+          "default": 2,
+          "display_name": "Cost Gen Mode"
+        },
+        "costgen_normal_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 2,
+          "display_name": "Cost Gen: Normal Attempts"
+        },
+        "costgen_perk_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Cost Gen: Perk Attempts"
+        },
         "costgen_push_collect": {
           "type": "default_on_toggle",
           "default": true,
           "display_name": "Cost Gen: Push/Collect"
+        },
+        "costgen_traversal_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Cost Gen: Traversal Attempts"
         },
         "free_zones": {
           "type": "range",
