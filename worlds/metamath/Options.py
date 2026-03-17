@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
+from Options import Choice, Range, TextChoice, Toggle, PerGameCommonOptions, OptionGroup
 
 class VanillaPlacement(Toggle):
     """
@@ -95,6 +95,34 @@ class AutoDownloadDatabase(Toggle):
     display_name = "Auto-Download Database"
     default = 1
 
+
+class EntranceRuleMode(Choice):
+    """
+    Controls how entrance rules handle convergence nodes (proof steps with multiple dependencies).
+
+    Strict: Every entrance requires both events and items for ALL dependencies.
+    Faithful to the original proof logic but may fail to generate in multiworld.
+
+    Relaxed Items: Each entrance requires proof events for ALL dependencies but only
+    the source step's item. Preserves the requirement to complete all prerequisites while
+    giving the fill algorithm flexibility at convergence points.
+
+    Relaxed Events: Each entrance requires items for ALL dependencies but only the
+    source step's event. The inverse of relaxed_items.
+
+    Fully Relaxed: Each entrance only requires the source step's event and item.
+    Convergence steps can be entered from any single completed branch.
+    """
+    display_name = "Entrance Rule Mode"
+
+    option_strict = 0
+    option_relaxed_items = 1
+    option_relaxed_events = 2
+    option_fully_relaxed = 3
+
+    default = 1
+
+
 @dataclass
 class MetamathOptions(PerGameCommonOptions):
     vanilla_placement: VanillaPlacement
@@ -103,6 +131,7 @@ class MetamathOptions(PerGameCommonOptions):
     randomize_starting_statements: RandomizeStartingStatements
     starting_statements: StartingStatements
     auto_download_database: AutoDownloadDatabase
+    entrance_rule_mode: EntranceRuleMode
 
 metamath_option_groups = [
     OptionGroup("Proof Settings", [
@@ -111,6 +140,7 @@ metamath_option_groups = [
         TheoremSelection,
         RandomizeStartingStatements,
         StartingStatements,
-        AutoDownloadDatabase
+        AutoDownloadDatabase,
+        EntranceRuleMode,
     ])
 ]

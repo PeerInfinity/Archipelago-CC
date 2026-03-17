@@ -184,7 +184,7 @@ class DepGraphWorld(World):
 
     def set_rules(self):
         """Set access rules based on graph dependencies."""
-        set_depgraph_rules(self, self.graph_structure)
+        set_depgraph_rules(self, self.graph_structure, self.options.entrance_rule_mode.value)
 
         final_proved = f"Completed Node {self.num_nodes}"
         self.multiworld.completion_condition[self.player] = \

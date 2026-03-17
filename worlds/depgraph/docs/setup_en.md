@@ -50,6 +50,7 @@ DepGraph:
   randomize_items: true
   randomize_starting_nodes: true
   starting_nodes: 0
+  entrance_rule_mode: relaxed_items
 ```
 
 ### 2. Choose Your Graph
@@ -120,6 +121,22 @@ starting_nodes: 30
 randomize_starting_nodes: true
 starting_nodes: 0
 ```
+
+### 4. Entrance Rule Mode
+
+Controls how entrance rules handle convergence nodes (nodes with multiple dependencies). This affects multiworld generation reliability.
+
+```yaml
+entrance_rule_mode: strict          # All events + all items (may fail in multiworld)
+entrance_rule_mode: relaxed_items   # All events required, only source item (default)
+entrance_rule_mode: relaxed_events  # All items required, only source event
+entrance_rule_mode: fully_relaxed   # Only source event + item required
+```
+
+- **strict**: Original behavior — every entrance requires all dependencies' events and items. May fail to generate in multiworld with graphs that have large convergence gates.
+- **relaxed_items** (default): Preserves the requirement to visit all prerequisites while giving the fill algorithm flexibility at convergence points. Recommended for multiworld.
+- **relaxed_events**: Each entrance requires items for all dependencies but only the source node's event. The inverse of relaxed_items.
+- **fully_relaxed**: Convergence nodes can be entered from any single completed branch.
 
 ## Generating Your Game
 

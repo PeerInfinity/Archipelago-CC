@@ -239,7 +239,7 @@ class MetamathWorld(World):
 
     def set_rules(self):
         """Set access rules based on proof dependencies."""
-        set_metamath_rules(self, self.proof_structure)
+        set_metamath_rules(self, self.proof_structure, self.options.entrance_rule_mode.value)
 
         # Set completion condition - require the "Proved" event for the final theorem
         final_proved = f"Proved Statement {self.num_statements}"
