@@ -14,11 +14,6 @@
           "content": [
             {
               "type": "component",
-              "componentType": "loopStatsPanel",
-              "title": "Loop Stats"
-            },
-            {
-              "type": "component",
               "componentType": "inventoryPanel",
               "title": "Inventory"
             },
@@ -31,6 +26,11 @@
               "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
+            },
+            {
+              "type": "component",
+              "componentType": "loopStatsPanel",
+              "title": "Loop Stats"
             },
             {
               "type": "component",
@@ -54,16 +54,6 @@
           "width": 35,
           "id": "middle-stack",
           "content": [
-            {
-              "type": "component",
-              "componentType": "loopsPanel",
-              "title": "Loops"
-            },
-            {
-              "type": "component",
-              "componentType": "loopsCostDebuggerPanel",
-              "title": "Loops Cost Debugger"
-            },
             {
               "type": "component",
               "componentType": "clientPanel",
@@ -180,6 +170,16 @@
               "type": "component",
               "componentType": "exitsPanel",
               "title": "Exits"
+            },
+            {
+              "type": "component",
+              "componentType": "costDebuggerPanel",
+              "title": "Cost Debugger"
+            },
+            {
+              "type": "component",
+              "componentType": "loopsPanel",
+              "title": "Loops"
             },
             {
               "type": "component",

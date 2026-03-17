@@ -144,6 +144,10 @@
       "reason": "Temporarily excluded. Same pattern as DOOM 1993 — helper references original module data (Maps.map_names) causing NameError."
     },
     {
+      "name": "Journey to Ascension.yaml",
+      "reason": "JtA is not compatible with WorldGen."
+    },
+    {
       "name": "Muse Dash.yaml",
       "reason": "Temporarily excluded. Block-bodied helper inlined into expression context causes SyntaxError."
     },

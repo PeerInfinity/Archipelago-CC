@@ -25,7 +25,8 @@ Parameters are processed during application initialization and can override conf
 | `server` | Server WebSocket URL | `?server=ws://localhost:38281` |
 | `playerName` | Player name for connection | `?playerName=Player1` |
 | `reset` | Reset to defaults | `?reset=true` |
-| `panel` | Focus specific panel(s) | `?panel=inventoryPanel,regionsPanel` |
+| `focusPanel` | Focus specific panel(s) | `?focusPanel=inventoryPanel,regionsPanel` |
+| `movePanel` | Move panel(s) to specific stack(s) | `?movePanel=loopsPanel:left-stack` |
 | `loadModule` | Load external module(s) by URL | `?loadModule=https://example.com/module/index.js` |
 
 ## Supported Parameters
@@ -216,11 +217,11 @@ These parameters control automatic connection to an Archipelago server.
 
 ### UI Parameters
 
-#### `panel`
+#### `focusPanel`
 
 **Purpose:** Focus one or more panels on application load. Supports comma-separated values to activate a panel in each stack simultaneously.
 
-**Usage:** `?panel=<componentType>` or `?panel=<type1>,<type2>,<type3>`
+**Usage:** `?focusPanel=<componentType>` or `?focusPanel=<type1>,<type2>,<type3>`
 
 **Valid Values:** The `componentType` value from any panel module. See the [Module Info Status Report](../guides/module_info_status.md) for a complete list of available panels - use the value from the `componentType` column. Multiple values are separated by commas.
 
@@ -233,16 +234,35 @@ These parameters control automatic connection to an Archipelago server.
 - `presetsPanel` - Preset selection
 
 **Examples:**
-- `?panel=inventoryPanel` - Focus the inventory panel on load
-- `?panel=clientPanel` - Focus the client/console panel on load
-- `?panel=inventoryPanel,regionsPanel` - Focus inventory and regions panels, each in its own stack
-- `?panel=loopsPanel,regionPanel,proofGraph` - Focus one panel in each of the three stacks
+- `?focusPanel=inventoryPanel` - Focus the inventory panel on load
+- `?focusPanel=clientPanel` - Focus the client/console panel on load
+- `?focusPanel=inventoryPanel,regionsPanel` - Focus inventory and regions panels, each in its own stack
+- `?focusPanel=loopsPanel,regionPanel,proofGraph` - Focus one panel in each of the three stacks
 
 **Details:**
 - The panels must be loaded in the current mode's layout to be activated
 - Activation occurs after a 1.5 second delay to allow Golden Layout to initialize
 - If a panel is in a tabbed stack, it will be brought to the front
 - Each panel is activated in whichever stack contains it (order in the URL does not matter)
+
+#### `movePanel`
+
+**Purpose:** Move one or more panels to specific layout stacks on application load. Panels are moved before `panel` activation occurs, so the two parameters can be combined.
+
+**Usage:** `?movePanel=<componentType>:<stackId>` or `?movePanel=<type1>:<stackId1>,<type2>:<stackId2>`
+
+**Valid Values:** Comma-separated pairs of `componentType:stackId`. The `componentType` is the same value used by the `focusPanel` parameter. The `stackId` is the Golden Layout stack ID from the layout preset (e.g., `left-stack`, `middle-stack`, `right-stack`).
+
+**Examples:**
+- `?movePanel=loopsPanel:left-stack` - Move the Loops panel to the left stack
+- `?movePanel=loopsPanel:left-stack,clientPanel:right-stack` - Move two panels to different stacks
+- `?movePanel=loopsPanel:middle-stack&focusPanel=loopsPanel` - Move the Loops panel to the middle stack and activate it
+
+**Details:**
+- Moves are processed before `focusPanel` activations, so both parameters work together
+- If the panel is already in the target stack, it is simply activated
+- The stack IDs correspond to the `id` fields in the layout preset configuration (`frontend/layout-configs/layout_presets.json`)
+- Uses Golden Layout's internal reparenting mechanism (the same approach used by drag/drop)
 
 #### `loadModule`
 
@@ -379,7 +399,7 @@ URL parameters are processed in multiple locations during initialization:
 |------|---------------------|
 | `frontend/app/mode/modeManager.js` | `mode`, `reset` |
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
-| `frontend/app/initialization/index.js` | `mode`, `panel`, `loadModule` |
+| `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
 | `frontend/modules/window-base/windowClient.js` | `windowId`, `windowName`, `heartbeatInterval` |
 | `frontend/modules/iframe-base/iframeClient.js` | `iframeId`, `iframeName`, `heartbeatInterval` |

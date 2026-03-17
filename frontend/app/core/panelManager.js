@@ -81,6 +81,17 @@ class PanelManager {
         }
       }, 'panelManager');
 
+      // Subscribe to ui:movePanel event
+      eventBus.subscribe('ui:movePanel', (payload) => {
+        if (payload && payload.componentType && payload.targetStackId) {
+          log(
+            'info',
+            `[PanelManager] Received ui:movePanel for ${payload.componentType} -> ${payload.targetStackId}`
+          );
+          this.movePanel(payload.componentType, payload.targetStackId);
+        }
+      }, 'panelManager');
+
       // Attempt to populate panelMap from existing items
       if (
         this.goldenLayout &&
@@ -1236,6 +1247,64 @@ class PanelManager {
       }
     }
     return stacks;
+  }
+
+  /**
+   * Move an existing panel to a different stack, identified by its Golden Layout ID
+   * (e.g., 'left-stack', 'middle-stack', 'right-stack').
+   *
+   * Uses the same removeChild(item, true) + addChild(item) reparenting pattern
+   * that Golden Layout's own drag/drop system uses internally.
+   *
+   * @param {string} componentType - The component type to move (e.g., 'loopsPanel').
+   * @param {string} targetStackId - The ID of the target stack (e.g., 'left-stack').
+   * @returns {boolean} True if the panel was moved successfully.
+   */
+  movePanel(componentType, targetStackId) {
+    if (!this.goldenLayout || !this.goldenLayout.isInitialised || !this.goldenLayout.root) {
+      log('warn', `[PanelManager movePanel] Cannot move panel — GoldenLayout not ready.`);
+      return false;
+    }
+
+    // Find the component item
+    const allItems = this.goldenLayout.getAllContentItems ? this.goldenLayout.getAllContentItems() : [];
+    const componentItem = allItems.find(
+      item => item.isComponent && item.container && item.container.componentType === componentType
+    );
+    if (!componentItem) {
+      log('warn', `[PanelManager movePanel] Component "${componentType}" not found in layout.`);
+      return false;
+    }
+
+    // Find the target stack by ID
+    const targetStack = this.findItemByIdRecursive(this.goldenLayout.root, targetStackId);
+    if (!targetStack || !targetStack.isStack) {
+      log('warn', `[PanelManager movePanel] Target stack "${targetStackId}" not found.`);
+      return false;
+    }
+
+    // Check if already in the target stack
+    const sourceStack = componentItem.parent;
+    if (sourceStack === targetStack) {
+      log('info', `[PanelManager movePanel] "${componentType}" is already in "${targetStackId}", activating.`);
+      if (typeof targetStack.setActiveComponentItem === 'function') {
+        targetStack.setActiveComponentItem(componentItem, true);
+      }
+      return true;
+    }
+
+    // Reparent: remove from source without destroying, add to target
+    log('info', `[PanelManager movePanel] Moving "${componentType}" from stack "${sourceStack.id || '?'}" to "${targetStackId}".`);
+    sourceStack.removeChild(componentItem, true);
+    targetStack.addChild(componentItem);
+
+    // Activate the moved panel in its new stack
+    if (typeof targetStack.setActiveComponentItem === 'function') {
+      targetStack.setActiveComponentItem(componentItem, true);
+    }
+
+    log('info', `[PanelManager movePanel] Successfully moved "${componentType}" to "${targetStackId}".`);
+    return true;
   }
 
   /**
