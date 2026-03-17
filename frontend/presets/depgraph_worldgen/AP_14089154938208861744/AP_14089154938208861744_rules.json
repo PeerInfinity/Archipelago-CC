@@ -74,16 +74,12 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "CSS",
                   "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
                   "Event: JavaScript Basics",
-                  "Event: Server Basics",
-                  "Git",
-                  "JavaScript Basics",
-                  "Server Basics"
+                  "Event: Server Basics"
                 ]
               }
             }
@@ -101,16 +97,12 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "CSS",
-                  "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
                   "Event: JavaScript Basics",
                   "Event: Server Basics",
-                  "Git",
-                  "JavaScript Basics",
-                  "Server Basics"
+                  "Git"
                 ]
               }
             }
@@ -124,7 +116,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "JavaScript Basics",
+              "name": "Express APIs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -221,15 +213,11 @@
               "args": {
                 "items": [
                   "CSS",
-                  "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
                   "Event: JavaScript Basics",
-                  "Event: Server Basics",
-                  "Git",
-                  "JavaScript Basics",
-                  "Server Basics"
+                  "Event: Server Basics"
                 ]
               }
             }
@@ -243,7 +231,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Custom State System",
+              "name": "JavaScript Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -279,8 +267,7 @@
                 "items": [
                   "Design Systems",
                   "Event: Design Systems",
-                  "Event: Static Website Complete",
-                  "Static Website Complete"
+                  "Event: Static Website Complete"
                 ]
               }
             }
@@ -294,7 +281,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Flask APIs",
+              "name": "Full-Stack Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -354,16 +341,12 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "CSS",
-                  "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
                   "Event: JavaScript Basics",
                   "Event: Server Basics",
-                  "Git",
-                  "JavaScript Basics",
-                  "Server Basics"
+                  "JavaScript Basics"
                 ]
               }
             }
@@ -377,7 +360,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "HTML",
+              "name": "PostgreSQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -413,8 +396,7 @@
                 "items": [
                   "Algorithms",
                   "Event: Algorithms",
-                  "Event: Static Website Complete",
-                  "Static Website Complete"
+                  "Event: Static Website Complete"
                 ]
               }
             }
@@ -428,7 +410,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Algorithms",
+              "name": "Cloud Provider",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -464,8 +446,7 @@
                 "items": [
                   "DOM Manipulation",
                   "Event: DOM Manipulation",
-                  "Event: Static Website Complete",
-                  "Static Website Complete"
+                  "Event: Static Website Complete"
                 ]
               }
             }
@@ -479,7 +460,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "HTTP Basics",
+              "name": "Interactive App Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -514,7 +495,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Design Systems",
+              "name": "Django APIs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -561,15 +542,11 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "CSS",
-                  "Command Line",
                   "Event: CSS",
                   "Event: Command Line",
                   "Event: Git",
                   "Event: JavaScript Basics",
                   "Event: Server Basics",
-                  "Git",
-                  "JavaScript Basics",
                   "Server Basics"
                 ]
               }
@@ -584,7 +561,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Git",
+              "name": "HTML",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -620,8 +597,7 @@
                 "items": [
                   "Event: HTTP Basics",
                   "Event: Interactive App Complete",
-                  "HTTP Basics",
-                  "Interactive App Complete"
+                  "HTTP Basics"
                 ]
               }
             }
@@ -635,7 +611,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "CSS",
+              "name": "Static Website Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -721,7 +697,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "DOM Manipulation",
                   "Event: DOM Manipulation",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -749,7 +724,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Design Systems",
                   "Event: Design Systems",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -764,7 +738,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Algorithms",
                   "Event: Algorithms",
                   "Event: Static Website Complete",
                   "Static Website Complete"
@@ -794,7 +767,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Static Website Complete",
+              "name": "Horizontal Scaling",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -843,7 +816,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "MongoDB Basics",
+              "name": "Accessibility",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -892,7 +865,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vanilla JS Mastery",
+              "name": "Integration Tests",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -926,8 +899,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
                   "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
@@ -937,13 +908,7 @@
                   "Event: Redux",
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
-                  "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "Event: Vuex"
                 ]
               }
             }
@@ -957,7 +922,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "DOM Manipulation",
+              "name": "Caching",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1006,7 +971,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "SQL",
+              "name": "Package Managers",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1055,7 +1020,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Django ORM",
+              "name": "NoSQL Indexing",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1089,9 +1054,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1101,12 +1063,7 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "Express DB Integration"
                 ]
               }
             }
@@ -1120,7 +1077,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vuex",
+              "name": "CSS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1169,7 +1126,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Express APIs",
+              "name": "JWT",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1218,7 +1175,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "UI/UX",
+              "name": "Responsive Design",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1252,9 +1209,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1264,12 +1218,7 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "SQLAlchemy"
                 ]
               }
             }
@@ -1283,7 +1232,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vue Mastery",
+              "name": "HTTPS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1332,7 +1281,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Redux",
+              "name": "React Mastery",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1381,7 +1330,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Accessibility",
+              "name": "Sessions",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1415,9 +1364,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1427,12 +1373,7 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "NoSQL Indexing"
                 ]
               }
             }
@@ -1446,7 +1387,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Django APIs",
+              "name": "Vue Mastery",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1544,7 +1485,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "React Mastery",
+              "name": "UI/UX",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1578,9 +1519,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1590,12 +1528,7 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "Redux"
                 ]
               }
             }
@@ -1609,7 +1542,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "SQL Optimization",
+              "name": "Express",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1658,7 +1591,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Interactive App Complete",
+              "name": "NoSQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1707,7 +1640,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "NoSQL",
+              "name": "MongoDB Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1741,9 +1674,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1753,12 +1683,7 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "SQL Optimization"
                 ]
               }
             }
@@ -1821,7 +1746,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "SQLAlchemy",
+              "name": "Vue",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1870,7 +1795,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Responsive Design",
+              "name": "Performance",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1905,8 +1830,6 @@
               "args": {
                 "items": [
                   "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -1915,13 +1838,7 @@
                   "Event: Redux",
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
-                  "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "Event: Vuex"
                 ]
               }
             }
@@ -1935,7 +1852,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "NoSQL Indexing",
+              "name": "Security Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1984,7 +1901,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vue",
+              "name": "Vanilla JS Mastery",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2018,9 +1935,7 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
                   "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -2029,13 +1944,7 @@
                   "Event: Redux",
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
-                  "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
-                  "Vuex"
+                  "Event: Vuex"
                 ]
               }
             }
@@ -2049,7 +1958,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Express DB Integration",
+              "name": "SQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2147,7 +2056,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "PostgreSQL",
+              "name": "Custom State System",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2181,9 +2090,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Accessibility",
-                  "Custom State System",
-                  "Django ORM",
                   "Event: Accessibility",
                   "Event: Custom State System",
                   "Event: Django ORM",
@@ -2193,11 +2099,6 @@
                   "Event: SQL Optimization",
                   "Event: SQLAlchemy",
                   "Event: Vuex",
-                  "Express DB Integration",
-                  "NoSQL Indexing",
-                  "Redux",
-                  "SQL Optimization",
-                  "SQLAlchemy",
                   "Vuex"
                 ]
               }
@@ -2212,7 +2113,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Express",
+              "name": "Flask APIs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2274,7 +2175,6 @@
                 "items": [
                   "Event: HTTP Basics",
                   "Event: Interactive App Complete",
-                  "HTTP Basics",
                   "Interactive App Complete"
                 ]
               }
@@ -2302,7 +2202,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Caching",
+              "name": "CI/CD",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2351,7 +2251,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Docker",
+              "name": "Redux",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2400,7 +2300,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sessions",
+              "name": "Scaling Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2449,7 +2349,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Unit Tests",
+              "name": "Algorithms",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2498,7 +2398,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "JWT",
+              "name": "Express DB Integration",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2532,14 +2432,11 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Authentication",
-                  "DevOps",
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
                   "Event: Testing",
-                  "Performance",
-                  "Testing"
+                  "Performance"
                 ]
               }
             }
@@ -2553,7 +2450,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cloud Provider",
+              "name": "Unit Tests",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2587,14 +2484,11 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Authentication",
                   "DevOps",
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
-                  "Event: Testing",
-                  "Performance",
-                  "Testing"
+                  "Event: Testing"
                 ]
               }
             }
@@ -2608,7 +2502,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "DevOps",
+              "name": "CDN",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2657,7 +2551,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Integration Tests",
+              "name": "Docker",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2706,7 +2600,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Testing",
+              "name": "Design Systems",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2741,13 +2635,10 @@
               "args": {
                 "items": [
                   "Authentication",
-                  "DevOps",
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
-                  "Event: Testing",
-                  "Performance",
-                  "Testing"
+                  "Event: Testing"
                 ]
               }
             }
@@ -2761,7 +2652,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Performance",
+              "name": "HTTP Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2810,7 +2701,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Authentication",
+              "name": "CORS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2859,7 +2750,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "CI/CD",
+              "name": "Production Deployment",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2893,13 +2784,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Authentication",
-                  "DevOps",
                   "Event: Authentication",
                   "Event: DevOps",
                   "Event: Performance",
                   "Event: Testing",
-                  "Performance",
                   "Testing"
                 ]
               }
@@ -2914,7 +2802,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "CDN",
+              "name": "DevOps",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2989,7 +2877,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Full-Stack Complete",
+              "name": "DOM Manipulation",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3038,7 +2926,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "HTTPS",
+              "name": "SQL Optimization",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3074,8 +2962,7 @@
                 "items": [
                   "Domain",
                   "Event: Domain",
-                  "Event: HTTPS",
-                  "HTTPS"
+                  "Event: HTTPS"
                 ]
               }
             }
@@ -3089,7 +2976,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "CORS",
+              "name": "Authentication",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3138,7 +3025,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Deployment Complete",
+              "name": "Git",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3185,7 +3072,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Domain",
                   "Event: Domain",
                   "Event: HTTPS",
                   "HTTPS"
@@ -3202,7 +3088,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Scaling Complete",
+              "name": "SQLAlchemy",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3251,7 +3137,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Package Managers",
+              "name": "Testing",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3285,11 +3171,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Deployment Complete",
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
                   "Event: Security Complete",
-                  "Scaling Complete",
                   "Security Complete"
                 ]
               }
@@ -3304,7 +3188,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Horizontal Scaling",
+              "name": "Deployment Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3338,12 +3222,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Deployment Complete",
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
                   "Event: Security Complete",
-                  "Scaling Complete",
-                  "Security Complete"
+                  "Scaling Complete"
                 ]
               }
             }
@@ -3394,9 +3276,7 @@
                   "Deployment Complete",
                   "Event: Deployment Complete",
                   "Event: Scaling Complete",
-                  "Event: Security Complete",
-                  "Scaling Complete",
-                  "Security Complete"
+                  "Event: Security Complete"
                 ]
               }
             }
@@ -3410,7 +3290,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Security Complete",
+              "name": "Vuex",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3445,7 +3325,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Production Deployment",
+              "name": "Django ORM",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5465,6 +5345,7 @@
       "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "graph_file": 4,
         "item_links": [],
@@ -5491,6 +5372,17 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "graph_file": {
           "type": "choice",

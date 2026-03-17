@@ -79,11 +79,7 @@
                   "Completed Node 2",
                   "Completed Node 4",
                   "Completed Node 6",
-                  "Node 1",
-                  "Node 10",
-                  "Node 2",
-                  "Node 4",
-                  "Node 6"
+                  "Node 1"
                 ]
               }
             }
@@ -106,11 +102,7 @@
                   "Completed Node 2",
                   "Completed Node 4",
                   "Completed Node 6",
-                  "Node 1",
-                  "Node 10",
-                  "Node 2",
-                  "Node 4",
-                  "Node 6"
+                  "Node 2"
                 ]
               }
             }
@@ -225,11 +217,7 @@
                   "Completed Node 2",
                   "Completed Node 4",
                   "Completed Node 6",
-                  "Node 1",
-                  "Node 10",
-                  "Node 2",
-                  "Node 4",
-                  "Node 6"
+                  "Node 4"
                 ]
               }
             }
@@ -279,7 +267,6 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 5",
-                  "Node 12",
                   "Node 5"
                 ]
               }
@@ -359,10 +346,6 @@
                   "Completed Node 2",
                   "Completed Node 4",
                   "Completed Node 6",
-                  "Node 1",
-                  "Node 10",
-                  "Node 2",
-                  "Node 4",
                   "Node 6"
                 ]
               }
@@ -413,7 +396,6 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 7",
-                  "Node 12",
                   "Node 7"
                 ]
               }
@@ -464,7 +446,6 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 8",
-                  "Node 12",
                   "Node 8"
                 ]
               }
@@ -566,11 +547,7 @@
                   "Completed Node 2",
                   "Completed Node 4",
                   "Completed Node 6",
-                  "Node 1",
-                  "Node 10",
-                  "Node 2",
-                  "Node 4",
-                  "Node 6"
+                  "Node 10"
                 ]
               }
             }
@@ -620,8 +597,7 @@
                 "items": [
                   "Completed Node 11",
                   "Completed Node 39",
-                  "Node 11",
-                  "Node 39"
+                  "Node 11"
                 ]
               }
             }
@@ -723,8 +699,7 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 8",
-                  "Node 12",
-                  "Node 8"
+                  "Node 12"
                 ]
               }
             }
@@ -751,8 +726,7 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 5",
-                  "Node 12",
-                  "Node 5"
+                  "Node 12"
                 ]
               }
             }
@@ -766,8 +740,7 @@
                 "items": [
                   "Completed Node 12",
                   "Completed Node 7",
-                  "Node 12",
-                  "Node 7"
+                  "Node 12"
                 ]
               }
             }
@@ -935,15 +908,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 15"
                 ]
               }
             }
@@ -1098,15 +1063,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 18"
                 ]
               }
             }
@@ -1261,15 +1218,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 21"
                 ]
               }
             }
@@ -1424,15 +1373,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 24"
                 ]
               }
             }
@@ -1587,15 +1528,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 27"
                 ]
               }
             }
@@ -1750,15 +1683,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 30"
                 ]
               }
             }
@@ -1913,15 +1838,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 33"
                 ]
               }
             }
@@ -2027,15 +1944,7 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
-                  "Node 38"
+                  "Node 35"
                 ]
               }
             }
@@ -2190,14 +2099,6 @@
                   "Completed Node 33",
                   "Completed Node 35",
                   "Completed Node 38",
-                  "Node 15",
-                  "Node 18",
-                  "Node 21",
-                  "Node 24",
-                  "Node 27",
-                  "Node 30",
-                  "Node 33",
-                  "Node 35",
                   "Node 38"
                 ]
               }
@@ -2274,7 +2175,6 @@
                 "items": [
                   "Completed Node 11",
                   "Completed Node 39",
-                  "Node 11",
                   "Node 39"
                 ]
               }
@@ -2536,10 +2436,7 @@
                   "Completed Node 45",
                   "Completed Node 48",
                   "Completed Node 51",
-                  "Node 44",
-                  "Node 45",
-                  "Node 48",
-                  "Node 51"
+                  "Node 44"
                 ]
               }
             }
@@ -2591,10 +2488,7 @@
                   "Completed Node 45",
                   "Completed Node 48",
                   "Completed Node 51",
-                  "Node 44",
-                  "Node 45",
-                  "Node 48",
-                  "Node 51"
+                  "Node 45"
                 ]
               }
             }
@@ -2744,10 +2638,7 @@
                   "Completed Node 45",
                   "Completed Node 48",
                   "Completed Node 51",
-                  "Node 44",
-                  "Node 45",
-                  "Node 48",
-                  "Node 51"
+                  "Node 48"
                 ]
               }
             }
@@ -2897,9 +2788,6 @@
                   "Completed Node 45",
                   "Completed Node 48",
                   "Completed Node 51",
-                  "Node 44",
-                  "Node 45",
-                  "Node 48",
                   "Node 51"
                 ]
               }
@@ -3074,8 +2962,7 @@
                 "items": [
                   "Completed Node 54",
                   "Completed Node 56",
-                  "Node 54",
-                  "Node 56"
+                  "Node 54"
                 ]
               }
             }
@@ -3187,7 +3074,6 @@
                 "items": [
                   "Completed Node 54",
                   "Completed Node 56",
-                  "Node 54",
                   "Node 56"
                 ]
               }
@@ -3288,9 +3174,7 @@
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
-                  "Node 58",
-                  "Node 59",
-                  "Node 60"
+                  "Node 58"
                 ]
               }
             }
@@ -3341,9 +3225,7 @@
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
-                  "Node 58",
-                  "Node 59",
-                  "Node 60"
+                  "Node 59"
                 ]
               }
             }
@@ -3394,8 +3276,6 @@
                   "Completed Node 58",
                   "Completed Node 59",
                   "Completed Node 60",
-                  "Node 58",
-                  "Node 59",
                   "Node 60"
                 ]
               }
@@ -5462,6 +5342,7 @@
       "world_class_name": "DepGraphWorld",
       "options": {
         "accessibility": 2,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "graph_file": 4,
         "item_links": [],
@@ -5487,6 +5368,17 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "graph_file": {
           "type": "choice",

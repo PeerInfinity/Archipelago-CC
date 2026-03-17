@@ -63,8 +63,7 @@
                 "items": [
                   "Proved Statement 1",
                   "Proved Statement 2",
-                  "Statement 1",
-                  "Statement 2"
+                  "Statement 1"
                 ]
               }
             }
@@ -84,7 +83,6 @@
                 "items": [
                   "Proved Statement 1",
                   "Proved Statement 2",
-                  "Statement 1",
                   "Statement 2"
                 ]
               }
@@ -136,9 +134,7 @@
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
-                  "Statement 3",
-                  "Statement 6",
-                  "Statement 7"
+                  "Statement 3"
                 ]
               }
             }
@@ -250,7 +246,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 6",
+              "name": "Statement 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -287,9 +283,7 @@
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
-                  "Statement 3",
-                  "Statement 6",
-                  "Statement 7"
+                  "Statement 6"
                 ]
               }
             }
@@ -340,8 +334,6 @@
                   "Proved Statement 3",
                   "Proved Statement 6",
                   "Proved Statement 7",
-                  "Statement 3",
-                  "Statement 6",
                   "Statement 7"
                 ]
               }
@@ -356,7 +348,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -392,8 +384,7 @@
                 "items": [
                   "Proved Statement 8",
                   "Proved Statement 9",
-                  "Statement 8",
-                  "Statement 9"
+                  "Statement 8"
                 ]
               }
             }
@@ -443,7 +434,6 @@
                 "items": [
                   "Proved Statement 8",
                   "Proved Statement 9",
-                  "Statement 8",
                   "Statement 9"
                 ]
               }
@@ -458,7 +448,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 9",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1797,6 +1787,7 @@
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1827,6 +1818,17 @@
           "type": "toggle",
           "default": true,
           "display_name": "Auto-Download Database"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "progression_balancing": {
           "type": "range",

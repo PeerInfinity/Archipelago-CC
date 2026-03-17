@@ -27,6 +27,15 @@ class UseCanonicalOptions(Toggle):
     display_name = "Use Canonical Options"
     default = True
 
+class EntranceRuleMode(Choice):
+    """Option for Entrance Rule Mode."""
+    display_name = "Entrance Rule Mode"
+    option_strict = 0
+    option_relaxed_items = 1
+    option_relaxed_events = 2
+    option_fully_relaxed = 3
+    default = 1
+
 class GraphFile(Choice):
     """Option for Graph File."""
     display_name = "Graph File"
@@ -60,6 +69,7 @@ class DepGraphWorldGenOptions(PerGameCommonOptions):
     """Options for DepGraph WorldGen."""
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
+    entrance_rule_mode: EntranceRuleMode
     graph_file: GraphFile
     randomize_starting_nodes: RandomizeStartingNodes
     starting_nodes: StartingNodes

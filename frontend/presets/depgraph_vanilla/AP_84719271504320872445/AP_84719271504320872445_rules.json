@@ -116,8 +116,7 @@
                 "items": [
                   "Completed Node 3",
                   "Completed Node 5",
-                  "Node 3",
-                  "Node 5"
+                  "Node 3"
                 ]
               }
             }
@@ -216,7 +215,6 @@
                 "items": [
                   "Completed Node 3",
                   "Completed Node 5",
-                  "Node 3",
                   "Node 5"
                 ]
               }
@@ -329,8 +327,7 @@
                 "items": [
                   "Completed Node 7",
                   "Completed Node 8",
-                  "Node 7",
-                  "Node 8"
+                  "Node 7"
                 ]
               }
             }
@@ -380,7 +377,6 @@
                 "items": [
                   "Completed Node 7",
                   "Completed Node 8",
-                  "Node 7",
                   "Node 8"
                 ]
               }
@@ -1782,6 +1778,7 @@
       "world_class_name": "DepGraphWorld",
       "options": {
         "accessibility": 2,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "graph_file": 0,
         "item_links": [],
@@ -1807,6 +1804,17 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "graph_file": {
           "type": "choice",

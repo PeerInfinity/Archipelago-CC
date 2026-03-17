@@ -32,6 +32,15 @@ class AutoDownloadDatabase(Toggle):
     display_name = "Auto-Download Database"
     default = True
 
+class EntranceRuleMode(Choice):
+    """Option for Entrance Rule Mode."""
+    display_name = "Entrance Rule Mode"
+    option_strict = 0
+    option_relaxed_items = 1
+    option_relaxed_events = 2
+    option_fully_relaxed = 3
+    default = 1
+
 class RandomizeStartingStatements(Toggle):
     """Option for Randomize Starting Statements."""
     display_name = "Randomize Starting Statements"
@@ -85,6 +94,7 @@ class MetamathWorldGenOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
     auto_download_database: AutoDownloadDatabase
+    entrance_rule_mode: EntranceRuleMode
     randomize_starting_statements: RandomizeStartingStatements
     starting_statements: StartingStatements
     theorem: Theorem

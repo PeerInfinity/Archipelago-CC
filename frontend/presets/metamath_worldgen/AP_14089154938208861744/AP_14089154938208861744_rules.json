@@ -63,8 +63,7 @@
                 "items": [
                   "2cn: |- 2 e. CC",
                   "Axiom ax-1cn: |- 1 e. CC",
-                  "Given 2cn: |- 2 e. CC",
-                  "ax-1cn: |- 1 e. CC"
+                  "Given 2cn: |- 2 e. CC"
                 ]
               }
             }
@@ -82,7 +81,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "2cn: |- 2 e. CC",
                   "Axiom ax-1cn: |- 1 e. CC",
                   "Given 2cn: |- 2 e. CC",
                   "ax-1cn: |- 1 e. CC"
@@ -136,9 +134,7 @@
                   "Definition df-4: |- 4 = ( 3 + 1 )",
                   "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
                   "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "df-4: |- 4 = ( 3 + 1 )",
-                  "oveq1i: |- ( A F C ) = ( B F C )"
+                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"
                 ]
               }
             }
@@ -152,7 +148,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "3eqtri: |- A = D",
+              "name": "eqtr4i: |- A = C",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -201,7 +197,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-4: |- 4 = ( 3 + 1 )",
+              "name": "oveq1i: |- ( A F C ) = ( B F C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -250,7 +246,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "oveq1i: |- ( A F C ) = ( B F C )",
+              "name": "df-2: |- 2 = ( 1 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -287,9 +283,7 @@
                   "Definition df-4: |- 4 = ( 3 + 1 )",
                   "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
                   "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "df-4: |- 4 = ( 3 + 1 )",
-                  "oveq1i: |- ( A F C ) = ( B F C )"
+                  "df-4: |- 4 = ( 3 + 1 )"
                 ]
               }
             }
@@ -340,8 +334,6 @@
                   "Definition df-4: |- 4 = ( 3 + 1 )",
                   "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
                   "Proved oveq1i: |- ( A F C ) = ( B F C )",
-                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-                  "df-4: |- 4 = ( 3 + 1 )",
                   "oveq1i: |- ( A F C ) = ( B F C )"
                 ]
               }
@@ -356,7 +348,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "df-2: |- 2 = ( 1 + 1 )",
+              "name": "3eqtri: |- A = D",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -392,8 +384,7 @@
                 "items": [
                   "3eqtri: |- A = D",
                   "Proved 3eqtri: |- A = D",
-                  "Proved oveq2i: |- ( C F A ) = ( C F B )",
-                  "oveq2i: |- ( C F A ) = ( C F B )"
+                  "Proved oveq2i: |- ( C F A ) = ( C F B )"
                 ]
               }
             }
@@ -407,7 +398,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "oveq2i: |- ( C F A ) = ( C F B )",
+              "name": "df-4: |- 4 = ( 3 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -441,7 +432,6 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "3eqtri: |- A = D",
                   "Proved 3eqtri: |- A = D",
                   "Proved oveq2i: |- ( C F A ) = ( C F B )",
                   "oveq2i: |- ( C F A ) = ( C F B )"
@@ -458,7 +448,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+              "name": "oveq2i: |- ( C F A ) = ( C F B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -493,7 +483,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "eqtr4i: |- A = C",
+              "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1818,6 +1808,7 @@
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1849,6 +1840,17 @@
           "type": "toggle",
           "default": true,
           "display_name": "Auto-Download Database"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "progression_balancing": {
           "type": "range",

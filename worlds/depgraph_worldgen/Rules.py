@@ -27,12 +27,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From command_line to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line', 'Server Basics', 'Git', 'CSS', 'JavaScript Basics')
+        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line')
     )
 
     world.set_rule(
         multiworld.get_entrance("From git to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line', 'Server Basics', 'Git', 'CSS', 'JavaScript Basics')
+        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Git')
     )
 
     world.set_rule(
@@ -47,12 +47,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From css to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line', 'Server Basics', 'Git', 'CSS', 'JavaScript Basics')
+        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'CSS')
     )
 
     world.set_rule(
         multiworld.get_entrance("From design_systems to ui_ux", player),
-        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Static Website Complete', 'Design Systems')
+        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Design Systems')
     )
 
     world.set_rule(
@@ -67,17 +67,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From javascript to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line', 'Server Basics', 'Git', 'CSS', 'JavaScript Basics')
+        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'JavaScript Basics')
     )
 
     world.set_rule(
         multiworld.get_entrance("From algorithms to vanilla_js", player),
-        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Static Website Complete', 'Algorithms')
+        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Algorithms')
     )
 
     world.set_rule(
         multiworld.get_entrance("From dom_manipulation to react", player),
-        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'Static Website Complete', 'DOM Manipulation')
+        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'DOM Manipulation')
     )
 
     world.set_rule(
@@ -87,12 +87,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From server_basics to static_website", player),
-        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Command Line', 'Server Basics', 'Git', 'CSS', 'JavaScript Basics')
+        HasAll('Event: Command Line', 'Event: Server Basics', 'Event: Git', 'Event: CSS', 'Event: JavaScript Basics', 'Server Basics')
     )
 
     world.set_rule(
         multiworld.get_entrance("From http_basics to sessions", player),
-        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'HTTP Basics', 'Interactive App Complete')
+        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'HTTP Basics')
     )
 
     world.set_rule(
@@ -117,7 +117,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From static_website to react", player),
-        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'Static Website Complete', 'DOM Manipulation')
+        HasAll('Event: Static Website Complete', 'Event: DOM Manipulation', 'Static Website Complete')
     )
 
     world.set_rule(
@@ -127,12 +127,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From static_website to ui_ux", player),
-        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Static Website Complete', 'Design Systems')
+        HasAll('Event: Static Website Complete', 'Event: Design Systems', 'Static Website Complete')
     )
 
     world.set_rule(
         multiworld.get_entrance("From static_website to vanilla_js", player),
-        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Static Website Complete', 'Algorithms')
+        HasAll('Event: Static Website Complete', 'Event: Algorithms', 'Static Website Complete')
     )
 
     world.set_rule(
@@ -152,7 +152,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From django_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM')
     )
 
     world.set_rule(
@@ -167,7 +167,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From express_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Express DB Integration')
     )
 
     world.set_rule(
@@ -182,7 +182,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From flask_db to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'SQLAlchemy')
     )
 
     world.set_rule(
@@ -197,7 +197,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From nosql_indexing to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'NoSQL Indexing')
     )
 
     world.set_rule(
@@ -212,7 +212,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From redux to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Redux')
     )
 
     world.set_rule(
@@ -227,7 +227,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From sql_optimization to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'SQL Optimization')
     )
 
     world.set_rule(
@@ -242,7 +242,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From accessibility to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Accessibility')
     )
 
     world.set_rule(
@@ -252,7 +252,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From custom_state to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Custom State System')
     )
 
     world.set_rule(
@@ -267,7 +267,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From vuex to interactive_app", player),
-        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Django ORM', 'Express DB Integration', 'SQLAlchemy', 'NoSQL Indexing', 'Redux', 'SQL Optimization', 'Accessibility', 'Custom State System', 'Vuex')
+        HasAll('Event: Django ORM', 'Event: Express DB Integration', 'Event: SQLAlchemy', 'Event: NoSQL Indexing', 'Event: Redux', 'Event: SQL Optimization', 'Event: Accessibility', 'Event: Custom State System', 'Event: Vuex', 'Vuex')
     )
 
     world.set_rule(
@@ -282,7 +282,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From interactive_app to sessions", player),
-        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'HTTP Basics', 'Interactive App Complete')
+        HasAll('Event: HTTP Basics', 'Event: Interactive App Complete', 'Interactive App Complete')
     )
 
     world.set_rule(
@@ -312,12 +312,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From load_balancing to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance', 'DevOps', 'Authentication', 'Testing')
+        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance')
     )
 
     world.set_rule(
         multiworld.get_entrance("From monitoring to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance', 'DevOps', 'Authentication', 'Testing')
+        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'DevOps')
     )
 
     world.set_rule(
@@ -332,7 +332,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From oauth to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance', 'DevOps', 'Authentication', 'Testing')
+        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Authentication')
     )
 
     world.set_rule(
@@ -347,7 +347,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From e2e_tests to fullstack", player),
-        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Performance', 'DevOps', 'Authentication', 'Testing')
+        HasAll('Event: Performance', 'Event: DevOps', 'Event: Authentication', 'Event: Testing', 'Testing')
     )
 
     world.set_rule(
@@ -372,7 +372,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From domain_setup to ssl_certificate", player),
-        HasAll('Event: Domain', 'Event: HTTPS', 'Domain', 'HTTPS')
+        HasAll('Event: Domain', 'Event: HTTPS', 'Domain')
     )
 
     world.set_rule(
@@ -387,7 +387,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From https to ssl_certificate", player),
-        HasAll('Event: Domain', 'Event: HTTPS', 'Domain', 'HTTPS')
+        HasAll('Event: Domain', 'Event: HTTPS', 'HTTPS')
     )
 
     world.set_rule(
@@ -397,15 +397,15 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("From input_validation to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Security Complete', 'Scaling Complete', 'Deployment Complete')
+        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Security Complete')
     )
 
     world.set_rule(
         multiworld.get_entrance("From microservices to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Security Complete', 'Scaling Complete', 'Deployment Complete')
+        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Scaling Complete')
     )
 
     world.set_rule(
         multiworld.get_entrance("From ssl_certificate to production", player),
-        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Security Complete', 'Scaling Complete', 'Deployment Complete')
+        HasAll('Event: Security Complete', 'Event: Scaling Complete', 'Event: Deployment Complete', 'Deployment Complete')
     )

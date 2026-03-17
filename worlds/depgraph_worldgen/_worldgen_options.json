@@ -1,5 +1,6 @@
 {
   "accessibility": 0,
+  "entrance_rule_mode": 1,
   "exclude_locations": [],
   "graph_file": 4,
   "item_links": [],

@@ -155,9 +155,7 @@
                   "Proved Statement 1",
                   "Proved Statement 23",
                   "Proved Statement 4",
-                  "Statement 1",
-                  "Statement 23",
-                  "Statement 4"
+                  "Statement 1"
                 ]
               }
             }
@@ -176,7 +174,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 16",
+              "name": "Statement 9",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -261,8 +259,7 @@
                 "items": [
                   "Proved Statement 4",
                   "Proved Statement 7",
-                  "Statement 4",
-                  "Statement 7"
+                  "Statement 4"
                 ]
               }
             }
@@ -277,8 +274,6 @@
                   "Proved Statement 1",
                   "Proved Statement 23",
                   "Proved Statement 4",
-                  "Statement 1",
-                  "Statement 23",
                   "Statement 4"
                 ]
               }
@@ -293,7 +288,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 8",
+              "name": "Statement 17",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -363,7 +358,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 20",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -412,7 +407,6 @@
                 "items": [
                   "Proved Statement 4",
                   "Proved Statement 7",
-                  "Statement 4",
                   "Statement 7"
                 ]
               }
@@ -464,8 +458,6 @@
                   "Proved Statement 10",
                   "Proved Statement 12",
                   "Proved Statement 8",
-                  "Statement 10",
-                  "Statement 12",
                   "Statement 8"
                 ]
               }
@@ -552,9 +544,7 @@
                   "Proved Statement 10",
                   "Proved Statement 12",
                   "Proved Statement 8",
-                  "Statement 10",
-                  "Statement 12",
-                  "Statement 8"
+                  "Statement 10"
                 ]
               }
             }
@@ -605,9 +595,7 @@
                   "Proved Statement 11",
                   "Proved Statement 14",
                   "Proved Statement 23",
-                  "Statement 11",
-                  "Statement 14",
-                  "Statement 23"
+                  "Statement 11"
                 ]
               }
             }
@@ -658,9 +646,7 @@
                   "Proved Statement 10",
                   "Proved Statement 12",
                   "Proved Statement 8",
-                  "Statement 10",
-                  "Statement 12",
-                  "Statement 8"
+                  "Statement 12"
                 ]
               }
             }
@@ -773,9 +759,7 @@
                   "Proved Statement 11",
                   "Proved Statement 14",
                   "Proved Statement 23",
-                  "Statement 11",
-                  "Statement 14",
-                  "Statement 23"
+                  "Statement 14"
                 ]
               }
             }
@@ -838,7 +822,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 36",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -887,7 +871,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 34",
+              "name": "Statement 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1006,7 +990,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 10",
+              "name": "Statement 36",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1042,8 +1026,7 @@
                 "items": [
                   "Proved Statement 20",
                   "Proved Statement 32",
-                  "Statement 20",
-                  "Statement 32"
+                  "Statement 20"
                 ]
               }
             }
@@ -1094,9 +1077,7 @@
                   "Proved Statement 21",
                   "Proved Statement 30",
                   "Proved Statement 31",
-                  "Statement 21",
-                  "Statement 30",
-                  "Statement 31"
+                  "Statement 21"
                 ]
               }
             }
@@ -1110,7 +1091,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 20",
+              "name": "Statement 16",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1146,8 +1127,7 @@
                 "items": [
                   "Proved Statement 22",
                   "Proved Statement 25",
-                  "Statement 22",
-                  "Statement 25"
+                  "Statement 22"
                 ]
               }
             }
@@ -1198,9 +1178,7 @@
                   "Proved Statement 1",
                   "Proved Statement 23",
                   "Proved Statement 4",
-                  "Statement 1",
-                  "Statement 23",
-                  "Statement 4"
+                  "Statement 23"
                 ]
               }
             }
@@ -1215,8 +1193,6 @@
                   "Proved Statement 11",
                   "Proved Statement 14",
                   "Proved Statement 23",
-                  "Statement 11",
-                  "Statement 14",
                   "Statement 23"
                 ]
               }
@@ -1267,8 +1243,7 @@
                 "items": [
                   "Proved Statement 24",
                   "Proved Statement 25",
-                  "Statement 24",
-                  "Statement 25"
+                  "Statement 24"
                 ]
               }
             }
@@ -1318,7 +1293,6 @@
                 "items": [
                   "Proved Statement 22",
                   "Proved Statement 25",
-                  "Statement 22",
                   "Statement 25"
                 ]
               }
@@ -1333,7 +1307,6 @@
                 "items": [
                   "Proved Statement 24",
                   "Proved Statement 25",
-                  "Statement 24",
                   "Statement 25"
                 ]
               }
@@ -1384,8 +1357,7 @@
                 "items": [
                   "Proved Statement 26",
                   "Proved Statement 27",
-                  "Statement 26",
-                  "Statement 27"
+                  "Statement 26"
                 ]
               }
             }
@@ -1435,7 +1407,6 @@
                 "items": [
                   "Proved Statement 26",
                   "Proved Statement 27",
-                  "Statement 26",
                   "Statement 27"
                 ]
               }
@@ -1486,8 +1457,7 @@
                 "items": [
                   "Proved Statement 28",
                   "Proved Statement 29",
-                  "Statement 28",
-                  "Statement 29"
+                  "Statement 28"
                 ]
               }
             }
@@ -1550,7 +1520,6 @@
                 "items": [
                   "Proved Statement 28",
                   "Proved Statement 29",
-                  "Statement 28",
                   "Statement 29"
                 ]
               }
@@ -1602,9 +1571,7 @@
                   "Proved Statement 21",
                   "Proved Statement 30",
                   "Proved Statement 31",
-                  "Statement 21",
-                  "Statement 30",
-                  "Statement 31"
+                  "Statement 30"
                 ]
               }
             }
@@ -1655,8 +1622,6 @@
                   "Proved Statement 21",
                   "Proved Statement 30",
                   "Proved Statement 31",
-                  "Statement 21",
-                  "Statement 30",
                   "Statement 31"
                 ]
               }
@@ -1671,7 +1636,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "Statement 34",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1707,7 +1672,6 @@
                 "items": [
                   "Proved Statement 20",
                   "Proved Statement 32",
-                  "Statement 20",
                   "Statement 32"
                 ]
               }
@@ -1722,7 +1686,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 17",
+              "name": "Statement 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1757,7 +1721,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 9",
+              "name": "Statement 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1793,8 +1757,7 @@
                 "items": [
                   "Proved Statement 34",
                   "Proved Statement 36",
-                  "Statement 34",
-                  "Statement 36"
+                  "Statement 34"
                 ]
               }
             }
@@ -1844,8 +1807,7 @@
                 "items": [
                   "Proved Statement 35",
                   "Proved Statement 37",
-                  "Statement 35",
-                  "Statement 37"
+                  "Statement 35"
                 ]
               }
             }
@@ -1895,7 +1857,6 @@
                 "items": [
                   "Proved Statement 34",
                   "Proved Statement 36",
-                  "Statement 34",
                   "Statement 36"
                 ]
               }
@@ -1946,7 +1907,6 @@
                 "items": [
                   "Proved Statement 35",
                   "Proved Statement 37",
-                  "Statement 35",
                   "Statement 37"
                 ]
               }
@@ -1961,8 +1921,7 @@
                 "items": [
                   "Proved Statement 37",
                   "Proved Statement 39",
-                  "Statement 37",
-                  "Statement 39"
+                  "Statement 37"
                 ]
               }
             }
@@ -2061,7 +2020,6 @@
                 "items": [
                   "Proved Statement 37",
                   "Proved Statement 39",
-                  "Statement 37",
                   "Statement 39"
                 ]
               }
@@ -3835,6 +3793,7 @@
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -3865,6 +3824,17 @@
           "type": "toggle",
           "default": true,
           "display_name": "Auto-Download Database"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "progression_balancing": {
           "type": "range",
