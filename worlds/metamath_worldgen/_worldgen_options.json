@@ -1,6 +1,7 @@
 {
   "accessibility": 0,
   "auto_download_database": true,
+  "entrance_rule_mode": 1,
   "exclude_locations": [],
   "item_links": [],
   "local_items": [],

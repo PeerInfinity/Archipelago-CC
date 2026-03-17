@@ -84,8 +84,7 @@
                 "items": [
                   "Proved Statement 1",
                   "Proved Statement 15",
-                  "Statement 1",
-                  "Statement 15"
+                  "Statement 1"
                 ]
               }
             }
@@ -105,7 +104,6 @@
                 "items": [
                   "Proved Statement 18",
                   "Proved Statement 2",
-                  "Statement 18",
                   "Statement 2"
                 ]
               }
@@ -156,7 +154,6 @@
                 "items": [
                   "Proved Statement 13",
                   "Proved Statement 3",
-                  "Statement 13",
                   "Statement 3"
                 ]
               }
@@ -207,8 +204,7 @@
                 "items": [
                   "Proved Statement 4",
                   "Proved Statement 5",
-                  "Statement 4",
-                  "Statement 5"
+                  "Statement 4"
                 ]
               }
             }
@@ -258,7 +254,6 @@
                 "items": [
                   "Proved Statement 4",
                   "Proved Statement 5",
-                  "Statement 4",
                   "Statement 5"
                 ]
               }
@@ -358,7 +353,6 @@
                 "items": [
                   "Proved Statement 11",
                   "Proved Statement 7",
-                  "Statement 11",
                   "Statement 7"
                 ]
               }
@@ -409,8 +403,7 @@
                 "items": [
                   "Proved Statement 8",
                   "Proved Statement 9",
-                  "Statement 8",
-                  "Statement 9"
+                  "Statement 8"
                 ]
               }
             }
@@ -460,7 +453,6 @@
                 "items": [
                   "Proved Statement 8",
                   "Proved Statement 9",
-                  "Statement 8",
                   "Statement 9"
                 ]
               }
@@ -573,8 +565,7 @@
                 "items": [
                   "Proved Statement 11",
                   "Proved Statement 7",
-                  "Statement 11",
-                  "Statement 7"
+                  "Statement 11"
                 ]
               }
             }
@@ -673,8 +664,7 @@
                 "items": [
                   "Proved Statement 13",
                   "Proved Statement 3",
-                  "Statement 13",
-                  "Statement 3"
+                  "Statement 13"
                 ]
               }
             }
@@ -724,8 +714,7 @@
                 "items": [
                   "Proved Statement 14",
                   "Proved Statement 21",
-                  "Statement 14",
-                  "Statement 21"
+                  "Statement 14"
                 ]
               }
             }
@@ -775,7 +764,6 @@
                 "items": [
                   "Proved Statement 1",
                   "Proved Statement 15",
-                  "Statement 1",
                   "Statement 15"
                 ]
               }
@@ -826,8 +814,7 @@
                 "items": [
                   "Proved Statement 16",
                   "Proved Statement 17",
-                  "Statement 16",
-                  "Statement 17"
+                  "Statement 16"
                 ]
               }
             }
@@ -890,7 +877,6 @@
                 "items": [
                   "Proved Statement 16",
                   "Proved Statement 17",
-                  "Statement 16",
                   "Statement 17"
                 ]
               }
@@ -941,8 +927,7 @@
                 "items": [
                   "Proved Statement 18",
                   "Proved Statement 2",
-                  "Statement 18",
-                  "Statement 2"
+                  "Statement 18"
                 ]
               }
             }
@@ -992,8 +977,7 @@
                 "items": [
                   "Proved Statement 19",
                   "Proved Statement 20",
-                  "Statement 19",
-                  "Statement 20"
+                  "Statement 19"
                 ]
               }
             }
@@ -1043,7 +1027,6 @@
                 "items": [
                   "Proved Statement 19",
                   "Proved Statement 20",
-                  "Statement 19",
                   "Statement 20"
                 ]
               }
@@ -1094,7 +1077,6 @@
                 "items": [
                   "Proved Statement 14",
                   "Proved Statement 21",
-                  "Statement 14",
                   "Statement 21"
                 ]
               }
@@ -2616,6 +2598,7 @@
       "options": {
         "accessibility": 2,
         "auto_download_database": true,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -2646,6 +2629,17 @@
           "type": "toggle",
           "default": true,
           "display_name": "Auto-Download Database"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "progression_balancing": {
           "type": "range",

@@ -80,7 +80,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 5",
+              "name": "Node 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -116,8 +116,7 @@
                 "items": [
                   "Completed Node 3",
                   "Completed Node 5",
-                  "Node 3",
-                  "Node 5"
+                  "Node 3"
                 ]
               }
             }
@@ -131,7 +130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 4",
+              "name": "Node 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -180,7 +179,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 2",
+              "name": "Node 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -216,7 +215,6 @@
                 "items": [
                   "Completed Node 3",
                   "Completed Node 5",
-                  "Node 3",
                   "Node 5"
                 ]
               }
@@ -231,7 +229,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 3",
+              "name": "Node 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -293,7 +291,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 6",
+              "name": "Node 8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -329,8 +327,7 @@
                 "items": [
                   "Completed Node 7",
                   "Completed Node 8",
-                  "Node 7",
-                  "Node 8"
+                  "Node 7"
                 ]
               }
             }
@@ -344,7 +341,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Node 8",
+              "name": "Node 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -380,7 +377,6 @@
                 "items": [
                   "Completed Node 7",
                   "Completed Node 8",
-                  "Node 7",
                   "Node 8"
                 ]
               }
@@ -1782,6 +1778,7 @@
       "world_class_name": "DepGraphWorld",
       "options": {
         "accessibility": 0,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "graph_file": 0,
         "item_links": [],
@@ -1807,6 +1804,17 @@
           },
           "default": 0,
           "display_name": "Accessibility"
+        },
+        "entrance_rule_mode": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
+          },
+          "default": 1,
+          "display_name": "Entrance Rule Mode"
         },
         "graph_file": {
           "type": "choice",
