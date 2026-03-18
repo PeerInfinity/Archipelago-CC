@@ -10,15 +10,16 @@ Changes to the main Archipelago core files:
 
 This is the only core file modification. All other core files (`BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `diff-files/config-files.diff` (405 lines)
+### 2. `diff-files/config-files.diff` (413 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/pyright-config.json** - Removed 3 entries from exclude list (`rule_builder/cached_world.py`, `rule_builder/options.py`, `test/general/test_rule_builder.py`) because the fork consolidates `cached_world.py` into `rules.py`
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
 - **.gitignore** - Ignore patterns for project-specific files (extensive additions)
+- **pytest.ini** - Added `test_json` to testpaths for fork-specific test modules
 - **README.md** - Project documentation
 
-These files configure the development environment and CI/CD pipeline. Note: `pytest.ini` and `requirements.txt` now match upstream exactly.
+These files configure the development environment and CI/CD pipeline. Note: `requirements.txt` matches upstream exactly.
 
 ### 3. `diff-files/alttp-bunny-rules.diff` (25 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
@@ -50,7 +51,7 @@ These modifications allow world generation to proceed without ROM files when `sk
 ### 6. Rule Builder Modifications (documented separately)
 Changes to the Rule Builder module (`rule_builder/`), which exists in upstream since PR #5048 was merged:
 - **rule_builder/__init__.py** - Upstream: empty file (0 bytes). Fork: 165 lines with full API exports for all rule types, AST format support, pathfinding tools, and documentation
-- **rule_builder/rules.py** - Upstream: 1,822 lines. Fork: 4,224 lines (+2,402 lines). Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and 15 new rule types for AST format support
+- **rule_builder/rules.py** - Upstream: 1,822 lines. Fork: 4,219 lines (+2,397 lines). Adds `RuleWorldMixin`, `RuleBuilderLogicMixin`, and 15 new rule types for AST format support
 
 These changes are not included in the `.diff` files because of their size. Instead, they are documented in:
 - **[fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md)** - Detailed API comparison table
@@ -83,7 +84,7 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 ## Notes
 
 - These diffs are generated against upstream commit `0de09cd7` (Archipelago 0.6.7)
-- Total lines changed across diff files: 917 lines (41 + 405 + 25 + 22 + 424)
+- Total lines changed across diff files: 925 lines (41 + 413 + 25 + 22 + 424)
 - Additionally, 3 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py, .github/pyright-config.json)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs

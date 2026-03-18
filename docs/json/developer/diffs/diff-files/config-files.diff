@@ -157,6 +157,14 @@
 +journey-to-ascension-modified/
 +fuzz_output/
 \ No newline at end of file
+--- a/pytest.ini
++++ b/pytest.ini
+@@ -4,4 +4,5 @@
+ python_functions = test
+ testpaths =
+     test
++    test_json
+     worlds
 --- a/README.md
 +++ b/README.md
 @@ -1,148 +1,102 @@

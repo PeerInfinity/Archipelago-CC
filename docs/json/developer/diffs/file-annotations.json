@@ -71,6 +71,15 @@
         "worlds/codingadventure/": {
             "description": "Original demo world: an educational web development game with progression items."
         },
+        "worlds/depgraph/": {
+            "description": "Original world that turns any directed acyclic graph (DAG) into a playable Archipelago world."
+        },
+        "iframe_games/": {
+            "description": "Iframe-hosted game content for frontend integration modules."
+        },
+        "worlds/jta/": {
+            "description": "Journey to Ascension: a demo world with cost-based progression and planner integration."
+        },
         "worlds/json_tools_installer/": {
             "description": "Utility APWorld (hidden) that downloads and installs JSON Tools components on vanilla Archipelago.",
             "links": [
@@ -112,6 +121,9 @@
         },
         "worlds/codingadventure_vanilla_worldgen2/": {
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
+        },
+        "worlds/depgraph_worldgen/": {
+            "description": "Auto-generated world from DepGraph rules via the World Generator."
         },
         "worlds/metamath_vanilla_worldgen2/": {
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
