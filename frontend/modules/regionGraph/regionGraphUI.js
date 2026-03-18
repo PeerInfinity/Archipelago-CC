@@ -1,4 +1,4 @@
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -19,6 +19,7 @@ export class RegionGraphUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.cy = null;
     this.cytoscape = null;
     this.cytoscapeFcose = null;
@@ -122,9 +123,9 @@ export class RegionGraphUI {
     const readyHandler = () => {
       logger.info('Received app:readyForUiDataLoad, starting initialization');
       this.loadCytoscape();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'regionGraph');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
     
     logger.debug('Constructor complete, waiting for app:readyForUiDataLoad event');
   }
@@ -138,18 +139,21 @@ export class RegionGraphUI {
       this.showName = await settingsManager.getSetting('moduleSettings.regionGraph.showName', true);
       this.showLabel1 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel1', false);
       this.showLabel2 = await settingsManager.getSetting('moduleSettings.regionGraph.showLabel2', false);
-      logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}`);
+      this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
+      logger.debug(`Loaded display settings: showName=${this.showName}, showLabel1=${this.showLabel1}, showLabel2=${this.showLabel2}, useSubstitutedNames=${this.useSubstitutedNames}`);
     } catch (error) {
       logger.error('Failed to load display settings:', error);
       this.showName = true;
       this.showLabel1 = false;
       this.showLabel2 = false;
+      this.useSubstitutedNames = true;
     }
   }
 
   getRegionDisplayText(regionData, regionName) {
     const parts = [];
-    const name = regionName || (typeof regionData === 'string' ? regionData : regionData?.name);
+    const rawName = regionName || (typeof regionData === 'string' ? regionData : regionData?.name);
+    const name = (this.useSubstitutedNames && regionData?.displayName) ? regionData.displayName : rawName;
 
     if (this.showName && name) {
       parts.push(name.replace(/_/g, ' '));
@@ -174,8 +178,10 @@ export class RegionGraphUI {
   getLocationDisplayText(locationData) {
     const parts = [];
 
-    if (this.showName && locationData?.name) {
-      parts.push(locationData.name);
+    const name = (this.useSubstitutedNames && locationData?.displayName) ? locationData.displayName : locationData?.name;
+
+    if (this.showName && name) {
+      parts.push(name);
     }
 
     if (this.showLabel1 && locationData?.label1) {
@@ -202,8 +208,19 @@ export class RegionGraphUI {
       logger.debug('All libraries already loaded, initializing graph');
       this.cytoscape = window.cytoscape;
       this.cytoscapeFcose = window.cytoscapeFcose;
-      this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
-      this.initializeGraph();
+      if (!window._cytoscapeFcoseRegistered) {
+        this.cytoscapeFcose(this.cytoscape);
+        window._cytoscapeFcoseRegistered = true;
+      }
+      // Only initialize immediately if the container is visible and has
+      // dimensions.  After a live layout reload the panel may be in a
+      // background tab; onPanelShow will handle deferred initialization.
+      const rect = this.graphContainer?.getBoundingClientRect();
+      if (rect && rect.width > 0 && rect.height > 0) {
+        this.initializeGraph();
+      } else {
+        logger.debug('Graph container not visible yet, deferring to onPanelShow');
+      }
     } else {
       logger.debug('Loading libraries dynamically');
       // Load Cytoscape.js first
@@ -604,6 +621,16 @@ export class RegionGraphUI {
             'color': '#999'
           }
         },
+        {
+          // Undiscovered but accessible: keep ??? text style but show accessibility coloring
+          selector: 'node.undiscovered-placeholder.accessible',
+          style: {
+            'background-color': '#2d5a1e',
+            'border-color': '#52b845',
+            'opacity': 0.8,
+            'color': '#ccc'
+          }
+        },
         // Undiscovered edge styles (Discovery Mode)
         {
           selector: 'edge.undiscovered',
@@ -740,45 +767,58 @@ export class RegionGraphUI {
     if (this.unsubscribeDiscoveryMode) this.unsubscribeDiscoveryMode();
     if (this.unsubscribeDiscoverySettings) this.unsubscribeDiscoverySettings();
     if (this.unsubscribeDiscoveryChanged) this.unsubscribeDiscoveryChanged();
+    if (this.unsubscribeSettingsChanged) this.unsubscribeSettingsChanged();
 
     // Subscribe to state updates
-    this.unsubscribeStateUpdate = eventBus.subscribe('stateManager:snapshotUpdated',
-      (data) => this.onStateUpdate(data), 'regionGraph');
+    this.unsubscribeStateUpdate = this.eventBus.subscribe('stateManager:snapshotUpdated',
+      (data) => this.onStateUpdate(data));
 
-    this.unsubscribeRegionChange = eventBus.subscribe('playerState:regionChanged',
-      (data) => this.updatePlayerLocation(data.newRegion), 'regionGraph');
+    this.unsubscribeRegionChange = this.eventBus.subscribe('playerState:regionChanged',
+      (data) => this.updatePlayerLocation(data.newRegion));
 
     // Subscribe to path updates to track the full path
-    this.unsubscribePathUpdate = eventBus.subscribe('playerState:pathUpdated',
-      (data) => this.onPathUpdate(data), 'regionGraph');
+    this.unsubscribePathUpdate = this.eventBus.subscribe('playerState:pathUpdated',
+      (data) => this.onPathUpdate(data));
 
     // Subscribe to rules loaded event (like Regions module)
-    this.unsubscribeRulesLoaded = eventBus.subscribe('stateManager:rulesLoaded',
+    this.unsubscribeRulesLoaded = this.eventBus.subscribe('stateManager:rulesLoaded',
       (event) => {
         logger.info('Received stateManager:rulesLoaded, initializing graph data');
         if (this.cy) {
           this.loadGraphData();
         }
-      }, 'regionGraph');
+      });
 
     // Subscribe to state ready event
-    this.unsubscribeStateReady = eventBus.subscribe('stateManager:ready',
+    this.unsubscribeStateReady = this.eventBus.subscribe('stateManager:ready',
       () => {
         logger.info('Received stateManager:ready, ensuring graph is loaded');
         if (this.cy && !this.graphInitialized) {
           this.loadGraphData();
         }
-      }, 'regionGraph');
+      });
 
     // Subscribe to discovery mode events
-    this.unsubscribeDiscoveryMode = eventBus.subscribe('discovery:modeChanged',
-      (data) => this.onDiscoveryModeChanged(data), 'regionGraph');
+    this.unsubscribeDiscoveryMode = this.eventBus.subscribe('discovery:modeChanged',
+      (data) => this.onDiscoveryModeChanged(data));
 
-    this.unsubscribeDiscoverySettings = eventBus.subscribe('discovery:settingsChanged',
-      (data) => this.onDiscoverySettingsChanged(data), 'regionGraph');
+    this.unsubscribeDiscoverySettings = this.eventBus.subscribe('discovery:settingsChanged',
+      (data) => this.onDiscoverySettingsChanged(data));
 
-    this.unsubscribeDiscoveryChanged = eventBus.subscribe('discovery:changed',
-      () => this.onDiscoveryChanged(), 'regionGraph');
+    this.unsubscribeDiscoveryChanged = this.eventBus.subscribe('discovery:changed',
+      () => this.onDiscoveryChanged());
+
+    // Subscribe to settings changes for display name toggle
+    this.unsubscribeSettingsChanged = this.eventBus.subscribe('settings:changed',
+      async ({ key }) => {
+        if (key === '*' || key.startsWith('generalSettings.useSubstitutedNames') ||
+            key.startsWith('moduleSettings.regionGraph')) {
+          await this.loadDisplaySettings();
+          if (this.cy && this.graphInitialized) {
+            this.loadGraphData();
+          }
+        }
+      });
   }
 
   async loadGraphData() {
@@ -888,7 +928,10 @@ export class RegionGraphUI {
         logger.debug('Libraries are loaded, initializing now...');
         this.cytoscape = window.cytoscape;
         this.cytoscapeFcose = window.cytoscapeFcose;
-        this.cytoscape.use(this.cytoscapeFcose(window.coseBase));
+        if (!window._cytoscapeFcoseRegistered) {
+          this.cytoscapeFcose(this.cytoscape);
+          window._cytoscapeFcoseRegistered = true;
+        }
         this.initializeGraph();
       } else {
         logger.debug('Some libraries not loaded, waiting...');
@@ -1050,6 +1093,9 @@ export class RegionGraphUI {
     }
     if (this.unsubscribeDiscoveryChanged) {
       this.unsubscribeDiscoveryChanged();
+    }
+    if (this.unsubscribeSettingsChanged) {
+      this.unsubscribeSettingsChanged();
     }
     if (this.cy) {
       this.cy.destroy();

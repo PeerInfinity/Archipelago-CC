@@ -5066,7 +5066,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "helper",
+        "name": "completion_condition"
+      }
+    }
   },
   "helpers": {
     "1": {
@@ -5213,6 +5218,13 @@
             ]
           }
         ]
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
+        }
       },
       "crystal_capturable": {
         "type": "or",

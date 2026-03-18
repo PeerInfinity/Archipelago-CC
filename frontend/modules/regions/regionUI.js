@@ -5,10 +5,9 @@ import commonUI from '../commonUI/index.js';
 import messageHandler from '../client/core/messageHandler.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
-import { moduleDispatcher } from './index.js';
+import { moduleDispatcher, getModuleEventBus } from './index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import {
@@ -37,6 +36,7 @@ export class RegionUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     // Add instance property for unsubscribe handles
     this.unsubscribeHandles = [];
@@ -80,7 +80,7 @@ export class RegionUI {
     this.expansionState = new ExpansionStateManager();
 
     // Create the navigation manager
-    this.navigationManager = new NavigationManager(eventBus);
+    this.navigationManager = new NavigationManager(this.eventBus);
 
     // Create the path analyzer and block builder
     this.pathAnalyzer = new PathAnalyzerUI(this);
@@ -93,7 +93,7 @@ export class RegionUI {
     this.stateManager = stateManager;
 
     // Create the event coordinator (note: subscribeToEvents called in initialize())
-    this.eventCoordinator = new EventCoordinator(eventBus, this);
+    this.eventCoordinator = new EventCoordinator(this.eventBus, this);
 
     this.regionsContainer = this.rootElement.querySelector(
       '#region-details-container' // Changed selector
@@ -138,9 +138,9 @@ export class RegionUI {
         '[RegionUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'regions');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -440,7 +440,7 @@ export class RegionUI {
    */
   updateFromPlayerStatePath(path, regionCounts) {
     if (!path || path.length === 0) {
-      log('warn', '[RegionUI] Received empty path from playerState');
+      // Path is empty before any moves are made — this is normal at startup
       return;
     }
     
@@ -450,7 +450,19 @@ export class RegionUI {
     this.nextUID = 1;
     
     const regionMoves = getRegionMovesFromPath(path);
-    
+
+    // Include the start region (source of the first move) so the full path is shown
+    if (regionMoves.length > 0 && regionMoves[0].sourceRegion) {
+      const startRegion = regionMoves[0].sourceRegion;
+      const uid = this.nextUID++;
+      this.visitedRegions.push({
+        name: startRegion,
+        expanded: false,
+        uid: uid,
+      });
+      this.expansionState.setExpanded(startRegion, false, 'navigation', uid);
+    }
+
     regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
       const isLastRegion = index === regionMoves.length - 1;
@@ -459,7 +471,7 @@ export class RegionUI {
       const expanded = isLastRegion;
 
       this.visitedRegions.push({
-        name: pathEntry.region,
+        name: pathEntry.destinationRegion,
         expanded: expanded, // Note: This property is kept for backward compatibility but not used
         uid: uid,
         exitUsed: pathEntry.exitUsed,
@@ -468,7 +480,7 @@ export class RegionUI {
 
       // Update expansion state manager
       this.expansionState.setExpanded(
-        pathEntry.region,
+        pathEntry.destinationRegion,
         expanded,
         'navigation',
         pathEntry.instanceNumber || uid
@@ -587,11 +599,11 @@ export class RegionUI {
       if (!isLastRegion && currentIndex >= 0) {
         // Navigating backwards - trim the path at this region
         log('info', `[RegionUI] Navigating backwards to ${oldRegionName} instance ${instanceNumber}`);
-        if (eventBus) {
-          eventBus.publish('playerState:trimPath', {
+        if (this.eventBus) {
+          this.eventBus.publish('playerState:trimPath', {
             regionName: oldRegionName,
             instanceNumber: instanceNumber
-          }, 'regions');
+          });
         }
         return;
       }

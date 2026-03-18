@@ -1275,6 +1275,14 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
     if is_canonical:
         export_data['is_canonical'] = True
 
+    # Pick up preset_label from any player's world
+    for player in multiworld.player_ids:
+        world = multiworld.worlds[player]
+        preset_label = getattr(world, 'preset_label', None)
+        if preset_label:
+            export_data['preset_label'] = preset_label
+            break
+
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
     #    export_data['debug_spoiler_entrances'] = {}
@@ -3038,6 +3046,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 folder_entry["is_vanilla"] = True
             if cleaned_data.get('is_canonical'):
                 folder_entry["is_canonical"] = True
+            if cleaned_data.get('preset_label'):
+                folder_entry["label"] = cleaned_data['preset_label']
 
             preset_index[clean_game_name]["folders"][filename_base] = folder_entry
             

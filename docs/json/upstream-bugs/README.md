@@ -36,7 +36,7 @@ For each bug, we maintain up to three types of documentation:
 |------|---------|---------|
 | **Technical doc** | Detailed analysis for developers | [bunny-rules.md](./alttp/bunny-rules.md) |
 | **Bug report** | Formatted for upstream submission | [bunny-rules-bug-report.md](./alttp/bunny-rules-bug-report.md) |
-| **Diff file** | Patch to fix the bug | [alttp-bunny-rules.diff](../developer/diffs/alttp-bunny-rules.diff) |
+| **Diff file** | Patch to fix the bug | [alttp-bunny-rules.diff](../developer/diffs/diff-files/alttp-bunny-rules.diff) |
 
 ## Related Documentation
 

@@ -182,7 +182,6 @@ class ShiversWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Water Pot Bottom", "Wax Pot Bottom", "Ash Pot Bottom", "Oil Pot Bottom", "Cloth Pot Bottom", "Wood Pot Bottom", "Crystal Pot Bottom", "Lightning Pot Bottom", "Sand Pot Bottom", "Metal Pot Bottom", "Water Pot Top", "Wax Pot Top", "Ash Pot Top", "Oil Pot Top", "Cloth Pot Top", "Wood Pot Top", "Crystal Pot Top", "Lightning Pot Top", "Sand Pot Top", "Metal Pot Top", "Water Pot Complete", "Wax Pot Complete", "Ash Pot Complete", "Oil Pot Complete", "Cloth Pot Complete", "Wood Pot Complete", "Crystal Pot Complete", "Lightning Pot Complete", "Sand Pot Complete", "Metal Pot Complete", "Key for Office Elevator", "Key for Bedroom Elevator", "Key for Three Floor Elevator", "Key for Workshop", "Key for Office", "Key for Prehistoric Room", "Key for Greenhouse", "Key for Ocean Room", "Key for Projector Room", "Key for Generator Room", "Key for Egypt Room", "Key for Library", "Key for Shaman Room", "Key for UFO Room", "Key for Torture Room", "Key for Puzzle Room", "Key for Bedroom", "Key for Underground Lake", "Key for Janitor Closet", "Key for Front Door", "Crawling", "Easier Lyre", "Water Always Available in Lobby", "Wax Always Available in Library", "Wax Always Available in Anansi Room", "Wax Always Available in Shaman Room", "Ash Always Available in Office", "Ash Always Available in Burial Room", "Oil Always Available in Prehistoric Room", "Cloth Always Available in Egypt", "Cloth Always Available in Burial Room", "Wood Always Available in Workshop", "Wood Always Available in Blue Maze", "Wood Always Available in Pegasus Room", "Wood Always Available in Gods Room", "Crystal Always Available in Lobby", "Crystal Always Available in Ocean", "Sand Always Available in Greenhouse", "Sand Always Available in Ocean", "Metal Always Available in Projector Room", "Metal Always Available in Bedroom", "Metal Always Available in Prehistoric", "Heal", "Mt. Pleasant Tribune: 44 year Old Mystery Solved!", "Mt. Pleasant Tribune: 45 year Old Mystery Solved!", "Mt. Pleasant Tribune: 46 year Old Mystery Solved!"]),
-        "Event": frozenset(["Crystal Pot Bottom DUPE", "Metal Pot Bottom DUPE", "Ash Pot Bottom DUPE", "Water Pot Top DUPE", "Oil Pot Top DUPE", "Sand Pot Bottom DUPE", "Empty", "Water Pot Bottom DUPE", "Wax Pot Top DUPE", "Cloth Pot Top DUPE", "Lightning Pot Top DUPE", "Wax Pot Bottom DUPE", "Cloth Pot Bottom DUPE", "Sand Pot Top DUPE", "Metal Pot Top DUPE", "Oil Pot Bottom DUPE", "Wood Pot Bottom DUPE", "Lightning Pot Bottom DUPE", "Wood Pot Top DUPE", "Crystal Pot Top DUPE", "Ash Pot Top DUPE", "Set Skull Dial: Prehistoric", "Set Skull Dial: Tar River", "Set Skull Dial: Egypt", "Set Skull Dial: Burial", "Set Skull Dial: Gods Room", "Set Skull Dial: Werewolf", "Viewed Theater Movie", "Set Time", "Set Song", "Viewed Fortune", "Aligned Planets", "Viewed Norse Stone", "Viewed Page 17", "Viewed Egyptian Hieroglyphics Explained", "Lost Your Head"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -441,6 +440,12 @@ class ShiversWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -579,6 +584,11 @@ class ShiversWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Mt. Pleasant Tribune: 45 year Old Mystery Solved!", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

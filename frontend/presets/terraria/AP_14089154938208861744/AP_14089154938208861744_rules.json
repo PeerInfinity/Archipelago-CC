@@ -10840,7 +10840,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Post-Skeletron Prime",
+              "Post-The Destroyer",
+              "Post-The Twins"
+            ]
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

@@ -1,5 +1,5 @@
 // UI component for window manager panel module
-import { moduleEventBus } from './index.js';
+import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -15,7 +15,8 @@ export class WindowManagerUI {
     constructor(container, componentState) {
         this.container = container;
         this.componentState = componentState;
-        
+        Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
+
         // UI elements
         this.rootElement = null;
         this.urlInput = null;
@@ -258,37 +259,37 @@ export class WindowManagerUI {
     }
 
     setupEventSubscriptions() {
-        if (moduleEventBus) {
+        if (this.eventBus) {
             // Subscribe to window panel events
-            const openedUnsubscribe = moduleEventBus.subscribe('windowPanel:opened', (data) => {
+            const openedUnsubscribe = this.eventBus.subscribe('windowPanel:opened', (data) => {
                 this.handleWindowOpened(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(openedUnsubscribe);
 
-            const closedUnsubscribe = moduleEventBus.subscribe('windowPanel:closed', (data) => {
+            const closedUnsubscribe = this.eventBus.subscribe('windowPanel:closed', (data) => {
                 this.handleWindowClosed(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(closedUnsubscribe);
 
-            const connectedUnsubscribe = moduleEventBus.subscribe('windowPanel:connected', (data) => {
+            const connectedUnsubscribe = this.eventBus.subscribe('windowPanel:connected', (data) => {
                 this.handleWindowConnected(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(connectedUnsubscribe);
 
-            const errorUnsubscribe = moduleEventBus.subscribe('windowPanel:error', (data) => {
+            const errorUnsubscribe = this.eventBus.subscribe('windowPanel:error', (data) => {
                 this.handleWindowError(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(errorUnsubscribe);
 
             // Subscribe to window adapter events
-            const adapterConnectedUnsubscribe = moduleEventBus.subscribe('window:connected', (data) => {
+            const adapterConnectedUnsubscribe = this.eventBus.subscribe('window:connected', (data) => {
                 this.handleWindowAdapterConnected(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(adapterConnectedUnsubscribe);
 
-            const adapterDisconnectedUnsubscribe = moduleEventBus.subscribe('window:disconnected', (data) => {
+            const adapterDisconnectedUnsubscribe = this.eventBus.subscribe('window:disconnected', (data) => {
                 this.handleWindowAdapterDisconnected(data);
-            }, 'windowManagerUI');
+            });
             this.unsubscribeHandles.push(adapterDisconnectedUnsubscribe);
         }
     }
@@ -371,11 +372,11 @@ export class WindowManagerUI {
         log('info', `Opening window with URL: ${url}`);
         
         // Publish open window event
-        if (moduleEventBus) {
-            moduleEventBus.publish('window:loadUrl', { 
+        if (this.eventBus) {
+            this.eventBus.publish('window:loadUrl', {
                 url: url,
                 // Don't specify panelId to open in any available window panel
-            }, 'windowManagerPanel');
+            });
         }
 
         this.updateStatus(`Opening window: ${url}`);
@@ -388,10 +389,10 @@ export class WindowManagerUI {
         log('info', 'Closing all windows');
         
         // Publish close window event
-        if (moduleEventBus) {
-            moduleEventBus.publish('window:close', {
+        if (this.eventBus) {
+            this.eventBus.publish('window:close', {
                 // Don't specify panelId to close all window panels
-            }, 'windowManagerUI');
+            });
         }
 
         this.updateStatus('Closing all windows...');

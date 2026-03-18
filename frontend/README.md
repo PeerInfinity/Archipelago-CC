@@ -55,12 +55,12 @@ frontend/
 
 | File | Purpose |
 |------|---------|
-| `modules.json` | Module manifest (enabled modules, load order) |
+| `module-configs/modules.json` | Module manifest (enabled modules, load order) |
 | `modes.json` | Application modes (default, test, adventure, etc.) |
-| `settings.json` | Default application settings |
-| `settings.schema.json` | Settings validation schema |
-| `layout_presets.json` | UI layout configurations |
-| `playwright_tests_config*.json` | Test configurations |
+| `settings/settings.json` | Default application settings |
+| `settings/settings.schema.json` | Settings validation schema |
+| `layout-configs/layout_presets.json` | UI layout configurations |
+| `test-configs/playwright_tests_config*.json` | Test configurations |
 
 ## Architecture
 
@@ -120,7 +120,7 @@ eventBus.subscribe('stateManager:snapshotUpdated', handler);
 1. Create directory: `modules/myModule/`
 2. Create `index.js` with module exports
 3. Create UI class (e.g., `myModuleUI.js`)
-4. Register in `modules.json`
+4. Register in `module-configs/modules.json`
 
 See [Creating Modules Guide](../docs/json/developer/guides/creating-modules.md).
 

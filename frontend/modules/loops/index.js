@@ -57,10 +57,25 @@ export function getPathFinder() {
   return _pathFinder;
 }
 
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'loops'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'loops'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'loops'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
+
 let loopUnsubscribeHandles = [];
 
 // --- Import the actual singletons needed for injection ---
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -85,6 +100,12 @@ function handleRulesLoaded(eventData) {
   if (staticData?.startRegions && _playerStateAPI?.setStartRegions) {
     _playerStateAPI.setStartRegions(staticData.startRegions);
     log('info', '[Loops Module] Set start regions:', staticData.startRegions);
+  }
+
+  // Clear cost data so the user is prompted to regenerate for the new rules
+  if (_costDataManager) {
+    _costDataManager.clear();
+    log('info', '[Loops Module] Cost data cleared for new rules');
   }
 
   // Full reset of loop state for new rules (clears XP, mana, explore states, etc.)
@@ -191,8 +212,8 @@ export function register(registrationApi) {
   );
 
   // Register dispatcher receiver for user:exitClicked
-  // When loop mode is active, this handler intercepts the event
-  // When loop mode is not active, it propagates to the next handler (regions module)
+  // When loop mode is active, this handler intercepts the event (blocks both discovery and move)
+  // When loop mode is not active, it propagates to discovery module, then regions module
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,
     'user:exitClicked',
@@ -200,16 +221,18 @@ export function register(registrationApi) {
     { direction: 'up', condition: 'conditional', timing: 'immediate' }
   );
 
+  // Register dispatcher sender for loop action events (consumed by discovery module)
+  registrationApi.registerDispatcherSender('loop:exploreCompleted', 'bottom');
+  registrationApi.registerDispatcherSender('loop:moveCompleted', 'bottom');
+
   // Register events that loops publishes
   registrationApi.registerEventBusPublisher('loopState:actionCompleted');
   registrationApi.registerEventBusPublisher('loopState:autoRestartChanged');
-  registrationApi.registerEventBusPublisher('loopState:paused');
   registrationApi.registerEventBusPublisher('loopState:pauseStateChanged');
   registrationApi.registerEventBusPublisher('loopState:processingStopped');
   registrationApi.registerEventBusPublisher('loopState:progressUpdated');
   registrationApi.registerEventBusPublisher('loopState:queueCompleted');
   registrationApi.registerEventBusPublisher('loopState:queueUpdated');
-  registrationApi.registerEventBusPublisher('loopState:resumed');
   registrationApi.registerEventBusPublisher('loopState:speedChanged');
   registrationApi.registerEventBusPublisher('loopState:stateLoaded');
   registrationApi.registerEventBusPublisher('loopState:xpChanged');
@@ -257,7 +280,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     getCurrentRegion: initializationApi.getModuleFunction('playerState', 'getCurrentRegion'),
     getRegionCounts: initializationApi.getModuleFunction('playerState', 'getRegionCounts'),
     setStartRegions: initializationApi.getModuleFunction('playerState', 'setStartRegions'),
-    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion')
+    isStartRegion: initializationApi.getModuleFunction('playerState', 'isStartRegion'),
+    reset: initializationApi.getModuleFunction('playerState', 'reset')
   };
   
   // Store the API for access by loopUI
@@ -324,126 +348,71 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       playerStateAPI: playerStateAPI,
     });
 
+    // Inject costDataManager into loopState for per-region/per-location cost lookups
+    if (loopStateSingleton && typeof loopStateSingleton.setCostDataManager === 'function') {
+      loopStateSingleton.setCostDataManager(_costDataManager);
+    }
+
     log('info', '[Loops Module] Cost generation components initialized');
 
-    // Expose cost generation tools on window for console access
+    // Expose loops game data on window for console debugging/editing
     if (typeof window !== 'undefined') {
-      window.costGenerator = _costGenerator;
+      window.loops = {
+        // Core state
+        get state() { return loopStateSingleton; },
+        get costData() { return _costDataManager; },
+        get costGenerator() { return _costGenerator; },
+        get pathFinder() { return _pathFinder; },
+        get playerState() { return _playerStateAPI; },
+
+        // Convenience accessors
+        get mana() { return loopStateSingleton.currentMana; },
+        set mana(v) {
+          loopStateSingleton.currentMana = v;
+          _moduleEventBus?.publish('loopState:manaChanged', { current: v, max: loopStateSingleton.maxMana });
+        },
+        get maxMana() { return loopStateSingleton.maxMana; },
+        set maxMana(v) {
+          loopStateSingleton.maxMana = v;
+          _moduleEventBus?.publish('loopState:manaChanged', { current: loopStateSingleton.currentMana, max: v });
+        },
+        get speed() { return loopStateSingleton.gameSpeed; },
+        set speed(v) { loopStateSingleton.setGameSpeed(v); },
+        get instant() { return loopStateSingleton.instantMode; },
+        set instant(v) { loopStateSingleton.setInstantMode(v); },
+        get paused() { return loopStateSingleton.isPaused; },
+        set paused(v) { loopStateSingleton.setPaused(v); },
+
+        // XP helpers
+        getXP(region) { return loopStateSingleton.getRegionXP(region); },
+        addXP(region, amount) { loopStateSingleton.addRegionXP(region, amount); },
+
+        // Queue
+        get queue() { return loopStateSingleton.getActionQueue(); },
+
+        // Summary
+        help() {
+          console.log(`
+loops.state          - Full LoopState object
+loops.costData       - CostDataManager (region/location costs)
+loops.costGenerator  - CostGenerator instance
+loops.pathFinder     - PathFinder instance
+loops.playerState    - PlayerState API
+
+loops.mana           - Get/set current mana
+loops.maxMana        - Get/set max mana
+loops.speed          - Get/set game speed
+loops.instant        - Get/set instant mode
+loops.paused         - Get/set paused state
+
+loops.getXP(region)  - Get XP data for a region
+loops.addXP(region, amount) - Add XP to a region
+loops.queue          - Current action queue
+          `.trim());
+        },
+      };
+      // Keep legacy reference
       window.costDataManager = _costDataManager;
-
-      // Add convenience function for console use
-      // Options: { forceRegenerate: boolean, rulesPath: string }
-      window.generateCosts = async (options = {}) => {
-        if (!_costGenerator) {
-          console.error('Cost generator not initialized');
-          return null;
-        }
-
-        const { forceRegenerate = false } = options;
-        let { rulesPath } = options;
-
-        // Try to get rulesPath from URL if not provided
-        if (!rulesPath) {
-          const urlParams = new URLSearchParams(window.location.search);
-          rulesPath = urlParams.get('rules');
-        }
-
-        // If we have a rulesPath and not forcing regeneration, try to load existing costs
-        if (rulesPath && !forceRegenerate) {
-          console.log('Checking for existing costs file...');
-          const existingCosts = await _costDataManager.tryLoadFromPreset(rulesPath);
-          if (existingCosts) {
-            console.log('Loaded existing costs file!');
-            console.log(`Regions: ${Object.keys(existingCosts.regions).length}`);
-            console.log(`Locations: ${Object.keys(existingCosts.locations).length}`);
-            return existingCosts;
-          }
-          console.log('No existing costs file found, generating...');
-        }
-
-        // Get sphere log from sphereState module
-        let sphereLog = null;
-
-        // First try stateManager snapshot (legacy path)
-        const snapshot = stateManager.getLatestStateSnapshot();
-        sphereLog = snapshot?.sphereLog;
-
-        // If not in snapshot, try sphereState module
-        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
-          const getSphereData = window.centralRegistry?.getPublicFunction?.('sphereState', 'getSphereData');
-          if (getSphereData) {
-            const sphereData = getSphereData();
-            // getSphereData returns processed sphere data, convert to raw format
-            if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
-              // Convert sphereData to the format expected by cost generator
-              sphereLog = sphereData.map((sphere, index) => ({
-                type: 'state_update',
-                sphere_index: index + 1,
-                player_data: {
-                  '1': {
-                    sphere_locations: sphere.locations || [],
-                    new_accessible_regions: sphere.newRegions || [],
-                  }
-                }
-              }));
-              console.log(`Using sphereState data: ${sphereLog.length} spheres`);
-            }
-          }
-        }
-
-        if (!sphereLog || !Array.isArray(sphereLog) || sphereLog.length === 0) {
-          console.error('No sphere log available. Load a rules file first or provide a sphere log array.');
-          return null;
-        }
-
-        console.log('Starting cost generation...');
-        const costs = await _costGenerator.generate(sphereLog, rulesPath || 'console');
-
-        if (costs) {
-          console.log('Cost generation complete!');
-          console.log(`Regions: ${Object.keys(costs.regions).length}`);
-          console.log(`Locations: ${Object.keys(costs.locations).length}`);
-
-          // Store the rulesPath for later saving
-          if (rulesPath) {
-            costs._rulesPath = rulesPath;
-            const saveInfo = _costDataManager.getCostDataForSaving(rulesPath);
-            console.log(`To save, call: window.saveCosts() or manually save to: ${saveInfo.path}`);
-
-            // Expose the cost data for external saving (e.g., by Playwright)
-            window.__generatedCostData__ = saveInfo;
-          } else {
-            console.log('Use window.costDataManager.downloadCostData() to download the costs file.');
-          }
-        }
-
-        return costs;
-      };
-
-      // Add function to save costs to preset directory (triggers download in browser)
-      window.saveCosts = () => {
-        const costs = _costDataManager.getCostData();
-        if (!costs) {
-          console.error('No cost data to save. Run generateCosts() first.');
-          return null;
-        }
-
-        const rulesPath = costs._rulesPath;
-        if (!rulesPath) {
-          // Fall back to URL param
-          const urlParams = new URLSearchParams(window.location.search);
-          const urlRulesPath = urlParams.get('rules');
-          if (urlRulesPath) {
-            return _costDataManager.saveCostsToPreset(urlRulesPath);
-          }
-          console.error('No rules path available. Provide rulesPath or use downloadCostData().');
-          return null;
-        }
-
-        return _costDataManager.saveCostsToPreset(rulesPath);
-      };
-
-      log('info', '[Loops Module] Console commands available: window.generateCosts(), window.costGenerator, window.costDataManager');
     }
   } catch (error) {
     log('error', '[Loops Module] Error initializing cost generation components:', error);
@@ -458,34 +427,21 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     const subscribe = (eventName, handler) => {
       log('info', `[Loops Module] Subscribing to ${eventName}`);
       try {
-        const unsubscribe = _moduleEventBus.subscribe(eventName, handler, 'loops');
+        const unsubscribe = _moduleEventBus.subscribe(eventName, handler);
         loopUnsubscribeHandles.push(unsubscribe);
       } catch (e) {
         log('error', `[Loops Module] Failed to subscribe to ${eventName}:`, e);
       }
     };
 
-    subscribe('settings:changed', (eventData) => {
-      // Use getModuleSettings again to be sure, or trust eventData?
-      // For now, trust eventData if it looks right
-      const loopSettings = eventData?.settings?.moduleSettings?.loops;
-      if (loopSettings && loopStateSingleton) {
-        log('info', 
-          '[Loops Module] Reacting to settings:changed',
-          loopSettings
-        );
-        if (loopSettings.defaultSpeed !== undefined) {
-          loopStateSingleton.setGameSpeed(loopSettings.defaultSpeed);
-        }
-        if (loopSettings.autoRestart !== undefined) {
-          loopStateSingleton.setAutoRestartQueue(loopSettings.autoRestart);
-        }
-      }
-    });
+    // Note: defaultSpeed and autoRestart are managed by DisplaySettingsManager
+    // in loopUI.js which persists them to localStorage. The settings:changed
+    // handler was removed here because settingsManager doesn't persist, so
+    // its values would reset localStorage-saved settings on every event.
 
     // Subscribe to stateManager:rulesLoaded to reset loop state when rules change
     loopUnsubscribeHandles.push(
-      eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleInfo.name)
+      _moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded)
     );
   } else {
     log('error',
@@ -510,9 +466,8 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
     // Clear window references
     if (typeof window !== 'undefined') {
-      delete window.costGenerator;
+      delete window.loops;
       delete window.costDataManager;
-      delete window.generateCosts;
     }
 
     // Call dispose on loopStateSingleton if it exists

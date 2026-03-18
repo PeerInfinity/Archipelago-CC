@@ -136,6 +136,26 @@ def set_rules(world):
         Has("Ladder") | Has("Magic Orb"))
 ```
 
+### Name Substitutions
+
+Some worlds must use generic names at the class level (e.g. `"Statement 1"`, `"Prove Statement 1"`) because Archipelago's datapackage contract requires `item_name_to_id` to be fixed at class definition time. But when the world generator creates a *new* world from the exported JSON, it can use whatever names it wants.
+
+If the source world publishes a `name_substitutions` attribute, the generator applies it to the raw JSON **before** extraction — so all generated code (Items.py, Locations.py, Rules.py, Regions.py) automatically gets meaningful names with zero manual fixup.
+
+The substitutions dict has three sub-dicts:
+
+```python
+self.name_substitutions = {
+    "items":     {"Statement 1": "2cn: |- 2 e. CC", ...},
+    "locations": {"Prove Statement 1": "Prove 2cn: |- 2 e. CC", ...},
+    "regions":   {"Prove Statement 1": "Prove 2cn: |- 2 e. CC", ...},
+}
+```
+
+The generator replaces every occurrence of each generic name across all JSON sections (items, regions, access rules, canonical placements, starting items, itempool counts, completion condition, dependencies, etc.) before any data extraction happens.
+
+See [Name Substitutions](../docs/json/developer/guides/world-generator.md#name-substitutions) in the developer guide for implementation details.
+
 ### Helper Function Expansion
 
 The generator expands helper function references into self-contained rules, making the generated code independent of external helper modules.

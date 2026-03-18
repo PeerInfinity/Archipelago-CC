@@ -158,7 +158,6 @@ class SubnauticaWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Compass", "Lightweight High Capacity Tank", "Vehicle Upgrade Console", "Ultra Glide Fins", "Cyclops Sonar Upgrade", "Reinforced Dive Suit", "Cyclops Thermal Reactor Module", "Water Filtration Suit", "Alien Containment", "Creature Decoy", "Cyclops Fire Suppression System", "Swim Charge Fins", "Repulsion Cannon", "Cyclops Decoy Tube Upgrade", "Cyclops Shield Generator", "Cyclops Depth Module MK1", "Cyclops Docking Bay Repair Module", "Battery Charger fragment", "Beacon Fragment", "Bioreactor Fragment", "Cyclops Bridge Fragment", "Cyclops Engine Fragment", "Cyclops Hull Fragment", "Grav Trap Fragment", "Laser Cutter Fragment", "Light Stick Fragment", "Mobile Vehicle Bay Fragment", "Modification Station Fragment", "Moonpool Fragment", "Nuclear Reactor Fragment", "Power Cell Charger Fragment", "Power Transmitter Fragment", "Prawn Suit Fragment", "Prawn Suit Drill Arm Fragment", "Prawn Suit Grappling Arm Fragment", "Prawn Suit Propulsion Cannon Fragment", "Prawn Suit Torpedo Arm Fragment", "Scanner Room Fragment", "Seamoth Fragment", "Stasis Rifle Fragment", "Thermal Plant Fragment", "Seaglide Fragment", "Radiation Suit", "Propulsion Cannon Fragment", "Neptune Launch Platform", "Ion Power Cell", "Exterior Growbed", "Picture Frame", "Bench", "Basic Plant Pot", "Interior Growbed", "Plant Shelf", "Observatory", "Multipurpose Room", "Bulkhead", "Spotlight", "Desk", "Swivel Chair", "Office Chair", "Command Chair", "Counter", "Single Bed", "Basic Double Bed", "Quilted Double Bed", "Coffee Vending Machine", "Trash Can", "Floodlight", "Bar Table", "Vending Machine", "Single Wall Shelf", "Wall Shelves", "Round Plant Pot", "Chic Plant Pot", "Nuclear Waste Disposal", "Wall Planter", "Ion Battery", "Neptune Gantry", "Neptune Boosters", "Neptune Fuel Reserve", "Neptune Cockpit", "Water Filtration Machine", "Ultra High Capacity Tank", "Large Room", "Large Room Glass Dome", "Multipurpose Room Glass Dome", "Partition", "Partition Door", "Furniture", "Farming", "Resources Bundle", "Titanium", "Copper Ore", "Silver Ore", "Gold", "Lead", "Diamond", "Lithium", "Ruby", "Nickel Ore", "Crystalline Sulfur", "Salt Deposit", "Kyanite", "Magnetite", "Reactor Rod"]),
-        "Event": frozenset(["Victory", "Disable Quarantine", "Full Infection", "Repair Aurora Drive"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -458,6 +457,12 @@ class SubnauticaWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -598,7 +603,7 @@ class SubnauticaWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Neptune Launch", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

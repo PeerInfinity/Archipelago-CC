@@ -203,7 +203,6 @@ class CivVIWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Pottery", "Animal Husbandry", "Mining", "Sailing", "Astrology", "Irrigation", "Archery", "Writing", "Masonry", "Bronze Working", "The Wheel", "Celestial Navigation", "Currency", "Horseback Riding", "Iron Working", "Shipbuilding", "Mathematics", "Construction", "Engineering", "Military Tactics", "Apprenticeship", "Machinery", "Education", "Stirrups", "Military Engineering", "Castles", "Cartography", "Mass Production", "Banking", "Gunpowder", "Printing", "Square Rigging", "Astronomy", "Metal Casting", "Siege Tactics", "Industrialization", "Scientific Theory", "Ballistics", "Military Science", "Steam Power", "Sanitation", "Economics", "Rifling", "Flight", "Replaceable Parts", "Steel", "Electricity", "Radio", "Chemistry", "Combustion", "Advanced Flight", "Rocketry", "Advanced Ballistics", "Combined Arms", "Plastics", "Computers", "Nuclear Fission", "Synthetic Materials", "Telecommunications", "Satellites", "Guidance Systems", "Lasers", "Composites", "Stealth Technology", "Robotics", "Nanotechnology", "Nuclear Fusion", "Buttress", "Refining", "Seasteads", "Advanced AI", "Advanced Power Cells", "Cybernetics", "Smart Materials", "Predictive Systems", "Offworld Mission", "Future Tech", "Code of Laws", "Craftsmanship", "Foreign Trade", "Military Tradition", "State Workforce", "Early Empire", "Mysticism", "Games Recreation", "Political Philosophy", "Drama and Poetry", "Military Training", "Defensive Tactics", "Recorded History", "Theology", "Naval Tradition", "Feudalism", "Civil Service", "Mercenaries", "Medieval Faires", "Guilds", "Divine Right", "Exploration", "Humanism", "Diplomatic Service", "Reformed Church", "Mercantilism", "The Enlightenment", "Colonialism", "Civil Engineering", "Nationalism", "Opera and Ballet", "Natural History", "Scorched Earth", "Urbanization", "Conservation", "Capitalism", "Nuclear Program", "Mass Media", "Mobilization", "Ideology", "Suffrage", "Totalitarianism", "Class Struggle", "Cold War", "Professional Sports", "Cultural Heritage", "Rapid Deployment", "Space Race", "Globalization", "Social Media", "Future Civic", "Environmentalism", "Corporate Libertarianism", "Digital Democracy", "Synthetic Technocracy", "Near Future Governance", "Global Warming Mitigation", "Smart Power Doctrine", "Information Warfare", "Exodus Imperative", "Cultural Hegemony", "Progressive Campus", "Progressive Theater", "Progressive Holy Site", "Progressive Encampment", "Progressive Commercial Hub", "Progressive Harbor", "Progressive Industrial Zone", "Progressive Preserve", "Progressive Entertainment Complex", "Progressive Neighborhood", "Progressive Aerodrome", "Progressive Diplomatic Quarter", "Progressive Space Port", "Progressive Era", "Gold: Small", "Gold: Medium", "Gold: Large", "Faith: Small", "Faith: Medium", "Faith: Large", "Diplomatic Favor", "Governor Title", "Envoy", "Relic", "Scout", "Additional Population", "Builder", "Trader", "Settler"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -537,6 +536,12 @@ class CivVIWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -677,7 +682,7 @@ class CivVIWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Complete a victory type", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

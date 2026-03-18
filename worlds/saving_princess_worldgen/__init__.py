@@ -107,7 +107,6 @@ class SavingPrincessWorld(RuleWorldMixin, World):
         "Keys": frozenset(["Cave Key", "Volcanic Key", "Arctic Key", "Swamp Key"]),
         "Filler": frozenset(["Full Heal", "Quick-fire Mode", "Active Camouflage"]),
         "Traps": frozenset(["Ice Trap", "Shake Trap", "Ninja Trap"]),
-        "Event": frozenset(["PRINCESS"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -201,6 +200,7 @@ class SavingPrincessWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'SavingPrincessWorld'
+        self.music_table = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
         self.is_pool_expanded = True
         self.world_description = 'Explore a space station crawling with rogue machines and even rival bounty hunters\nwith the same objective as you - but with far, far different intentions!\n\nExpand your arsenal as you collect upgrades to your trusty arm cannon and armor!'
         self.slot_data = types.SimpleNamespace(death_link=0, expanded_pool=1, instant_saving=1, sprint_availability=2, cliff_weapon_upgrade=1, ace_weapon_upgrade=1, shake_intensity=50, iframes_duration=100, music_table=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
@@ -211,6 +211,12 @@ class SavingPrincessWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -349,6 +355,24 @@ class SavingPrincessWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("Mission objective", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = SavingPrincessWorldGenItem(
+                "PRINCESS",
+                item_table["PRINCESS"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("PRINCESS", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

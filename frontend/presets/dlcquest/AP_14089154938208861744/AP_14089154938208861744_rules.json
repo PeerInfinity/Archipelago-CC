@@ -1994,6 +1994,10 @@
       "prog_items_init": {
         " coins": 0,
         " coins freemium": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory Basic"
       }
     }
   },

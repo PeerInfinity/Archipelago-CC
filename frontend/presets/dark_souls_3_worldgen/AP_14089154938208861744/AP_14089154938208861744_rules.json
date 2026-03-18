@@ -33504,7 +33504,6 @@
       "Armor",
       "Boss Souls",
       "Cinders",
-      "Event",
       "Everything",
       "Healing",
       "Miscellaneous",
@@ -38468,7 +38467,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "KFF: Soul of the Lords"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

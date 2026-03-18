@@ -4128,9 +4128,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Post-Plantera",
                       "Hallow",
-                      "Hardmode"
+                      "Hardmode",
+                      "Post-Plantera"
                     ]
                   }
                 },
@@ -4727,8 +4727,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Hardmode Anvil",
                   "Bone",
+                  "Hardmode Anvil",
                   "Soul of Light",
                   "Soul of Night"
                 ]
@@ -8729,7 +8729,6 @@
   },
   "item_groups": {
     "1": [
-      "Event",
       "Everything"
     ]
   },
@@ -9928,7 +9927,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Post-Skeletron Prime",
+              "Post-The Destroyer",
+              "Post-The Twins"
+            ]
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

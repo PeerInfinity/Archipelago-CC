@@ -10,29 +10,29 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-02-22 16:57:39 UTC
+**Generated:** 2026-02-19 08:47:52 UTC
 
-**Source Data Created:** 2026-02-22T16:57:38.054119+00:00
+**Source Data Created:** 2026-02-19T08:47:51.638222+00:00
 
-**Source Data Last Updated:** 2026-02-22T16:57:38.054130+00:00
+**Source Data Last Updated:** 2026-02-19T08:47:51.638230+00:00
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 63 (84.0%)
-- **Failed:** 12 (16.0%)
+- **Passed:** 75 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 68
-- **Second Pass Failed:** 5
+- **Second Pass Tested:** 75
+- **Second Pass Passed:** 75
+- **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 37/63 (58.7% of passed)
-- **Passing with Generic Logic:** 64/63 (101.6% of passed)
-- **Passing with Both Generic:** 37/63 (58.7% of passed)
+- **Passing with Generic Exporter:** 39/75 (52.0% of passed)
+- **Passing with Generic Logic:** 69/75 (92.0% of passed)
+- **Passing with Both Generic:** 39/75 (52.0% of passed)
 
 ## Test Results
 
@@ -49,7 +49,7 @@
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 4.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Celeste (Open World) | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
+| Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 4.1KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
@@ -69,7 +69,7 @@
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 20.4KB | ✅ |
-| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | 4 | 4 | 10.1KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 3.6KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 38.2KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 7.3KB | ✅ |
@@ -79,7 +79,7 @@
 | Mega Man 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Metamath | ❌ Failed | ❌ Failed | 5 | 5 | ✅ | ✅ |
+| Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
@@ -89,27 +89,27 @@
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Satisfactory | ✅ Passed | ✅ Passed | 5 | 5 | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Secret of Evermore | ❌ Failed | ❌ Failed | 6 | 6 | 5.6KB | 7.5KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 5.6KB | 7.5KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 29.3KB | 90.1KB |
-| Stardew Valley | ❌ Failed | — | 6 | 6 | 18.8KB | 8.0KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 7 | 7 | 61.0KB | 114.5KB |
-| TOEM original | ❌ Failed | ❌ Failed | 7 | 7 | 0.6KB | ✅ |
+| TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 16.9KB | ✅ |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.2KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| VVVVVV | ❌ Failed | — | 8 | 8 | 3.8KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 9.2KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
@@ -185,7 +185,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | A Hat in Time.yaml |
 | 2 | Castlevania 64.yaml |
 
-### Celeste (Open World) ❌ (Split 2)
+### Celeste (Open World) ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -337,7 +337,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 
-### Kirby's Dream Land 3 ❌ (Split 2)
+### Kirby's Dream Land 3 ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -428,7 +428,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Kingdom Hearts.yaml |
 | 5 | Meritous.yaml |
 
-### Metamath ❌ (Split 2)
+### Metamath ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -529,7 +529,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Meritous.yaml |
 | 6 | Saving Princess.yaml |
 
-### Secret of Evermore ❌ (Split 2)
+### Secret of Evermore ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -573,7 +573,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Old School Runescape.yaml |
 | 6 | Starcraft 2.yaml |
 
-### Stardew Valley ❌ (Split 6)
+### Stardew Valley ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -640,7 +640,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Saving Princess.yaml |
 | 7 | Super Metroid.yaml |
 
-### TOEM original ❌ (Split 2)
+### TOEM original ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -697,7 +697,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 ### The Messenger ✅ (Split 7)
 
@@ -760,7 +761,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
-### VVVVVV ❌ (Split 2)
+### VVVVVV ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -813,37 +814,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
-## Bisection Results
-
-When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-### Stardew Valley (Stardew Valley.yaml)
-
-**Failing pairs found:** 5
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Aquaria.yaml | ❌ | ✅ | ✅ | ❌ |
-| Civilization VI.yaml | ❌ | ✅ | ✅ | ❌ |
-| Final Fantasy Mystic Quest.yaml | ❌ | ✅ | ✅ | ❌ |
-| Lufia II Ancient Cave.yaml | ❌ | ✅ | ✅ | ❌ |
-| Overcooked! 2.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### VVVVVV (VVVVVV.yaml)
-
-**Failing pairs found:** 7
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ❌ | ✅ | ✅ | ❌ |
-| Celeste (Open World).yaml | ❌ | ✅ | ✅ | ❌ |
-| Donkey Kong Country 3.yaml | ❌ | ✅ | ✅ | ❌ |
-| Kirby's Dream Land 3.yaml | ❌ | ✅ | ✅ | ❌ |
-| Metamath.yaml | ❌ | ✅ | ✅ | ❌ |
-| Secret of Evermore.yaml | ❌ | ✅ | ✅ | ❌ |
-| TOEM original.yaml | ❌ | ✅ | ✅ | ❌ |
-
-
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
@@ -851,75 +821,77 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
 | A Hat in Time | 1 | 8 | 1 | ✅ Passed |
-| A Link to the Past | 1 | 7 | 1 | ✅ Passed |
+| A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
 | APQuest | 1 | 8 | 1 | ✅ Passed |
 | Adventure | 1 | 8 | 1 | ✅ Passed |
-| Aquaria | 1 | 6 | 1 | ✅ Passed |
+| Aquaria | 1 | 7 | 1 | ✅ Passed |
 | Baking Adventure | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 2 | 8 | 2 | ✅ Passed |
-| Celeste (Open World) | 2 | 7 | 2 | ❌ Failed |
+| Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 8 | 2 | ✅ Passed |
-| Civilization VI | 2 | 6 | 2 | ✅ Passed |
+| Civilization VI | 2 | 7 | 2 | ✅ Passed |
 | Coding Adventure | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 3 | 8 | 3 | ✅ Passed |
-| Donkey Kong Country 3 | 3 | 6 | 2 | ✅ Passed |
+| Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | EarthBound | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
 | Faxanadu | 3 | 8 | 3 | ✅ Passed |
-| Final Fantasy Mystic Quest | 3 | 6 | 3 | ✅ Passed |
+| Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 4 | 8 | 4 | ✅ Passed |
 | Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
-| Kirby's Dream Land 3 | 4 | 6 | 3 | ❌ Failed |
+| Kirby's Dream Land 3 | 4 | 8 | 4 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
-| Lufia II Ancient Cave | 4 | 6 | 4 | ✅ Passed |
+| Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | Math Adventure | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
 | Meritous | 5 | 8 | 5 | ✅ Passed |
-| Metamath | 5 | 5 | 3 | ❌ Failed |
+| Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
 | Noita | 5 | 8 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
-| Overcooked! 2 | 5 | 6 | 5 | ✅ Passed |
+| Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
 | Satisfactory | 5 | 7 | 5 | ✅ Passed |
 | Saving Princess | 6 | 8 | 6 | ✅ Passed |
-| Secret of Evermore | 6 | 4 | 3 | ❌ Failed |
+| Secret of Evermore | 6 | 8 | 6 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
+| Stardew Valley | 6 | 7 | 6 | ✅ Passed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario World | 6 | 7 | 6 | ✅ Passed |
 | Super Metroid | 7 | 8 | 7 | ✅ Passed |
-| TOEM original | 7 | 3 | 3 | ❌ Failed |
+| TOEM original | 7 | 8 | 7 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | TUNIC | 7 | 8 | 7 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
-| The Legend of Zelda | 6 | 6 | 6 | ✅ Passed |
+| The Legend of Zelda | 7 | 7 | 7 | ✅ Passed |
 | The Messenger | 7 | 7 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
 | Undertale | 8 | 8 | 8 | ✅ Passed |
+| VVVVVV | 8 | 8 | 8 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
 | shapez | 8 | 8 | 8 | ✅ Passed |
@@ -952,6 +924,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Metamath.yaml |
 | 6 | Secret of Evermore.yaml |
 | 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### A Short Hike ✅ (Split 3)
 
@@ -1001,7 +974,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Baking Adventure ✅ (Split 7)
 
@@ -1064,7 +1038,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
-#### Celeste (Open World) ❌ (Split 2)
+#### Celeste (Open World) ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1075,6 +1049,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Metamath.yaml |
 | 6 | Secret of Evermore.yaml |
 | 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Celeste 64 ✅ (Split 3)
 
@@ -1124,7 +1099,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Coding Adventure ✅ (Split 7)
 
@@ -1192,11 +1168,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Kirby's Dream Land 3.yaml |
-| 4 | Metamath.yaml |
-| 5 | Secret of Evermore.yaml |
-| 6 | TOEM original.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### EarthBound ✅ (Split 3)
 
@@ -1246,7 +1224,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Heretic ✅ (Split 7)
 
@@ -1309,16 +1288,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario World.yaml |
 | 7 | Timespinner.yaml |
 
-#### Kirby's Dream Land 3 ❌ (Split 2)
+#### Kirby's Dream Land 3 ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Kirby's Dream Land 3.yaml |
-| 4 | Metamath.yaml |
-| 5 | Secret of Evermore.yaml |
-| 6 | TOEM original.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Landstalker - The Treasures of King Nole ✅ (Split 3)
 
@@ -1368,7 +1349,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Mario & Luigi Superstar Saga ✅ (Split 7)
 
@@ -1431,15 +1413,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
-#### Metamath ❌ (Split 2)
+#### Metamath ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Muse Dash ✅ (Split 3)
 
@@ -1489,7 +1474,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Paint ✅ (Split 7)
 
@@ -1552,14 +1538,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
-#### Secret of Evermore ❌ (Split 2)
+#### Secret of Evermore ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Secret of Evermore.yaml |
-| 4 | TOEM original.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Shivers ✅ (Split 3)
 
@@ -1599,6 +1589,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Starcraft 2.yaml |
 | 7 | Terraria.yaml |
 | 8 | shapez.yaml |
+
+#### Stardew Valley ✅ (Split 6)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### Subnautica ✅ (Split 7)
 
@@ -1661,13 +1663,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
-#### TOEM original ❌ (Split 2)
+#### TOEM original ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | TOEM original.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### TOEM rule builder ✅ (Split 3)
 
@@ -1717,7 +1724,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
-| 6 | The Legend of Zelda.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
 
 #### The Messenger ✅ (Split 7)
 
@@ -1780,6 +1788,19 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Super Metroid.yaml |
 | 8 | Undertale.yaml |
 
+#### VVVVVV ✅ (Split 2)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
+
 #### Wargroove ✅ (Split 3)
 
 | Player # | Template |
@@ -1818,65 +1839,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Starcraft 2.yaml |
 | 7 | Terraria.yaml |
 | 8 | shapez.yaml |
-
-### Second Pass Bisection Results
-
-When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-#### Celeste (Open World) (Celeste (Open World).yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kirby's Dream Land 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Metamath.yaml | ✅ | ✅ | ✅ | ✅ |
-| Secret of Evermore.yaml | ✅ | ✅ | ✅ | ✅ |
-| TOEM original.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Kirby's Dream Land 3 (Kirby's Dream Land 3.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Metamath.yaml | ✅ | ✅ | ✅ | ✅ |
-| Secret of Evermore.yaml | ✅ | ✅ | ✅ | ✅ |
-| TOEM original.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Metamath (Metamath.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Secret of Evermore.yaml | ✅ | ✅ | ✅ | ✅ |
-| TOEM original.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Secret of Evermore (Secret of Evermore.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| TOEM original.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### TOEM original (TOEM original.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes

@@ -74,7 +74,7 @@ export class CostDataManager {
         source: url,
         regionCount: Object.keys(data.regions || {}).length,
         locationCount: Object.keys(data.locations || {}).length,
-      }, 'loops');
+      });
 
       return data;
     } catch (error) {
@@ -84,7 +84,7 @@ export class CostDataManager {
       this.eventBus?.publish('costDataManager:loadError', {
         source: url,
         error: error.message,
-      }, 'loops');
+      });
 
       return null;
     } finally {
@@ -127,7 +127,7 @@ export class CostDataManager {
         source: file.name,
         regionCount: Object.keys(data.regions || {}).length,
         locationCount: Object.keys(data.locations || {}).length,
-      }, 'loops');
+      });
 
       return data;
     } catch (error) {
@@ -137,7 +137,7 @@ export class CostDataManager {
       this.eventBus?.publish('costDataManager:loadError', {
         source: file.name,
         error: error.message,
-      }, 'loops');
+      });
 
       return null;
     } finally {
@@ -166,7 +166,7 @@ export class CostDataManager {
       source,
       regionCount: Object.keys(data.regions || {}).length,
       locationCount: Object.keys(data.locations || {}).length,
-    }, 'loops');
+    });
 
     return true;
   }
@@ -211,7 +211,7 @@ export class CostDataManager {
       return regionData.moveCost;
     }
 
-    return this.costData.defaultRegionCost || 10;
+    return this.costData.defaultRegionCost || 50;
   }
 
   /**
@@ -229,7 +229,7 @@ export class CostDataManager {
       return locationCost;
     }
 
-    return this.costData.defaultLocationCost || 10;
+    return this.costData.defaultLocationCost || 100;
   }
 
   /**
@@ -237,7 +237,7 @@ export class CostDataManager {
    * @returns {number} Default region move cost
    */
   getDefaultRegionCost() {
-    return this.costData?.defaultRegionCost || 10;
+    return this.costData?.defaultRegionCost || 50;
   }
 
   /**
@@ -245,7 +245,7 @@ export class CostDataManager {
    * @returns {number} Default location check cost
    */
   getDefaultLocationCost() {
-    return this.costData?.defaultLocationCost || 10;
+    return this.costData?.defaultLocationCost || 100;
   }
 
   /**
@@ -291,7 +291,7 @@ export class CostDataManager {
 
     logger.info('Cost data cleared');
 
-    this.eventBus?.publish('costDataManager:cleared', {}, 'loops');
+    this.eventBus?.publish('costDataManager:cleared', {});
   }
 
   /**
@@ -370,7 +370,7 @@ export class CostDataManager {
             regionCount: Object.keys(data.regions || {}).length,
             locationCount: Object.keys(data.locations || {}).length,
             fromExisting: true,
-          }, 'loops');
+          });
 
           return data;
         }

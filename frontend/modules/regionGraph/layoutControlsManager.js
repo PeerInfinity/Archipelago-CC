@@ -1,6 +1,7 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -16,7 +17,7 @@ export class LayoutControlsManager {
         <button id="toggleControls" style="background: none; border: 1px solid #555; color: white; padding: 2px 6px; font-size: 10px; cursor: pointer; border-radius: 2px; margin-right: 8px; pointer-events: none;">+</button>
         <span style="font-weight: bold; pointer-events: none;">Controls</span>
       </div>
-      <div id="controlsContent" style="display: none;">
+      <div id="controlsContent" style="display: none; max-height: calc(100vh - 100px); overflow-y: auto; padding-right: 15px;">
         <div style="margin-bottom: 10px;">
           <button id="resetView" style="margin: 2px; padding: 4px 8px;">Reset View</button>
           <button id="relayout" style="margin: 2px; padding: 4px 8px;">Re-layout</button>
@@ -107,24 +108,24 @@ export class LayoutControlsManager {
   async loadCheckboxSettings() {
     // Load checkbox states from settings
     const checkboxes = [
-      { id: '#forceShowLocations', setting: 'regionGraph.forceShowLocations', default: false },
-      { id: '#forceHideLocations', setting: 'regionGraph.forceHideLocations', default: false },
-      { id: '#keepRegionSetsComplete', setting: 'regionGraph.keepRegionSetsComplete', default: true },
-      { id: '#onlyShowLocationsInView', setting: 'regionGraph.onlyShowLocationsInView', default: false },
-      { id: '#movePlayerOneStep', setting: 'regionGraph.movePlayerOneStep', default: false },
-      { id: '#movePlayerDirectly', setting: 'regionGraph.movePlayerDirectly', default: true },
-      { id: '#showRegionInPanel', setting: 'regionGraph.showRegionInPanel', default: true },
-      { id: '#addToPath', setting: 'regionGraph.addToPath', default: true },
-      { id: '#overwritePath', setting: 'regionGraph.overwritePath', default: false },
-      { id: '#addLocationsToPath', setting: 'regionGraph.addLocationsToPath', default: false },
-      { id: '#checkAllLocationsInRegion', setting: 'regionGraph.checkAllLocationsInRegion', default: false },
-      { id: '#graph-show-undiscovered', setting: 'regionGraph.showUndiscovered', default: true }
+      { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
+      { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
+      { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
+      { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
+      { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
+      { id: '#movePlayerDirectly', setting: 'moduleSettings.regionGraph.movePlayerDirectly', default: true },
+      { id: '#showRegionInPanel', setting: 'moduleSettings.regionGraph.showRegionInPanel', default: true },
+      { id: '#addToPath', setting: 'moduleSettings.regionGraph.addToPath', default: true },
+      { id: '#overwritePath', setting: 'moduleSettings.regionGraph.overwritePath', default: false },
+      { id: '#addLocationsToPath', setting: 'moduleSettings.regionGraph.addLocationsToPath', default: false },
+      { id: '#checkAllLocationsInRegion', setting: 'moduleSettings.regionGraph.checkAllLocationsInRegion', default: false },
+      { id: '#graph-show-undiscovered', setting: 'moduleSettings.regionGraph.showUndiscovered', default: true }
     ];
 
     // Load numeric input settings
     const numericInputs = [
-      { id: '#maxLocationNodes', setting: 'regionGraph.maxLocationNodes', default: 100 },
-      { id: '#viewportStabilizeDelay', setting: 'regionGraph.viewportStabilizeDelay', default: 1000 }
+      { id: '#maxLocationNodes', setting: 'moduleSettings.regionGraph.maxLocationNodes', default: 100 },
+      { id: '#viewportStabilizeDelay', setting: 'moduleSettings.regionGraph.viewportStabilizeDelay', default: 1000 }
     ];
 
     for (const input of numericInputs) {
@@ -184,7 +185,7 @@ export class LayoutControlsManager {
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
     if (showUndiscoveredCheckbox) {
       showUndiscoveredCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#graph-show-undiscovered', 'regionGraph.showUndiscovered', e.target.checked);
+        await this.saveCheckboxSetting('#graph-show-undiscovered', 'moduleSettings.regionGraph.showUndiscovered', e.target.checked);
         // Rebuild the graph with new filtering
         if (this.ui.cy && this.ui.graphInitialized) {
           this.ui.loadGraphData();
@@ -197,7 +198,7 @@ export class LayoutControlsManager {
     if (keepRegionSetsCheckbox) {
       this.ui.keepRegionSetsComplete = keepRegionSetsCheckbox.checked;
       keepRegionSetsCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#keepRegionSetsComplete', 'regionGraph.keepRegionSetsComplete', e.target.checked);
+        await this.saveCheckboxSetting('#keepRegionSetsComplete', 'moduleSettings.regionGraph.keepRegionSetsComplete', e.target.checked);
         this.ui.keepRegionSetsComplete = e.target.checked;
         // Refresh location nodes if visible
         if (this.ui.locationsVisible) {
@@ -216,7 +217,7 @@ export class LayoutControlsManager {
         viewportDelayContainer.style.display = onlyInViewCheckbox.checked ? 'block' : 'none';
       }
       onlyInViewCheckbox.addEventListener('change', async (e) => {
-        await this.saveCheckboxSetting('#onlyShowLocationsInView', 'regionGraph.onlyShowLocationsInView', e.target.checked);
+        await this.saveCheckboxSetting('#onlyShowLocationsInView', 'moduleSettings.regionGraph.onlyShowLocationsInView', e.target.checked);
         this.ui.onlyShowLocationsInView = e.target.checked;
         // Show/hide viewport delay setting
         if (viewportDelayContainer) {
@@ -245,13 +246,6 @@ export class LayoutControlsManager {
 
   async saveCheckboxSetting(checkboxId, settingKey, value) {
     try {
-      // Ensure the regionGraph settings section exists
-      const currentSettings = await settingsManager.getSettings();
-      if (!currentSettings.regionGraph) {
-        await settingsManager.updateSetting('regionGraph', {});
-      }
-
-      // Now update the specific setting
       await settingsManager.updateSetting(settingKey, value);
     } catch (error) {
       logger.warn(`Failed to save setting ${settingKey}:`, error);
@@ -260,13 +254,6 @@ export class LayoutControlsManager {
 
   async saveNumericSetting(settingKey, value) {
     try {
-      // Ensure the regionGraph settings section exists
-      const currentSettings = await settingsManager.getSettings();
-      if (!currentSettings.regionGraph) {
-        await settingsManager.updateSetting('regionGraph', {});
-      }
-
-      // Now update the specific setting
       await settingsManager.updateSetting(settingKey, value);
     } catch (error) {
       logger.warn(`Failed to save setting ${settingKey}:`, error);
@@ -324,26 +311,191 @@ export class LayoutControlsManager {
     this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
 
-    // Use the same COSE settings as the preset in layoutEditor
-    const layoutOptions = {
-      name: 'cose',
-      randomize: false,
-      animate: true,
-      animationDuration: 1000,
-      fit: true,
-      padding: 50,
-      nodeRepulsion: 400000,
-      nodeOverlap: 10,
-      idealEdgeLength: 100,
-      edgeElasticity: 100,
-      nestingFactor: 5,
-      gravity: 80,
-      numIter: 1000,
-      componentSpacing: 100
-    };
+    // Auto-detect DAG structure for hierarchical layout
+    const dagResult = this.detectDAGStructure();
+    let layoutOptions;
+    let selectedPreset = 'cose';
+
+    if (dagResult.isDAG) {
+      // Check if nodes have pre-computed hierarchy depths from graphDataManager.
+      // If so, use a custom hierarchical layout that respects those depths
+      // (Cytoscape's breadthfirst BFS ignores our longest-path computation).
+      layoutOptions = this.buildHierarchyLayout();
+      logger.debug(`Using custom hierarchy layout with ${layoutOptions._depthCount} depth levels`);
+
+      selectedPreset = 'hierarchical-auto';
+      logger.debug(`DAG detected, using hierarchical layout`);
+    } else {
+      // Use COSE for non-DAG graphs
+      layoutOptions = {
+        name: 'cose',
+        randomize: false,
+        animate: true,
+        animationDuration: 1000,
+        fit: true,
+        padding: 50,
+        nodeRepulsion: 400000,
+        nodeOverlap: 10,
+        idealEdgeLength: 100,
+        edgeElasticity: 100,
+        nestingFactor: 5,
+        gravity: 80,
+        numIter: 1000,
+        componentSpacing: 100
+      };
+    }
+
+    // Sync layout editor dropdown to reflect the selected layout
+    const layoutPresetSelect = this.ui.controlPanel?.querySelector('#layoutPreset');
+    if (layoutPresetSelect) {
+      layoutPresetSelect.value = selectedPreset;
+    }
 
     this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
     this.ui.currentLayout.run();
+  }
+
+  /**
+   * Build a hierarchical layout using pre-computed longest-path depths stored
+   * on node data (hierarchyDepth). Returns a Cytoscape 'preset' layout config
+   * with computed positions that guarantee no edge connects same-row nodes.
+   */
+  buildHierarchyLayout() {
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+
+    // Group nodes by depth
+    const depthGroups = new Map();
+    nodes.forEach(node => {
+      const depth = node.data('hierarchyDepth') ?? 0;
+      if (!depthGroups.has(depth)) depthGroups.set(depth, []);
+      depthGroups.get(depth).push(node);
+    });
+
+    // Sort depth levels
+    const sortedDepths = [...depthGroups.keys()].sort((a, b) => a - b);
+    const numLevels = sortedDepths.length;
+
+    // Log depth distribution for debugging
+    const depthInfo = sortedDepths.map(d => `${d}:${depthGroups.get(d).length}`).join(', ');
+    logger.debug(`Hierarchy layout: ${numLevels} levels, distribution: [${depthInfo}]`);
+
+    // Compute node dimensions for spacing
+    const avgNodeWidth = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.w;
+    }, 0) / Math.max(nodes.length, 1);
+    const avgNodeHeight = nodes.reduce((sum, n) => {
+      const bb = n.boundingBox({ includeLabels: true });
+      return sum + bb.h;
+    }, 0) / Math.max(nodes.length, 1);
+
+    const spacingFactor = 1.5;
+    const rowSpacing = Math.max(avgNodeHeight * spacingFactor, 80);
+    const colSpacing = Math.max(avgNodeWidth * spacingFactor, 120);
+
+    // Compute positions: center each row horizontally
+    const positions = new Map();
+    sortedDepths.forEach((depth, levelIndex) => {
+      const nodesAtDepth = depthGroups.get(depth);
+      const rowWidth = (nodesAtDepth.length - 1) * colSpacing;
+      const startX = -rowWidth / 2;
+
+      nodesAtDepth.forEach((node, colIndex) => {
+        positions.set(node.id(), {
+          x: startX + colIndex * colSpacing,
+          y: levelIndex * rowSpacing
+        });
+      });
+    });
+
+    return {
+      name: 'preset',
+      _depthCount: numLevels,
+      positions: (node) => positions.get(node.id()) || { x: 0, y: 0 },
+      animate: true,
+      animationDuration: 1000,
+      fit: true,
+      padding: 50
+    };
+  }
+
+  /**
+   * Detect whether the graph has DAG (directed acyclic graph) structure
+   * by analyzing hasForwardExit/hasReverseExit on edges and running Kahn's algorithm.
+   * @returns {{ isDAG: boolean }}
+   */
+  detectDAGStructure() {
+    const edges = this.ui.cy.edges().filter(e => !e.hasClass('hidden'));
+    if (edges.length === 0) return { isDAG: false };
+
+    // Count truly bidirectional edges (both directions have actual exits)
+    let bidirectionalCount = 0;
+    for (let i = 0; i < edges.length; i++) {
+      const data = edges[i].data();
+      if (data.hasForwardExit && data.hasReverseExit) {
+        bidirectionalCount++;
+      }
+    }
+
+    // If >10% of edges are truly bidirectional, not a DAG
+    if (bidirectionalCount / edges.length > 0.1) {
+      return { isDAG: false };
+    }
+
+    // Build directed adjacency from hasForwardExit/hasReverseExit
+    // Edges are oriented parent→child by BFS depth from starting region
+    const inDegree = new Map();
+    const adjList = new Map();
+
+    // Initialize all nodes
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+      const id = node.id();
+      inDegree.set(id, 0);
+      adjList.set(id, []);
+    });
+
+    // Add directed edges based on which direction has an actual exit
+    for (let i = 0; i < edges.length; i++) {
+      const data = edges[i].data();
+      const source = data.source; // parent (shallower in BFS)
+      const target = data.target; // child (deeper in BFS)
+      if (!inDegree.has(source) || !inDegree.has(target)) continue;
+
+      if (data.hasForwardExit && !data.hasReverseExit) {
+        // Forward only: source -> target
+        adjList.get(source).push(target);
+        inDegree.set(target, inDegree.get(target) + 1);
+      } else if (data.hasReverseExit && !data.hasForwardExit) {
+        // Reverse only: target -> source
+        adjList.get(target).push(source);
+        inDegree.set(source, inDegree.get(source) + 1);
+      }
+      // If both, skip — already counted as bidirectional and under threshold
+    }
+
+    // Kahn's algorithm for topological sort / cycle detection
+    const queue = [];
+    for (const [nodeId, deg] of inDegree) {
+      if (deg === 0) queue.push(nodeId);
+    }
+
+    let processed = 0;
+    while (queue.length > 0) {
+      const node = queue.shift();
+      processed++;
+      for (const neighbor of adjList.get(node) || []) {
+        const newDeg = inDegree.get(neighbor) - 1;
+        inDegree.set(neighbor, newDeg);
+        if (newDeg === 0) queue.push(neighbor);
+      }
+    }
+
+    const totalNodes = inDegree.size;
+    const isDAG = processed === totalNodes && totalNodes > 0;
+
+    logger.debug(`DAG detection: ${processed}/${totalNodes} nodes processed, bidirectional=${bidirectionalCount}/${edges.length}, isDAG=${isDAG}`);
+
+    return { isDAG };
   }
 
   saveNodePositions() {

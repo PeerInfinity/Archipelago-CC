@@ -126,7 +126,6 @@ class RiskOfRainWorld(RuleWorldMixin, World):
         "Fillers": frozenset(["Money", "Lunar Coin", "1000 Exp"]),
         "Stages": frozenset(["Stage 1", "Stage 2", "Stage 3", "Stage 4", "Progressive Stage"]),
         "Environments": frozenset(["Aphelian Sanctuary", "Void Fields", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Bazaar Between Time", "Distant Roost", "Distant Roost (2)", "Abyssal Depths", "Wetland Aspect", "Rallypoint Delta", "Hidden Realm: Gilded Coast", "Titanic Plains", "Titanic Plains (2)", "Abandoned Aqueduct", "Hidden Realm: A Moment, Whole", "Verdant Falls", "Commencement", "Hidden Realm: A Moment, Fractured", "Sundered Grove", "Siren's Call", "Sky Meadow", "Siphoned Forest", "Sulfur Pools", "The Planetarium", "Void Locus", "Scorched Acres"]),
-        "Event": frozenset(["Stage 5", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -602,6 +601,12 @@ class RiskOfRainWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -742,7 +747,7 @@ class RiskOfRainWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Victory", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

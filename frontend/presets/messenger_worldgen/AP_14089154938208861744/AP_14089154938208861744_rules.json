@@ -139,22 +139,13 @@
             "name": "Money Sink",
             "connected_region": "The Craftsman's Corner",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shards",
-                    "count": 4566
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Money Wrench"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Shards": 4566,
+                  "Money Wrench": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -6861,7 +6852,6 @@
   "item_groups": {
     "1": [
       "Crest",
-      "Event",
       "Everything",
       "Keys",
       "Notes",
@@ -7400,6 +7390,10 @@
       ],
       "prog_items_init": {
         "Shards": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Do the Thing!"
       }
     }
   },

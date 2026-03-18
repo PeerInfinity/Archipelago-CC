@@ -21600,7 +21600,12 @@
     }
   },
   "game_info": {
-    "2": {}
+    "2": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Triforce"
+      }
+    }
   },
   "helpers": {
     "1": {

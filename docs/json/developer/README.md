@@ -47,10 +47,10 @@ Documentation of changes from upstream Archipelago:
 | Document | Description |
 |----------|-------------|
 | [Repository Changes](./diffs/repository-changes.md) | Overview of all fork modifications |
-| [Core Files](./diffs/core-files.diff) | Changes to Main.py, BaseClasses.py |
-| [Config Files](./diffs/config-files.diff) | Configuration modifications |
-| [World Init Files](./diffs/world-init-files.diff) | World __init__.py changes |
-| [Rule Builder Modifications](./diffs/rule-builder-modifications.md) | Rule Builder customizations |
+| [Core Files](./diffs/diff-files/core-files.diff) | Changes to Main.py, BaseClasses.py |
+| [Config Files](./diffs/diff-files/config-files.diff) | Configuration modifications |
+| [World Init Files](./diffs/diff-files/world-init-files.diff) | World __init__.py changes |
+| [Rule Builder Modifications](./diffs/rule-builder/rule-builder-modifications.md) | Rule Builder customizations |
 | [Universal Tracker Modifications](./diffs/universal-tracker-modifications.md) | UT integration changes |
 | [Fuzzer Modifications](./diffs/fuzzer-modifications.md) | Fuzzer enhancements |
 

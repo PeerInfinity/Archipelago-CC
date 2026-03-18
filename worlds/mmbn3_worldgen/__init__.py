@@ -284,7 +284,6 @@ class MMBN3World(RuleWorldMixin, World):
         "Zenny": frozenset(["200z", "500z", "600z", "800z", "900z", "1000z", "1200z", "1400z", "1600z", "1800z", "2000z", "3000z", "9000z", "10000z", "30000z", "50000z"]),
         "BugFrags": frozenset(["30 BugFrags", "10 BugFrags", "1 BugFrag"]),
         "Navi Chips": frozenset(["Roll R", "Roll V2 R", "Roll V3 R", "GutsMan G", "GutsMan V2 G", "GutsMan V3 G", "ProtoMan B", "ProtoMan V2 B", "ProtoMan V3 B", "FlashMan F", "FlashMan V2 F", "FlashMan V3 F", "BeastMan B", "BeastMan V2 B", "BeastMan V3 B", "BubblMan B", "BubblMan V2 B", "BubblMan V3 B", "DesertMan D", "DesertMan V2 D", "DesertMan V3 D", "PlantMan P", "PlantMan V2 P", "PlantMan V3 P", "FlamMan F", "FlamMan V2 F", "FlamMan V3 F", "DrillMan D", "DrillMan V2 D", "DrillMan V3 D", "MetalMan M", "MetalMan V2 M", "MetalMan V3 M", "KingMan K", "KingMan V2 K", "KingMan V3 K", "BowlMan B", "BowlMan V2 B", "BowlMan V3 B"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -843,6 +842,12 @@ class MMBN3World(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -983,7 +988,7 @@ class MMBN3World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Alpha Defeated", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

@@ -5206,7 +5206,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Goal"
+      }
+    }
   },
   "helpers": {
     "1": {

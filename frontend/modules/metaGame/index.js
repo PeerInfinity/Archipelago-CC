@@ -73,6 +73,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ui:activatePanel');
   registrationApi.registerEventBusPublisher('progressBarPanel:showUIContent');
   registrationApi.registerEventBusPublisher('progressBarPanel:hideUIContent');
+  registrationApi.registerEventBusPublisher('metaGame:progressBarCancelled');
   // Note: metaGame-specific progress bar events are registered dynamically when progress bars are created
   
   // Register settings schema
@@ -107,7 +108,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     });
 
     // Subscribe to editor config Apply events
-    eventBus.subscribe('editor:metaGameConfigApply', handleEditorConfigApply, moduleId);
+    eventBus.subscribe('editor:metaGameConfigApply', handleEditorConfigApply);
     logger.info('metaGame', 'Subscribed to editor:metaGameConfigApply events');
 
     // Event handlers are registered during the registration phase
@@ -126,7 +127,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     
   } catch (error) {
     logger.error('metaGame', 'Failed to initialize MetaGame module:', error);
-    eventBus.publish('metaGame:error', { error: error.message }, moduleInfo.name);
+    eventBus.publish('metaGame:error', { error: error.message });
     throw error;
   }
 }

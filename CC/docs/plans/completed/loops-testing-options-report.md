@@ -27,7 +27,7 @@ This report analyzes four approaches for testing the Loops module in the fronten
    - TestController provides actions: `performAction()`, `waitForEvent()`, `pollForCondition()`
    - Playwright integration via `window.__playwrightTestsComplete__`
 
-2. **Playwright E2E** (`tests/e2e/`)
+2. **Playwright E2E** (`test_json/e2e/`)
    - `app.spec.js` - Standard in-app test runner
    - `multiclient.spec.js` - Server-based multiclient coordination
 
@@ -303,7 +303,7 @@ This is the most complex option requiring work across multiple layers.
 
 **Use Case**: When investigating test failures or developing new features, use:
 ```bash
-npx playwright test --debug tests/e2e/app.spec.js
+npx playwright test --debug test_json/e2e/app.spec.js
 ```
 
 ### Future Consideration: Option 3 (Bounce Messages)

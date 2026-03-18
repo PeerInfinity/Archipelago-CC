@@ -2,6 +2,13 @@
 
 import { createSphereStateSingleton, getSphereStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import {
+  compareSphereIndex,
+  computeCrossPlayerItems,
+  computeGrantDelta,
+  getCumulativeBaseItems,
+  grantUpToSphere,
+} from './crossPlayerItems.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -22,7 +29,7 @@ export const moduleInfo = {
 
 // Store module-level references
 let moduleEventBus = null;
-const moduleId = 'sphereState';
+let moduleId = 'sphereState';
 
 /**
  * Registration function for the sphereState module.
@@ -122,6 +129,17 @@ export async function register(registrationApi) {
     return sphereState.getLogHeader();
   });
 
+  // Cross-player item computation (used by loopsCostDebugger verify, spoilerChecklist sync)
+  registrationApi.registerPublicFunction(moduleId, 'compareSphereIndex', compareSphereIndex);
+  registrationApi.registerPublicFunction(moduleId, 'computeCrossPlayerItems',
+    (upToSphere, inclusive) => computeCrossPlayerItems(upToSphere, inclusive));
+  registrationApi.registerPublicFunction(moduleId, 'computeGrantDelta',
+    (crossPlayerItems, currentInventory) => computeGrantDelta(crossPlayerItems, currentInventory));
+  registrationApi.registerPublicFunction(moduleId, 'getCumulativeBaseItems',
+    (upToSphere, inclusive) => getCumulativeBaseItems(upToSphere, inclusive));
+  registrationApi.registerPublicFunction(moduleId, 'grantItemsUpToSphere',
+    (sphereIndex) => grantUpToSphere(sphereIndex));
+
   // Register event publishers
   registrationApi.registerEventBusPublisher('sphereState:dataLoaded');
   registrationApi.registerEventBusPublisher('sphereState:dataCleared');
@@ -138,6 +156,7 @@ export async function register(registrationApi) {
  * @param {object} initializationApi - API provided by the initialization script.
  */
 export async function initialize(mId, priorityIndex, initializationApi) {
+  moduleId = mId;
   log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
 
   // Store the event bus reference
@@ -148,10 +167,10 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
   // Subscribe to stateManager:rulesLoaded via eventBus
   if (moduleEventBus) {
-    moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleId);
+    moduleEventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
     log('info', `[${moduleId} Module] Subscribed to stateManager:rulesLoaded via eventBus`);
 
-    moduleEventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated, moduleId);
+    moduleEventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated);
     log('info', `[${moduleId} Module] Subscribed to stateManager:snapshotUpdated via eventBus`);
   }
 

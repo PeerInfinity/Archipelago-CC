@@ -9,7 +9,7 @@
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createRegionLink } from '../commonUI/index.js';
@@ -61,7 +61,7 @@ export class TestSpoilerUI {
     this.abortController = null;
     this.spoilersPanelContainer = null;
     this.viewChangeSubscription = null;
-    this.eventBus = eventBus;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.rootElement = null;
     this.activeRulesetName = null;
     this.gameName = null;
@@ -166,9 +166,9 @@ export class TestSpoilerUI {
       );
       this.initialize(); // This will call the modified initialize method
 
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'spoilerTest');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.dispose();
@@ -343,7 +343,7 @@ export class TestSpoilerUI {
           }
         }
       }
-      , 'spoilerTest');
+    );
 
     if (this.rawJsonDataUnsub) this.rawJsonDataUnsub();
     this.rawJsonDataUnsub = this.eventBus.subscribe(
@@ -362,7 +362,7 @@ export class TestSpoilerUI {
           }
         }
       }
-      , 'spoilerTest');
+    );
 
     this.initialized = true;
     this.log(

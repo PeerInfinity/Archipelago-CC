@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-02-22 16:57:39 UTC
+**Generated:** 2026-02-19 08:47:52 UTC
 
 **Source Data Created:** 2026-02-18T23:40:25.407810+00:00
 
@@ -66,8 +66,8 @@ Of the 55 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | 235.5KB |
 | A Hat in Time WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 232.4KB |
-| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 669.3KB |
-| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 668.7KB |
+| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 669.4KB |
+| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 668.8KB |
 | A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 671.7KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 670.0KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 78.5KB |
@@ -149,8 +149,8 @@ Of the 55 templates passing all 4 tests:
 | 4 | Links Awakening DX WorldGen | 703.0KB |
 | 5 | A Link to the Past WorldGen | 671.7KB |
 | 6 | A Link to the Past WorldGen2 | 670.0KB |
-| 7 | A Link to the Past Vanilla WorldGen | 669.3KB |
-| 8 | A Link to the Past Vanilla WorldGen2 | 668.7KB |
+| 7 | A Link to the Past Vanilla WorldGen | 669.4KB |
+| 8 | A Link to the Past Vanilla WorldGen2 | 668.8KB |
 | 9 | Final Fantasy Mystic Quest WorldGen | 556.6KB |
 | 10 | Overcooked! 2 WorldGen | 485.8KB |
 

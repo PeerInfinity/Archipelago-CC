@@ -97,7 +97,26 @@ PRESETS = {
         'resolve_options_to_constants': True,
         'use_tracking_mode_config': False,
     },
-    'ut-fuzz': {
+    'ut-hybrid': {
+        'skip_required_files': True,
+        'save_rules_json': False,
+        'save_tracker_pickle': False,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+        'clear_game_presets': False,
+        'clear_all_presets': False,
+        'resolve_options_to_constants': True,
+        'use_tracking_mode_config': True,  # Config picks best tracking mode per game
+    },
+    'ut-worldgen': {
         'skip_required_files': True,
         'save_rules_json': True,
         'save_tracker_pickle': False,
@@ -108,18 +127,37 @@ PRESETS = {
         'extend_sphere_log_to_all_locations': False,
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
-        'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
-        'filter_event_items': True,  # Filter out event locations/items to match UT output
+        'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
         'resolve_options_to_constants': True,
-        'use_tracking_mode_config': True,  # Use tracking-mode-config.json for per-game export decisions
+        'use_tracking_mode_config': False,
     },
-    'pickle-mode': {
+    'ut-pickle': {
         'skip_required_files': True,
-        'save_rules_json': False,  # Disable JSON export
-        'save_tracker_pickle': True,  # Enable pickle export
+        'save_rules_json': False,
+        'save_tracker_pickle': True,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+        'clear_game_presets': False,
+        'clear_all_presets': False,
+        'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
+    },
+    'ut-original': {
+        'skip_required_files': True,
+        'save_rules_json': False,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': True,
@@ -192,6 +230,10 @@ Examples:
   %(prog)s normal                          # Apply normal preset
   %(prog)s minimal-spoilers                # Apply minimal spoiler testing settings
   %(prog)s full-spoilers                   # Apply full spoiler testing settings
+  %(prog)s ut-hybrid                       # Apply UT hybrid mode (config picks best mode per game)
+  %(prog)s ut-worldgen                     # Apply UT worldgen mode (rules.json export)
+  %(prog)s ut-pickle                       # Apply UT pickle mode (pickle export)
+  %(prog)s ut-original                     # Apply UT original mode (YAML-based tracking)
   %(prog)s --save-rules-json               # Enable save_rules_json only
   %(prog)s --no-save-rules-json            # Disable save_rules_json only
   %(prog)s minimal-spoilers --no-verbose-sphere-log  # Apply preset then override
