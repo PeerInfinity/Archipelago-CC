@@ -571,6 +571,7 @@ export class GraphInteractionManager {
   updateLabelVisibility(zoom) {
     // Check if locations are manually shown - if so, show their labels at same zoom as region labels
     const forceShowLocationLabels = this.ui.locationsManuallyShown;
+    const edgeLabelStyle = this.ui.edgeLabelsHidden ? '' : 'data(label)';
 
     // Update visibility of labels based on zoom level
     if (zoom < this.ui.zoomLevels.hideAllLabels) {
@@ -631,7 +632,7 @@ export class GraphInteractionManager {
         .selector('node.region').style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
-        .selector('edge[label]').style('label', 'data(label)')
+        .selector('edge[label]').style('label', edgeLabelStyle)
         .selector('.region-location-edge').style('label', '')
         .update();
     } else if (zoom < this.ui.zoomLevels.showLocationLabels) {
@@ -641,7 +642,7 @@ export class GraphInteractionManager {
         .selector('node.region').style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', forceShowLocationLabels ? 'data(label)' : '')
-        .selector('edge[label]').style('label', 'data(label)')
+        .selector('edge[label]').style('label', edgeLabelStyle)
         .selector('.region-location-edge').style('label', '')
         .update();
     } else {
@@ -651,7 +652,7 @@ export class GraphInteractionManager {
         .selector('node.region').style('label', 'data(label)')
         .selector('node.player').style('label', 'data(label)')
         .selector('.location-node').style('label', 'data(label)')
-        .selector('edge[label]').style('label', 'data(label)')
+        .selector('edge[label]').style('label', edgeLabelStyle)
         .selector('.region-location-edge').style('label', '')
         .update();
     }

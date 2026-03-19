@@ -13,12 +13,6 @@
         "apworlds/": {
             "description": "Pre-built APWorld packages (.apworld files) for distribution."
         },
-        "docs/json/archipelago-games-sheet/": {
-            "description": "Extracted spreadsheet data listing all playable Archipelago worlds and their status.",
-            "links": [
-                {"title": "README", "path": "docs/json/archipelago-games-sheet/README.md"}
-            ]
-        },
         "docs/json/": {
             "description": "Documentation portal for the JSON Export Tools project: user guides, developer docs, architecture, and test results.",
             "links": [
@@ -120,12 +114,6 @@
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
         },
         "worlds/codingadventure_vanilla_worldgen2/": {
-            "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
-        },
-        "worlds/depgraph_worldgen/": {
-            "description": "Auto-generated world from DepGraph rules via the World Generator."
-        },
-        "worlds/metamath_vanilla_worldgen2/": {
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
         },
         "worlds/shorthike_worldgen2/": {

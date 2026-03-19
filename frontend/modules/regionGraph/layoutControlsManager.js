@@ -41,6 +41,10 @@ export class LayoutControlsManager {
             <input type="checkbox" id="forceHideLocations" style="margin-right: 5px;">
             Always hide locations (override zoom)
           </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="forceHideEdgeLabels" style="margin-right: 5px;">
+            Hide edge labels
+          </label>
         </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Location Display Limits:</div>
@@ -110,6 +114,7 @@ export class LayoutControlsManager {
     const checkboxes = [
       { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
       { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
+      { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: false },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
       { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
@@ -181,6 +186,21 @@ export class LayoutControlsManager {
       }
     }
 
+    // Sync location visibility flags from loaded checkbox states
+    const forceShowEl = this.ui.controlPanel.querySelector('#forceShowLocations');
+    const forceHideEl = this.ui.controlPanel.querySelector('#forceHideLocations');
+    if (forceShowEl?.checked) {
+      this.ui.locationsManuallyShown = true;
+      this.ui.locationsManuallyHidden = false;
+    } else if (forceHideEl?.checked) {
+      this.ui.locationsManuallyHidden = true;
+      this.ui.locationsManuallyShown = false;
+    }
+
+    // Sync edge label visibility flag
+    const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
+    this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
+
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
     if (showUndiscoveredCheckbox) {
@@ -227,6 +247,16 @@ export class LayoutControlsManager {
         if (this.ui.locationsVisible) {
           this.ui.refreshLocationNodes();
         }
+      });
+    }
+
+    // Setup change handler for forceHideEdgeLabels
+    const forceHideEdgeLabelsCheckbox = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
+    if (forceHideEdgeLabelsCheckbox) {
+      forceHideEdgeLabelsCheckbox.addEventListener('change', async (e) => {
+        await this.saveCheckboxSetting('#forceHideEdgeLabels', 'moduleSettings.regionGraph.forceHideEdgeLabels', e.target.checked);
+        this.ui.edgeLabelsHidden = e.target.checked;
+        this.ui.interactionManager.updateZoomBasedVisibility();
       });
     }
 

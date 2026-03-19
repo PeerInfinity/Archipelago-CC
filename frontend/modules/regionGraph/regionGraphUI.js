@@ -50,6 +50,7 @@ export class RegionGraphUI {
     this.locationsVisible = false;
     this.locationsManuallyHidden = false;
     this.locationsManuallyShown = false;
+    this.edgeLabelsHidden = false;
 
     // Location display limit settings (defaults, loaded from settings later)
     this.maxLocationNodes = 100;

@@ -100,7 +100,8 @@ export function initializeProofState(state, staticData, log, wirePublishing) {
 
   const success = state.loadFromSlotData(
     slotData,
-    playerWorld.name_substitutions
+    playerWorld.name_substitutions,
+    playerWorld.options
   );
 
   if (!success) {

@@ -50,13 +50,14 @@ export class ProofGraphState extends ProofBaseState {
    * Load proof structure from rules.json slot_data.
    * @param {Object} slotData
    * @param {Object} [nameSubstitutions]
+   * @param {Object} [options] - World options (forwarded to _parseProofStructure)
    */
-  loadFromSlotData(slotData, nameSubstitutions) {
+  loadFromSlotData(slotData, nameSubstitutions, options) {
     this.correctEdges.clear();
     this.drawnEdges.clear();
     this.incorrectAttempts = 0;
 
-    const success = this._parseProofStructure(slotData, nameSubstitutions);
+    const success = this._parseProofStructure(slotData, nameSubstitutions, options);
     if (!success) return false;
 
     // Build correct edges from parsed step dependencies (one per slot)
@@ -158,8 +159,7 @@ export class ProofGraphState extends ProofBaseState {
    * Check if a step's location is checkable.
    * A step is checkable if:
    *   - All its dependency edges have been correctly drawn
-   *   - All dependency items have been received
-   *   - All dependency locations have been checked (proved)
+   *   - Dependencies are satisfied per entranceRuleMode
    *   - Its location hasn't been checked yet
    */
   isStepCheckable(stepIndex) {
@@ -168,13 +168,7 @@ export class ProofGraphState extends ProofBaseState {
     if (this.checkedLocations.has(step.locationName)) return false;
     if (!this._isStepFullyConnected(stepIndex)) return false;
 
-    // Also require all dependency items received and locations checked
-    return step.dependencies.every(depIdx => {
-      const depStep = this.steps.get(depIdx);
-      return depStep &&
-        this.receivedItems.has(depStep.itemName) &&
-        this.checkedLocations.has(depStep.locationName);
-    });
+    return this._areDepsSatisfied(step);
   }
 
   /**
@@ -187,27 +181,14 @@ export class ProofGraphState extends ProofBaseState {
 
   /**
    * Get the set of step indices that should be visible in the graph.
-   * Uses the same logic as ProofQueueBaseState._updateAvailableSteps():
-   * a step is visible if it has no dependencies (axiom/definition) OR
-   * all its dependency items have been received and all dependency
-   * locations have been checked.
+   * A step is visible if its dependencies are satisfied per entranceRuleMode.
    * @returns {Set<number>}
    */
   getVisibleSteps() {
     const visible = new Set();
     for (const [index, step] of this.steps) {
-      if (step.dependencies.length === 0) {
+      if (this._areDepsSatisfied(step)) {
         visible.add(index);
-      } else {
-        const allDepsSatisfied = step.dependencies.every(depIdx => {
-          const depStep = this.steps.get(depIdx);
-          return depStep &&
-            this.receivedItems.has(depStep.itemName) &&
-            this.checkedLocations.has(depStep.locationName);
-        });
-        if (allDepsSatisfied) {
-          visible.add(index);
-        }
       }
     }
     return visible;

@@ -16,12 +16,13 @@ export class ProofQueueState extends ProofQueueBaseState {
    * Load proof structure from rules.json slot_data.
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} nameSubstitutions - The name_substitutions object from rules.json
+   * @param {Object} [options] - World options (forwarded to _parseProofStructure)
    */
-  loadFromSlotData(slotData, nameSubstitutions) {
+  loadFromSlotData(slotData, nameSubstitutions, options) {
     this.queue = [];
     this.availableSteps.clear();
 
-    const success = this._parseProofStructure(slotData, nameSubstitutions);
+    const success = this._parseProofStructure(slotData, nameSubstitutions, options);
     if (!success) return false;
 
     // Steps with no dependencies are always available to place
