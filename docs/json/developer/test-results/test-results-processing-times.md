@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-03-19 01:36:51 UTC
+**Generated:** 2026-03-19 03:44:41 UTC
 
 **Source Data Created:** 2026-03-18T23:33:14.026754+00:00
 
@@ -129,8 +129,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Timespinner | 29.1s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 2 | Undertale | 28.8s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, Meritous.yaml (+3 more) |
+| 3 | Super Metroid | 28.1s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, Meritous.yaml (+2 more) |
+| 4 | MegaMan Battle Network 3 | 26.8s | 5 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, MegaMan Battle Network 3.yaml |
+| 5 | Journey to Ascension | 22.3s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml |
+| 6 | VVVVVV | 21.9s | 8 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Metamath.yaml (+3 more) |
+| 7 | TOEM original | 21.7s | 7 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Metamath.yaml (+2 more) |
+| 8 | Secret of Evermore | 21.5s | 6 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Metamath.yaml (+1 more) |
+| 9 | shapez | 21.2s | 8 | Aquaria.yaml, Civilization VI.yaml, Faxanadu.yaml, Lingo.yaml, Old School Runescape.yaml (+3 more) |
+| 10 | Satisfactory | 20.3s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, MegaMan Battle Network 3.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 2700.7s | 6 | Baking Adventure.yaml, Coding Adventure.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Dark Souls III | 178.1s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 3 | Kingdom Hearts 2 | 136.2s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml |
+| 4 | Satisfactory | 119.8s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 5 | Starcraft 2 | 80.0s | 6 | Aquaria.yaml, Civilization VI.yaml, Faxanadu.yaml, Lingo.yaml, Old School Runescape.yaml (+1 more) |
+| 6 | Secret of Evermore | 76.0s | 6 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Metamath.yaml (+1 more) |
+| 7 | Super Metroid | 56.1s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, Meritous.yaml (+2 more) |
+| 8 | Kirby's Dream Land 3 | 54.0s | 4 | APQuest.yaml, ChecksFinder.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 9 | Kingdom Hearts | 44.0s | 4 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
+| 10 | Super Mario Land 2 | 35.0s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Inscryption.yaml, Mega Man 2.yaml, Risk of Rain 2.yaml (+1 more) |
