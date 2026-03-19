@@ -45,7 +45,7 @@ class InstallerApp(App):
 
     # Component properties (defaults set from DEFAULT_COMPONENTS)
     comp_exporter = BooleanProperty(True)
-    comp_rule_builder = BooleanProperty(True)
+    comp_rule_builder = BooleanProperty(False)
     comp_world_generator = BooleanProperty(True)
     comp_frontend = BooleanProperty(True)
     comp_presets = BooleanProperty(False)
@@ -397,6 +397,41 @@ class InstallerApp(App):
         prop_name = f'comp_{name}'
         if hasattr(self, prop_name):
             setattr(self, prop_name, value)
+
+        # Show warning when enabling components that replace vanilla files
+        if value and name == "rule_builder":
+            self._show_rule_builder_warning()
+
+    def _show_rule_builder_warning(self):
+        """Show a warning about rule_builder replacing vanilla files."""
+        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        warn_label = Label(
+            text=(
+                "WARNING: Installing Rule Builder will replace the vanilla\n"
+                "rule_builder/ directory with the extended version from\n"
+                "this project.\n\n"
+                "A backup of the existing rule_builder/ directory will be\n"
+                "created automatically before overwriting.\n\n"
+                "You can restore the original files later via the CLI:\n"
+                "  python -m worlds.json_tools_installer.cli.install --restore-rule-builder"
+            ),
+            halign='left',
+            valign='top',
+            size_hint_y=0.8,
+        )
+        warn_label.bind(size=warn_label.setter('text_size'))
+        content.add_widget(warn_label)
+
+        ok_btn = Button(text='OK', size_hint_y=None, height=40)
+        content.add_widget(ok_btn)
+
+        popup = Popup(
+            title='Rule Builder Warning',
+            content=content,
+            size_hint=(0.7, 0.5),
+        )
+        ok_btn.bind(on_press=popup.dismiss)
+        popup.open()
 
     def on_monkey_patch_toggle(self, instance, value: bool):
         """Handle monkey patch checkbox toggle."""
