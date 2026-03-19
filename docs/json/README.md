@@ -30,7 +30,7 @@ For an overview of all major features in this project, see the **[Features Index
 **New Games & Modes:**
 - [MetaMath](../../worlds/metamath/docs/README.md) — Mathematical proofs as playable Archipelago worlds
 - [DepGraph](./features/depgraph.md) — Any dependency graph as an Archipelago world
-- [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing
+- [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing ([Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta))
 - [Loops](./features/loops.md) — Incremental/idle game mode on top of the tracker
 - [Maze Metagame](./features/maze-metagame.md) — A-Mazing-Idle as a meta-progression layer
 

@@ -528,16 +528,31 @@ export async function initializeApplication(dependencies) {
   const metagameParam = urlParams.get('metagame');
   // ?movePanel=componentType:stackId,... — move panels to specific stacks before activating
   const moveParam = urlParams.get('movePanel');
+
+  // Support iframeAutoLoad from mode settings (e.g., settings-jta.json)
+  let effectiveIframeParam = iframeParam;
+  if (!effectiveIframeParam) {
+    try {
+      const allSettings = await settingsManager.getSettings();
+      if (allSettings.iframeAutoLoad) {
+        effectiveIframeParam = allSettings.iframeAutoLoad;
+        logger.info('init', `iframeAutoLoad from settings: "${effectiveIframeParam}"`);
+      }
+    } catch (e) {
+      logger.warn('init', 'Error reading iframeAutoLoad setting:', e);
+    }
+  }
+
   if (moveParam) {
     eventBus.registerPublisher('ui:movePanel', 'core');
   }
-  if (iframeParam) {
+  if (effectiveIframeParam) {
     eventBus.registerPublisher('iframe:loadUrl', 'core');
   }
   if (metagameParam) {
     eventBus.registerPublisher('metaGame:loadFromUrl', 'core');
   }
-  if (panelParam || iframeParam || metagameParam || moveParam) {
+  if (panelParam || effectiveIframeParam || metagameParam || moveParam) {
     const activatePanelsAndAutoLoad = () => {
       // Handle ?move= parameter first (before panel activation)
       if (moveParam) {
@@ -565,16 +580,16 @@ export async function initializeApplication(dependencies) {
         }
       }
 
-      // Handle ?iframe= parameter: resolve and load after a short delay for panels to settle
-      if (iframeParam) {
-        const resolvedUrl = resolveIframeUrl(iframeParam);
+      // Handle iframe auto-load: from ?iframe= URL parameter or iframeAutoLoad setting
+      if (effectiveIframeParam) {
+        const resolvedUrl = resolveIframeUrl(effectiveIframeParam);
         if (resolvedUrl) {
           setTimeout(() => {
-            logger.info('init', `Loading iframe from URL parameter: ${iframeParam} -> ${resolvedUrl}`);
+            logger.info('init', `Loading iframe: ${effectiveIframeParam} -> ${resolvedUrl}`);
             eventBus.publish('iframe:loadUrl', { url: resolvedUrl }, 'core');
           }, IFRAME_LOAD_DELAY_MS);
         } else {
-          logger.warn('init', `Could not resolve iframe URL parameter: ${iframeParam}`);
+          logger.warn('init', `Could not resolve iframe URL: ${effectiveIframeParam}`);
         }
       }
 

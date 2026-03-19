@@ -105,6 +105,23 @@
       "enabled": true
     }
   },
+  "jta": {
+    "moduleConfig": {
+      "path": "./module-configs/modules-jta.json",
+      "enabled": true
+    },
+    "rulesConfig": {
+      "path": "./presets/jta_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "enabled": true
+    },
+    "userSettings": {
+      "paths": [
+        "./settings/settings.json",
+        "./settings/settings-jta.json"
+      ],
+      "enabled": true
+    }
+  },
   "discovery-entrance": {
     "userSettings": {
       "paths": [

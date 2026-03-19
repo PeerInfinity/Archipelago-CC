@@ -46,7 +46,7 @@ For a detailed walkthrough, see the [User Quick Start Guide](./docs/json/user/qu
 
 **[DepGraph](./docs/json/features/depgraph.md)** — Turns any directed acyclic graph into a playable world. Supports JSON, DOT, and CSV graph formats. Bundled examples include tech trees, skill trees, and recipe chains. Includes a tool to convert a to-do list into a dependency graph. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph)
 
-**[Journey to Ascension](./worlds/jta/docs/en_Journey%20to%20Ascension.md)** — An incremental/idle game integrated via the frontend's iframe interface. The APWorld randomizes game features, then an algorithm adjusts energy costs and XP multipliers to guarantee the game is completable with a specific strategy.
+**[Journey to Ascension](./worlds/jta/docs/en_Journey%20to%20Ascension.md)** — An incremental/idle game integrated via the frontend's iframe interface. The APWorld randomizes game features, then an algorithm adjusts energy costs and XP multipliers to guarantee the game is completable with a specific strategy. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)
 
 ## Alternate Game Modes
 
