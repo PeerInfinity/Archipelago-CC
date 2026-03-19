@@ -11,6 +11,29 @@ This project is a fork of the main Archipelago project that focuses on two key a
 
 For the main project overview and credits, please see the [README.md at the project root](../../README.md).
 
+## Features
+
+For an overview of all major features in this project, see the **[Features Index](./features/README.md)**. Highlights include:
+
+**Core Tools:**
+- [JSON Exporter](../../exporter/README.md) — Export multiworld game logic to JSON
+- [Web Frontend & Tracker](../../frontend/README.md) — Browser-based tracker with region graph, discovery mode, and reachability analysis
+- [JSON Tools Installer](../../worlds/json_tools_installer/README.md) — One-click APWorld installer for vanilla Archipelago
+- [Skip Required Files](./features/skip-required-files.md) — Generate seeds without ROM files
+
+**World Generation & Tracking:**
+- [World Generator](../../world_generator/README.md) — Convert JSON rules back into functional Python worlds
+- [Universal Tracker Enhancements](./features/universal-tracker.md) — Three tracking modes with hybrid auto-selection
+- [Rule Builder Extensions](../../rule_builder/README.md) — 15 new rule types, AST format, explain support
+- [Fuzzer Improvements](./features/fuzzer.md) — Reproducible fuzzing for cross-game validation
+
+**New Games & Modes:**
+- [MetaMath](../../worlds/metamath/docs/README.md) — Mathematical proofs as playable Archipelago worlds
+- [DepGraph](./features/depgraph.md) — Any dependency graph as an Archipelago world
+- [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing
+- [Loops](./features/loops.md) — Incremental/idle game mode on top of the tracker
+- [Maze Metagame](./features/maze-metagame.md) — A-Mazing-Idle as a meta-progression layer
+
 ## Documentation Sections
 
 This documentation is organized into the following main sections:
@@ -57,3 +80,4 @@ READMEs in the source directories provide quick-start guides for each major comp
 | Exporter | [exporter/README.md](../../exporter/README.md) | Python rule export pipeline, game handlers, analyzer |
 | World Generator | [world_generator/README.md](../../world_generator/README.md) | JSON to Python world conversion |
 | Rule Builder | [rule_builder/README.md](../../rule_builder/README.md) | Declarative rule definition system |
+| Archipelago Games Sheet | [docs/json/archipelago-games-sheet/README.md](./archipelago-games-sheet/README.md) | Community game compatibility data |

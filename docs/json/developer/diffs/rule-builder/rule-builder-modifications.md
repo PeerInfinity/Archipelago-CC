@@ -2,7 +2,7 @@
 
 This document provides a brief overview of the modifications made to the Rule Builder compared to the original [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops.
 
-- **Original source:** [drtchops/Archipelago](https://github.com/drtchops/Archipelago/tree/rules-engine) (rules-engine branch)
+- **Original source:** [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops (original `rules-engine` branch no longer available)
 - **Location in this repository:** `rule_builder/`
 - **Last updated:** 2026-02-11
 

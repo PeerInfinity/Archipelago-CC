@@ -56,6 +56,7 @@ Changes to the Rule Builder module (`rule_builder/`), which exists in upstream s
 These changes are not included in the `.diff` files because of their size. Instead, they are documented in:
 - **[fork-vs-upstream-rule-builder.md](./rule-builder/fork-vs-upstream-rule-builder.md)** - Detailed API comparison table
 - **[rule-builder-modifications.md](./rule-builder/rule-builder-modifications.md)** - Overview of all modifications and new modules
+- **[upstream-rule-builder-changes.md](./rule-builder/upstream-rule-builder-changes.md)** - Upstream Rule Builder evolution between fork base and current target
 
 Note: `rule_builder/cached_world.py` and `rule_builder/options.py` are **unmodified** from upstream.
 

@@ -57,8 +57,17 @@ Design and implementation plans for features.
 | [ALttP Bunny Rules Investigation](./docs/plans/alttp-bunny-rules-investigation.md) | Investigation into bunny state rules |
 | [Bunny Rule Analyzer Support](./docs/plans/bunny-rule-analyzer-support.md) | Analyzer support for bunny rules |
 | [Bunny Rule Extraction Options](./docs/plans/bunny-rule-extraction-options.md) | Options for extracting bunny rules |
+| [Compare Rules Normalization Analysis](./docs/plans/compare-rules-normalization-analysis.md) | Rules normalization analysis |
+| [Connection Puzzle DepGraph](./docs/plans/connection-puzzle-depgraph.md) | Connection puzzle DepGraph design |
 | [Help Module Plan](./docs/plans/help-module-plan.md) | Planning for help system module |
 | [Incremental Game Randomizer](./docs/plans/incremental-game-randomizer.md) | Incremental randomization features |
+| [Instantiated Expressions](./docs/plans/instantiated-expressions.md) | Instantiated expressions design |
+| [JtA Cost Adjustment Algorithm](./docs/plans/jta-cost-adjustment-algorithm.md) | JtA cost adjustment algorithm |
+| [JtA Queue UI Plan](./docs/plans/jta-queue-ui-plan.md) | JtA queue UI plan |
+| [JtA Strategy and APWorld Plan](./docs/plans/jta-strategy-and-apworld-plan.md) | JtA strategy and APWorld plan |
+| [Modules Panel Plan](./docs/plans/modules-panel-plan.md) | Modules panel plan |
+| [Multiworld Mystery Scenario Pack](./docs/plans/multiworld-mystery-scenario-pack.md) | Multiworld mystery scenario pack |
+| [Proof Modules Universal Graph](./docs/plans/proof-modules-universal-graph.md) | Proof modules universal graph |
 | [World Generator Game Handlers](./docs/plans/world-generator-game-handlers-plan.md) | Game-specific handler support |
 
 #### Partial Implementation
@@ -86,6 +95,8 @@ Design and implementation plans for features.
 | [Rule Format Inconsistencies](./docs/plans/completed/rule-format-inconsistencies.md) | Format inconsistency fixes |
 | [Rule Format Migration Analysis](./docs/plans/completed/rule-format-migration-analysis.md) | Migration analysis |
 | [Setting Value Refactor](./docs/plans/completed/setting-value-refactor-plan.md) | Settings refactoring |
+| [Cross-Player Item Sync](./docs/plans/completed/cross-player-item-sync.md) | Cross-player item sync |
+| [Upstream Merge Plan](./docs/plans/completed/upstream-merge-plan.md) | Upstream merge plan |
 | [Worker-Side Spoiler Test](./docs/plans/completed/worker-side-spoiler-test-plan.md) | Worker-based testing |
 
 ### Investigations
@@ -103,6 +114,14 @@ Technical investigations and research documents:
 | [Exporter Simplification](./docs/investigations/exporter-simplification-analysis.md) | Simplification opportunities |
 | [Game-Specific Code Audit](./docs/investigations/game-specific-code-audit.md) | Game code audit |
 | [Player ID Slot Investigation](./docs/investigations/player_id_slot_investigation.md) | Player/slot ID analysis |
+
+### Release
+
+- **[Release Checklist](./docs/release-checklist.md)** — Release preparation checklist
+
+### Announcements
+
+- **[Announcement Draft](./docs/temp/announcement-v1.md)** — Release announcement draft
 
 ## Related Documentation
 

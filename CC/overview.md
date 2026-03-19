@@ -99,7 +99,7 @@ This directory contains a subset of the original Python implementation from the 
 
 ### Backend: Rule Builder (`rule_builder/`)
 
-A declarative rule definition system for Archipelago. The original code is from [drtchops/Archipelago](https://github.com/drtchops/Archipelago) branch [`rules-engine`](https://github.com/drtchops/Archipelago/tree/rules-engine), associated with [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048). The code is MIT licensed and has been copied into this repository with ongoing modifications.
+A declarative rule definition system for Archipelago, from [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops. The code is MIT licensed and has been copied into this repository with ongoing modifications.
 
 Rule Builder provides a clean, Python-first API for defining game logic rules that are inherently serializable to JSON.
 

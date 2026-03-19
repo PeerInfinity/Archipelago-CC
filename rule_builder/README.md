@@ -30,19 +30,7 @@ rule = Rule.from_dict(rule_dict)
 
 ## Source
 
-The code in `rules.py` is from [drtchops/Archipelago](https://github.com/drtchops/Archipelago) branch [`rules-engine`](https://github.com/drtchops/Archipelago/tree/rules-engine).
-
-## Example Implementations
-
-These branches demonstrate Rule Builder usage in real worlds:
-
-### TOEM (Comparison Demo)
-- [Original implementation](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_original) - Traditional lambda rules
-- [Rule Builder version](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_rule_builder) - Same world using Rule Builder
-
-### Astalon (Real-World Usage)
-- [Main campaign logic](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/main_campaign.py)
-- [Custom rule definitions](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/custom_rules.py)
+The code in `rules.py` is from [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops. The original `rules-engine` branch is no longer available.
 
 ## Dependencies
 
