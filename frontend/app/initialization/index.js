@@ -526,6 +526,7 @@ export async function initializeApplication(dependencies) {
   const panelParam = urlParams.get('focusPanel');
   const iframeParam = urlParams.get('iframe');
   const metagameParam = urlParams.get('metagame');
+  const useWindowParam = urlParams.get('useWindow');
   // ?movePanel=componentType:stackId,... — move panels to specific stacks before activating
   const moveParam = urlParams.get('movePanel');
 
@@ -547,7 +548,11 @@ export async function initializeApplication(dependencies) {
     eventBus.registerPublisher('ui:movePanel', 'core');
   }
   if (effectiveIframeParam) {
-    eventBus.registerPublisher('iframe:loadUrl', 'core');
+    if (useWindowParam) {
+      eventBus.registerPublisher('window:loadUrl', 'core');
+    } else {
+      eventBus.registerPublisher('iframe:loadUrl', 'core');
+    }
   }
   if (metagameParam) {
     eventBus.registerPublisher('metaGame:loadFromUrl', 'core');
@@ -580,13 +585,21 @@ export async function initializeApplication(dependencies) {
         }
       }
 
-      // Handle iframe auto-load: from ?iframe= URL parameter or iframeAutoLoad setting
+      // Handle iframe/window auto-load: from ?iframe= URL parameter or iframeAutoLoad setting
+      // When ?useWindow=1 is present, redirect to window adapter instead
       if (effectiveIframeParam) {
         const resolvedUrl = resolveIframeUrl(effectiveIframeParam);
         if (resolvedUrl) {
           setTimeout(() => {
-            logger.info('init', `Loading iframe: ${effectiveIframeParam} -> ${resolvedUrl}`);
-            eventBus.publish('iframe:loadUrl', { url: resolvedUrl }, 'core');
+            if (useWindowParam) {
+              logger.info('init', `Loading in window (useWindow=1): ${effectiveIframeParam} -> ${resolvedUrl}`);
+              eventBus.publish('window:loadUrl', { url: resolvedUrl }, 'core');
+              // Activate window panel instead of iframe panel
+              eventBus.publish('ui:activatePanel', { panelId: 'windowPanel' }, 'core');
+            } else {
+              logger.info('init', `Loading iframe: ${effectiveIframeParam} -> ${resolvedUrl}`);
+              eventBus.publish('iframe:loadUrl', { url: resolvedUrl }, 'core');
+            }
           }, IFRAME_LOAD_DELAY_MS);
         } else {
           logger.warn('init', `Could not resolve iframe URL: ${effectiveIframeParam}`);

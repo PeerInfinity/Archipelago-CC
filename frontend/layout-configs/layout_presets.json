@@ -438,6 +438,16 @@
             },
             {
               "type": "component",
+              "componentType": "windowPanel",
+              "title": "Window Panel"
+            },
+            {
+              "type": "component",
+              "componentType": "windowManagerPanel",
+              "title": "Window Manager"
+            },
+            {
+              "type": "component",
               "componentType": "optionsPanel",
               "title": "Options"
             },

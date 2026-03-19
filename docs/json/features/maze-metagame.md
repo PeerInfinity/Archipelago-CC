@@ -30,9 +30,18 @@ Combines with [Loops mode](loops.md), adding maze gates to:
 - Location check actions
 - Automatic pre-configured upgrades applied on each challenge
 
+## Window Mode (`?useWindow=1`)
+
+By default, maze challenges load in the iframe panel (embedded in the main page). Adding `?useWindow=1` opens maze challenges in a separate browser window instead:
+
+- `?metagame=mazegame&useWindow=1` - Standard maze game in separate windows
+- `?metagame=mazegameloops&useWindow=1` - Loops-compatible in separate windows
+
+In window mode, the maze window opens when a challenge starts and closes automatically when the maze is completed. The same A-Mazing-Idle HTML page works in both iframe and window contexts thanks to the unified AdapterClient.
+
 ## Current Status
 
-This is a proof of concept demonstrating the MetaGame system's ability to layer external games on top of Archipelago tracking. The core integration works — maze completion detection, event interception, iframe communication — but it hasn't been tuned for fun. The MetaGame system itself is designed to support any iframe-based game, not just A-Mazing-Idle.
+This is a proof of concept demonstrating the MetaGame system's ability to layer external games on top of Archipelago tracking. The core integration works — maze completion detection, event interception, iframe/window communication — but it hasn't been tuned for fun. The MetaGame system itself is designed to support any iframe or window-based game, not just A-Mazing-Idle.
 
 ## Further Reading
 

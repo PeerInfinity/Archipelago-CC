@@ -199,16 +199,16 @@
     },
     "windowAdapter": {
       "path": "./modules/windowAdapter/index.js",
-      "enabled": false
+      "enabled": true
     },
     "windowPanel": {
       "path": "./modules/windowPanel/index.js",
-      "enabled": false,
+      "enabled": true,
       "requires": ["windowAdapter"]
     },
     "windowManagerPanel": {
       "path": "./modules/windowManagerPanel/index.js",
-      "enabled": false,
+      "enabled": true,
       "requires": ["windowAdapter", "windowPanel"]
     },
     "ruleConverter": {

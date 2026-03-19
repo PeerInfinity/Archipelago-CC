@@ -377,8 +377,18 @@ export class MetaGameLogic {
       savedPanelType
     };
 
-    // Activate the iframe panel to show the maze game
-    this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
+    // Check if using window mode
+    const useWindow = new URLSearchParams(window.location.search).get('useWindow');
+
+    if (useWindow) {
+      // In window mode: open the maze game in a separate window
+      this.eventBus.publish('window:loadUrl', {
+        url: './modules/a-mazing-idle-remote/index-iframe.html'
+      });
+    } else {
+      // In iframe mode: activate the iframe panel to show the maze game
+      this.eventBus.publish('ui:activatePanel', { panelId: 'iframePanel' });
+    }
 
     // Set the biome for this challenge (triggers iframe reload).
     // Upgrades are written directly to save data; disableBiomeCheck zeros out
@@ -394,14 +404,16 @@ export class MetaGameLogic {
       this.eventBus.publish('amazingIdle:setBiome', setBiomeData);
     }
 
-    // Focus the iframe so keyboard input goes to the maze game
-    requestAnimationFrame(() => {
-      const iframe = document.querySelector('.iframe-panel-container iframe');
-      if (iframe) {
-        iframe.focus();
-        this.logger.debug('metaGame', 'Focused maze game iframe');
-      }
-    });
+    if (!useWindow) {
+      // Focus the iframe so keyboard input goes to the maze game
+      requestAnimationFrame(() => {
+        const iframe = document.querySelector('.iframe-panel-container iframe');
+        if (iframe) {
+          iframe.focus();
+          this.logger.debug('metaGame', 'Focused maze game iframe');
+        }
+      });
+    }
 
     // Subscribe to maze completion (one-shot)
     const completionHandler = (data) => {
@@ -480,8 +492,11 @@ export class MetaGameLogic {
       this.mazeCompletionUnsubscribe = null;
     }
 
-    // Restore the previously active panel
-    if (savedPanelType) {
+    // Restore the previously active panel or close the window
+    const useWindow = new URLSearchParams(window.location.search).get('useWindow');
+    if (useWindow) {
+      this.eventBus.publish('window:close', {});
+    } else if (savedPanelType) {
       this.logger.debug('metaGame', `Restoring panel: ${savedPanelType}`);
       this.eventBus.publish('ui:activatePanel', { panelId: savedPanelType });
     }
