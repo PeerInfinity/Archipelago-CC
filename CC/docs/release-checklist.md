@@ -20,9 +20,13 @@ Generate diff files and file lists against the current upstream commit before me
 
 ```bash
 python scripts/docs/generate-file-diff-lists.py
+python scripts/docs/check-annotations.py
 ```
 
-Review the output in `docs/json/developer/diffs/` — verify the file lists and diff files look correct.
+- `generate-file-diff-lists.py` — Compares the fork against an upstream commit and generates categorized file lists (new directories, new files, changed files, deleted files) and diff files in `docs/json/developer/diffs/`.
+- `check-annotations.py` — Verifies that every item in the diff has a corresponding entry in `file-annotations.json`. Reports missing annotations and stale entries.
+
+Review the output in `docs/json/developer/diffs/` — verify the file lists and diff files look correct. Commit the updated diffs.
 
 ### 1.2 Merge from upstream
 
@@ -39,143 +43,67 @@ Resolve any conflicts, paying attention to:
 - World `__init__.py` files — romless patches must be preserved
 - `BaseClasses.py`, `Main.py`, `Utils.py` — should match upstream (monkey patches handle fork functionality)
 
-### 1.3 Merge Universal Tracker
+Commit the merge.
 
-Merge the latest Universal Tracker changes. The tracker world is at `worlds/tracker/` with fork extensions (`worldgen_mixin.py`, `pickle_mixin.py`, `tracker_extensions.py`). Original tracker fixtures are at `scripts/test/fixtures/tracker_original/`.
+### 1.3 Update the diffs directory (post-upstream-merge)
 
-### 1.4 Merge the fuzzer
+The scripts only generate the file lists in `file-lists/`. The rest of the diffs directory must be updated manually.
 
-Merge the latest fuzzer changes. Fuzzer modifications are documented in `docs/json/developer/diffs/fuzzer-modifications.md`.
+**Auto-generated** (run these scripts):
 
-### 1.5 Update the diffs directory (post-merge)
+```bash
+python scripts/docs/generate-file-diff-lists.py    # Regenerates file-lists/*.md
+python scripts/docs/check-annotations.py            # Check for missing/stale annotations
+```
 
-Regenerate the diff documentation now that upstream, UT, and fuzzer changes are incorporated.
+**Manual updates** — review and update as needed:
+
+- `README.md` — Update the upstream commit reference at the top
+- `repository-changes.md` — Update the high-level overview if new directories or major changes were added
+- `file-annotations.json` — Add entries for any new files/directories reported by `check-annotations.py`
+- `diff-files/*.diff` — Regenerate diffs for any changed files (core-files.diff, config-files.diff, world-init-files.diff, etc.)
+- `rule-builder/*.md` — Update if `rule_builder/` changed upstream (fork-vs-upstream comparison, modifications summary)
+- `fuzzer-modifications.md` — Update if the fuzzer changed upstream
+- `universal-tracker-modifications.md` — Update if UT changed upstream
+
+Commit the updated diffs.
+
+### 1.4 Merge Universal Tracker
+
+Merge the latest Universal Tracker changes from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago). The tracker world is at `worlds/tracker/` with fork extensions (`worldgen_mixin.py`, `pickle_mixin.py`, `tracker_extensions.py`).
+
+After merging, update the test fixture with the **unmodified** UT from FarisTheAncient's repo (not our modified version):
+
+```bash
+rm -rf scripts/test/fixtures/tracker_original
+# Copy the unmodified UT directly from FarisTheAncient's release or repo
+# into scripts/test/fixtures/tracker_original/
+```
+
+The fixture must contain the original UT without any fork extensions, so fuzz tests can compare our modified tracker against the baseline.
+
+### 1.5 Merge the fuzzer
+
+Merge the latest fuzzer changes from [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer). Fuzzer modifications are documented in `docs/json/developer/diffs/fuzzer-modifications.md`.
+
+### 1.6 Update the diffs directory (post-merge)
+
+Regenerate the file lists and update the manual diffs as in step 1.3, now incorporating UT and fuzzer changes. Pay particular attention to:
+- `universal-tracker-modifications.md` — if UT was updated in 1.4
+- `fuzzer-modifications.md` — if the fuzzer was updated in 1.5
 
 ```bash
 python scripts/docs/generate-file-diff-lists.py
+python scripts/docs/check-annotations.py
 ```
 
-Review `docs/json/developer/diffs/README.md` and update:
-- The upstream commit reference at the top
-- Any diff file descriptions that changed
-- The rule builder modification docs if `rule_builder/` changed upstream
+Review and commit the updated diffs.
 
 ---
 
-## Phase 2: Freshness Report Review
+## Phase 2: Preset Generation
 
-### 2.1 Generate the freshness report
-
-```bash
-python scripts/docs/generate-freshness-report.py
-```
-
-Review `docs/json/developer/test-results/test-results-freshness.md` to see which test result documents are stale and need regenerating. This report also checks documentation sync status (rule docs, script docs, orphaned docs).
-
-### 2.2 Address stale items
-
-Use the freshness report to identify which test workflows need to be run and which documents need regenerating. The report lists the exact command for each stale document.
-
----
-
-## Phase 3: Local Validation
-
-Quick local checks that don't require workflow infrastructure. Run these before triggering CI workflows.
-
-### 3.1 Run local unit tests
-
-```bash
-pytest                    # Python unit tests (test/, test_json/, worlds/)
-npm run test:unit         # JavaScript unit tests (Vitest)
-```
-
-### 3.2 Run documentation sync checks
-
-```bash
-python scripts/docs/sync-rule-docs.py        # Rule types documentation coverage
-python scripts/docs/sync-rule-tests.py        # Rule types test coverage
-python scripts/docs/sync-script-docs.py       # Script documentation coverage
-python scripts/docs/find_orphaned_docs.py     # Document reachability
-```
-
-### 3.3 Run additional local-only tests
-
-These tests are not covered by any workflow:
-
-```bash
-python scripts/test/test_ast_format_parsing.py                   # AST format rule parsing
-python scripts/test/test-json-world-builder.py --game "Adventure" # JSON world builder round-trip
-node scripts/test/test-bidirectional-detection.js                 # Exit bidirectionality detection
-npm run bench                                                     # JS rule engine benchmarks
-```
-
----
-
-## Phase 4: Test Workflows
-
-Run the GitHub Actions test workflows. All workflows are manually triggered from the [Actions tab](https://github.com/PeerInfinity/Archipelago-CC/actions).
-
-### 4.1 Run test workflows
-
-Run **all** of the following workflows (can be started in parallel):
-
-| Workflow | File | Key Inputs |
-|----------|------|------------|
-| Test All Templates (Sequential) | `test-all-sequential.yml` | `template_type`: original, worldgen, apworld |
-| Test UT Fuzzer | `test-ut-fuzz.yml` | All UT modes (original, worldgen, hybrid, etc.) |
-| Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
-| Test Multiworld UT Fuzz | `test-multiworld-ut-fuzz.yml` | Default settings |
-| Test World Generator | `test-world-generator.yml` | `test_mode`: both |
-| Unit Tests | `unittests.yml` | |
-| Unit Tests (JSON) | `unittests_json.yml` | |
-
-### 4.2 Fix errors reported by test workflows
-
-Review workflow results and fix any failures. Re-run failed workflows after fixes.
-
-Common failure types:
-- Spoiler test failures — may indicate rule export/import issues
-- UT fuzz failures — may indicate tracking discrepancies
-- World generator failures — may indicate new upstream rule types not yet supported
-
----
-
-## Phase 5: Documentation Generation
-
-### 5.1 Run the document generation scripts
-
-Generate all test result documentation from the workflow output:
-
-```bash
-python scripts/docs/generate-all-docs.py
-```
-
-This runs all generators in order: test charts, UT fuzz charts, spoiler fuzz charts, fuzz summary, world generator report, and freshness report.
-
-Individual generators can be run with `--only <tag>` if only some data changed:
-
-```bash
-python scripts/docs/generate-all-docs.py --list          # see available generators and tags
-python scripts/docs/generate-all-docs.py --only fuzz     # just fuzz-related docs
-python scripts/docs/generate-all-docs.py --only summary  # just summary/freshness docs
-```
-
-### 5.2 Run the documentation sync scripts
-
-These check that documentation is in sync with the codebase:
-
-```bash
-python scripts/docs/sync-rule-docs.py        # Rule types documentation
-python scripts/docs/sync-rule-tests.py        # Rule types test coverage
-python scripts/docs/sync-script-docs.py       # Script documentation
-python scripts/docs/find_orphaned_docs.py     # Document reachability
-```
-
----
-
-## Phase 6: Preset Generation
-
-### 6.1 Run the preset update script
+### 2.1 Run the preset generation workflow
 
 Trigger the **Generate Presets** workflow (`generate-presets.yml`) from the Actions tab, or run locally:
 
@@ -192,27 +120,156 @@ The workflow generates presets on the `generated-presets` branch. Key inputs:
 - `update_preset_files`: true
 - `sync_mode`: merge or reset
 
-After preset generation, update the preset files index:
+The workflow also rebuilds the world mapping (`scripts/data/world-mapping.json`) and updates the preset files index (`frontend/presets/preset_files.json`).
+
+After the workflow completes, merge the `generated-presets` branch into `main`:
 
 ```bash
-python scripts/docs/update-preset-files.py
-```
-
-This updates `frontend/presets/preset_files.json` with test results and placement metadata.
-
-### 6.2 Run the tracker update script
-
-Update the Universal Tracker world fixtures from the current `worlds/tracker/` source. Ensure `scripts/test/fixtures/tracker_original/` is in sync.
-
-Rebuild the world mapping:
-
-```bash
-python scripts/build/build-world-mapping.py
+git fetch origin generated-presets
+git merge origin/generated-presets
 ```
 
 ---
 
-## Phase 7: APWorld Packaging
+## Phase 3: Freshness Report Review
+
+### 3.1 Generate the freshness report
+
+```bash
+python scripts/docs/generate-freshness-report.py
+```
+
+Compares timestamps of test result documents against their source data and workflow runs. Reports which documents are stale and lists the exact command to regenerate each one.
+
+Review `docs/json/developer/test-results/test-results-freshness.md`.
+
+### 3.2 Address stale items
+
+Use the freshness report to identify which test workflows need to be run and which documents need regenerating.
+
+---
+
+## Phase 4: Local Validation
+
+Quick local checks that don't require workflow infrastructure. Run these before triggering CI workflows.
+
+### 4.1 Run local unit tests
+
+```bash
+pytest                    # Python unit tests (test/, test_json/, worlds/)
+npm run test:unit         # JavaScript unit tests (Vitest)
+```
+
+### 4.2 Run documentation and coverage checks
+
+These scripts are read-only by default — they report discrepancies without modifying files. Note: `generate-freshness-report.py` (Phase 3) automatically runs these same scripts with `--json` and includes their results in the freshness report. Running them here gives more detailed interactive output.
+
+```bash
+python scripts/docs/sync-rule-docs.py        # Check rule types are documented
+python scripts/docs/sync-rule-tests.py        # Check rule types have test coverage
+python scripts/docs/sync-script-docs.py       # Check scripts are documented in READMEs
+python scripts/docs/find_orphaned_docs.py     # Check all .md files are linked from entry points
+```
+
+- `sync-rule-docs.py` — Extracts rule types from `ruleEngine.js`, `rules.py`, and `ast_format.py`, compares against `rule-types-reference.md` and `rule-format-specification.md`. Use `--update` to auto-generate stubs.
+- `sync-rule-tests.py` — Checks which rule types have test coverage in `test_json/` fixtures, Python tests, and JS tests.
+- `sync-script-docs.py` — Scans `scripts/` for executables and checks they're documented in `scripts/README.md`. Use `--generate` to create stubs.
+- `find_orphaned_docs.py` — Crawls markdown links from entry points (`README.md`, `docs/json/README.md`, etc.) and reports `.md` files not reachable from any entry point.
+
+### 4.3 Run additional local-only tests
+
+These tests are not covered by any workflow:
+
+```bash
+python scripts/test/test_ast_format_parsing.py                   # AST format rule parsing
+python scripts/test/test-json-world-builder.py --game "Adventure" # JSON world builder round-trip
+node scripts/test/test-bidirectional-detection.js                 # Exit bidirectionality detection
+npm run bench                                                     # JS rule engine benchmarks
+```
+
+---
+
+## Phase 5: Test Workflows
+
+Run the GitHub Actions test workflows. All workflows are manually triggered from the [Actions tab](https://github.com/PeerInfinity/Archipelago-CC/actions).
+
+The freshness report from Phase 3 shows which workflows have stale results and need to be rerun. For a full release, run all workflows. For incremental updates, the freshness report identifies which ones are out of date.
+
+### 5.1 Run test workflows
+
+Run **all** of the following workflows (can be started in parallel):
+
+| Workflow | File | Key Inputs |
+|----------|------|------------|
+| Test All Templates (Sequential) | `test-all-sequential.yml` | `template_type`: original, worldgen, apworld |
+| Test UT Fuzzer | `test-ut-fuzz.yml` | All UT modes (original, worldgen, hybrid, etc.) |
+| Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
+| Test Multiworld UT Fuzz | `test-multiworld-ut-fuzz.yml` | Default settings |
+| Test World Generator | `test-world-generator.yml` | `test_mode`: both |
+| Unit Tests | `unittests.yml` | |
+| Unit Tests (JSON) | `unittests_json.yml` | |
+
+### 5.2 Merge workflow results
+
+Test workflows push their results to separate branches (e.g., `test-results-original`, `test-results-worldgen`, `test-results-apworld`). Merge them into `main`:
+
+```bash
+bash CC/scripts/interactive-branch-merge.sh
+```
+
+### 5.3 Fix errors reported by test workflows
+
+After merging in the workflow results, generate prompts for any unexpected test failures:
+
+```bash
+python CC/scripts/prompt-all-templates.py --all-promptfiles
+```
+
+This compares failures against the exclude lists and generates prompt files for failures that aren't already known/excluded. Use these prompts to investigate and fix the issues.
+
+If any fixes were made, go back to Phase 2 (preset generation) and repeat from there — fixes may affect presets, test results, and documentation.
+
+Common failure types:
+- Spoiler test failures — may indicate rule export/import issues
+- UT fuzz failures — may indicate tracking discrepancies
+- World generator failures — may indicate new upstream rule types not yet supported
+
+---
+
+## Phase 6: Documentation Generation
+
+### 6.1 Run the document generation scripts
+
+Generate all test result documentation from the workflow output, and update the preset files index:
+
+```bash
+python scripts/docs/generate-all-docs.py
+python scripts/docs/update-preset-files.py
+```
+
+This runs all generators in order: test charts, UT fuzz charts, spoiler fuzz charts, fuzz summary, world generator report, and freshness report.
+
+Individual generators can be run with `--only <tag>` if only some data changed:
+
+```bash
+python scripts/docs/generate-all-docs.py --list          # see available generators and tags
+python scripts/docs/generate-all-docs.py --only fuzz     # just fuzz-related docs
+python scripts/docs/generate-all-docs.py --only summary  # just summary/freshness docs
+```
+
+### 6.2 Verify documentation links
+
+After generating docs, check that all new documents are linked from the documentation entry points:
+
+```bash
+python scripts/docs/find_orphaned_docs.py
+```
+
+If new docs were generated but aren't reachable from any entry point, add links to the appropriate index pages.
+
+---
+
+## Phase 7: APWorld Packaging and Dev Testing
 
 ### 7.1 Pack the APWorlds
 
@@ -225,52 +282,71 @@ python scripts/build/pack_apworld.py bakingadventure   # → apworlds/bakingadve
 python scripts/build/pack_apworld.py codingadventure   # → apworlds/codingadventure.apworld
 ```
 
-### 7.2 Run the JSON installer test
+### 7.2 Test the installer against the dev repository
 
-Test the installer APWorld to verify it can download and install components correctly from the dev repository:
+Run the end-to-end installer test against the **dev** repository. This clones vanilla Archipelago into a test directory, installs the APWorld, runs the installer to download and patch components from Archipelago-CC, and runs verification tests.
+
+Each test run should start from a fresh state. Use `--fresh` to delete and re-clone the target directory. Reusing the same `--target-dir` for all runs avoids accumulating multiple copies of the Archipelago clone:
 
 ```bash
-python -m worlds.json_tools_installer check
+python scripts/install_json_tools.py --dev --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --dev --all --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --dev --romless --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --dev --all --romless --fresh --target-dir /tmp/jt-test
 ```
+
+Key options:
+- `--dev` — Download from the dev repo (Archipelago-CC) instead of stable
+- `--all` — Install all components (frontend, presets, docs, etc.)
+- `--romless` — Apply ROM-less patches (enables ALttP testing)
+- `--target-dir DIR` — Install to specified directory (default: `./archipelago-json-tools`)
+- `--fresh` — Delete existing target directory before cloning
+- `--skip-tests` — Skip running verification tests
+- `--test MODE` — Choose test game (`auto`, `adventure`, `alttp`, or `none`)
 
 ---
 
 ## Phase 8: Stable Release
 
-### 8.1 Merge with the stable release repository
+### 8.1 Sync to the stable repository
 
-Push the release to the stable repository (`PeerInfinity/Archipelago` @ `JSONExport`):
+The stable repository (`PeerInfinity/Archipelago` @ `JSONExport`) has no shared git history with the dev repo — it's a flat snapshot updated by rsync. Use the sync script to copy files:
 
 ```bash
-git push archipelago main:JSONExport
+bash scripts/release/sync-to-stable.sh /path/to/stable/Archipelago
 ```
 
-Or if the histories have diverged, merge into the JSONExport branch.
+The script:
+1. Deletes all files in the destination (preserving `.git`, `.github`, `README.md`, `.gitignore`, `.claude`)
+2. Copies all files from the dev repo via rsync (excluding `.git`, `.github`, root `README.md`, root `.gitignore`)
+3. Restores non-root `README.md` and `.gitignore` files
 
-### 8.2 Run the JSON installer test from the stable repository
+After syncing:
 
-Test the installer APWorld against the **stable** repository URLs to verify that the published APWorld downloads work correctly from `PeerInfinity/Archipelago` @ `JSONExport`.
+```bash
+cd /path/to/stable/Archipelago
+git status                          # Review changes
+git add -A                          # Stage all changes
+git commit -m 'Sync from Archipelago-CC'
+git push
+```
 
-### 8.3 Verify the live demo
+### 8.2 Test the installer against the stable repository
 
-Check that the GitHub Pages deployment updated:
+Run the same installer tests against the **stable** repository to verify the published APWorld downloads work correctly:
+
+```bash
+python scripts/install_json_tools.py --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --all --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --romless --fresh --target-dir /tmp/jt-test
+python scripts/install_json_tools.py --all --romless --fresh --target-dir /tmp/jt-test
+```
+
+### 8.3 Verify the live demos
+
+Check that the GitHub Pages deployments updated:
 - Stable: https://peerinfinity.github.io/Archipelago/
 - Dev: https://peerinfinity.github.io/Archipelago-CC/
-
----
-
-## Phase 9: Announce
-
-### 9.1 Post to Discord
-
-Post the release announcement. Draft is at `CC/docs/temp/announcement-v1.md`.
-
-Include links to:
-- Stable repository: https://github.com/PeerInfinity/Archipelago/tree/JSONExport
-- Dev repository: https://github.com/PeerInfinity/Archipelago-CC
-- Live demos (stable and dev)
-- Installer APWorld download link
-- Test results: `docs/json/developer/test-results/test-results-fuzz-summary.md`
 
 ---
 
@@ -279,6 +355,7 @@ Include links to:
 | Task | Command |
 |------|---------|
 | Generate diff lists | `python scripts/docs/generate-file-diff-lists.py` |
+| Check diff annotations | `python scripts/docs/check-annotations.py` |
 | Generate freshness report | `python scripts/docs/generate-freshness-report.py` |
 | Generate all docs | `python scripts/docs/generate-all-docs.py` |
 | Update preset files index | `python scripts/docs/update-preset-files.py` |
@@ -286,3 +363,6 @@ Include links to:
 | Pack installer APWorld | `python scripts/build/pack_json_tools_installer.py` |
 | Pack game APWorld | `python scripts/build/pack_apworld.py <name>` |
 | Generate YAML templates | `python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"` |
+| Test installer (dev) | `python scripts/install_json_tools.py --dev --all --romless` |
+| Test installer (stable) | `python scripts/install_json_tools.py --all --romless` |
+| Sync to stable repo | `bash scripts/release/sync-to-stable.sh <dest_dir>` |
