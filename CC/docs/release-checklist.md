@@ -218,9 +218,11 @@ python scripts/build/build-world-mapping.py
 
 ```bash
 python scripts/build/pack_json_tools_installer.py    # → apworlds/json_tools_installer.apworld
-python scripts/build/pack_json_tools.py               # → apworlds/json_tools.apworld
 python scripts/build/pack_apworld.py metamath          # → apworlds/metamath.apworld
-python scripts/build/pack_apworld.py depgraph          # → additional apworlds as needed
+python scripts/build/pack_apworld.py depgraph          # → apworlds/depgraph.apworld
+python scripts/build/pack_apworld.py jta               # → apworlds/jta.apworld
+python scripts/build/pack_apworld.py bakingadventure   # → apworlds/bakingadventure.apworld
+python scripts/build/pack_apworld.py codingadventure   # → apworlds/codingadventure.apworld
 ```
 
 ### 7.2 Run the JSON installer test
@@ -282,6 +284,5 @@ Include links to:
 | Update preset files index | `python scripts/docs/update-preset-files.py` |
 | Build world mapping | `python scripts/build/build-world-mapping.py` |
 | Pack installer APWorld | `python scripts/build/pack_json_tools_installer.py` |
-| Pack JSON tools APWorld | `python scripts/build/pack_json_tools.py` |
 | Pack game APWorld | `python scripts/build/pack_apworld.py <name>` |
 | Generate YAML templates | `python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"` |

@@ -201,13 +201,6 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   node scripts/build/bundle-frontend.js --no-minify  # Debug build without minification
   ```
 
-- **`build/pack_json_tools.py`** - Package JSON Tools modules into a distributable APWorld
-  ```bash
-  python scripts/build/pack_json_tools.py                      # Create json_tools.apworld
-  python scripts/build/pack_json_tools.py --include-frontend   # Include frontend files
-  python scripts/build/pack_json_tools.py --dry-run            # Preview what would be packaged
-  ```
-
 - **`build/pack_json_tools_installer.py`** - Package the JSON Tools Installer as an APWorld
   ```bash
   python scripts/build/pack_json_tools_installer.py            # Create installer apworld
