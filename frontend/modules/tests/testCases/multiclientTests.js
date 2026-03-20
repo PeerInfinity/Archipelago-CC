@@ -251,7 +251,10 @@ export async function timerSendTest(testController) {
     // Multi-pass timer logic to handle locations that become reachable after event propagation
     // The timer might stop before all regions become reachable (via event auto-collection)
     // This is needed for games like Pokemon RB with complex event dependency chains
-    const maxTimerPasses = 5;
+    // Scale passes based on location count - large games (1000+ locations) need more passes
+    // since items received unlock new regions which unlock more locations
+    const locationCount = staticData?.locations?.size || 0;
+    const maxTimerPasses = locationCount > 500 ? 20 : 5;
     let timerPassCount = 1;
 
     while (timerPassCount <= maxTimerPasses) {
