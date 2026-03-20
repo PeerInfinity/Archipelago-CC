@@ -342,7 +342,13 @@ python scripts/install_json_tools.py --romless --fresh --target-dir /tmp/jt-test
 python scripts/install_json_tools.py --all --romless --fresh --target-dir /tmp/jt-test
 ```
 
-### 8.3 Verify the live demos
+### 8.3 Deploy the stable live demo
+
+The stable repo does not auto-deploy on push. Manually trigger the **Deploy to GitHub Pages** workflow from the [Actions tab](https://github.com/PeerInfinity/Archipelago/actions/workflows/deploy-gh-pages.yml). Use the default settings (source branch: `JSONExport`).
+
+The dev repo (Archipelago-CC) deploys automatically on push.
+
+### 8.4 Verify the live demos
 
 Check that the GitHub Pages deployments updated:
 - Stable: https://peerinfinity.github.io/Archipelago/
