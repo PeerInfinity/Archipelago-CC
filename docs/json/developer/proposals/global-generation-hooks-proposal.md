@@ -1,8 +1,12 @@
 # Feature Proposal: Global Generation Hooks
 
+**Status:** Reference implementation in Archipelago-CC fork
+
 ## Summary
 
 Add a global hook registry that complements PR #5700's stage methods (`finalize_multiworld`, `pre_output`). This enables utilities that need to run across all worlds without requiring a player slot.
+
+This fork contains a working implementation that serves as a reference for the upstream proposal.
 
 ## Relationship to PR #5700
 
@@ -31,51 +35,94 @@ This means:
 - Cross-world tools (exporters, analytics) can't hook into generation
 - Users would need to "play" a utility world to activate it
 
-## Proposed Solution
+## Implementation
 
-Add a parallel hook registry for global callbacks that run independently of player selection.
-
-### API
+### Hook Registry (`worlds/Hooks.py`)
 
 ```python
-# New file: worlds/Hooks.py
-from typing import Callable, List
-from BaseClasses import MultiWorld
+import logging
+from typing import Callable, List, TYPE_CHECKING
 
-GenerationHook = Callable[[MultiWorld, str, str], None]
+if TYPE_CHECKING:
+    from BaseClasses import MultiWorld
 
-_post_output_hooks: List[GenerationHook] = []
+logger = logging.getLogger(__name__)
 
-def register_post_output_hook(hook: GenerationHook) -> None:
-    """
-    Register a hook called after all generate_output calls complete,
-    before archive creation.
+PostOutputHook = Callable[["MultiWorld", str, str], None]
 
-    Args:
-        hook: Callable receiving (multiworld, output_dir, filename_base)
-    """
+_post_output_hooks: List[PostOutputHook] = []
+
+
+def register_post_output_hook(hook: PostOutputHook) -> None:
+    """Register a hook to be called after output generation."""
     _post_output_hooks.append(hook)
 
-def call_post_output_hooks(multiworld: MultiWorld, output_dir: str, filename_base: str) -> None:
-    """Called by Main.py after output generation."""
+
+def call_post_output_hooks(multiworld: "MultiWorld", output_dir: str, filename_base: str) -> None:
+    """Call all registered post-output hooks."""
     for hook in _post_output_hooks:
         try:
             hook(multiworld, output_dir, filename_base)
-        except Exception as e:
-            import logging
-            logging.getLogger("Hooks").exception(
-                f"Error in generation hook {hook.__module__}.{hook.__name__}: {e}"
-            )
+        except Exception:
+            logger.exception(f"Post-output hook {hook.__name__} failed")
 ```
 
 ### Integration with Main.py
 
-A single call after output futures complete:
+A single import and call replaces what was previously a 29-line export block:
 
 ```python
-# After generate_output futures complete, before spoiler/archive
+# Import (top of Main.py)
 from worlds.Hooks import call_post_output_hooks
+
+# Call point (after spoiler generation, before archive creation)
 call_post_output_hooks(multiworld, temp_dir, outfilebase)
+```
+
+### Hook Registration (APWorld `__init__.py`)
+
+Hooks are registered at module load time, guarded by ImportError for vanilla AP compatibility:
+
+```python
+# Register post-output generation hook (works in fork where worlds/Hooks.py exists)
+try:
+    from worlds.Hooks import register_post_output_hook
+    from .export_hook import export_post_output_hook
+    register_post_output_hook(export_post_output_hook)
+except ImportError:
+    pass  # worlds/Hooks.py doesn't exist (vanilla AP without hook support)
+```
+
+### Example Hook Function
+
+The JSON Tools exporter hook (`worlds/json_tools_installer/export_hook.py`):
+
+```python
+def export_post_output_hook(multiworld, output_dir, filename_base):
+    """Export game rules and multiworld pickle after output generation."""
+    from settings import get_settings
+    from exporter import export_game_rules, clear_rule_cache
+    from exporter.games import clear_handler_cache
+    from exporter.pickle_exporter import export_multiworld_pickle
+
+    settings = get_settings()
+
+    export_game_rules(
+        multiworld, output_dir, filename_base,
+        settings.general_options.update_frontend_presets,
+        settings.general_options.skip_preset_copy_if_rules_identical,
+        settings.general_options.rules_json_format,
+        clear_game_presets=settings.general_options.clear_game_presets,
+        clear_all_presets=settings.general_options.clear_all_presets,
+    )
+    clear_rule_cache()
+    clear_handler_cache()
+
+    export_multiworld_pickle(
+        multiworld, output_dir, filename_base,
+        settings.general_options.update_frontend_presets,
+        settings.general_options.skip_preset_copy_if_rules_identical,
+    )
 ```
 
 ## Comparison with PR #5700
@@ -101,9 +148,9 @@ pre_output()              ← PR #5700 (per-world)
     ↓
 generate_output()         ← existing (per-world, threaded)
     ↓
-post_output hooks         ← THIS PROPOSAL (global)
-    ↓
 spoiler generation
+    ↓
+post_output hooks         ← THIS PROPOSAL (global)
     ↓
 archive creation
 ```
@@ -121,26 +168,28 @@ archive creation
 - Adding files to the output archive
 - Operations that need access to generated output files
 
-## Use Cases
+## Mutual Exclusion: Hooks vs Monkey Patches
 
-### JSON Rule Exporter
+The JSON Tools APWorld supports two deployment scenarios. Only one export mechanism is active at a time:
 
-Export game logic for all worlds to JSON:
+| Scenario | Hooks registered? | Monkey patches installed? | Who handles export? |
+|----------|:-:|:-:|---|
+| Fork (Main.py has hook call) | Yes | No (`is_main_patched()` → True) | Hook |
+| Vanilla AP (no hook support) | No (ImportError) | Yes (`is_main_patched()` → False) | Monkey patch |
 
+Detection in `is_main_patched()`:
 ```python
-from worlds.Hooks import register_post_output_hook
-
-def export_all_rules(multiworld, output_dir, filename_base):
-    from .exporter import export_game_rules
-    for world in multiworld.worlds.values():
-        export_game_rules(world, output_dir, filename_base)
-
-register_post_output_hook(export_all_rules)
+def is_main_patched() -> bool:
+    try:
+        import Main
+        return hasattr(Main, 'call_post_output_hooks')
+    except ImportError:
+        return False
 ```
 
-### Generation Analytics
+## Additional Use Cases
 
-Collect cross-world statistics:
+### Generation Analytics
 
 ```python
 from worlds.Hooks import register_post_output_hook
@@ -158,8 +207,6 @@ register_post_output_hook(collect_analytics)
 
 ### Custom Output Formats
 
-Generate alternative formats alongside standard output:
-
 ```python
 from worlds.Hooks import register_post_output_hook
 
@@ -175,7 +222,7 @@ register_post_output_hook(generate_html_spoiler)
 
 ### Error Handling
 
-Hooks are wrapped in try/except to prevent crashing generation. Errors are logged but don't halt the process.
+Hooks are wrapped in try/except to prevent crashing generation. Errors are logged via `logger.exception()` but don't halt the process.
 
 ### Thread Safety
 
@@ -183,7 +230,11 @@ Hooks run from the main thread after the ThreadPoolExecutor completes `generate_
 
 ### Registration Timing
 
-Hooks are registered at module load time (in APWorld `__init__.py`), before generation begins.
+Hooks are registered at module load time (in APWorld `__init__.py`), before `main()` starts. World imports happen early in the Archipelago startup sequence, so hooks are ready before the call point in Main.py.
+
+### Fork Divergence Reduction
+
+The hook system reduced Main.py fork modifications from ~35 lines (import + 29-line export block) to ~4 lines (import + 2-line hook call). The export logic now lives entirely in the APWorld, which is the appropriate ownership boundary.
 
 ## Backward Compatibility
 
@@ -191,11 +242,12 @@ This proposal is purely additive:
 - No changes to existing stage methods
 - No breaking changes to World API
 - Complements rather than replaces PR #5700
+- APWorlds using hooks degrade gracefully on vanilla AP via ImportError guard
 
 ## Scope
 
 **In scope:**
-- Single `post_output` hook point (after output, before archive)
+- Single `post_output` hook point (after spoiler, before archive)
 - Simple registration API
 - Error handling/logging
 
@@ -206,4 +258,4 @@ This proposal is purely additive:
 
 ## Summary
 
-PR #5700 enhances the per-world stage system. This proposal adds a complementary global hook system for utilities that need to operate across all worlds without requiring a player slot. Together, they cover both per-world and cross-world use cases.
+PR #5700 enhances the per-world stage system. This proposal adds a complementary global hook system for utilities that need to operate across all worlds without requiring a player slot. Together, they cover both per-world and cross-world use cases. The Archipelago-CC fork contains a working reference implementation.

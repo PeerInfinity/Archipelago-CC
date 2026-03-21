@@ -38527,6 +38527,16 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "can_reach_location",
+        "args": [
+          {
+            "type": "constant",
+            "value": "All-In (Terran): Victory"
+          }
+        ]
+      },
       "rating_tables": {
         "tvx_defense_ratings": {
           "Siege Tank": 5,

@@ -1163,7 +1163,12 @@
     }
   },
   "game_info": {
-    "4": {}
+    "4": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
   },
   "helpers": {
     "1": {

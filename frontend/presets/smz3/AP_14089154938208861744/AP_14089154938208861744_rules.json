@@ -68106,7 +68106,145 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "smz3World"
+                  },
+                  "attr": "GetRegion"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Ganon's Tower"
+                  }
+                ]
+              },
+              "attr": "CanEnter"
+            },
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "state"
+                  },
+                  "attr": "smz3state"
+                },
+                "index": {
+                  "type": "player_id"
+                }
+              }
+            ]
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "smz3World"
+                  },
+                  "attr": "GetRegion"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Ganon's Tower"
+                  }
+                ]
+              },
+              "attr": "TowerAscend"
+            },
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "state"
+                  },
+                  "attr": "smz3state"
+                },
+                "index": {
+                  "type": "player_id"
+                }
+              }
+            ]
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "smz3World"
+                  },
+                  "attr": "GetRegion"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Ganon's Tower"
+                  }
+                ]
+              },
+              "attr": "CanComplete"
+            },
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "state"
+                  },
+                  "attr": "smz3state"
+                },
+                "index": {
+                  "type": "player_id"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

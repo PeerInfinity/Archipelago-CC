@@ -157,10 +157,13 @@ gen_worldgen_world() {
 }
 
 # Run world_generator to create a world package from rules.json
+# Usage: run_world_generator RULES_JSON OUTPUT_DIR GAME_NAME [EXTRA_ARGS...]
 run_world_generator() {
   local rules_json="$1" output_dir="$2" game_name="$3"
+  shift 3
   local args=(python -m world_generator "$rules_json" -o "$output_dir" --game-name "$game_name" --force)
   [ -n "$WORLDGEN_CANONICAL_SEED" ] && args+=(--canonical-seed "$WORLDGEN_CANONICAL_SEED")
+  args+=("$@")
   run_cmd "${args[@]}"
 }
 
@@ -196,6 +199,74 @@ ${game_name}:
 YAMLEOF
     python Generate.py --weights_file_path "Templates/${game_name} Vanilla.yaml" --multi 1 --seed 1
     rm -f "$vanilla_yaml"
+  fi
+}
+
+# Generate a MetaMath seed with a specific theorem (and optional extra options)
+generate_metamath_seed() {
+  local theorem="$1" seed_num="$2" extra_opts="${3:-}"
+  local temp_yaml="Players/Templates/Metamath ${theorem}.yaml"
+
+  if [ "$SCRIPT_MODE" = true ]; then
+    {
+      echo "mkdir -p \"Players/Templates\""
+      echo "cat > \"${temp_yaml}\" << 'YAMLEOF'"
+      echo "name: Player{number}"
+      echo "game: \"Metamath\""
+      echo "Metamath:"
+      echo "  theorem: ${theorem}"
+      if [ -n "$extra_opts" ]; then
+        echo "$extra_opts"
+      fi
+      echo "YAMLEOF"
+      _fmt python Generate.py --weights_file_path "Templates/Metamath ${theorem}.yaml" --multi 1 --seed "$seed_num"
+      echo "rm -f \"${temp_yaml}\""
+    } >> "$OUTPUT_SCRIPT"
+  else
+    mkdir -p "Players/Templates"
+    cat > "$temp_yaml" << YAMLEOF
+name: Player{number}
+game: "Metamath"
+Metamath:
+  theorem: ${theorem}
+$([ -n "$extra_opts" ] && echo "$extra_opts")
+YAMLEOF
+    python Generate.py --weights_file_path "Templates/Metamath ${theorem}.yaml" --multi 1 --seed "$seed_num"
+    rm -f "$temp_yaml"
+  fi
+}
+
+# Generate a DepGraph seed with a specific graph (and optional extra options)
+generate_depgraph_seed() {
+  local graph="$1" seed_num="$2" extra_opts="${3:-}"
+  local temp_yaml="Players/Templates/DepGraph ${graph}.yaml"
+
+  if [ "$SCRIPT_MODE" = true ]; then
+    {
+      echo "mkdir -p \"Players/Templates\""
+      echo "cat > \"${temp_yaml}\" << 'YAMLEOF'"
+      echo "name: Player{number}"
+      echo "game: \"DepGraph\""
+      echo "DepGraph:"
+      echo "  graph_file: ${graph}"
+      if [ -n "$extra_opts" ]; then
+        echo "$extra_opts"
+      fi
+      echo "YAMLEOF"
+      _fmt python Generate.py --weights_file_path "Templates/DepGraph ${graph}.yaml" --multi 1 --seed "$seed_num"
+      echo "rm -f \"${temp_yaml}\""
+    } >> "$OUTPUT_SCRIPT"
+  else
+    mkdir -p "Players/Templates"
+    cat > "$temp_yaml" << YAMLEOF
+name: Player{number}
+game: "DepGraph"
+DepGraph:
+  graph_file: ${graph}
+$([ -n "$extra_opts" ] && echo "$extra_opts")
+YAMLEOF
+    python Generate.py --weights_file_path "Templates/DepGraph ${graph}.yaml" --multi 1 --seed "$seed_num"
+    rm -f "$temp_yaml"
   fi
 }
 
@@ -252,15 +323,15 @@ gen_worldgen2_world() {
 # ============================================================
 
 # Templates that generate seeds 1, 2, 3
+# Note: Metamath is handled in its own dedicated section (theorem variants)
 EXTRA_SEED_TEMPLATES=(
   "A Link to the Past"
   "Adventure"
   "A Short Hike"
   "A Hat in Time"
-  "Math Adventure"
+  "Journey to Ascension"
   "Baking Adventure"
   "Coding Adventure"
-  "Metamath"
 )
 
 # Templates included in the multiworld preset
@@ -275,9 +346,10 @@ MULTIWORLD_TEMPLATES=(
 # ALTTP uses special scripts in scripts/vanilla-alttp/; others use generate_vanilla_seed
 declare -A VANILLA_PRESET_DIR
 VANILLA_PRESET_DIR["A Link to the Past"]="alttp"
-VANILLA_PRESET_DIR["Math Adventure"]="mathadventure"
+VANILLA_PRESET_DIR["Journey to Ascension"]="jta"
 VANILLA_PRESET_DIR["Baking Adventure"]="bakingadventure"
 VANILLA_PRESET_DIR["Coding Adventure"]="codingadventure"
+# Note: Metamath vanilla is handled in its own dedicated section (theorem variants)
 
 # WorldGen2 templates (game name -> preset directory name for source WorldGen presets)
 declare -A WORLDGEN2_PRESET_DIR
@@ -287,6 +359,7 @@ WORLDGEN2_PRESET_DIR["A Short Hike"]="shorthike"
 WORLDGEN2_PRESET_DIR["Adventure"]="adventure"
 
 # All WorldGen2 games (union of vanilla and normal WorldGen2)
+# Note: Metamath WorldGen2 is handled in its own dedicated section (theorem variants)
 WORLDGEN2_TEMPLATES=(
   "A Hat in Time"
   "A Link to the Past"
@@ -294,7 +367,6 @@ WORLDGEN2_TEMPLATES=(
   "Adventure"
   "Baking Adventure"
   "Coding Adventure"
-  "Math Adventure"
 )
 
 # ============================================================
@@ -347,6 +419,74 @@ for template in "${EXTRA_SEED_TEMPLATES[@]}"; do
   gen_seeds "$template"
 done
 
+# --- MetaMath theorem variants ---
+
+section "Generating MetaMath theorem variant presets"
+
+# --- Vanilla seeds ---
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "Metamath"                                    # 2p2e4, seed 1
+  generate_metamath_seed "canth" 2 "  vanilla_placement: true"        # canth, seed 2
+  generate_metamath_seed "wilth" 3 "  vanilla_placement: true"        # wilth, seed 3
+fi
+
+# --- Main seeds ---
+# 2p2e4 (easy): seeds 1-3 via default template
+gen_seeds "Metamath"
+# canth (medium): seeds 4-6
+generate_metamath_seed "canth" 4
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_metamath_seed "canth" 5
+  generate_metamath_seed "canth" 6
+fi
+# wilth (hard): seeds 7-9
+generate_metamath_seed "wilth" 7
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_metamath_seed "wilth" 8
+  generate_metamath_seed "wilth" 9
+fi
+
+# --- DepGraph graph variant presets ---
+
+section "Generating DepGraph graph variant presets"
+
+# --- Vanilla seeds ---
+if [ "$GENERATE_VANILLA_SEEDS" = "true" ]; then
+  generate_vanilla_seed "DepGraph"                                            # coding_adventure, seed 1
+  generate_depgraph_seed "baking_adventure" 2 "  vanilla_placement: true"     # baking_adventure, seed 2
+  generate_depgraph_seed "tech_tree" 3 "  vanilla_placement: true"            # tech_tree, seed 3
+  generate_depgraph_seed "skill_tree" 4 "  vanilla_placement: true"           # skill_tree, seed 4
+  generate_depgraph_seed "recipe_chain" 5 "  vanilla_placement: true"         # recipe_chain, seed 5
+fi
+
+# --- Main seeds ---
+# coding_adventure (default): seeds 1-3 via default template
+gen_seeds "DepGraph"
+# baking_adventure: seeds 4-6
+generate_depgraph_seed "baking_adventure" 4
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "baking_adventure" 5
+  generate_depgraph_seed "baking_adventure" 6
+fi
+# tech_tree: seeds 7-9
+generate_depgraph_seed "tech_tree" 7
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "tech_tree" 8
+  generate_depgraph_seed "tech_tree" 9
+fi
+# skill_tree: seeds 10-12
+generate_depgraph_seed "skill_tree" 10
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "skill_tree" 11
+  generate_depgraph_seed "skill_tree" 12
+fi
+# recipe_chain: seeds 13-15
+generate_depgraph_seed "recipe_chain" 13
+if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
+  generate_depgraph_seed "recipe_chain" 14
+  generate_depgraph_seed "recipe_chain" 15
+fi
+
 # --- Multiworld ---
 
 if [ "$GENERATE_MULTIWORLD" = "true" ]; then
@@ -395,6 +535,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
     fi
     gen_seed "${template} WorldGen" 1
   done
+
 fi
 
 # --- WorldGen2 ---
@@ -422,6 +563,7 @@ if [ "$GENERATE_WORLDGEN2" = "true" ]; then
       gen_seed "${template} WorldGen2" 1
     fi
   done
+
 fi
 
 # --- Cleanup ---

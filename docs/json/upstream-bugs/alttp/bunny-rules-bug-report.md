@@ -135,4 +135,4 @@ The `_rule=path_rule` default argument binds the value at lambda creation time r
 
 ### Diff available
 
-A patch file is available at: `docs/json/developer/diffs/alttp-bunny-rules.diff`
+A patch file is available at: `docs/json/developer/diffs/diff-files/alttp-bunny-rules.diff`

@@ -82,7 +82,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     options: BakingAdventureVanillaWorldGen2Options
 
     base_id: ClassVar[int] = 300000000
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -100,7 +100,6 @@ class BakingAdventureWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements match the original non-randomized game
@@ -165,6 +164,12 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -305,7 +310,7 @@ class BakingAdventureWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Cool on Wire Rack", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

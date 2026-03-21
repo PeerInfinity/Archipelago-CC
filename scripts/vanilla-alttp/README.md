@@ -76,10 +76,22 @@ Analyzes matches between sahasrahbot and Archipelago names.
 python3 analyze_name_matches.py
 ```
 
+#### `analyze_pool_match.py`
+Analyze vanilla item placements vs the ALTTP item pool to identify mismatches.
+```bash
+python3 analyze_pool_match.py
+```
+
 #### `validate_mappings.py`
 Validates that mapped item names exist in Archipelago.
 ```bash
 python3 validate_mappings.py
+```
+
+#### `generate_vanilla_alttp.py`
+Generate a vanilla ALTTP seed with monkey patches applied (produces actual output files unlike test_vanilla_patches.py).
+```bash
+python3 generate_vanilla_alttp.py
 ```
 
 #### `generate_vanilla_plando.py`

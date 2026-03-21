@@ -1977,7 +1977,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "has_all_counts",
+        "args": [
+          {
+            "type": "constant",
+            "value": {
+              "Booster Bumper": 5,
+              "Hazard Bumper": 25,
+              "Treasure Bumper": 32
+            }
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

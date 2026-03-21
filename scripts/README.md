@@ -201,13 +201,6 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   node scripts/build/bundle-frontend.js --no-minify  # Debug build without minification
   ```
 
-- **`build/pack_json_tools.py`** - Package JSON Tools modules into a distributable APWorld
-  ```bash
-  python scripts/build/pack_json_tools.py                      # Create json_tools.apworld
-  python scripts/build/pack_json_tools.py --include-frontend   # Include frontend files
-  python scripts/build/pack_json_tools.py --dry-run            # Preview what would be packaged
-  ```
-
 - **`build/pack_json_tools_installer.py`** - Package the JSON Tools Installer as an APWorld
   ```bash
   python scripts/build/pack_json_tools_installer.py            # Create installer apworld
@@ -319,6 +312,26 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   python scripts/docs/sync-script-docs.py --generate      # Generate doc stubs
   ```
 
+- **`docs/generate-file-diff-lists.py`** - Generate categorized file diff lists comparing fork vs upstream Archipelago
+  ```bash
+  python scripts/docs/generate-file-diff-lists.py                           # Generate all diff lists
+  python scripts/docs/generate-file-diff-lists.py --upstream-commit fb45a2f8  # Specify upstream commit
+  python scripts/docs/generate-file-diff-lists.py --dry-run                 # Preview without writing
+  ```
+
+- **`docs/check-annotations.py`** - Verify that every item in the fork-vs-upstream diff has a corresponding entry in `file-annotations.json`. Reports missing annotations and stale entries.
+  ```bash
+  python scripts/docs/check-annotations.py --upstream-commit fb45a2f8       # Check against specific commit
+  python scripts/docs/check-annotations.py                                  # Check against latest upstream/main
+  ```
+
+### Release Scripts (scripts/release/)
+
+- **`release/sync-to-stable.sh`** - Sync the dev repository to the stable repository (`PeerInfinity/Archipelago` @ `JSONExport`) via rsync. Deletes all files in the destination (preserving `.git`, `.github`, `README.md`, `.gitignore`, `.claude`), copies all files from dev, then restores non-root `README.md` and `.gitignore` files.
+  ```bash
+  bash scripts/release/sync-to-stable.sh /path/to/stable/Archipelago
+  ```
+
 ### Utility Scripts (scripts/utils/)
 
 - **`utils/cleanup-output-directories.py`** - Clean up test output directories
@@ -343,6 +356,12 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 - **`utils/list-games.py`** - List games from preset files and templates
   ```bash
   python scripts/utils/list-games.py
+  ```
+
+- **`utils/list-template-files.py`** - List template file names from world-mapping.json, excluding WorldGen/Vanilla entries and excluded games
+  ```bash
+  python scripts/utils/list-template-files.py                                          # List with permanent excludes only
+  python scripts/utils/list-template-files.py --exclude main_test_exclude_list         # Apply additional excludes
   ```
 
 - **`utils/generate_extra_templates.sh`** - Generate additional template variations
@@ -384,6 +403,8 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   bash scripts/utils/generate_test_templates.sh
   ```
 
+- **`utils/generated_commands.sh`** - Auto-generated script output from `generate_all_templates.sh --script`. Not intended to be run directly; produced for CI workflow use.
+
 ### Configuration Scripts (scripts/setup/)
 
 - **`setup/update_host_settings.py`** - Update host.yaml configuration
@@ -412,13 +433,46 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 
 ### Root Scripts (scripts/)
 
-- **`install_json_tools.py`** - Standalone JSON Tools installation script
+- **`install_json_tools.py`** - End-to-end installation test script. Verifies that JSON Tools can be
+  installed from scratch into a fresh Archipelago clone and that the resulting installation works
+  correctly. Not intended for end users — this is a developer tool for testing the installation
+  pipeline. It clones Archipelago, creates a venv, downloads and runs the JSON Tools installer,
+  sets up the dev environment, optionally applies ROM-less patches, and runs verification tests.
+
   ```bash
-  python scripts/install_json_tools.py                       # Basic installation
-  python scripts/install_json_tools.py --dev --all           # Dev version with all components
-  python scripts/install_json_tools.py --romless             # Enable ROM-less testing
-  python scripts/install_json_tools.py --target-dir /path    # Custom installation directory
+  # Basic installation (monkey patching, tests with Adventure)
+  python scripts/install_json_tools.py --dev --target-dir ~/Archipelago-vanilla
+
+  # ROM-less + ALTTP test
+  python scripts/install_json_tools.py --dev --romless --target-dir ~/Archipelago-vanilla
+
+  # Fresh install (delete existing target first)
+  python scripts/install_json_tools.py --dev --fresh --target-dir ~/Archipelago-vanilla
+
+  # Dev version with all components, skip tests
+  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir ~/Archipelago-vanilla
+
+  # Dry run (preview what would be done)
+  python scripts/install_json_tools.py --dev --dry-run --target-dir ~/Archipelago-vanilla
   ```
+
+  **Key options:**
+  | Option | Description |
+  |--------|-------------|
+  | `--dev` | Use development branch (Archipelago-CC @ main). Default is stable. |
+  | `--target-dir DIR` | Installation directory (default: `./archipelago-json-tools`) |
+  | `--patch-mode MODE` | `monkey` (default, runtime patching) or `none` |
+  | `--romless` | Apply ROM-less patches (enables ALTTP and other ROM-based game testing) |
+  | `--fresh` | Delete existing target directory before cloning |
+  | `--test MODE` | `auto` (default: ALTTP if --romless, else Adventure), `adventure`, `alttp`, or `none` |
+  | `--all` | Install all components (frontend, presets, docs, etc.) |
+  | `--skip-clone` | Skip cloning (assume Archipelago already exists in target) |
+  | `--skip-setup` | Skip development environment setup |
+  | `--skip-tests` | Same as `--test none` |
+  | `--dry-run` / `-n` | Show what would be done without making changes |
+
+  **Verification tests** run both a spoiler test (`test-all-templates.py`) and a UT fuzz test
+  (`test-all-ut-fuzz.py --runs 1`) for a single game, ensuring the installation works end-to-end.
 
 - **`install_apworlds.py`** - Bulk install APWorlds from community index
   ```bash
@@ -473,6 +527,54 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 - **`worlds/yachtdice/export_yacht_weights.py`** - Export Yacht Dice item weights
   ```bash
   python scripts/worlds/yachtdice/export_yacht_weights.py
+  ```
+
+### Vanilla ALttP Scripts (scripts/vanilla-alttp/)
+
+Tools for placing items in their vanilla (original game) locations in A Link to the Past. See the **[Vanilla ALttP README](vanilla-alttp/README.md)** for full documentation.
+
+### Journey to Ascension Scripts (scripts/jta/)
+
+- **`jta/cost-adjust.js`** - Adjust costMult values in randomized JtA game data so perk tasks are completable within a target number of energy resets per sphere
+  ```bash
+  node scripts/jta/cost-adjust.js \
+    --gamedata frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_gamedata.json \
+    --spherelog frontend/presets/jta/AP_SEED/AP_SEED_sphere_log.jsonl \
+    --output frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_costs.json \
+    --resets-per-sphere 5
+  ```
+
+- **`jta/cost-plan.js`** - Generate cost data using simulated playthrough with binary search solver (more accurate than cost-adjust.js)
+  ```bash
+  node scripts/jta/cost-plan.js \
+    --gamedata path/to/gamedata.json \
+    --spherelog path/to/sphere_log.jsonl \
+    --output path/to/costs.json \
+    --two-pass --normal-attempts 2
+  ```
+
+- **`jta/cost-generate-game.js`** - Generate costs using real game engine via Playwright in a headless browser
+  ```bash
+  node scripts/jta/cost-generate-game.js \
+    -g path/to/gamedata.json \
+    -s path/to/sphere_log.jsonl \
+    --port 8000 --two-pass
+  ```
+
+- **`jta/cost-debugger.js`** - Generate costs via simulated playthrough and output a detailed step-by-step debug report
+  ```bash
+  node scripts/jta/cost-debugger.js \
+    --gamedata path/to/gamedata.json \
+    --spherelog path/to/sphere_log.jsonl \
+    --output jta_cost_debug_report.json
+  ```
+
+- **`jta/game-verify.js`** - Run cost debugger's planned steps through the actual game engine in a headless browser, comparing planned vs actual results
+  ```bash
+  node scripts/jta/game-verify.js \
+    -g path/to/gamedata.json \
+    -s path/to/sphere_log.jsonl \
+    --port 8000
   ```
 
 ## Test Output Directories
@@ -694,6 +796,9 @@ scripts/
 │   ├── list-games.py            # Game listing
 │   └── generate_extra_templates.sh    # Generate additional templates
 │
+├── vanilla-alttp/                # ALttP vanilla item placement tools
+│   └── README.md             # Vanilla placement documentation
+│
 ├── data/                         # Generated data files
 ├── output/                       # Test output directories
 │   ├── spoiler-minimal/
@@ -711,6 +816,13 @@ scripts/
 │           ├── client-integration.md   # Client integration
 │           ├── map-integration.md      # Map integration
 │           └── re-gen-passthrough.md   # Re-generation passthrough
+│
+├── jta/                          # Journey to Ascension cost tools
+│   ├── cost-adjust.js        # Cost adjustment CLI
+│   ├── cost-plan.js          # Cost planner with binary search
+│   ├── cost-debugger.js      # Step-by-step cost debug report
+│   ├── cost-generate-game.js # Browser-based cost generation
+│   └── game-verify.js        # Planned vs actual game verification
 │
 └── README.md                     # This file
 ```

@@ -302,7 +302,8 @@ def run_world_generator(
         rules_path,
         '--output', output_dir,
         '--game-name', game_name,
-        '--force'
+        '--force',
+        '--apply-name-substitutions'
     ]
 
     if canonical_seed is not None:

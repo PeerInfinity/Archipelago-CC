@@ -57,7 +57,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Fish Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -74,7 +74,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Cold Borscht",
+              "name": "Berry Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -110,7 +110,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Crab Armor",
+              "name": "Vedha's Cure-All",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -140,7 +140,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spirit Form",
+              "name": "Hot Soup x 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -157,7 +157,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Crab Cake",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -237,7 +237,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Glowing Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -314,7 +314,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Nature Form",
+              "name": "Baby Dumbo",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -421,26 +421,6 @@
             }
           },
           {
-            "name": "Home Waters, turtle room to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
-            "name": "Home Waters, turtle room to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "Home Waters, turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -457,6 +437,26 @@
               "rule": "Has",
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
+              }
+            }
+          },
+          {
+            "name": "Home Waters, turtle room to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
+              }
+            }
+          },
+          {
+            "name": "Home Waters, turtle room to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
               }
             }
           }
@@ -608,7 +608,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Special Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -625,7 +625,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Baby Nautilus",
+              "name": "Plant Leaf",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -674,7 +674,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Fish Form",
+              "name": "Transturtle Abyss right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -730,7 +730,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Form",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -747,7 +747,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Transturtle Home Waters",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -885,7 +885,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -921,7 +921,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Divine Soup",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -977,7 +977,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Veil top left",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1211,7 +1211,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mushroom x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1226,7 +1226,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Transturtle Simon Says",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1287,26 +1287,6 @@
             }
           },
           {
-            "name": "Open Waters top right area, turtle room to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
-            "name": "Open Waters top right area, turtle room to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "Open Waters top right area, turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -1325,6 +1305,26 @@
                 "item_name": "Transturtle Arnassi Ruins"
               }
             }
+          },
+          {
+            "name": "Open Waters top right area, turtle room to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
+              }
+            }
+          },
+          {
+            "name": "Open Waters top right area, turtle room to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
+              }
+            }
           }
         ],
         "locations": [
@@ -1335,7 +1335,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Perogi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1350,7 +1350,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1402,7 +1402,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rainbow Mushroom",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1419,7 +1419,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1577,7 +1577,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Red Bulb x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1791,6 +1791,16 @@
             }
           },
           {
+            "name": "Arnassi Ruins cave, transturtle area to Simon Says area",
+            "connected_region": "Simon Says area",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Simon Says"
+              }
+            }
+          },
+          {
             "name": "Arnassi Ruins cave, transturtle area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
@@ -1809,16 +1819,6 @@
                 "item_name": "Transturtle Final Boss"
               }
             }
-          },
-          {
-            "name": "Arnassi Ruins cave, transturtle area to Simon Says area",
-            "connected_region": "Simon Says area",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Simon Says"
-              }
-            }
           }
         ],
         "locations": [
@@ -1829,7 +1829,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fish Oil",
+              "name": "Leaf Poultice x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1858,7 +1858,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1937,6 +1937,16 @@
             }
           },
           {
+            "name": "Simon Says area to Arnassi Ruins cave, transturtle area",
+            "connected_region": "Arnassi Ruins cave, transturtle area",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Arnassi Ruins"
+              }
+            }
+          },
+          {
             "name": "Simon Says area to Abyss right area, transturtle",
             "connected_region": "Abyss right area, transturtle",
             "access_rule": {
@@ -1953,16 +1963,6 @@
               "rule": "Has",
               "args": {
                 "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
-            "name": "Simon Says area to Arnassi Ruins cave, transturtle area",
-            "connected_region": "Arnassi Ruins cave, transturtle area",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -2053,7 +2053,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 3",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2098,7 +2098,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Magic Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2113,7 +2113,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2236,7 +2236,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Kelp Forest bottom left",
+              "name": "Transturtle Veil top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2281,7 +2281,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arnassi Armor",
+              "name": "Nature Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2298,7 +2298,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Baby Piranha",
+              "name": "Jelly Costume",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2329,7 +2329,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Blaster",
+              "name": "Health Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2406,7 +2406,7 @@
             "name": "Mithalas castle to Mithalas Cathedral start",
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
-              "rule": "_has_bind_song",
+              "rule": "_is_cathedral_door_opened",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             }
@@ -2441,6 +2441,23 @@
               "type": "None"
             },
             "locked": false,
+            "event": false
+          },
+          {
+            "name": "Mithalas City Castle, sitting on the sealed throne",
+            "id": 698218,
+            "access_rule": {
+              "rule": "_has_bind_song",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "Door to the Cathedral opened",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
             "event": false
           }
         ]
@@ -2484,7 +2501,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup x 2",
+              "name": "Baby Blaster",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2544,6 +2561,15 @@
         "name": "Mithalas Cathedral start",
         "exits": [
           {
+            "name": "Mithalas Cathedral start to Mithalas castle",
+            "connected_region": "Mithalas castle",
+            "access_rule": {
+              "rule": "_is_cathedral_door_opened",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
             "name": "Mithalas Cathedral start to Mithalas Cathedral start urns",
             "connected_region": "Mithalas Cathedral start urns",
             "access_rule": {
@@ -2587,7 +2613,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Ice Cream",
+              "name": "Small Tentacle x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2653,7 +2679,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Simon Says",
+              "name": "Transturtle Open Waters top right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2683,7 +2709,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Tasty Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2698,7 +2724,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 2",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2713,7 +2739,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Wok",
+              "name": "Healing Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2728,7 +2754,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Long Life Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2743,7 +2769,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Dumbo Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2783,7 +2809,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leadership Roll",
+              "name": "Swamp Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2798,7 +2824,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Egg",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2885,7 +2911,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2915,7 +2941,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha's Cure-All",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3089,7 +3115,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3104,7 +3130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Glowing Egg",
+              "name": "Leadership Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3119,7 +3145,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Arnassi Ruins",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3136,7 +3162,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Sea Cake",
+              "name": "Crab Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3182,7 +3208,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Health Upgrade",
+              "name": "Red Berry",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3296,7 +3322,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magic Soup",
+              "name": "Turtle Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3454,26 +3480,6 @@
             }
           },
           {
-            "name": "Kelp Forest bottom left area to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
-            "name": "Kelp Forest bottom left area to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "Kelp Forest bottom left area to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -3492,6 +3498,26 @@
                 "item_name": "Transturtle Arnassi Ruins"
               }
             }
+          },
+          {
+            "name": "Kelp Forest bottom left area to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
+              }
+            }
+          },
+          {
+            "name": "Kelp Forest bottom left area to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
+              }
+            }
           }
         ],
         "locations": [
@@ -3502,7 +3528,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Cold Borscht",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3600,7 +3626,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Tasty Cake",
+              "name": "Spider Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3629,7 +3655,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dual Form",
+              "name": "Transturtle Arnassi Ruins",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3992,26 +4018,6 @@
             }
           },
           {
-            "name": "The Veil top left area to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
-            "name": "The Veil top left area to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "The Veil top left area to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -4030,6 +4036,26 @@
                 "item_name": "Transturtle Arnassi Ruins"
               }
             }
+          },
+          {
+            "name": "The Veil top left area to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
+              }
+            }
+          },
+          {
+            "name": "The Veil top left area to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
+              }
+            }
           }
         ],
         "locations": [
@@ -4040,7 +4066,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tasty Roll",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4074,9 +4100,9 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Li and Li Song",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4089,7 +4115,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4190,26 +4216,6 @@
             }
           },
           {
-            "name": "The Veil top right area, left of temple to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
-            "name": "The Veil top right area, left of temple to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "The Veil top right area, left of temple to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -4226,6 +4232,26 @@
               "rule": "Has",
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
+              }
+            }
+          },
+          {
+            "name": "The Veil top right area, left of temple to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
+              }
+            }
+          },
+          {
+            "name": "The Veil top right area, left of temple to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
               }
             }
           }
@@ -4255,7 +4281,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4339,7 +4365,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Swamp Cake",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4354,7 +4380,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Veil top right",
+              "name": "Sun Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4418,7 +4444,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sight Poultice",
+              "name": "Small Bone x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4499,7 +4525,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Crab Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4544,7 +4570,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Long Life Soup",
+              "name": "Special Bulb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4573,7 +4599,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hand Roll",
+              "name": "Plant Leaf x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4655,9 +4681,9 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Turtle Soup",
+              "name": "Transturtle Veil top left",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4684,7 +4710,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Home Waters",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4737,9 +4763,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Baby Nautilus",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4752,9 +4778,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Abyss right",
+              "name": "Hearty Soup",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4865,12 +4891,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "_has_bind_song",
+                  "rule": "_has_light",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "_has_light",
+                  "rule": "_has_sun_crystal",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4886,7 +4912,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Meat x 2",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4895,13 +4921,13 @@
             "event": false
           },
           {
-            "name": "Sun Temple, bulb on the right part",
+            "name": "Sun Temple, bulb in the right part",
             "id": 698092,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Loaf of Life",
+              "name": "Leaf Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4996,7 +5022,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Jelly Costume",
+              "name": "Hearty Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5031,18 +5057,15 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Lumerean God beated",
-                      "Sun God beated"
-                    ]
+                    "item_name": "Lumerean God beated"
                   }
                 }
               ]
             },
             "item": {
-              "name": "Berry Ice Cream",
+              "name": "Small Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5062,18 +5085,15 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Lumerean God beated",
-                      "Sun God beated"
-                    ]
+                    "item_name": "Lumerean God beated"
                   }
                 }
               ]
             },
             "item": {
-              "name": "Leaf Poultice",
+              "name": "Sight Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5111,7 +5131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Spicy Roll",
+              "name": "Shield Song",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5200,7 +5220,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dumbo Ice Cream",
+              "name": "Fish Oil",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5245,7 +5265,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shark Fin Soup",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5296,7 +5316,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Special Cake",
+              "name": "Mushroom x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5398,7 +5418,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Red Bulb x 2",
+              "name": "Vedha Sea Crisp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5551,16 +5571,6 @@
             }
           },
           {
-            "name": "Abyss right area, transturtle to The Body, final boss area turtle room",
-            "connected_region": "The Body, final boss area turtle room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Final Boss"
-              }
-            }
-          },
-          {
             "name": "Abyss right area, transturtle to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -5579,6 +5589,16 @@
                 "item_name": "Transturtle Arnassi Ruins"
               }
             }
+          },
+          {
+            "name": "Abyss right area, transturtle to The Body, final boss area turtle room",
+            "connected_region": "The Body, final boss area turtle room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Final Boss"
+              }
+            }
           }
         ],
         "locations": [
@@ -5589,7 +5609,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Li and Li Song",
+              "name": "Arnassi Armor",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5642,7 +5662,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leeching Poultice",
+              "name": "Spicy Meat x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5838,7 +5858,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Small Bone x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6085,9 +6105,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Shield Song",
+              "name": "Dual Form",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6152,7 +6172,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Spider Roll",
+              "name": "Healing Poultice x 2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6196,7 +6216,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vedha Sea Crisp",
+              "name": "Wok",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6256,7 +6276,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Leaf Poultice x 3",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6329,7 +6349,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Tentacle x 2",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6369,7 +6389,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Special Bulb",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6525,16 +6545,6 @@
             }
           },
           {
-            "name": "The Body, final boss area turtle room to Abyss right area, transturtle",
-            "connected_region": "Abyss right area, transturtle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Transturtle Abyss right"
-              }
-            }
-          },
-          {
             "name": "The Body, final boss area turtle room to Simon Says area",
             "connected_region": "Simon Says area",
             "access_rule": {
@@ -6551,6 +6561,16 @@
               "rule": "Has",
               "args": {
                 "item_name": "Transturtle Arnassi Ruins"
+              }
+            }
+          },
+          {
+            "name": "The Body, final boss area turtle room to Abyss right area, transturtle",
+            "connected_region": "Abyss right area, transturtle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Transturtle Abyss right"
               }
             }
           }
@@ -6593,7 +6613,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Perogi",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6637,7 +6657,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hot Soup",
+              "name": "Transturtle Kelp Forest bottom left",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6760,7 +6780,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Hearty Soup",
+              "name": "Plant Leaf x 3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6893,7 +6913,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Transturtle Open Waters top right",
+              "name": "Spirit Form",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7034,7 +7054,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Plant Leaf x 2",
+              "name": "Shark Fin Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7101,7 +7121,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Baby Dumbo",
+              "name": "Baby Piranha",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7116,7 +7136,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Small Bone x 3",
+              "name": "Loaf of Life",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7131,7 +7151,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Poultice x 2",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7146,7 +7166,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Arcane Poultice",
+              "name": "Divine Soup",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7168,7 +7188,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Berry",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7323,7 +7343,7 @@
           "Damage",
           "Everything"
         ],
-        "classification": "useful",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -7485,7 +7505,7 @@
           "Damage",
           "Everything"
         ],
-        "classification": "useful",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -7496,7 +7516,7 @@
           "Damage",
           "Everything"
         ],
-        "classification": "useful",
+        "classification": "progression",
         "type": null,
         "max_count": 1
       },
@@ -8616,6 +8636,16 @@
         "type": null,
         "max_count": 1
       },
+      "Door to the Cathedral opened": {
+        "name": "Door to the Cathedral opened",
+        "id": 698134,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Nautilus Prime beated": {
         "name": "Nautilus Prime beated",
         "id": null,
@@ -8704,6 +8734,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "Has Sun Crystal": {
+        "name": "Has Sun Crystal",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "Fallen God beated": {
         "name": "Fallen God beated",
         "id": null,
@@ -8759,6 +8800,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "Body Tongue cleared": {
+        "name": "Body Tongue cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "First Secret obtained": {
         "name": "First Secret obtained",
         "id": null,
@@ -8783,28 +8835,6 @@
       },
       "Third Secret obtained": {
         "name": "Third Secret obtained",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Body Tongue cleared": {
-        "name": "Body Tongue cleared",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Has Sun Crystal": {
-        "name": "Has Sun Crystal",
         "id": null,
         "groups": [
           "Event"
@@ -8859,6 +8889,7 @@
       "Crab Cake": 1,
       "Crabbius Maximus beated": 1,
       "Divine Soup": 1,
+      "Door to the Cathedral opened": 1,
       "Drunian God beated": 1,
       "Dual Form": 1,
       "Dumbo Ice Cream": 3,
@@ -9014,22 +9045,38 @@
         "early_bind_song": 1,
         "early_energy_form": 1,
         "exclude_locations": [],
+        "infinite_hot_soup": true,
         "ingredient_randomizer": 0,
         "item_links": [],
-        "light_needed_to_get_to_dark_places": true,
+        "light_needed_to_get_to_dark_places": 1,
         "local_items": [],
+        "maximum_ingredient_amount": 8,
         "mini_bosses_to_beat": 0,
+        "no_progression_abyss": false,
+        "no_progression_arnassi_ruins": false,
+        "no_progression_body": false,
+        "no_progression_energy_temple": false,
+        "no_progression_frozen_veil": false,
         "no_progression_hard_or_hidden_locations": false,
+        "no_progression_kelp_forest": false,
+        "no_progression_mithalas": false,
+        "no_progression_simon_says": false,
+        "no_progression_sunken_city": false,
+        "no_progression_veil": false,
         "non_local_items": [],
         "objective": 0,
+        "open_body_tongue": false,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
+        "save_healing": true,
+        "skip_final_boss_3rd_form": false,
         "skip_first_vision": false,
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": [],
+        "throne_as_location": false,
         "turtle_randomizer": 2,
         "unconfine_home_water": 0
       },
@@ -9090,6 +9137,11 @@
           "default": 1,
           "display_name": "Early Energy form"
         },
+        "infinite_hot_soup": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Infinite Hot Soup"
+        },
         "ingredient_randomizer": {
           "type": "choice",
           "name_lookup": {
@@ -9101,9 +9153,21 @@
           "display_name": "Randomize Ingredients"
         },
         "light_needed_to_get_to_dark_places": {
-          "type": "default_on_toggle",
-          "default": true,
+          "type": "choice",
+          "name_lookup": {
+            "0": "off",
+            "1": "on",
+            "2": "sun_form"
+          },
+          "default": 1,
           "display_name": "Light needed to get to dark places"
+        },
+        "maximum_ingredient_amount": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 20,
+          "default": 8,
+          "display_name": "Maximum ingredient amount"
         },
         "mini_bosses_to_beat": {
           "type": "range",
@@ -9112,19 +9176,76 @@
           "default": 0,
           "display_name": "Minibosses to beat"
         },
+        "no_progression_abyss": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Abyss"
+        },
+        "no_progression_arnassi_ruins": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in Arnassi Ruins"
+        },
+        "no_progression_body": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Body"
+        },
+        "no_progression_energy_temple": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Energy Temple"
+        },
+        "no_progression_frozen_veil": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Frozen Veil"
+        },
         "no_progression_hard_or_hidden_locations": {
           "type": "toggle",
           "default": false,
           "display_name": "No progression in hard or hidden locations"
         },
+        "no_progression_kelp_forest": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in Kelp Forest"
+        },
+        "no_progression_mithalas": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in Mithalas"
+        },
+        "no_progression_simon_says": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in Simon says area"
+        },
+        "no_progression_sunken_city": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Sunken City"
+        },
+        "no_progression_veil": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "No progression in the Veil"
+        },
         "objective": {
           "type": "choice",
           "name_lookup": {
             "0": "kill_the_creator",
-            "1": "obtain_secrets_and_kill_the_creator"
+            "1": "obtain_secrets_and_kill_the_creator",
+            "2": "killing_the_four_gods",
+            "3": "gods_and_creator"
           },
           "default": 0,
           "display_name": "Objective"
+        },
+        "open_body_tongue": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Open the body tongue"
         },
         "progression_balancing": {
           "type": "range",
@@ -9132,6 +9253,16 @@
           "range_end": 99,
           "default": 50,
           "display_name": "Progression Balancing"
+        },
+        "save_healing": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Save heal Naija"
+        },
+        "skip_final_boss_3rd_form": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Skip final boss third form"
         },
         "skip_first_vision": {
           "type": "toggle",
@@ -9142,6 +9273,11 @@
           "type": "start_inventory_pool",
           "default": {},
           "display_name": "Start Inventory from Pool"
+        },
+        "throne_as_location": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Throne as a location"
         },
         "turtle_randomizer": {
           "type": "choice",
@@ -9167,6 +9303,7 @@
       },
       "regions": {
         "player": 1,
+        "is_four_gods": false,
         "menu": "Menu",
         "verse_cave_r": "Verse Cave right area",
         "verse_cave_l": "Verse Cave left area",
@@ -9266,7 +9403,7 @@
         "body_rt": "The Body right area, top path",
         "body_rb": "The Body right area, bottom path",
         "body_b": "The Body bottom area",
-        "final_boss_loby": "The Body, before final boss",
+        "final_boss_lobby": "The Body, before final boss",
         "final_boss_tube": "The Body, final boss area turtle room",
         "final_boss": "The Body, final boss",
         "final_boss_end": "The Body, final boss area"
@@ -9349,9 +9486,7 @@
         74,
         75
       ],
-      "exclude": [
-        "Transturtle Final Boss"
-      ],
+      "exclude": [],
       "base_id": 698000,
       "world_description": "Aquaria is a side-scrolling action-adventure game. It follows Naija, an\naquatic humanoid woman, as she explores the underwater world of Aquaria.\nAlong her journey, she learns about the history of the world she inhabits\nas well as her own past. The gameplay focuses on a combination of swimming,\nsinging, and combat, through which Naija can interact with the world. Her\nsongs can move items, affect plants and animals, and change her physical\nappearance into other forms that have different abilities, like firing\nprojectiles at hostile creatures, or passing through barriers inaccessible\nto her in her natural form.\nFrom: https://en.wikipedia.org/wiki/Aquaria_(video_game)",
       "slot_data": {
@@ -9435,16 +9570,37 @@
         ],
         "aquarian_translate": false,
         "blind_goal": false,
-        "secret_needed": false,
+        "goal": 0,
         "minibosses_to_kill": 0,
         "bigbosses_to_kill": 0,
         "skip_first_vision": false,
+        "skip_final_boss_3rd_form": false,
+        "infinite_hot_soup": true,
+        "open_body_tongue": false,
         "unconfine_home_water_energy_door": false,
         "unconfine_home_water_transturtle": false,
+        "maximum_ingredient_amount": 8,
         "bind_song_needed_to_get_under_rock_bulb": true,
         "no_progression_hard_or_hidden_locations": false,
         "light_needed_to_get_to_dark_places": true,
-        "turtle_randomizer": 2
+        "turtle_randomizer": 2,
+        "no_progression_simon_says": false,
+        "no_progression_kelp_forest": false,
+        "no_progression_veil": false,
+        "no_progression_mithalas": false,
+        "no_progression_energy_temple": false,
+        "no_progression_arnassi_ruins": false,
+        "no_progression_frozen_veil": false,
+        "no_progression_abyss": false,
+        "no_progression_sunken_city": false,
+        "no_progression_body": false,
+        "save_healing": true,
+        "throne_as_location": false,
+        "required_client_version": [
+          1,
+          4,
+          1
+        ]
       },
       "web": {
         "theme": "ocean",
@@ -9476,7 +9632,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
   },
   "helpers": {
     "1": {
@@ -9650,6 +9811,10 @@
       "_has_tongue_cleared": {
         "type": "item_check",
         "item": "Body Tongue cleared"
+      },
+      "_is_cathedral_door_opened": {
+        "type": "item_check",
+        "item": "Door to the Cathedral opened"
       }
     }
   }

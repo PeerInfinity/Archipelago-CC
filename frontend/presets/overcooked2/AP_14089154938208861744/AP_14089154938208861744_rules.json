@@ -15602,6 +15602,10 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      },
       "level_logic": {
         "*": [
           [
