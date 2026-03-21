@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle (APWorlds)
 
-**Generated:** 2026-02-19 21:59:55 UTC
+**Generated:** 2026-03-21 16:55:02 UTC
 
 **Source Data Last Updated:** 2026-01-24T05:05:20
 
@@ -93,7 +93,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Mario Kart Double Dash | ❌ | ❌ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ❌ | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ | ❌ | 9.7KB | ✅ | N/A |
+| Metroid Zero Mission | ❌ | ❌ | 9.8KB | ✅ | N/A |
 | Minishoot Adventures | ❌ 4/10 | ❌ | 25.9KB | ✅ | N/A |
 | Minit | ⚠️ 6/10 | ❌ | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -106,7 +106,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ | ❌ | ✅ | ✅ | N/A |
 | Pseudoregalia | ❌ | ✅ | 17.1KB | ✅ | N/A |
 | Rabi-Ribi | ❌ | ❌ | ✅ | ✅ | N/A |
-| Rain World | ✅ | ✅ | 11.7KB | ✅ | N/A |
+| Rain World | ✅ | ✅ | 11.8KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | ❌ | ✅ | ✅ | N/A |
 | Reventure | ❌ | ✅ | ✅ | ✅ | N/A |
 | Rift Wizard | ✅ | ❌ | 7.7KB | ✅ | N/A |
@@ -122,15 +122,15 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Sonic Heroes | ✅ | ✅ | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 4/10 | ❌ | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ✅ | ❌ | 9.4KB | ✅ | N/A |
-| Soul Blazer | ⚠️ 8/10 | ❌ | 10.6KB | ✅ | N/A |
+| Soul Blazer | ⚠️ 8/10 | ❌ | 10.5KB | ✅ | N/A |
 | Spinball | ✅ | ✅ | ✅ | ✅ | N/A |
-| Spyro 3 | ❌ | ❌ | 15.2KB | ✅ | N/A |
+| Spyro 3 | ❌ | ❌ | 15.3KB | ✅ | N/A |
 | Stacklands | ❌ | ❌ | 12.7KB | ✅ | N/A |
-| Star Fox 64 | ✅ | ❌ | 17.1KB | ✅ | N/A |
+| Star Fox 64 | ✅ | ❌ | 17.2KB | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | ✅ | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ | ❌ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ❌ | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ | ❌ | 15.0KB | ✅ | N/A |
+| System Shock 2 | ❌ | ❌ | 15.1KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ | ❌ | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tetris Attack | ❌ | ❌ | 23.1KB | ✅ | N/A |
@@ -146,7 +146,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Watery Words | ✅ | ✅ | 9.1KB | ✅ | N/A |
 | Wordipelago | ✅ | ✅ | 19.5KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ❌ | ❌ | ✅ | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ❌ | 28.7KB | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ❌ | 28.8KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ❌ | ❌ | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ❌ | ✅ | ✅ | N/A |
 | osu! | ✅ | ❌ | ✅ | ✅ | N/A |
@@ -173,7 +173,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Lil Gator Game | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | N/A |
-| Rain World | 11.7KB | ✅ | N/A |
+| Rain World | 11.8KB | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | N/A |
 | Sonic Heroes | ✅ | ✅ | N/A |
 | Spinball | ✅ | ✅ | N/A |
@@ -207,12 +207,12 @@ These games pass in the Worldgen UT but fail in the Pickle UT.
 | Ratchet & Clank 2 | ✅ | ✅ | N/A |
 | Rift Wizard | 7.7KB | ✅ | N/A |
 | Sonic the Hedgehog 1 | 9.4KB | ✅ | N/A |
-| Star Fox 64 | 17.1KB | ✅ | N/A |
+| Star Fox 64 | 17.2KB | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | N/A |
 | Tevi | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 28.7KB | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 28.8KB | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
@@ -268,7 +268,7 @@ These games fail in both Universal Tracker versions.
 | Lunacid | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
-| Metroid Zero Mission | 9.7KB | ✅ | N/A |
+| Metroid Zero Mission | 9.8KB | ✅ | N/A |
 | Minishoot Adventures | 25.9KB | ✅ | N/A |
 | Minit | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
@@ -289,10 +289,10 @@ These games fail in both Universal Tracker versions.
 | Sly Cooper and the Thievius Raccoonus | ✅ | ✅ | N/A |
 | Sonic Adventure DX | 29.9KB | ✅ | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
-| Soul Blazer | 10.6KB | ✅ | N/A |
-| Spyro 3 | 15.2KB | ✅ | N/A |
+| Soul Blazer | 10.5KB | ✅ | N/A |
+| Spyro 3 | 15.3KB | ✅ | N/A |
 | Stacklands | 12.7KB | ✅ | N/A |
-| System Shock 2 | 15.0KB | ✅ | N/A |
+| System Shock 2 | 15.1KB | ✅ | N/A |
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | Tetris Attack | 23.1KB | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
