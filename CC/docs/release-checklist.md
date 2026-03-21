@@ -32,18 +32,20 @@ Review the output in `docs/json/developer/diffs/` — verify the file lists and 
 
 ### 1.2 Merge from upstream
 
-Merge the latest upstream Archipelago changes into the dev repository. See [upstream-merge-plan.md](plans/completed/upstream-merge-plan.md) for the detailed process.
+Merge the latest upstream Archipelago changes into the dev repository. See the **[Upstream Merge Guide](upstream-merge-guide.md)** for the detailed process, including per-file merge strategies and diff file references.
 
 ```bash
 git fetch upstream
 git merge upstream/main
 ```
 
-Resolve any conflicts, paying attention to:
-- `settings.py` — must keep fork modifications (`skip_required_files`)
-- `rule_builder/rules.py` — fork has extensive additions
-- World `__init__.py` files — romless patches must be preserved
-- `BaseClasses.py`, `Main.py`, `Utils.py` — should match upstream (monkey patches handle fork functionality)
+The merge guide categorizes each fork-modified file and explains how to handle conflicts. Key points:
+- **Rule Builder** (`rule_builder/rules.py`) — cannot merge automatically; back up fork version, keep ours, manually apply upstream changes
+- **Romless world patches** (11 `__init__.py` files) — accept upstream, reapply from `world-init-files.diff`
+- **Test files** — accept upstream, reapply from `test-files.diff` and `test-rule-builder-fork.diff`
+- **Bug fixes** (`alttp/Rules.py`, `landstalker/Hints.py`, `lufia2ac/Options.py`) — check if upstream fixed independently; if not, reapply from diff files
+- **`settings.py`** — must keep fork modifications (`skip_required_files`)
+- **`BaseClasses.py`, `Main.py`, `Utils.py`** — should match upstream (monkey patches handle fork functionality)
 
 Commit the merge.
 
