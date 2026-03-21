@@ -62,9 +62,10 @@ export class WindowAdapterCore {
         this.messageHandlers.set(MessageTypes.REQUEST_STATE_SNAPSHOT, this.handleRequestStateSnapshot.bind(this));
         this.messageHandlers.set(MessageTypes.REQUEST_LOG_CONFIG, this.handleRequestLogConfig.bind(this));
 
-        // Stub handlers for iframe-specific messages (handled by iframeAdapterCore instead)
+        // Stub handler for IFRAME_READY (handled by iframeAdapterCore instead)
         this.messageHandlers.set(MessageTypes.IFRAME_READY, this.handleIframeMessage.bind(this));
-        this.messageHandlers.set(MessageTypes.IFRAME_APP_READY, this.handleIframeMessage.bind(this));
+        // Handle IFRAME_APP_READY from window-mode clients using unified AdapterClient
+        this.messageHandlers.set(MessageTypes.IFRAME_APP_READY, this.handleWindowAppReady.bind(this));
     }
 
     /**
@@ -195,6 +196,21 @@ export class WindowAdapterCore {
     handleIframeMessage(message, source) {
         // Silently ignore - these messages are for iframeAdapterCore
         log('debug', `Ignoring iframe-specific message: ${message.type} (handled by iframeAdapterCore)`);
+    }
+
+    /**
+     * Handle app-ready message from window-mode clients using unified AdapterClient.
+     * The unified client sends IFRAME_APP_READY regardless of mode.
+     * @param {object} message - The message object
+     * @param {Window} source - Source window
+     */
+    handleWindowAppReady(message, source) {
+        const windowId = message.windowId || message.clientId || message.iframeId;
+        if (!this.windows.has(windowId)) {
+            // Not a window-mode client registered with us — ignore
+            return;
+        }
+        log('info', `Window app ready: ${windowId}`);
     }
 
     /**

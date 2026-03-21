@@ -1,5 +1,6 @@
 // UI component for window manager panel module
 import { getModuleEventBus } from './index.js';
+import { knownWindowPages } from '../../app/config/knownWindowPages.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -30,19 +31,8 @@ export class WindowManagerUI {
         this.currentUrl = '';
         this.connectedWindows = new Map(); // windowId -> info
         
-        // Known pages configuration
-        this.knownPages = [
-            {
-                name: "Text Adventure (Standalone)",
-                url: "./modules/textAdventure-remote/index-window.html",
-                description: "Interactive text adventure running in separate window"
-            },
-            {
-                name: "Window Base",
-                url: "./modules/window-base/index.html",
-                description: "Basic window module showing connection status and heartbeat"
-            }
-        ];
+        // Known pages configuration (from shared config)
+        this.knownPages = knownWindowPages.map(({ name, url, description, shortName }) => ({ name, url, description, shortName }));
         
         // Event subscriptions
         this.unsubscribeHandles = [];
@@ -332,9 +322,11 @@ export class WindowManagerUI {
         this.knownPages.forEach(page => {
             const option = document.createElement('option');
             option.value = page.url;
-            option.textContent = `${page.name} - ${page.description}`;
+            option.textContent = page.shortName
+                ? `${page.name} [${page.shortName}] - ${page.description}`
+                : `${page.name} - ${page.description}`;
             this.knownPagesSelect.appendChild(option);
-            log('info', `Added option: value="${page.url}", text="${page.name} - ${page.description}"`);
+            log('info', `Added option: value="${page.url}", text="${option.textContent}"`);
         });
         
         log('info', `Dropdown populated with ${this.knownPagesSelect.options.length} total options`);

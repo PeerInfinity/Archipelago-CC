@@ -49,6 +49,13 @@ export class ProofBaseState {
 
     /** @type {'proof'|'graph'|null} Structure type: 'proof' for MetaMath, 'graph' for DepGraph */
     this.structureType = null;
+
+    /**
+     * Entrance rule mode (2-bit field from world options).
+     * 0 = strict, 1 = relaxed_items, 2 = relaxed_events, 3 = fully_relaxed.
+     * @type {number}
+     */
+    this.entranceRuleMode = 0;
   }
 
   // ─── Proof Structure Parsing ──────────────────────────────
@@ -61,14 +68,16 @@ export class ProofBaseState {
    *
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} [nameSubstitutions] - The name_substitutions object from rules.json
+   * @param {Object} [options] - World options (contains entrance_rule_mode)
    * @returns {boolean} Whether parsing succeeded
    * @protected
    */
-  _parseProofStructure(slotData, nameSubstitutions) {
+  _parseProofStructure(slotData, nameSubstitutions, options) {
     this.steps.clear();
     this.receivedItems.clear();
     this.checkedLocations.clear();
     this.nameSubstitutions.clear();
+    this.entranceRuleMode = options?.entrance_rule_mode ?? 0;
 
     // Accept either proof_structure (MetaMath) or graph_structure (DepGraph)
     const structure = slotData?.proof_structure || slotData?.graph_structure;
@@ -245,6 +254,77 @@ export class ProofBaseState {
    */
   _onLocationChecked() {
     // Default: no-op. ProofQueueBaseState overrides to update available steps.
+  }
+
+  // ─── Dependency Satisfaction ─────────────────────────────────
+
+  /**
+   * Check if a step's dependencies are satisfied, respecting entranceRuleMode.
+   *
+   * Mode is a 2-bit field (mirrors Python Rules.py logic):
+   *   0 (strict):         ALL dep items + ALL dep locations required.
+   *   1 (relaxed_items):  ALL dep locations + ANY dep item required.
+   *   2 (relaxed_events): ALL dep items + ANY dep location required.
+   *   3 (fully_relaxed):  ANY single dep with both item + location required.
+   *
+   * In relaxed modes the backend creates per-entrance rules where each entrance
+   * only requires its source's relaxed component. The region is reachable when
+   * ANY entrance is passable, which gives the ANY semantics above.
+   *
+   * @param {ProofStep} step
+   * @returns {boolean}
+   * @protected
+   */
+  _areDepsSatisfied(step) {
+    if (step.dependencies.length === 0) return true;
+
+    const relaxItems = !!(this.entranceRuleMode & 1);
+    const relaxEvents = !!(this.entranceRuleMode & 2);
+
+    if (!relaxItems && !relaxEvents) {
+      // Strict: ALL items AND ALL locations
+      return step.dependencies.every(depIdx => {
+        const d = this.steps.get(depIdx);
+        return d &&
+          this.receivedItems.has(d.itemName) &&
+          this.checkedLocations.has(d.locationName);
+      });
+    }
+
+    if (relaxItems && relaxEvents) {
+      // Fully relaxed: ANY dep where BOTH item received AND location checked
+      return step.dependencies.some(depIdx => {
+        const d = this.steps.get(depIdx);
+        return d &&
+          this.receivedItems.has(d.itemName) &&
+          this.checkedLocations.has(d.locationName);
+      });
+    }
+
+    // One axis relaxed, the other strict
+    if (relaxItems) {
+      // Relaxed Items: ALL locations checked, ANY item received
+      const allLocations = step.dependencies.every(depIdx => {
+        const d = this.steps.get(depIdx);
+        return d && this.checkedLocations.has(d.locationName);
+      });
+      const anyItem = step.dependencies.some(depIdx => {
+        const d = this.steps.get(depIdx);
+        return d && this.receivedItems.has(d.itemName);
+      });
+      return allLocations && anyItem;
+    }
+
+    // Relaxed Events: ALL items received, ANY location checked
+    const allItems = step.dependencies.every(depIdx => {
+      const d = this.steps.get(depIdx);
+      return d && this.receivedItems.has(d.itemName);
+    });
+    const anyLocation = step.dependencies.some(depIdx => {
+      const d = this.steps.get(depIdx);
+      return d && this.checkedLocations.has(d.locationName);
+    });
+    return allItems && anyLocation;
   }
 
   // ─── Query Helpers ──────────────────────────────────────────

@@ -71,6 +71,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('progressBar:hide');
   registrationApi.registerEventBusPublisher('progressBar:destroy');
   registrationApi.registerEventBusPublisher('ui:activatePanel');
+  registrationApi.registerEventBusPublisher('window:loadUrl');
+  registrationApi.registerEventBusPublisher('window:close');
   registrationApi.registerEventBusPublisher('progressBarPanel:showUIContent');
   registrationApi.registerEventBusPublisher('progressBarPanel:hideUIContent');
   registrationApi.registerEventBusPublisher('metaGame:progressBarCancelled');

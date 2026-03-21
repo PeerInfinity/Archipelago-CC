@@ -473,6 +473,38 @@
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 22,
+        "total_locations": 22
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 3
+      }
     }
   },
   "bakingadventure_vanilla": {
@@ -940,8 +972,8 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 9,
-        "total_locations": 9
+        "locations_checked": 18,
+        "total_locations": 18
       },
       "multiworld": {
         "passed": true,
@@ -1312,6 +1344,38 @@
         ],
         "label": "recipe_chain s15"
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 120,
+        "total_locations": 120
+      },
+      "multiworld": {
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
+        "total_players": 1,
+        "first_failure_player": null
+      }
     }
   },
   "multiworld": {
@@ -1528,8 +1592,8 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 237,
-        "total_locations": 237
+        "locations_checked": 238,
+        "total_locations": 238
       },
       "multiworld": {
         "passed": true,
@@ -2354,18 +2418,18 @@
         "seed_range": "1-10"
       },
       "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1194,
+        "passed": false,
+        "client1_passed": false,
+        "client2_passed": false,
+        "locations_checked": 735,
         "total_locations": 1194
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -2826,8 +2890,8 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 135,
-        "total_locations": 1389
+        "locations_checked": 0,
+        "total_locations": 0
       }
     }
   },
@@ -3071,7 +3135,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-17Mar2026-041453_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-21Mar2026-044552_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -3543,6 +3607,28 @@
       }
     }
   },
+  "mm3": {
+    "name": "Mega Man 3",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mega Man 3"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apmm3",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
   "mmbn3": {
     "name": "MegaMan Battle Network 3",
     "folders": {
@@ -3588,11 +3674,11 @@
         "total_locations": 264
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4051,7 +4137,7 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 1060,
+        "locations_checked": 1040,
         "total_locations": 1061
       }
     }
@@ -4080,8 +4166,8 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": false,
-        "seeds_passed": 0,
-        "seeds_failed": 10,
+        "seeds_passed": 2,
+        "seeds_failed": 8,
         "total_seeds": 10,
         "first_failure_seed": 1,
         "seed_range": "1-10"
@@ -4098,7 +4184,7 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 960,
+        "locations_checked": 670,
         "total_locations": 1010
       }
     }
@@ -4315,11 +4401,11 @@
         "total_locations": 555
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4668,18 +4754,18 @@
         "seed_range": "1-10"
       },
       "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 500,
-        "total_locations": 500
+        "passed": false,
+        "client1_passed": false,
+        "client2_passed": false,
+        "locations_checked": 145,
+        "total_locations": 489
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 6
       },
       "spoiler_fuzz": {
         "passed": false,
@@ -4747,52 +4833,6 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
-      }
-    }
-  },
-  "apsudoku": {
-    "name": "Sudoku",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Sudoku"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": true,
-        "locations_checked": 0,
-        "total_locations": 0
       }
     }
   },
@@ -4963,11 +5003,11 @@
         "total_locations": 108
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -5565,11 +5605,11 @@
         "total_locations": 185
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -7775,6 +7815,28 @@
       }
     }
   },
+  "mm3_worldgen": {
+    "name": "Mega Man 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mega Man 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
   "mmbn3_worldgen": {
     "name": "MegaMan Battle Network 3 WorldGen",
     "folders": {
@@ -9562,9 +9624,9 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-17T04:31:16.549283+00:00",
-    "games_with_test_data": 151,
-    "total_games": 160,
+    "test_data_updated": "2026-03-21T05:01:29.753446+00:00",
+    "games_with_test_data": 152,
+    "total_games": 161,
     "games_without_test_data": 9,
     "test_types_loaded": [
       "minimal_spoiler",

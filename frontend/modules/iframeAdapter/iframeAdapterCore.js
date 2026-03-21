@@ -82,14 +82,15 @@ export class IframeAdapterCore {
 
         // Validate message structure
         if (!validateMessage(message)) {
-            // Silently ignore WINDOW_READY and WINDOW_APP_READY messages (they're for windowAdapter)
-            if (message && (message.type === 'WINDOW_READY' || message.type === 'WINDOW_APP_READY')) {
-                return;
-            }
             log('warn', 'Received invalid message', message);
             return;
         }
-        
+
+        // Silently ignore window-specific messages (they're for windowAdapterCore)
+        if (message.type === 'WINDOW_READY' || message.type === 'WINDOW_APP_READY') {
+            return;
+        }
+
         log('debug', `Received message: ${message.type} from iframe: ${message.iframeId}`);
 
         // Debug log all available handlers

@@ -13,12 +13,6 @@
         "apworlds/": {
             "description": "Pre-built APWorld packages (.apworld files) for distribution."
         },
-        "docs/json/archipelago-games-sheet/": {
-            "description": "Extracted spreadsheet data listing all playable Archipelago worlds and their status.",
-            "links": [
-                {"title": "README", "path": "docs/json/archipelago-games-sheet/README.md"}
-            ]
-        },
         "docs/json/": {
             "description": "Documentation portal for the JSON Export Tools project: user guides, developer docs, architecture, and test results.",
             "links": [
@@ -122,12 +116,6 @@
         "worlds/codingadventure_vanilla_worldgen2/": {
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
         },
-        "worlds/depgraph_worldgen/": {
-            "description": "Auto-generated world from DepGraph rules via the World Generator."
-        },
-        "worlds/metamath_vanilla_worldgen2/": {
-            "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
-        },
         "worlds/shorthike_worldgen2/": {
             "description": "Second-generation world: generated from a worldgen world to test cross-generation compatibility."
         },
@@ -165,12 +153,6 @@
 
         "_section: Changed Files - GitHub Config": "",
 
-        ".github/pyright-config.json": {
-            "description": "Removed 3 entries from pyright exclude list (`cached_world.py`, `options.py`, `test_rule_builder.py`) because the fork consolidates `cached_world.py` into `rules.py`.",
-            "links": [
-                {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/config-files.diff"}
-            ]
-        },
         ".github/workflows/codeql-analysis.yml": {
             "description": "Added explicit `security-events`, `actions`, and `contents` permissions for safer fork operation.",
             "links": [
@@ -242,12 +224,6 @@
             "links": [
                 {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-init-files.diff"},
                 {"title": "Skip Required Files Proposal", "path": "docs/json/developer/proposals/skip-required-files-proposal.md"}
-            ]
-        },
-        "worlds/apsudoku/__init__.py": {
-            "description": "Added skip_required_files support to bypass generation prerequisites.",
-            "links": [
-                {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-init-files.diff"}
             ]
         },
         "worlds/dkc3/__init__.py": {

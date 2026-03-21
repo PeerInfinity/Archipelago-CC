@@ -47,9 +47,11 @@ export class RegionGraphUI {
       showLocationLabels: 2.0
     };
     this.currentZoomLevel = 1.0;
+    this.wheelSensitivity = 1.0;
     this.locationsVisible = false;
     this.locationsManuallyHidden = false;
     this.locationsManuallyShown = false;
+    this.edgeLabelsHidden = false;
 
     // Location display limit settings (defaults, loaded from settings later)
     this.maxLocationNodes = 100;
@@ -275,6 +277,32 @@ export class RegionGraphUI {
       };
       document.head.appendChild(script1);
     }
+  }
+
+  setupCustomWheelZoom() {
+    // Override Cytoscape's built-in wheel zoom with a configurable handler.
+    // We intercept in the capture phase to prevent the event from reaching
+    // Cytoscape's own listener on its internal canvas element.
+    this.graphContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Normalize deltaY across deltaMode (pixels, lines, pages)
+      let dy = e.deltaY;
+      if (e.deltaMode === 1) dy *= 33;
+      else if (e.deltaMode === 2) dy *= 100;
+
+      const factor = Math.pow(10, -dy / 500 * this.wheelSensitivity);
+      const newZoom = Math.max(
+        this.cy.minZoom(),
+        Math.min(this.cy.maxZoom(), this.cy.zoom() * factor)
+      );
+
+      this.cy.zoom({
+        level: newZoom,
+        renderedPosition: { x: e.offsetX, y: e.offsetY }
+      });
+    }, { capture: true, passive: false });
   }
 
   async initializeGraph() {
@@ -697,6 +725,7 @@ export class RegionGraphUI {
     });
 
     logger.debug('Cytoscape instance created successfully');
+    this.setupCustomWheelZoom();
     this.setupControlPanel();
     this.interactionManager.setupEventHandlers();
     this.subscribeToEvents();

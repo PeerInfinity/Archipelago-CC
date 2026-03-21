@@ -16,16 +16,24 @@ export async function initializeMetaGame({ eventBus, dispatcher, logger, progres
     // Register publishers for maze game events
     eventBus.registerPublisher('ui:activatePanel');
     eventBus.registerPublisher('amazingIdle:mazeCompleted');
-    eventBus.registerPublisher('iframe:loadUrl');
     eventBus.registerPublisher('amazingIdle:setBiome');
 
-    // Load the maze game into the iframe
-    const mazeUrl = resolveIframeUrl('mazegame');
-    if (mazeUrl) {
-      eventBus.publish('iframe:loadUrl', { url: mazeUrl });
-      logger.info('mazeGameLoops', `Loading maze game iframe: ${mazeUrl}`);
+    // Check if ?useWindow=1 is set — load into window adapter instead of iframe
+    const useWindow = new URLSearchParams(window.location.search).get('useWindow');
+    const loadEvent = useWindow ? 'window:loadUrl' : 'iframe:loadUrl';
+    eventBus.registerPublisher(loadEvent);
+
+    // Load the maze game into the iframe at startup (window mode defers until challenge starts)
+    if (!useWindow) {
+      const mazeUrl = resolveIframeUrl('mazegame');
+      if (mazeUrl) {
+        eventBus.publish(loadEvent, { url: mazeUrl });
+        logger.info('mazeGameLoops', `Loading maze game via ${loadEvent}: ${mazeUrl}`);
+      } else {
+        logger.warn('mazeGameLoops', 'Could not resolve maze game URL');
+      }
     } else {
-      logger.warn('mazeGameLoops', 'Could not resolve maze game iframe URL');
+      logger.info('mazeGameLoops', 'Window mode: deferring maze game load until challenge starts');
     }
 
     // Do NOT change discovery settings — loop mode manages them.

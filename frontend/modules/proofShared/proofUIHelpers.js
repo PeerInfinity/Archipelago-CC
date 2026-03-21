@@ -180,6 +180,6 @@ export function ensureStateLoaded(state) {
   const slotData = playerWorld?.slot_data;
   if (!slotData?.proof_structure && !slotData?.graph_structure) return false;
 
-  state.loadFromSlotData(slotData, playerWorld.name_substitutions);
+  state.loadFromSlotData(slotData, playerWorld.name_substitutions, playerWorld.options);
   return state.isLoaded;
 }

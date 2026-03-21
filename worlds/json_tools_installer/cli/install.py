@@ -46,6 +46,8 @@ from ..installer.extractor import (
     extract_tools,
     list_installed_components,
     remove_component,
+    restore_component_backup,
+    list_component_backups,
     COMPONENTS,
     DEFAULT_COMPONENTS,
 )
@@ -159,6 +161,17 @@ def do_install(
     commit_hash = get_latest_commit_hash(source)
     if commit_hash:
         print(f"  [OK] Latest commit: {commit_hash[:12]}")
+
+    # Warn about components that replace vanilla files
+    if "rule_builder" in components:
+        print("\n  [WARNING] Rule Builder will replace the vanilla rule_builder/ directory.")
+        print("            A backup will be created automatically before overwriting.")
+        print("            To restore later: python -m worlds.json_tools_installer.cli.install --restore-rule-builder")
+        if not skip_confirmation:
+            response = input("\n  Continue? [y/N]: ")
+            if response.lower() != 'y':
+                print("  Aborted.")
+                return False
 
     # Download archive
     print(f"\n  Downloading from: {get_download_url(source)}")
@@ -334,7 +347,7 @@ def main(args=None):
     parser.add_argument(
         "--rule-builder",
         action="store_true",
-        help="Install rule builder module (default component)",
+        help="Install extended rule builder (replaces vanilla rule_builder/)",
     )
     parser.add_argument(
         "--world-generator",
@@ -402,6 +415,11 @@ def main(args=None):
         "--revert-patches",
         action="store_true",
         help="Revert ROM-less patches only (keep tools)",
+    )
+    parser.add_argument(
+        "--restore-rule-builder",
+        action="store_true",
+        help="Restore the vanilla rule_builder/ directory from backup",
     )
 
     # Options
@@ -487,6 +505,23 @@ def main(args=None):
                 for e in result.errors:
                     print(f"  [ERROR] {e}")
                 return 1
+        return 0
+
+    if parsed.restore_rule_builder:
+        print_header("Restoring Vanilla Rule Builder")
+        backups = list_component_backups("rule_builder")
+        if not backups:
+            print("  [ERROR] No rule_builder backups found.")
+            return 1
+        print(f"  Found {len(backups)} backup(s). Latest: {backups[0]}")
+        if not parsed.dry_run:
+            if restore_component_backup("rule_builder"):
+                print("  [OK] Restored rule_builder/ from backup.")
+            else:
+                print("  [ERROR] Failed to restore rule_builder/.")
+                return 1
+        else:
+            print("  [DRY RUN] Would restore rule_builder/ from backup.")
         return 0
 
     # Determine components to install

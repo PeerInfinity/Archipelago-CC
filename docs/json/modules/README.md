@@ -63,3 +63,4 @@ Each file below links to the available documentation for that module. See the [u
 - [Proof Shared](./proofShared.md)
 - [Shared](./shared.md)
 - [Window Base](./window-base.md)
+- [Tests](./tests.md)

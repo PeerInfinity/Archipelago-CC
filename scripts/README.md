@@ -201,13 +201,6 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   node scripts/build/bundle-frontend.js --no-minify  # Debug build without minification
   ```
 
-- **`build/pack_json_tools.py`** - Package JSON Tools modules into a distributable APWorld
-  ```bash
-  python scripts/build/pack_json_tools.py                      # Create json_tools.apworld
-  python scripts/build/pack_json_tools.py --include-frontend   # Include frontend files
-  python scripts/build/pack_json_tools.py --dry-run            # Preview what would be packaged
-  ```
-
 - **`build/pack_json_tools_installer.py`** - Package the JSON Tools Installer as an APWorld
   ```bash
   python scripts/build/pack_json_tools_installer.py            # Create installer apworld
@@ -319,6 +312,13 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   python scripts/docs/sync-script-docs.py --generate      # Generate doc stubs
   ```
 
+- **`docs/generate-file-diff-lists.py`** - Generate categorized file diff lists comparing fork vs upstream Archipelago
+  ```bash
+  python scripts/docs/generate-file-diff-lists.py                           # Generate all diff lists
+  python scripts/docs/generate-file-diff-lists.py --upstream-commit 0de09cd7  # Specify upstream commit
+  python scripts/docs/generate-file-diff-lists.py --dry-run                 # Preview without writing
+  ```
+
 ### Utility Scripts (scripts/utils/)
 
 - **`utils/cleanup-output-directories.py`** - Clean up test output directories
@@ -343,6 +343,12 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 - **`utils/list-games.py`** - List games from preset files and templates
   ```bash
   python scripts/utils/list-games.py
+  ```
+
+- **`utils/list-template-files.py`** - List template file names from world-mapping.json, excluding WorldGen/Vanilla entries and excluded games
+  ```bash
+  python scripts/utils/list-template-files.py                                          # List with permanent excludes only
+  python scripts/utils/list-template-files.py --exclude main_test_exclude_list         # Apply additional excludes
   ```
 
 - **`utils/generate_extra_templates.sh`** - Generate additional template variations
@@ -383,6 +389,8 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```bash
   bash scripts/utils/generate_test_templates.sh
   ```
+
+- **`utils/generated_commands.sh`** - Auto-generated script output from `generate_all_templates.sh --script`. Not intended to be run directly; produced for CI workflow use.
 
 ### Configuration Scripts (scripts/setup/)
 
@@ -506,6 +514,54 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 - **`worlds/yachtdice/export_yacht_weights.py`** - Export Yacht Dice item weights
   ```bash
   python scripts/worlds/yachtdice/export_yacht_weights.py
+  ```
+
+### Vanilla ALttP Scripts (scripts/vanilla-alttp/)
+
+Tools for placing items in their vanilla (original game) locations in A Link to the Past. See the **[Vanilla ALttP README](vanilla-alttp/README.md)** for full documentation.
+
+### Journey to Ascension Scripts (scripts/jta/)
+
+- **`jta/cost-adjust.js`** - Adjust costMult values in randomized JtA game data so perk tasks are completable within a target number of energy resets per sphere
+  ```bash
+  node scripts/jta/cost-adjust.js \
+    --gamedata frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_gamedata.json \
+    --spherelog frontend/presets/jta/AP_SEED/AP_SEED_sphere_log.jsonl \
+    --output frontend/presets/jta/AP_SEED/AP_SEED_P1_Player1_costs.json \
+    --resets-per-sphere 5
+  ```
+
+- **`jta/cost-plan.js`** - Generate cost data using simulated playthrough with binary search solver (more accurate than cost-adjust.js)
+  ```bash
+  node scripts/jta/cost-plan.js \
+    --gamedata path/to/gamedata.json \
+    --spherelog path/to/sphere_log.jsonl \
+    --output path/to/costs.json \
+    --two-pass --normal-attempts 2
+  ```
+
+- **`jta/cost-generate-game.js`** - Generate costs using real game engine via Playwright in a headless browser
+  ```bash
+  node scripts/jta/cost-generate-game.js \
+    -g path/to/gamedata.json \
+    -s path/to/sphere_log.jsonl \
+    --port 8000 --two-pass
+  ```
+
+- **`jta/cost-debugger.js`** - Generate costs via simulated playthrough and output a detailed step-by-step debug report
+  ```bash
+  node scripts/jta/cost-debugger.js \
+    --gamedata path/to/gamedata.json \
+    --spherelog path/to/sphere_log.jsonl \
+    --output jta_cost_debug_report.json
+  ```
+
+- **`jta/game-verify.js`** - Run cost debugger's planned steps through the actual game engine in a headless browser, comparing planned vs actual results
+  ```bash
+  node scripts/jta/game-verify.js \
+    -g path/to/gamedata.json \
+    -s path/to/sphere_log.jsonl \
+    --port 8000
   ```
 
 ## Test Output Directories
@@ -727,6 +783,9 @@ scripts/
 │   ├── list-games.py            # Game listing
 │   └── generate_extra_templates.sh    # Generate additional templates
 │
+├── vanilla-alttp/                # ALttP vanilla item placement tools
+│   └── README.md             # Vanilla placement documentation
+│
 ├── data/                         # Generated data files
 ├── output/                       # Test output directories
 │   ├── spoiler-minimal/
@@ -744,6 +803,13 @@ scripts/
 │           ├── client-integration.md   # Client integration
 │           ├── map-integration.md      # Map integration
 │           └── re-gen-passthrough.md   # Re-generation passthrough
+│
+├── jta/                          # Journey to Ascension cost tools
+│   ├── cost-adjust.js        # Cost adjustment CLI
+│   ├── cost-plan.js          # Cost planner with binary search
+│   ├── cost-debugger.js      # Step-by-step cost debug report
+│   ├── cost-generate-game.js # Browser-based cost generation
+│   └── game-verify.js        # Planned vs actual game verification
 │
 └── README.md                     # This file
 ```

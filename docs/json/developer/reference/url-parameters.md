@@ -284,33 +284,83 @@ These parameters control automatic connection to an Archipelago server.
 - Multiple modules can be loaded by repeating the `loadModule` parameter
 - Load failures are logged but do not prevent other modules from loading
 
----
+#### `iframe`
 
-### Window/Iframe Parameters
+**Purpose:** Auto-load an iframe application on startup by shortname or URL. Can be combined with `useWindow` to load into a separate window instead.
 
-These parameters are used for multi-window setups and embedded iframe clients.
+**Usage:** `?iframe=<shortname>` or `?iframe=<url>`
 
-#### `windowId` / `iframeId`
+**Valid Values:** A shortname from the known pages list (`textadventure`, `iframebase`, `mazegame`, `jta`) or a full URL.
 
-**Purpose:** Sets a custom identifier for the window or iframe instance.
-
-**Usage:** `?windowId=<id>` or `?iframeId=<id>`
+**Examples:**
+- `?iframe=jta` - Load Journey to Ascension in an iframe
+- `?iframe=mazegame` - Load A-Mazing-Idle in an iframe
+- `?iframe=jta&useWindow=1` - Load JTA in a separate browser window instead
 
 **Details:**
-- Used to distinguish between multiple window/iframe instances
-- `windowId` and `iframeId` are interchangeable for compatibility
+- Resolved via `knownIframePages.js` shortname lookup, or passed through as a URL
+- Falls back to the `iframeAutoLoad` setting from mode settings (e.g., `settings-jta.json` has `"iframeAutoLoad": "jta"`)
+- Publishes `iframe:loadUrl` (or `window:loadUrl` when `useWindow=1`)
+- Loading happens after the panel manager initializes, with a 500ms delay
+
+#### `useWindow`
+
+**Purpose:** Redirect iframe auto-loads to the window adapter, opening content in a separate browser window instead of an embedded iframe.
+
+**Usage:** `?useWindow=1`
+
+**Examples:**
+- `?iframe=jta&useWindow=1` - Load JTA in a separate window
+- `?mode=jta&useWindow=1` - JTA mode with game in a separate window (via `iframeAutoLoad`)
+- `?metagame=mazegame&useWindow=1` - Maze metagame with mazes opening in separate windows
+
+**Details:**
+- Works with both `?iframe=` parameter and `iframeAutoLoad` setting
+- Also affects metagame configurations: maze challenges open/close in separate windows instead of switching iframe panel tabs
+- The same HTML pages work in both iframe and window contexts thanks to the unified AdapterClient
+
+#### `metagame`
+
+**Purpose:** Load a metagame configuration on startup. Metagames add secondary gameplay layers on top of the Archipelago tracker.
+
+**Usage:** `?metagame=<shortname>`
+
+**Valid Values:** `mazegame`, `mazegameloops`
+
+**Examples:**
+- `?metagame=mazegame` - Standard maze challenges
+- `?metagame=mazegameloops` - Loops-compatible maze challenges
+- `?metagame=mazegame&useWindow=1` - Maze challenges in separate windows
+
+---
+
+### Window/Iframe Client Parameters
+
+These parameters are used by the unified `AdapterClient` (in iframe or window contexts). They are appended to the URL by the iframe panel or window panel when loading content.
+
+#### `clientId` / `windowId` / `iframeId`
+
+**Purpose:** Sets a custom identifier for the client instance.
+
+**Usage:** `?clientId=<id>`, `?windowId=<id>`, or `?iframeId=<id>`
+
+**Details:**
+- Used to distinguish between multiple client instances
+- All three are accepted interchangeably by the unified `AdapterClient`
+- `windowId` also influences auto-detection: its presence hints at window mode
+- Typically set automatically by the iframe panel (`?iframeId=`) or window panel (`?windowId=`)
 
 #### `windowName` / `iframeName`
 
-**Purpose:** Sets a custom display name for the window or iframe.
+**Purpose:** Sets a custom display name used when generating a client ID (if no explicit ID is provided).
 
 **Usage:** `?windowName=<name>` or `?iframeName=<name>`
 
-**Default:** `window-base` or `iframe-base`
+**Default:** `window-client` or `iframe-client` (based on auto-detected mode)
 
 #### `heartbeatInterval`
 
-**Purpose:** Sets the heartbeat interval for window/iframe communication.
+**Purpose:** Sets the heartbeat interval for adapter communication.
 
 **Usage:** `?heartbeatInterval=<milliseconds>`
 
@@ -399,10 +449,9 @@ URL parameters are processed in multiple locations during initialization:
 |------|---------------------|
 | `frontend/app/mode/modeManager.js` | `mode`, `reset` |
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
-| `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule` |
+| `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule`, `iframe`, `useWindow`, `metagame` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
-| `frontend/modules/window-base/windowClient.js` | `windowId`, `windowName`, `heartbeatInterval` |
-| `frontend/modules/iframe-base/iframeClient.js` | `iframeId`, `iframeName`, `heartbeatInterval` |
+| `frontend/modules/shared/adapterClient.js` | `windowId`, `iframeId`, `clientId`, `windowName`, `iframeName`, `heartbeatInterval` |
 | `frontend/modules/tests/testLogic.js` | `mode`, `testOrderSeed` |
 
 ---
