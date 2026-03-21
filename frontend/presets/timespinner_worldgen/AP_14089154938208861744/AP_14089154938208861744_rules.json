@@ -7924,7 +7924,6 @@
   "item_groups": {
     "1": [
       "Equipment",
-      "Event",
       "Everything",
       "Familiar",
       "Key",
@@ -8320,7 +8319,6 @@
         "boss_healing": true,
         "boss_rando": 0,
         "boss_rando_type": 0,
-        "cantoran": false,
         "dad_percent": false,
         "damage_rando": 0,
         "death_link": false,
@@ -8337,7 +8335,6 @@
         "gyre_archives": false,
         "has_replaced_options": false,
         "hp_cap": 999,
-        "inverted": false,
         "item_links": [],
         "level_cap": 99,
         "local_items": [],
@@ -8640,11 +8637,6 @@
           "default": 0,
           "display_name": "Boss Randomization Type"
         },
-        "cantoran": {
-          "type": "toggle",
-          "default": false,
-          "display_name": "Cantoran"
-        },
         "dad_percent": {
           "type": "toggle",
           "default": false,
@@ -8746,11 +8738,6 @@
           "range_end": 999,
           "default": 999,
           "display_name": "HP Cap"
-        },
-        "inverted": {
-          "type": "toggle",
-          "default": false,
-          "display_name": "Inverted"
         },
         "level_cap": {
           "type": "range",
@@ -9328,7 +9315,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Killed Nightmare"
+      }
+    }
   },
   "helpers": {
     "1": {

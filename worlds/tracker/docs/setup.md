@@ -37,3 +37,10 @@ in either case, if you ping Faris with the yaml in the Universal Tracker channel
 * `include_location_name` : Chooses if the tracker output will include the location name... this is likely less useful for users, but can be useful for devs trying to debug logic issues, and it will display the regions you can access regardless of location logic
 * `hide_excluded_locations` : Chooses if the tracker output will include excluded locations, usually not an issue but for some games/yaml settings the number of excluded locations can be considerable so this reduces visual clutter
 * `enforce_deferred_entrances` : Determines how worlds should use the deferred entrances feature, valid values are ["on":Force deferred entrances to be used if available, "default":let the world decide if/when to use them, "off":force deferred entrances to not be used]
+
+# Additional Documentation
+
+* [Hybrid Mode](hybrid-mode.md) - Automatically select the best tracking mode per game using tracking-mode-config.json
+* [re-gen-passthrough](re-gen-passthrough.md) - Native UT integration hooks for deterministic regeneration
+* [Client Integration](client-integration.md) - How game clients integrate with UT
+* [APWorld Integration](apworld-integration.md) - How APWorlds integrate with UT

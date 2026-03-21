@@ -4713,7 +4713,6 @@
   },
   "item_groups": {
     "1": [
-      "Event",
       "Everything"
     ]
   },
@@ -5168,7 +5167,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
+      }
+    }
   },
   "helpers": {
     "1": {
@@ -5279,6 +5283,10 @@
             ]
           }
         ]
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
       },
       "crystal_capturable": {
         "type": "or",

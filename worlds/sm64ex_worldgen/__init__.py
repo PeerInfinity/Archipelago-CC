@@ -81,7 +81,7 @@ class SM64World(RuleWorldMixin, World):
     options_dataclass = SuperMario64WorldGenOptions
     options: SuperMario64WorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -430,6 +430,12 @@ class SM64World(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -568,6 +574,11 @@ class SM64World(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.can_reach("BitS: Top", "Region", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

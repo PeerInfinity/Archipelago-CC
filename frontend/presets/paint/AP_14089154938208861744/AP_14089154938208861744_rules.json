@@ -3747,7 +3747,29 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "compare",
+        "left": {
+          "type": "helper",
+          "name": "paint_percent_available"
+        },
+        "op": ">=",
+        "right": {
+          "type": "min",
+          "args": [
+            {
+              "type": "option_value",
+              "option": "logic_percent"
+            },
+            {
+              "type": "option_value",
+              "option": "goal_percent"
+            }
+          ]
+        }
+      }
+    }
   },
   "helpers": {
     "1": {

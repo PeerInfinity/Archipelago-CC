@@ -19664,6 +19664,10 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Mother Brain"
+      },
       "doors": {
         "LandingSiteRight": "green",
         "LandingSiteTopRight": "yellow",

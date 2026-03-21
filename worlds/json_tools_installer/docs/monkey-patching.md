@@ -34,69 +34,79 @@ This allows hooks to be installed, tracked, and cleanly uninstalled.
 
 ## Hooks
 
-### 1. Export Hook (`export_rules`)
+Four hooks are installed in order:
 
-**Target:** `Main.main()`
+### 1. Temp Dir Capture (`temp_dir_capture`)
 
-**Purpose:** Export rules JSON and pickle files after seed generation completes.
+**Target:** `AutoWorld.call_stage()`
+
+**Purpose:** Capture the temporary output directory so exported files can be written inside it and included in the output ZIP.
 
 **How it works:**
+- Wraps `call_stage(multiworld, method_name, *args)`
+- When `method_name == "generate_output"`, stores the temp dir path as `multiworld.temp_dir_for_sphere_log`
+- Passes through to the original function
 
-```python
-import Main
+### 2. Slot Data Cache (`slot_data_cache`)
 
-original_main = Main.main
+**Target:** `AutoWorld.World.fill_slot_data()` (base class + all subclasses)
 
-@functools.wraps(original_main)
-def hooked_main(*args, **kwargs):
-    # Call original generation
-    result = original_main(*args, **kwargs)
+**Purpose:** Cache slot data results so the exporter can read them without re-calling `fill_slot_data()` after caches have been cleared by `stage_modify_multidata`.
 
-    # result is the MultiWorld object
-    if result is not None:
-        _post_generation_export(result)
+**How it works:**
+- At install time, wraps `World.fill_slot_data()` on the base class
+- At the start of `hooked_main()` (deferred patching), wraps `fill_slot_data()` on every registered world subclass that overrides it — this is necessary because Python's MRO dispatches directly to subclass methods, bypassing any wrapper on the base class
+- Each wrapper calls the original method, stores the result as `self._cached_slot_data`, and returns it
+- The exporter reads the cached value via `hasattr(world, '_cached_slot_data')`
 
-    return result
-
-Main.main = hooked_main
-```
-
-The hook:
-1. Calls the original `Main.main()` which performs seed generation
-2. Captures the returned `MultiWorld` object
-3. Calls `_post_generation_export()` to export rules and pickle
-4. Returns the multiworld to preserve normal behavior
-
-### 2. Sphere Logging Hook (`sphere_logging`)
+### 3. Sphere Logging (`sphere_logging`)
 
 **Target:** `BaseClasses.Spoiler.create_playthrough()`
 
 **Purpose:** Log sphere information during playthrough creation for the frontend.
 
 **How it works:**
+- Checks if sphere logging is enabled via `get_export_setting('save_sphere_log', False)`
+- If enabled, delegates to `exporter.sphere_logger.create_playthrough_with_logging()`
+- If disabled, calls the original function directly
 
-```python
-import BaseClasses
+### 4. Export Rules (`export_rules`)
 
-original_create_playthrough = BaseClasses.Spoiler.create_playthrough
+**Target:** `BaseClasses.Spoiler.to_file()` (primary) + `Main.main()` (fallback)
 
-@functools.wraps(original_create_playthrough)
-def hooked_create_playthrough(self, create_paths: bool = True):
-    if get_export_setting('save_sphere_log', False):
-        return _create_playthrough_with_logging(self, create_paths, original_create_playthrough)
-    return original_create_playthrough(self, create_paths)
+**Purpose:** Export rules JSON and pickle files after seed generation.
 
-BaseClasses.Spoiler.create_playthrough = hooked_create_playthrough
-```
+**How it works:**
 
-The hook:
-1. Checks if sphere logging is enabled
-2. If enabled, calls a wrapper that logs sphere data while creating the playthrough
-3. If disabled, calls the original function directly
+**Primary path** — wraps `Spoiler.to_file()`:
+- Called inside `with output as temp_dir:`, so exported files are written to temp_dir and included in the output ZIP
+- After calling the original `to_file()`, runs `export_post_output_hook()` with the temp directory
+- Sets `_module_state['export_ran'] = True` to prevent the fallback from running
+
+**Fallback path** — wraps `Main.main()`:
+- Also triggers deferred subclass patching for `slot_data_cache` (since all worlds are now loaded)
+- After `main()` returns, checks if the primary path already ran
+- If not (e.g. spoiler was disabled so `to_file()` was never called), runs `_post_generation_export()` which creates its own temp directory — files are NOT included in the ZIP but are still copied to `frontend/presets/` if `update_frontend_presets` is enabled
 
 ## Export Flow
 
-When `_post_generation_export()` is called after generation:
+The primary path runs inside `Spoiler.to_file()`, within the output temp directory:
+
+```
+Spoiler.to_file(filename)
+       │
+       ├─► Call original to_file() (writes spoiler)
+       │
+       └─► export_post_output_hook(multiworld, temp_dir, filename_base)
+               │
+               ├─► Call export_game_rules()
+               │   └─► Exporter decides internally whether to export based on settings
+               │
+               └─► Call export_multiworld_pickle()
+                   └─► Exporter decides internally whether to export based on settings
+```
+
+The fallback path runs after `Main.main()` returns (only if the primary path didn't run):
 
 ```
 Main.main() returns MultiWorld
@@ -106,15 +116,9 @@ _post_generation_export(multiworld)
        │
        ├─► Build filename from seed_name (e.g., "AP_14089154938208861744")
        │
-       ├─► Get settings via get_export_setting() with fallbacks
-       │
        ├─► Create temporary directory
        │
-       ├─► Call export_game_rules()
-       │   └─► Exporter decides internally whether to export based on settings
-       │
-       └─► Call export_multiworld_pickle()
-           └─► Exporter decides internally whether to export based on settings
+       └─► export_post_output_hook(multiworld, temp_dir, filename_base)
 ```
 
 ### Key Point: Exporters Handle Decisions
@@ -157,21 +161,15 @@ This allows monkey patching to work on vanilla Archipelago where `host.yaml` may
 | `save_sphere_log` | Enable sphere logging | `False` |
 | `save_tracker_pickle` | Enable pickle export | `False` |
 
-## Comparison: Monkey Patching vs Fork Integration
+## Primary vs Fallback
 
-| Aspect | Monkey Patching | Fork (Main.py) |
-|--------|-----------------|----------------|
-| **When exports run** | After `Main.main()` returns | Inside `Main.main()`, before temp dir cleanup |
-| **Temp directory** | Creates its own | Uses generation's temp dir |
-| **Settings source** | host.yaml → installer config | host.yaml (settings.general_options) |
-| **File modifications** | None | Main.py has export calls built-in |
-| **Cache clearing** | Yes (clear_rule_cache, clear_handler_cache) | Yes |
-
-### Timing Difference
-
-In the fork, exports happen inside `Main.main()` before the temporary directory is cleaned up. The exports go to `temp_dir` and are then zipped into the output archive.
-
-With monkey patching, exports happen after `Main.main()` returns, so the generation's temp directory is already gone. The hooks create their own temp directory and rely on `save_presets=True` to copy files to `frontend/presets/`.
+| Aspect | Primary path | Fallback path |
+|--------|-------------|---------------|
+| **Trigger** | `Spoiler.to_file()` called | `Main.main()` returns, primary didn't run |
+| **When** | Spoiler enabled (default) | Spoiler disabled (`args.spoiler == 0`) |
+| **Temp directory** | Uses generation's temp dir | Creates its own |
+| **Files in ZIP** | Yes | No |
+| **Preset copy** | Yes, if `update_frontend_presets` | Yes, if `update_frontend_presets` |
 
 ## Installation and Auto-Install
 
@@ -186,7 +184,7 @@ results = install_hooks(export_rules=True, sphere_logging=True)
 
 ### Auto-Installation
 
-When the installer APWorld loads, it can automatically install hooks:
+When the installer APWorld loads, it checks the config and auto-installs hooks if enabled:
 
 ```python
 # In __init__.py
@@ -203,6 +201,14 @@ def auto_install():
         install_hooks()
 ```
 
+Monkey patching is initially disabled (`method` defaults to `"none"`). It is enabled when:
+- The installer is run (the "Monkey Patch" checkbox is checked by default)
+- The user clicks "Enable Monkey Patches" in the JSON Tools Status GUI
+
+### Toggling at Runtime
+
+The JSON Tools Status GUI shows the current monkey patch state and provides a toggle button to enable or disable hooks immediately. This also updates the config so the setting persists across restarts.
+
 ## Uninstalling Hooks
 
 Hooks can be cleanly uninstalled by restoring the original functions:
@@ -211,7 +217,7 @@ Hooks can be cleanly uninstalled by restoring the original functions:
 from worlds.json_tools_installer.monkey_patches import uninstall_hooks
 
 results = uninstall_hooks()
-# Restores Main.main and Spoiler.create_playthrough to originals
+# Restores all wrapped functions to originals
 ```
 
 ## Error Handling
@@ -249,7 +255,7 @@ You'll see messages like:
 
 ## Limitations
 
-1. **Timing** - Exports happen after generation completes, so they can't be included in the output zip archive
-2. **Settings** - Requires either configured host.yaml or installer config for settings
+1. **Fallback timing** - When spoiler output is disabled, the fallback path runs after generation completes, so exported files are NOT included in the output ZIP (they go to `frontend/presets/` instead). The primary path does not have this limitation.
+2. **Settings** - Requires either configured host.yaml or installer config for settings.
 3. **Dependencies** - Requires the exporter module and its dependencies (astunparse, dill) to be installed. The installer auto-installs these during setup.
-4. **Single wrap** - If another system also wraps `Main.main()`, behavior depends on wrap order
+4. **Single wrap** - If another system also wraps `Spoiler.to_file()` or `Main.main()`, behavior depends on wrap order.

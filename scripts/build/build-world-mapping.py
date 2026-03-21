@@ -591,7 +591,7 @@ def extract_game_name_from_apworld(apworld_path: str) -> Optional[tuple]:
             # Find Python files to search for World class
             py_files = [name for name in zf.namelist()
                         if name.startswith(f"{world_dir}/") and name.endswith('.py')
-                        and '/test/' not in name and '/tests/' not in name]
+                        and '/test/' not in name and '/tests/' not in name and '/test_json/' not in name]
 
             # Sort to prioritize __init__.py and world.py
             def priority(f):

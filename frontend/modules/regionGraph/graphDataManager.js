@@ -86,7 +86,7 @@ export class GraphDataManager {
     const snapshot = stateManager.getLatestStateSnapshot();
     const staticData = stateManager.getStaticData();
 
-    if (!snapshot || !staticData) {
+    if (!snapshot || !staticData || !regionData) {
       return { checked: 0, accessible: 0, inaccessible: 0, total: 0 };
     }
 
@@ -181,15 +181,6 @@ export class GraphDataManager {
       nodes: [],
       edges: []
     };
-
-    // Check if bidirectional exits are assumed from game settings (with auto-detection)
-    const bidirectionalSetting = stateManager.getEffectiveBidirectionalSetting();
-    const assumeBidirectional = bidirectionalSetting.assumeBidirectional;
-    logger.debug('Exit configuration', {
-      assumeBidirectional,
-      source: bidirectionalSetting.source,
-      mode: bidirectionalSetting.detection?.mode
-    });
 
     // Get discovery mode state and settings
     const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
@@ -317,6 +308,120 @@ export class GraphDataManager {
       }
     }
 
+    // Pre-compute longest-path depths from starting region for edge orientation.
+    // Unlike simple BFS depth, longest-path ensures that if edge A-B exists and
+    // A is at depth N, B is at depth >= N+1. This prevents edges between same-row
+    // nodes in the directed hierarchical layout.
+    //
+    // Algorithm:
+    // 1. Undirected BFS for reachability and initial depth estimates
+    // 2. Build a DAG by deduplicating edge pairs (shallower→deeper, alphabetical tiebreak)
+    // 3. Topological sort (Kahn's) + longest-path relaxation
+    const stateSnapshot = stateManager.getLatestStateSnapshot();
+    const startRegionsData = stateSnapshot?.startRegions;
+    let startRegions = [];
+    if (Array.isArray(startRegionsData)) {
+      startRegions = startRegionsData;
+    } else if (startRegionsData && typeof startRegionsData === 'object') {
+      // Handle object format with 'default' property (e.g. { default: ["Menu"], available: [] })
+      if (Array.isArray(startRegionsData.default)) {
+        startRegions = startRegionsData.default;
+      }
+    }
+    if (startRegions.length === 0) {
+      // Fallback to first region in data
+      const firstRegion = regions.keys().next().value;
+      if (firstRegion) startRegions = [firstRegion];
+    }
+    logger.debug(`startRegions=${JSON.stringify(startRegions)}`);
+    const bfsDepth = new Map();
+    if (startRegions.length > 0) {
+      const root = startRegions[0];
+
+      // Step 1: Undirected BFS for reachability and initial depth ordering
+      const ubfsAdj = new Map();
+      for (const [, exit] of exitMap) {
+        if (!ubfsAdj.has(exit.fromRegion)) ubfsAdj.set(exit.fromRegion, []);
+        if (!ubfsAdj.has(exit.toRegion)) ubfsAdj.set(exit.toRegion, []);
+        ubfsAdj.get(exit.fromRegion).push(exit.toRegion);
+        ubfsAdj.get(exit.toRegion).push(exit.fromRegion);
+      }
+      const ubfsDepth = new Map();
+      const bfsQueue = [root];
+      ubfsDepth.set(root, 0);
+      while (bfsQueue.length > 0) {
+        const current = bfsQueue.shift();
+        const currentDepth = ubfsDepth.get(current);
+        for (const neighbor of ubfsAdj.get(current) || []) {
+          if (!ubfsDepth.has(neighbor)) {
+            ubfsDepth.set(neighbor, currentDepth + 1);
+            bfsQueue.push(neighbor);
+          }
+        }
+      }
+
+      // Step 2: Build a DAG from edge pairs. For each pair of connected regions,
+      // create one directed edge. For unidirectional exits, trust the data
+      // direction. For bidirectional exits, orient shallower→deeper using BFS
+      // depth, with alphabetical tiebreaker (guaranteed acyclic).
+      const dagAdj = new Map();
+      const dagInDeg = new Map();
+      const seenPairs = new Set();
+      for (const [nodeId] of ubfsDepth) {
+        dagAdj.set(nodeId, []);
+        dagInDeg.set(nodeId, 0);
+      }
+      for (const [, exit] of exitMap) {
+        const a = exit.fromRegion;
+        const b = exit.toRegion;
+        if (!ubfsDepth.has(a) || !ubfsDepth.has(b)) continue;
+        const pairKey = a < b ? `${a}|${b}` : `${b}|${a}`;
+        if (seenPairs.has(pairKey)) continue;
+        seenPairs.add(pairKey);
+
+        const reverseKey = `${b}->${a}`;
+        const isBidirectional = exitMap.has(reverseKey);
+
+        let parent, child;
+        if (!isBidirectional) {
+          // Unidirectional exit: trust the data direction
+          parent = a;
+          child = b;
+        } else {
+          // Bidirectional: orient by BFS depth, alphabetical tiebreak
+          const da = ubfsDepth.get(a);
+          const db = ubfsDepth.get(b);
+          if (da < db) { parent = a; child = b; }
+          else if (db < da) { parent = b; child = a; }
+          else { parent = a < b ? a : b; child = a < b ? b : a; }
+        }
+
+        dagAdj.get(parent).push(child);
+        dagInDeg.set(child, dagInDeg.get(child) + 1);
+      }
+
+      // Step 3: Topological sort (Kahn's) with longest-path relaxation
+      const topoQueue = [];
+      for (const [nodeId, deg] of dagInDeg) {
+        if (deg === 0) topoQueue.push(nodeId);
+      }
+      for (const [nodeId] of ubfsDepth) {
+        if (!bfsDepth.has(nodeId)) bfsDepth.set(nodeId, 0);
+      }
+      while (topoQueue.length > 0) {
+        const node = topoQueue.shift();
+        const curDepth = bfsDepth.get(node) || 0;
+        for (const child of dagAdj.get(node)) {
+          const newDepth = curDepth + 1;
+          if (newDepth > (bfsDepth.get(child) || 0)) {
+            bfsDepth.set(child, newDepth);
+          }
+          dagInDeg.set(child, dagInDeg.get(child) - 1);
+          if (dagInDeg.get(child) === 0) topoQueue.push(child);
+        }
+      }
+    }
+
     // Create edges with directionality analysis
     for (const [exitKey, exitData] of exitMap.entries()) {
       const { fromRegion, toRegion, exitName, accessRule } = exitData;
@@ -331,17 +436,22 @@ export class GraphDataManager {
 
       // Determine if the connection is bidirectional
       const hasReverseExit = exitMap.has(reverseExitKey);
-      const isBidirectional = assumeBidirectional || hasReverseExit;
+      const isBidirectional = hasReverseExit;
 
-      // Use the lexicographically smaller region as source for consistency
-      const isForwardDirection = fromRegion < toRegion;
-      const edgeSource = isForwardDirection ? fromRegion : toRegion;
-      const edgeTarget = isForwardDirection ? toRegion : fromRegion;
+      // Orient edge parent→child. For unidirectional exits, trust the data
+      // direction. For bidirectional exits, use longest-path depth to orient
+      // shallower→deeper.
+      const fromDepth = bfsDepth.get(fromRegion);
+      const toDepth = bfsDepth.get(toRegion);
+      const useDataDirection = !hasReverseExit || fromDepth === undefined || toDepth === undefined || fromDepth <= toDepth;
+
+      const edgeSource = useDataDirection ? fromRegion : toRegion;
+      const edgeTarget = useDataDirection ? toRegion : fromRegion;
       const edgeId = `${edgeSource}-${edgeTarget}`;
 
-      // Get the primary exit (in the direction of the edge)
-      const primaryExit = isForwardDirection ? exitData : exitMap.get(reverseExitKey);
-      const reverseExit = isForwardDirection ? exitMap.get(reverseExitKey) : exitData;
+      // Get the primary exit (forward = source→target direction) and reverse exit
+      const primaryExit = useDataDirection ? exitData : exitMap.get(reverseExitKey);
+      const reverseExit = useDataDirection ? exitMap.get(reverseExitKey) : exitData;
 
       // Create label for edge - handle bidirectional edges with different exit names
       let edgeLabel = '';
@@ -406,17 +516,33 @@ export class GraphDataManager {
         exitName: primaryExit ? primaryExit.exitName : (reverseExit ? reverseExit.exitName : ''),
         accessRule: primaryExit ? primaryExit.accessRule : (reverseExit ? reverseExit.accessRule : null),
         isBidirectional: isBidirectional,
-        hasForwardExit: isForwardDirection ? true : hasReverseExit,
-        hasReverseExit: isForwardDirection ? hasReverseExit : true,
-        forwardExitRule: isForwardDirection ? accessRule : (reverseExit ? reverseExit.accessRule : null),
-        reverseExitRule: isForwardDirection ? (reverseExit ? reverseExit.accessRule : null) : accessRule,
-        forwardExitName: isForwardDirection ? exitData.exitName : (reverseExit ? reverseExit.exitName : ''),
-        reverseExitName: isForwardDirection ? (reverseExit ? reverseExit.exitName : '') : exitData.exitName
+        hasForwardExit: useDataDirection ? true : hasReverseExit,
+        hasReverseExit: useDataDirection ? hasReverseExit : true,
+        forwardExitRule: primaryExit ? primaryExit.accessRule : null,
+        reverseExitRule: reverseExit ? reverseExit.accessRule : null,
+        forwardExitName: primaryExit ? primaryExit.exitName : '',
+        reverseExitName: reverseExit ? reverseExit.exitName : ''
       };
 
       elements.edges.push({ data: edgeData, classes: edgeClasses });
-      processedEdges.add(edgeId);
-      processedEdges.add(reverseEdgeId); // Mark both directions as processed
+      processedEdges.add(forwardEdgeId);
+      processedEdges.add(reverseEdgeId);
+    }
+
+    // Store hierarchy depths on node data for layout positioning.
+    // Cytoscape's breadthfirst uses its own BFS which ignores our depth computation,
+    // so we store depths on nodes for a custom preset layout to use.
+    if (bfsDepth.size > 0) {
+      let depthCount = 0;
+      const maxDepth = Math.max(...bfsDepth.values());
+      for (const nodeData of elements.nodes) {
+        const depth = bfsDepth.get(nodeData.data.id);
+        if (depth !== undefined) {
+          nodeData.data.hierarchyDepth = depth;
+          depthCount++;
+        }
+      }
+      logger.debug(`Stored hierarchyDepth on ${depthCount}/${elements.nodes.length} nodes, max depth=${maxDepth}`);
     }
 
     // Increment layout generation to invalidate any pending layoutstop timeouts

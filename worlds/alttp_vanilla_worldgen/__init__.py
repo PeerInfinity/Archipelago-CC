@@ -24,12 +24,10 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Activated Flute": 1,
     "Arrows (10)": 10,
     "Big Key (Desert Palace)": 1,
     "Big Key (Eastern Palace)": 1,
     "Big Key (Ganons Tower)": 1,
-    "Big Key (Hyrule Castle)": 1,
     "Big Key (Ice Palace)": 1,
     "Big Key (Misery Mire)": 1,
     "Big Key (Palace of Darkness)": 1,
@@ -107,22 +105,20 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Shovel": 1,
     "Silver Bow": 1,
     "Single Arrow": 1,
-    "Small Key (Agahnims Tower)": 4,
-    "Small Key (Desert Palace)": 4,
-    "Small Key (Eastern Palace)": 2,
-    "Small Key (Ganons Tower)": 8,
-    "Small Key (Hyrule Castle)": 4,
-    "Small Key (Ice Palace)": 6,
-    "Small Key (Misery Mire)": 6,
+    "Small Key (Agahnims Tower)": 2,
+    "Small Key (Desert Palace)": 1,
+    "Small Key (Ganons Tower)": 4,
+    "Small Key (Hyrule Castle)": 1,
+    "Small Key (Ice Palace)": 2,
+    "Small Key (Misery Mire)": 3,
     "Small Key (Palace of Darkness)": 6,
-    "Small Key (Skull Woods)": 5,
-    "Small Key (Swamp Palace)": 6,
-    "Small Key (Thieves Town)": 3,
+    "Small Key (Skull Woods)": 3,
+    "Small Key (Swamp Palace)": 1,
+    "Small Key (Thieves Town)": 1,
     "Small Key (Tower of Hera)": 1,
-    "Small Key (Turtle Rock)": 6,
+    "Small Key (Turtle Rock)": 4,
     "Tempered Sword": 1,
     "Titans Mitts": 1,
-    "Triforce": 1,
     "__max_boss_heart_container": 10,
     "__max_heart_piece": 24,
     "__max_progressive_bottle": 4,
@@ -130,23 +126,58 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
+    "Flute Activation Spot": "Activated Flute",
     "Floodgate": "Open Floodgate",
     "Missing Smith": "Return Smith",
     "Capacity Upgrade Shop": "Capacity Upgrade Shop",
+    "Desert Palace - Desert Tiles 1 Pot Key": "Small Key (Desert Palace)",
+    "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
+    "Desert Palace - Desert Tiles 2 Pot Key": "Small Key (Desert Palace)",
     "Desert Palace - Prize": "Red Pendant",
+    "Eastern Palace - Dark Square Pot Key": "Small Key (Eastern Palace)",
+    "Eastern Palace - Dark Eyegore Key Drop": "Small Key (Eastern Palace)",
     "Eastern Palace - Prize": "Green Pendant",
+    "Hyrule Castle - Map Guard Key Drop": "Small Key (Hyrule Castle)",
+    "Hyrule Castle - Boomerang Guard Key Drop": "Small Key (Hyrule Castle)",
+    "Hyrule Castle - Big Key Drop": "Big Key (Hyrule Castle)",
+    "Sewers - Key Rat Key Drop": "Small Key (Hyrule Castle)",
+    "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
+    "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
     "Agahnim 1": "Beat Agahnim 1",
     "Tower of Hera - Prize": "Blue Pendant",
     "Frog": "Get Frog",
     "Dark Blacksmith Ruins": "Pick Up Purple Chest",
+    "Swamp Palace - Pot Row Pot Key": "Small Key (Swamp Palace)",
+    "Swamp Palace - Trench 1 Pot Key": "Small Key (Swamp Palace)",
+    "Swamp Palace - Hookshot Pot Key": "Small Key (Swamp Palace)",
+    "Swamp Palace - Trench 2 Pot Key": "Small Key (Swamp Palace)",
+    "Swamp Palace - Waterway Pot Key": "Small Key (Swamp Palace)",
     "Swamp Palace - Prize": "Crystal 2",
+    "Thieves' Town - Hallway Pot Key": "Small Key (Thieves Town)",
+    "Thieves' Town - Spike Switch Pot Key": "Small Key (Thieves Town)",
     "Thieves' Town - Prize": "Crystal 4",
+    "Skull Woods - West Lobby Pot Key": "Small Key (Skull Woods)",
+    "Skull Woods - Spike Corner Key Drop": "Small Key (Skull Woods)",
     "Skull Woods - Prize": "Crystal 3",
+    "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
+    "Ice Palace - Conveyor Key Drop": "Small Key (Ice Palace)",
+    "Ice Palace - Many Pots Pot Key": "Small Key (Ice Palace)",
+    "Ice Palace - Hammer Block Key Drop": "Small Key (Ice Palace)",
     "Ice Palace - Prize": "Crystal 5",
+    "Misery Mire - Spikes Pot Key": "Small Key (Misery Mire)",
+    "Misery Mire - Fishbone Pot Key": "Small Key (Misery Mire)",
+    "Misery Mire - Conveyor Crystal Key Drop": "Small Key (Misery Mire)",
     "Misery Mire - Prize": "Crystal 6",
+    "Turtle Rock - Pokey 1 Key Drop": "Small Key (Turtle Rock)",
+    "Turtle Rock - Pokey 2 Key Drop": "Small Key (Turtle Rock)",
     "Turtle Rock - Prize": "Crystal 7",
     "Palace of Darkness - Prize": "Crystal 1",
+    "Ganons Tower - Conveyor Cross Pot Key": "Small Key (Ganons Tower)",
+    "Ganons Tower - Conveyor Star Pits Pot Key": "Small Key (Ganons Tower)",
+    "Ganons Tower - Double Switch Pot Key": "Small Key (Ganons Tower)",
+    "Ganons Tower - Mini Helmasaur Key Drop": "Small Key (Ganons Tower)",
     "Agahnim 2": "Beat Agahnim 2",
+    "Ganon": "Triforce",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -345,7 +376,7 @@ class ALTTPWorld(RuleWorldMixin, World):
     options_dataclass = ALinktothePastVanillaWorldGenOptions
     options: ALinktothePastVanillaWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
     # Use auto indirect conditions since entrance rules have region dependencies
     # that aren't registered via RuleBuilder.set_rule()
@@ -386,7 +417,6 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Compasses": frozenset(["Compass (Ganons Tower)", "Compass (Turtle Rock)", "Compass (Thieves Town)", "Compass (Tower of Hera)", "Compass (Ice Palace)", "Compass (Skull Woods)", "Compass (Misery Mire)", "Compass (Palace of Darkness)", "Compass (Swamp Palace)", "Compass (Agahnims Tower)", "Compass (Desert Palace)", "Compass (Eastern Palace)", "Compass (Hyrule Castle)"]),
         "Big Keys": frozenset(["Big Key (Ganons Tower)", "Big Key (Turtle Rock)", "Big Key (Thieves Town)", "Big Key (Tower of Hera)", "Big Key (Ice Palace)", "Big Key (Skull Woods)", "Big Key (Misery Mire)", "Big Key (Palace of Darkness)", "Big Key (Swamp Palace)", "Big Key (Agahnims Tower)", "Big Key (Desert Palace)", "Big Key (Eastern Palace)", "Big Key (Hyrule Castle)"]),
         "Small Keys": frozenset(["Small Key (Hyrule Castle)", "Small Key (Eastern Palace)", "Small Key (Desert Palace)", "Small Key (Agahnims Tower)", "Small Key (Swamp Palace)", "Small Key (Palace of Darkness)", "Small Key (Misery Mire)", "Small Key (Skull Woods)", "Small Key (Ice Palace)", "Small Key (Tower of Hera)", "Small Key (Thieves Town)", "Small Key (Turtle Rock)", "Small Key (Ganons Tower)", "Small Key (Universal)"]),
-        "Event": frozenset(["Open Floodgate", "Return Smith", "Capacity Upgrade Shop", "Beat Agahnim 1", "Get Frog", "Pick Up Purple Chest", "Beat Agahnim 2"]),
         "Pendants": frozenset(["Red Pendant", "Green Pendant", "Blue Pendant"]),
         "Crystals": frozenset(["Crystal 2", "Crystal 4", "Crystal 3", "Crystal 5", "Crystal 6", "Crystal 7", "Crystal 1"]),
     }
@@ -998,6 +1028,12 @@ class ALTTPWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -1136,6 +1172,11 @@ class ALTTPWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Triforce", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

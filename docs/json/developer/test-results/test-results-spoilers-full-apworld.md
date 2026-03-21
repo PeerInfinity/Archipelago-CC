@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-spoilers-full.md)
 
-**Generated:** 2026-02-19 08:47:52 UTC
+**Generated:** 2026-03-21 22:45:04 UTC
 
 **Source Data Created:** 2026-01-24T06:28:42.338785
 
@@ -96,7 +96,7 @@
 | Mario Kart Double Dash | ❌ Failed | 1399 | 0 | 12.1 | 🔴 0.0% | ✅ | ✅ |
 | MetroCUBEvania | ✅ Passed | 0 | 3.3 | 3.3 | 🟢 Complete | ✅ | ✅ |
 | Metroid Fusion | ❌ Failed | 0 | 0 | 11.1 | 🔴 0.0% | ✅ | ✅ |
-| Metroid Zero Mission | ❌ Failed | 1 | 0.1 | 14.1 | 🟠 0.7% | 9.7KB | ✅ |
+| Metroid Zero Mission | ❌ Failed | 1 | 0.1 | 14.1 | 🟠 0.7% | 9.8KB | ✅ |
 | Minishoot Adventures | ❌ Failed | 0 | 1.9 | 7.1 | 🟡 26.8% | 25.9KB | ✅ |
 | Minit | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 23.9KB | ✅ |
 | Monster Sanctuary | ❌ Failed | 0 | 0 | 17.1 | 🔴 0.0% | ✅ | ✅ |
@@ -109,7 +109,7 @@
 | Pokemon Mystery Dungeon Explorers of Sky | ❌ Failed | 0 | 0 | 13.1 | 🔴 0.0% | ✅ | ✅ |
 | Pseudoregalia | ❌ Failed | 0 | 0.3 | 9.1 | 🟠 3.3% | 17.1KB | ✅ |
 | Rabi-Ribi | ❌ Failed | 1482 | 0 | 4.35 | 🔴 0.0% | ✅ | ✅ |
-| Rain World | ❌ Failed | 0 | 0.1 | 12.5 | 🟠 0.8% | 11.7KB | ✅ |
+| Rain World | ❌ Failed | 0 | 0.1 | 12.5 | 🟠 0.8% | 11.8KB | ✅ |
 | Ratchet & Clank 2 | ✅ Passed | 0 | 18.4 | 18.4 | 🟢 Complete | ✅ | ✅ |
 | Reventure | ❌ Failed | 0 | 0.6 | 5.9 | 🟠 10.2% | ✅ | ✅ |
 | Rift Wizard | ✅ Passed | 0 | 25.1 | 25.1 | 🟢 Complete | 7.7KB | ✅ |
@@ -124,15 +124,15 @@
 | Sonic Heroes | ❌ Failed | 8831 | 0 | 7.2 | 🔴 0.0% | ✅ | ✅ |
 | Sonic Rush | ❌ Failed | 0 | 0.7 | 4.3 | 🟠 16.3% | ✅ | ✅ |
 | Sonic the Hedgehog 1 | ✅ Passed | 0 | 3.2 | 3.2 | 🟢 Complete | 9.4KB | ✅ |
-| Soul Blazer | ❌ Failed | 0 | 0.1 | 16.1 | 🟠 0.6% | 10.6KB | ✅ |
+| Soul Blazer | ❌ Failed | 0 | 0.1 | 16.1 | 🟠 0.6% | 10.5KB | ✅ |
 | Spinball | ✅ Passed | 0 | 1.1 | 1.1 | 🟢 Complete | ✅ | ✅ |
-| Spyro 3 | ❌ Failed | 2113 | 0 | 10.2 | 🔴 0.0% | 15.2KB | ✅ |
+| Spyro 3 | ❌ Failed | 2113 | 0 | 10.2 | 🔴 0.0% | 15.3KB | ✅ |
 | Stacklands | ❌ Failed | 0 | 0.4 | 11.1 | 🟠 3.6% | 12.7KB | ✅ |
-| Star Fox 64 | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | 17.1KB | ✅ |
+| Star Fox 64 | ❌ Failed | 0 | 0 | 8.2 | 🔴 0.0% | 17.2KB | ✅ |
 | Star Wars Episode I Racer | ✅ Passed | 0 | 1.46 | 1.46 | 🟢 Complete | 5.7KB | ✅ |
 | Super Cat Planet | ❌ Failed | 0 | 0.2 | 6.3 | 🟠 3.2% | ✅ | ✅ |
 | Symphony of the Night | ✅ Passed | 0 | 4.32 | 4.32 | 🟢 Complete | ✅ | ✅ |
-| System Shock 2 | ❌ Failed | 0 | 0.2 | 15.15 | 🟠 1.3% | 15.0KB | ✅ |
+| System Shock 2 | ❌ Failed | 0 | 0.2 | 15.15 | 🟠 1.3% | 15.1KB | ✅ |
 | TCG Card Shop Simulator | ❌ Failed | 0 | 2.7 | 6.2 | 🟡 43.5% | ✅ | ✅ |
 | Tetris Attack | ❌ Failed | 1 | 0 | 58.2 | 🔴 0.0% | 23.1KB | ✅ |
 | Tevi | ❌ Failed | 0 | 0 | 12.38 | 🔴 0.0% | ✅ | ✅ |
@@ -147,7 +147,7 @@
 | Watery Words | ✅ Passed | 0 | 5.8 | 5.8 | 🟢 Complete | 9.1KB | ✅ |
 | Wordipelago | ❌ Failed | 0 | 4.4 | 10.1 | 🟡 43.6% | 19.5KB | ✅ |
 | XCOM 2 War of the Chosen | ❌ Failed | 0 | 0 | 6.1 | 🔴 0.0% | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | 7.2 | 20.2 | 🟡 35.6% | 28.7KB | ✅ |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ Failed | 0 | 7.2 | 20.2 | 🟡 35.6% | 28.8KB | ✅ |
 | Yu-Gi-Oh! Forbidden Memories | ❌ Failed | 0 | 0 | 10.15 | 🔴 0.0% | ✅ | ✅ |
 | osu! | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | plateup | ✅ Passed | 0 | 2.8 | 2.8 | 🟢 Complete | ✅ | ✅ |

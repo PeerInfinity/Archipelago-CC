@@ -122,6 +122,12 @@ Examples:
     )
 
     parser.add_argument(
+        '--apply-name-substitutions',
+        action='store_true',
+        help='Apply name_substitutions from the rules file (e.g. Metamath generic to meaningful names)'
+    )
+
+    parser.add_argument(
         '-v', '--verbose',
         action='store_true',
         help='Enable verbose output'
@@ -162,6 +168,7 @@ Examples:
             force=args.force,
             canonical_seed=canonical_seed,
             player_id=args.player_id,
+            apply_name_substitutions=args.apply_name_substitutions,
         )
 
         # Load and validate

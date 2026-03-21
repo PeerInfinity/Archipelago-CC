@@ -1,6 +1,6 @@
 // discoveryPanelUI.js - UI component for discovery mode settings and state display
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
@@ -20,6 +20,7 @@ export class DiscoveryPanelUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.rootElement = null;
     this.isInitialized = false;
     this.unsubscribeHandles = [];
@@ -56,9 +57,9 @@ export class DiscoveryPanelUI {
     const readyHandler = () => {
       log('info', '[DiscoveryPanelUI] Received app:readyForUiDataLoad. Initializing panel.');
       this.initialize();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'discoveryPanel');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.dispose();
@@ -271,10 +272,11 @@ export class DiscoveryPanelUI {
     // Subscribe to events
     this.subscribeToEvents();
 
+    // Mark initialized before buildUI so updateDataDisplay() doesn't bail out
+    this.isInitialized = true;
+
     // Build the UI
     this.buildUI();
-
-    this.isInitialized = true;
     log('info', '[DiscoveryPanelUI] Initialization complete.');
   }
 
@@ -329,7 +331,7 @@ export class DiscoveryPanelUI {
       debouncedUpdate();
     };
     this.unsubscribeHandles.push(
-      eventBus.subscribe('discovery:changed', discoveryChangedHandler, 'discoveryPanel')
+      this.eventBus.subscribe('discovery:changed', discoveryChangedHandler)
     );
 
     // Subscribe to settings changes
@@ -341,7 +343,7 @@ export class DiscoveryPanelUI {
       }
     };
     this.unsubscribeHandles.push(
-      eventBus.subscribe('settings:changed', settingsChangedHandler, 'discoveryPanel')
+      this.eventBus.subscribe('settings:changed', settingsChangedHandler)
     );
 
     // Subscribe to rules loaded to refresh data
@@ -350,7 +352,7 @@ export class DiscoveryPanelUI {
       debouncedUpdate();
     };
     this.unsubscribeHandles.push(
-      eventBus.subscribe('stateManager:rulesLoaded', rulesLoadedHandler, 'discoveryPanel')
+      this.eventBus.subscribe('stateManager:rulesLoaded', rulesLoadedHandler)
     );
   }
 

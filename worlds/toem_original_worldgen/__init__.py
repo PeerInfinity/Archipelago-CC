@@ -162,7 +162,7 @@ class ToemWorld(RuleWorldMixin, World):
     options: TOEMoriginalWorldGenOptions
 
     origin_region_name: str = "Homelanda"
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -190,7 +190,6 @@ class ToemWorld(RuleWorldMixin, World):
         "Photo": frozenset(["Cow photo", "Flies photo", "Home bird photo", "Tato photo", "Ant photo", "Beehive photo", "Butterfly photo", "Oskar photo", "Sero photo", "Forest bird photo", "Ladybug photo", "Tom photo", "Nestworm photo", "Pet rock photo", "Snail photo", "Squirrel photo", "Stag beetle photo", "Tato bug photo", "Tato fly photo", "Bubble fly photo", "Fia photo", "Fräs photo", "Willemijn photo", "Crab photo", "Dragonfly photo", "Happy carp photo", "Jellyfish photo", "King fish photo", "Seagull photo", "Seahorse photo", "Sunday swan photo", "Tato scuba photo", "Tato swim photo", "Toad photo", "Business pigeon photo", "Portillo photo", "Mouse photo", "Pigeon photo", "Punky parrot photo", "Tato skateboard photo", "Tato tourist photo", "Turtle photo", "Mikée photo", "Nariko photo", "Cosmo deer photo", "Teddy photo", "Fluff ball photo", "Hedgehog photo", "Meteopal photo", "Mountain goat photo", "Owl photo", "Snow bird photo", "Tato alien photo", "Tato ski photo", "Bat photo", "Beach snake photo", "Beak bird photo", "Bitling frog photo", "Bitling mouse photo", "Bitling snail photo", "Bitling tato photo", "Coco crab photo", "Day lizard photo", "Drill mole photo", "Eggert photo", "Fire fly photo", "Glow worm photo", "Itsy bitsy photo", "Mud frog photo", "Night lizard photo", "Snout bug photo", "Tato coco photo", "Tato king photo", "Water strider photo"]),
         "Item": frozenset(["Backpack", "Camera", "Clogs", "Foam finger", "Tripod", "Cowboy hat", "Lost sock", "Fjällbjörn hat", "Ghost glasses", "Soaked sock", "Monster mask", "Frames & filters", "Fishing hat", "Honk attachment", "Umbrella", "Old key", "Hard hat", "Diving helmet", "Rubber boots", "Fisherman's whisle", "Supreme deluxe sandwich", "Pirate hat", "Paper hat", "Photo challenger flag", "Hotbean hat", "Reporter hat", "Muddy camera", "Sneakers", "Cinnamon bun", "Frisbee", "Climbing boots", "Puffer hat", "Scarf", "Ski goggles", "Space helmet", "Water popper attachment", "Sun hat", "Melonear", "Banakin", "Oranganas", "Beanut", "Pickaxe", "Sun cap", "Flip-flops", "Ice cream", "Royal cape", "minigame ticket", "Lei", "Vacation shirt", "Royal cane", "Empty bottle", "Water bottle", "Viking helmet", "Foot cast", "Beret"]),
         "CASETTE": frozenset(["Jamal Green - Photo of Home", "Launchable Socks - Squirrel Photography"]),
-        "Event": frozenset(["TOEM Experienced"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -532,6 +531,12 @@ class ToemWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -670,6 +675,24 @@ class ToemWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("TOEM Experienced", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = TOEMoriginalWorldGenItem(
+                "TOEM Experienced",
+                item_table["TOEM Experienced"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("TOEM Experienced", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

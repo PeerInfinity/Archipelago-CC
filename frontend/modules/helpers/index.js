@@ -1,4 +1,5 @@
 import { HelperUI } from './helperUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -18,6 +19,22 @@ export const moduleInfo = {
   column: 3, // Right column
   description: 'Helper functions display panel.',
 };
+
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'helpers'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'helpers'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'helpers'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 class HelpersModule {
   constructor() {
@@ -46,7 +63,6 @@ class HelpersModule {
 
   initialize(initializationApi) {
     log('info', 'Helpers module initialized.');
-    // No complex initialization needed for this module at this time
   }
 }
 
@@ -56,6 +72,7 @@ export function register(registrationApi) {
   helpersModule.register(registrationApi);
 }
 
-export function initialize(initializationApi) {
+export function initialize(moduleId, priorityIndex, initializationApi) {
+  _moduleEventBus = initializationApi.getEventBus();
   helpersModule.initialize(initializationApi);
 }

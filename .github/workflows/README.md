@@ -165,7 +165,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 | Workflow | File | Purpose |
 |----------|------|---------|
-| Unit Tests | `unit-tests.yml` | Python/JS unit tests |
+| JavaScript Unit Tests | `unittests_json.yml` | JavaScript/Vitest unit tests |
 | CodeQL Analysis | `codeql-analysis.yml` | Security analysis |
 | Strict Type Check | `strict-type-check.yml` | TypeScript type checking |
 | Scan Build | `scan-build.yml` | Static analysis |

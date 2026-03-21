@@ -144,7 +144,7 @@ export class DiscoveryState {
 
     // Notify listeners that discovery state has been initialized
     if (this.eventBus) {
-      this.eventBus.publish('discovery:changed', {}, 'discovery');
+      this.eventBus.publish('discovery:changed', {});
     }
   }
 
@@ -178,8 +178,8 @@ export class DiscoveryState {
         this.discoveredExits.set(regionName, new Set());
       }
 
-      this.eventBus.publish('discovery:regionDiscovered', { regionName }, 'discovery');
-      this.eventBus.publish('discovery:changed', {}, 'discovery'); // General change event
+      this.eventBus.publish('discovery:regionDiscovered', { regionName });
+      this.eventBus.publish('discovery:changed', {}); // General change event
       return true; // Indicate that a change occurred
     }
     return false;
@@ -190,8 +190,8 @@ export class DiscoveryState {
     if (!this.discoveredLocations.has(locationName)) {
       this.discoveredLocations.add(locationName);
       log('info', `[DiscoveryState] Discovered Location: ${locationName}`);
-      this.eventBus.publish('discovery:locationDiscovered', { locationName }, 'discovery');
-      this.eventBus.publish('discovery:changed', {}, 'discovery');
+      this.eventBus.publish('discovery:locationDiscovered', { locationName });
+      this.eventBus.publish('discovery:changed', {});
       return true;
     }
     return false;
@@ -212,8 +212,8 @@ export class DiscoveryState {
       this.eventBus.publish('discovery:exitDiscovered', {
         regionName,
         exitName,
-      }, 'discovery');
-      this.eventBus.publish('discovery:changed', {}, 'discovery');
+      });
+      this.eventBus.publish('discovery:changed', {});
       return true;
     }
     return false;
@@ -261,7 +261,7 @@ export class DiscoveryState {
 
     log('info', '[DiscoveryState] State loaded.');
     if (this.eventBus) {
-      this.eventBus.publish('discovery:changed', {}, 'discovery'); // Notify UI after loading
+      this.eventBus.publish('discovery:changed', {}); // Notify UI after loading
     } else {
       log(
         'warn',
@@ -282,7 +282,7 @@ export class DiscoveryState {
     this.initialize();
 
     if (this.eventBus) {
-      this.eventBus.publish('discovery:changed', {}, 'discovery');
+      this.eventBus.publish('discovery:changed', {});
     } else {
       log(
         'warn',
@@ -312,7 +312,7 @@ export class DiscoveryState {
       log('info', `[DiscoveryState] Undiscovered Region: ${regionName}`);
 
       if (this.eventBus) {
-        this.eventBus.publish('discovery:changed', {}, 'discovery');
+        this.eventBus.publish('discovery:changed', {});
       }
       return true;
     }
@@ -330,7 +330,7 @@ export class DiscoveryState {
       log('info', `[DiscoveryState] Undiscovered Location: ${locationName}`);
 
       if (this.eventBus) {
-        this.eventBus.publish('discovery:changed', {}, 'discovery');
+        this.eventBus.publish('discovery:changed', {});
       }
       return true;
     }
@@ -350,7 +350,7 @@ export class DiscoveryState {
       log('info', `[DiscoveryState] Undiscovered Exit: ${regionName} -> ${exitName}`);
 
       if (this.eventBus) {
-        this.eventBus.publish('discovery:changed', {}, 'discovery');
+        this.eventBus.publish('discovery:changed', {});
       }
       return true;
     }

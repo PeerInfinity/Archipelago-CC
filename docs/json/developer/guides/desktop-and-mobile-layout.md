@@ -31,14 +31,14 @@ The desktop layout uses [Golden Layout](https://golden-layout.com/), a web-based
 
 1. A `GoldenLayout` instance is created and attached to the `#goldenlayout-container` DOM element
 2. All panel components registered in the `centralRegistry` are registered with Golden Layout as component factories
-3. A layout configuration is loaded from `layout_presets.json` (filtered by enabled modules)
+3. A layout configuration is loaded from `layout-configs/layout_presets.json` (filtered by enabled modules)
 4. The `PanelManager` is initialized to provide a runtime API for panel activation and creation
 
 ### Panel Arrangement
 
 Panels are organized into **stacks** (tabbed groups) arranged in **rows** and **columns**. Users can drag, drop, resize, and rearrange panels. The layout is persisted to `localStorage`.
 
-### Layout Presets (`layout_presets.json`)
+### Layout Presets (`layout-configs/layout_presets.json`)
 
 The file defines named presets. Each preset specifies a tree of rows, columns, and stacks:
 
@@ -85,7 +85,7 @@ The mobile layout replaces the multi-panel Golden Layout with a single-panel vie
 
 ### Column Navigation
 
-The mobile layout preserves the desktop's column grouping concept. Panels are organized into the same columns defined in `layout_presets.json`:
+The mobile layout preserves the desktop's column grouping concept. Panels are organized into the same columns defined in `layout-configs/layout_presets.json`:
 
 - The **tab bar** shows tabs only for panels in the **current column**
 - **Left/right arrow buttons** switch between columns
@@ -179,7 +179,8 @@ body.desktop-layout-active .mobile-tab-bar {
     Dockable multi-panel      + column navigation
     drag/drop interface       + single panel view
               |                       |
-         layout_presets.json     layout_presets.json
+  layout-configs/             layout-configs/
+      layout_presets.json     layout_presets.json
          (panel arrangement)     (column grouping)
 ```
 

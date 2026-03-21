@@ -39,7 +39,6 @@ Lingo.yaml
 Links Awakening DX.yaml
 Lufia II Ancient Cave.yaml
 Mario & Luigi Superstar Saga.yaml
-Math Adventure.yaml
 Mega Man 2.yaml
 MegaMan Battle Network 3.yaml
 Meritous.yaml

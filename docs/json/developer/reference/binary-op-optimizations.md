@@ -3,7 +3,7 @@
 The `BinaryOpProcessor` performs compile-time optimizations on binary operations, list operations, and collection functions during rule export. When operands can be resolved to concrete values at export time, the processor computes the result immediately, producing simpler and smaller JSON output.
 
 **Source:** `exporter/analyzer/binary_ops.py`
-**Tests:** `tests/exporter/analyzer/test_binary_ops.py`
+**Tests:** `test_json/exporter/analyzer/test_binary_ops.py`
 
 ## Architecture
 

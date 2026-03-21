@@ -11,7 +11,7 @@ import { profiler } from '../../modules/shared/profiler.js';
  * These Maps are passed by reference and will be populated during execution.
  *
  * @param {Object} options - Configuration options
- * @param {Object} options.modulesData - Module configuration data from modules.json
+ * @param {Object} options.modulesData - Module configuration data from module-configs/modules.json
  * @param {Array} options.modulesData.loadPriority - Array of module IDs in load order
  * @param {Object} options.modulesData.moduleDefinitions - Object mapping module IDs to definitions
  * @param {Map} options.runtimeModuleStates - Map to store runtime module states (will be populated)
@@ -165,11 +165,26 @@ async function loadSingleModule(options) {
       moduleInstance = bundledModules[moduleId];
       logger.debug('init', `Using pre-bundled module: ${moduleId}`);
     } else {
+      if (bundledModules) {
+        // Running in bundled mode but this module is not in the bundle.
+        // Its transitive imports (eventBus, settingsManager, etc.) will be loaded
+        // as separate file-URL modules, creating different singleton instances from
+        // the ones already in the bundle. This breaks event subscriptions and shared
+        // state. Add this module to BUNDLED_MODULES in init-bundled.js to fix it.
+        logger.warn(
+          'init',
+          `Module "${moduleId}" is enabled but missing from __BUNDLED_MODULES__. ` +
+          `In bundled mode this causes duplicate singleton instances (eventBus, settingsManager, etc.) ` +
+          `which breaks event subscriptions. Add it to init-bundled.js.`
+        );
+      }
       // Dynamically import the module
       // IMPORTANT: Resolve path relative to frontend root, not this file's location
-      // Module paths in modules.json are like "./modules/foo/index.js"
-      // From this file's location (app/initialization/), we need to go up to frontend root
-      const resolvedPath = new URL(moduleDefinition.path, new URL('../../', import.meta.url)).href;
+      // Module paths in module-configs/modules.json are like "./modules/foo/index.js"
+      // Use window.location.href (page URL) as base so this works in both bundled and
+      // unbundled modes. Using import.meta.url breaks in bundled mode because the bundle
+      // is at frontend/dist/bundle.js — two levels up lands at the repo root, not frontend/.
+      const resolvedPath = new URL(moduleDefinition.path, window.location.href).href;
       moduleInstance = await import(resolvedPath);
       logger.debug('init', `Dynamically imported module: ${moduleId}`);
     }
