@@ -3135,7 +3135,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-21Mar2026-031218_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-21Mar2026-044552_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -3604,6 +3604,28 @@
         "runs_passed": 10,
         "runs_failed": 0,
         "failure_types": null
+      }
+    }
+  },
+  "mm3": {
+    "name": "Mega Man 3",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mega Man 3"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apmm3",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
       }
     }
   },
@@ -7793,6 +7815,28 @@
       }
     }
   },
+  "mm3_worldgen": {
+    "name": "Mega Man 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mega Man 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "is_canonical": true
+      }
+    }
+  },
   "mmbn3_worldgen": {
     "name": "MegaMan Battle Network 3 WorldGen",
     "folders": {
@@ -9580,10 +9624,10 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-21T03:30:00.802244+00:00",
+    "test_data_updated": "2026-03-21T05:01:29.753446+00:00",
     "games_with_test_data": 152,
-    "total_games": 159,
-    "games_without_test_data": 7,
+    "total_games": 161,
+    "games_without_test_data": 9,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",
