@@ -87,7 +87,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Scale",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -228,7 +228,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Shard",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1314,7 +1314,7 @@
               }
             },
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1629,7 +1629,7 @@
               }
             },
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1650,7 +1650,7 @@
               }
             },
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1947,7 +1947,7 @@
               }
             },
             "item": {
-              "name": "Titanite Slab",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2890,7 +2890,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Shard",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2979,7 +2979,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Twinkling Titanite x3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3060,7 +3060,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Farron Coal",
+              "name": "Twinkling Titanite x2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3414,7 +3414,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Large Titanite Shard",
+              "name": "Twinkling Titanite x3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4711,7 +4711,7 @@
               }
             },
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4783,7 +4783,7 @@
               }
             },
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4837,7 +4837,7 @@
               }
             },
             "item": {
-              "name": "Titanite Chunk",
+              "name": "Twinkling Titanite",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4866,7 +4866,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Twinkling Titanite",
+              "name": "Farron Coal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4908,7 +4908,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Slab",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6235,7 +6235,7 @@
               }
             },
             "item": {
-              "name": "Titanite Slab",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6253,7 +6253,7 @@
               }
             },
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Large Titanite Shard",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6271,7 +6271,7 @@
               }
             },
             "item": {
-              "name": "Titanite Scale x3",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6289,7 +6289,7 @@
               }
             },
             "item": {
-              "name": "Titanite Chunk x2",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6330,7 +6330,7 @@
               }
             },
             "item": {
-              "name": "Titanite Slab",
+              "name": "Titanite Chunk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13324,7 +13324,7 @@
               ]
             },
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Titanite Chunk x2",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13365,7 +13365,7 @@
               ]
             },
             "item": {
-              "name": "Twinkling Titanite x3",
+              "name": "Titanite Scale x3",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15478,7 +15478,7 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "LC: Red Tearstone Ring - chapel, drop onto roof",
+            "name": "LC: Red Tearstone Ring - chapel, balcony before drop",
             "id": 100967,
             "access_rule": {
               "rule": "True_"
@@ -15552,7 +15552,7 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "LC: Hood of Prayer",
+            "name": "LC: Hood of Prayer - ascent, chest at beginning",
             "id": 100972,
             "access_rule": {
               "rule": "True_"
@@ -19109,7 +19109,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Chunk x6",
+              "name": "Titanite Shard",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -19270,7 +19270,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Twinkling Titanite x3",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -19356,7 +19356,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Titanite Scale",
+              "name": "Titanite Chunk x6",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -19922,7 +19922,7 @@
               }
             },
             "item": {
-              "name": "Twinkling Titanite x2",
+              "name": "Titanite Scale",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -33504,7 +33504,6 @@
       "Armor",
       "Boss Souls",
       "Cinders",
-      "Event",
       "Everything",
       "Healing",
       "Miscellaneous",
@@ -34291,27 +34290,14 @@
       "CA: Firebomb - down the cliff edge": "Purple Moss Clump",
       "ID: Old Sorcerer Hat - B2 near, middle cell": "Purple Moss Clump",
       "CA: Titanite Shard - jump to coffin": "Havel's Gauntlets",
-      "AL: Cinders of a Lord - Aldrich": "Titanite Scale",
-      "AP: Titanite Slab - belfry roof": "Titanite Scale",
-      "CA: Soul of an Unknown Traveler - by miniboss": "Titanite Scale",
-      "FS: Black Dress - shop after killing Yuria": "Titanite Scale",
-      "FS: Black Hand Hat - shop after killing GA NPC": "Titanite Scale",
-      "FS: Divine Blessing - Greirat from IBV": "Titanite Scale",
-      "FS: Firelink Greatsword - Ludleth for Cinder": "Titanite Scale",
-      "FS: Homeward - Irina": "Titanite Scale",
-      "FS: Yhorm's Great Machete - Ludleth for Yhorm": "Titanite Scale",
-      "GA: Soul of a Crestfallen Knight - path to dome": "Titanite Scale",
-      "GA: Titanite Chunk - 2F, right after dark room": "Titanite Scale",
-      "GA: Titanite Scale - 2F, titanite scale atop bookshelf": "Titanite Scale",
-      "IBV: Undead Bone Shard - descent, behind gravestone": "Titanite Scale",
-      "ID: Dung Pie - B3, by path from pit": "Titanite Scale",
-      "ID: Soul of a Crestfallen Knight - balcony above pit": "Titanite Scale",
-      "LC: Irithyll Rapier - basement, miniboss drop": "Titanite Scale",
-      "LC: Soul of Dragonslayer Armour": "Titanite Scale",
-      "LC: Titanite Chunk - moat #1": "Titanite Scale",
-      "RS: Sorcerer Hood - water beneath stronghold": "Titanite Scale",
-      "US: Spotted Whip - by Cornyx's cage after Cuculus quest": "Titanite Scale",
-      "US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris": "Titanite Scale",
+      "AL: Brass Armor - tomb": "Twinkling Titanite x2",
+      "AL: Painting Guardian Waistcloth - prison tower, rafters": "Twinkling Titanite x2",
+      "AP: Large Soul of a Nameless Soldier - fort, by stairs to first room": "Twinkling Titanite x2",
+      "AP: Soul of a Weary Warrior - intro, first cliff edge": "Twinkling Titanite x2",
+      "CA: Soul of an Unknown Traveler - by miniboss": "Twinkling Titanite x2",
+      "FS: Sunset Shield - by grave after killing Hodrick w/Sirris": "Twinkling Titanite x2",
+      "ID: Profaned Coal - B3 far, left cell": "Twinkling Titanite x2",
+      "US: Transposing Kiln - boss drop": "Twinkling Titanite x2",
       "CA: Titanite Scale - miniboss drop": "Repair Powder",
       "CKG: Ring of Sacrifice - under balcony": "Repair Powder",
       "CKG: Titanite Chunk - right of shortcut lift bottom": "Repair Powder",
@@ -34321,33 +34307,14 @@
       "FS: Uchigatana - NPC drop": "Storm Ruler",
       "FS: Master's Attire - NPC drop": "Black Eye Orb",
       "FS: Master's Gloves - NPC drop": "Excrement-covered Ashes",
-      "CD: Archdeacon Holy Garb - boss room after killing boss": "Titanite Shard",
-      "CD: Armor of Thorns - Rosaria's Bed Chamber after killing Kirk": "Titanite Shard",
-      "FS: Broken Straight Sword - gravestone after boss": "Titanite Shard",
-      "FS: Lift Chamber Key - Leonhard": "Titanite Shard",
-      "FS: Magic Shield - Orbeck": "Titanite Shard",
-      "FS: Soothing Sunlight - Ludleth for Dancer": "Titanite Shard",
-      "FS: Soul Arrow - Orbeck": "Titanite Shard",
-      "FS: Untrue White Ring - Yuria shop": "Titanite Shard",
-      "FS: White Dragon Breath - Ludleth for Oceiros": "Titanite Shard",
-      "HWL: Astora Straight Sword - fort walkway, drop down": "Titanite Shard",
-      "HWL: Battle Axe - flame tower, mimic": "Titanite Shard",
-      "HWL: Green Blossom - shortcut, lower courtyard": "Titanite Shard",
-      "HWL: Soul of a Deserted Corpse - path to back tower, by lift door": "Titanite Shard",
-      "HWL: Standard Arrow - back tower": "Titanite Shard",
-      "RS: Brigand Gauntlets - beneath road": "Titanite Shard",
-      "RS: Sage Ring - water beneath stronghold": "Titanite Shard",
-      "RS: Sellsword Trousers - keep perimeter balcony": "Titanite Shard",
-      "US: Charcoal Pine Resin - hanging corpse room": "Titanite Shard",
-      "US: Flynn's Ring - tower village, rooftop": "Titanite Shard",
-      "US: Human Pine Resin - tower village building, chest upstairs": "Titanite Shard",
-      "US: Northern Armor - tower village, hanging corpse": "Titanite Shard",
-      "US: Northern Helm - tower village, hanging corpse": "Titanite Shard",
-      "US: Soul of an Unknown Traveler - back alley, past crates": "Titanite Shard",
-      "US: Soul of an Unknown Traveler - chasm crypt": "Titanite Shard",
-      "US: Titanite Shard - chasm #2": "Titanite Shard",
-      "US: Titanite Shard - lower path to Cliff Underside": "Titanite Shard",
-      "US: Undead Bone Shard - by white tree": "Titanite Shard",
+      "FS: Broken Straight Sword - gravestone after boss": "Titanite Slab",
+      "FS: Dragonscale Armor - shop after killing AP boss": "Titanite Slab",
+      "FS: Firelink Gauntlets - shop after placing all Cinders": "Titanite Slab",
+      "FS: Homeward - Irina": "Titanite Slab",
+      "GA: Cinders of a Lord - Lothric Prince": "Titanite Slab",
+      "GA: Hunter's Ring - dome, very top": "Titanite Slab",
+      "HWL: Battle Axe - flame tower, mimic": "Titanite Slab",
+      "SL: Undead Bone Shard - lake, miniboss drop": "Titanite Slab",
       "CD: Archdeacon White Crown - boss room after killing boss": "Soul of an Unknown Traveler",
       "CD: Titanite Shard - moat, far end": "Soul of an Unknown Traveler",
       "CD: Titanite Shard - path, side path by Cathedral of the Deep bonfire": "Soul of an Unknown Traveler",
@@ -34367,6 +34334,33 @@
       "FS: Cracked Red Eye Orb - Leonhard": "Rusted Coin x2",
       "HWL: Soul of a Deserted Corpse - fountain, path to promenade": "Rusted Coin x2",
       "RS: Golden Falcon Shield - path from stronghold right room to Farron Keep": "Rusted Coin x2",
+      "AP: Twinkling Titanite - walkway, miniboss drop": "Titanite Shard",
+      "CD: Archdeacon Holy Garb - boss room after killing boss": "Titanite Shard",
+      "CD: Armor of Thorns - Rosaria's Bed Chamber after killing Kirk": "Titanite Shard",
+      "FS: Firelink Greatsword - Ludleth for Cinder": "Titanite Shard",
+      "FS: Lift Chamber Key - Leonhard": "Titanite Shard",
+      "FS: Magic Shield - Orbeck": "Titanite Shard",
+      "FS: Soothing Sunlight - Ludleth for Dancer": "Titanite Shard",
+      "FS: Soul Arrow - Orbeck": "Titanite Shard",
+      "FS: Untrue White Ring - Yuria shop": "Titanite Shard",
+      "FS: White Dragon Breath - Ludleth for Oceiros": "Titanite Shard",
+      "HWL: Astora Straight Sword - fort walkway, drop down": "Titanite Shard",
+      "HWL: Green Blossom - shortcut, lower courtyard": "Titanite Shard",
+      "HWL: Soul of a Deserted Corpse - path to back tower, by lift door": "Titanite Shard",
+      "HWL: Standard Arrow - back tower": "Titanite Shard",
+      "RS: Brigand Gauntlets - beneath road": "Titanite Shard",
+      "RS: Sage Ring - water beneath stronghold": "Titanite Shard",
+      "RS: Sellsword Trousers - keep perimeter balcony": "Titanite Shard",
+      "US: Charcoal Pine Resin - hanging corpse room": "Titanite Shard",
+      "US: Flynn's Ring - tower village, rooftop": "Titanite Shard",
+      "US: Human Pine Resin - tower village building, chest upstairs": "Titanite Shard",
+      "US: Northern Armor - tower village, hanging corpse": "Titanite Shard",
+      "US: Northern Helm - tower village, hanging corpse": "Titanite Shard",
+      "US: Soul of an Unknown Traveler - back alley, past crates": "Titanite Shard",
+      "US: Soul of an Unknown Traveler - chasm crypt": "Titanite Shard",
+      "US: Titanite Shard - chasm #2": "Titanite Shard",
+      "US: Titanite Shard - lower path to Cliff Underside": "Titanite Shard",
+      "US: Undead Bone Shard - by white tree": "Titanite Shard",
       "FS: White Sign Soapstone - shop": "Small Lothric Banner",
       "FS: Dried Finger - shop": "Raw Gem",
       "FS: Farron Greatsword - Ludleth for Abyss Watchers": "Raw Gem",
@@ -34467,6 +34461,7 @@
       "FS: Lothric's Holy Sword - Ludleth for Princes": "Large Titanite Shard",
       "FS: Old King's Great Hammer - Ludleth for Old Demon King": "Large Titanite Shard",
       "FS: Spook - Orbeck": "Large Titanite Shard",
+      "FS: Twisted Wall of Light - Orbeck for Golden Scroll": "Large Titanite Shard",
       "FS: Undead Legion Leggings - shop after killing FK boss": "Large Titanite Shard",
       "FSBT: Hollow Gem - crow for Eleonora": "Large Titanite Shard",
       "FSBT: Porcine Shield - crow for Undead Bone Shard": "Large Titanite Shard",
@@ -34477,7 +34472,6 @@
       "SL: Black Knight Sword - ruins main lower, illusory wall in far hall": "Large Titanite Shard",
       "SL: Toxic Mist - ruins main lower, in lava": "Large Titanite Shard",
       "UG: Shriving Stone - swamp, by bonfire": "Large Titanite Shard",
-      "US: Titanite Shard - porch after burning tree": "Large Titanite Shard",
       "FS: Karla's Trousers - Prisoner Chief's Ashes": "Profuse Sweat",
       "FS: Xanthous Overcoat - Xanthous Ashes": "Cleric Blue Robe",
       "FS: Xanthous Gloves - Xanthous Ashes": "Executioner Armor",
@@ -34507,15 +34501,15 @@
       "FK: Rotten Pine Resin - outside pavilion by left island": "Twinkling Titanite",
       "FS: Black Flame - Karla for Grave Warden Tome": "Twinkling Titanite",
       "FS: Bountiful Sunlight - Ludleth for Rosaria": "Twinkling Titanite",
+      "FS: Chaos Storm - Cornyx for Izalith Tome": "Twinkling Titanite",
       "FS: Cleric's Candlestick - Ludleth for Deacons": "Twinkling Titanite",
       "FS: Elite Knight Armor - shop after Anri quest": "Twinkling Titanite",
+      "FS: Fire Orb - Cornyx for Great Swamp Tome": "Twinkling Titanite",
       "FS: Gundyr's Helm - shop after killing UG boss": "Twinkling Titanite",
-      "FS: Heal - Irina": "Twinkling Titanite",
       "FSBT: Hello Carving - crow for Alluring Skull": "Twinkling Titanite",
       "GA: Titanite Chunk - 1F, balcony": "Twinkling Titanite",
       "GA: Titanite Chunk - 2F, by wax pool": "Twinkling Titanite",
       "GA: Twinkling Titanite - 1F, lizard by drop": "Twinkling Titanite",
-      "HWL: Way of Blue - Emma": "Twinkling Titanite",
       "RS: Braille Divine Tome of Carim - drop from bridge to Halfway Fortress": "Twinkling Titanite",
       "RS: Ember - right of fire behind stronghold left room": "Twinkling Titanite",
       "RS: Fallen Knight Gauntlets - water's edge by Farron Keep": "Twinkling Titanite",
@@ -34548,32 +34542,21 @@
       "FS: Chaos Bed Vestiges - Ludleth for Old Demon King": "Flynn's Ring",
       "FS: Greatsword of Judgment - Ludleth for Pontiff": "Crest Shield",
       "FS: Profaned Greatsword - Ludleth for Pontiff": "Smough's Helm",
-      "FS: Yhorm's Greatshield - Ludleth for Yhorm": "Northern Armor",
-      "FS: Dancer's Enchanted Swords - Ludleth for Dancer": "Great Scythe",
-      "FS: Dragonslayer Greataxe - Ludleth for Dragonslayer": "Plank Shield",
-      "FS: Dragonslayer Greatshield - Ludleth for Dragonslayer": "Outrider Knight Armor",
-      "FS: Moonlight Greatsword - Ludleth for Oceiros": "Leonhard's Trousers",
-      "FS: Gundyr's Halberd - Ludleth for Champion": "Bloodred Moss Clump",
-      "IBV: Ring of Sacrifice - lake, right of stairs from descent": "Bloodred Moss Clump",
-      "FS: Prisoner's Chain - Ludleth for Champion": "Hood of Prayer",
-      "FS: Storm Curved Sword - Ludleth for Nameless": "Alva Leggings",
-      "FS: Dragonslayer Swordspear - Ludleth for Nameless": "Old Sorcerer Hat",
-      "FS: Lightning Storm - Ludleth for Nameless": "Manikin Claws",
       "AP: Great Magic Barrier - drop off belfry roof": "Titanite Chunk",
       "AP: Titanite Chunk - rotunda": "Titanite Chunk",
       "AP: Titanite Scale - mausoleum, upstairs balcony": "Titanite Chunk",
       "CC: Sharp Gem - atrium lower, right before exit": "Titanite Chunk",
       "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC": "Titanite Chunk",
-      "FS: Carthus Flame Arc - Cornyx for Carthus Tome": "Titanite Chunk",
-      "FS: Chaos Storm - Cornyx for Izalith Tome": "Titanite Chunk",
+      "FS: Clandestine Coat - shop with Orbeck's Ashes": "Titanite Chunk",
       "FS: Embraced Armor of Favor - shop after killing water reserve minibosses": "Titanite Chunk",
-      "FS: Fire Orb - Cornyx for Great Swamp Tome": "Titanite Chunk",
       "FS: Gauntlets of Favor - shop after killing water reserve minibosses": "Titanite Chunk",
       "FS: Helm of Favor - shop after killing water reserve minibosses": "Titanite Chunk",
+      "FS: Hidden Body - Orbeck for Golden Scroll": "Titanite Chunk",
+      "FS: Hidden Weapon - Orbeck for Golden Scroll": "Titanite Chunk",
       "FS: Leonhard's Gauntlets - shop after killing Leonhard": "Titanite Chunk",
       "FS: Sunless Leggings - shop, Sirris quest, kill GA boss": "Titanite Chunk",
-      "FS: Sunlight Spear - Ludleth for Cinder": "Titanite Chunk",
       "FS: Twinkling Titanite - Greirat from IBV": "Titanite Chunk",
+      "FS: Yhorm's Great Machete - Ludleth for Yhorm": "Titanite Chunk",
       "GA: Soul Stream - 3F, behind illusory wall": "Titanite Chunk",
       "GA: Titanite Scale - 3F, corner up stairs": "Titanite Chunk",
       "GA: Titanite Slab - final elevator secret": "Titanite Chunk",
@@ -34589,6 +34572,38 @@
       "PC: Twinkling Titanite - halls above swamp, lizard #1": "Titanite Chunk",
       "SL: Large Titanite Shard - lake, by entrance": "Titanite Chunk",
       "UG: Chaos Blade - environs, left of shrine": "Titanite Chunk",
+      "FS: Yhorm's Greatshield - Ludleth for Yhorm": "Northern Armor",
+      "FS: Dancer's Enchanted Swords - Ludleth for Dancer": "Great Scythe",
+      "FS: Dragonslayer Greataxe - Ludleth for Dragonslayer": "Plank Shield",
+      "FS: Dragonslayer Greatshield - Ludleth for Dragonslayer": "Outrider Knight Armor",
+      "FS: Moonlight Greatsword - Ludleth for Oceiros": "Leonhard's Trousers",
+      "FS: Gundyr's Halberd - Ludleth for Champion": "Bloodred Moss Clump",
+      "IBV: Ring of Sacrifice - lake, right of stairs from descent": "Bloodred Moss Clump",
+      "FS: Prisoner's Chain - Ludleth for Champion": "Hood of Prayer",
+      "FS: Storm Curved Sword - Ludleth for Nameless": "Alva Leggings",
+      "FS: Dragonslayer Swordspear - Ludleth for Nameless": "Old Sorcerer Hat",
+      "FS: Lightning Storm - Ludleth for Nameless": "Manikin Claws",
+      "AL: Cinders of a Lord - Aldrich": "Titanite Scale",
+      "AP: Titanite Slab - belfry roof": "Titanite Scale",
+      "FS: Black Hand Hat - shop after killing GA NPC": "Titanite Scale",
+      "FS: Carthus Flame Arc - Cornyx for Carthus Tome": "Titanite Scale",
+      "FS: Cast Light - Orbeck for Golden Scroll": "Titanite Scale",
+      "FS: Divine Blessing - Greirat from IBV": "Titanite Scale",
+      "FS: Gnaw - Karla for Deep Braille Tome": "Titanite Scale",
+      "FS: Sunlight Spear - Ludleth for Cinder": "Titanite Scale",
+      "FS: Titanite Slab - shop after placing all Cinders": "Titanite Scale",
+      "GA: Soul of a Crestfallen Knight - path to dome": "Titanite Scale",
+      "GA: Titanite Chunk - 2F, right after dark room": "Titanite Scale",
+      "GA: Titanite Scale - 2F, titanite scale atop bookshelf": "Titanite Scale",
+      "IBV: Undead Bone Shard - descent, behind gravestone": "Titanite Scale",
+      "ID: Dung Pie - B3, by path from pit": "Titanite Scale",
+      "ID: Soul of a Crestfallen Knight - balcony above pit": "Titanite Scale",
+      "LC: Irithyll Rapier - basement, miniboss drop": "Titanite Scale",
+      "LC: Soul of Dragonslayer Armour": "Titanite Scale",
+      "LC: Titanite Chunk - moat #1": "Titanite Scale",
+      "RS: Sorcerer Hood - water beneath stronghold": "Titanite Scale",
+      "US: Spotted Whip - by Cornyx's cage after Cuculus quest": "Titanite Scale",
+      "US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris": "Titanite Scale",
       "AL: Large Titanite Shard - bottom of the nearest buttress": "Soul of a Weary Warrior",
       "AL: Sun Princess Ring - dark cathedral, after boss": "Soul of a Weary Warrior",
       "AP: Dragon Head Stone - fort, boss drop": "Soul of a Weary Warrior",
@@ -34654,14 +34669,13 @@
       "ID: Covetous Gold Serpent Ring - Siegward's cell": "Firebomb x2",
       "PC: Cinders of a Lord - Yhorm the Giant": "Firebomb x2",
       "FSBT: I'm sorry Carving - crow for Shriving Stone": "Toxic Mist",
-      "FS: Cast Light - Orbeck for Golden Scroll": "Titanite Slab",
-      "FS: Clandestine Coat - shop with Orbeck's Ashes": "Titanite Slab",
-      "FS: Dragonscale Armor - shop after killing AP boss": "Titanite Slab",
-      "FS: Firelink Gauntlets - shop after placing all Cinders": "Titanite Slab",
-      "FSBT: Titanite Scale - crow for Blacksmith Hammer": "Titanite Slab",
-      "GA: Cinders of a Lord - Lothric Prince": "Titanite Slab",
-      "GA: Hunter's Ring - dome, very top": "Titanite Slab",
-      "SL: Undead Bone Shard - lake, miniboss drop": "Titanite Slab",
+      "AL: Soul of a Weary Warrior - plaza, nearer": "Titanite Scale x3",
+      "AP: Twinkling Titanite - walkway building, lizard": "Titanite Scale x3",
+      "CKG: Titanite Scale - tomb, chest #2": "Titanite Scale x3",
+      "FSBT: Titanite Scale - crow for Blacksmith Hammer": "Titanite Scale x3",
+      "GA: Heavy Gem - rooftops, lizard": "Titanite Scale x3",
+      "PC: Logan's Scroll - chapel roof, NPC drop": "Titanite Scale x3",
+      "PC: Storm Ruler - Siegward": "Titanite Scale x3",
       "FSBT: Help me! Carving - crow for any sacred chime": "Court Sorcerer Trousers",
       "FSBT: Titanite Slab - crow for Coiled Sword Fragment": "Ember x2",
       "RS: Titanite Shard - woods, left of path from Halfway Fortress": "Ember x2",
@@ -34715,7 +34729,7 @@
       "LC: Ember - by Dragon Barracks bonfire": "Alluring Skull",
       "HWL: Cell Key - fort ground, down stairs": "Mendicant's Staff",
       "HWL: Ember - fountain #1": "Homeward Bone x3",
-      "LC: Hood of Prayer": "Homeward Bone x3",
+      "LC: Hood of Prayer - ascent, chest at beginning": "Homeward Bone x3",
       "LC: Refined Gem - plaza": "Homeward Bone x3",
       "HWL: Soul of a Deserted Corpse - fort entry, corner": "Pale Shade Gloves",
       "HWL: Lucerne - promenade, side path": "Iron Leggings",
@@ -34745,8 +34759,11 @@
       "HWL: Silver Eagle Kite Shield - fort mezzanine": "Soul of the Blood of the Wolf",
       "HWL: Ember - fort roof, transforming hollow": "Great Lightning Spear",
       "HWL: Titanite Shard - fort roof, transforming hollow": "Soul Spear",
+      "FS: Karla's Pointed Hat - kill Karla": "Twinkling Titanite x3",
+      "GA: Golden Wing Crest Shield - outside 5F, NPC drop": "Twinkling Titanite x3",
+      "HWL: Way of Blue - Emma": "Twinkling Titanite x3",
+      "US: Titanite Shard - porch after burning tree": "Twinkling Titanite x3",
       "US: Soul of the Rotted Greatwood": "Great Magic Weapon",
-      "US: Transposing Kiln - boss drop": "Farron Coal",
       "US: Pyromancy Flame - Cornyx": "Drang Hammers",
       "US: Cornyx's Garb - kill Cornyx": "Soul of a Stray Demon",
       "GA: Twinkling Titanite - up stairs from 4F, lizard": "Fire Gem",
@@ -34765,7 +34782,7 @@
       "FK: Ember - by white tree": "Fading Soul",
       "ID: Old Cell Key - stairs between pit and B3": "Fading Soul",
       "ID: Soul of a Weary Warrior - by drop to pit": "Fading Soul",
-      "LC: Red Tearstone Ring - chapel, drop onto roof": "Fading Soul",
+      "LC: Red Tearstone Ring - chapel, balcony before drop": "Fading Soul",
       "SL: Yellow Bug Pellet - side lake": "Fading Soul",
       "US: Repair Powder - first building, balcony": "Fading Soul",
       "US: Homeward Bone - stable roof": "Black Hand Armor",
@@ -34849,6 +34866,7 @@
       "FS: Carthus Beacon - Cornyx for Carthus Tome": "Skull Ring",
       "FS: Great Chaos Fire Orb - Cornyx for Izalith Tome": "Lothric's Holy Sword",
       "FS: Saint's Ring - Irina": "Homeward",
+      "FS: Heal - Irina": "Farron Coal",
       "FS: Caressing Tears - Irina": "Pale Tongue",
       "FS: Dragonscale Waistcloth - shop after killing AP boss": "Pale Tongue",
       "RS: Farron Coal - keep perimeter": "Pale Tongue",
@@ -34923,18 +34941,6 @@
       "FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll": "Dark Gem",
       "FS: Crystal Soul Spear - Orbeck for Crystal Scroll": "Heysel Pick",
       "FS: Crystal Magic Weapon - Orbeck for Crystal Scroll": "Black Leggings",
-      "AL: Soul of a Weary Warrior - plaza, nearer": "Titanite Scale x3",
-      "AP: Twinkling Titanite - walkway building, lizard": "Titanite Scale x3",
-      "CKG: Titanite Scale - tomb, chest #2": "Titanite Scale x3",
-      "FS: Hidden Weapon - Orbeck for Golden Scroll": "Titanite Scale x3",
-      "FS: Twisted Wall of Light - Orbeck for Golden Scroll": "Titanite Scale x3",
-      "GA: Heavy Gem - rooftops, lizard": "Titanite Scale x3",
-      "PC: Logan's Scroll - chapel roof, NPC drop": "Titanite Scale x3",
-      "AL: Ember - plaza, further": "Titanite Chunk x2",
-      "AP: Titanite Chunk - walkway, miniboss drop": "Titanite Chunk x2",
-      "FS: Hidden Body - Orbeck for Golden Scroll": "Titanite Chunk x2",
-      "ID: Large Titanite Shard - B1 far, rightmost cell": "Titanite Chunk x2",
-      "PC: Greatshield of Glory - palace, mimic in far room": "Titanite Chunk x2",
       "FS: Repair - Orbeck for Golden Scroll": "Farron Greatsword",
       "FS: Young Dragon Ring - Orbeck for one scroll and buying three spells": "Murakumo",
       "CD: Ember - edge of platform before boss": "Titanite Shard x2",
@@ -35212,20 +35218,17 @@
       "ID: Murakumo - Alva drop": "Leo Ring",
       "ID: Pale Pine Resin - B1 far, cell with broken wall": "Smough's Gauntlets",
       "ID: Large Soul of a Nameless Soldier - B2 far, by lift": "Winged Spear",
+      "AL: Ember - plaza, further": "Titanite Chunk x2",
+      "AP: Titanite Chunk - walkway, miniboss drop": "Titanite Chunk x2",
+      "ID: Large Titanite Shard - B1 far, rightmost cell": "Titanite Chunk x2",
+      "PC: Greatshield of Glory - palace, mimic in far room": "Titanite Chunk x2",
+      "PC: Siegbr\u00e4u - Siegward after killing boss": "Titanite Chunk x2",
       "FS: Hawkwood's Swordgrass - Andre after gesture in AP summit": "Carthus Rouge",
       "ID: Homeward Bone - path from B2 to pit": "Carthus Rouge",
       "ID: Bellowing Dragoncrest Ring - drop from B1 towards pit": "Winged Knight Armor",
       "ID: Lightning Bolt - awning over pit": "Gundyr's Gauntlets",
       "ID: Large Titanite Shard - pit #2": "Blue Wooden Shield",
       "ID: Ember - B3 center": "Dragonslayer Lightning Arrow x10",
-      "AL: Brass Armor - tomb": "Twinkling Titanite x2",
-      "AL: Painting Guardian Waistcloth - prison tower, rafters": "Twinkling Titanite x2",
-      "AP: Large Soul of a Nameless Soldier - fort, by stairs to first room": "Twinkling Titanite x2",
-      "AP: Soul of a Weary Warrior - intro, first cliff edge": "Twinkling Titanite x2",
-      "FS: Gnaw - Karla for Deep Braille Tome": "Twinkling Titanite x2",
-      "FS: Sunset Shield - by grave after killing Hodrick w/Sirris": "Twinkling Titanite x2",
-      "ID: Profaned Coal - B3 far, left cell": "Twinkling Titanite x2",
-      "PC: Siegbr\u00e4u - Siegward after killing boss": "Twinkling Titanite x2",
       "ID: Large Titanite Shard - B3 near, right corner": "Yhorm's Greatshield",
       "ID: Old Sorcerer Coat - B2 near, middle cell": "Red Bug Pellet x3",
       "ID: Old Sorcerer Boots - B2 near, middle cell": "Soul of a Demon",
@@ -35265,10 +35268,6 @@
       "PC: Undead Bone Shard - by bonfire": "Brigand Armor",
       "PC: Rusted Gold Coin - palace, mimic in far room": "Carthus Rouge x2",
       "PC: Twinkling Titanite - halls above swamp, lizard #2": "Bursting Fireball",
-      "FS: Karla's Pointed Hat - kill Karla": "Twinkling Titanite x3",
-      "FS: Titanite Slab - shop after placing all Cinders": "Twinkling Titanite x3",
-      "GA: Golden Wing Crest Shield - outside 5F, NPC drop": "Twinkling Titanite x3",
-      "PC: Storm Ruler - Siegward": "Twinkling Titanite x3",
       "AL: Drang Twinspears - plaza, NPC drop": "Ragged Mask",
       "AL: Brass Helm - tomb": "Lucerne",
       "AL: Brass Leggings - tomb": "Master's Gloves",
@@ -35453,13 +35452,13 @@
       "AP: Twinkling Dragon Torso Stone - summit, gesture at altar": "Magic Stoneplate Ring",
       "AP: Calamity Ring - mausoleum, gesture at altar": "Horsehoof Ring",
       "AP: Titanite Scale - walkway, miniboss drop": "Painting Guardian Gloves",
-      "AP: Twinkling Titanite - walkway, miniboss drop": "Titanite Chunk x6",
       "FS: Golden Crown - shop after killing AP boss": "Battle Axe",
       "FS: Golden Bracelets - shop after killing AP boss": "Winged Knight Helm",
       "FK: Twinkling Dragon Head Stone - Hawkwood drop": "Exploding Bolt x6",
       "KFF: Soul of the Lords": "Lightning Urn x3",
       "FS: Firelink Helm - shop after placing all Cinders": "Silver Mask",
       "FS: Firelink Leggings - shop after placing all Cinders": "Broadsword",
+      "FS: Black Dress - shop after killing Yuria": "Titanite Chunk x6",
       "FS: Black Gauntlets - shop after killing Yuria": "Gauntlets of Favor",
       "FS: Black Leggings - shop after killing Yuria": "Notched Whip",
       "FS: Blue Tearstone Ring - Greirat": "Cinders of a Lord - Yhorm the Giant",
@@ -37082,14 +37081,14 @@
           "100748": 1073742117,
           "100721": 1073742095,
           "100482": 343437456,
-          "100899": 1073742844,
+          "100903": 1073742854,
           "100733": 1073742104,
           "100465": 340436456,
           "100011": 400500,
           "100105": 6370000,
           "100709": 1073741939,
           "100972": 1073743970,
-          "100890": 1073742824,
+          "100898": 1073742827,
           "100822": 1073742227,
           "100264": 21240000,
           "100179": 13100000,
@@ -37097,6 +37096,7 @@
           "100501": 345936456,
           "100855": 1073742284,
           "100845": 1073742279,
+          "100890": 1073742824,
           "100931": 1073743926,
           "100917": 1073743044,
           "100690": 536891522,
@@ -37142,6 +37142,7 @@
           "100682": 536891452,
           "100257": 21170000,
           "100571": 362435456,
+          "100895": 1073742826,
           "100317": 292436456,
           "100154": 10000000,
           "100239": 20210000,
@@ -37152,7 +37153,7 @@
           "100519": 348438456,
           "100496": 345435456,
           "100168": 11020000,
-          "100895": 1073742826,
+          "100899": 1073742844,
           "100826": 1073742231,
           "100967": 1073743965,
           "100443": 331438456,
@@ -37167,7 +37168,7 @@
           "100825": 1073742230,
           "100745": 1073742116,
           "101022": 1076162824,
-          "100898": 1073742827,
+          "100901": 1073742844,
           "100355": 297438456,
           "100864": 1073742324,
           "100711": 1073742065,
@@ -37214,8 +37215,8 @@
           "100873": 1073742541,
           "101058": 1077292824,
           "100988": 1075047824,
+          "100904": 1073742854,
           "100993": 1075052824,
-          "100932": 1073743927,
           "100222": 16130000,
           "100889": 1073742567,
           "100910": 1073742974,
@@ -37291,6 +37292,7 @@
           "100672": 536891342,
           "100095": 6280000,
           "101052": 1077262824,
+          "100932": 1073743927,
           "100809": 1073742197,
           "100259": 21190000,
           "100907": 1073742944,
@@ -37352,8 +37354,6 @@
           "100914": 1073743014,
           "100130": 8220000,
           "100347": 295938456,
-          "100901": 1073742844,
-          "100896": 1073742826,
           "100089": 6200000,
           "100082": 6080000,
           "100891": 1073742824,
@@ -37582,12 +37582,12 @@
           "100643": 536891112,
           "100573": 362437456,
           "100139": 9010000,
+          "100896": 1073742826,
           "100782": 1073742159,
           "100389": 317436456,
           "100446": 332437456,
           "100263": 21230000,
           "100017": 402200,
-          "100903": 1073742854,
           "100274": 22070000,
           "100854": 1073742283,
           "100888": 1073742563,
@@ -37626,7 +37626,6 @@
           "100485": 343936456,
           "100783": 1073742159,
           "101038": 1076361824,
-          "100904": 1073742854,
           "100492": 344935456,
           "100155": 10010000,
           "100494": 344937456,
@@ -37810,13 +37809,13 @@
           "100618": 536890982,
           "100697": 536891632,
           "100561": 359437456,
-          "100897": 1073742826,
           "100107": 7010000,
           "100388": 317435456,
           "100031": 404600,
           "100762": 1073742124,
           "100324": 293435456,
           "100043": 2020000,
+          "100897": 1073742826,
           "100530": 351437456,
           "100173": 12050000,
           "100952": 1073743949,
@@ -38286,10 +38285,12 @@
         },
         "itemCounts": {
           "100748": 4,
+          "100903": 2,
           "100011": 6,
           "100845": 2,
           "100740": 5,
           "100745": 2,
+          "100901": 3,
           "100864": 2,
           "100790": 6,
           "100742": 3,
@@ -38300,6 +38301,7 @@
           "100758": 3,
           "100796": 3,
           "100749": 3,
+          "100904": 3,
           "100755": 3,
           "100776": 2,
           "100764": 6,
@@ -38311,8 +38313,6 @@
           "100744": 6,
           "100857": 3,
           "100900": 2,
-          "100901": 3,
-          "100896": 2,
           "100891": 2,
           "100752": 3,
           "100859": 2,
@@ -38340,14 +38340,13 @@
           "100743": 5,
           "100015": 5,
           "100734": 2,
+          "100896": 2,
           "100017": 10,
-          "100903": 2,
           "100854": 3,
           "100723": 3,
           "100763": 4,
           "100735": 3,
           "100783": 2,
-          "100904": 3,
           "100853": 2,
           "100769": 3,
           "100780": 2,
@@ -38360,9 +38359,9 @@
           "100848": 2,
           "100722": 2,
           "100856": 2,
-          "100897": 6,
           "100031": 6,
           "100762": 3,
+          "100897": 6,
           "100784": 3,
           "100007": 8,
           "100708": 5,
@@ -38468,7 +38467,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "KFF: Soul of the Lords"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

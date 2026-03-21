@@ -134,7 +134,6 @@ class CodingAdventureWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["HTML", "CSS", "Design Systems", "JavaScript Basics", "DOM Manipulation", "Algorithms", "Server Basics", "File I/O", "HTTP Basics", "Git", "Command Line", "Package Managers", "Static Website Complete", "React", "Vue", "Frontend Framework", "State Management", "Express", "Django", "Flask", "REST APIs", "Database Integration", "UI/UX", "Responsive Design", "Accessibility", "SQL", "NoSQL", "Database Basics", "Query Optimization", "Interactive App Complete", "Sessions", "JWT", "Authentication", "Caching", "CDN", "Performance", "Unit Tests", "Integration Tests", "Testing", "Docker", "CI/CD", "DevOps", "Full-Stack Complete", "HTTPS", "CORS", "Security Complete", "Horizontal Scaling", "Scaling Complete", "Cloud Provider", "Domain", "Deployment Complete"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements match the original non-randomized game
@@ -289,6 +288,12 @@ class CodingAdventureWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -429,7 +434,7 @@ class CodingAdventureWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Production Deployment", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

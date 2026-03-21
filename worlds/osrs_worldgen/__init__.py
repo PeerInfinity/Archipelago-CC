@@ -140,7 +140,6 @@ class OSRSWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Area: Lumbridge", "Area: Lumbridge Swamp", "Area: HAM Hideout", "Area: Lumbridge Farms", "Area: South of Varrock", "Area: Lumberyard", "Area: Central Varrock", "Area: Varrock Palace", "Area: West Varrock", "Area: Edgeville", "Area: Barbarian Village", "Area: Draynor Manor", "Area: Falador", "Area: Dwarven Mines", "Area: Ice Mountain", "Area: Monastery", "Area: Falador Farms", "Area: Port Sarim", "Area: Mudskipper Point", "Area: Karamja", "Area: Crandor", "Area: Rimmington", "Area: Crafting Guild", "Area: Draynor Village", "Area: Wizard Tower", "Area: Corsair Cove", "Area: Al Kharid", "Area: Citharede Abbey", "Area: Wilderness", "Progressive Armor", "Progressive Weapons", "Progressive Tools", "Progressive Ranged Weapon", "Progressive Ranged Armor", "Progressive Magic Spell", "An Invitation to the Gielinor Games", "Settled's Crossbow", "The Stone of Jas", "Nieve's Phone Number", "Hannanie's Lost Sanity", "XP Waste", "Ten Free Pulls on the Squeal of Fortune", "Project Zanaris Beta Invite", "A Funny Feeling You Would Have Been Followed", "An Ominous Prediction From Gnome Child", "A Logic Error", "The Warding Skill", "A 1/2500 Chance At Your Very Own Pet Baron Sucellus, Redeemable at your Local Duke, Some Restrictions May Apply", "A Suspicious Email From Iagex.com Asking for your Password", "A Review on that Pull Request You've Been Waiting On", "Fifty Billion RS3 GP (Worthless)", "Mod Ash's Coffee Cup", "An Embarrasing Photo of Zammorak at the Christmas Party", "Another Bug To Report", "1-Up Mushroom", "Empty White Hallways", "Area: Menaphos", "A Ratcatchers Dialogue Rewrite", "\"Nostalgia\"", "A Hornless Unicorn", "The Ability To Use ::bank", "Free Haircut at the Falador Hairdresser", "Nothing Interesting Happens", "Why Fletch?", "Evolution of Combat", "Care Pack: 10,000 GP", "Care Pack: 90 Steel Nails", "Care Pack: 25 Swordfish", "Care Pack: 50 Lobsters", "Care Pack: 100 Law Runes", "Care Pack: 300 Each Elemental Rune", "Care Pack: 100 Chaos Runes", "Care Pack: 100 Death Runes", "Care Pack: 100 Oak Logs", "Care Pack: 50 Willow Logs", "Care Pack: 50 Bronze Bars", "Care Pack: 200 Iron Ore", "Care Pack: 100 Coal Ore", "Care Pack: 100 Raw Trout", "Care Pack: 200 Leather", "Care Pack: 50 Energy Potion (4)", "Care Pack: 200 Big Bones", "Care Pack: 10 Each Uncut gems", "Care Pack: 3 Rings of Forging", "Care Pack: 500 Rune Essence", "Care Pack: 200 Mind Runes"]),
-        "Event": frozenset(["1 QP (Cook's Assistant)", "3 QP (Demon Slayer)", "1 QP (The Restless Ghost)", "5 QP (Romeo & Juliet)", "1 QP (Sheep Shearer)", "1 QP (Shield of Arrav)", "4 QP (Ernest the Chicken)", "3 QP (Vampyre Slayer)", "1 QP (Imp Catcher)", "3 QP (Prince Ali Rescue)", "1 QP (Doric's Quest)", "3 QP (Black Knights' Fortress)", "1 QP (Witch's Potion)", "1 QP (The Knight's Sword)", "5 QP (Goblin Diplomacy)", "2 QP (Pirate's Treasure)", "1 QP (Rune Mysteries)", "1 QP (Misthalin Mystery)", "2 QP (The Corsair Curse)", "1 QP (X Marks The Spot)", "1 QP (Below Ice Mountain)", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -328,6 +327,12 @@ class OSRSWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -468,7 +473,7 @@ class OSRSWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Quest: Dragon Slayer", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

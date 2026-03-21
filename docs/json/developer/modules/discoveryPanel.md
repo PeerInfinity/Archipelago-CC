@@ -12,28 +12,29 @@
 ## Responsibilities
 
 - **Discovery Mode Toggle:** Checkbox to enable/disable discovery mode
-- **Region Discovery Settings:** Configure when regions are marked discovered (on enter, etc.)
+- **Region Discovery Settings:** Configure when regions are marked discovered (on enter or when an exit is discovered)
 - **Auto-Discovery Options:** Automatically discover locations and exits when regions are entered
-- **Undiscovered Display Settings:** Choose how undiscovered items appear (hidden, placeholders, with/without details)
-- **Discovered Items Display:** Shows organized lists of discovered regions, locations, and exits
+- **Undiscovered Display Settings:** Choose how undiscovered items appear (hidden or placeholders)
+- **Additional Settings:** Show undiscovered region names, click-to-discover region, disable location check UI
+- **Debug Settings Section:** Hidden by default, toggled via "Show Debug Options". Contains click-to-discover location and show undiscovered details settings.
+- **Discovered Items Display:** Shows organized lists of discovered regions, locations, and exits (within the debug container, visible when debug options are shown)
 - **Section Collapsing:** Collapse/expand sections for regions, locations, and exits
-- **Location Click Discovery:** Option to mark locations as discovered when clicked
-- **Debug Operations:** Bulk mark all items as discovered or reset all
+- **Reset Action:** "Reset All Discoveries" button at the bottom with confirmation dialog
 - **Settings Persistence:** Loads/saves discovery settings to settings manager
 - **Real-Time Updates:** Updates UI when discovery state changes
 
 ## Events Published
 
-This module does not publish any events. It is a consumer of discovery events.
+This module does not publish any events directly. It calls `settingsManager.updateSetting()` and `discoveryStateSingleton` toggle methods which trigger events elsewhere.
 
 ## Events Subscribed To
 
 | Event | Handler |
 |-------|---------|
 | `app:readyForUiDataLoad` | Defers initialization until app is ready |
-| `discovery:changed` | Refreshes displayed lists when discovery state changes |
-| `settings:changed` | Updates UI when settings change |
-| `stateManager:rulesLoaded` | Resets panel when new rules are loaded |
+| `discovery:changed` | Refreshes displayed lists when discovery state changes (debounced 100ms) |
+| `settings:changed` | Reloads all `moduleSettings.discovery.*` settings and updates UI |
+| `stateManager:rulesLoaded` | Refreshes display when new rules are loaded (debounced 100ms) |
 
 ## Public Functions
 
@@ -41,7 +42,7 @@ This module does not register public functions. It is purely a UI panel componen
 
 ## Dependencies & Interactions
 
-- **`discoveryStateSingleton`:** Queries discovery state; calls mark functions for bulk discovery
+- **`discoveryStateSingleton`:** Queries discovery state; calls toggle methods for individual items and reset
 - **`stateManager`:** Gets current game data (regions, locations, exits)
 - **`settingsManager`:** Loads and persists discovery mode settings
 - **`eventBus`:** Subscribes to discovery and state manager events
@@ -53,49 +54,67 @@ This module does not register public functions. It is purely a UI panel componen
 
 Controls for discovery mode behavior:
 
-- **Enable Discovery Mode** - Master toggle
-- **Region Discovery Trigger** - When to mark regions discovered
-- **Auto-discover Locations** - Mark locations when region entered
-- **Auto-discover Exits** - Mark exits when region entered
-- **Undiscovered Display** - Hidden, visible as "???", or with details
-- **Click to Discover** - Mark locations discovered on click
+- **Enable Discovery Mode** - Master toggle (Yes/No radio buttons)
+- **Region Discovery Trigger** - "When the region is first entered" (`onEnter`) or "When an exit leading to the region is discovered" (`onExitDiscovered`)
+- **Auto-discover Locations** - Mark locations when region discovered
+- **Auto-discover Exits** - Mark exits when region discovered
+- **Items in Undiscovered Regions** - "Hide entirely" (`hidden`) or "Show as '???'" (`placeholder`)
+- **Show Undiscovered Region Names** - Show real names instead of "???" for regions with discovered exits leading to them
+- **Click Discovers Region** - Clicking an undiscovered region discovers it
+- **Disable Location Check UI** - Prevent location check actions on click
+- **Show Debug Options** - Toggle debug settings and discovery state lists
+
+### Debug Settings (Hidden by Default)
+
+Visible when "Show Debug Options" is enabled:
+
+- **Click Discovers Location** - Clicking an undiscovered location discovers it
+- **Show Undiscovered Details** - Show full details for undiscovered locations
 
 ### Discovered Regions
 
-Lists all regions marked as discovered:
-- Colored indicators showing accessibility status
-- Click to navigate to region in other panels
+Lists all regions with checkboxes:
+- Blue + bold: Start regions (cannot be unchecked)
+- Green: Discovered regions
+- Gray: Undiscovered regions
+- Shows "X / Y discovered" count
 
 ### Discovered Locations
 
-Lists discovered locations grouped by region:
-- Shows parent region for each location
-- Color indicates accessibility status
+Lists all locations with checkboxes:
+- Green: Discovered locations
+- Gray: Undiscovered locations
+- Shows "X / Y discovered" count
 
 ### Discovered Exits
 
 Lists discovered exits grouped by source region:
-- Shows source → target region connection
-- Color indicates accessibility status
+- Shows source → target region connection as "exitName -> connectedRegion"
+- Green: Discovered exits
+- Gray: Undiscovered exits
+- Shows "X / Y discovered" count
 
-### Debug Section
+### Actions Bar
 
-Bulk operations for testing:
-- **Mark All Discovered** - Discover all regions, locations, exits
-- **Reset All** - Clear all discovery state
+- **Reset All Discoveries** button (red styling, confirmation dialog before executing)
 
 ## Settings Keys
 
-The module manages these settings:
+The module manages these settings under the `moduleSettings.discovery.*` prefix:
 
-| Setting | Type | Description |
-|---------|------|-------------|
-| `discoveryMode.enabled` | `boolean` | Master enable/disable |
-| `discoveryMode.regionTrigger` | `string` | When regions are discovered |
-| `discoveryMode.autoDiscoverLocations` | `boolean` | Auto-discover locations |
-| `discoveryMode.autoDiscoverExits` | `boolean` | Auto-discover exits |
-| `discoveryMode.undiscoveredDisplay` | `string` | How to show undiscovered items |
-| `discoveryMode.clickToDiscover` | `boolean` | Click marks as discovered |
+| Setting | Default | Type | Description |
+|---------|---------|------|-------------|
+| `enableDiscoveryMode` | `false` | Boolean | Master enable/disable |
+| `regionDiscoveryTrigger` | `'onEnter'` | String | When regions are discovered |
+| `autoDiscoverLocations` | `false` | Boolean | Auto-discover locations |
+| `autoDiscoverExits` | `false` | Boolean | Auto-discover exits |
+| `undiscoveredDisplay` | `'hidden'` | String | How to show undiscovered items |
+| `showDebugOptions` | `true` | Boolean | Show debug settings and lists |
+| `clickDiscoversLocation` | `true` | Boolean | Click marks location discovered |
+| `clickDiscoversRegion` | `false` | Boolean | Click marks region discovered |
+| `disableLocationCheckUI` | `false` | Boolean | Prevent location check on click |
+| `showUndiscoveredDetails` | `false` | Boolean | Show full details for undiscovered |
+| `showUndiscoveredRegionNames` | `false` | Boolean | Show names for regions with discovered exits |
 
 ## Integration with Discovery System
 
@@ -105,7 +124,9 @@ The Discovery Panel is the primary UI for the discovery feature:
 2. **Discovery Panel** (`discoveryPanel`) - This module; UI for settings and display
 3. **Region Graph** - Respects discovery mode for node visibility
 4. **Locations Panel** - Respects discovery mode for location visibility
-5. **Text Adventure** - Respects discovery mode for descriptions
+5. **Exits Panel** - Respects discovery mode for exit visibility
+6. **Regions Panel** - Respects discovery mode for region/location/exit visibility
+7. **Text Adventure** - Respects discovery mode for descriptions
 
 When discovery mode is enabled:
 - Only discovered regions appear in navigation

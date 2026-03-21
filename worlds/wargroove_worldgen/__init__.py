@@ -107,7 +107,6 @@ class WargrooveWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Spearman", "Wagon", "Mage", "Archer", "Knight", "Ballista", "Golem", "Harpy", "Witch", "Dragon", "Balloon", "Barge", "Merfolk", "Turtle", "Harpoon Ship", "Warship", "Thief", "Rifleman", "Eastern Bridges", "Southern Walls", "Final Bridges", "Final Walls", "Final Sickle", "Income Boost", "Commander Defense Boost", "Cherrystone Commanders", "Felheim Commanders", "Floran Commanders", "Heavensong Commanders", "Requiem Commanders", "Outlaw Commanders"]),
-        "Event": frozenset(["Wargroove Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -214,6 +213,12 @@ class WargrooveWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -354,7 +359,7 @@ class WargrooveWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Wargroove Finale: Victory", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

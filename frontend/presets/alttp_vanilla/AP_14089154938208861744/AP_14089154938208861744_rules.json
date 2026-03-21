@@ -3959,16 +3959,11 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": {
-                          "rule": "OptionValue",
-                          "args": {
-                            "option": "enemy_health"
-                          }
-                        },
+                        "left": 1,
                         "op": "in",
                         "right": [
-                          0,
-                          1
+                          "easy",
+                          "default"
                         ],
                         "_original_ast_type": "compare"
                       },
@@ -21563,7 +21558,12 @@
     }
   },
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Triforce"
+      }
+    }
   },
   "helpers": {
     "1": {

@@ -12,7 +12,7 @@
 
 #### Responsibilities
 
-- **Display Module List:** Fetches the complete list of modules from `modules.json` (via an API provided by `init.js`) and displays them in their `loadPriority` order.
+- **Display Module List:** Fetches the complete list of modules from `module-configs/modules.json` (via an API provided by `init.js`) and displays them in their `loadPriority` order.
 - **Show Module State:** For each module, it displays its name, description, and current enabled/disabled status via a checkbox.
 - **Enable/Disable Modules:** Allows the user to toggle a module's "Enabled" checkbox.
   - **Disabling** a module will destroy its associated Golden Layout panel, effectively removing it from the UI.

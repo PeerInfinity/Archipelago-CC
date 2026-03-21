@@ -21,6 +21,17 @@
     "template_file": "A Hat in Time WorldGen.yaml",
     "world_directory": "ahit_worldgen"
   },
+  "A Hat in Time WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "A Hat in Time WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "A Hat in Time WorldGen2.yaml",
+    "world_directory": "ahit_worldgen2"
+  },
   "A Link to the Past": {
     "exporter_path": "exporter/games/official/alttp.py",
     "exporter_size": 14313,
@@ -43,6 +54,17 @@
     "template_file": "A Link to the Past Vanilla WorldGen.yaml",
     "world_directory": "alttp_vanilla_worldgen"
   },
+  "A Link to the Past Vanilla WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "A Link to the Past Vanilla WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "A Link to the Past Vanilla WorldGen2.yaml",
+    "world_directory": "alttp_vanilla_worldgen2"
+  },
   "A Link to the Past WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -53,6 +75,17 @@
     "has_custom_game_logic": false,
     "template_file": "A Link to the Past WorldGen.yaml",
     "world_directory": "alttp_worldgen"
+  },
+  "A Link to the Past WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "A Link to the Past WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "A Link to the Past WorldGen2.yaml",
+    "world_directory": "alttp_worldgen2"
   },
   "A Short Hike": {
     "exporter_path": null,
@@ -75,6 +108,17 @@
     "has_custom_game_logic": false,
     "template_file": "A Short Hike WorldGen.yaml",
     "world_directory": "shorthike_worldgen"
+  },
+  "A Short Hike WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "A Short Hike WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "A Short Hike WorldGen2.yaml",
+    "world_directory": "shorthike_worldgen2"
   },
   "APQuest": {
     "exporter_path": null,
@@ -131,6 +175,17 @@
     "template_file": "Adventure WorldGen.yaml",
     "world_directory": "adventure_worldgen"
   },
+  "Adventure WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Adventure WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Adventure WorldGen2.yaml",
+    "world_directory": "adventure_worldgen2"
+  },
   "Aquaria": {
     "exporter_path": "exporter/games/official/aquaria.py",
     "exporter_size": 1889,
@@ -185,6 +240,17 @@
     "has_custom_game_logic": false,
     "template_file": "Baking Adventure Vanilla WorldGen.yaml",
     "world_directory": "bakingadventure_vanilla_worldgen"
+  },
+  "Baking Adventure Vanilla WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Baking Adventure Vanilla WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Baking Adventure Vanilla WorldGen2.yaml",
+    "world_directory": "bakingadventure_vanilla_worldgen2"
   },
   "Baking Adventure WorldGen": {
     "exporter_path": null,
@@ -406,6 +472,17 @@
     "template_file": "Coding Adventure Vanilla WorldGen.yaml",
     "world_directory": "codingadventure_vanilla_worldgen"
   },
+  "Coding Adventure Vanilla WorldGen2": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Coding Adventure Vanilla WorldGen2",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Coding Adventure Vanilla WorldGen2.yaml",
+    "world_directory": "codingadventure_vanilla_worldgen2"
+  },
   "Coding Adventure WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -450,17 +527,6 @@
     "template_file": "DOOM 1993.yaml",
     "world_directory": "doom_1993"
   },
-  "DOOM 1993 WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "DOOM 1993 WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "DOOM 1993 WorldGen.yaml",
-    "world_directory": "doom_1993_worldgen"
-  },
   "DOOM II": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -471,17 +537,6 @@
     "has_custom_game_logic": false,
     "template_file": "DOOM II.yaml",
     "world_directory": "doom_ii"
-  },
-  "DOOM II WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "DOOM II WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "DOOM II WorldGen.yaml",
-    "world_directory": "doom_ii_worldgen"
   },
   "Dark Souls III": {
     "exporter_path": null,
@@ -504,6 +559,28 @@
     "has_custom_game_logic": false,
     "template_file": "Dark Souls III WorldGen.yaml",
     "world_directory": "dark_souls_3_worldgen"
+  },
+  "DepGraph": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph.yaml",
+    "world_directory": "depgraph"
+  },
+  "DepGraph WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "DepGraph WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "DepGraph WorldGen.yaml",
+    "world_directory": "depgraph_worldgen"
   },
   "Donkey Kong Country 3": {
     "exporter_path": null,
@@ -637,17 +714,6 @@
     "template_file": "Heretic.yaml",
     "world_directory": "heretic"
   },
-  "Heretic WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Heretic WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Heretic WorldGen.yaml",
-    "world_directory": "heretic_worldgen"
-  },
   "Hollow Knight": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -724,6 +790,17 @@
     "has_custom_game_logic": true,
     "template_file": "Jak and Daxter The Precursor Legacy.yaml",
     "world_directory": "jakanddaxter"
+  },
+  "Journey to Ascension": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Journey to Ascension",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Journey to Ascension.yaml",
+    "world_directory": "jta"
   },
   "Kingdom Hearts": {
     "exporter_path": null,
@@ -857,39 +934,6 @@
     "template_file": "Mario & Luigi Superstar Saga WorldGen.yaml",
     "world_directory": "mlss_worldgen"
   },
-  "Math Adventure": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Math Adventure",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Math Adventure.yaml",
-    "world_directory": "mathadventure"
-  },
-  "Math Adventure Vanilla WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Math Adventure Vanilla WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Math Adventure Vanilla WorldGen.yaml",
-    "world_directory": "mathadventure_vanilla_worldgen"
-  },
-  "Math Adventure WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Math Adventure WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Math Adventure WorldGen.yaml",
-    "world_directory": "mathadventure_worldgen"
-  },
   "Mega Man 2": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -911,6 +955,28 @@
     "has_custom_game_logic": false,
     "template_file": "Mega Man 2 WorldGen.yaml",
     "world_directory": "mm2_worldgen"
+  },
+  "Mega Man 3": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Mega Man 3",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Mega Man 3.yaml",
+    "world_directory": "mm3"
+  },
+  "Mega Man 3 WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Mega Man 3 WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Mega Man 3 WorldGen.yaml",
+    "world_directory": "mm3_worldgen"
   },
   "MegaMan Battle Network 3": {
     "exporter_path": null,
@@ -988,17 +1054,6 @@
     "has_custom_game_logic": false,
     "template_file": "Muse Dash.yaml",
     "world_directory": "musedash"
-  },
-  "Muse Dash WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Muse Dash WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Muse Dash WorldGen.yaml",
-    "world_directory": "musedash_worldgen"
   },
   "Noita": {
     "exporter_path": null,
@@ -1088,17 +1143,6 @@
     "template_file": "Paint.yaml",
     "world_directory": "paint"
   },
-  "Paint WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Paint WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Paint WorldGen.yaml",
-    "world_directory": "paint_worldgen"
-  },
   "Pokemon Emerald": {
     "exporter_path": "exporter/games/official/pokemon_emerald.py",
     "exporter_size": 5358,
@@ -1175,17 +1219,6 @@
     "has_custom_game_logic": false,
     "template_file": "Satisfactory.yaml",
     "world_directory": "satisfactory"
-  },
-  "Satisfactory WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Satisfactory WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Satisfactory WorldGen.yaml",
-    "world_directory": "satisfactory_worldgen"
   },
   "Saving Princess": {
     "exporter_path": null,
@@ -1277,9 +1310,9 @@
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/official/stardew_valley.py",
-    "exporter_size": 19214,
+    "exporter_size": 20489,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
-    "game_logic_size": 8179,
+    "game_logic_size": 10071,
     "game_name": "Stardew Valley",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
@@ -1307,17 +1340,6 @@
     "has_custom_game_logic": false,
     "template_file": "Subnautica WorldGen.yaml",
     "world_directory": "subnautica_worldgen"
-  },
-  "Sudoku": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Sudoku",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Sudoku.yaml",
-    "world_directory": "apsudoku"
   },
   "Super Mario 64": {
     "exporter_path": null,
@@ -1714,5 +1736,16 @@
     "has_custom_game_logic": false,
     "template_file": "shapez.yaml",
     "world_directory": "shapez"
+  },
+  "shapez WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "shapez WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "shapez WorldGen.yaml",
+    "world_directory": "shapez_worldgen"
   }
 }

@@ -84,6 +84,10 @@ def _has_tongue_cleared(state: "CollectionState", player: int) -> bool:
     return state.has('Body Tongue cleared', player)
 
 
+def _is_cathedral_door_opened(state: "CollectionState", player: int) -> bool:
+    return state.has('Door to the Cathedral opened', player)
+
+
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
@@ -131,16 +135,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -148,6 +142,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -226,16 +230,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -243,6 +237,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -311,6 +315,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Abyss right area, transturtle", player),
         Has('Transturtle Abyss right', 1)
     )
@@ -318,11 +327,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Body, final boss area turtle room", player),
         Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
@@ -351,6 +355,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Simon Says area to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Simon Says area to Abyss right area, transturtle", player),
         Has('Transturtle Abyss right', 1)
     )
@@ -358,11 +367,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Simon Says area to The Body, final boss area turtle room", player),
         Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -412,7 +416,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mithalas castle to Mithalas Cathedral start", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+        HelperCall(helper_func=_is_cathedral_door_opened, helper_name="_is_cathedral_door_opened", body_rule=Has("Door to the Cathedral opened"))
     )
 
     world.set_rule(
@@ -433,6 +437,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Mithalas castle spirit crystal to Mithalas castle", player),
         HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral start to Mithalas castle", player),
+        HelperCall(helper_func=_is_cathedral_door_opened, helper_name="_is_cathedral_door_opened", body_rule=Has("Door to the Cathedral opened"))
     )
 
     world.set_rule(
@@ -531,16 +540,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -548,6 +547,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -606,16 +615,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("The Veil top left area to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -623,6 +622,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top left area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top left area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -656,16 +665,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -673,6 +672,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -727,7 +736,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sun Temple right area to Sun Temple left area entrance", player),
-        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_light, helper_name="_has_light"))
+        Or(HelperCall(helper_func=_has_light, helper_name="_has_light"), HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal"))
     )
 
     world.set_rule(
@@ -821,11 +830,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Abyss right area, transturtle to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -833,6 +837,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Abyss right area, transturtle to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
@@ -956,11 +965,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Body, final boss area turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Simon Says area", player),
         Has('Transturtle Simon Says', 1)
     )
@@ -968,6 +972,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Arnassi Ruins cave, transturtle area", player),
         Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Body, final boss area turtle room to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
@@ -1111,6 +1120,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Mithalas City Castle, sitting on the sealed throne", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
         multiworld.get_location("Mithalas Cathedral, Mithalan Dress", player),
         HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
     )
@@ -1172,12 +1186,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, first cliff bulb", player),
-        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), Has('Lumerean God beated'))
     )
 
     world.set_rule(
         multiworld.get_location("Sun Temple boss path, second cliff bulb", player),
-        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), Has('Lumerean God beated'))
     )
 
     world.set_rule(

@@ -29180,7 +29180,6 @@
       "Cancel Auto Scrolls",
       "Coins",
       "Difficulties",
-      "Event",
       "Everything",
       "Golden Coins",
       "Level Progression",
@@ -36254,6 +36253,10 @@
       ],
       "prog_items_init": {
         "COINS": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Wario Defeated"
       }
     }
   },

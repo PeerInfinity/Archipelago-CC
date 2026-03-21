@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   // Directory where your test files are located
-  testDir: './tests/e2e',
+  testDir: './test_json/e2e',
 
   // Timeout for each test (in milliseconds)
   // Default is 300s (5 minutes) to accommodate games with many events (e.g., Yu-Gi-Oh! 2006).

@@ -11,7 +11,7 @@ This document describes the three rule format systems used in this project:
 | Format | Identifier | Origin | Status |
 |--------|------------|--------|--------|
 | AST Format | `type` field | This project's AST analyzer | Internal use |
-| Original Rule Builder | `rule` field | [PR #5048](https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py) | Active development |
+| Original Rule Builder | `rule` field | [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) | Active development |
 | Extended Rule Builder | `rule` field | This fork | Production use |
 
 ---
@@ -331,7 +331,7 @@ These types are produced by the analyzer but rarely appear in practice:
 
 The Rule Builder format was created by drtchops in [Archipelago PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048). It provides a declarative, class-based approach to defining rules.
 
-**Source**: https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py
+**Source**: [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) (original `rules-engine` branch no longer available)
 
 ### General Structure
 
@@ -1004,7 +1004,7 @@ Estimated reduction for typical worldgen world:
 ## References
 
 - Original Rule Builder PR: https://github.com/ArchipelagoMW/Archipelago/pull/5048
-- Active development: https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py
+- Original source branch no longer available
 - AST Analyzer: `exporter/analyzer/`
 - Rule Builder classes: `rule_builder/rules.py`
 - AST format parser: `rule_builder/ast_format.py`

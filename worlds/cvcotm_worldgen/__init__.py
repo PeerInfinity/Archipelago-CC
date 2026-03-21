@@ -126,7 +126,6 @@ class CVCotMWorld(RuleWorldMixin, World):
         "Action": frozenset(["Mercury Card", "Venus Card", "Jupiter Card", "Mars Card", "Diana Card", "Apollo Card", "Neptune Card", "Saturn Card", "Uranus Card", "Pluto Card"]),
         "Action Card": frozenset(["Mercury Card", "Venus Card", "Jupiter Card", "Mars Card", "Diana Card", "Apollo Card", "Neptune Card", "Saturn Card", "Uranus Card", "Pluto Card"]),
         "Freeze Action": frozenset(["Mercury Card", "Mars Card"]),
-        "Event": frozenset(["The Count Downed"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -407,6 +406,12 @@ class CVCotMWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -545,6 +550,24 @@ class CVCotMWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("Dracula", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = CastlevaniaCircleoftheMoonWorldGenItem(
+                "The Count Downed",
+                item_table["The Count Downed"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("The Count Downed", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

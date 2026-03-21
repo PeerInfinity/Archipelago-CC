@@ -237,7 +237,6 @@ class MLSSWorld(RuleWorldMixin, World):
         "Beanfruit": frozenset(["Bean Fruit 1", "Bean Fruit 2", "Bean Fruit 3", "Bean Fruit 4", "Bean Fruit 5", "Bean Fruit 6", "Bean Fruit 7"]),
         "Neon Egg": frozenset(["Blue Neon Egg", "Red Neon Egg", "Green Neon Egg", "Yellow Neon Egg", "Purple Neon Egg", "Orange Neon Egg", "Azure Neon Egg"]),
         "Beanstar Piece": frozenset(["Beanstar Piece 1", "Beanstar Piece 2", "Beanstar Piece 3", "Beanstar Piece 4"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -1380,6 +1379,12 @@ class MLSSWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -1520,7 +1525,7 @@ class MLSSWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Cackletta's Soul", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

@@ -32,6 +32,10 @@ def cloth_capturable(state: "CollectionState", player: int) -> bool:
     return (state.has_all(['Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE'], player)) or (state.has_all(['Cloth Pot Complete', 'Cloth Pot Complete DUPE'], player))
 
 
+def completion_condition(state: "CollectionState", player: int) -> bool:
+    return state.has('Mt. Pleasant Tribune: 45 year Old Mystery Solved!', player)
+
+
 def crystal_capturable(state: "CollectionState", player: int) -> bool:
     return (state.has_all(['Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE'], player)) or (state.has_all(['Crystal Pot Complete', 'Crystal Pot Complete DUPE'], player))
 

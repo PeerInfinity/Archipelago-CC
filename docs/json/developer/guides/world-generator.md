@@ -319,6 +319,104 @@ def generate_early(self) -> None:
 
 Without the `--canonical-seed` flag, the generated world simply creates a randomized item pool for all seeds.
 
+## Name Substitutions
+
+### The Problem
+
+Some Archipelago worlds must use generic names at the class level. For example, the Metamath world registers `"Statement 1"` through `"Statement 1000"` in its class-level `item_name_to_id` because the actual theorem labels aren't known until `generate_early()` runs — and the datapackage contract requires those dicts to be fixed at class definition time.
+
+These generic names work fine for the original world, but when the world generator creates a *new* WorldGen world from the exported JSON, it creates its own datapackage and can use any names it wants. Meaningful names like `"2cn: |- 2 e. CC"` are far more readable than `"Statement 1"`.
+
+### How It Works
+
+The solution has two parts:
+
+**1. The source world publishes `name_substitutions`**
+
+In `generate_early()`, the world builds a dict mapping generic → meaningful names and stores it as an instance attribute:
+
+```python
+from .Items import statement_item_name
+from .Locations import statement_location_name
+
+# In generate_early(), after building the proof structure:
+self.name_substitutions = {"items": {}, "locations": {}, "regions": {}}
+for i, stmt in self.proof_structure.statements.items():
+    generic_item = f"Statement {i}"
+    generic_loc = f"Prove Statement {i}"
+    meaningful_item = statement_item_name(stmt.label, stmt.expression)
+    meaningful_loc = statement_location_name(stmt.label, stmt.expression)
+    if generic_item != meaningful_item:
+        self.name_substitutions["items"][generic_item] = meaningful_item
+    if generic_loc != meaningful_loc:
+        self.name_substitutions["locations"][generic_loc] = meaningful_loc
+        self.name_substitutions["regions"][generic_loc] = meaningful_loc
+```
+
+The exporter auto-discovers this attribute (via `AUTO_DISCOVER_WORLD_ATTRIBUTES`) and includes it in the rules JSON under `world.1.name_substitutions`.
+
+**2. The world generator applies substitutions before extraction**
+
+In `WorldGenerator.load()`, before `extract_all()` processes the JSON, `apply_name_substitutions()` replaces every occurrence of each generic name with its meaningful counterpart. This is done at the raw JSON level so all downstream code — extractors, rule codegen, templates — automatically gets correct names.
+
+### What Gets Substituted
+
+The function walks these JSON sections:
+
+| Section | Item names | Location names | Region names |
+|---------|-----------|----------------|--------------|
+| `items.{player}` | dict keys | — | — |
+| `regions.{player}.*.locations[].name` | — | location names | — |
+| `regions.{player}.*.locations[].item.name` | placed items | — | — |
+| `regions.{player}.*.locations[].access_rule` | rule args | — | — |
+| `regions.{player}.*.exits[].access_rule` | rule args | — | — |
+| `regions.{player}.*.exits[].connected_region` | — | — | region refs |
+| `regions.{player}` (keys) | — | — | dict keys |
+| `canonical_placements.{player}` | values | keys | — |
+| `starting_items.{player}` | list items | — | — |
+| `itempool_counts.{player}` | dict keys | — | — |
+| `game_info.{player}.completion_condition.item` | item name | — | — |
+| `progression_mapping.{player}` | keys + values | — | — |
+| `world.{player}.canonical_placements` | values | keys | — |
+| `world.{player}.location_dependencies` | value lists | keys | — |
+| `world.{player}.entrance_dependencies` | value lists | — | — |
+| `world.{player}.exit_dependencies` | value lists | — | — |
+
+Inside access rules, the function recursively walks the rule tree and substitutes item names in `args.item_name` (used by `Has`, `CountItem`), `args.items` (used by `HasAll`, `HasAny`, `CountFromList`), and `args.item` fields. Compound rules (`And`, `Or`, `Not`, `Compare`) are traversed recursively.
+
+After applying substitutions, the `name_substitutions` key is removed from the world section so it doesn't appear as a world attribute in the generated code.
+
+### Result
+
+Without name substitutions, the generated Metamath WorldGen code looks like:
+
+```python
+# Rules.py
+world.set_rule(
+    multiworld.get_entrance("From 2cn to addassi", player),
+    HasAll('Statement 1', 'Statement 2')
+)
+```
+
+With name substitutions applied:
+
+```python
+# Rules.py
+world.set_rule(
+    multiworld.get_entrance("From 2cn to addassi", player),
+    HasAll('2cn: |- 2 e. CC', 'ax-1cn: |- 1 e. CC')
+)
+```
+
+### When to Use This
+
+Name substitutions are useful when a world:
+- Uses generic/numbered names at the class level due to datapackage constraints
+- Has meaningful names available at runtime (e.g. from parsing game data)
+- Wants WorldGen worlds to use those meaningful names instead
+
+The pattern is general-purpose — any world can publish `name_substitutions` and the world generator will apply them automatically.
+
 ## Rule Caching
 
 Generated worlds have rule caching disabled by default:

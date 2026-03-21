@@ -57,10 +57,10 @@ general_options:
   save_tracker_pickle: true
 ```
 
-Or use the `pickle-mode` preset:
+Or use the `ut-pickle` preset:
 
 ```bash
-python scripts/setup/update_host_settings.py pickle-mode
+python scripts/setup/update_host_settings.py ut-pickle
 ```
 
 ### Loading Pickles
@@ -220,6 +220,12 @@ The handler system uses composition via mixins:
 - **`WorldDataMixin`** - Extract world data (items, regions, options)
 - **`HelperDiscoveryMixin`** - Auto-discover helper functions
 - **`OptionNormalizationMixin`** - Convert options to export format
+
+## World Attribute Auto-Discovery
+
+When `AUTO_DISCOVER_WORLD_ATTRIBUTES` is `True` (the default), the exporter automatically exports simple instance attributes from the world object into the `world.{player}` section of the JSON. This includes dicts, lists, strings, numbers, and booleans set on the world during generation.
+
+One notable use of this is **name substitutions**: if a world sets `self.name_substitutions` (a dict mapping generic names to meaningful names), the exporter includes it in the JSON. The [world generator](../world_generator/README.md#name-substitutions) then applies these substitutions before extraction, so WorldGen worlds get meaningful item/location/region names automatically.
 
 ## Output Format
 

@@ -200,13 +200,13 @@ export class StateManagerProxy {
   initializeWorker() {
     log('info', '[stateManagerProxy] Creating Worker...');
     try {
-      // Determine worker URL - use absolute path in bundled mode since import.meta.url
-      // points to the bundle location, not the original module location
-      // Check if we're in a bundle by looking at import.meta.url (contains /dist/)
-      // We can't use window.__BUNDLED_MODULES__ because it's set after static imports complete
+      // Determine worker URL based on bundled vs unbundled mode.
+      // In bundled mode, import.meta.url points to dist/bundle.js, so we resolve
+      // relative to the page location instead (works for any deployment path).
+      // In unbundled mode, import.meta.url points to this module's actual location.
       const isBundled = import.meta.url.includes('/dist/');
       const workerUrl = isBundled
-        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.origin + '/frontend/')
+        ? new URL('./modules/stateManager/stateManagerWorker.js', window.location.href)
         : new URL('./stateManagerWorker.js', import.meta.url);
 
       log('info', `[stateManagerProxy] Worker URL: ${workerUrl.href} (bundled: ${!!isBundled})`);
@@ -519,8 +519,9 @@ export class StateManagerProxy {
         // console.debug('[stateManagerProxy] Progress update received:', message.detail); // Debug level
         this.eventBus.publish(
           'stateManager:computationProgress',
-          message.detail
-        , 'stateManager');
+          message.detail,
+          'stateManager'
+        );
         break;
       case 'event': // For granular events forwarded from worker
         log(
@@ -639,8 +640,9 @@ export class StateManagerProxy {
       case 'computationProgress':
         this.eventBus.publish(
           'stateManager:computationProgress',
-          message.detail
-        , 'stateManager');
+          message.detail,
+          'stateManager'
+        );
         break;
       case 'eventPublish': // New case for event republishing from worker
         this._handleEventPublish(message);
@@ -901,7 +903,7 @@ export class StateManagerProxy {
         message.payload
       );
       // Potentially publish an event if generic pongs are useful
-      // this.eventBus.publish('stateManager:pongReceived', { payload: message.payload }, 'stateManager');
+      // this.eventBus.publish('stateManager:pongReceived', { payload: message.payload });
     }
   }
 
@@ -1655,6 +1657,15 @@ export class StateManagerProxy {
       StateManagerProxy.COMMANDS.CHECK_LOCATION,
       { locationName, addItems, forceCheck },
       true
+    );
+  }
+
+  async batchCheckLocations(locationNames, addItems = true) {
+    return this._sendCommand(
+      'batchCheckLocations',
+      { locationNames, addItems },
+      true,
+      30000 // 30 second timeout for batch operations
     );
   }
 

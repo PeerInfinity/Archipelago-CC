@@ -112,7 +112,6 @@ class MM2World(RuleWorldMixin, World):
         "Weapons": frozenset(["Atomic Fire", "Air Shooter", "Leaf Shield", "Bubble Lead", "Quick Boomerang", "Time Stopper", "Metal Blade", "Crash Bomber"]),
         "Items": frozenset(["Item 1 - Propeller", "Item 2 - Rocket", "Item 3 - Bouncy"]),
         "Stages": frozenset(["Heat Man Access Codes", "Air Man Access Codes", "Wood Man Access Codes", "Bubble Man Access Codes", "Quick Man Access Codes", "Flash Man Access Codes", "Metal Man Access Codes", "Crash Man Access Codes"]),
-        "Event": frozenset(["Wily Stage 1 - Completed", "Wily Stage 2 - Completed", "Wily Stage 3 - Completed", "Wily Stage 4 - Completed", "Wily Stage 5 - Completed", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -244,6 +243,12 @@ class MM2World(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -384,7 +389,7 @@ class MM2World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Dr. Wily (Alien) - Defeated", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

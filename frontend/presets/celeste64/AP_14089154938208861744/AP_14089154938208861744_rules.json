@@ -2066,7 +2066,23 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "count_check",
+            "item": "Strawberry",
+            "count": 16
+          },
+          {
+            "type": "can_reach",
+            "region": "Badeline Island",
+            "resolution": "Region"
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

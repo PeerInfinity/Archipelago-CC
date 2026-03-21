@@ -14,35 +14,35 @@
         "name": "Menu",
         "exits": [
           {
-            "name": "To Statement 1",
+            "name": "To 2cn",
             "connected_region": "Prove Statement 1",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To Statement 2",
+            "name": "To ax-1cn",
             "connected_region": "Prove Statement 2",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To Statement 4",
+            "name": "To df-2",
             "connected_region": "Prove Statement 4",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To Statement 5",
+            "name": "To df-3",
             "connected_region": "Prove Statement 5",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "To Statement 6",
+            "name": "To df-4",
             "connected_region": "Prove Statement 6",
             "access_rule": {
               "rule": "True_"
@@ -55,14 +55,15 @@
         "name": "Prove Statement 1",
         "exits": [
           {
-            "name": "From Statement 1 to Statement 3",
+            "name": "From 2cn to addassi",
             "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 1",
-                  "Statement 2"
+                  "Proved Statement 1",
+                  "Proved Statement 2",
+                  "Statement 1"
                 ]
               }
             }
@@ -74,13 +75,14 @@
         "name": "Prove Statement 2",
         "exits": [
           {
-            "name": "From Statement 2 to Statement 3",
+            "name": "From ax-1cn to addassi",
             "connected_region": "Prove Statement 3",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 1",
+                  "Proved Statement 1",
+                  "Proved Statement 2",
                   "Statement 2"
                 ]
               }
@@ -95,12 +97,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 2",
+              "name": "Statement 3",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 2",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -108,15 +125,16 @@
         "name": "Prove Statement 3",
         "exits": [
           {
-            "name": "From Statement 3 to Statement 8",
+            "name": "From addassi to 3eqtri",
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 3",
-                  "Statement 6",
-                  "Statement 7"
+                  "Proved Statement 3",
+                  "Proved Statement 6",
+                  "Proved Statement 7",
+                  "Statement 3"
                 ]
               }
             }
@@ -127,21 +145,30 @@
             "name": "Prove Statement 3",
             "id": 234790003,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Statement 1",
-                  "Statement 2"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Statement 3",
+              "name": "Statement 4",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 3",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -149,12 +176,15 @@
         "name": "Prove Statement 4",
         "exits": [
           {
-            "name": "From Statement 4 to Statement 9",
+            "name": "From df-2 to oveq2i",
             "connected_region": "Prove Statement 9",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Statement 4"
+                "items": [
+                  "Proved Statement 4",
+                  "Statement 4"
+                ]
               }
             }
           }
@@ -167,12 +197,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 4",
+              "name": "Statement 6",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 4",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -180,12 +225,15 @@
         "name": "Prove Statement 5",
         "exits": [
           {
-            "name": "From Statement 5 to Statement 7",
+            "name": "From df-3 to oveq1i",
             "connected_region": "Prove Statement 7",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Statement 5"
+                "items": [
+                  "Proved Statement 5",
+                  "Statement 5"
+                ]
               }
             }
           }
@@ -198,12 +246,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "Statement 7",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 5",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -211,15 +274,16 @@
         "name": "Prove Statement 6",
         "exits": [
           {
-            "name": "From Statement 6 to Statement 8",
+            "name": "From df-4 to 3eqtri",
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 3",
-                  "Statement 6",
-                  "Statement 7"
+                  "Proved Statement 3",
+                  "Proved Statement 6",
+                  "Proved Statement 7",
+                  "Statement 6"
                 ]
               }
             }
@@ -233,12 +297,27 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 6",
+              "name": "Statement 8",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 6",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -246,14 +325,15 @@
         "name": "Prove Statement 7",
         "exits": [
           {
-            "name": "From Statement 7 to Statement 8",
+            "name": "From oveq1i to 3eqtri",
             "connected_region": "Prove Statement 8",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 3",
-                  "Statement 6",
+                  "Proved Statement 3",
+                  "Proved Statement 6",
+                  "Proved Statement 7",
                   "Statement 7"
                 ]
               }
@@ -265,18 +345,30 @@
             "name": "Prove Statement 7",
             "id": 234790007,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Statement 5"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Statement 7",
+              "name": "Statement 2",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 7",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -284,14 +376,15 @@
         "name": "Prove Statement 8",
         "exits": [
           {
-            "name": "From Statement 8 to Statement 10",
+            "name": "From 3eqtri to eqtr4i",
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 8",
-                  "Statement 9"
+                  "Proved Statement 8",
+                  "Proved Statement 9",
+                  "Statement 8"
                 ]
               }
             }
@@ -302,22 +395,30 @@
             "name": "Prove Statement 8",
             "id": 234790008,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Statement 3",
-                  "Statement 6",
-                  "Statement 7"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Statement 8",
+              "name": "Statement 9",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 8",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -325,13 +426,14 @@
         "name": "Prove Statement 9",
         "exits": [
           {
-            "name": "From Statement 9 to Statement 10",
+            "name": "From oveq2i to eqtr4i",
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Statement 8",
+                  "Proved Statement 8",
+                  "Proved Statement 9",
                   "Statement 9"
                 ]
               }
@@ -343,18 +445,30 @@
             "name": "Prove Statement 9",
             "id": 234790009,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Statement 4"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Statement 9",
+              "name": "Statement 5",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
+          },
+          {
+            "name": "Proved Statement 9",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -366,13 +480,7 @@
             "name": "Prove Statement 10",
             "id": 234790010,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Statement 8",
-                  "Statement 9"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Statement 10",
@@ -381,6 +489,21 @@
               "type": "None"
             },
             "locked": true
+          },
+          {
+            "name": "Proved Statement 10",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Proved Statement 10",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -503,94 +626,6 @@
           "Statements"
         ],
         "classification": "progression",
-        "type": null,
-        "max_count": 1
-      },
-      "QED Moment": {
-        "name": "QED Moment",
-        "id": 234791992,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Inference Help": {
-        "name": "Inference Help",
-        "id": 234791993,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Deduction Tip": {
-        "name": "Deduction Tip",
-        "id": 234791994,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Theorem Insight": {
-        "name": "Theorem Insight",
-        "id": 234791995,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Lemma Note": {
-        "name": "Lemma Note",
-        "id": 234791996,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Axiom Reference": {
-        "name": "Axiom Reference",
-        "id": 234791997,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Logic Guide": {
-        "name": "Logic Guide",
-        "id": 234791998,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
-        "type": null,
-        "max_count": 1
-      },
-      "Proof Hint": {
-        "name": "Proof Hint",
-        "id": 234791999,
-        "groups": [
-          "Everything",
-          "Hints"
-        ],
-        "classification": "filler",
         "type": null,
         "max_count": 1
       },
@@ -1583,18 +1618,135 @@
         "classification": "filler",
         "type": null,
         "max_count": 1
+      },
+      "Proved Statement 2": {
+        "name": "Proved Statement 2",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 3": {
+        "name": "Proved Statement 3",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 4": {
+        "name": "Proved Statement 4",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 5": {
+        "name": "Proved Statement 5",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 6": {
+        "name": "Proved Statement 6",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 7": {
+        "name": "Proved Statement 7",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 8": {
+        "name": "Proved Statement 8",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 9": {
+        "name": "Proved Statement 9",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 10": {
+        "name": "Proved Statement 10",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Proved Statement 1": {
+        "name": "Proved Statement 1",
+        "id": null,
+        "groups": [],
+        "classification": "progression",
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },
   "item_groups": {
     "1": [
       "Everything",
-      "Hints",
       "Statements"
     ]
   },
   "itempool_counts": {
     "1": {
+      "Proved Statement 1": 1,
+      "Proved Statement 10": 1,
+      "Proved Statement 2": 1,
+      "Proved Statement 3": 1,
+      "Proved Statement 4": 1,
+      "Proved Statement 5": 1,
+      "Proved Statement 6": 1,
+      "Proved Statement 7": 1,
+      "Proved Statement 8": 1,
+      "Proved Statement 9": 1,
       "Statement 1": 1,
       "Statement 10": 1,
       "Statement 2": 1,
@@ -1608,14 +1760,24 @@
     }
   },
   "canonical_placements": {
-    "1": {}
+    "1": {
+      "Prove Statement 2": "Statement 2",
+      "Prove Statement 3": "Statement 3",
+      "Prove Statement 4": "Statement 4",
+      "Prove Statement 5": "Statement 5",
+      "Prove Statement 6": "Statement 6",
+      "Prove Statement 7": "Statement 7",
+      "Prove Statement 8": "Statement 8",
+      "Prove Statement 9": "Statement 9"
+    }
   },
   "progression_mapping": {
     "1": {}
   },
   "starting_items": {
     "1": [
-      "Statement 1"
+      "Statement 1",
+      "Proved Statement 1"
     ]
   },
   "world": {
@@ -1625,7 +1787,7 @@
       "options": {
         "accessibility": 0,
         "auto_download_database": true,
-        "complexity": 1,
+        "entrance_rule_mode": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1633,12 +1795,14 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
+        "randomize_starting_statements": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "starting_statements": 0,
-        "theorem": 1
+        "theorem": 1,
+        "vanilla_placement": false
       },
       "option_definitions": {
         "accessibility": {
@@ -1655,15 +1819,16 @@
           "default": true,
           "display_name": "Auto-Download Database"
         },
-        "complexity": {
+        "entrance_rule_mode": {
           "type": "choice",
           "name_lookup": {
-            "0": "simple",
-            "1": "moderate",
-            "2": "complex"
+            "0": "strict",
+            "1": "relaxed_items",
+            "2": "relaxed_events",
+            "3": "fully_relaxed"
           },
           "default": 1,
-          "display_name": "Proof Complexity"
+          "display_name": "Entrance Rule Mode"
         },
         "progression_balancing": {
           "type": "range",
@@ -1676,6 +1841,11 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "randomize_starting_statements": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Starting Statements"
         },
         "starting_statements": {
           "type": "range",
@@ -1708,10 +1878,17 @@
             "18": "sin0",
             "19": "euclemma",
             "20": "wilth",
+            "22": "prmunb",
+            "23": "cncmp",
             "21": "dfac5"
           },
           "default": 1,
           "display_name": "Theorem to Prove"
+        },
+        "vanilla_placement": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Vanilla Item Placement"
         }
       },
       "proof_structure": {
@@ -1729,103 +1906,237 @@
         }
       },
       "num_statements": 10,
+      "preset_label": "2p2e4 s1",
+      "name_substitutions": {
+        "items": {
+          "Statement 1": "2cn: |- 2 e. CC",
+          "Proved Statement 1": "Given 2cn: |- 2 e. CC",
+          "Statement 2": "ax-1cn: |- 1 e. CC",
+          "Proved Statement 2": "Axiom ax-1cn: |- 1 e. CC",
+          "Statement 3": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved Statement 3": "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Statement 4": "df-2: |- 2 = ( 1 + 1 )",
+          "Proved Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
+          "Statement 5": "df-3: |- 3 = ( 2 + 1 )",
+          "Proved Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
+          "Statement 6": "df-4: |- 4 = ( 3 + 1 )",
+          "Proved Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
+          "Statement 7": "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved Statement 7": "Proved oveq1i: |- ( A F C ) = ( B F C )",
+          "Statement 8": "3eqtri: |- A = D",
+          "Proved Statement 8": "Proved 3eqtri: |- A = D",
+          "Statement 9": "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved Statement 9": "Proved oveq2i: |- ( C F A ) = ( C F B )",
+          "Statement 10": "eqtr4i: |- A = C",
+          "Proved Statement 10": "Proved eqtr4i: |- A = C"
+        },
+        "locations": {
+          "Prove Statement 1": "Given 2cn: |- 2 e. CC",
+          "Prove Statement 2": "Axiom ax-1cn: |- 1 e. CC",
+          "Prove Statement 3": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Prove Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
+          "Prove Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
+          "Prove Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
+          "Prove Statement 7": "Prove oveq1i: |- ( A F C ) = ( B F C )",
+          "Prove Statement 8": "Prove 3eqtri: |- A = D",
+          "Prove Statement 9": "Prove oveq2i: |- ( C F A ) = ( C F B )",
+          "Prove Statement 10": "Prove eqtr4i: |- A = C"
+        },
+        "regions": {
+          "Prove Statement 1": "Given 2cn: |- 2 e. CC",
+          "Prove Statement 2": "Axiom ax-1cn: |- 1 e. CC",
+          "Prove Statement 3": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Prove Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
+          "Prove Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
+          "Prove Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
+          "Prove Statement 7": "Prove oveq1i: |- ( A F C ) = ( B F C )",
+          "Prove Statement 8": "Prove 3eqtri: |- A = D",
+          "Prove Statement 9": "Prove oveq2i: |- ( C F A ) = ( C F B )",
+          "Prove Statement 10": "Prove eqtr4i: |- A = C"
+        }
+      },
+      "canonical_placements": {
+        "Prove Statement 2": "Statement 2",
+        "Prove Statement 3": "Statement 3",
+        "Prove Statement 4": "Statement 4",
+        "Prove Statement 5": "Statement 5",
+        "Prove Statement 6": "Statement 6",
+        "Prove Statement 7": "Statement 7",
+        "Prove Statement 8": "Statement 8",
+        "Prove Statement 9": "Statement 9"
+      },
       "location_dependencies": {
         "Prove Statement 3": [
           "Statement 1",
-          "Statement 2"
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
+        ],
+        "Proved Statement 3": [
+          "Statement 1",
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
         ],
         "Prove Statement 7": [
-          "Statement 5"
+          "Statement 5",
+          "Proved Statement 5"
+        ],
+        "Proved Statement 7": [
+          "Statement 5",
+          "Proved Statement 5"
         ],
         "Prove Statement 8": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
+        ],
+        "Proved Statement 8": [
+          "Statement 3",
+          "Proved Statement 3",
+          "Statement 6",
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
         "Prove Statement 9": [
-          "Statement 4"
+          "Statement 4",
+          "Proved Statement 4"
+        ],
+        "Proved Statement 9": [
+          "Statement 4",
+          "Proved Statement 4"
         ],
         "Prove Statement 10": [
           "Statement 8",
-          "Statement 9"
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
+        ],
+        "Proved Statement 10": [
+          "Statement 8",
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
         ]
       },
       "entrance_dependencies": {
-        "From Statement 1 to Statement 3": [
+        "From 2cn to addassi": [
           "Statement 1",
-          "Statement 2"
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
         ],
-        "From Statement 2 to Statement 3": [
+        "From ax-1cn to addassi": [
           "Statement 1",
-          "Statement 2"
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
         ],
-        "From Statement 5 to Statement 7": [
-          "Statement 5"
+        "From df-3 to oveq1i": [
+          "Statement 5",
+          "Proved Statement 5"
         ],
-        "From Statement 3 to Statement 8": [
+        "From addassi to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 6 to Statement 8": [
+        "From df-4 to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 7 to Statement 8": [
+        "From oveq1i to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 4 to Statement 9": [
-          "Statement 4"
+        "From df-2 to oveq2i": [
+          "Statement 4",
+          "Proved Statement 4"
         ],
-        "From Statement 8 to Statement 10": [
+        "From 3eqtri to eqtr4i": [
           "Statement 8",
-          "Statement 9"
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
         ],
-        "From Statement 9 to Statement 10": [
+        "From oveq2i to eqtr4i": [
           "Statement 8",
-          "Statement 9"
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
         ]
       },
       "exit_dependencies": {
-        "From Statement 1 to Statement 3": [
+        "From 2cn to addassi": [
           "Statement 1",
-          "Statement 2"
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
         ],
-        "From Statement 2 to Statement 3": [
+        "From ax-1cn to addassi": [
           "Statement 1",
-          "Statement 2"
+          "Proved Statement 1",
+          "Statement 2",
+          "Proved Statement 2"
         ],
-        "From Statement 3 to Statement 8": [
+        "From addassi to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 4 to Statement 9": [
-          "Statement 4"
+        "From df-2 to oveq2i": [
+          "Statement 4",
+          "Proved Statement 4"
         ],
-        "From Statement 5 to Statement 7": [
-          "Statement 5"
+        "From df-3 to oveq1i": [
+          "Statement 5",
+          "Proved Statement 5"
         ],
-        "From Statement 6 to Statement 8": [
+        "From df-4 to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 7 to Statement 8": [
+        "From oveq1i to 3eqtri": [
           "Statement 3",
+          "Proved Statement 3",
           "Statement 6",
-          "Statement 7"
+          "Proved Statement 6",
+          "Statement 7",
+          "Proved Statement 7"
         ],
-        "From Statement 8 to Statement 10": [
+        "From 3eqtri to eqtr4i": [
           "Statement 8",
-          "Statement 9"
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
         ],
-        "From Statement 9 to Statement 10": [
+        "From oveq2i to eqtr4i": [
           "Statement 8",
-          "Statement 9"
+          "Proved Statement 8",
+          "Statement 9",
+          "Proved Statement 9"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
@@ -1835,40 +2146,42 @@
             "label": "2cn",
             "expression": "|- 2 e. CC",
             "dependencies": [],
-            "full_text": "2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.) (|- 2 e. CC)"
+            "full_text": "2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.)"
           },
           "2": {
             "label": "ax-1cn",
             "expression": "|- 1 e. CC",
             "dependencies": [],
-            "full_text": "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.) (|- 1 e. CC)"
+            "full_text": "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.)"
           },
           "3": {
             "label": "addassi",
             "expression": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "dependencies": [
               1,
+              2,
               2
             ],
-            "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))"
+            "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.)",
+            "instantiated_expression": "|- ( ( 2 + 1 ) + 1 ) = ( 2 + ( 1 + 1 ) )"
           },
           "4": {
             "label": "df-2",
             "expression": "|- 2 = ( 1 + 1 )",
             "dependencies": [],
-            "full_text": "df-2: Define the number 2.  (Contributed by NM, 27-May-1999.) (|- 2 = ( 1 + 1 ))"
+            "full_text": "df-2: Define the number 2.  (Contributed by NM, 27-May-1999.)"
           },
           "5": {
             "label": "df-3",
             "expression": "|- 3 = ( 2 + 1 )",
             "dependencies": [],
-            "full_text": "df-3: Define the number 3.  (Contributed by NM, 27-May-1999.) (|- 3 = ( 2 + 1 ))"
+            "full_text": "df-3: Define the number 3.  (Contributed by NM, 27-May-1999.)"
           },
           "6": {
             "label": "df-4",
             "expression": "|- 4 = ( 3 + 1 )",
             "dependencies": [],
-            "full_text": "df-4: Define the number 4.  (Contributed by NM, 27-May-1999.) (|- 4 = ( 3 + 1 ))"
+            "full_text": "df-4: Define the number 4.  (Contributed by NM, 27-May-1999.)"
           },
           "7": {
             "label": "oveq1i",
@@ -1876,7 +2189,8 @@
             "dependencies": [
               5
             ],
-            "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))"
+            "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.)",
+            "instantiated_expression": "|- ( 3 + 1 ) = ( ( 2 + 1 ) + 1 )"
           },
           "8": {
             "label": "3eqtri",
@@ -1886,7 +2200,8 @@
               6,
               7
             ],
-            "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
+            "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.)",
+            "instantiated_expression": "|- 4 = ( 2 + ( 1 + 1 ) )"
           },
           "9": {
             "label": "oveq2i",
@@ -1894,7 +2209,8 @@
             "dependencies": [
               4
             ],
-            "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))"
+            "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.)",
+            "instantiated_expression": "|- ( 2 + 2 ) = ( 2 + ( 1 + 1 ) )"
           },
           "10": {
             "label": "eqtr4i",
@@ -1903,14 +2219,16 @@
               8,
               9
             ],
-            "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)"
+            "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.)",
+            "instantiated_expression": "|- ( 2 + 2 ) = 4"
           }
         },
         "starting_statements": [
           1
         ],
         "theorem": "2p2e4",
-        "randomize_items": false
+        "randomize_items": 1,
+        "vanilla_placement": 0
       },
       "web": {
         "theme": "grass",
@@ -1932,7 +2250,13 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Proved Statement 10"
+      }
+    }
   },
-  "helpers": {}
+  "helpers": {},
+  "preset_label": "2p2e4 s1"
 }

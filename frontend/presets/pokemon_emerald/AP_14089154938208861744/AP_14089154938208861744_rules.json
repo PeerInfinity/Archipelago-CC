@@ -45403,6 +45403,11 @@
         "blind_trainers": false,
         "death_link": false,
         "dexsanity": false,
+        "dexsanity_encounter_types": [
+          "Fishing",
+          "Water",
+          "Land"
+        ],
         "double_battle_chance": 0,
         "easter_egg": "EMERALD SECRET",
         "elite_four_count": 8,
@@ -46259,6 +46264,10 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "EVENT_DEFEAT_CHAMPION"
+      },
       "hm_requirements": {
         "HM01 Cut": [
           "Stone Badge"

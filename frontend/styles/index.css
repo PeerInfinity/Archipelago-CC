@@ -615,6 +615,12 @@ select:hover {
   opacity: 0.8;
 }
 
+.exit-item.undiscovered,
+.location-item.undiscovered,
+.entrance-item.undiscovered {
+  opacity: 0.5;
+}
+
 #regions-panel {
   flex-grow: 1;
   overflow-y: auto;

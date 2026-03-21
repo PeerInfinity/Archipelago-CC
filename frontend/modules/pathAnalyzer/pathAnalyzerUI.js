@@ -4,7 +4,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { PathAnalyzerLogic } from './pathAnalyzerLogic.js';
 import commonUI from '../commonUI/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import loopState from '../loops/loopStateSingleton.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
@@ -25,6 +25,7 @@ function log(level, message, ...data) {
  */
 export class PathAnalyzerUI {
   constructor(regionUI, pathAnalyzerSettings = null) {
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.regionUI = regionUI;
 
     // If specific settings provided, use them; otherwise use defaults from settingsManager
@@ -323,7 +324,7 @@ export class PathAnalyzerUI {
     if (this.settingsUnsubscribe) {
       this.settingsUnsubscribe();
     }
-    this.settingsUnsubscribe = eventBus.subscribe(
+    this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       ({ key, value }) => {
         if (key === '*' || key.startsWith('colorblindMode')) {
@@ -336,7 +337,7 @@ export class PathAnalyzerUI {
           }
         }
       }
-    , 'pathAnalyzer');
+    );
   }
 
   dispose() {

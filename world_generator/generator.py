@@ -11,7 +11,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 
-from .extractors import extract_all, ExtractedData, sanitize_identifier
+from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
     generate_items_py,
     generate_locations_py,
@@ -41,6 +41,7 @@ class WorldGenerator:
         force: bool = False,
         canonical_seed: Optional[int] = None,
         player_id: str = '1',
+        apply_name_substitutions: bool = False,
     ):
         """
         Initialize the generator.
@@ -52,12 +53,14 @@ class WorldGenerator:
             force: If True, overwrite existing files
             canonical_seed: If set, generated world will place items in original locations when seed matches this value
             player_id: Player ID to extract from multiworld rules file (default: '1')
+            apply_name_substitutions: If True, apply name_substitutions from the rules file (default: False)
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
         self.force = force
         self.canonical_seed = canonical_seed
         self.player_id = player_id
+        self.apply_name_substitutions = apply_name_substitutions
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -82,6 +85,10 @@ class WorldGenerator:
 
         with open(self.json_path, 'r') as f:
             json_data = json.load(f)
+
+        # Apply name substitutions if present (e.g. Metamath generic → meaningful names)
+        if self.apply_name_substitutions:
+            apply_name_substitutions(json_data, player_id=self.player_id)
 
         self.data = extract_all(json_data, player_id=self.player_id)
 
@@ -278,28 +285,22 @@ class WorldGenerator:
         # self.data is guaranteed non-None when this method is called from generate()
         assert self.data is not None
 
-        # Create a basic setup_en.md
-        setup_md = docs_dir / 'setup_en.md'
-        if not setup_md.exists() or self.force:
-            setup_content = f"""# {self.data.metadata.game_name} Setup Guide
+        # Create a doc file for each tutorial referenced in the metadata
+        tutorial_files_created = set()
+        for tutorial in self.data.metadata.web_tutorials:
+            if tutorial.file_name and tutorial.file_name not in tutorial_files_created:
+                tutorial_md = docs_dir / tutorial.file_name
+                if not tutorial_md.exists() or self.force:
+                    tutorial_content = f"# {tutorial.name}\n\n{tutorial.description}\n"
+                    tutorial_md.write_text(tutorial_content)
+                tutorial_files_created.add(tutorial.file_name)
 
-## Required Software
-
-- Archipelago client
-
-## Installation
-
-1. Download the game's .apworld file
-2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with {self.data.metadata.game_name}
-
-## Joining a Game
-
-1. Open the Archipelago client
-2. Connect to the server
-3. Start playing!
-"""
-            setup_md.write_text(setup_content)
+        # Create setup_en.md if no tutorials created it
+        if 'setup_en.md' not in tutorial_files_created:
+            setup_md = docs_dir / 'setup_en.md'
+            if not setup_md.exists() or self.force:
+                setup_content = f"# {self.data.metadata.game_name} Setup Guide\n\nGenerated world package.\n"
+                setup_md.write_text(setup_content)
 
         # Create game info file (en_GameName.md) for WebHost integration
         game_info_md = docs_dir / f'en_{self.data.metadata.game_name}.md'
