@@ -6,7 +6,6 @@ process of converting a JSON rules file into an Archipelago world package.
 """
 
 import json
-import os
 import logging
 from pathlib import Path
 from typing import List, Optional, Dict
@@ -211,13 +210,6 @@ class WorldGenerator:
             '__init__.py': generate_init_py(self.data, canonical_seed=self.canonical_seed),
         }
 
-        # Write __init__.py first to prevent race conditions with parallel workers.
-        # The exporter's _cleanup_empty_worldgen_dirs() deletes worldgen directories
-        # that lack __init__.py. By writing it immediately after directory creation,
-        # we prevent another worker's cleanup from deleting our directory.
-        if not dry_run:
-            self._write_file(output_dir / '__init__.py', files['__init__.py'])
-
         # Generate archipelago.json manifest for apworld packaging compatibility
         manifest = {
             "game": self.data.metadata.game_name,
@@ -227,7 +219,6 @@ class WorldGenerator:
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
-            output_dir.mkdir(parents=True, exist_ok=True)
             manifest_path.write_text(json.dumps(manifest, indent=4))
             logger.info(f"Wrote manifest to {manifest_path}")
         else:
@@ -245,7 +236,6 @@ class WorldGenerator:
         if options_data:
             options_path = output_dir / '_worldgen_options.json'
             if not dry_run:
-                output_dir.mkdir(parents=True, exist_ok=True)
                 options_path.write_text(json.dumps(options_data, indent=2))
                 logger.info(f"Wrote worldgen options to {options_path}")
 
@@ -259,8 +249,6 @@ class WorldGenerator:
                 print('='*60)
                 print(content[:500] + ('...' if len(content) > 500 else ''))
             else:
-                # __init__.py was already written above, but _write_file
-                # will overwrite it (same content) which is fine
                 self._write_file(file_path, content)
 
         if not dry_run:
@@ -324,11 +312,6 @@ class WorldGenerator:
         if file_path.exists() and not self.force:
             logger.warning(f"Skipping existing file: {file_path}")
             return
-
-        # Ensure parent directory exists. During parallel fuzzer runs, the
-        # exporter's _cleanup_empty_worldgen_dirs() may delete our directory
-        # between _create_directory_structure() and file writes.
-        file_path.parent.mkdir(parents=True, exist_ok=True)
 
         logger.info(f"Writing: {file_path}")
         file_path.write_text(content)
