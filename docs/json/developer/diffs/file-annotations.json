@@ -216,6 +216,12 @@
                 {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-minor-fixes.diff"}
             ]
         },
+        "worlds/shapez/__init__.py": {
+            "description": "Removed forced `early_balancer_tunnel_and_trash = 0` override during UT regeneration that made UT more permissive than the server.",
+            "links": [
+                {"title": "Diff", "path": "docs/json/developer/diffs/diff-files/world-minor-fixes.diff"}
+            ]
+        },
 
         "_section: Changed Files - World Init (skip_required_files)": "",
 

@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-03-19 03:44:41 UTC
+**Generated:** 2026-03-21 18:02:52 UTC
 
-**Source Data Created:** 2026-03-19T01:36:50.061993+00:00
+**Source Data Created:** 2026-03-21T18:02:51.077563+00:00
 
-**Source Data Last Updated:** 2026-03-19T01:36:50.062002+00:00
+**Source Data Last Updated:** 2026-03-21T18:02:51.077575+00:00
 
 ## Summary
 
 - **Total Games:** 88
-- **Passed:** 75 (85.2%)
-- **Failed:** 13 (14.8%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 78 (88.6%)
+- **Failed:** 10 (11.4%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 39/75 (52.0% of passed)
-- **Passing with Generic Logic:** 68/75 (90.7% of passed)
-- **Passing with Both Generic:** 39/75 (52.0% of passed)
+- **Passing with Generic Exporter:** 41/78 (52.6% of passed)
+- **Passing with Generic Logic:** 70/78 (89.7% of passed)
+- **Passing with Both Generic:** 41/78 (52.6% of passed)
 
 ## Test Results
 
@@ -55,7 +55,7 @@
 | DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 13/13 | ✅ | 42/42 | 1.2KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
-| Dark Souls III | ❌ Failed | 0 | ❌ | 305/1194 | 301/1190 | 4/4 | ❌ | 735/1194 | ✅ | ✅ |
+| Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | ✅ | ✅ |
 | DepGraph | ✅ Passed | 0 | ✅ | 120/120 | 60/60 | 60/60 | ✅ | 120/120 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
 | EarthBound | ✅ Passed | 0 | ✅ | 265/265 | 251/251 | 14/14 | ✅ | 265/265 | ✅ | ✅ |
@@ -67,7 +67,7 @@
 | Hollow Knight | ❌ Failed | 1 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 148/239 | 148/239 | 0/0 | ❌ | 145/239 | 21.7KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 180/239 | 180/239 | 0/0 | ❌ | 180/239 | 21.7KB | 4.6KB |
 | Journey to Ascension | ✅ Passed | 0 | ✅ | 22/22 | 21/21 | 1/1 | ✅ | 22/22 | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 20.4KB | ✅ |
@@ -78,6 +78,7 @@
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | ✅ | ✅ |
+| Mega Man 3 | ✅ Passed | 0 | ✅ | 75/75 | 64/64 | 11/11 | ✅ | 75/75 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | ✅ | 18/18 | 9/9 | 9/9 | ✅ | 18/18 | ✅ | ✅ |
@@ -87,10 +88,10 @@
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
-| Pokemon Emerald | ❌ Failed | 0 | ❌ | 885/1061 | 128/194 | 757/867 | ❌ | 1040/1061 | 5.2KB | 8.7KB |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 502/1010 | 86/161 | 412/845 | ❌ | 670/1010 | 12.2KB | 13.0KB |
+| Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061/1061 | 194/194 | 867/867 | ✅ | 1061/1061 | 5.2KB | 8.7KB |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 962/1010 | 153/161 | 805/845 | ❌ | 960/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
-| Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
+| Risk of Rain 2 | ✅ Passed | 0 | ✅ | 189/189 | 187/187 | 2/2 | ✅ | 189/189 | ✅ | ✅ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 107/316 | 107/316 | 0/0 | ❌ | 105/316 | 54.2KB | 51.3KB |
 | Satisfactory | ✅ Passed | 0 | ✅ | 555/555 | 377/377 | 178/178 | ✅ | 555/555 | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
@@ -98,21 +99,20 @@
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 29.3KB | 90.1KB |
-| Stardew Valley | ❌ Failed | 0 | ❌ | 113/489 | 111/472 | 2/17 | ❌ | 145/489 | 20.0KB | 9.8KB |
+| Stardew Valley | ❌ Failed | 0 | ✅ | 489/489 | 472/472 | 17/17 | ❌ | 85/489 | 20.0KB | 9.8KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
-| Sudoku | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ✅ | 0/0 | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.6KB | ✅ |
-| TOEM rule builder | ❌ Failed | 1 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.5KB | ✅ |
+| TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 16.9KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 7.0KB | ✅ |
-| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 14.2KB | ✅ |
+| The Witness | ❌ Failed | 0 | ❌ | 98/247 | 51/168 | 47/79 | ❌ | 95/247 | 14.2KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.8KB | ✅ |
@@ -122,6 +122,15 @@
 | Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.3KB | 21.4KB |
 | Zillion | ❌ Failed | 0 | ❌ | 0/147 | 0/147 | 0/0 | ❌ | 0/147 | ✅ | ✅ |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
+
+## Intermittent Failures
+
+These tests were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Pokemon Emerald | 1 | 2026-03-21 17:39 | Previously failed, now passing |
+
 
 ## Notes
 
