@@ -37,13 +37,12 @@ These files are only modified in the fork. Upstream hasn't touched them, so ther
 | File | Fork change |
 |------|------------|
 | `.gitattributes` | Added `merge=ours` strategy |
-| `.github/pyright-config.json` | Removed 3 exclude entries |
 | `.github/workflows/codeql-analysis.yml` | Added explicit permissions |
 | `pytest.ini` | Added `test_json` to testpaths |
 | `settings.py` | `skip_required_files` support |
 
 If upstream does touch any of these in a future merge, use the diff files to understand the fork changes:
-- `diff-files/config-files.diff` covers `.gitattributes`, `.github/pyright-config.json`, `.github/workflows/codeql-analysis.yml`, `pytest.ini`
+- `diff-files/config-files.diff` covers `.gitattributes`, `.github/workflows/codeql-analysis.yml`, `pytest.ini`
 - `diff-files/core-files.diff` covers `settings.py`
 
 **Action:** Nothing — these files won't conflict.
@@ -60,12 +59,11 @@ If upstream does touch any of these in a future merge, use the diff files to und
 
 ### Category 4: Romless world patches (reapply if upstream changed the file)
 
-11 world `__init__.py` files have romless patches (`check_rom_available()` calls). These are documented in `diff-files/world-init-files.diff`.
+10 world `__init__.py` files have romless patches (`check_rom_available()` calls). These are documented in `diff-files/world-init-files.diff`.
 
 | File | Pattern |
 |------|---------|
 | `worlds/alttp/__init__.py` | `check_rom_available()` guard |
-| `worlds/apsudoku/__init__.py` | `skip_required_files` guard |
 | `worlds/dkc3/__init__.py` | `check_rom_available()` guard |
 | `worlds/ff1/__init__.py` | `skip_required_files` guard |
 | `worlds/lufia2ac/__init__.py` | `check_rom_available()` guard |

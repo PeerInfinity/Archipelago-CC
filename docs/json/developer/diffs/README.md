@@ -1,6 +1,6 @@
 # Diff Files from Upstream
 
-This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The diffs are generated against upstream commit `0de09cd7` (February 21, 2026, Archipelago 0.6.7).
+This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository. The diffs are generated against upstream commit `fb45a2f8` (March 20, 2026, Archipelago 0.6.7).
 
 ## Available Diff Files
 
@@ -13,7 +13,6 @@ This is the only core file modification. All other core files (`BaseClasses.py`,
 ### 2. `diff-files/config-files.diff` (413 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
-- **.github/pyright-config.json** - Removed 3 entries from exclude list (`rule_builder/cached_world.py`, `rule_builder/options.py`, `test/general/test_rule_builder.py`) because the fork consolidates `cached_world.py` into `rules.py`
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
 - **.gitignore** - Ignore patterns for project-specific files (extensive additions)
 - **pytest.ini** - Added `test_json` to testpaths for fork-specific test modules
@@ -45,7 +44,6 @@ Fork-only additions to the upstream Rule Builder test file:
 ### 7. `diff-files/world-init-files.diff` (424 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
-- **worlds/apsudoku/__init__.py** - AP Sudoku
 - **worlds/dkc3/__init__.py** - Donkey Kong Country 3
 - **worlds/ff1/__init__.py** - Final Fantasy I
 - **worlds/lufia2ac/__init__.py** - Lufia II Ancient Cave
@@ -94,7 +92,7 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 
 ## Notes
 
-- These diffs are generated against upstream commit `0de09cd7` (Archipelago 0.6.7)
+- These diffs are generated against upstream commit `fb45a2f8` (Archipelago 0.6.7)
 - Total lines changed across diff files: 1,622 lines (41 + 413 + 25 + 22 + 62 + 635 + 424)
 - Additionally, 2 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py)
 - These diffs only include modifications to existing files that also exist in upstream
@@ -182,7 +180,7 @@ The `.diff` files in `diff-files/` were created using:
 ```bash
 diff -u --label a/[file] --label b/[file] ~/CC/Archipelago-vanilla/[file] [file] > [output.diff]
 ```
-Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `0de09cd7`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
+Where `~/CC/Archipelago-vanilla/` is a clean clone of upstream at commit `fb45a2f8`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
 
 ### File Lists
 

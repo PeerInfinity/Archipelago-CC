@@ -1,5 +1,5 @@
 diff --git a/test/general/test_rule_builder.py b/test/general/test_rule_builder.py
-index 52248b604..7a15fe9c2 100644
+index 81003dcd8..cc18f7d14 100644
 --- a/test/general/test_rule_builder.py
 +++ b/test/general/test_rule_builder.py
 @@ -11,9 +11,16 @@ from rule_builder.cached_world import CachedRuleBuilderWorld
@@ -34,7 +34,7 @@ index 52248b604..7a15fe9c2 100644
  )
  from test.general import setup_solo_multiworld
  from test.param import classvar_matrix
-@@ -1334,3 +1346,598 @@ class TestExplain(RuleBuilderTestCase):
+@@ -1342,3 +1354,598 @@ class TestExplain(RuleBuilderTestCase):
              "& False)",
          )
          assert str(self.resolved_rule) == " ".join(expected)
