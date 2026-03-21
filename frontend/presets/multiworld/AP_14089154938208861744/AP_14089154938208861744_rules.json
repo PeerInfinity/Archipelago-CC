@@ -10292,16 +10292,11 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": {
-                          "rule": "OptionValue",
-                          "args": {
-                            "option": "enemy_health"
-                          }
-                        },
+                        "left": 1,
                         "op": "in",
                         "right": [
-                          0,
-                          1
+                          "easy",
+                          "default"
                         ],
                         "_original_ast_type": "compare"
                       },
@@ -12567,10 +12562,30 @@
             "name": "Pyramid Hole",
             "connected_region": "Pyramid",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Beat Agahnim 2"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "bool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "open_pyramid",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Beat Agahnim 2"
+                  }
+                }
+              ]
             }
           },
           {
