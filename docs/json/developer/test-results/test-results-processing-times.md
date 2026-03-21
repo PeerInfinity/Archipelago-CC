@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-03-21 20:17:55 UTC
+**Generated:** 2026-03-21 21:55:16 UTC
 
 **Source Data Created:** 2026-03-21T20:01:12.857645+00:00
 
@@ -117,8 +117,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Super Metroid | 30.8s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 2 | Super Mario Land 2 | 29.3s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+1 more) |
+| 3 | shapez | 23.1s | 8 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
+| 4 | Mega Man 3 | 23.0s | 4 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Journey to Ascension.yaml, Mega Man 3.yaml |
+| 5 | Timespinner | 21.9s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 6 | Undertale | 21.8s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+2 more) |
+| 7 | Terraria | 21.4s | 7 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
+| 8 | Saving Princess | 21.3s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+1 more) |
+| 9 | Meritous | 20.8s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml |
+| 10 | Kingdom Hearts | 20.6s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 900.2s | 6 | Baking Adventure.yaml, Coding Adventure.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Starcraft 2 | 213.8s | 6 | Aquaria.yaml, Civilization VI.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 3 | Satisfactory | 174.0s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 4 | Kingdom Hearts 2 | 121.1s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, DepGraph.yaml, Kingdom Hearts 2.yaml |
+| 5 | Secret of Evermore | 92.1s | 6 | A Short Hike.yaml, Celeste 64.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 6 | Kirby's Dream Land 3 | 56.0s | 4 | A Short Hike.yaml, Celeste 64.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 7 | Kingdom Hearts | 52.0s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
+| 8 | Super Mario Land 2 | 42.0s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Journey to Ascension.yaml, Mega Man 3.yaml, Risk of Rain 2.yaml (+1 more) |
+| 9 | Raft | 36.0s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml |
+| 10 | Celeste (Open World) | 30.7s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
