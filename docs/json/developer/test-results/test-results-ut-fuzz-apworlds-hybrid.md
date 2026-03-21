@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:32:58 UTC
 
 **Source Data Created:** 2026-02-04T21:03:09.652326
 
@@ -55,15 +55,15 @@
 
 Of the 74 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 51/74 (68.9%)
+- **Passing with Generic Exporter:** 52/74 (70.3%)
 - **Passing with Generic Logic:** 74/74 (100.0%)
-- **Passing with Both Generic:** 51/74 (68.9%)
+- **Passing with Both Generic:** 52/74 (70.3%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 404.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 404.6KB
 
 ## Test Results
 
@@ -135,7 +135,7 @@ Of the 74 games with 100% pass rate:
 | *Mario Kart Double Dash* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.8KB | ✅ | N/A |
+| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
 | *Minishoot Adventures* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 25.9KB | ✅ | N/A |
 | *Minit* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 23.9KB | ✅ | N/A |
 | *Monster Sanctuary* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
@@ -190,7 +190,7 @@ Of the 74 games with 100% pass rate:
 | *Yu-Gi-Oh! Forbidden Memories* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *plateup* | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | ✅ | ✅ | N/A |
+| *plateup* | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | N/A | N/A | N/A |
 
 ## Results Breakdown
 
