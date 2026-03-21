@@ -16,14 +16,16 @@ Checklist for preparing a release of Archipelago-CC (dev) and merging to the sta
 
 ### 1.1 Update the diffs directory (pre-merge baseline)
 
-Generate diff files and file lists against the current upstream commit before merging, so you have a record of the fork state before upstream changes.
+Generate diff files and file lists against the **most recent merged upstream commit** before merging new upstream changes. This creates a baseline snapshot of the fork state. The upstream commit to use is documented at the top of `docs/json/developer/diffs/README.md`.
+
+**Important:** Without `--upstream-commit`, the scripts default to the latest `upstream/main`, which includes unmerged upstream changes and will produce incorrect results. Always specify the commit from the most recent merge.
 
 ```bash
-python scripts/docs/generate-file-diff-lists.py
-python scripts/docs/check-annotations.py
+python scripts/docs/generate-file-diff-lists.py --upstream-commit <COMMIT>
+python scripts/docs/check-annotations.py --upstream-commit <COMMIT>
 ```
 
-- `generate-file-diff-lists.py` — Compares the fork against an upstream commit and generates categorized file lists (new directories, new files, changed files, deleted files) and diff files in `docs/json/developer/diffs/`.
+- `generate-file-diff-lists.py` — Compares the fork against the specified upstream commit and generates categorized file lists (new directories, new files, changed files, deleted files) and diff files in `docs/json/developer/diffs/`.
 - `check-annotations.py` — Verifies that every item in the diff has a corresponding entry in `file-annotations.json`. Reports missing annotations and stale entries.
 
 Review the output in `docs/json/developer/diffs/` — verify the file lists and diff files look correct. Commit the updated diffs.
@@ -49,16 +51,16 @@ Commit the merge.
 
 The scripts only generate the file lists in `file-lists/`. The rest of the diffs directory must be updated manually.
 
-**Auto-generated** (run these scripts):
+**Auto-generated** (run these scripts with the newly merged upstream commit):
 
 ```bash
-python scripts/docs/generate-file-diff-lists.py    # Regenerates file-lists/*.md
-python scripts/docs/check-annotations.py            # Check for missing/stale annotations
+python scripts/docs/generate-file-diff-lists.py --upstream-commit <NEW_COMMIT>
+python scripts/docs/check-annotations.py --upstream-commit <NEW_COMMIT>
 ```
 
 **Manual updates** — review and update as needed:
 
-- `README.md` — Update the upstream commit reference at the top
+- `README.md` — Update the upstream commit reference at the top to `<NEW_COMMIT>`
 - `repository-changes.md` — Update the high-level overview if new directories or major changes were added
 - `file-annotations.json` — Add entries for any new files/directories reported by `check-annotations.py`
 - `diff-files/*.diff` — Regenerate diffs for any changed files (core-files.diff, config-files.diff, world-init-files.diff, etc.)
@@ -93,11 +95,11 @@ Regenerate the file lists and update the manual diffs as in step 1.3, now incorp
 - `fuzzer-modifications.md` — if the fuzzer was updated in 1.5
 
 ```bash
-python scripts/docs/generate-file-diff-lists.py
-python scripts/docs/check-annotations.py
+python scripts/docs/generate-file-diff-lists.py --upstream-commit <NEW_COMMIT>
+python scripts/docs/check-annotations.py --upstream-commit <NEW_COMMIT>
 ```
 
-Review and commit the updated diffs.
+Use the same `<NEW_COMMIT>` from step 1.3. Review and commit the updated diffs.
 
 ---
 
