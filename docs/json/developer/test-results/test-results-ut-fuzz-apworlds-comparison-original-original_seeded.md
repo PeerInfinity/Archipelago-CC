@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Original vs Pickle (APWorlds)
+# Universal Tracker Fuzz Test Comparison: Original vs Orig Seeded (APWorlds)
 
 **Generated:** 2026-03-21 23:56:42 UTC
 
 **Source Data Last Updated:** 2026-03-21T23:32:58
 
-This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Pickle-based Universal Tracker (loads serialized multiworld).
+This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Original Universal Tracker with generation seed number.
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
@@ -13,64 +13,64 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ### Individual Test Results
 
 - [Original UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-original.md)
-- [Pickle UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-pickle.md)
+- [Orig Seeded UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-original_seeded.md)
 
 ## Summary
 
 - **Total Games Tested:** 123
-- **Passing Both:** 54 (43.9%)
-- **Passing Original Only:** 1 (0.8%)
-- **Passing Pickle Only:** 32 (26.0%)
-- **Passing Neither:** 36 (29.3%)
+- **Passing Both:** 55 (44.7%)
+- **Passing Original Only:** 0 (0.0%)
+- **Passing Orig Seeded Only:** 12 (9.8%)
+- **Passing Neither:** 56 (45.5%)
 
 ## Full Comparison
 
-| Game Name | Original Result | Pickle Result |
+| Game Name | Original Result | Orig Seeded Result |
 |-----------|:---------------------:|:---------------------:|
 | A Dance of Fire and Ice | ❌ | ❌ |
 | A Difficult Game About Climbing | ⚠️ 9/10 | ✅ |
-| A Link Between Worlds | ❌ 3/10 | ❌ 2/10 |
+| A Link Between Worlds | ❌ 3/10 | ❌ 3/10 |
 | ANIMAL WELL | ⚠️ 9/10 | ✅ |
 | Actraiser | ✅ | ✅ |
 | Against the Storm | ⚠️ 6/10 | ⚠️ 6/10 |
 | Air Delivery | ✅ | ✅ |
 | An Untitled Story | ✅ | ✅ |
 | Anodyne | ✅ | ✅ |
-| Another Crabs Treasure | ⚠️ 5/10 | ✅ |
+| Another Crabs Treasure | ⚠️ 5/10 | ⚠️ 5/10 |
 | Ape Escape | ✅ | ✅ |
 | Ape Escape 3 | ✅ | ✅ |
-| Astalon | ✅ | ⚠️ 5/8 |
+| Astalon | ✅ | ✅ |
 | Autopelago | ✅ | ✅ |
 | Axiom Verge | ⚠️ 5/10 | ✅ |
-| Balatro | ❌ | ✅ |
-| Brotato | ❌ 3/7 | ✅ |
+| Balatro | ❌ | ❌ |
+| Brotato | ❌ 3/7 | ❌ 3/7 |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ |
-| Cavern of Dreams | ❌ 2/10 | ✅ |
-| ChecksMate | ⚠️ 8/10 | ⚠️ 6/10 |
+| Cavern of Dreams | ❌ 2/10 | ❌ 2/5 |
+| ChecksMate | ⚠️ 8/10 | ⚠️ 8/10 |
 | Chrono Trigger Jets of Time | ❌ | ❌ |
 | ClusterTruck | ❌ 3/10 | ❌ 3/10 |
 | Corn Kidz 64 | ✅ | ✅ |
 | CrossCode | ✅ | ✅ |
-| Crystal Project | ❌ 3/10 | ⚠️ 8/10 |
+| Crystal Project | ❌ 3/10 | ❌ 3/10 |
 | Crystalis | ✅ | ✅ |
 | Cuphead | ❌ | ❌ |
 | DORONKO WANKO | ✅ | ✅ |
-| Deep Rock Galactic | ⚠️ 6/10 | ⚠️ 9/10 |
+| Deep Rock Galactic | ⚠️ 6/10 | ⚠️ 6/10 |
 | Diddy Kong Racing | ✅ | ✅ |
 | Digimon World | ⚠️ 6/10 | ✅ |
 | Dome Keeper | ✅ | ✅ |
-| Duke Nukem 3D | ❌ | ✅ |
+| Duke Nukem 3D | ❌ | ❌ 1/9 |
 | Final Fantasy Tactics A2 | ❌ | ❌ |
 | Final Fantasy Tactics Advance | ✅ | ✅ |
-| Fire Emblem Sacred Stones | ❌ 4/10 | ✅ |
-| Frogmonster | ⚠️ 8/10 | ✅ |
+| Fire Emblem Sacred Stones | ❌ 4/10 | ⚠️ 5/10 |
+| Frogmonster | ⚠️ 8/10 | ⚠️ 8/10 |
 | GZDoom | ❌ | ❌ |
 | Garfield Kart - Furious Racing | ❌ | ❌ |
-| Golden Sun The Lost Age | ⚠️ 7/10 | ✅ |
+| Golden Sun The Lost Age | ⚠️ 7/10 | ⚠️ 9/10 |
 | Grim Dawn | ⚠️ 7/9 | ✅ |
-| Hammerwatch | ❌ 2/10 | ⚠️ 9/10 |
+| Hammerwatch | ❌ 2/10 | ❌ 2/10 |
 | Hatsune Miku Project Diva Mega Mix+ | ❌ 1/10 | ✅ |
-| Here Comes Niko! | ⚠️ 8/10 | ✅ |
+| Here Comes Niko! | ⚠️ 8/10 | ⚠️ 8/10 |
 | Iji | ⚠️ 8/10 | ✅ |
 | Into the Breach | ❌ 2/10 | ❌ 2/10 |
 | Isles Of Sea And Sky | ✅ | ✅ |
@@ -85,7 +85,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | League of Legends | ⚠️ 8/10 | ⚠️ 8/10 |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ |
 | Lil Gator Game | ❌ | ❌ |
-| Lingo 2 | ⚠️ 2/4 | ✅ |
+| Lingo 2 | ⚠️ 2/4 | ⚠️ 2/4 |
 | Little Witch Nobeta | ✅ | ✅ |
 | Luigi's Mansion | ✅ | ✅ |
 | Lunacid | ✅ | ✅ |
@@ -93,20 +93,20 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Mario Kart Double Dash | ✅ | ✅ |
 | MetroCUBEvania | ✅ | ✅ |
 | Metroid Fusion | ⚠️ 7/10 | ✅ |
-| Metroid: Zero Mission | ❌ | ✅ |
-| Minishoot Adventures | ❌ | ✅ |
+| Metroid: Zero Mission | ❌ | ❌ 1/10 |
+| Minishoot Adventures | ❌ | ❌ |
 | Minit | ✅ | ✅ |
-| Monster Sanctuary | ❌ 1/10 | ❌ 4/10 |
+| Monster Sanctuary | ❌ 1/10 | ❌ 3/10 |
 | Nine Sols | ✅ | ✅ |
 | Ori and the Blind Forest | ✅ | ✅ |
-| Ori and the Will of the Wisps | ❌ 2/10 | ⚠️ 6/7 |
+| Ori and the Will of the Wisps | ❌ 2/10 | ❌ 2/6 |
 | Oxygen Not Included | ⚠️ 8/10 | ⚠️ 8/9 |
-| Pizza Tower | ⚠️ 6/10 | ✅ |
-| PlateUp | ❌ 1/10 | ❌ 2/5 |
-| Pokemon FireRed and LeafGreen | ⚠️ 6/10 | ✅ |
+| Pizza Tower | ⚠️ 6/10 | ⚠️ 6/10 |
+| PlateUp | ❌ 1/10 | ❌ 1/5 |
+| Pokemon FireRed and LeafGreen | ⚠️ 6/10 | ⚠️ 6/10 |
 | Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 8/10 | ⚠️ 8/10 |
 | Pseudoregalia | ✅ | ✅ |
-| Rabi-Ribi | ⚠️ 2/4 | ✅ |
+| Rabi-Ribi | ⚠️ 2/4 | ⚠️ 2/4 |
 | Rain World | ✅ | ✅ |
 | Ratchet & Clank 2 | ✅ | ✅ |
 | Reventure | ✅ | ✅ |
@@ -118,27 +118,27 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 2/10 | ❌ 2/10 |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ |
 | Sly 2: Band of Thieves | ❌ | ❌ |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 8/10 | ⚠️ 9/10 |
-| Sonic Adventure DX | ❌ 1/7 | ✅ |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 8/10 | ⚠️ 8/10 |
+| Sonic Adventure DX | ❌ 1/7 | ❌ |
 | Sonic Heroes | ✅ | ✅ |
 | Sonic Rush | ⚠️ 9/10 | ✅ |
 | Sonic the Hedgehog 1 | ✅ | ✅ |
 | Soul Blazer | ✅ | ✅ |
 | Spinball | ✅ | ✅ |
-| Spyro 3 | ❌ 2/9 | ✅ |
+| Spyro 3 | ❌ 2/9 | ❌ 2/9 |
 | Stacklands | ✅ | ✅ |
 | Star Fox 64 | ✅ | ✅ |
-| Star Wars Episode I Racer | ❌ | ✅ |
+| Star Wars Episode I Racer | ❌ | ❌ |
 | Super Cat Planet | ✅ | ✅ |
 | Symphony of the Night | ✅ | ✅ |
 | System Shock 2 | ⚠️ 6/10 | ⚠️ 6/9 |
-| TCG Card Shop Simulator | ❌ | ⚠️ 8/10 |
+| TCG Card Shop Simulator | ❌ | ❌ |
 | TOEM: A Photo Adventure | ✅ | ✅ |
 | Tetris Attack | ⚠️ 8/9 | ✅ |
-| The Legend of Zelda - Oracle of Seasons | ❌ | ❌ 3/10 |
-| The Legend of Zelda - Phantom Hourglass | ❌ 2/10 | ⚠️ 8/10 |
+| The Legend of Zelda - Oracle of Seasons | ❌ | ❌ |
+| The Legend of Zelda - Phantom Hourglass | ❌ 2/10 | ❌ 3/10 |
 | The Sims 4 | ❌ | ❌ |
-| ToeJam and Earl | ❌ 1/10 | ✅ |
+| ToeJam and Earl | ❌ 1/10 | ❌ 1/10 |
 | TurnipBoy | ✅ | ✅ |
 | Tyrian | ⚠️ 7/9 | ✅ |
 | Vampire Survivors | ✅ | ✅ |
@@ -147,11 +147,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Wordipelago | ✅ | ✅ |
 | XCOM 2 War of the Chosen | ✅ | ✅ |
 | Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ |
-| Yu-Gi-Oh! Forbidden Memories | ❌ | ✅ |
+| Yu-Gi-Oh! Forbidden Memories | ❌ | ❌ |
 | Zelda II: The Adventure of Link | ❌ 2/10 | ❌ 2/10 |
 | osu! | ❌ | ❌ |
 
-## Games Passing Both (54)
+## Games Passing Both (55)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -163,6 +163,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Anodyne |
 | Ape Escape |
 | Ape Escape 3 |
+| Astalon |
 | Autopelago |
 | Castlevania: Dawn of Sorrow |
 | Corn Kidz 64 |
@@ -212,54 +213,26 @@ These games have 100% success rate in both Universal Tracker versions.
 | XCOM 2 War of the Chosen |
 | Yu-Gi-Oh! Dungeon Dice Monsters |
 
-## Games Passing Original Only (1)
+## Games Passing Orig Seeded Only (12)
 
-These games pass in the Original UT but fail in the Pickle UT.
-
-| Game Name |
-|-----------|
-| Astalon |
-
-## Games Passing Pickle Only (32)
-
-These games pass in the Pickle UT but fail in the Original UT.
+These games pass in the Orig Seeded UT but fail in the Original UT.
 
 | Game Name |
 |-----------|
 | A Difficult Game About Climbing |
 | ANIMAL WELL |
-| Another Crabs Treasure |
 | Axiom Verge |
-| Balatro |
-| Brotato |
-| Cavern of Dreams |
 | Digimon World |
-| Duke Nukem 3D |
-| Fire Emblem Sacred Stones |
-| Frogmonster |
-| Golden Sun The Lost Age |
 | Grim Dawn |
 | Hatsune Miku Project Diva Mega Mix+ |
-| Here Comes Niko! |
 | Iji |
 | Keep Talking and Nobody Explodes |
-| Lingo 2 |
 | Metroid Fusion |
-| Metroid: Zero Mission |
-| Minishoot Adventures |
-| Pizza Tower |
-| Pokemon FireRed and LeafGreen |
-| Rabi-Ribi |
-| Sonic Adventure DX |
 | Sonic Rush |
-| Spyro 3 |
-| Star Wars Episode I Racer |
 | Tetris Attack |
-| ToeJam and Earl |
 | Tyrian |
-| Yu-Gi-Oh! Forbidden Memories |
 
-## Games Passing Neither (36)
+## Games Passing Neither (56)
 
 These games fail in both Universal Tracker versions.
 
@@ -268,42 +241,62 @@ These games fail in both Universal Tracker versions.
 | A Dance of Fire and Ice |
 | A Link Between Worlds |
 | Against the Storm |
+| Another Crabs Treasure |
+| Balatro |
+| Brotato |
+| Cavern of Dreams |
 | ChecksMate |
 | Chrono Trigger Jets of Time |
 | ClusterTruck |
 | Crystal Project |
 | Cuphead |
 | Deep Rock Galactic |
+| Duke Nukem 3D |
 | Final Fantasy Tactics A2 |
+| Fire Emblem Sacred Stones |
+| Frogmonster |
 | GZDoom |
 | Garfield Kart - Furious Racing |
+| Golden Sun The Lost Age |
 | Hammerwatch |
+| Here Comes Niko! |
 | Into the Breach |
 | Jigsaw |
 | Kirby Super Star |
 | League of Legends |
 | Lil Gator Game |
+| Lingo 2 |
+| Metroid: Zero Mission |
+| Minishoot Adventures |
 | Monster Sanctuary |
 | Ori and the Will of the Wisps |
 | Oxygen Not Included |
+| Pizza Tower |
 | PlateUp |
+| Pokemon FireRed and LeafGreen |
 | Pokemon Mystery Dungeon Explorers of Sky |
+| Rabi-Ribi |
 | Rusted Moss |
 | Sentinels of the Multiverse |
 | Ship of Harkinian |
 | Sly 2: Band of Thieves |
 | Sly Cooper and the Thievius Raccoonus |
+| Sonic Adventure DX |
+| Spyro 3 |
+| Star Wars Episode I Racer |
 | System Shock 2 |
 | TCG Card Shop Simulator |
 | The Legend of Zelda - Oracle of Seasons |
 | The Legend of Zelda - Phantom Hourglass |
 | The Sims 4 |
+| ToeJam and Earl |
 | Wario Land |
+| Yu-Gi-Oh! Forbidden Memories |
 | Zelda II: The Adventure of Link |
 | osu! |
 
 ## Notes
 
 - **Original Result:** ✅ if all runs passed, ❌ if none passed, or passes/total as a fraction (success/failure only, excludes timeouts and ignored)
-- **Pickle Result:** ✅ if all runs passed, ❌ if none passed, or passes/total as a fraction (success/failure only, excludes timeouts and ignored)
+- **Orig Seeded Result:** ✅ if all runs passed, ❌ if none passed, or passes/total as a fraction (success/failure only, excludes timeouts and ignored)
 - A game is considered "passing" if it has a 100% success rate (0 failures, 0 timeouts)

@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:56:42 UTC
 
-**Source Data Last Updated:** 2026-02-19T21:59:55
+**Source Data Last Updated:** 2026-03-21T22:05:16
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -17,13 +17,13 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 
 ## Summary
 
-- **Total Games Tested:** 90
-- **Passing Both:** 66 (73.3%)
-- **Passing Worldgen Only:** 7 (7.8%)
-- **Passing Pickle Only:** 12 (13.3%)
-- **Passing Neither:** 5 (5.6%)
-- **Passing Pickle with no custom code:** 41 (45.6%)
-- **Passing Pickle Only with no custom code:** 3 (3.3%)
+- **Total Games Tested:** 88
+- **Passing Both:** 69 (78.4%)
+- **Passing Worldgen Only:** 4 (4.5%)
+- **Passing Pickle Only:** 8 (9.1%)
+- **Passing Neither:** 7 (8.0%)
+- **Passing Pickle with no custom code:** 43 (48.9%)
+- **Passing Pickle Only with no custom code:** 3 (3.4%)
 
 ## Full Comparison
 
@@ -51,7 +51,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | 281.9KB |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | 327.5KB |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | 1034.1KB |
-| DepGraph | ✅ | N/A | ✅ | ✅ | 201.9KB |
+| DepGraph | ✅ | ✅ | ✅ | ✅ | 201.9KB |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | 122.4KB |
 | EarthBound | ✅ | ✅ | ✅ | ✅ | 337.6KB |
 | Factorio | ✅ | ✅ | 8.8KB | ✅ | 290.1KB |
@@ -63,7 +63,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 100.4KB |
 | Inscryption | ✅ | ✅ | 8.0KB | ✅ | 84.3KB |
 | Jak and Daxter: The Precursor Legacy | ✅ | ✅ | 21.7KB | 4.6KB | 257.9KB |
-| Journey to Ascension | ❌ | N/A | ✅ | ✅ | 48.3KB |
+| Journey to Ascension | ❌ | ❌ | ✅ | ✅ | 48.3KB |
 | Kingdom Hearts | ❌ 4/10 | ✅ | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | ❌ | ⚠️ 7/10 | 20.4KB | ✅ | 1630.7KB |
 | Kirby's Dream Land 3 | ❌ | ✅ | 10.1KB | ✅ | 528.7KB |
@@ -72,9 +72,8 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Links Awakening DX | ✅ | ❌ 1/10 | 7.3KB | ✅ | 703.1KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | 395.5KB |
-| Math Adventure | N/A | ✅ | N/A | N/A | N/A |
 | Mega Man 2 | ✅ | ✅ | ✅ | ✅ | 51.7KB |
-| Mega Man 3 | ✅ | N/A | ✅ | ✅ | 71.7KB |
+| Mega Man 3 | ✅ | ✅ | ✅ | ✅ | 71.7KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | 204.7KB |
 | Meritous | ✅ | ✅ | ✅ | ✅ | 57.0KB |
 | Metamath | ✅ | ✅ | ✅ | ✅ | 56.0KB |
@@ -84,24 +83,23 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Old School Runescape | ✅ | ✅ | 1.0KB | ✅ | 305.2KB |
 | Overcooked! 2 | ✅ | ✅ | 28.5KB | ✅ | 488.3KB |
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.5KB |
-| Pokemon Emerald | ⚠️ 4/7 | ✅ | 5.2KB | 8.7KB | 1350.2KB |
+| Pokemon Emerald | ⚠️ 4/7 | ⚠️ 5/7 | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | ❌ | ✅ | 12.2KB | 13.0KB | 1270.2KB |
 | Raft | ✅ | ✅ | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 131.4KB |
 | SMZ3 | ❌ 2/10 | ✅ | 54.2KB | 51.3KB | 1890.6KB |
 | Satisfactory | ✅ | ❌ | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ✅ | ✅ | ✅ | ✅ | 33.6KB |
-| Secret of Evermore | ✅ | ❌ | 5.6KB | 7.5KB | 415.0KB |
+| Secret of Evermore | ✅ | ✅ | 5.6KB | 7.5KB | 415.0KB |
 | Shivers | ✅ | ❌ | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.9KB |
-| Stardew Valley | ❌ | ✅ | 20.0KB | 9.8KB | 2558.2KB |
+| Stardew Valley | ❌ | ❌ 4/10 | 20.0KB | 9.8KB | 2558.2KB |
 | Subnautica | ✅ | ✅ | 2.2KB | ✅ | 205.5KB |
-| Sudoku | N/A | ✅ | N/A | N/A | N/A |
 | Super Mario 64 | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ⚠️ 5/7 | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | ⚠️ 3/5 | 61.0KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
@@ -109,7 +107,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ | ❌ 1/10 | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ✅ | ✅ | 7.0KB | ✅ | 250.2KB |
-| The Witness | ✅ | ✅ | 14.6KB | ✅ | 458.1KB |
+| The Witness | ✅ | ✅ | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ✅ | ✅ | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | ✅ | 3.8KB | ✅ | 22.7KB |
@@ -120,7 +118,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Zillion | ❌ | ✅ | ✅ | ✅ | 321.2KB |
 | shapez | ✅ | ✅ | ✅ | ✅ | 153.8KB |
 
-## Games Passing Both (66)
+## Games Passing Both (69)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -148,6 +146,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | DOOM 1993 | ✅ | ✅ | 281.9KB |
 | DOOM II | ✅ | ✅ | 327.5KB |
 | Dark Souls III | ✅ | ✅ | 1034.1KB |
+| DepGraph | ✅ | ✅ | 201.9KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.4KB |
 | EarthBound | ✅ | ✅ | 337.6KB |
 | Factorio | 8.8KB | ✅ | 290.1KB |
@@ -163,6 +162,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Lufia II Ancient Cave | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 395.5KB |
 | Mega Man 2 | ✅ | ✅ | 51.7KB |
+| Mega Man 3 | ✅ | ✅ | 71.7KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | 204.7KB |
 | Meritous | ✅ | ✅ | 57.0KB |
 | Metamath | ✅ | ✅ | 56.0KB |
@@ -174,6 +174,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Raft | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | 131.4KB |
 | Saving Princess | ✅ | ✅ | 33.6KB |
+| Secret of Evermore | 5.6KB | 7.5KB | 415.0KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 262.2KB |
 | Subnautica | 2.2KB | ✅ | 205.5KB |
 | Super Mario 64 | ✅ | ✅ | 101.2KB |
@@ -185,7 +186,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Terraria | 16.9KB | ✅ | 279.0KB |
 | The Legend of Zelda | ✅ | ✅ | 554.6KB |
 | The Wind Waker | 7.0KB | ✅ | 250.2KB |
-| The Witness | 14.6KB | ✅ | 458.1KB |
+| The Witness | 14.6KB | ✅ | 468.1KB |
 | Timespinner | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | ✅ | 56.3KB |
 | VVVVVV | 3.8KB | ✅ | 22.7KB |
@@ -193,21 +194,18 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 295.3KB |
 | shapez | ✅ | ✅ | 153.8KB |
 
-## Games Passing Worldgen Only (7)
+## Games Passing Worldgen Only (4)
 
 These games pass in the Worldgen UT but fail in the Pickle UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| DepGraph | ✅ | ✅ | 201.9KB |
 | Links Awakening DX | 7.3KB | ✅ | 703.1KB |
-| Mega Man 3 | ✅ | ✅ | 71.7KB |
 | Satisfactory | 41.8KB | ✅ | 1619.5KB |
-| Secret of Evermore | 5.6KB | 7.5KB | 415.0KB |
 | Shivers | ✅ | ✅ | 150.1KB |
 | The Messenger | 15.2KB | ✅ | 210.4KB |
 
-## Games Passing Pickle Only (12)
+## Games Passing Pickle Only (8)
 
 These games pass in the Pickle UT but fail in the Worldgen UT.
 
@@ -216,17 +214,13 @@ These games pass in the Pickle UT but fail in the Worldgen UT.
 | Hollow Knight | ✅ | ✅ | 3501.1KB |
 | Kingdom Hearts | ✅ | ✅ | 748.7KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.7KB |
-| Math Adventure | N/A | N/A | N/A |
 | Ocarina of Time | ✅ | ✅ | 1274.4KB |
-| Pokemon Emerald | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1270.2KB |
 | SMZ3 | 54.2KB | 51.3KB | 1890.6KB |
-| Stardew Valley | 20.0KB | 9.8KB | 2558.2KB |
-| Sudoku | N/A | N/A | N/A |
 | Yacht Dice | 0.9KB | 285.0KB | 248.5KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 644.0KB |
 
-## Games Passing Neither (5)
+## Games Passing Neither (7)
 
 These games fail in both Universal Tracker versions.
 
@@ -234,7 +228,9 @@ These games fail in both Universal Tracker versions.
 |-----------|:--------:|:---------:|:----------:|
 | Journey to Ascension | ✅ | ✅ | 48.3KB |
 | Kingdom Hearts 2 | 20.4KB | ✅ | 1630.7KB |
+| Pokemon Emerald | 5.2KB | 8.7KB | 1350.2KB |
 | Starcraft 2 | 29.3KB | 90.1KB | 1086.9KB |
+| Stardew Valley | 20.0KB | 9.8KB | 2558.2KB |
 | Super Metroid | 61.0KB | 114.5KB | 625.1KB |
 | Zillion | ✅ | ✅ | 321.2KB |
 
