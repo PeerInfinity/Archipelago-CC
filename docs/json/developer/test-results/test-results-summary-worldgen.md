@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-03-19 03:44:41 UTC
+**Generated:** 2026-03-21 10:13:56 UTC
 
 **Source Data Created:** 2026-02-18T23:40:25.407810+00:00
 
@@ -66,10 +66,10 @@ Of the 55 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.2KB | ✅ | 235.3KB |
 | A Hat in Time WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 232.5KB |
-| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.5KB |
-| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 665.1KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 668.3KB |
-| A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 665.7KB |
+| A Link to the Past Vanilla WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 666.1KB |
+| A Link to the Past Vanilla WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 664.6KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.0KB | ✅ | 667.8KB |
+| A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 665.2KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.4KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.4KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.8KB |
@@ -92,7 +92,7 @@ Of the 55 templates passing all 4 tests:
 | DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 49.0KB |
 | DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1064.5KB |
+| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1064.6KB |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 131.2KB |
 | EarthBound WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 352.9KB |
 | Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.8KB | ✅ | 231.5KB |
@@ -117,7 +117,7 @@ Of the 55 templates passing all 4 tests:
 | Old School Runescape WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 307.3KB |
 | Overcooked! 2 WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.5KB | ✅ | 485.8KB |
 | Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 2.7KB | ✅ | N/A |
-| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 155.4KB |
+| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 140.0KB |
 | Satisfactory WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 41.8KB | ✅ | N/A |
 | Saving Princess WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 34.3KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.1KB |
@@ -143,13 +143,13 @@ Of the 55 templates passing all 4 tests:
 
 | Rank | Game Name | Rules Size |
 |------|-----------|------------|
-| 1 | Dark Souls III WorldGen | 1064.5KB |
+| 1 | Dark Souls III WorldGen | 1064.6KB |
 | 2 | Super Mario Land 2 WorldGen | 920.6KB |
 | 3 | Links Awakening DX WorldGen | 696.9KB |
-| 4 | A Link to the Past WorldGen | 668.3KB |
-| 5 | A Link to the Past Vanilla WorldGen | 666.5KB |
-| 6 | A Link to the Past WorldGen2 | 665.7KB |
-| 7 | A Link to the Past Vanilla WorldGen2 | 665.1KB |
+| 4 | A Link to the Past WorldGen | 667.8KB |
+| 5 | A Link to the Past Vanilla WorldGen | 666.1KB |
+| 6 | A Link to the Past WorldGen2 | 665.2KB |
+| 7 | A Link to the Past Vanilla WorldGen2 | 664.6KB |
 | 8 | Final Fantasy Mystic Quest WorldGen | 556.7KB |
 | 9 | Overcooked! 2 WorldGen | 485.8KB |
 | 10 | Mario & Luigi Superstar Saga WorldGen | 403.9KB |
