@@ -416,14 +416,32 @@ class WorldgenMixin:
         rules_filename = f"AP_{self.seed_name}_rules.json"
 
         candidates = []
+        presets_dir = project_root / "frontend" / "presets"
 
-        # 1. WorldGen preset directory
-        worldgen_preset_path = project_root / "frontend" / "presets" / f"{world_directory}_worldgen" / seed_dir_name / rules_filename
+        # 1. WorldGen preset directory (always highest priority for UT tracking)
+        worldgen_preset_path = presets_dir / f"{world_directory}_worldgen" / seed_dir_name / rules_filename
         candidates.append(worldgen_preset_path)
 
-        # 2. Original preset directory
-        original_preset_path = project_root / "frontend" / "presets" / world_directory / seed_dir_name / rules_filename
-        candidates.append(original_preset_path)
+        # 2. Search all other preset directories matching this world
+        # This catches the base directory, _vanilla, and any other exporter variants.
+        # Sorted by modification time (newest first) so the most recent export wins
+        # when the same seed exists in multiple directories from different option sets.
+        if presets_dir.exists():
+            other_preset_candidates = []
+            for dir_entry in presets_dir.iterdir():
+                if (dir_entry.is_dir()
+                        and dir_entry.name != f"{world_directory}_worldgen"
+                        and (dir_entry.name == world_directory
+                             or dir_entry.name.startswith(f"{world_directory}_"))):
+                    candidate = dir_entry / seed_dir_name / rules_filename
+                    other_preset_candidates.append(candidate)
+
+            # Sort by modification time (newest first) to prefer the most recent export
+            other_preset_candidates.sort(
+                key=lambda p: p.stat().st_mtime if p.exists() else 0,
+                reverse=True
+            )
+            candidates.extend(other_preset_candidates)
 
         # 3. Output directory (extracted from ZIP)
         output_dir_path = Path(output_path()) / rules_filename
