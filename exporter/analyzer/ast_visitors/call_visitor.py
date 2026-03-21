@@ -712,6 +712,20 @@ class CallVisitorMixin(BaseVisitorMixin):
                             analyzed_items = []
                             for item_func in constant_value:
                                 try:
+                                    # Check if this is a bound method of Region.can_reach
+                                    # These carry the region name on __self__ and should be
+                                    # converted directly to CanReachRegion rules rather than
+                                    # analyzed from source (which loses the region identity)
+                                    if (hasattr(item_func, '__self__')
+                                            and hasattr(item_func, '__name__')
+                                            and item_func.__name__ == 'can_reach'
+                                            and hasattr(item_func.__self__, 'entrances')
+                                            and hasattr(item_func.__self__, 'name')):
+                                        region_name = item_func.__self__.name
+                                        logging.debug(f"all(GeneratorExp constant): Detected Region.can_reach bound method for region '{region_name}'")
+                                        analyzed_items.append({'type': 'can_reach', 'region': region_name})
+                                        continue
+
                                     item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
                                                               seen_funcs=self.seen_funcs, game_handler=self.game_handler,
                                                               player_context=self.player_context,
@@ -911,6 +925,17 @@ class CallVisitorMixin(BaseVisitorMixin):
                             analyzed_items = []
                             for item_func in constant_value:
                                 try:
+                                    # Check if this is a bound method of Region.can_reach
+                                    if (hasattr(item_func, '__self__')
+                                            and hasattr(item_func, '__name__')
+                                            and item_func.__name__ == 'can_reach'
+                                            and hasattr(item_func.__self__, 'entrances')
+                                            and hasattr(item_func.__self__, 'name')):
+                                        region_name = item_func.__self__.name
+                                        logging.debug(f"any(GeneratorExp constant): Detected Region.can_reach bound method for region '{region_name}'")
+                                        analyzed_items.append({'type': 'can_reach', 'region': region_name})
+                                        continue
+
                                     item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
                                                               seen_funcs=self.seen_funcs, game_handler=self.game_handler,
                                                               player_context=self.player_context,
