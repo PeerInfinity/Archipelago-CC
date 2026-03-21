@@ -116,7 +116,7 @@ The **Exporter** and **GameLogic** columns indicate whether a game uses custom c
 | `scripts/test/test-all-templates.py` | Main test orchestration script |
 | `scripts/lib/test_runner.py` | Core test execution functions |
 | `scripts/test/run-tests.js` | Playwright test runner wrapper |
-| `tests/e2e/app.spec.js` | Playwright test specification |
+| `test_json/e2e/app.spec.js` | Playwright test specification |
 
 ### Exporter System
 

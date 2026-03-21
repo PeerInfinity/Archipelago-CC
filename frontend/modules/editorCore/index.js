@@ -7,8 +7,24 @@
  */
 
 import { editorDataService } from './editorDataService.js';
-import eventBus from '../../app/core/eventBus.js';
 import { EDITOR_EVENTS } from './editorEvents.js';
+import eventBus from '../../app/core/eventBus.js';
+
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'editorCore'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'editorCore'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'editorCore'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -48,6 +64,8 @@ export function register(registrationApi) {
  */
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[Editor Core Module] Initializing (${moduleId}, priority ${priorityIndex})...`);
+
+  _moduleEventBus = initializationApi.getEventBus();
 
   // Initialize the data service - this sets up all event subscriptions
   editorDataService.initialize();

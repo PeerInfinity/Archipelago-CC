@@ -14382,7 +14382,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
+        "classification": "progression_deprioritized",
         "type": null,
         "max_count": 20
       },
@@ -14539,7 +14539,7 @@
           "Everything",
           "Keys"
         ],
-        "classification": "progression",
+        "classification": "progression_deprioritized",
         "type": null,
         "max_count": 2
       },
@@ -14581,7 +14581,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
+        "classification": "progression_deprioritized",
         "type": null,
         "max_count": 17
       },
@@ -17320,7 +17320,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
   },
   "helpers": {
     "1": {

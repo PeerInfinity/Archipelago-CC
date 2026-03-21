@@ -31,6 +31,21 @@ export let moduleDispatcher = null; // Export the dispatcher
 let moduleId = 'regions'; // Store module ID
 let moduleUnsubscribeHandles = [];
 let regionUIInstance = null; // Store reference to the UI instance
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'regions'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'regions'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'regions'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 /**
  * Registration function for the Regions module.
@@ -181,12 +196,12 @@ function handleExitClicked(data, propagationOptions) {
     log('info', `[${moduleId} Module] Navigating to region: ${destinationRegion} (Show All mode)`);
 
     // First activate the regions panel if not already active
-    eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
+    _moduleEventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
 
     // Then navigate to the target region
-    eventBus.publish('ui:navigateToRegion', {
+    _moduleEventBus.publish('ui:navigateToRegion', {
       regionName: destinationRegion
-    }, 'regions');
+    });
   } else {
     // Normal mode - execute region move via dispatcher
     log('info', `[${moduleId} Module] Processing exit click: moving to ${destinationRegion} via ${exitName}`);
@@ -230,6 +245,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
   // Assign the dispatcher to the exported variable
   moduleDispatcher = initializationApi.getDispatcher();
+  _moduleEventBus = initializationApi.getEventBus();
 
   // Example: Subscribe to something using the module-wide eventBus if needed later
   // const handle = moduleEventBus.subscribe('some:event', () => {}, 'moduleName');
@@ -247,6 +263,7 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     moduleUnsubscribeHandles = [];
     // Any other cleanup specific to this module's initialize phase
     moduleDispatcher = null; // Clear dispatcher reference
+    _moduleEventBus = null;
   };
 }
 

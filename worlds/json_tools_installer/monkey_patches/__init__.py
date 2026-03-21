@@ -1,10 +1,8 @@
 """
 Monkey patching module for JSON Tools.
 
-Provides runtime patches for Archipelago core files when file-based
-patching is not available or desired.
-
-This is used as a fallback for unsupported AP versions.
+Provides runtime patches for Archipelago core files to add
+JSON export functionality without modifying source files.
 
 Usage:
     from worlds.json_tools_installer.monkey_patches import install_hooks
@@ -27,9 +25,6 @@ from .hooks import (
     is_hook_installed,
     get_installed_hooks,
     auto_install,
-    is_main_patched,
-    is_baseclasses_patched,
-    are_file_patches_applied,
 )
 
 __all__ = [
@@ -38,7 +33,4 @@ __all__ = [
     "is_hook_installed",
     "get_installed_hooks",
     "auto_install",
-    "is_main_patched",
-    "is_baseclasses_patched",
-    "are_file_patches_applied",
 ]

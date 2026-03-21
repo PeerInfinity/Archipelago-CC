@@ -18,7 +18,7 @@ from .Options import SMWOptions, smw_option_groups
 from .Presets import smw_options_presets
 from .Regions import create_regions, connect_regions
 from .Rom import LocalRom, patch_rom, get_base_rom_path, SMWDeltaPatch
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 from .Rules import set_rules
 
 

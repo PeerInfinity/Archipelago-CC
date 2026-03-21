@@ -131,7 +131,7 @@ class BaseGameExportHandler(
     # When False, option values are kept as option_value references
     #   - Rules remain generic and can work with different option configurations
     #   - Requires runtime option resolution in the frontend
-    # This can be overridden by the host.yaml setting: general_options.resolve_options_to_constants
+    # This can be overridden by the host.yaml setting: json_tools.resolve_options_to_constants
     RESOLVE_OPTIONS_TO_CONSTANTS: bool = True
 
     # Set of helper function names to export as definitions (manual whitelist)
@@ -1023,7 +1023,7 @@ class BaseGameExportHandler(
         resolved at runtime by the frontend. This allows rules to work with
         different option configurations.
 
-        The host.yaml setting (general_options.resolve_options_to_constants) takes
+        The host.yaml setting (json_tools.resolve_options_to_constants) takes
         precedence over the class variable RESOLVE_OPTIONS_TO_CONSTANTS.
 
         Returns:
@@ -1031,9 +1031,9 @@ class BaseGameExportHandler(
         """
         # Check host.yaml setting first (takes precedence)
         try:
-            from settings import get_settings
-            settings = get_settings()
-            host_setting = getattr(settings.general_options, 'resolve_options_to_constants', None)
+            from worlds.json_tools_installer.json_tools_settings import get_json_tools_settings
+            jt = get_json_tools_settings()
+            host_setting = getattr(jt, 'resolve_options_to_constants', None)
             if host_setting is not None:
                 return host_setting
         except Exception:
@@ -1818,6 +1818,35 @@ class BaseGameExportHandler(
             game_info['prog_items_init'] = dict(self.PROG_ITEMS_INIT)
         elif hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = dict(world.prog_items_init)
+
+        # Export completion_condition if available and non-trivial
+        try:
+            completion_func = world.multiworld.completion_condition.get(world.player)
+            if completion_func is not None:
+                from BaseClasses import CollectionState
+                empty_state = CollectionState(world.multiworld)
+                if not completion_func(empty_state):  # Non-trivial condition
+                    # Check if this is a Rule Builder Resolved rule with native serialization
+                    if hasattr(completion_func, 'to_dict') and callable(completion_func.to_dict):
+                        from exporter.exporter import _make_rule_dict_serializable
+                        rb_dict = completion_func.to_dict()
+                        rb_dict = _make_rule_dict_serializable(rb_dict)
+                        if hasattr(self, 'expand_rule'):
+                            rb_dict = self.expand_rule(rb_dict)
+                        game_info['completion_condition'] = rb_dict
+                    else:
+                        from exporter.analyzer import analyze_rule
+                        from exporter.games.base.utilities import extract_closure_vars
+                        closure_vars = extract_closure_vars(completion_func)
+                        closure_vars.setdefault('world', world)
+                        closure_vars.setdefault('self', world)
+                        result = analyze_rule(rule_func=completion_func, closure_vars=closure_vars,
+                                              game_handler=self, player_context=world.player)
+                        if result and result.get('type') != 'error':
+                            game_info['completion_condition'] = result
+        except Exception as e:
+            import logging
+            logging.getLogger('exporter').debug(f"Could not export completion_condition: {e}")
 
         return game_info
 

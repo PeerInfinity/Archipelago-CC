@@ -41,12 +41,15 @@ window.centralRegistry = centralRegistry;
 // Register frontend as publisher for events it publishes
 centralRegistry.registerEventBusPublisher('core', 'app:fullModeDataLoadedFromStorage');
 centralRegistry.registerEventBusPublisher('core', 'module:stateChanged');
+centralRegistry.registerEventBusPublisher('core', 'module:loaded');
+centralRegistry.registerEventBusPublisher('core', 'module:loadFailed');
 centralRegistry.registerEventBusPublisher('core', 'app:modesJsonLoaded');
 centralRegistry.registerEventBusPublisher('core', 'app:readyForUiDataLoad');
 centralRegistry.registerEventBusPublisher('core', 'app:activeModeDetermined');
 centralRegistry.registerEventBusPublisher('core', 'uiHostRegistry:hostStatusChanged');
 centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');
 centralRegistry.registerEventBusPublisher('core', 'settings:changed');
+centralRegistry.registerEventBusPublisher('panelManager', 'ui:panelManuallyClosed');
 
 // Import layout libraries
 import { GoldenLayout } from './libs/golden-layout/js/esm/golden-layout.js';

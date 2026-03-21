@@ -43,27 +43,27 @@ export class TextAdventureLogic {
             // Listen for player state changes
             this.eventBus.subscribe('playerState:regionChanged', (data) => {
                 this.handleRegionChange(data);
-            }, 'textAdventure');
+            });
 
             // Listen for rules loaded event directly from StateManager
             this.eventBus.subscribe('stateManager:rulesLoaded', (data) => {
                 this.handleRulesLoaded(data);
-            }, 'textAdventure');
+            });
 
             // Listen for ready event directly from StateManager
             this.eventBus.subscribe('stateManager:ready', (data) => {
                 this.handleStateManagerReady(data);
-            }, 'textAdventure');
+            });
 
             // Listen for state changed event directly from StateManager
             this.eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
                 this.handleStateChange(data);
-            }, 'textAdventure');
+            });
 
             // Listen for discovery mode changes
             this.eventBus.subscribe('discovery:modeChanged', (data) => {
                 this.handleDiscoveryModeChanged(data);
-            }, 'textAdventure');
+            });
         }
     }
 
@@ -259,7 +259,7 @@ export class TextAdventureLogic {
             
             // Publish event
             if (this.eventBus) {
-                this.eventBus.publish('textAdventure:customDataLoaded', { customData }, 'textAdventure');
+                this.eventBus.publish('textAdventure:customDataLoaded', { customData });
             }
             
             return true;
@@ -945,7 +945,7 @@ export class TextAdventureLogic {
 
         // Publish event
         if (this.eventBus) {
-            this.eventBus.publish('textAdventure:messageAdded', { message }, 'textAdventure');
+            this.eventBus.publish('textAdventure:messageAdded', { message });
         }
 
         log('debug', 'Message added:', message);
@@ -965,7 +965,7 @@ export class TextAdventureLogic {
     clearMessageHistory() {
         this.messageHistory = [];
         if (this.eventBus) {
-            this.eventBus.publish('textAdventure:historyCleared', {}, 'textAdventure');
+            this.eventBus.publish('textAdventure:historyCleared', {});
         }
     }
 

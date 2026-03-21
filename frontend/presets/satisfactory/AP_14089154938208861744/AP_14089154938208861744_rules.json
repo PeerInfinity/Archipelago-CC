@@ -48161,7 +48161,33 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "function_call",
+        "function": {
+          "type": "attribute",
+          "object": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "state_logic"
+          },
+          "attr": "can_produce_all"
+        },
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Automated Wiring",
+              "Smart Plating",
+              "Versatile Framework"
+            ]
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

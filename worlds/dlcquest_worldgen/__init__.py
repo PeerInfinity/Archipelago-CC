@@ -104,7 +104,7 @@ class DLCqworld(RuleWorldMixin, World):
     options_dataclass = DLCQuestWorldGenOptions
     options: DLCQuestWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -122,7 +122,6 @@ class DLCqworld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Movement Pack", "Animation Pack", "Audio Pack", "Pause Menu Pack", "Time is Money Pack", "Double Jump Pack", "Pet Pack", "Sexy Outfits Pack", "Top Hat Pack", "Map Pack", "Gun Pack", "The Zombie Pack", "Night Map Pack", "Psychological Warfare Pack", "Armor for your Horse Pack", "Finish the Fight Pack", "Particles Pack", "Day One Patch Pack", "Checkpoint Pack", "Incredibly Important Pack", "Wall Jump Pack", "Health Bar Pack", "Parallax Pack", "Harmless Plants Pack", "Death of Comedy Pack", "Canadian Dialog Pack", "DLC NPC Pack", "Cut Content Pack", "Name Change Pack", "Pickaxe", "Season Pass", "High Definition Next Gen Pack", "Increased HP Pack", "Removed Ads Pack", "Big Sword Pack", "Really Big Sword Pack", "Unfathomable Sword Pack", "Gun", "Sword", "Wooden Sword", "Box of Various Supplies", "Humble Indie Bindle", "DLC Quest: Coin Bundle", "Live Freemium or Die: Coin Bundle", "Zombie Sheep", "Temporary Spike", "Loading Screen", "DLC Quest: Progressive Weapon", "Live Freemium or Die: Progressive Weapon", "DLC Quest: Coin Piece", "Live Freemium or Die: Coin Piece"]),
-        "Event": frozenset(["4 coins", "46 coins", "60 coins", "100 coins", "50 coins", "9 coins", "10 coins", "89 coins", "7 coins", "171 coins", "76 coins", "203 coins", "Victory Basic"]),
         "coins": frozenset([" coins", " coins freemium"]),
     }
 
@@ -247,6 +246,12 @@ class DLCqworld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -419,7 +424,7 @@ class DLCqworld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Winning Basic", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

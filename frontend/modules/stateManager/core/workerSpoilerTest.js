@@ -242,6 +242,8 @@ export class WorkerSpoilerTest {
         if (!isSphere0Base && newlyAddedItems.length > 0) {
           // Add items, skipping accumulator targets when using resolved_items
           // (they appear in resolved_items but are just computed values, not real items)
+          // Skip game logic hooks when using resolved_items to avoid double-counting
+          if (useResolvedItems) this.sm._skipGameLogicHooks = true;
           for (const itemName of newlyAddedItems) {
             // Skip accumulator target items when using resolved_items
             // The pattern-matching items (e.g., "46 coins") will handle accumulation
@@ -251,6 +253,7 @@ export class WorkerSpoilerTest {
             this.sm.addItemToInventory(itemName, 1);
             result.itemsAdded++;
           }
+          if (useResolvedItems) this.sm._skipGameLogicHooks = false;
           this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} items upfront`);
         }
 
@@ -293,6 +296,9 @@ export class WorkerSpoilerTest {
             // The dedup logic doesn't work here because location items use base progressive
             // names (e.g., "Progressive Claw") while resolved_items use tier names
             // (e.g., "Cat Claw"). checkLocation will be called with addItems=false below.
+            // Skip game logic hooks to avoid double-counting virtual items
+            // (resolved_items already contains the correct virtual item values).
+            this.sm._skipGameLogicHooks = true;
             for (const itemName of newlyAddedItems) {
               if (accumulatorTargets.has(itemName)) {
                 continue;
@@ -300,6 +306,7 @@ export class WorkerSpoilerTest {
               this.sm.addItemToInventory(itemName, 1);
               result.itemsAdded++;
             }
+            this.sm._skipGameLogicHooks = false;
             if (result.itemsAdded > 0) {
               this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} resolved items from sphere log`);
             }

@@ -1,6 +1,23 @@
 # World Generator
 
-The world generator converts JSON rules files (exported from Archipelago worlds) into complete Python world packages that can be used with Archipelago.
+The world generator converts JSON rules files into complete, functional Archipelago world packages. Its primary purpose is enabling the [Universal Tracker's worldgen tracking mode](../docs/json/features/universal-tracker.md) — rebuilding a game's logic from exported JSON so the tracker can evaluate reachability and explain rules for any game.
+
+## How It Fits Into Tracking
+
+The standard Universal Tracker works by regenerating a world from YAML template files. This breaks for games with randomized logic (entrance shuffle, random starting locations, etc.) because the regenerated world won't match the actual seed.
+
+The worldgen tracking mode solves this. During seed generation, the [exporter](../exporter/README.md) captures the game's actual logic — items, locations, regions, access rules, options — into a `_rules.json` file. When the tracker connects to a server, it uses the world generator to rebuild the world from that JSON, producing a world that matches the real seed exactly.
+
+Because the rebuilt world uses [Rule Builder](../rule_builder/README.md) objects for all access rules, the tracker gets full `/explain` support — colored rule trees showing why a location is or isn't reachable given your current items. This works for every game, even those without native Rule Builder integration, since all rules are converted to Rule Builder objects during the rebuild.
+
+The tracker's [hybrid mode](../worlds/tracker/docs/hybrid-mode.md) automatically selects the best tracking mode per game based on fuzz test results, trying worldgen first, then falling back to pickle or original regeneration.
+
+## Other Uses
+
+- **Testing and validation** — Generate a worldgen copy of any game and compare its behavior against the original to verify the export pipeline.
+- **Bootstrapping new worlds** — Start from an exported rules file and customize the generated code, rather than writing everything from scratch.
+
+Generated worlds use the `_worldgen` suffix by convention (e.g., `tunic_worldgen`) to avoid conflicts with the original world.
 
 ## Quick Start
 
@@ -136,6 +153,26 @@ def set_rules(world):
         Has("Ladder") | Has("Magic Orb"))
 ```
 
+### Name Substitutions
+
+Some worlds must use generic names at the class level (e.g. `"Statement 1"`, `"Prove Statement 1"`) because Archipelago's datapackage contract requires `item_name_to_id` to be fixed at class definition time. But when the world generator creates a *new* world from the exported JSON, it can use whatever names it wants.
+
+If the source world publishes a `name_substitutions` attribute, the generator applies it to the raw JSON **before** extraction — so all generated code (Items.py, Locations.py, Rules.py, Regions.py) automatically gets meaningful names with zero manual fixup.
+
+The substitutions dict has three sub-dicts:
+
+```python
+self.name_substitutions = {
+    "items":     {"Statement 1": "2cn: |- 2 e. CC", ...},
+    "locations": {"Prove Statement 1": "Prove 2cn: |- 2 e. CC", ...},
+    "regions":   {"Prove Statement 1": "Prove 2cn: |- 2 e. CC", ...},
+}
+```
+
+The generator replaces every occurrence of each generic name across all JSON sections (items, regions, access rules, canonical placements, starting items, itempool counts, completion condition, dependencies, etc.) before any data extraction happens.
+
+See [Name Substitutions](../docs/json/developer/guides/world-generator.md#name-substitutions) in the developer guide for implementation details.
+
 ### Helper Function Expansion
 
 The generator expands helper function references into self-contained rules, making the generated code independent of external helper modules.
@@ -168,8 +205,10 @@ No external packages required.
 ## Related Documentation
 
 - **[World Generator Guide](../docs/json/developer/guides/world-generator.md)** - Detailed usage guide
+- **[World Generator Tests](../docs/json/developer/tests/test-world-generator.md)** - Round-trip testing documentation
 - **[Exporter](../exporter/README.md)** - Creates the JSON files this consumes
 - **[Rule Builder](../rule_builder/README.md)** - Rule definition system used in generated worlds
+- **[Universal Tracker Enhancements](../docs/json/features/universal-tracker.md)** - Tracking modes that use generated worlds
 - **[CLAUDE.md](../CLAUDE.md)** - Quick reference with common commands
 
 ## Example Workflow

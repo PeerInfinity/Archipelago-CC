@@ -1,5 +1,4 @@
 colorama>=0.4.6
-dill>=0.3.8
 websockets>=13.0.1,<14
 PyYAML>=6.0.3
 jellyfish>=1.2.1
@@ -20,5 +19,3 @@ kivymd>=2.0.1.dev0
 
 # Legacy world dependencies that custom worlds rely on
 Pymem>=1.13.0
-astunparse>=1.6.3
-psutil>=6.1.1

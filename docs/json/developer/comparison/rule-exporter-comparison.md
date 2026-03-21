@@ -66,7 +66,7 @@ Rule Builder Classes -> Composition -> Resolution -> to_dict() -> JSON Structure
 | **Serialization method** | Post-hoc AST inspection | Built-in `to_dict()` |
 | **World code changes required** | None | Must use `RuleWorldMixin` |
 | **Backward compatibility** | Full - works with existing worlds | Requires world conversion |
-| **Caching** | Rule analysis cache by function ID | State cache in `CollectionState.rule_cache` |
+| **Caching** | Rule analysis cache by function ID | State cache in `CollectionState.rule_builder_cache` |
 | **Game-specific handlers** | 80+ handler files | Custom rules inherit from base |
 | **Human-readable output** | Via Rule Builder conversion | `explain()` method |
 | **Rule optimization** | Post-analysis cleanup | Instance reuse via equality |
@@ -146,7 +146,7 @@ Cache key: `(id(rule_func), id(game_handler), player)`
 **Rule Builder Format** (adds to `BaseClasses.py`):
 ```python
 # Per-player rule cache in CollectionState
-self.rule_cache: dict[int, dict[int, bool]] = {}
+self.rule_builder_cache: dict[int, dict[int, bool]] = {}
 ```
 - Rules that evaluate to the same result share instances
 - Cache invalidation hooks for item collection/removal
@@ -251,14 +251,7 @@ AST format excels at extracting rules from existing code without requiring chang
 
 ### PR #5048 Resources
 - [PR #5048: Core: Add rule builder](https://github.com/ArchipelagoMW/Archipelago/pull/5048)
-- [Source code (rules-engine branch)](https://github.com/drtchops/Archipelago/tree/rules-engine)
-- [rule_builder.py](https://github.com/drtchops/Archipelago/blob/rules-engine/rule_builder.py)
-
-### Example Implementations
-- [TOEM - Original implementation](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_original) - Traditional lambda rules
-- [TOEM - Rule Builder version](https://github.com/drtchops/Archipelago/tree/toem-benchmark/worlds/toem_rule_builder) - Same world using Rule Builder
-- [Astalon - Main campaign logic](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/main_campaign.py)
-- [Astalon - Custom rule definitions](https://github.com/drtchops/Archipelago/blob/astalon-rule-builder/worlds/astalon/logic/custom_rules.py)
+- Original source branches (`rules-engine`, `toem-benchmark`, `astalon-rule-builder`) are no longer available
 
 ### Archipelago Core
 - [Archipelago World API Documentation](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/world%20api.md)

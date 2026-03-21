@@ -7,7 +7,7 @@ from typing import List, Set, TextIO, Dict
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 import settings
-from Utils import check_rom_available
+from worlds.RomlessUtils import check_rom_available
 from .Items import get_item_names_per_category, item_table, filler_items, trap_items
 from .Locations import get_locations
 from .Regions import init_areas

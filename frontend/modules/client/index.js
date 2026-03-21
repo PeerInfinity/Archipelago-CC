@@ -3,13 +3,14 @@
 import MainContentUI from './ui/mainContentUI.js';
 import storage from './core/storage.js';
 import connection from './core/connection.js';
-import { loadMappingsFromStorage } from './utils/idMapping.js';
+import { loadMappingsFromStorage, getServerLocationId } from './utils/idMapping.js';
 import messageHandler, {
   handleUserLocationCheckForClient,
   handleUserItemCheckForClient,
 } from './core/messageHandler.js';
 import LocationManager from './core/locationManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -191,7 +192,6 @@ export function register(registrationApi) {
   // MainContentUI might still publish these, so keep registration for now
   registrationApi.registerEventBusPublisher('network:disconnectRequest'); // This is if MainContentUI publishes disconnect on EventBus
   registrationApi.registerEventBusPublisher('network:connectRequest'); // This is if MainContentUI publishes connect on EventBus (though it now calls directly)
-  registrationApi.registerEventBusPublisher('ui:panelManuallyClosed');
   // Removed event bus registrations for control:start and control:quickCheck as they are now internal to Timer module
   // registrationApi.registerEventBusPublisher('control:start');
   // registrationApi.registerEventBusPublisher('control:quickCheck');
@@ -248,7 +248,7 @@ export function register(registrationApi) {
           unsubscribe();
           resolve(chatData);
         }
-      }, 'client-chat-waiter');
+      });
     });
   });
 
@@ -292,7 +292,7 @@ export function register(registrationApi) {
           unsubscribe();
           resolve(bounceData);
         }
-      }, 'client-ready-waiter');
+      });
     });
   });
 
@@ -325,6 +325,25 @@ export function register(registrationApi) {
       isConnected: coreConnection ? coreConnection.isConnected() : false,
       isHandshakeComplete: coreMessageHandler.getClientSlot() !== null && coreMessageHandler.getClientSlot() !== undefined,
     };
+  });
+
+  // Register public function for batch-sending location checks to the server
+  // Used by the timer after batchCheckLocations to notify the server
+  registrationApi.registerPublicFunction(moduleInfo.name, 'sendBatchLocationChecks', async (locationNames) => {
+    if (!coreMessageHandler || !coreConnection?.isConnected()) return;
+    const serverIds = [];
+    for (const name of locationNames) {
+      let serverId = null;
+      if (coreMessageHandler.serverLocationNameToId?.has(name)) {
+        serverId = coreMessageHandler.serverLocationNameToId.get(name);
+      } else {
+        serverId = await getServerLocationId(name, stateManagerProxySingleton);
+      }
+      if (serverId !== null) serverIds.push(serverId);
+    }
+    if (serverIds.length > 0) {
+      coreMessageHandler._internalSendLocationChecks(serverIds);
+    }
   });
 }
 
@@ -463,7 +482,17 @@ export function getClientModuleDispatcher() {
 
 // ADDED: Export event bus for use by other files in this module
 export function getClientModuleEventBus() {
-  return moduleEventBus;
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'client'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'client'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'client'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }
 
 // Export setter for MainContentUI instance

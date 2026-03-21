@@ -1,4 +1,4 @@
-name: Test ALTTP Spoiler
+name: Test ALTTP Spoiler & Frontend Regression
 
 on:
   # Run on push to main branch
@@ -8,6 +8,8 @@ on:
     paths:
       - 'Players/Templates/*.yaml'
       - 'scripts/test/**'
+      - 'frontend/**'
+      - 'test_json/**'
       - '.github/workflows/test-templates.yml'
 
   # Run on pull requests
@@ -15,14 +17,16 @@ on:
     paths:
       - 'Players/Templates/*.yaml'
       - 'scripts/test/**'
+      - 'frontend/**'
+      - 'test_json/**'
       - '.github/workflows/test-templates.yml'
 
   # Allow manual triggering
   workflow_dispatch:
 
 jobs:
-  test-alttp:
-    name: Test ALTTP Spoiler
+  test-alttp-and-regression:
+    name: Test ALTTP Spoiler & Frontend Regression
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -121,8 +125,9 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: alttp-test-results
+          name: test-results
           path: |
             scripts/output/
             docs/json/developer/test-results/
+            test-results/
           retention-days: 7

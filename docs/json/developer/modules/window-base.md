@@ -6,7 +6,9 @@
 
 ## Key Files
 
-- `frontend/modules/window-base/windowClient.js` - Main communication client
+- `frontend/modules/window-base/windowClient.js` - Re-exports `AdapterClient` as `WindowClient` for backward compatibility
+- `frontend/modules/shared/adapterClient.js` - Unified communication client (auto-detects iframe vs window context)
+- `frontend/modules/shared/communicationProtocol.js` - Unified communication protocol
 - `frontend/modules/window-base/standalone.js` - Standalone app entry point
 - `frontend/modules/window-base/mockDependencies.js` - Mock implementations for testing
 - `frontend/modules/window-base/index.html` - Example standalone page
@@ -51,22 +53,19 @@ client.startHeartbeat();
 client.disconnect();
 ```
 
-## Key Differences from IframeClient
+## Unified AdapterClient
 
-| Aspect | IframeClient | WindowClient |
-|--------|--------------|--------------|
-| Parent Reference | `window.parent` | `window.opener` |
-| ID Parameter | `iframeId` | `windowId` (or `iframeId` for compat) |
-| Connection Check | Parent exists | Opener exists and not closed |
-| Window Relationship | Embedded | Separate browser window |
+`WindowClient` is a backward-compatible re-export of the unified `AdapterClient` class (`frontend/modules/shared/adapterClient.js`). `IframeClient` and `WindowClient` are the same class — the `AdapterClient` auto-detects whether it is running in an iframe (`window.parent`) or a separate window (`window.opener`) and uses the appropriate transport and handshake.
+
+This means the same HTML page (e.g., `index-iframe.html`) works when loaded in an iframe panel or opened as a separate window, with no code changes needed.
 
 ## Features
 
-- **Auto ID Generation:** Generates unique window ID if not provided
-- **Backward Compatibility:** Accepts both `windowId` and `iframeId` parameters
-- **Opener Validation:** Verifies opener window exists before connection
-- **Detailed Diagnostics:** Enhanced logging for window context debugging
-- **Drop-in Replacement:** Same API as IframeClient
+- **Auto-Detection:** Detects iframe vs window context automatically
+- **Auto ID Generation:** Generates unique client ID if not provided
+- **Backward Compatibility:** Accepts `windowId`, `iframeId`, or `clientId` parameters
+- **Opener Validation:** Verifies opener window exists before connection (window mode)
+- **Drop-in Replacement:** Same API whether used as `IframeClient` or `WindowClient`
 
 ## Integration with windowAdapter
 
@@ -101,16 +100,8 @@ try {
 }
 ```
 
-## When to Use
-
-Use `WindowClient` instead of `IframeClient` when:
-- Your app is opened via `window.open()`
-- You need a separate browser window (not embedded)
-- Users may want to move the window to another monitor
-- You need popup-style interaction
-
 ## Dependencies
 
-- Uses communication protocol from `windowAdapter/communicationProtocol.js`
+- Uses unified communication protocol from `shared/communicationProtocol.js` (re-exported by `windowAdapter/communicationProtocol.js`)
 - Optional shared logger for debugging
 - No external library dependencies

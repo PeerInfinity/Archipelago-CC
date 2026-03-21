@@ -22,6 +22,8 @@
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 const logger = createUniversalLogger('costGenerator');
 
@@ -87,7 +89,7 @@ export class CostGenerator {
           [startRegion]: { moveCost: 0 },
         },
         locations: {},
-        defaultRegionCost: 10,
+        defaultRegionCost: 50,
         defaultLocationCost: 10,
       };
 
@@ -123,7 +125,7 @@ export class CostGenerator {
           processed: this.processedEntries,
           total: this.totalEntries,
           percent: Math.floor((this.processedEntries / this.totalEntries) * 100),
-        }, 'loops');
+        });
       }
 
       // Assign default costs to unvisited regions/locations
@@ -176,26 +178,49 @@ export class CostGenerator {
    */
   _extractLocationEntries(sphereLog) {
     const entries = [];
+    const playerId = this._getCurrentPlayerId();
 
     for (const logEntry of sphereLog) {
       if (logEntry.type !== 'state_update') continue;
 
-      const playerData = logEntry.player_data?.['1']; // Single player
+      const playerData = logEntry.player_data?.[playerId];
       if (!playerData) continue;
 
       const sphereLocations = playerData.sphere_locations || [];
       const newRegions = playerData.new_accessible_regions || [];
 
-      for (const locationName of sphereLocations) {
+      // Count items received by this player in this sphere (from any source)
+      const baseItems = playerData.new_inventory_details?.base_items || {};
+      const itemsReceived = Object.values(baseItems).reduce((sum, count) => sum + count, 0);
+
+      for (let i = 0; i < sphereLocations.length; i++) {
         entries.push({
           sphereIndex: logEntry.sphere_index,
-          locationName,
+          locationName: sphereLocations[i],
           newAccessibleRegions: newRegions,
+          // Grant items received on the last location in the sphere
+          itemsReceived: (i === sphereLocations.length - 1) ? itemsReceived : 0,
+        });
+      }
+
+      // Items received without checking any locations (from other players)
+      if (sphereLocations.length === 0 && itemsReceived > 0) {
+        entries.push({
+          sphereIndex: logEntry.sphere_index,
+          locationName: null,
+          newAccessibleRegions: newRegions,
+          itemsReceived,
         });
       }
     }
 
     return entries;
+  }
+
+  _getCurrentPlayerId() {
+    const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
+    const id = getIdFn?.();
+    return id ? String(id) : DEFAULT_PLAYER_ID;
   }
 
   /**
@@ -207,12 +232,28 @@ export class CostGenerator {
   async _processLocationEntry(entry, costs, startRegion) {
     const { locationName } = entry;
 
+    // Phantom entry: no location to check, just apply mana boost from received items
+    if (!locationName) {
+      if (entry.itemsReceived > 0) {
+        this.loopState.maxMana += entry.itemsReceived * 10;
+        this.loopState.currentMana = this.loopState.maxMana;
+        logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${this.loopState.maxMana})`);
+      }
+      return;
+    }
+
     // Get location's region from static data
     const staticData = this.stateManager.getStaticData();
     const locationData = staticData?.locations?.get(locationName);
 
     if (!locationData) {
-      logger.warn(`Location not found in static data: ${locationName}`);
+      // Location not in this game's static data (belongs to another player) — skip
+      // but still apply any mana boost from items received
+      if (entry.itemsReceived > 0) {
+        this.loopState.maxMana += entry.itemsReceived * 10;
+        this.loopState.currentMana = this.loopState.maxMana;
+      }
+      logger.debug(`Skipping location not in this game: ${locationName}`);
       return;
     }
 
@@ -296,7 +337,13 @@ export class CostGenerator {
     // Wait for the location to be checked
     await this._waitForLocationCheck(locationName);
 
-    // Reset loop for next entry (refill mana, reset action progress)
+    // Apply mana boost from items received in this sphere
+    if (entry.itemsReceived > 0) {
+      this.loopState.maxMana += entry.itemsReceived * 10;
+      logger.debug(`Mana boost from received items: +${entry.itemsReceived * 10} (now ${this.loopState.maxMana})`);
+    }
+
+    // Reset loop for next entry (refill mana to maxMana, reset action progress)
     this.loopState._resetLoop?.();
     // Unpause after reset
     this.loopState.setPaused(false);
@@ -319,16 +366,16 @@ export class CostGenerator {
 
         if (isNowChecked) {
           clearTimeout(timeout);
-          this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+          this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
           resolve(true);
         }
       };
 
-      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+      this.eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
       // Safety timeout (5 seconds per location in instant mode should be plenty)
       timeout = setTimeout(() => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'costGenerator');
+        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
         logger.warn(`Timeout waiting for ${locationName} to be checked`);
         resolve(false);
       }, 5000);
