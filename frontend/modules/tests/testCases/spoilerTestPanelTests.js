@@ -19,9 +19,7 @@ export async function spoilerTestPanelFullRun(testController) {
 
     // 1. Activate the Spoiler Test panel
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
     
     // Poll for panel initialization instead of arbitrary delay
     if (!(await testController.pollForCondition(

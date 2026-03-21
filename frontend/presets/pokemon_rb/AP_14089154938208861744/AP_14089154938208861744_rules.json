@@ -45133,6 +45133,10 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Become Champion"
+      },
       "extra_badges": {},
       "local_poke_data": {
         "Bulbasaur": {

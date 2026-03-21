@@ -5,7 +5,6 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBusCore from '../../app/core/eventBus.js';
 // eventBus will be injected during module initialization
 let eventBus = null;
 
@@ -2950,11 +2949,11 @@ class CommonUI {
       }
 
       // Publish panel activation first
-      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'commonUI');
+      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
       log('info', `[commonUI] Published ui:activatePanel for regionsPanel.`);
 
       // Then publish navigation
-      eventBus.publish('ui:navigateToRegion', { regionName: regionName }, 'commonUI');
+      eventBus.publish('ui:navigateToRegion', { regionName: regionName });
       log(
         'info',
         `[commonUI] Published ui:navigateToRegion for ${regionName}.`
@@ -3033,16 +3032,13 @@ class CommonUI {
     link.addEventListener('click', (e) => {
       e.stopPropagation();
 
-      // Use injected eventBus if available, otherwise fall back to imported eventBusCore
-      const activeEventBus = eventBus || eventBusCore;
-
-      if (!activeEventBus) {
+      if (!eventBus) {
         log('error', '[commonUI] No eventBus available - cannot publish events. Location: ' + locationName);
         return;
       }
 
       // First activate the Regions panel
-      activeEventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'commonUI');
+      eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
       log('info', `[commonUI] Published ui:activatePanel for regionsPanel.`);
 
       // Then publish navigation to the location
@@ -3050,10 +3046,10 @@ class CommonUI {
         'info',
         `[commonUI] Publishing ui:navigateToLocation for ${locationName} in ${regionName}`
       );
-      activeEventBus.publish('ui:navigateToLocation', {
+      eventBus.publish('ui:navigateToLocation', {
         locationName: locationName,
         regionName: regionName,
-      }, 'commonUI');
+      });
     });
 
     return link;

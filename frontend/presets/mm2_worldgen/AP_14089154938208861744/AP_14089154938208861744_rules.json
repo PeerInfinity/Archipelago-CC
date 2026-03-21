@@ -1407,7 +1407,6 @@
   },
   "item_groups": {
     "1": [
-      "Event",
       "Everything",
       "Items",
       "Stages",
@@ -2021,7 +2020,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
   },
   "helpers": {
     "1": {

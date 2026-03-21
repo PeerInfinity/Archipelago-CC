@@ -69,7 +69,7 @@ export class NavigationManager {
         if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
           if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
             const staticData = stateManager.getStaticData();
-            const regionData = staticData?.regions?.[regionName];
+            const regionData = staticData?.regions?.get(regionName);
             node.data('label', regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' '));
           } else {
             node.data('label', '???');
@@ -78,7 +78,7 @@ export class NavigationManager {
         } else {
           // Update the label to include count if region is in path
           const staticData = stateManager.getStaticData();
-          const regionData = staticData?.regions?.[regionName];
+          const regionData = staticData?.regions?.get(regionName);
           const baseText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
 
           if (count > 0) {
@@ -132,7 +132,7 @@ export class NavigationManager {
       // Region may not exist yet (e.g. placeholder before rules load) or in this graph
       const staticData = stateManager.getStaticData?.();
       const existsInStaticData = staticData?.regions?.has(regionName);
-      const logLevel = (!existsInStaticData || this.isStartRegion(regionName)) ? 'debug' : 'warn';
+      const logLevel = (!existsInStaticData || !this.ui.graphInitialized || this.isStartRegion(regionName)) ? 'debug' : 'warn';
       logger[logLevel](`Region node not found: ${regionName}`);
       return;
     }
@@ -150,10 +150,10 @@ export class NavigationManager {
       logger.verbose('Last path entry', { lastPathEntry });
 
       // If player's current region is the last region in path AND we have exit info
-      if (lastPathEntry.region === regionName && lastPathEntry.exitUsed) {
+      if (lastPathEntry.destinationRegion === regionName && lastPathEntry.exitUsed) {
         // Find the previous region in the path to determine the incoming edge
         const previousRegion = this.ui.currentPath.length > 1 ?
-          this.ui.currentPath[this.ui.currentPath.length - 2].region : null;
+          this.ui.currentPath[this.ui.currentPath.length - 2].destinationRegion : null;
 
         logger.verbose(`Previous region in path: ${previousRegion}`);
 
@@ -401,7 +401,7 @@ export class NavigationManager {
     }
 
     // Start from the last region in the current path
-    const startRegion = currentPath[currentPath.length - 1].region;
+    const startRegion = currentPath[currentPath.length - 1].destinationRegion;
 
     if (startRegion === targetRegion) {
       logger.debug(`Target region ${targetRegion} is already at end of path`);

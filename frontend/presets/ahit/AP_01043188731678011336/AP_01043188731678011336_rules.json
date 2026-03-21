@@ -7895,6 +7895,10 @@
   "exporter": {},
   "game_info": {
     "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Time Piece Cluster"
+      },
       "chapter_costs": {
         "Mafia Town": 0,
         "Battle of the Birds": 5,

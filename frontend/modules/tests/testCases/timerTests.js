@@ -120,7 +120,7 @@ export async function timerOfflineTest(testController) {
       timerStopped = true;
     };
 
-    const unsubStop = testController.eventBus.subscribe('timer:stopped', stopHandler, 'tests');
+    const unsubStop = testController.eventBus.subscribe('timer:stopped', stopHandler);
 
     // Wait for timer to stop (indicating all checks are done)
     let lastCheckedCount = 0;
@@ -344,15 +344,15 @@ async function timerOfflineTestGanonImmediateCheck(testController) {
 
         if (isNowChecked) {
           clearTimeout(timeout);
-          eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
           resolve(true);
         }
       };
-      eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+      eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
       // Add a safety timeout
       timeout = setTimeout(() => {
-        eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+        eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
         resolve(false); // Ganon was NOT checked
       }, 2000);
     });
@@ -542,15 +542,15 @@ async function timerOfflineTestCheckRejection(testController) {
 
             if (isNowChecked) {
               clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+              eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
               resolve(true);
             }
           };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
           // Add a safety timeout
           timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             resolve(false); // Location was NOT checked
           }, 1000); // Shorter timeout for this test
         });
@@ -760,15 +760,15 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
 
             if (isNowChecked) {
               clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+              eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
               resolve();
             }
           };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
           // Add a safety timeout
           timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             testController.log(`    WARNING: Timeout waiting for ${locationName} to be checked`);
             resolve();
           }, 5000);
@@ -985,15 +985,15 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
 
           if (isNowChecked) {
             clearTimeout(timeout);
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             resolve();
           }
         };
-        eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+        eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
         // Add a safety timeout
         timeout = setTimeout(() => {
-          eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
           testController.log(`    WARNING: Timeout waiting for ${locationToCheck.name} to be checked`);
           resolve();
         }, 5000);
@@ -1299,15 +1299,15 @@ async function timerOfflineTestWithSphereOrderNoAutoCollect(testController) {
 
             if (isNowChecked) {
               clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+              eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
               resolve();
             }
           };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
           // Add a safety timeout
           timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             testController.log(`    WARNING: Timeout waiting for ${locationName} to be checked`);
             resolve();
           }, 5000);
@@ -1484,15 +1484,15 @@ async function timerOfflineTestWithSphereOrder(testController) {
 
             if (isNowChecked) {
               clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+              eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
               resolve();
             }
           };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
           // Add a safety timeout
           timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             testController.log(`    WARNING: Timeout waiting for ${locationName} to be checked`);
             resolve();
           }, 5000);
@@ -1790,15 +1790,15 @@ async function timerOfflineTestWithLoopsQueue(testController) {
 
             if (isNowChecked) {
               clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+              eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
               resolve(true);
             }
           };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
+          eventBus.subscribe('stateManager:snapshotUpdated', handler);
 
           // Safety timeout (5 seconds per location in instant mode should be plenty)
           timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
+            eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
             testController.log(`    WARNING: Timeout waiting for ${targetLocation.name} to be checked`);
             resolve(false);
           }, 5000);

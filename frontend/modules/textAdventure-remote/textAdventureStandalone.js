@@ -389,7 +389,7 @@ Load a rules file in the main application to begin your adventure.`;
         const actualExit = regionInfo?.data?.exits?.find(ex => ex.name.toLowerCase() === exitNameLower);
 
         if (!actualExit) {
-            console.error(`[textAdventureStandalone] No exit found matching "${exitName}". Available: ${regionInfo?.data?.exits?.map(e => e.name).join(', ')}`);
+            logger.error(`No exit found matching "${exitName}". Available: ${regionInfo?.data?.exits?.map(e => e.name).join(', ')}`);
             return `Unrecognized exit: ${exitName}`;
         }
 

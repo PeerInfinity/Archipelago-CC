@@ -5,9 +5,9 @@
  * Data management is handled by EditorDataService from editorCore module.
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
-import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { applyLoadedData } from '../../utils/dataApplicator.js';
 
 // Modes that support the Apply button
 const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'metaGameJsFile', 'latestSnapshot'];
@@ -53,6 +53,7 @@ const themeCompartment = new Compartment();
 class CodeMirror6UI {
   constructor(container, componentState) {
     log('info', 'CodeMirror6UI instance created');
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.container = container;
     this.componentState = componentState;
 
@@ -83,9 +84,9 @@ class CodeMirror6UI {
     const readyHandler = () => {
       log('info', '[CodeMirror6UI] Received app:readyForUiDataLoad. Initializing editor.');
       this.initialize();
-      eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
+      this.eventBus.unsubscribe(EDITOR_EVENTS.APP_READY, readyHandler);
     };
-    eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler, 'editorCM6');
+    this.eventBus.subscribe(EDITOR_EVENTS.APP_READY, readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -105,6 +106,9 @@ class CodeMirror6UI {
     log('info', 'Initializing CodeMirror6UI...');
     this._createControls();
     this._createEditor();
+
+    // Register this panel's ID with the data service so it can be activated on export
+    editorDataService.registerPanelId('editorCodeMirror6Panel');
 
     // Subscribe to data service content changes
     this.unsubscribeContentChanged = editorDataService.onContentChanged(
@@ -187,6 +191,14 @@ class CodeMirror6UI {
     // Create Apply button (visible for supported modes)
     this.applyButton = this._createButton('Apply', this._handleApplyClick);
     this.applyButton.title = 'Apply changes (Ctrl+Enter)';
+    this.applyButton.style.backgroundColor = '#2e7d32';
+    this.applyButton.style.color = '#fff';
+    this.applyButton.addEventListener('mouseenter', () => {
+      this.applyButton.style.backgroundColor = '#388e3c';
+    });
+    this.applyButton.addEventListener('mouseleave', () => {
+      this.applyButton.style.backgroundColor = '#2e7d32';
+    });
     controlsDiv.appendChild(this.applyButton);
 
     // Update Apply button visibility based on current source
@@ -315,7 +327,7 @@ class CodeMirror6UI {
     log('info', `[CodeMirror6UI] Displaying content for source: ${currentSourceKey}`);
 
     if (!content.loaded) {
-      this._setEditorContent('Loading...');
+      this._setEditorContent(content.text || 'No data available.');
       return;
     }
 
@@ -393,23 +405,24 @@ class CodeMirror6UI {
       this._showApplyFeedback(true);
       log('info', `[CodeMirror6UI] ${currentSourceKey} applied successfully`);
     } catch (error) {
+      if (error && error._handled) return; // feedback already shown
       log('error', `[CodeMirror6UI] Error applying ${currentSourceKey}:`, error);
       this._showApplyFeedback(false);
       alert(`Error applying: ${error.message}`);
     }
   }
 
-  _showApplyFeedback(success) {
+  _showApplyFeedback(success, message) {
     if (!this.applyButton) return;
 
     const originalText = this.applyButton.textContent;
     const originalBg = this.applyButton.style.backgroundColor;
 
     if (success) {
-      this.applyButton.textContent = 'Applied!';
+      this.applyButton.textContent = message || 'Applied!';
       this.applyButton.style.backgroundColor = '#4CAF50';
     } else {
-      this.applyButton.textContent = 'Error!';
+      this.applyButton.textContent = message || 'Error!';
       this.applyButton.style.backgroundColor = '#f44336';
     }
 
@@ -426,11 +439,11 @@ class CodeMirror6UI {
     log('info', '[CodeMirror6UI] Applying edited rules...');
 
     // Publish the files:jsonLoaded event to trigger rules loading
-    eventBus.publish('files:jsonLoaded', {
+    this.eventBus.publish('files:jsonLoaded', {
       jsonData: rulesData,
       selectedPlayerId: '1',
       sourceName: 'editorApply'
-    }, 'editorCodeMirror6');
+    });
   }
 
   async _applyLocalStorageMode(jsonText) {
@@ -464,38 +477,10 @@ class CodeMirror6UI {
   async _applyDataForExport(jsonText) {
     const loadedData = JSON.parse(jsonText);
     log('info', '[CodeMirror6UI] Applying data for export...');
-
-    // Apply data using the same logic as jsonUI._applyNonReloadData
-    const handlers = centralRegistry.getAllJsonDataHandlers();
-
-    for (const dataKey in loadedData) {
-      if (dataKey === 'modeName' || dataKey === 'savedTimestamp') continue;
-
-      if (dataKey === 'rulesConfig' && loadedData.rulesConfig) {
-        // Apply rules directly
-        eventBus.publish('files:jsonLoaded', {
-          jsonData: loadedData.rulesConfig,
-          selectedPlayerId: '1',
-          sourceName: 'editorApplyExport'
-        }, 'editorCodeMirror6');
-        log('info', '[CodeMirror6UI] Applied rulesConfig from export data');
-      } else if (dataKey === 'userSettings' && loadedData.userSettings) {
-        // Apply user settings via settings manager
-        if (window.settingsManager) {
-          await window.settingsManager.updateSettings(loadedData.userSettings);
-          log('info', '[CodeMirror6UI] Applied userSettings from export data');
-        }
-      } else if (handlers.has(dataKey)) {
-        const handler = handlers.get(dataKey);
-        if (!handler.requiresReload && handler.applyLoadedDataFunction) {
-          try {
-            handler.applyLoadedDataFunction(loadedData[dataKey]);
-            log('info', `[CodeMirror6UI] Applied ${dataKey} from export data`);
-          } catch (e) {
-            log('error', `[CodeMirror6UI] Error applying ${dataKey}:`, e);
-          }
-        }
-      }
+    const result = await applyLoadedData(loadedData, 'editorCodeMirror6');
+    if (result.requiresReload) {
+      this._showApplyFeedback(true, 'Applied! (reload needed)');
+      throw { _handled: true }; // skip default feedback
     }
   }
 
@@ -515,10 +500,10 @@ class CodeMirror6UI {
         const evalConfig = new Function(`return ${configStr}`)();
 
         // Publish event for metaGame to update its configuration
-        eventBus.publish('editor:metaGameConfigApply', {
+        this.eventBus.publish('editor:metaGameConfigApply', {
           configuration: evalConfig,
           sourceName: 'editorApply'
-        }, 'editorCodeMirror6');
+        });
 
         log('info', '[CodeMirror6UI] MetaGame configuration extracted and applied');
       } catch (evalError) {
@@ -536,10 +521,10 @@ class CodeMirror6UI {
     log('info', '[CodeMirror6UI] Applying edited snapshot...');
 
     // Publish event for state manager to apply the snapshot
-    eventBus.publish('editor:snapshotApply', {
+    this.eventBus.publish('editor:snapshotApply', {
       snapshot: snapshotData,
       sourceName: 'editorApply'
-    }, 'editorCodeMirror6');
+    });
   }
 
   _updateApplyButtonVisibility() {

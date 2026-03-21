@@ -20,11 +20,40 @@ When UT connects to a server, `TrackerCore.initalize_tracker_core()` selects a t
 
 ---
 
+## Hybrid Mode vs Specific Mode
+
+There are two ways to select which tracking mode UT uses: **hybrid mode** (automatic per-game selection) and **specific mode** (one mode forced for all games).
+
+### Hybrid Mode
+
+Hybrid mode uses `tracking-mode-config.json` to automatically select the best tracking mode for each game. Not every mode works for every game — some games only pass with pickle, others only with worldgen, and some work with all modes. Hybrid mode consults the config to pick the highest-priority mode that has been tested and verified for the current game.
+
+This affects both sides of the pipeline:
+
+- **Export time:** The exporter reads the config and only exports the files needed for each game's best mode (e.g., `_rules.json` for worldgen games, `.pkl` for pickle games). This avoids generating unnecessary files.
+- **Tracker time:** UT reads the config, gets the list of passing modes for the current game, and tries them in `fallback_order` priority, skipping any mode not in the game's passing list.
+
+Enable with: `python scripts/setup/update_host_settings.py ut-hybrid`
+
+For full details, see the [Hybrid Mode user guide](../../../../worlds/tracker/docs/hybrid-mode.md).
+
+### Specific Mode
+
+When a specific mode is selected, the same mode is used for all games uniformly. The exporter exports the corresponding file format for every game, and UT uses only that mode (falling back to YAML-based tracking if it fails).
+
+| Preset | Export | UT behavior |
+|--------|--------|-------------|
+| `ut-worldgen` | `_rules.json` for all games | Worldgen mode for all games |
+| `ut-pickle` | `.pkl` for all games | Pickle mode for all games |
+| `ut-original` | No extra exports | YAML-based tracking for all games |
+
+This is simpler but less optimal — some games may fail in the chosen mode even though they would succeed in a different one.
+
 ## Fallback Order
 
-### Config-Driven (production)
+### Config-Driven (hybrid mode)
 
-When `exporter/tracking-mode-config.json` is present, the mode order comes from its `fallback_order` key:
+When `exporter/tracking-mode-config.json` is present and `use_tracking_mode_config` is enabled, the mode order comes from the config's `fallback_order` key:
 
 ```json
 {
@@ -35,14 +64,16 @@ When `exporter/tracking-mode-config.json` is present, the mode order comes from 
 
 Each game's `game_results` entry lists which modes have been validated for that game. UT skips modes not in the passing list for the current game, then falls through to the next mode in `fallback_order`.
 
-### Legacy (no config)
+### Legacy (specific mode / no config)
 
-Without `tracking-mode-config.json`, the hardcoded order is:
+Without `tracking-mode-config.json`, or when `use_tracking_mode_config` is disabled, the fallback depends on which files are available. UT tries each mode in a hardcoded order, using whichever files were exported:
 
-1. Pickle
-2. Worldgen
-3. Original Seeded
+1. Pickle (if a `.pkl` file exists)
+2. Worldgen (if a `_rules.json` file exists)
+3. Original Seeded (if seed number can be resolved)
 4. Original (YAML)
+
+When a specific mode preset is used (e.g., `ut-worldgen`), only the corresponding file type is exported, so UT naturally uses that mode — the other modes are skipped because their files don't exist.
 
 ---
 
@@ -175,6 +206,7 @@ The config's `fallback_order` is the global priority list. Per-game entries in `
 
 ## Related Documentation
 
+- [Hybrid Mode](../../../../worlds/tracker/docs/hybrid-mode.md) — User guide for config-driven per-game mode selection
 - [Universal Tracker Modifications](../diffs/universal-tracker-modifications.md) — Architecture overview and file-by-file changes
 - [UT Fuzz Tests](../tests/test-fuzz.md) — How the modes are tested
 - [Fuzzer Debugging Guide](../guides/fuzzer-debugging.md) — Debugging tracking failures

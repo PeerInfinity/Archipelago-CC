@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import enum
 import logging
 from typing import (TYPE_CHECKING, Any, ClassVar, Dict, Generic, Iterable,
-                    Optional, Sequence, Tuple, TypeGuard, TypeVar, Union, cast)
+                    Optional, Sequence, Tuple, TypeGuard, TypeVar, Union)
 
 
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components
@@ -39,7 +39,7 @@ def valid_patch_suffix(obj: object) -> TypeGuard[Union[str, Iterable[str]]]:
         return valid_individual(obj)
     if not isinstance(obj, Iterable):
         return False
-    obj_it = cast(Iterable[object], obj)
+    obj_it: Iterable[object] = obj
     return all(valid_individual(each) for each in obj_it)
 
 

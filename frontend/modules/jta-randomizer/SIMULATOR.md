@@ -23,54 +23,56 @@ The simulator's purpose is to establish baseline reset counts for reaching each 
 ### Artifacts
 Special items with powerful effects:
 - **Scroll of Haste**: Next task is 5x faster (reduces energy cost by 80%)
-- **Magic Ring**: Next task gives 3x XP
+- **Magic Ring**: Next task gives 5x XP
+- **Bottled Lightning**: 2x speed on boss tasks (passive while held)
 - **Dreamcatcher**: Duplicates all items found this reset
 
 Artifacts are obtained from specific tasks (e.g., "Scribe Scroll of Haste" in Zone 7) and persist at 50% across resets like other items.
 
 ### Skills
-12 skills with different XP multipliers (higher = slower to level):
+12 skills with different XP multipliers (higher = slower to level). Two skills (Survival, Druid) were removed in v0.5.0:
 
 | Skill | XP Multiplier |
 |-------|---------------|
-| Charisma, Study, Search, Subterfuge, Crafting, Survival, Travel | 1x |
+| Charisma, Study, Search, Subterfuge, Crafting, Travel | 1x |
 | Magic | 3x |
 | Combat | 5x |
-| Fortitude | 10x |
-| Druid | 20x |
-| Ascension | 1000x |
+| Fortitude | 5x |
+| Ascension | 200x |
 
 **Leveling formula**: `XP needed = 1.02^level * 10 * skillMult`
 
 **Progress bonus**: `1.01^level` speed multiplier per skill level
 
 ### Zones
-16 zones (0-15), each containing:
+27 zones (0-26), with 0-15 modeled pre-prestige. Each zone contains:
 - **Mandatory tasks**: Must complete to unlock Travel task
 - **Travel task**: Advances to next zone
 - **Normal tasks**: Optional (perks, items, XP farming)
 - **Boss tasks**: High-cost optional challenges that unlock hidden tasks
 - **Hidden tasks**: Unlocked by defeating the corresponding boss
 
-**Zone cost scaling**: `2.2^zoneId` multiplier on all task costs
+**Zone cost scaling**: `2.2^zoneId` multiplier on non-boss task costs, `4^zoneId` for boss tasks
 
 ### Boss Mechanics
-Each boss, when defeated, unlocks a hidden task in the same zone:
+Each boss, when defeated, unlocks a hidden task in the same zone.
+Boss tasks use a steeper zone cost exponent (4) compared to normal tasks (2.2).
+
 | Zone | Boss | Unlocks | Boss costMult |
 |------|------|---------|---------------|
-| 2 | Goblin Warlord | Save the Village | 1300 |
-| 3 | Angry Ent | Gather Magical Roots | 12000 |
-| 4 | Goblin Chieftain | Wipe Out Goblins | 10000 |
-| 5 | Bandits | Loot Bandit Camp | 10000 |
-| 7 | Corrupt Mayor | Purge Corrupt Bureaucracy | 10000 |
-| 8 | Werewolf | Gather Shed Fur from Lair | 20000 |
-| 10 | Kraken | Explore Kraken's Lair | 15000 |
-| 11 | Horde of Lizardfolk | Steal Their Oracle Bones | 150000 |
-| 12 | Giant Sandworm | Learn to Dance the Worm | 600000 |
-| 13 | Sleepy Djinn | Find More Lamps | 2000000 |
-| 15 | The Weaver of Dreams | Contain the Dream | 100000000 |
+| 2 | Goblin Warlord | Save the Village | 400 |
+| 3 | Angry Ent | Gather Magical Roots | 1000 |
+| 4 | Goblin Chieftain | Wipe Out Goblins | 1000 |
+| 5 | Bandits | Loot Bandit Camp | 500 |
+| 7 | Corrupt Mayor | Purge Corrupt Bureaucracy | 150 |
+| 8 | Werewolf | Gather Shed Fur from Lair | 170 |
+| 10 | Kraken | Explore Kraken's Lair | 40 |
+| 11 | Horde of Lizardfolk | Steal Their Oracle Bones | 210 |
+| 12 | Giant Sandworm | Learn to Dance the Worm | 460 |
+| 13 | Sleepy Djinn | Find More Lamps | 840 |
+| 15 | The Weaver of Dreams | Contain the Dream | 13000 |
 
-**Note**: Boss costs are extremely high. The cheapest boss (Goblin Warlord) costs ~63,000 energy at game start, making bosses late-game content that requires massive energy accumulation through the EnergeticMemory perk.
+**Note**: Boss costMults are lower than v0.2.0 but the steeper exponent (4^zoneId) makes later bosses still very expensive.
 
 ### Tasks
 Each task has:
@@ -166,7 +168,8 @@ Tasks training multiple bottleneck skills are naturally prioritized.
 
 ### Task Cost
 ```javascript
-baseCost = BASE_COST × costMult × 2.2^zoneId  // BASE_COST = 10
+baseCost = BASE_COST × costMult × exp^zoneId  // BASE_COST = 10
+// exp = 4 for Boss tasks, 2.2 for all others
 ```
 
 ### Progress Per Tick
@@ -175,8 +178,10 @@ progress = 1.0
   × (1.01^skillLevel)^(1/numSkills)  // Geometric mean for multi-skill
   × perkBonuses
   × 1.05^zoneId  // Zone speedup
+  × MajorTimeCompression (1.5x if perk)
   × powerBonus  // For Combat/Fortitude
-  × attunementBonus  // For Magic/Druid/Study
+  × attunementBonus  // For Magic/Study
+  × BottledLightning (2x if boss task and artifact held)
 ```
 
 ### Ticks to Complete
@@ -191,13 +196,18 @@ drainPerTick = 1.0
   × 0.8 (if HighAltitudeClimbing)
   × 0.95^(highestZone - currentZone) (if ReflectionsOnTheJourney)
   × 1.05^zoneId
+  × 1.5 (if multi-tick and MajorTimeCompression)
 
 energyCost = ticks × drainPerTick × maxReps
 ```
 
 ### XP Gain
 ```javascript
-xpPerRep = progressPerTick × 8 × xpMult × 1.5 (if Writing perk) × 1.25^zoneId
+xpPerRep = progressPerTick × 8 × xpMult × ticks
+  × 1.5 (if Writing perk)
+  × 2.0 (if GazedBeyondTheVeil perk)
+  × 1.25^zoneId
+  × 5.0 (if Magic Ring XP boost)
 ```
 
 ### Zone Reachability
@@ -241,33 +251,31 @@ Output includes **delta** (resets since previous milestone) to identify:
 
 ## Observed Progression
 
-Typical baseline results (simulation to Zone 8):
+**Note**: These numbers are from v0.2.0 and will differ with v0.5.0 changes (skill removals, formula updates, boss exponent changes). Run the simulation to get updated numbers.
 
 | Zone | Name | Reset | Delta | Notes |
 |------|------|-------|-------|-------|
 | 0 | The Village | 2 | 2 | Initial zone |
 | 1 | The Village Watch | 24 | 22 | Study/Charisma bottleneck |
 | 2 | The Raid | 74 | 50 | Combat bottleneck |
-| 3 | The Wilderness | 164 | 90 | Search/Subterfuge/Survival needed |
+| 3 | The Wilderness | 164 | 90 | Search/Subterfuge needed |
 | 4 | The Cave System | 212 | 48 | Magic introduced |
 | 5 | The Road to the City | 288 | 76 | Multi-skill requirements |
 | 6 | The City Outskirts | 328 | 40 | Combat/Fortitude needed |
 | 7 | The City | 446 | 118 | Scroll of Haste available |
-| 8 | The Forest | 678 | 232 | Druid introduced (20x XP mult) |
-
-**Note**: Bosses are not defeated in early/mid game due to extremely high costs. The first boss (Goblin Warlord) requires ~63,000 energy at start, while starting energy is only 100.
+| 8 | The Forest | 678 | 232 | Magic-heavy |
 
 ## Limitations
 
 1. **No automation**: The Amulet's automation feature isn't simulated
-2. **No prestige/ascension**: The Ascension skill and prestige mechanics aren't fully modeled
-3. **Deterministic**: No randomization in task selection or outcomes
-4. **Item skill modifiers not applied**: Non-energy items provide skill bonuses when consumed in the real game, but the simulator doesn't apply these bonuses
-5. **Magic Ring XP bonus not used**: The simulator tracks Magic Rings but doesn't currently use them for XP optimization
+2. **No prestige system**: Prestige unlocks and repeatables (GottaGoFast, Perky, MandatorySchmandatory, SpiteTheGods, Deenergized, MasteryOfTime, DivineInspiration, DivineKnowledge, DivinerKnowledge) are not yet modeled
+3. **Zones 16-26 not modeled**: Post-prestige zones are deferred
+4. **Deterministic**: No randomization in task selection or outcomes
+5. **Magic Ring XP bonus not optimized**: The simulator tracks Magic Rings but doesn't strategically use them for maximum XP
 
 ## Features Modeled
 
-1. **Artifacts**: Scroll of Haste (5x speed), Magic Ring (3x XP - tracked but not used), Dreamcatcher (item duplication)
+1. **Artifacts**: Scroll of Haste (5x speed), Magic Ring (5x XP), Bottled Lightning (2x boss speed), Dreamcatcher (item duplication)
 2. **Boss tasks**: All bosses can be attempted; defeating them unlocks hidden tasks
 3. **Hidden tasks**: Unlocked hidden tasks become available for grinding
 4. **Immediate item use**: Push runs consume items as they're acquired

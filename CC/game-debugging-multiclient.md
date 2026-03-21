@@ -97,7 +97,7 @@ A successful test looks like:
 === Testing Adventure.yaml ===
 Running Generate.py for Adventure.yaml...
 Running multiclient timer test (dual-client mode)...
-  Command: npx playwright test tests/e2e/multiclient.spec.js -g multiclient timer test
+  Command: npx playwright test test_json/e2e/multiclient.spec.js -g multiclient timer test
   Environment: TEST_GAME=adventure TEST_SEED=1
 Completed Adventure.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Locations Checked=25/25
 ```
@@ -339,7 +339,7 @@ This means the timer checks locations as fast as possible. If locations aren't b
 
 | File | Purpose |
 |------|---------|
-| `tests/e2e/multiclient.spec.js` | Playwright test specification |
+| `test_json/e2e/multiclient.spec.js` | Playwright test specification |
 | `frontend/modules/tests/testCases/multiclientTests.js` | Client-side test logic |
 | `scripts/test/test-all-templates.py` | Test runner script |
 | `scripts/lib/test_runner.py` | Test execution functions |
