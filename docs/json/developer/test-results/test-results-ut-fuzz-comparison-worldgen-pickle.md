@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-03-21 22:57:46 UTC
+**Generated:** 2026-03-21 23:01:02 UTC
 
 **Source Data Last Updated:** 2026-03-21T22:05:16
 
@@ -94,12 +94,12 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Shivers | ✅ | ❌ | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.9KB |
-| Stardew Valley | ❌ | ❌ 3/9 | 20.0KB | 9.8KB | 2558.2KB |
+| Stardew Valley | ❌ | ❌ 4/10 | 20.0KB | 9.8KB | 2558.2KB |
 | Subnautica | ✅ | ✅ | 2.2KB | ✅ | 205.5KB |
 | Super Mario 64 | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ⚠️ 5/7 | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | ⚠️ 3/5 | 61.0KB | 114.5KB | 625.1KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |

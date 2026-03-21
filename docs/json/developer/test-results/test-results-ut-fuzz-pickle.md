@@ -6,11 +6,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:57:46 UTC
+**Generated:** 2026-03-21 23:01:02 UTC
 
-**Source Data Created:** 2026-03-21T22:57:45.855451+00:00
+**Source Data Created:** 2026-03-21T23:01:02.332805+00:00
 
-**Source Data Last Updated:** 2026-03-21T22:57:45.855460+00:00
+**Source Data Last Updated:** 2026-03-21T23:01:02.332817+00:00
 
 **Universal Tracker Version:** Pickle (loads serialized multiworld)
 
@@ -30,8 +30,8 @@
 - **Total Fuzz Runs:** 880
 - **Successful Runs:** 769 (87.4%)
 - **Failed Runs:** 70
-- **Timed Out Runs:** 4
-- **Ignored Runs:** 37
+- **Timed Out Runs:** 2
+- **Ignored Runs:** 39
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
@@ -110,12 +110,12 @@
 | Shivers | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
 | Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *Starcraft 2* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Stardew Valley* | ❌ | 10 | 3 | 6 | 1 | 0 | ❌ 30.0% |
+| *Stardew Valley* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Super Metroid* | ❌ | 10 | 5 | 2 | 0 | 3 | ⚠️ 50.0% |
+| *Super Metroid* | ❌ | 10 | 3 | 2 | 0 | 5 | ❌ 30.0% |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *TUNIC* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -131,7 +131,7 @@
 | *Yacht Dice* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Yoshi's Island | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Yu-Gi-Oh! 2006 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Zillion | ❌ | 10 | 7 | 0 | 2 | 1 | ⚠️ 70.0% |
+| Zillion | ❌ | 10 | 8 | 0 | 1 | 1 | ⚠️ 80.0% |
 | shapez | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 
 ## Results Breakdown
@@ -238,10 +238,10 @@ Games NOT expected to pass pickle mode and failed as expected.
 | Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
 | Shivers | 10 | 0 | 9 | 1 | 0.0% |
 | Starcraft 2 | 10 | 0 | 10 | 0 | 0.0% |
-| Stardew Valley | 10 | 3 | 6 | 1 | 30.0% |
-| Super Metroid | 10 | 5 | 2 | 0 | 50.0% |
+| Stardew Valley | 10 | 4 | 6 | 0 | 40.0% |
+| Super Metroid | 10 | 3 | 2 | 0 | 30.0% |
 | The Messenger | 10 | 1 | 9 | 0 | 10.0% |
-| Zillion | 10 | 7 | 0 | 2 | 70.0% |
+| Zillion | 10 | 8 | 0 | 1 | 80.0% |
 
 ### Unexpected Failures (Logic Mismatch) (2)
 
