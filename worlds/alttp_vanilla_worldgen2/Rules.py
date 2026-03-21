@@ -630,8 +630,10 @@ def set_rules(world: "World") -> None:
         Has('Magic Mirror', 1)
     )
 
-    multiworld.get_entrance("Pyramid Hole", player).access_rule = \
-        lambda state: ((bool(state.multiworld.worlds[player].options.open_pyramid)) or (state.has('Beat Agahnim 2', player)))
+    world.set_rule(
+        multiworld.get_entrance("Pyramid Hole", player),
+        Has('Beat Agahnim 2', 1)
+    )
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),

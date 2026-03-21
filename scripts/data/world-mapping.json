@@ -967,6 +967,17 @@
     "template_file": "Mega Man 3.yaml",
     "world_directory": "mm3"
   },
+  "Mega Man 3 WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Mega Man 3 WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Mega Man 3 WorldGen.yaml",
+    "world_directory": "mm3_worldgen"
+  },
   "MegaMan Battle Network 3": {
     "exporter_path": null,
     "exporter_size": 0,
