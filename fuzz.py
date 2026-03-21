@@ -960,9 +960,6 @@ if __name__ == "__main__":
             world.__module__.split(".")[1]
             for world in AutoWorldRegister.world_types.values()
         ]
-        if "apsudoku" in valid_worlds:
-            valid_worlds.remove("apsudoku")
-
         yamls_per_run_bounds = [int(arg) for arg in args.yamls_per_run.split("-")]
 
         if len(yamls_per_run_bounds) not in {1, 2}:
