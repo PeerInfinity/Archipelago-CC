@@ -20,7 +20,7 @@ function log(level, message, ...data) {
 
 // Store module-level references
 let moduleDispatcher = null;
-const moduleId = 'playerState';
+let moduleId = 'playerState';
 
 export async function register(registrationApi) {
     // Register dispatcher receivers for events
@@ -141,11 +141,22 @@ export async function register(registrationApi) {
         const playerState = getPlayerStateSingleton();
         return playerState.isStartRegion(regionName);
     });
+
+    registrationApi.registerPublicFunction(moduleId, 'setPath', (pathArray, startRegion) => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.setPath(pathArray, startRegion);
+    });
+
+    registrationApi.registerPublicFunction(moduleId, 'reset', () => {
+        const playerState = getPlayerStateSingleton();
+        return playerState.reset();
+    });
 }
 
 export async function initialize(mId, priorityIndex, initializationApi) {
+    moduleId = mId;
     log('info', `[${moduleId} Module] Initializing with priority ${priorityIndex}...`);
-    
+
     // Store the dispatcher reference
     moduleDispatcher = initializationApi.getDispatcher();
     
@@ -155,12 +166,12 @@ export async function initialize(mId, priorityIndex, initializationApi) {
     
     // Subscribe to stateManager:rulesLoaded via eventBus (not dispatcher)
     if (eventBus) {
-        eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded, moduleId);
+        eventBus.subscribe('stateManager:rulesLoaded', handleRulesLoaded);
         log('info', `[${moduleId} Module] Subscribed to stateManager:rulesLoaded via eventBus`);
 
         // Subscribe to iframe/window app ready events to send initial state
-        eventBus.subscribe('iframe:appReady', handleRemoteAppReady, moduleId);
-        eventBus.subscribe('window:appReady', handleRemoteAppReady, moduleId);
+        eventBus.subscribe('iframe:appReady', handleRemoteAppReady);
+        eventBus.subscribe('window:appReady', handleRemoteAppReady);
         log('info', `[${moduleId} Module] Subscribed to remote app ready events`);
     }
 
@@ -182,7 +193,7 @@ function handleRemoteAppReady(data, propagationOptions) {
                 newRegion: currentRegion,
                 oldRegion: null,
                 source: 'playerState-init'
-            }, moduleId);
+            });
             log('info', `[${moduleId} Module] Published initial region: ${currentRegion}`);
         }
     }
@@ -282,11 +293,15 @@ function handleLocationCheck(data, propagationOptions) {
 
     const playerState = getPlayerStateSingleton();
     if (data && data.locationName) {
-        // Get staticData for region lookup
-        const staticData = stateManagerProxySingleton.getStaticData();
-        playerState.addLocationCheck(data.locationName, data.regionName, staticData);
+        // Skip adding to path when the event comes from the loops module's
+        // action queue completion — the path entry was already added when
+        // the loop queue was initially built.
+        if (!data.fromLoop) {
+            const staticData = stateManagerProxySingleton.getStaticData();
+            playerState.addLocationCheck(data.locationName, data.regionName, staticData);
+        }
     }
-    
+
     // Propagate event to the next module (up direction)
     if (moduleDispatcher) {
         moduleDispatcher.publishToNextModule(

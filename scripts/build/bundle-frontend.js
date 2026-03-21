@@ -84,6 +84,51 @@ function copyFilesToDist() {
   }
 }
 
+/**
+ * Validates that all enabled modules in modules.json are present in
+ * init-bundled.js's BUNDLED_MODULES map. Any enabled module that is missing
+ * will be dynamically imported at runtime, which creates duplicate singleton
+ * instances (eventBus, settingsManager, etc.) and breaks event subscriptions.
+ */
+function validateBundledModules() {
+  const modulesJsonPath = path.join(frontendDir, 'module-configs/modules.json');
+  const initBundledPath = path.join(frontendDir, 'init-bundled.js');
+
+  const modulesJson = JSON.parse(fs.readFileSync(modulesJsonPath, 'utf8'));
+  const enabledModules = Object.entries(modulesJson.moduleDefinitions)
+    .filter(([, def]) => def.enabled)
+    .map(([id]) => id);
+
+  const initBundledSrc = fs.readFileSync(initBundledPath, 'utf8');
+
+  // Extract BUNDLED_MODULES block content
+  const blockMatch = initBundledSrc.match(/const BUNDLED_MODULES\s*=\s*\{([\s\S]*?)\};/);
+  if (!blockMatch) {
+    console.warn('⚠️  Could not locate BUNDLED_MODULES in init-bundled.js — skipping validation.');
+    return;
+  }
+
+  // Extract keys from lines like "  optionsPanel: optionsPanelModule,"
+  const bundledKeys = new Set(
+    [...blockMatch[1].matchAll(/^\s+([\w-]+)\s*:/gm)].map(m => m[1])
+  );
+
+  const missing = enabledModules.filter(id => !bundledKeys.has(id));
+  if (missing.length > 0) {
+    console.warn('');
+    console.warn('⚠️  WARNING: The following enabled modules are missing from BUNDLED_MODULES in init-bundled.js:');
+    for (const id of missing) {
+      console.warn(`   - ${id}`);
+    }
+    console.warn('   These modules will be dynamically imported in bundled mode, which creates');
+    console.warn('   duplicate singleton instances and breaks event subscriptions.');
+    console.warn('   Add them to init-bundled.js to fix this.');
+    console.warn('');
+  } else {
+    console.log('✅ All enabled modules are present in BUNDLED_MODULES.');
+  }
+}
+
 async function build() {
   console.log(`\n📦 Building frontend bundle...`);
   console.log(`   Entry: ${buildOptions.entryPoints[0]}`);
@@ -93,6 +138,10 @@ async function build() {
   console.log('');
 
   try {
+    // Validate module coverage before building
+    console.log('🔍 Validating bundled module coverage...');
+    validateBundledModules();
+
     // Copy required files (workers, etc.)
     console.log('📋 Copying required files...');
     copyFilesToDist();

@@ -46,6 +46,8 @@ class TestBase(unittest.TestCase):
         exclusion_dict = {
             "A Link to the Past":
                 {"Pendants", "Crystals"},
+            "DLCQuest":
+                {"coins"},
             "Ocarina of Time":
                 {"medallions", "stones", "rewards", "logic_bottles"},
             "Starcraft 2":
@@ -56,6 +58,10 @@ class TestBase(unittest.TestCase):
         for game_name, world_type in AutoWorldRegister.world_types.items():
             with self.subTest(game_name, game_name=game_name):
                 exclusions = exclusion_dict.get(game_name, frozenset())
+                # Apply exclusions from base game to WorldGen variants
+                for base_name, base_exclusions in exclusion_dict.items():
+                    if game_name.startswith(base_name) and game_name != base_name:
+                        exclusions = exclusions | base_exclusions
                 for group_name, items in world_type.item_name_groups.items():
                     if group_name not in exclusions:
                         with self.subTest(group_name, group_name=group_name):
@@ -123,6 +129,7 @@ class TestBase(unittest.TestCase):
             call_all(multiworld, "pre_fill")
             distribute_items_restrictive(multiworld)
             call_all(multiworld, "post_fill")
+            call_all(multiworld, "finalize_multiworld")
             self.assertTrue(multiworld.can_beat_game(CollectionState(multiworld)), f"seed = {multiworld.seed}")
 
         for game_name, world_type in AutoWorldRegister.world_types.items():

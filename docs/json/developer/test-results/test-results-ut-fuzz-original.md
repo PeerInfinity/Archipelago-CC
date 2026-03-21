@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-19 21:58:42 UTC
+**Generated:** 2026-03-21 22:05:16 UTC
 
 **Source Data Created:** 2026-02-19T21:12:34.273146+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 38 (passes original mode per config)
-- **Unexpected Passes:** 3 (expected to fail but passed)
+- **Expected Passes:** 37 (passes original mode per config)
+- **Unexpected Passes:** 4 (expected to fail but passed)
 - **Expected Failures:** 46 (doesn't pass original mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -64,8 +64,8 @@
 | Civilization VI | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Coding Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | DLCQuest | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
-| DOOM 1993 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *DOOM 1993* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *DOOM II* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Donkey Kong Country 3 | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
 | EarthBound | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
@@ -73,7 +73,7 @@
 | Faxanadu | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Final Fantasy Mystic Quest | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
-| Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Heretic* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
@@ -91,18 +91,18 @@
 | MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Metamath | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
-| Muse Dash | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Muse Dash* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Noita | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Ocarina of Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Overcooked! 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Paint* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Pokemon Emerald | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | *Raft* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Satisfactory | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Satisfactory* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Saving Princess | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
 | *Secret of Evermore* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
@@ -135,7 +135,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (38)
+### Expected Passes (37)
 
 Games that pass original mode per tracking-mode-config.json and passed the test.
 
@@ -163,7 +163,6 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Inscryption | 10 | 10 | 0 | 0 | 100.0% |
 | Lufia II Ancient Cave | 10 | 10 | 0 | 0 | 100.0% |
 | Mario & Luigi Superstar Saga | 10 | 10 | 0 | 0 | 100.0% |
-| Math Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
 | Meritous | 10 | 10 | 0 | 0 | 100.0% |
 | Old School Runescape | 10 | 10 | 0 | 0 | 100.0% |
@@ -180,7 +179,7 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Undertale | 10 | 10 | 0 | 0 | 100.0% |
 | Wargroove | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (3)
+### Unexpected Passes (4)
 
 Games NOT expected to pass original mode (not in config or mode not listed) but passed anyway.
 
@@ -188,6 +187,7 @@ Games NOT expected to pass original mode (not in config or mode not listed) but 
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | Lingo | 10 | 3 | 0 | 0 | 30.0% |
+| Math Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | Noita | 10 | 10 | 0 | 0 | 100.0% |
 
 ### Expected Failures (46)
@@ -275,12 +275,19 @@ These templates are excluded from testing:
 | Archipelago.yaml | Not a game. |
 | Bomb Rush Cyberfunk.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| DOOM 1993.yaml | Temporarily excluded. Helper references original module data (Maps.map_names, self.all_boss_levels, self.included_episodes, Locations.location_table) causing NameError. |
+| DOOM II.yaml | Temporarily excluded. Same pattern as DOOM 1993 — helper references original module data (Maps.map_names) causing NameError. |
+| Heretic.yaml | Temporarily excluded. Same pattern as DOOM 1993 — helper references original module data (Maps.map_names) causing NameError. |
 | JSON Tools Installer.yaml | Not a game. |
+| Journey to Ascension.yaml | JtA is not compatible with WorldGen. |
 | Kingdom Hearts 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Muse Dash.yaml | Temporarily excluded. Block-bodied helper inlined into expression context causes SyntaxError. |
+| Paint.yaml | Temporarily excluded. Helper paint_percent_available not in JSON helpers dict causing NameError (calculate_paint_percent_available is present but referenced under wrong name). |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
+| Satisfactory.yaml | Temporarily excluded. Calls self.state_logic.can_produce_all() which resolves to state.has_all() but is not exported, causing AttributeError. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |

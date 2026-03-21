@@ -10,6 +10,7 @@ import pyevermizer  # from package
 import settings
 from BaseClasses import Item, ItemClassification, Location, LocationProgressType, Region, Tutorial
 from Utils import output_path
+from worlds.RomlessUtils import check_rom_available
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule, set_rule
 from .logic import SoEPlayerLogic
@@ -220,13 +221,7 @@ class SoEWorld(World):
 
     @classmethod
     def stage_assert_generate(cls, _: "MultiWorld") -> None:
-        rom_file = get_base_rom_path()
-        if not os.path.exists(rom_file):
-            from settings import skip_required_files
-            if not skip_required_files:
-                raise FileNotFoundError(rom_file)
-            import logging
-            logging.getLogger("SoE").warning("SoE ROM file not found at %s but skip_required_files is set. ROM generation will be skipped, but other generation steps will continue.", rom_file)
+        check_rom_available(get_base_rom_path(), cls.game)
 
     def create_regions(self) -> None:
         # exclude 'hidden' on easy
@@ -448,14 +443,7 @@ class SoEWorld(World):
                         line = f'{loc.type},{loc.index}:{soe_item.type},{soe_item.index}\n'
                     f.write(line.encode('utf-8'))
 
-            if not os.path.exists(rom_file):
-                from settings import skip_required_files
-                if not skip_required_files:
-                    raise FileNotFoundError(rom_file)
-                import logging
-                logging.getLogger("SoE").warning("SoE ROM file not found at %s but skip_required_files is set. Skipping ROM generation for player %s.", 
-                                    rom_file, self.player)
-                # Set a placeholder ROM name to indicate ROM wasn't generated
+            if not check_rom_available(rom_file, self.game):
                 self.rom_name = "SOE_ROM_NOT_GENERATED"
                 self.connect_name_available_event.set()
                 return

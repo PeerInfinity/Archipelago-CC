@@ -247,7 +247,7 @@ class EarthBoundWorld(RuleWorldMixin, World):
     options_dataclass = EarthBoundWorldGenOptions
     options: EarthBoundWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -288,7 +288,6 @@ class EarthBoundWorld(RuleWorldMixin, World):
         "PSI": frozenset(["Onett Teleport", "Twoson Teleport", "Happy-Happy Village Teleport", "Threed Teleport", "Saturn Valley Teleport", "Dusty Dunes Teleport", "Fourside Teleport", "Winters Teleport", "Summers Teleport", "Scaraba Teleport", "Dalaam Teleport", "Deep Darkness Teleport", "Tenda Village Teleport", "Lost Underworld Teleport", "Progressive Poo PSI", "Magicant Teleport"]),
         "Photos": frozenset(["Photograph"]),
         "Money": frozenset(["$10", "$100", "$1000"]),
-        "Event": frozenset(["Power of the Earth", "ATM Access", "Melody", "Valley Bridge Repair", "Threed Tunnels Clear", "Submarine to Deep Darkness", "Saved Earth"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -961,6 +960,12 @@ class EarthBoundWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -1099,6 +1104,11 @@ class EarthBoundWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Saved Earth", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

@@ -7410,6 +7410,13 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "2a_end_3_north-west -> 2a_end_2_north-east",
+            "connected_region": "2a_end_2_north-east",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -7434,6 +7441,13 @@
           {
             "name": "2a_end_3_west -> 2a_end_3_room",
             "connected_region": "2a_end_3_room",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "2a_end_3_west -> 2a_end_2_east",
+            "connected_region": "2a_end_2_east",
             "access_rule": {
               "rule": "True_"
             }
@@ -19890,10 +19904,7 @@
             "name": "Mirror Temple A - Room b-01c Strawberry",
             "id": 211877993,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Red Boosters"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -20894,10 +20905,7 @@
             "name": "Mirror Temple A - Room b-10 Strawberry",
             "id": 211877999,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Red Boosters"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Strawberry",
@@ -27266,6 +27274,13 @@
           {
             "name": "6a_b-00_west -> 6a_b-00_room",
             "connected_region": "6a_b-00_room",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "6a_b-00_west -> 6a_20_east",
+            "connected_region": "6a_20_east",
             "access_rule": {
               "rule": "True_"
             }
@@ -37882,6 +37897,7 @@
         "groups": [
           "Everything",
           "Interactables",
+          "Shields",
           "Touch Switches"
         ],
         "classification": "progression",
@@ -39415,6 +39431,7 @@
       "Interactables",
       "Keys",
       "Red Bubbles",
+      "Shields",
       "Touch Switches",
       "Traps"
     ]
@@ -40076,7 +40093,7 @@
       "strawberries_required": 40,
       "world_description": "Celeste (Open World) is a randomizer for the original Celeste. In this acclaimed platformer created by ExOK Games, you control Madeline as she attempts to climb the titular mountain, meeting friends and obstacles along the way.  Progression is found in unlocking the ability to interact with various objects in the areas, such as springs, traffic blocks, feathers, and many more. Please be safe on the climb.",
       "slot_data": {
-        "apworld_version": 10005,
+        "apworld_version": 10007,
         "min_mod_version": 10000,
         "death_link": 0,
         "death_link_amnesty": 10,
@@ -40201,7 +40218,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
   },
   "helpers": {}
 }

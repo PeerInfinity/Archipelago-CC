@@ -59,7 +59,7 @@ class InstallationInfo:
 @dataclass
 class PatchInfo:
     """Information about applied patches."""
-    method: str = "monkey"  # "none", "monkey", or "file"
+    method: str = "none"  # "none" or "monkey"
     backups: List[BackupInfo] = field(default_factory=list)
     applied_at: Optional[str] = None
     romless_applied: bool = False
@@ -160,7 +160,7 @@ class InstallerConfig:
             BackupInfo(**b) for b in patches.get("backups", [])
         ]
         config.patches = PatchInfo(
-            method=patches.get("method", "monkey"),
+            method=patches.get("method", "none"),
             backups=backups,
             applied_at=patches.get("applied_at"),
             romless_applied=patches.get("romless_applied", False),
@@ -274,44 +274,49 @@ def clear_installation(config: InstallerConfig) -> None:
 
 
 # Export settings presets for host.yaml configuration
+# All settings go under the 'json_tools' namespace in host.yaml
 EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
     "normal": {
-        "skip_required_files": False,
-        "save_rules_json": False,
-        "rules_json_format": "rule_builder",
-        "skip_preset_copy_if_rules_identical": False,
-        "save_sphere_log": False,
-        "verbose_sphere_log": False,
-        "extend_sphere_log_to_all_locations": False,
-        "log_fractional_sphere_details": True,
-        "log_integer_sphere_details": False,
-        "auto_collect_events": False,
-        "filter_event_items": False,
-        "update_frontend_presets": False,
-        "use_tracking_mode_config": False,
-        "resolve_options_to_constants": True,
-        "clear_game_presets": False,
-        "clear_all_presets": False,
-        "save_tracker_pickle": False,
+        "json_tools": {
+            "skip_required_files": False,
+            "save_rules_json": False,
+            "rules_json_format": "rule_builder",
+            "skip_preset_copy_if_rules_identical": False,
+            "save_sphere_log": False,
+            "verbose_sphere_log": False,
+            "extend_sphere_log_to_all_locations": False,
+            "log_fractional_sphere_details": True,
+            "log_integer_sphere_details": False,
+            "auto_collect_events": False,
+            "filter_event_items": False,
+            "update_frontend_presets": False,
+            "use_tracking_mode_config": False,
+            "resolve_options_to_constants": True,
+            "clear_game_presets": False,
+            "clear_all_presets": False,
+            "save_tracker_pickle": False,
+        },
     },
     "minimal-spoilers": {
-        "skip_required_files": True,
-        "save_rules_json": True,
-        "rules_json_format": "rule_builder",
-        "skip_preset_copy_if_rules_identical": False,
-        "save_sphere_log": True,
-        "verbose_sphere_log": False,
-        "extend_sphere_log_to_all_locations": False,
-        "log_fractional_sphere_details": True,
-        "log_integer_sphere_details": False,
-        "auto_collect_events": False,
-        "filter_event_items": False,
-        "update_frontend_presets": True,
-        "use_tracking_mode_config": False,
-        "resolve_options_to_constants": True,
-        "clear_game_presets": False,
-        "clear_all_presets": False,
-        "save_tracker_pickle": False,
+        "json_tools": {
+            "skip_required_files": True,
+            "save_rules_json": True,
+            "rules_json_format": "rule_builder",
+            "skip_preset_copy_if_rules_identical": False,
+            "save_sphere_log": True,
+            "verbose_sphere_log": False,
+            "extend_sphere_log_to_all_locations": False,
+            "log_fractional_sphere_details": True,
+            "log_integer_sphere_details": False,
+            "auto_collect_events": False,
+            "filter_event_items": False,
+            "update_frontend_presets": True,
+            "use_tracking_mode_config": False,
+            "resolve_options_to_constants": True,
+            "clear_game_presets": False,
+            "clear_all_presets": False,
+            "save_tracker_pickle": False,
+        },
     },
 }
 
@@ -345,7 +350,7 @@ def configure_export_settings(
     """
     Configure export settings in host.yaml.
 
-    This adds the export-related settings to host.yaml's general_options section.
+    This adds the export-related settings to host.yaml's json_tools section.
     These settings are needed for JSON export and sphere logging to work.
 
     Args:
@@ -367,7 +372,7 @@ def configure_export_settings(
         print(f"Warning: Unknown preset '{preset}', using 'normal'")
         preset = "normal"
 
-    settings = EXPORT_PRESETS[preset]
+    preset_config = EXPORT_PRESETS[preset]
 
     # Find or create host.yaml
     host_yaml_path = get_host_yaml_path()
@@ -407,7 +412,7 @@ def configure_export_settings(
             # If Launcher.py didn't create it, fall back to minimal creation
             if host_yaml_path is None:
                 host_yaml_path = Path(user_path("host.yaml"))
-                data = {"general_options": {}}
+                data = {"general_options": {}, "json_tools": {}}
         else:
             print("Warning: host.yaml not found, cannot configure export settings")
             return False
@@ -423,13 +428,12 @@ def configure_export_settings(
             print(f"Warning: Failed to read host.yaml: {e}")
             return False
 
-    # Ensure general_options section exists
-    if "general_options" not in data:
-        data["general_options"] = {}
-
-    # Add/update export settings
-    for key, value in settings.items():
-        data["general_options"][key] = value
+    # Apply settings from preset to their respective namespaces
+    for namespace, settings in preset_config.items():
+        if namespace not in data:
+            data[namespace] = {}
+        for key, value in settings.items():
+            data[namespace][key] = value
 
     # Write back to file
     try:
@@ -441,11 +445,12 @@ def configure_export_settings(
         return False
 
     # Also update installer config so get_export_setting() works on vanilla AP
-    # (vanilla AP's settings.general_options doesn't have these custom fields,
+    # (vanilla AP's settings.json_tools doesn't exist,
     # so the fallback to installer config is needed)
     try:
         config = load_config()
-        for key, value in settings.items():
+        jt_settings = preset_config.get("json_tools", {})
+        for key, value in jt_settings.items():
             if hasattr(config.export_settings, key):
                 setattr(config.export_settings, key, value)
         save_config(config)
@@ -466,14 +471,13 @@ def get_export_setting(setting_name: str, default: Any = None) -> Any:
     Returns:
         The setting value from host.yaml, installer config, or the default.
     """
-    # First try host.yaml (fork's settings)
+    # First try host.yaml json_tools namespace (fork's settings)
     try:
-        from settings import get_settings
-        settings = get_settings()
-        if hasattr(settings, 'general_options'):
-            value = getattr(settings.general_options, setting_name, None)
-            if value is not None:
-                return value
+        from .json_tools_settings import get_json_tools_settings
+        jt = get_json_tools_settings()
+        value = getattr(jt, setting_name, None)
+        if value is not None:
+            return value
     except (ImportError, AttributeError):
         pass
 
