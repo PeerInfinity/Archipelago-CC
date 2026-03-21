@@ -89,6 +89,12 @@
                     "item_name": "Progressive Symmetry",
                     "count": 2
                   }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Symmetry Island Upper"
+                  }
                 }
               ]
             },
@@ -105,10 +111,27 @@
             "name": "Desert Laser Activated",
             "id": null,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Desert Outside"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Desert Elevator Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Desert Outside"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Desert Outside"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "+1 Laser (Unredirected)",
@@ -132,6 +155,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Quarry Boathouse Upper Back"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Quarry Stoneworks Upper Floor"
+                  }
+                },
+                {
                   "rule": "HasAllCounts",
                   "args": {
                     "items": {
@@ -141,6 +176,12 @@
                       "Progressive Stars": 2,
                       "Shapers": 1
                     }
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Outside Quarry"
                   }
                 }
               ]
@@ -158,10 +199,33 @@
             "name": "Shadows Laser Activated",
             "id": null,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Shadows Laser Room"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows Laser Room"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows Ledge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows Laser Room"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -196,6 +260,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Inside Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Outside Monastery"
+                  }
+                },
                 {
                   "rule": "CanReachRegion",
                   "args": {
@@ -243,6 +319,12 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Jungle"
+                  }
+                },
                 {
                   "rule": "CanReachRegion",
                   "args": {
@@ -1053,13 +1135,24 @@
             "name": "Symmetry Island Lower Panel",
             "id": 158040,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Progressive Dots",
-                  "Progressive Symmetry"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Inside Glass Factory"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Progressive Dots",
+                      "Progressive Symmetry"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -1665,16 +1758,33 @@
             "name": "Quarry Laser Panel",
             "id": 158702,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Colored Squares": 1,
-                  "Eraser": 1,
-                  "Progressive Dots": 1,
-                  "Progressive Stars": 2,
-                  "Shapers": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Quarry Boathouse Upper Back"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Quarry Stoneworks Upper Floor"
+                  }
+                },
+                {
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Colored Squares": 1,
+                      "Eraser": 1,
+                      "Progressive Dots": 1,
+                      "Progressive Stars": 2,
+                      "Shapers": 1
+                    }
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -2494,7 +2604,21 @@
             "name": "Shadows Laser Panel",
             "id": 158703,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows Ledge"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Shadows"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -2963,7 +3087,33 @@
             "name": "Keep Laser Panel Hedges",
             "id": 158704,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 2nd Maze"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 3rd Maze"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 4th Maze"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -2977,17 +3127,46 @@
             "name": "Keep Laser Panel Pressure Plates",
             "id": 158705,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Black/White Squares": 1,
-                  "Colored Squares": 1,
-                  "Progressive Dots": 1,
-                  "Progressive Stars": 2,
-                  "Progressive Symmetry": 1,
-                  "Shapers": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 2nd Pressure Plate"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 3rd Pressure Plate"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep 4th Pressure Plate"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Keep"
+                  }
+                },
+                {
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Black/White Squares": 1,
+                      "Colored Squares": 1,
+                      "Progressive Dots": 1,
+                      "Progressive Stars": 2,
+                      "Progressive Symmetry": 1,
+                      "Shapers": 1
+                    }
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -3088,10 +3267,21 @@
             "name": "Monastery Outside 3",
             "id": 158212,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Dots"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Inside Monastery"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Dots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Surge",
@@ -3105,10 +3295,27 @@
             "name": "Monastery Laser Panel",
             "id": 158706,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Dots"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Inside Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Outside Monastery"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Dots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Rotated Shapers",
@@ -3157,10 +3364,27 @@
             "name": "Monastery Inside 4",
             "id": 158217,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Dots"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Inside Monastery"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Outside Monastery"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Dots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -3408,13 +3632,24 @@
             "name": "Town Church Entry Panel",
             "id": 158226,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Progressive Stars",
-                  "Rotated Shapers"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Town"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Progressive Stars",
+                      "Rotated Shapers"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -3499,10 +3734,21 @@
             "name": "Town Tall Hexagonal",
             "id": 158224,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Symmetry"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Town"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Symmetry"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -3540,15 +3786,26 @@
             "name": "Town Wooden Rooftop",
             "id": 158240,
             "access_rule": {
-              "rule": "HasAllCounts",
-              "args": {
-                "items": {
-                  "Eraser": 1,
-                  "Progressive Dots": 2,
-                  "Rotated Shapers": 1,
-                  "Shapers": 1
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Town"
+                  }
+                },
+                {
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Eraser": 1,
+                      "Progressive Dots": 2,
+                      "Rotated Shapers": 1,
+                      "Shapers": 1
+                    }
+                  }
                 }
-              }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -3576,13 +3833,24 @@
             "name": "Town Church Lattice",
             "id": 158227,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Progressive Stars",
-                  "Rotated Shapers"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Town"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Progressive Stars",
+                      "Rotated Shapers"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -4318,10 +4586,21 @@
             "name": "Jungle Popup Wall 6",
             "id": 158265,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sound Dots"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Jungle"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sound Dots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -4335,10 +4614,21 @@
             "name": "Jungle Laser Panel",
             "id": 158709,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sound Dots"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Jungle"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sound Dots"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -4579,13 +4869,24 @@
             "name": "Bunker Glass Room 3",
             "id": 158281,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Black/White Squares",
-                  "Colored Squares"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Bunker"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Black/White Squares",
+                      "Colored Squares"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -5193,10 +5494,21 @@
             "name": "Swamp Between Bridges Near Row 4",
             "id": 158306,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shapers"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Platform"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Shapers"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -5248,13 +5560,30 @@
             "name": "Swamp Between Bridges Far Row 4",
             "id": 158322,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Rotated Shapers",
-                  "Shapers"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Between Bridges Near"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Platform"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Rotated Shapers",
+                      "Shapers"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -5462,13 +5791,36 @@
             "name": "Swamp Beyond Rotating Bridge 4",
             "id": 158332,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Rotated Shapers",
-                  "Shapers"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Between Bridges Far"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Between Bridges Near"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Swamp Platform"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Rotated Shapers",
+                      "Shapers"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Speed Boost",
@@ -14599,161 +14951,69 @@
             "Mountain Entry",
             "0x17C34"
           ],
-          "Quarry Stoneworks Upper Floor Easter Eggs": [
-            "+2 Easter Eggs",
-            "Quarry Stoneworks Upper Floor"
-          ],
-          "Town Easter Eggs": [
-            "+5 Easter Eggs",
-            "Town"
-          ],
-          "The Ocean Easter Eggs": [
-            "+2 Easter Eggs",
-            "The Ocean"
-          ],
-          "Orchard Beyond First Gate Easter Egg": [
-            "+1 Easter Egg",
-            "Orchard Beyond First Gate"
-          ],
-          "Bunker Green Room Easter Egg": [
-            "+1 Easter Egg",
-            "Bunker Green Room"
-          ],
-          "Mountain Floor 1 Back Section Easter Egg": [
-            "+1 Easter Egg",
-            "Mountain Floor 1 Back Section"
-          ],
-          "Desert Outside Easter Eggs": [
-            "+6 Easter Eggs",
-            "Desert Outside"
-          ],
-          "Town Tower Top Easter Egg": [
-            "+1 Easter Egg",
-            "Town Tower Top"
-          ],
           "Outside Quarry Easter Eggs": [
             "+2 Easter Eggs",
             "Outside Quarry"
-          ],
-          "Southern Peninsula Easter Eggs": [
-            "+5 Easter Eggs",
-            "Southern Peninsula"
-          ],
-          "Quarry Easter Eggs": [
-            "+5 Easter Eggs",
-            "Quarry"
-          ],
-          "Symmetry Island Upper Easter Egg": [
-            "+1 Easter Egg",
-            "Symmetry Island Upper"
-          ],
-          "Treehouse Beach Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Beach"
-          ],
-          "Keep Tower Easter Eggs": [
-            "+2 Easter Eggs",
-            "Keep Tower"
-          ],
-          "Swamp Near Boat Easter Egg": [
-            "+1 Easter Egg",
-            "Swamp Near Boat"
-          ],
-          "Treehouse Yellow Bridge Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Yellow Bridge"
-          ],
-          "Outside Tutorial Easter Eggs": [
-            "+4 Easter Eggs",
-            "Outside Tutorial"
-          ],
-          "Symmetry Island Lower Easter Eggs": [
-            "+2 Easter Eggs",
-            "Symmetry Island Lower"
-          ],
-          "Keep 2nd Pressure Plate Easter Eggs": [
-            "+2 Easter Eggs",
-            "Keep 2nd Pressure Plate"
-          ],
-          "Swamp Entry Area Easter Egg": [
-            "+1 Easter Egg",
-            "Swamp Entry Area"
-          ],
-          "Mountainside Easter Eggs": [
-            "+4 Easter Eggs",
-            "Mountainside"
-          ],
-          "Shadows Easter Eggs": [
-            "+2 Easter Eggs",
-            "Shadows"
-          ],
-          "Inside Glass Factory Easter Eggs": [
-            "+2 Easter Eggs",
-            "Inside Glass Factory"
-          ],
-          "Outside Swamp Easter Eggs": [
-            "+2 Easter Eggs",
-            "Outside Swamp"
           ],
           "Swamp Laser Area Easter Egg": [
             "+1 Easter Egg",
             "Swamp Laser Area"
           ],
+          "Symmetry Island Lower Easter Eggs": [
+            "+2 Easter Eggs",
+            "Symmetry Island Lower"
+          ],
+          "Mountainside Easter Eggs": [
+            "+4 Easter Eggs",
+            "Mountainside"
+          ],
+          "Treehouse Second Purple Bridge Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Second Purple Bridge"
+          ],
+          "Town Wooden Rooftop Easter Egg": [
+            "+1 Easter Egg",
+            "Town Wooden Rooftop"
+          ],
+          "Outside Swamp Easter Eggs": [
+            "+2 Easter Eggs",
+            "Outside Swamp"
+          ],
+          "Keep 3rd Maze Easter Eggs": [
+            "+3 Easter Eggs",
+            "Keep 3rd Maze"
+          ],
+          "Treehouse Junction Easter Eggs": [
+            "+2 Easter Eggs",
+            "Treehouse Junction"
+          ],
+          "Desert Outside Easter Eggs": [
+            "+6 Easter Eggs",
+            "Desert Outside"
+          ],
+          "Treehouse Beach Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Beach"
+          ],
+          "Quarry Easter Eggs": [
+            "+5 Easter Eggs",
+            "Quarry"
+          ],
+          "Shadows Easter Eggs": [
+            "+2 Easter Eggs",
+            "Shadows"
+          ],
+          "Bunker Green Room Easter Egg": [
+            "+1 Easter Egg",
+            "Bunker Green Room"
+          ],
           "Windmill Interior Easter Eggs": [
             "+2 Easter Eggs",
             "Windmill Interior"
           ],
-          "Desert Elevator Room Easter Egg": [
-            "+1 Easter Egg",
-            "Desert Elevator Room"
-          ],
-          "Mountain Bottom Floor Pillars Room Easter Egg": [
-            "+1 Easter Egg",
-            "Mountain Bottom Floor Pillars Room"
-          ],
-          "Keep 4th Pressure Plate Easter Egg": [
-            "+1 Easter Egg",
-            "Keep 4th Pressure Plate"
-          ],
-          "Quarry Boathouse Easter Eggs": [
+          "The Ocean Easter Eggs": [
             "+2 Easter Eggs",
-            "Quarry Boathouse"
-          ],
-          "Treehouse Burned House Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Burned House"
-          ],
-          "Desert Flood Room Underwater Easter Egg": [
-            "+1 Easter Egg",
-            "Desert Flood Room Underwater"
-          ],
-          "Keep 3rd Pressure Plate Easter Egg": [
-            "+1 Easter Egg",
-            "Keep 3rd Pressure Plate"
-          ],
-          "Treehouse Green Bridge Left House Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Green Bridge Left House"
-          ],
-          "Jungle Under Popup Wall Easter Egg": [
-            "+1 Easter Egg",
-            "Jungle Under Popup Wall"
-          ],
-          "Mountain Floor 1 Trash Pillar Easter Egg": [
-            "+1 Easter Egg",
-            "Mountain Floor 1 Trash Pillar"
-          ],
-          "Orchard End Easter Egg": [
-            "+1 Easter Egg",
-            "Orchard End"
-          ],
-          "Outside Bunker Easter Eggs": [
-            "+3 Easter Eggs",
-            "Outside Bunker"
-          ],
-          "Bunker Glass Room Easter Egg": [
-            "+1 Easter Egg",
-            "Bunker Glass Room"
+            "The Ocean"
           ],
           "Swamp Platform Easter Egg": [
             "+1 Easter Egg",
@@ -14763,165 +15023,257 @@
             "+5 Easter Eggs",
             "Shipwreck"
           ],
-          "Treehouse Second Purple Bridge Easter Egg": [
+          "Town Tower Top Easter Egg": [
             "+1 Easter Egg",
-            "Treehouse Second Purple Bridge"
+            "Town Tower Top"
           ],
-          "Keep 3rd Maze Easter Eggs": [
+          "Outside Bunker Easter Eggs": [
             "+3 Easter Eggs",
-            "Keep 3rd Maze"
+            "Outside Bunker"
           ],
-          "Jungle Easter Eggs": [
+          "Quarry Stoneworks Upper Floor Easter Eggs": [
             "+2 Easter Eggs",
-            "Jungle"
+            "Quarry Stoneworks Upper Floor"
           ],
-          "Shadows Laser Room Easter Egg": [
+          "Town Easter Eggs": [
+            "+5 Easter Eggs",
+            "Town"
+          ],
+          "Jungle Under Popup Wall Easter Egg": [
             "+1 Easter Egg",
-            "Shadows Laser Room"
+            "Jungle Under Popup Wall"
           ],
-          "Town Wooden Rooftop Easter Egg": [
-            "+1 Easter Egg",
-            "Town Wooden Rooftop"
+          "Southern Peninsula Easter Eggs": [
+            "+5 Easter Eggs",
+            "Southern Peninsula"
           ],
-          "Theater Easter Egg": [
-            "+1 Easter Egg",
-            "Theater"
-          ],
-          "Treehouse Laser Room Back Platform Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Laser Room Back Platform"
-          ],
-          "Monastery Garden Easter Egg": [
-            "+1 Easter Egg",
-            "Monastery Garden"
-          ],
-          "Tutorial Easter Egg": [
-            "+1 Easter Egg",
-            "Tutorial"
-          ],
-          "Town RGB House Easter Eggs": [
+          "Inside Glass Factory Easter Eggs": [
             "+2 Easter Eggs",
-            "Town RGB House"
+            "Inside Glass Factory"
           ],
-          "Desert Pond Room Easter Eggs": [
+          "Quarry Boathouse Easter Eggs": [
             "+2 Easter Eggs",
-            "Desert Pond Room"
+            "Quarry Boathouse"
           ],
-          "Treehouse Junction Easter Eggs": [
-            "+2 Easter Eggs",
-            "Treehouse Junction"
-          ],
-          "Bunker Under Elevator Easter Egg": [
+          "Symmetry Island Upper Easter Egg": [
             "+1 Easter Egg",
-            "Bunker Under Elevator"
-          ],
-          "Treehouse Drawbridge Platform Easter Egg": [
-            "+1 Easter Egg",
-            "Treehouse Drawbridge Platform"
-          ],
-          "Monastery North Shutters Easter Egg": [
-            "+1 Easter Egg",
-            "Monastery North Shutters"
-          ],
-          "Mountaintop Easter Egg": [
-            "+1 Easter Egg",
-            "Mountaintop"
-          ],
-          "Shadows Ledge Easter Egg": [
-            "+1 Easter Egg",
-            "Shadows Ledge"
-          ],
-          "Mountain Floor 2 Easter Egg": [
-            "+1 Easter Egg",
-            "Mountain Floor 2"
-          ],
-          "Swamp Cyan Underwater Easter Egg": [
-            "+1 Easter Egg",
-            "Swamp Cyan Underwater"
-          ],
-          "Outside Tutorial Outpost Easter Egg": [
-            "+1 Easter Egg",
-            "Outside Tutorial Outpost"
+            "Symmetry Island Upper"
           ],
           "Keep Easter Egg": [
             "+1 Easter Egg",
             "Keep"
           ],
-          "Outside Tutorial Path To Outpost Easter Egg": [
+          "Jungle Easter Eggs": [
+            "+2 Easter Eggs",
+            "Jungle"
+          ],
+          "Swamp Cyan Underwater Easter Egg": [
             "+1 Easter Egg",
-            "Outside Tutorial Path To Outpost"
+            "Swamp Cyan Underwater"
+          ],
+          "Desert Pond Room Easter Eggs": [
+            "+2 Easter Eggs",
+            "Desert Pond Room"
+          ],
+          "Outside Tutorial Easter Eggs": [
+            "+4 Easter Eggs",
+            "Outside Tutorial"
           ],
           "Inside Monastery Easter Egg": [
             "+1 Easter Egg",
             "Inside Monastery"
+          ],
+          "Keep 2nd Pressure Plate Easter Eggs": [
+            "+2 Easter Eggs",
+            "Keep 2nd Pressure Plate"
+          ],
+          "Swamp Near Boat Easter Egg": [
+            "+1 Easter Egg",
+            "Swamp Near Boat"
+          ],
+          "Theater Easter Egg": [
+            "+1 Easter Egg",
+            "Theater"
+          ],
+          "Town RGB House Easter Eggs": [
+            "+2 Easter Eggs",
+            "Town RGB House"
+          ],
+          "Treehouse Green Bridge Left House Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Green Bridge Left House"
+          ],
+          "Bunker Glass Room Easter Egg": [
+            "+1 Easter Egg",
+            "Bunker Glass Room"
+          ],
+          "Mountain Floor 2 Easter Egg": [
+            "+1 Easter Egg",
+            "Mountain Floor 2"
+          ],
+          "Orchard Beyond First Gate Easter Egg": [
+            "+1 Easter Egg",
+            "Orchard Beyond First Gate"
+          ],
+          "Bunker Under Elevator Easter Egg": [
+            "+1 Easter Egg",
+            "Bunker Under Elevator"
+          ],
+          "Shadows Ledge Easter Egg": [
+            "+1 Easter Egg",
+            "Shadows Ledge"
+          ],
+          "Mountain Floor 1 Trash Pillar Easter Egg": [
+            "+1 Easter Egg",
+            "Mountain Floor 1 Trash Pillar"
+          ],
+          "Keep 4th Pressure Plate Easter Egg": [
+            "+1 Easter Egg",
+            "Keep 4th Pressure Plate"
+          ],
+          "Desert Flood Room Underwater Easter Egg": [
+            "+1 Easter Egg",
+            "Desert Flood Room Underwater"
+          ],
+          "Monastery Garden Easter Egg": [
+            "+1 Easter Egg",
+            "Monastery Garden"
+          ],
+          "Swamp Entry Area Easter Egg": [
+            "+1 Easter Egg",
+            "Swamp Entry Area"
+          ],
+          "Mountaintop Easter Egg": [
+            "+1 Easter Egg",
+            "Mountaintop"
+          ],
+          "Orchard End Easter Egg": [
+            "+1 Easter Egg",
+            "Orchard End"
+          ],
+          "Desert Elevator Room Easter Egg": [
+            "+1 Easter Egg",
+            "Desert Elevator Room"
+          ],
+          "Shadows Laser Room Easter Egg": [
+            "+1 Easter Egg",
+            "Shadows Laser Room"
+          ],
+          "Mountain Bottom Floor Pillars Room Easter Egg": [
+            "+1 Easter Egg",
+            "Mountain Bottom Floor Pillars Room"
+          ],
+          "Keep Tower Easter Eggs": [
+            "+2 Easter Eggs",
+            "Keep Tower"
+          ],
+          "Outside Tutorial Outpost Easter Egg": [
+            "+1 Easter Egg",
+            "Outside Tutorial Outpost"
+          ],
+          "Mountain Floor 1 Back Section Easter Egg": [
+            "+1 Easter Egg",
+            "Mountain Floor 1 Back Section"
+          ],
+          "Treehouse Burned House Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Burned House"
+          ],
+          "Keep 3rd Pressure Plate Easter Egg": [
+            "+1 Easter Egg",
+            "Keep 3rd Pressure Plate"
+          ],
+          "Treehouse Laser Room Back Platform Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Laser Room Back Platform"
+          ],
+          "Outside Tutorial Path To Outpost Easter Egg": [
+            "+1 Easter Egg",
+            "Outside Tutorial Path To Outpost"
+          ],
+          "Monastery North Shutters Easter Egg": [
+            "+1 Easter Egg",
+            "Monastery North Shutters"
+          ],
+          "Treehouse Drawbridge Platform Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Drawbridge Platform"
+          ],
+          "Treehouse Yellow Bridge Easter Egg": [
+            "+1 Easter Egg",
+            "Treehouse Yellow Bridge"
+          ],
+          "Tutorial Easter Egg": [
+            "+1 Easter Egg",
+            "Tutorial"
           ]
         },
         "VICTORY_LOCATION": "0x3D9A9",
         "AVAILABLE_EASTER_EGGS_PER_REGION": {
-          "Quarry Stoneworks Upper Floor": 2,
-          "Town": 5,
-          "The Ocean": 2,
-          "Orchard Beyond First Gate": 1,
-          "Bunker Green Room": 1,
-          "Mountain Floor 1 Back Section": 1,
-          "Desert Outside": 6,
-          "Town Tower Top": 1,
           "Outside Quarry": 2,
-          "Southern Peninsula": 5,
-          "Quarry": 5,
-          "Symmetry Island Upper": 1,
-          "Treehouse Beach": 1,
-          "Keep Tower": 2,
-          "Swamp Near Boat": 1,
-          "Treehouse Yellow Bridge": 1,
-          "Outside Tutorial": 4,
-          "Symmetry Island Lower": 2,
-          "Keep 2nd Pressure Plate": 2,
-          "Swamp Entry Area": 1,
-          "Mountainside": 4,
-          "Shadows": 2,
-          "Inside Glass Factory": 2,
-          "Outside Swamp": 2,
           "Swamp Laser Area": 1,
+          "Symmetry Island Lower": 2,
+          "Mountainside": 4,
+          "Treehouse Second Purple Bridge": 1,
+          "Town Wooden Rooftop": 1,
+          "Outside Swamp": 2,
+          "Keep 3rd Maze": 3,
+          "Treehouse Junction": 2,
+          "Desert Outside": 6,
+          "Treehouse Beach": 1,
+          "Quarry": 5,
+          "Shadows": 2,
+          "Bunker Green Room": 1,
           "Windmill Interior": 2,
-          "Desert Elevator Room": 1,
-          "Mountain Bottom Floor Pillars Room": 1,
-          "Keep 4th Pressure Plate": 1,
-          "Quarry Boathouse": 2,
-          "Treehouse Burned House": 1,
-          "Desert Flood Room Underwater": 1,
-          "Keep 3rd Pressure Plate": 1,
-          "Treehouse Green Bridge Left House": 1,
-          "Jungle Under Popup Wall": 1,
-          "Mountain Floor 1 Trash Pillar": 1,
-          "Orchard End": 1,
-          "Outside Bunker": 3,
-          "Bunker Glass Room": 1,
+          "The Ocean": 2,
           "Swamp Platform": 1,
           "Shipwreck": 5,
-          "Treehouse Second Purple Bridge": 1,
-          "Keep 3rd Maze": 3,
-          "Jungle": 2,
-          "Shadows Laser Room": 1,
-          "Town Wooden Rooftop": 1,
-          "Theater": 1,
-          "Treehouse Laser Room Back Platform": 1,
-          "Monastery Garden": 1,
-          "Tutorial": 1,
-          "Town RGB House": 2,
-          "Desert Pond Room": 2,
-          "Treehouse Junction": 2,
-          "Bunker Under Elevator": 1,
-          "Treehouse Drawbridge Platform": 1,
-          "Monastery North Shutters": 1,
-          "Mountaintop": 1,
-          "Shadows Ledge": 1,
-          "Mountain Floor 2": 1,
-          "Swamp Cyan Underwater": 1,
-          "Outside Tutorial Outpost": 1,
+          "Town Tower Top": 1,
+          "Outside Bunker": 3,
+          "Quarry Stoneworks Upper Floor": 2,
+          "Town": 5,
+          "Jungle Under Popup Wall": 1,
+          "Southern Peninsula": 5,
+          "Inside Glass Factory": 2,
+          "Quarry Boathouse": 2,
+          "Symmetry Island Upper": 1,
           "Keep": 1,
+          "Jungle": 2,
+          "Swamp Cyan Underwater": 1,
+          "Desert Pond Room": 2,
+          "Outside Tutorial": 4,
+          "Inside Monastery": 1,
+          "Keep 2nd Pressure Plate": 2,
+          "Swamp Near Boat": 1,
+          "Theater": 1,
+          "Town RGB House": 2,
+          "Treehouse Green Bridge Left House": 1,
+          "Bunker Glass Room": 1,
+          "Mountain Floor 2": 1,
+          "Orchard Beyond First Gate": 1,
+          "Bunker Under Elevator": 1,
+          "Shadows Ledge": 1,
+          "Mountain Floor 1 Trash Pillar": 1,
+          "Keep 4th Pressure Plate": 1,
+          "Desert Flood Room Underwater": 1,
+          "Monastery Garden": 1,
+          "Swamp Entry Area": 1,
+          "Mountaintop": 1,
+          "Orchard End": 1,
+          "Desert Elevator Room": 1,
+          "Shadows Laser Room": 1,
+          "Mountain Bottom Floor Pillars Room": 1,
+          "Keep Tower": 2,
+          "Outside Tutorial Outpost": 1,
+          "Mountain Floor 1 Back Section": 1,
+          "Treehouse Burned House": 1,
+          "Keep 3rd Pressure Plate": 1,
+          "Treehouse Laser Room Back Platform": 1,
           "Outside Tutorial Path To Outpost": 1,
-          "Inside Monastery": 1
+          "Monastery North Shutters": 1,
+          "Treehouse Drawbridge Platform": 1,
+          "Treehouse Yellow Bridge": 1,
+          "Tutorial": 1
         },
         "ALWAYS_EVENT_NAMES_BY_HEX": {
           "0x00509": "+1 Laser",
@@ -15599,49 +15951,52 @@
         "+1 Laser",
         "Mountain Entry",
         "+2 Easter Eggs",
-        "+5 Easter Eggs",
+        "+1 Easter Egg",
         "+2 Easter Eggs",
+        "+4 Easter Eggs",
         "+1 Easter Egg",
         "+1 Easter Egg",
-        "+1 Easter Egg",
+        "+2 Easter Eggs",
+        "+3 Easter Eggs",
+        "+2 Easter Eggs",
         "+6 Easter Eggs",
         "+1 Easter Egg",
-        "+2 Easter Eggs",
         "+5 Easter Eggs",
-        "+5 Easter Eggs",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+2 Easter Eggs",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+4 Easter Eggs",
-        "+2 Easter Eggs",
-        "+2 Easter Eggs",
-        "+1 Easter Egg",
-        "+4 Easter Eggs",
-        "+2 Easter Eggs",
-        "+2 Easter Eggs",
         "+2 Easter Eggs",
         "+1 Easter Egg",
         "+2 Easter Eggs",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
         "+2 Easter Eggs",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+1 Easter Egg",
-        "+3 Easter Eggs",
-        "+1 Easter Egg",
         "+1 Easter Egg",
         "+5 Easter Eggs",
         "+1 Easter Egg",
         "+3 Easter Eggs",
         "+2 Easter Eggs",
+        "+5 Easter Eggs",
+        "+1 Easter Egg",
+        "+5 Easter Eggs",
+        "+2 Easter Eggs",
+        "+2 Easter Eggs",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+2 Easter Eggs",
+        "+1 Easter Egg",
+        "+2 Easter Eggs",
+        "+4 Easter Eggs",
+        "+1 Easter Egg",
+        "+2 Easter Eggs",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+2 Easter Eggs",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
+        "+1 Easter Egg",
         "+1 Easter Egg",
         "+1 Easter Egg",
         "+1 Easter Egg",
@@ -15649,9 +16004,6 @@
         "+1 Easter Egg",
         "+1 Easter Egg",
         "+2 Easter Eggs",
-        "+2 Easter Eggs",
-        "+2 Easter Eggs",
-        "+1 Easter Egg",
         "+1 Easter Egg",
         "+1 Easter Egg",
         "+1 Easter Egg",
@@ -17928,23 +18280,23 @@
           ]
         },
         "precompleted_puzzles": [
-          975446,
-          975434,
-          975467,
-          975428,
-          975425,
-          975455,
-          975419,
           975458,
-          975461,
           975440,
           975449,
-          975437,
-          975422,
+          975461,
+          975425,
+          975416,
+          975428,
+          975467,
+          975443,
+          975434,
+          975446,
           975452,
           975464,
-          975443,
-          975416,
+          975455,
+          975422,
+          975419,
+          975437,
           975431
         ],
         "panel_hunt_required_absolute": 0,
