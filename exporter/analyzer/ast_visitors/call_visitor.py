@@ -1880,18 +1880,24 @@ class CallVisitorMixin(BaseVisitorMixin):
                 logging.debug(f"Processing potential option to_bool call")
                 # Check if the object is a setting_value or option_value (options access pattern)
                 # Note: expression_visitors.py creates 'option_value' type, but older code may use 'setting_value'
+                # Also handle 'attribute' type from AST chains like world.worlds[player].options.X
                 func_object = func_info.get('object', {})
                 func_obj_type = func_object.get('type')
+                setting_name = None
                 if func_obj_type in ('setting_value', 'option_value'):
                     # Handle both key names: 'setting' (legacy) and 'option' (current)
                     setting_name = func_object.get('setting') or func_object.get('option')
+                elif func_obj_type == 'attribute':
+                    # Handle attribute chain like {attr: 'open_pyramid', object: {attr: 'options', ...}}
+                    # Extract setting name if this is an options.X access pattern
+                    setting_name = self._extract_setting_from_attribute_chain(func_object)
+                if setting_name:
                     logging.debug(f"to_bool called on setting: {setting_name}")
 
                     # Try to get the actual option object and call to_bool()
-                    # closure_vars['world'] could be either:
-                    # 1. The player's world (multiworld.worlds[player]) - has .options
-                    # 2. The multiworld itself - has .worlds dict
-                    world_or_multiworld = self.closure_vars.get('world')
+                    # closure_vars may contain 'world' (player's world with .options)
+                    # or 'multiworld' (the MultiWorld with .worlds dict)
+                    world_or_multiworld = self.closure_vars.get('world') or self.closure_vars.get('multiworld')
                     if world_or_multiworld is not None and setting_name:
                         try:
                             # Determine if we have the player's world or the multiworld
@@ -2186,6 +2192,31 @@ class CallVisitorMixin(BaseVisitorMixin):
             result['args'] = filtered_args
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
+
+    def _extract_setting_from_attribute_chain(self, attr_node: Dict[str, Any]) -> Optional[str]:
+        """Extract setting name from an attribute chain representing option access.
+
+        Handles patterns like:
+        - {type: 'attribute', attr: 'open_pyramid', object: {type: 'attribute', attr: 'options', ...}}
+        - The setting name is the attr when its parent object has attr='options'
+
+        Args:
+            attr_node: An attribute-type node from the AST visitor
+
+        Returns:
+            The setting name if this is an options.X pattern, None otherwise
+        """
+        if attr_node.get('type') != 'attribute':
+            return None
+
+        setting_name = attr_node.get('attr')
+        parent = attr_node.get('object', {})
+
+        # Check if parent is options access: {type: 'attribute', attr: 'options', ...}
+        if parent.get('type') == 'attribute' and parent.get('attr') == 'options':
+            return setting_name
+
+        return None
 
     def _extract_set_elements(self, arg: Dict[str, Any]) -> Optional[list]:
         """Extract a list of elements from a set/tuple/list/constant structure.
