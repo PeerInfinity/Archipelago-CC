@@ -1884,11 +1884,11 @@
         "total_locations": 215
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 2
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -2418,18 +2418,18 @@
         "seed_range": "1-10"
       },
       "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 735,
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 1194,
         "total_locations": 1194
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -3056,7 +3056,7 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 145,
+        "locations_checked": 180,
         "total_locations": 239
       }
     }
@@ -3135,7 +3135,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-21Mar2026-044552_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-21Mar2026-200009_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -3627,6 +3627,38 @@
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
       }
+    },
+    "test_results": {
+      "minimal_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "full_spoiler": {
+        "passed": true,
+        "seeds_passed": 10,
+        "seeds_failed": 0,
+        "total_seeds": 10,
+        "first_failure_seed": null,
+        "seed_range": "1-10"
+      },
+      "multiclient": {
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 75,
+        "total_locations": 75
+      },
+      "multiworld": {
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
+        "total_players": 1,
+        "first_failure_player": 3
+      }
     }
   },
   "mmbn3": {
@@ -3674,11 +3706,11 @@
         "total_locations": 264
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4134,10 +4166,10 @@
         "seed_range": "1-10"
       },
       "multiclient": {
-        "passed": false,
-        "client1_passed": false,
-        "client2_passed": false,
-        "locations_checked": 1040,
+        "passed": true,
+        "client1_passed": true,
+        "client2_passed": true,
+        "locations_checked": 1061,
         "total_locations": 1061
       }
     }
@@ -4184,7 +4216,7 @@
         "passed": false,
         "client1_passed": false,
         "client2_passed": false,
-        "locations_checked": 670,
+        "locations_checked": 960,
         "total_locations": 1010
       }
     }
@@ -4290,15 +4322,15 @@
         "passed": true,
         "client1_passed": true,
         "client2_passed": true,
-        "locations_checked": 223,
-        "total_locations": 223
+        "locations_checked": 189,
+        "total_locations": 189
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4401,11 +4433,11 @@
         "total_locations": 555
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -4755,9 +4787,9 @@
       },
       "multiclient": {
         "passed": false,
-        "client1_passed": false,
+        "client1_passed": true,
         "client2_passed": false,
-        "locations_checked": 145,
+        "locations_checked": 85,
         "total_locations": 489
       },
       "multiworld": {
@@ -4943,11 +4975,11 @@
         "total_locations": 60
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 3
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -5003,11 +5035,11 @@
         "total_locations": 108
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -5522,34 +5554,34 @@
     },
     "test_results": {
       "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 10,
         "total_seeds": 10,
-        "first_failure_seed": null,
+        "first_failure_seed": 1,
         "seed_range": "1-10"
       },
       "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
+        "passed": false,
+        "seeds_passed": 0,
+        "seeds_failed": 10,
         "total_seeds": 10,
-        "first_failure_seed": null,
+        "first_failure_seed": 1,
         "seed_range": "1-10"
       },
       "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 147,
-        "total_locations": 147
+        "passed": false,
+        "client1_passed": false,
+        "client2_passed": false,
+        "locations_checked": 95,
+        "total_locations": 247
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
+        "passed": false,
+        "players_passed": 0,
+        "players_failed": 1,
         "total_players": 1,
-        "first_failure_player": null
+        "first_failure_player": 8
       },
       "spoiler_fuzz": {
         "passed": false,
@@ -5605,11 +5637,11 @@
         "total_locations": 185
       },
       "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
+        "passed": true,
+        "players_passed": 1,
+        "players_failed": 0,
         "total_players": 1,
-        "first_failure_player": 3
+        "first_failure_player": null
       },
       "spoiler_fuzz": {
         "passed": true,
@@ -7080,60 +7112,6 @@
         "client2_passed": true,
         "locations_checked": 42,
         "total_locations": 42
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
-  "dark_souls_3_worldgen": {
-    "name": "Dark Souls III WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Dark Souls III WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ],
-        "is_canonical": true
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 1194,
-        "total_locations": 1194
       },
       "multiworld": {
         "passed": true,
@@ -9624,10 +9602,10 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-21T05:01:29.753446+00:00",
+    "test_data_updated": "2026-03-21T20:15:05.719540+00:00",
     "games_with_test_data": 152,
-    "total_games": 161,
-    "games_without_test_data": 9,
+    "total_games": 160,
+    "games_without_test_data": 8,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",

@@ -549,17 +549,6 @@
     "template_file": "Dark Souls III.yaml",
     "world_directory": "dark_souls_3"
   },
-  "Dark Souls III WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Dark Souls III WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Dark Souls III WorldGen.yaml",
-    "world_directory": "dark_souls_3_worldgen"
-  },
   "DepGraph": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1563,7 +1552,7 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/official/witness.py",
-    "exporter_size": 14548,
+    "exporter_size": 14910,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "The Witness",
