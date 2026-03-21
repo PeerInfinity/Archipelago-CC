@@ -124,6 +124,12 @@ The workflow generates presets on the `generated-presets` branch. Key inputs:
 - `update_preset_files`: true
 - `sync_mode`: merge or reset
 
+**Run the workflow twice:**
+
+1. **First run with `reset` mode** — replaces `generated-presets` with an exact copy of `main` before generating. This cleanly removes presets for deleted games and ensures no stale data from the upstream merge lingers.
+
+2. **Second run with `merge` mode** — advances the merge base so that any file deletions made by the workflow (e.g., worldgen directories that failed to generate) will correctly propagate when merging back to `main`.
+
 The workflow also rebuilds the world mapping (`scripts/data/world-mapping.json`) and updates the preset files index (`frontend/presets/preset_files.json`).
 
 After the workflow completes, merge the `generated-presets` branch into `main`:
