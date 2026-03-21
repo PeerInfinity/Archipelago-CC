@@ -169,7 +169,8 @@
     "regionGraph": {
       "showName": true,
       "showLabel1": true,
-      "showLabel2": true
+      "showLabel2": true,
+      "wheelSensitivity": 1
     },
     "loops": {
       "defaultSpeed": 10,

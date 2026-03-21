@@ -275,12 +275,17 @@ export class WindowPanelUI {
      */
     handleCloseWindow(data) {
         const { panelId } = data;
-        
+
         // Check if this command is for us
         if (panelId && panelId !== this.container?.id) {
             return; // Not for us
         }
-        
+
+        // Ignore if no window is open
+        if (!this.connectedWindowRef) {
+            return;
+        }
+
         log('info', 'Closing connected window');
         this.closeWindow();
     }
@@ -346,14 +351,20 @@ export class WindowPanelUI {
      * Close the connected window
      */
     closeWindow() {
-        if (this.connectedWindowRef && !this.connectedWindowRef.closed) {
+        if (this.connectedWindowRef) {
+            // Save ref locally — unregisterWindow publishes window:disconnected
+            // which synchronously nulls this.connectedWindowRef via handleWindowDisconnected
+            const windowRef = this.connectedWindowRef;
+            this.connectedWindowRef = null;
+
             // Notify adapter that window is disconnecting
             if (this.isConnected && window.windowAdapterCore) {
                 window.windowAdapterCore.unregisterWindow(this.windowId);
             }
-            
-            this.connectedWindowRef.close();
-            this.connectedWindowRef = null;
+
+            if (!windowRef.closed) {
+                windowRef.close();
+            }
         }
         
         this.isConnected = false;

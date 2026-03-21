@@ -41,6 +41,10 @@ export class LayoutControlsManager {
             <input type="checkbox" id="forceHideLocations" style="margin-right: 5px;">
             Always hide locations (override zoom)
           </label>
+          <label style="display: block; margin: 3px 0; cursor: pointer;">
+            <input type="checkbox" id="forceHideEdgeLabels" style="margin-right: 5px;">
+            Hide edge labels
+          </label>
         </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Location Display Limits:</div>
@@ -60,6 +64,10 @@ export class LayoutControlsManager {
           <label id="viewportDelayContainer" style="display: none; margin: 3px 0;">
             <span style="margin-right: 5px;">Viewport stabilize delay (ms):</span>
             <input type="number" id="viewportStabilizeDelay" min="100" max="5000" value="1000" style="width: 60px; padding: 2px;">
+          </label>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
+            <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
           </label>
         </div>
         <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
@@ -110,6 +118,7 @@ export class LayoutControlsManager {
     const checkboxes = [
       { id: '#forceShowLocations', setting: 'moduleSettings.regionGraph.forceShowLocations', default: false },
       { id: '#forceHideLocations', setting: 'moduleSettings.regionGraph.forceHideLocations', default: false },
+      { id: '#forceHideEdgeLabels', setting: 'moduleSettings.regionGraph.forceHideEdgeLabels', default: false },
       { id: '#keepRegionSetsComplete', setting: 'moduleSettings.regionGraph.keepRegionSetsComplete', default: true },
       { id: '#onlyShowLocationsInView', setting: 'moduleSettings.regionGraph.onlyShowLocationsInView', default: false },
       { id: '#movePlayerOneStep', setting: 'moduleSettings.regionGraph.movePlayerOneStep', default: false },
@@ -125,12 +134,14 @@ export class LayoutControlsManager {
     // Load numeric input settings
     const numericInputs = [
       { id: '#maxLocationNodes', setting: 'moduleSettings.regionGraph.maxLocationNodes', default: 100 },
-      { id: '#viewportStabilizeDelay', setting: 'moduleSettings.regionGraph.viewportStabilizeDelay', default: 1000 }
+      { id: '#viewportStabilizeDelay', setting: 'moduleSettings.regionGraph.viewportStabilizeDelay', default: 1000 },
+      { id: '#wheelSensitivity', setting: 'moduleSettings.regionGraph.wheelSensitivity', default: 1, parse: parseFloat }
     ];
 
     for (const input of numericInputs) {
       const element = this.ui.controlPanel.querySelector(input.id);
       if (element) {
+        const parseFn = input.parse || (v => parseInt(v, 10));
         try {
           const value = await settingsManager.getSetting(input.setting, input.default);
           element.value = value;
@@ -139,6 +150,8 @@ export class LayoutControlsManager {
             this.ui.maxLocationNodes = value;
           } else if (input.id === '#viewportStabilizeDelay') {
             this.ui.viewportStabilizeDelay = value;
+          } else if (input.id === '#wheelSensitivity') {
+            this.ui.wheelSensitivity = value;
           }
         } catch (error) {
           logger.warn(`Failed to load setting ${input.setting}:`, error);
@@ -148,12 +161,14 @@ export class LayoutControlsManager {
             this.ui.maxLocationNodes = input.default;
           } else if (input.id === '#viewportStabilizeDelay') {
             this.ui.viewportStabilizeDelay = input.default;
+          } else if (input.id === '#wheelSensitivity') {
+            this.ui.wheelSensitivity = input.default;
           }
         }
 
         // Setup change handler
         element.addEventListener('change', async (e) => {
-          const newValue = parseInt(e.target.value, 10);
+          const newValue = parseFn(e.target.value);
           await this.saveNumericSetting(input.setting, newValue);
           if (input.id === '#maxLocationNodes') {
             this.ui.maxLocationNodes = newValue;
@@ -163,6 +178,8 @@ export class LayoutControlsManager {
             }
           } else if (input.id === '#viewportStabilizeDelay') {
             this.ui.viewportStabilizeDelay = newValue;
+          } else if (input.id === '#wheelSensitivity') {
+            this.ui.wheelSensitivity = newValue;
           }
         });
       }
@@ -180,6 +197,21 @@ export class LayoutControlsManager {
         }
       }
     }
+
+    // Sync location visibility flags from loaded checkbox states
+    const forceShowEl = this.ui.controlPanel.querySelector('#forceShowLocations');
+    const forceHideEl = this.ui.controlPanel.querySelector('#forceHideLocations');
+    if (forceShowEl?.checked) {
+      this.ui.locationsManuallyShown = true;
+      this.ui.locationsManuallyHidden = false;
+    } else if (forceHideEl?.checked) {
+      this.ui.locationsManuallyHidden = true;
+      this.ui.locationsManuallyShown = false;
+    }
+
+    // Sync edge label visibility flag
+    const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
+    this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
 
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
@@ -227,6 +259,16 @@ export class LayoutControlsManager {
         if (this.ui.locationsVisible) {
           this.ui.refreshLocationNodes();
         }
+      });
+    }
+
+    // Setup change handler for forceHideEdgeLabels
+    const forceHideEdgeLabelsCheckbox = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
+    if (forceHideEdgeLabelsCheckbox) {
+      forceHideEdgeLabelsCheckbox.addEventListener('change', async (e) => {
+        await this.saveCheckboxSetting('#forceHideEdgeLabels', 'moduleSettings.regionGraph.forceHideEdgeLabels', e.target.checked);
+        this.ui.edgeLabelsHidden = e.target.checked;
+        this.ui.interactionManager.updateZoomBasedVisibility();
       });
     }
 

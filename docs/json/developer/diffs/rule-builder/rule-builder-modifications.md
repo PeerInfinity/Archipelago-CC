@@ -2,7 +2,7 @@
 
 This document provides a brief overview of the modifications made to the Rule Builder compared to the original [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops.
 
-- **Original source:** [drtchops/Archipelago](https://github.com/drtchops/Archipelago/tree/rules-engine) (rules-engine branch)
+- **Original source:** [PR #5048](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops (original `rules-engine` branch no longer available)
 - **Location in this repository:** `rule_builder/`
 - **Last updated:** 2026-02-11
 
@@ -22,13 +22,13 @@ These changes integrate Rule Builder with the JSON Export system, enabling round
 
 | File | Lines | Origin | Description |
 |------|-------|--------|-------------|
-| `rules.py` | 4174 | Modified from PR #5048 | Core rule classes, extended with AST rule types |
+| `rules.py` | 4219 | Modified from PR #5048 | Core rule classes, extended with AST rule types |
 | `ast_explain.py` | 803 | **New** | Human-readable explanations for AST rules |
 | `ast_format.py` | 642 | **New** | Parse AST JSON into Rule Builder objects |
 | `pathfinding.py` | 429 | **New** | Pathfinding and accessibility analysis tools |
 | `_ast_utils.py` | 178 | **New** | Shared AST parsing utilities |
 | `__init__.py` | 165 | **New** | Module exports and documentation |
-| **Total** | **6391** | | |
+| **Total** | **6436** | | |
 
 ---
 

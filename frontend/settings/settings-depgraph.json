@@ -8,7 +8,9 @@
       "addLocationsToPath": false,
       "movePlayerOneStep": false,
       "movePlayerDirectly": false,
-      "showRegionInPanel": false
+      "showRegionInPanel": false,
+      "forceHideLocations": true,
+      "forceHideEdgeLabels": true
     }
   }
 }
