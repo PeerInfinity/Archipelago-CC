@@ -455,6 +455,12 @@ f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
 
 ---
 
+## Related Documentation
+
+- [Hybrid Mode](../../../../worlds/tracker/docs/hybrid-mode.md) — User guide for config-driven per-game mode selection
+- [UT Tracking Modes Reference](../reference/ut-tracking-modes.md) — Technical details on each tracking mode
+- [UT Fuzz Tests](../tests/test-fuzz.md) — How the modes are tested
+
 ## Related Files
 
 - **Original repository:** https://github.com/FarisTheAncient/Archipelago (tracker branch)

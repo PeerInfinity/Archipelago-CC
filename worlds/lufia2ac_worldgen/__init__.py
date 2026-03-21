@@ -97,7 +97,7 @@ class L2ACWorld(RuleWorldMixin, World):
     options_dataclass = LufiaIIAncientCaveWorldGenOptions
     options: LufiaIIAncientCaveWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -119,7 +119,6 @@ class L2ACWorld(RuleWorldMixin, World):
         "Capsule monsters": frozenset(["JELZE", "FLASH", "GUSTO", "ZEPPY", "DARBI", "SULLY", "BLAZE"]),
         "Iris treasures": frozenset(["Iris sword", "Iris shield", "Iris helmet", "Iris armor", "Iris ring", "Iris jewel", "Iris staff", "Iris pot", "Iris tiara"]),
         "Blue chest items": frozenset(["Sizzle sword", "Blaze sword", "Gades blade", "Sky sword", "Snow sword", "Fry sword", "Mega ax", "Spark staff", "Air whip", "Water spear", "Dragon spear", "Mirak plate", "Ruse armor", "Flame shield", "Water gaunt", "Bolt shield", "Cryst shield", "Dark mirror", "Apron shield", "Agony helm", "Boom turban", "Aqua helm", "Ice hairband", "Hairpin", "Earring", "Dia ring", "Sea ring", "Engage ring", "Water jewel", "Thundo jewel", "Earth jewel", "Twist jewel", "Gloom jewel", "Tidal jewel", "Catfish jwl.", "Camu jewel", "Spido jewel", "Gorgan rock", "Black eye", "Silver eye", "Gold eye"]),
-        "Event": frozenset(["Progressive chest access", "Final Floor access"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -227,6 +226,12 @@ class L2ACWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -365,6 +370,11 @@ class L2ACWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Ancient key", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

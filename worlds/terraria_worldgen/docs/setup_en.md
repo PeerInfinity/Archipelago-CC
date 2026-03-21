@@ -1,17 +1,3 @@
-# Terraria WorldGen Setup Guide
+# Multiworld Setup Guide
 
-## Required Software
-
-- Archipelago client
-
-## Installation
-
-1. Download the game's .apworld file
-2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with Terraria WorldGen
-
-## Joining a Game
-
-1. Open the Archipelago client
-2. Connect to the server
-3. Start playing!
+A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.

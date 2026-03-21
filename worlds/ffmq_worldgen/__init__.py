@@ -177,7 +177,7 @@ class FFMQWorld(RuleWorldMixin, World):
     options_dataclass = FinalFantasyMysticQuestWorldGenOptions
     options: FinalFantasyMysticQuestWorldGenOptions
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -209,7 +209,6 @@ class FFMQWorld(RuleWorldMixin, World):
         "Shields": frozenset(["Steel Shield", "Venus Shield", "Aegis Shield", "Progressive Shield"]),
         "Accessories": frozenset(["Charm", "Magic Ring", "Cupid Locket", "Progressive Accessory"]),
         "Refills": frozenset(["Bomb Refill", "Projectile Refill"]),
-        "Event": frozenset(["Minotaur", "Kaeli 1", "Kaeli 2", "Barrel Pushed", "Tristam", "Tristam Bone Item Given", "Long Spine Bombed", "Short Spine Bombed", "Skull 1 Bombed", "Skull 2 Bombed", "Flamerus Rex", "Phoebe 1", "Summer Aquaria", "Phanquid", "Freezer Crab", "Ice Pyramid 1F Statue", "Ice Pyramid 3F Statue", "Ice Pyramid 4F Statue", "Ice Pyramid 5F Statue", "Ice Golem", "Ship Liberated", "Spencer Cave Libra Block Bombed", "Reuben 1", "Jinn", "Reuben Dad Saved", "Medusa", "Lava Dome Plate", "Dualhead Hydra", "Gidrah", "Dullahan", "Rainbow Bridge", "Pazuzu 1F", "Pazuzu 2F Lock", "Pazuzu 2F", "Pazuzu 3F", "Pazuzu 4F Lock", "Pazuzu 4F", "Pazuzu 5F", "Pazuzu 6F Lock", "Pazuzu 6F", "Pazuzu", "Ship Dock Access", "Ship Steering Wheel", "Ship Loaned", "Stone Golem", "Twinhead Wyvern", "Zuh", "Dark King"]),
     }
 
     # Progressive item mapping: progressive_item -> [component_items_in_order]
@@ -845,6 +844,12 @@ class FFMQWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -983,6 +988,11 @@ class FFMQWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Dark King", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

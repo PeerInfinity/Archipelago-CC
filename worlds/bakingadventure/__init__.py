@@ -39,7 +39,6 @@ class BakingAdventureWorld(World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game

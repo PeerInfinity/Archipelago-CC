@@ -423,6 +423,7 @@ async function testSingleTask(page, taskId, zoneId, port, testEnergy = 100000) {
         items: new Map(),
         scrollsOfHaste: 0,
         magicRings: 0,
+        bottledLightnings: 0,
         bossesDefeated: new Set(),
         unlockedHiddenTasks: new Set(),
     };

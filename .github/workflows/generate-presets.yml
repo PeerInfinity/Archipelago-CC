@@ -36,12 +36,25 @@ on:
       clean_existing:
         description: 'Delete existing frontend presets and worldgen worlds before generating'
         type: boolean
-        default: false
+        default: true
 
       update_preset_files:
         description: 'Run update-preset-files.py to refresh preset_files.json before committing'
         type: boolean
-        default: false
+        default: true
+
+      generate_script:
+        description: 'Generate scripts/utils/generated_commands.sh with the current settings'
+        type: boolean
+        default: true
+
+      sync_mode:
+        description: 'How to sync with main: "merge" advances merge base (preserves deletion tracking), "reset" replaces with exact copy of main (removes zombie files)'
+        type: choice
+        options:
+          - merge
+          - reset
+        default: merge
 
       filter_presets:
         description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
@@ -67,6 +80,8 @@ jobs:
           check-latest: true
 
       - name: Create or switch to generated-presets branch
+        env:
+          SYNC_MODE: ${{ inputs.sync_mode }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -75,20 +90,48 @@ jobs:
           if git ls-remote --exit-code --heads origin generated-presets; then
             git checkout generated-presets
             git pull origin generated-presets
-            # Merge main into generated-presets to advance the merge base.
-            # This ensures file deletions on generated-presets correctly propagate
-            # when the branch is later merged back into main.
-            # Use -X theirs to resolve content conflicts in favor of main.
-            if ! git merge origin/main -X theirs --no-edit --allow-unrelated-histories; then
-              # Handle remaining conflicts (e.g. delete/modify) in favor of main
-              mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
-              for file in "${conflict_files[@]}"; do
-                git checkout --theirs "$file" 2>/dev/null || git rm -f "$file" 2>/dev/null || true
-              done
-              git add -A
-              git commit --no-edit
+
+            if [ "$SYNC_MODE" = "reset" ]; then
+              # Reset mode: nuke and replace with exact copy of main.
+              # Eliminates zombie files but doesn't advance the merge base,
+              # so workflow-only deletions won't propagate back to main.
+              git rm -rf .
+              git checkout origin/main -- .
+              if ! git diff --staged --quiet; then
+                git commit -m "Sync generated-presets with main"
+                git push origin generated-presets
+              fi
+            else
+              # Merge mode: advance the merge base so file deletions on
+              # generated-presets correctly propagate when merging back to main.
+              # Use -X theirs to resolve content conflicts in favor of main.
+              if ! git merge origin/main -X theirs --no-edit --allow-unrelated-histories; then
+                # Handle remaining conflicts (e.g. delete/modify) in favor of main
+                mapfile -t conflict_files < <(git diff --name-only --diff-filter=U)
+                for file in "${conflict_files[@]}"; do
+                  git checkout --theirs "$file" 2>/dev/null || git rm -f "$file" 2>/dev/null || true
+                done
+                git add -A
+                git commit --no-edit
+              fi
+              git push origin generated-presets
+
+              # Remove files that exist on generated-presets but not on main.
+              # The merge advances the merge base but can't remove files whose
+              # deletion predates the common ancestor. Exclude paths that the
+              # generate script intentionally creates.
+              git diff --name-only -z origin/main HEAD --diff-filter=A -- . \
+                ':(exclude)frontend/presets/' \
+                ':(exclude)worlds/*_worldgen*/' \
+                ':(exclude)frontend/modules/textAdventure-remote/shared/' \
+                ':(exclude)scripts/data/world-mapping.json' \
+                ':(exclude)scripts/output/' \
+              | xargs -r -0 git rm -f
+              if ! git diff --staged --quiet; then
+                git commit -m "Remove files deleted on main"
+                git push origin generated-presets
+              fi
             fi
-            git push origin generated-presets
           else
             git checkout -b generated-presets origin/main
           fi
@@ -144,11 +187,30 @@ jobs:
           chmod +x scripts/utils/generate_all_templates.sh
           scripts/utils/generate_all_templates.sh
 
+      - name: Generate commands script
+        if: inputs.generate_script
+        env:
+          GENERATE_MULTIWORLD: ${{ inputs.generate_multiworld }}
+          GENERATE_EXTRA_SEEDS: ${{ inputs.generate_extra_seeds }}
+          GENERATE_VANILLA_SEEDS: ${{ inputs.generate_vanilla_seeds }}
+          GENERATE_WORLDGEN: ${{ inputs.generate_worldgen }}
+          WORLDGEN_CANONICAL_SEED: ${{ inputs.worldgen_canonical_seed }}
+          GENERATE_WORLDGEN2: ${{ inputs.generate_worldgen2 }}
+          CLEAN_EXISTING: ${{ inputs.clean_existing }}
+        run: |
+          source .venv/bin/activate
+          scripts/utils/generate_all_templates.sh --script scripts/utils/generated_commands.sh
+
       - name: Update preset files index
         if: inputs.update_preset_files
         run: |
           source .venv/bin/activate
           python scripts/docs/update-preset-files.py
+
+      - name: Rebuild world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
 
       - name: Commit and push generated presets
         env:

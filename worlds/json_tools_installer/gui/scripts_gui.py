@@ -40,6 +40,23 @@ class ScriptAction:
 
 # Define script categories and actions
 SCRIPT_CATEGORIES = {
+    "Dev Server": [
+        ScriptAction(
+            "Start Dev Server",
+            "Start local HTTP server on port 8000 for the frontend",
+            command=[sys.executable, "-m", "http.server", "8000"]
+        ),
+        ScriptAction(
+            "Stop Dev Server",
+            "Stop any running HTTP server on port 8000",
+            command=[sys.executable, "-c",
+                     "import subprocess, sys; "
+                     "r = subprocess.run(['pkill', '-f', 'http.server 8000'] if sys.platform != 'win32' "
+                     "else ['taskkill', '/F', '/FI', 'WINDOWTITLE eq http.server*'], "
+                     "capture_output=True, text=True); "
+                     "print('Server stopped.' if r.returncode == 0 else 'No server running.')"]
+        ),
+    ],
     "Setup": [
         ScriptAction(
             "Setup Dev Environment (Full)",
@@ -106,29 +123,31 @@ SCRIPT_CATEGORIES = {
             command=[sys.executable, "scripts/setup/update_host_settings.py", "full-spoilers"]
         ),
         ScriptAction(
-            "Pickle Mode",
-            "Export tracker pickle instead of JSON (save_tracker_pickle=True, save_rules_json=False)",
+            "UT Hybrid",
+            "Config picks best tracking mode per game (uses tracking-mode-config.json)",
             script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "pickle-mode"]
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-hybrid"]
         ),
         ScriptAction(
-            "UT Fuzz",
-            "Enable event auto-collection and filtering to match Universal Tracker behavior",
+            "UT Worldgen",
+            "Export rules.json for worldgen-based tracking",
             script_path="scripts/setup/update_host_settings.py",
-            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-fuzz"]
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-worldgen"]
+        ),
+        ScriptAction(
+            "UT Pickle",
+            "Export tracker pickle for pickle-based tracking",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-pickle"]
+        ),
+        ScriptAction(
+            "UT Original",
+            "YAML-based tracking (no extra exports needed)",
+            script_path="scripts/setup/update_host_settings.py",
+            command=[sys.executable, "scripts/setup/update_host_settings.py", "ut-original"]
         ),
     ],
     "Patches": [
-        ScriptAction(
-            "Apply Main Patches",
-            "Patch core files for JSON export support",
-            command=None  # Handled specially
-        ),
-        ScriptAction(
-            "Revert Main Patches",
-            "Restore original core files from backups",
-            command=None  # Handled specially
-        ),
         ScriptAction(
             "Apply ROM-less Patches",
             "Enable generation without ROM files (for testing)",
@@ -168,23 +187,23 @@ SCRIPT_CATEGORIES = {
             "Run full test-all-templates.py for Adventure",
             script_path="scripts/test/test-all-templates.py",
             command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "Adventure.yaml", "-p"]
+                     "--include-list", "Adventure.yaml", "--minimal-spoilers", "-p"]
         ),
         ScriptAction(
             "Test Adventure UT Worldgen",
             "Run UT worldgen fuzz test for Adventure",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--include-list", "Adventure.yaml", "--runs", "10",
                      "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test Adventure UT Pickle",
             "Run UT pickle fuzz test for Adventure",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "Adventure.yaml", "--runs", "1",
+                     "--include-list", "Adventure.yaml", "--runs", "10",
                      "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test ALTTP Generation",
@@ -203,23 +222,23 @@ SCRIPT_CATEGORIES = {
             "Run full test-all-templates.py for ALTTP",
             script_path="scripts/test/test-all-templates.py",
             command=[sys.executable, "scripts/test/test-all-templates.py",
-                     "--include-list", "A Link to the Past.yaml", "-p"]
+                     "--include-list", "A Link to the Past.yaml", "--minimal-spoilers", "-p"]
         ),
         ScriptAction(
             "Test ALTTP UT Worldgen",
             "Run UT worldgen fuzz test for ALTTP",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
                      "--ut-version", "worldgen", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
         ScriptAction(
             "Test ALTTP UT Pickle",
             "Run UT pickle fuzz test for ALTTP",
             command=[sys.executable, "scripts/test/test-all-ut-fuzz.py",
-                     "--include-list", "A Link to the Past.yaml", "--runs", "1",
+                     "--include-list", "A Link to the Past.yaml", "--runs", "10",
                      "--ut-version", "pickle", "--no-use-tracking-config",
-                     "--seed", "1"]
+                     "--starting-seed", "1"]
         ),
     ],
 }
@@ -257,7 +276,7 @@ class ScriptsApp(App):
 
         for category, actions in SCRIPT_CATEGORIES.items():
             # Skip scripts category if not installed (but keep patches)
-            if category not in ["Patches", "Update Host Settings"] and not scripts_available:
+            if category not in ["Dev Server", "Patches", "Update Host Settings"] and not scripts_available:
                 continue
 
             # Category header
@@ -355,60 +374,10 @@ class ScriptsApp(App):
             self.enable_auto_monkey_patches()
         elif "monkey" in action_name and "disable" in action_name:
             self.disable_auto_monkey_patches()
-        elif "main" in action_name and "apply" in action_name:
-            self.apply_main_patches()
-        elif "main" in action_name and "revert" in action_name:
-            self.revert_main_patches()
         elif "rom-less" in action_name and "apply" in action_name:
             self.apply_romless_patches()
         elif "rom-less" in action_name and "revert" in action_name:
             self.revert_romless_patches()
-
-    def apply_main_patches(self):
-        """Apply main patches."""
-        def do_apply():
-            try:
-                from ..installer.patcher import apply_bundled_patches
-                from ..config import load_config
-                config = load_config()
-                result = apply_bundled_patches(config)
-                if result.success:
-                    msg = f"Applied patches to: {', '.join(result.patched_files)}"
-                    if result.warnings:
-                        msg += f"\n\nWarnings: {', '.join(result.warnings)}"
-                    Clock.schedule_once(lambda dt: self.show_message("Success", msg))
-                else:
-                    Clock.schedule_once(lambda dt: self.show_message("Error",
-                        f"Failed: {', '.join(result.errors)}"))
-            except Exception as e:
-                error_msg = str(e)
-                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
-
-        thread = threading.Thread(target=do_apply)
-        thread.daemon = True
-        thread.start()
-
-    def revert_main_patches(self):
-        """Revert main patches."""
-        def do_revert():
-            try:
-                from ..installer.patcher import revert_patches
-                from ..config import load_config
-                config = load_config()
-                result = revert_patches(config)
-                if result.success:
-                    msg = f"Reverted: {', '.join(result.patched_files)}"
-                    Clock.schedule_once(lambda dt: self.show_message("Success", msg))
-                else:
-                    Clock.schedule_once(lambda dt: self.show_message("Error",
-                        f"Failed: {', '.join(result.errors)}"))
-            except Exception as e:
-                error_msg = str(e)
-                Clock.schedule_once(lambda dt: self.show_message("Error", error_msg))
-
-        thread = threading.Thread(target=do_revert)
-        thread.daemon = True
-        thread.start()
 
     def apply_romless_patches(self):
         """Apply ROM-less patches."""
@@ -494,7 +463,7 @@ class ScriptsApp(App):
 
                 # Update config to not use monkey patching
                 config = load_config()
-                config.patches.method = "file"
+                config.patches.method = "none"
                 save_config(config)
 
                 # Uninstall from current session if any

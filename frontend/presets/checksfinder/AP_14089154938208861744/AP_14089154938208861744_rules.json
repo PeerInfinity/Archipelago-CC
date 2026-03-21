@@ -668,7 +668,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "has_all_counts",
+        "args": [
+          {
+            "type": "constant",
+            "value": {
+              "Map Bombs": 15,
+              "Map Height": 5,
+              "Map Width": 5
+            }
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }

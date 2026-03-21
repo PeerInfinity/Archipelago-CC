@@ -610,23 +610,13 @@
             "name": "Catch All Fish Reward",
             "id": 83038,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Feather",
-                    "count": 7
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Fishing Rod",
-                    "count": 2
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Golden Feather": 7,
+                  "Progressive Fishing Rod": 2
                 }
-              ]
+              }
             },
             "item": {
               "name": "Seashell",
@@ -978,22 +968,13 @@
             "name": "Return to Shell Kid",
             "id": 83132,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seashell",
-                    "count": 15
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shell Necklace"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Seashell": 15,
+                  "Shell Necklace": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -1197,22 +1178,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Feather",
-                        "count": 0
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bucket"
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Golden Feather": 0,
+                      "Bucket": 1
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1744,22 +1716,13 @@
             "name": "Hawk Peak East Buried Chest",
             "id": 83107,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Feather",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shovel"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Golden Feather": 3,
+                  "Shovel": 1
                 }
-              ]
+              }
             },
             "item": {
               "name": "Stick",
@@ -1938,22 +1901,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Golden Feather",
-                            "count": 0
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bucket"
-                          }
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Golden Feather": 0,
+                          "Bucket": 1
                         }
-                      ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2034,22 +1988,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Golden Feather",
-                            "count": 0
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bucket"
-                          }
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Golden Feather": 0,
+                          "Bucket": 1
                         }
-                      ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2115,22 +2060,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Feather",
-                        "count": 0
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bucket"
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Golden Feather": 0,
+                      "Bucket": 1
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2998,6 +2934,119 @@
       ],
       "prog_items_init": {
         "COINS": 0
+      },
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Collect 15 Seashells"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Feather",
+            "count": {
+              "type": "constant",
+              "value": 12
+            }
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Tough Bird Salesman (400 Coins)"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Ranger May Shell Necklace Golden Feather"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Sue the Rabbit Shoes Reward"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Wristwatch Trade"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Return Camping Permit"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Boat Challenge Reward"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Shovel Kid Trade"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Purchase Sunhat"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_location",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Artist Golden Feather"
+              }
+            ]
+          }
+        ]
       }
     }
   },

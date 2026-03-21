@@ -133,7 +133,7 @@ This shows:
 | File | Purpose |
 |------|---------|
 | `scripts/test/test-all-templates.py` | Main orchestration (with `--multiclient` flag) |
-| `tests/e2e/multiclient.spec.js` | Playwright test specification |
+| `test_json/e2e/multiclient.spec.js` | Playwright test specification |
 | `scripts/lib/test_runner.py` | Test execution logic |
 
 ### Server Components

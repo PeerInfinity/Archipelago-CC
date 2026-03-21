@@ -16,11 +16,11 @@ The script extracts implemented types from:
     - rule_builder/ast_format.py (Python AST parser handlers)
 
 And tested types from:
-    - tests/fixtures/rule_type_tests.json (shared cross-language fixtures)
-    - tests/rule_builder/test_rules.py (Rule Builder unit tests)
-    - tests/rule_builder/test_ast_format.py (AST format tests)
-    - tests/rule_builder/test_serialization.py (serialization tests)
-    - tests/test_rule_fixtures.py (fixture runner tests)
+    - test_json/fixtures/rule_type_tests.json (shared cross-language fixtures)
+    - test_json/rule_builder/test_rules.py (Rule Builder unit tests)
+    - test_json/rule_builder/test_ast_format.py (AST format tests)
+    - test_json/rule_builder/test_serialization.py (serialization tests)
+    - test_json/test_rule_fixtures.py (fixture runner tests)
     - exporter/converter/test_*.py (converter tests)
     - frontend/modules/shared/ruleEngine.test.js (JS unit tests)
 """
@@ -204,7 +204,7 @@ def extract_ast_format_handlers(filepath: Path) -> dict[str, RuleTypeInfo]:
 
 def extract_fixture_tested_types(filepath: Path) -> dict[str, list[SourceLocation]]:
     """
-    Extract tested rule types from tests/fixtures/rule_type_tests.json.
+    Extract tested rule types from test_json/fixtures/rule_type_tests.json.
 
     Returns a dict mapping rule type names to test locations.
     """
@@ -472,17 +472,17 @@ def main():
     all_tested: dict[str, list[SourceLocation]] = {}
 
     # Shared fixtures
-    fixture_tested = extract_fixture_tested_types(root / "tests/fixtures/rule_type_tests.json")
+    fixture_tested = extract_fixture_tested_types(root / "test_json/fixtures/rule_type_tests.json")
     print(f"  rule_type_tests.json: {len(fixture_tested)} types")
     for name, locs in fixture_tested.items():
         all_tested.setdefault(name, []).extend(locs)
 
     # Python test files (pass fixture_tested to detect shared fixture usage)
     python_test_files = [
-        root / "tests/rule_builder/test_rules.py",
-        root / "tests/rule_builder/test_ast_format.py",
-        root / "tests/rule_builder/test_serialization.py",
-        root / "tests/test_rule_fixtures.py",
+        root / "test_json/rule_builder/test_rules.py",
+        root / "test_json/rule_builder/test_ast_format.py",
+        root / "test_json/rule_builder/test_serialization.py",
+        root / "test_json/test_rule_fixtures.py",
         root / "exporter/converter/test_rule_builder_to_ast.py",
         root / "exporter/converter/test_round_trip.py",
     ]

@@ -13233,7 +13233,229 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "helper",
+        "name": "completion_rule"
+      }
+    }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "completion_rule": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "goal_levels",
+            "value": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "Maps"
+              },
+              "attr": "map_names"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "goal_levels",
+            "value": {
+              "type": "conditional",
+              "test": {
+                "type": "attribute",
+                "object": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "goal"
+                },
+                "attr": "value"
+              },
+              "if_true": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "all_boss_levels"
+              },
+              "if_false": {
+                "type": "name",
+                "name": "goal_levels"
+              }
+            }
+          },
+          {
+            "type": "for_iter",
+            "iterable": {
+              "type": "name",
+              "name": "goal_levels"
+            },
+            "body": [
+              {
+                "type": "if_statement",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "map_name"
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "constant",
+                      "value": " - Exit"
+                    }
+                  },
+                  "op": "not in",
+                  "right": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "location_name_to_id"
+                  }
+                },
+                "body": [
+                  {
+                    "type": "continue"
+                  }
+                ]
+              },
+              {
+                "type": "assign",
+                "name": "loc",
+                "value": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "Locations"
+                    },
+                    "attr": "location_table"
+                  },
+                  "index": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "location_name_to_id"
+                    },
+                    "index": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "map_name"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "constant",
+                        "value": " - Exit"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "if_statement",
+                "test": {
+                  "type": "not",
+                  "condition": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "included_episodes"
+                    },
+                    "index": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "name",
+                          "name": "loc"
+                        },
+                        "index": {
+                          "type": "constant",
+                          "value": "episode"
+                        }
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    }
+                  }
+                },
+                "body": [
+                  {
+                    "type": "continue"
+                  }
+                ]
+              },
+              {
+                "type": "if_statement",
+                "test": {
+                  "type": "not",
+                  "condition": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "map_name"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "constant",
+                        "value": " - Complete"
+                      }
+                    },
+                    "count": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  }
+                },
+                "body": [
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
+                  }
+                ]
+              }
+            ],
+            "var": "map_name"
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ]
+      }
+    }
+  }
 }

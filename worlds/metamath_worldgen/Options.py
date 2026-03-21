@@ -32,13 +32,19 @@ class AutoDownloadDatabase(Toggle):
     display_name = "Auto-Download Database"
     default = True
 
-class Complexity(Choice):
-    """Option for Proof Complexity."""
-    display_name = "Proof Complexity"
-    option_simple = 0
-    option_moderate = 1
-    option_complex = 2
+class EntranceRuleMode(Choice):
+    """Option for Entrance Rule Mode."""
+    display_name = "Entrance Rule Mode"
+    option_strict = 0
+    option_relaxed_items = 1
+    option_relaxed_events = 2
+    option_fully_relaxed = 3
     default = 1
+
+class RandomizeStartingStatements(Toggle):
+    """Option for Randomize Starting Statements."""
+    display_name = "Randomize Starting Statements"
+    default = True
 
 class StartingStatements(Range):
     """Option for Starting Statements %."""
@@ -72,7 +78,14 @@ class Theorem(Choice):
     option_euclemma = 19
     option_wilth = 20
     option_dfac5 = 21
+    option_prmunb = 22
+    option_cncmp = 23
     default = 1
+
+class VanillaPlacement(Toggle):
+    """Option for Vanilla Item Placement."""
+    display_name = "Vanilla Item Placement"
+    default = False
 
 
 @dataclass
@@ -81,6 +94,8 @@ class MetamathWorldGenOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     use_canonical_options: UseCanonicalOptions
     auto_download_database: AutoDownloadDatabase
-    complexity: Complexity
+    entrance_rule_mode: EntranceRuleMode
+    randomize_starting_statements: RandomizeStartingStatements
     starting_statements: StartingStatements
     theorem: Theorem
+    vanilla_placement: VanillaPlacement

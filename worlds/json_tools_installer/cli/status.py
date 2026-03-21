@@ -21,7 +21,7 @@ import sys
 from ..config import load_config, get_config_path
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.extractor import list_installed_components, COMPONENTS
-from ..installer.patcher import get_patch_summary, check_patch_status
+from ..installer.romless_patcher import get_romless_patch_summary
 
 
 def print_header(text: str) -> None:
@@ -79,22 +79,28 @@ def show_status(verbose: bool = False) -> None:
             for path in comp.source_paths:
                 print(f"        -> {path}/")
 
-    # Patches
-    print_header("Core File Patches")
-    patch_summary = get_patch_summary(config)
+    # ROM-less Patches
+    print_header("ROM-less Patches")
+    romless_summary = get_romless_patch_summary(config)
 
-    print_row("Method:", patch_summary["method"])
-    print_row("Patched Files:", f"{patch_summary['patched_count']}/{patch_summary['total_files']}")
-    print_row("Backups Available:", str(patch_summary['backup_count']))
-    if patch_summary["applied_at"]:
-        print_row("Applied At:", patch_summary["applied_at"])
+    print_row("Patch Method:", config.patches.method)
+    print_row("Worlds Patched:", f"{romless_summary['patched_count']}/{romless_summary['total_worlds']}")
+    print_row("Infrastructure:", f"{romless_summary['infrastructure_patched']}/{romless_summary['infrastructure_files']}")
+    print_row("Backups Available:", str(romless_summary['backup_count']))
+    if romless_summary.get("applied_at"):
+        print_row("Applied At:", romless_summary["applied_at"])
 
     print()
-    for filename, status in patch_summary["files"].items():
+    for world_name, status in romless_summary.get("worlds", {}).items():
         patched_icon = print_status_icon(status.is_patched)
         backup_text = " (backup available)" if status.has_backup else ""
-        status_text = "Patched" if status.is_patched else "Original"
-        print(f"  {patched_icon} {filename:<20} {status_text}{backup_text}")
+        if not status.world_exists:
+            status_text = "Not installed"
+        elif status.is_patched:
+            status_text = "Patched"
+        else:
+            status_text = "Original"
+        print(f"  {patched_icon} {world_name:<20} {status_text}{backup_text}")
 
         if verbose:
             if status.current_hash:
@@ -103,6 +109,17 @@ def show_status(verbose: bool = False) -> None:
                 print(f"        Original: {status.original_hash[:16]}...")
             if status.backup_path:
                 print(f"        Backup:   {status.backup_path}")
+
+    # Infrastructure files
+    for _infra_key, status in romless_summary.get("infrastructure", {}).items():
+        patched_icon = print_status_icon(status.is_patched)
+        if not status.world_exists:
+            status_text = "Not installed"
+        elif status.is_patched:
+            status_text = "Patched"
+        else:
+            status_text = "Original"
+        print(f"  {patched_icon} {status.world:<20} {status_text}")
 
     # Configuration file location
     if verbose:

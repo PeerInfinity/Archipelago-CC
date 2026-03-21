@@ -1,0 +1,427 @@
+diff --git a/.gitattributes b/.gitattributes
+index 5ab537933..0a0924067 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -1,2 +1,4 @@
+ worlds/blasphemous/region_data.py linguist-generated=true
+ worlds/yachtdice/YachtWeights.py linguist-generated=true
++.gitignore merge=ours
++README.md merge=ours
+\ No newline at end of file
+diff --git a/.github/workflows/codeql-analysis.yml b/.github/workflows/codeql-analysis.yml
+index 3abbb5f64..dbde0d080 100644
+--- a/.github/workflows/codeql-analysis.yml
++++ b/.github/workflows/codeql-analysis.yml
+@@ -32,6 +32,10 @@ jobs:
+   analyze:
+     name: Analyze
+     runs-on: ubuntu-latest
++    permissions:
++      security-events: write
++      actions: read
++      contents: read
+ 
+     strategy:
+       fail-fast: false
+diff --git a/.gitignore b/.gitignore
+index 8f9ed6df1..9d6fdb00e 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -54,7 +54,7 @@ _persistent_storage.yaml
+ mystery_result_*.yaml
+ *-errors.txt
+ success.txt
+-output/
++/output/
+ Output Logs/
+ /factorio/
+ /WebHostLib/static/generated
+@@ -199,3 +199,110 @@ _speedups.html
+ .LSOverride
+ Thumbs.db
+ [Dd]esktop.ini
++
++# JSDoc generated API documentation
++/docs/json/api/
++
++# Don't ignore these in frontend and its subfolders
++!frontend/**/*.archipelago
++!frontend/**/*_Spoiler.txt
++
++# new stuff
++/Context.py
++Context.txt
++ContextList.txt
++ContextList2.txt
++missingFiles.txt
++FixedContextList.txt
++generate_output.txt
++pytest_output.txt
++pytest-list.txt
++test_output_raw_rules.txt
++debug_cleanup_data.txt
++debug_mode_settings.txt
++rule_analysis_debug.log
++server_log.txt
++playwright-report.json
++playwright-analysis.txt
++*-old.js
++*-old.py
++*-old/
++*-new.js
++*-new.py
++*-new/
++NewDocs/*
++test_results/
++test_files-full.json
++scrap/*
++trash/*
++node_modules/*
++test-results/*
++set.mm
++*.pkl.gz
++*_pickle_meta.json
++
++!scripts/build/
++!scripts/lib/
++!scripts/test/lib/
++!frontend/modules/spoilerTest/lib/
++
++scripts/output/spoiler-minimal/test-results-*
++scripts/output/spoiler-minimal/test-results_*
++scripts/output/spoiler-minimal-worldgen/test-results-*
++scripts/output/spoiler-minimal-worldgen/test-results_*
++scripts/output/spoiler-minimal-apworld/test-results-*
++scripts/output/spoiler-minimal-apworld/test-results_*
++scripts/output/spoiler-full/test-results-*
++scripts/output/spoiler-full/test-results_*
++scripts/output/spoiler-full-worldgen/test-results-*
++scripts/output/spoiler-full-worldgen/test-results_*
++scripts/output/spoiler-full-apworld/test-results-*
++scripts/output/spoiler-full-apworld/test-results_*
++scripts/output/multiclient/test-results-*
++scripts/output/multiclient/test-results_*
++scripts/output/multiclient-worldgen/test-results-*
++scripts/output/multiclient-worldgen/test-results_*
++scripts/output/multiclient-apworld/test-results-*
++scripts/output/multiclient-apworld/test-results_*
++scripts/output/multiworld/test-results-*
++scripts/output/multiworld/test-results_*
++scripts/output/multiworld-worldgen/test-results-*
++scripts/output/multiworld-worldgen/test-results_*
++scripts/output/multiworld-apworld/test-results-*
++scripts/output/multiworld-apworld/test-results_*
++scripts/output/ut-fuzz/test-results-*
++scripts/output/ut-fuzz/test-results_*
++# Track specific UT fuzz result files
++!scripts/output/ut-fuzz/test-results-original-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-original_seeded-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-original_seeded-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json
++
++*_from_pickle_rules.json
++
++!CC/scripts/prompts/gen-errors.txt
++
++coverage/
++benchmark-results.json
++
++test1/
++test2/
++test3/
++test4/
++frontend/modules/mazeGame-iframe/
++.git.disabled/
++worlds/apworld_manager/
++worlds_disabled/
++custom_worlds_disabled/
++iframe_games/journey-to-ascension-backup/
++iframe_games/journey-to-ascension-modified/
++iframe_games/omsi-loops/
++iframe_games/journey-to-ascension/build/
++iframe_games/journey-to-ascension/node_modules/
++fuzz_output/
+\ No newline at end of file
+diff --git a/pytest.ini b/pytest.ini
+index f050d58b7..9b9637514 100644
+--- a/pytest.ini
++++ b/pytest.ini
+@@ -4,4 +4,5 @@ python_classes = Test
+ python_functions = test
+ testpaths =
+     test
++    test_json
+     worlds
+diff --git a/README.md b/README.md
+index 7a0c663db..fdb644fa6 100644
+--- a/README.md
++++ b/README.md
+@@ -1,149 +1,113 @@
+-# [Archipelago](https://archipelago.gg) ![Discord Shield](https://discordapp.com/api/guilds/731205301247803413/widget.png?style=shield) | [Install](https://github.com/ArchipelagoMW/Archipelago/releases)
+-
+-Archipelago provides a generic framework for developing multiworld capability for game randomizers. In all cases,
+-presently, Archipelago is also the randomizer itself.
+-
+-Currently, the following games are supported:
+-
+-* The Legend of Zelda: A Link to the Past
+-* Factorio
+-* Subnautica
+-* Risk of Rain 2
+-* The Legend of Zelda: Ocarina of Time
+-* Timespinner
+-* Super Metroid
+-* Secret of Evermore
+-* Final Fantasy
+-* VVVVVV
+-* Raft
+-* Super Mario 64
+-* Meritous
+-* Super Metroid/Link to the Past combo randomizer (SMZ3)
+-* ChecksFinder
+-* Hollow Knight
+-* The Witness
+-* Sonic Adventure 2: Battle
+-* Starcraft 2
+-* Donkey Kong Country 3
+-* Dark Souls 3
+-* Super Mario World
+-* Pokémon Red and Blue
+-* Hylics 2
+-* Overcooked! 2
+-* Zillion
+-* Lufia II Ancient Cave
+-* Blasphemous
+-* Wargroove
+-* Stardew Valley
+-* The Legend of Zelda
+-* The Messenger
+-* Kingdom Hearts 2
+-* The Legend of Zelda: Link's Awakening DX
+-* Adventure
+-* DLC Quest
+-* Noita
+-* Undertale
+-* Bumper Stickers
+-* Mega Man Battle Network 3: Blue Version
+-* Muse Dash
+-* DOOM 1993
+-* Terraria
+-* Lingo
+-* Pokémon Emerald
+-* DOOM II
+-* Shivers
+-* Heretic
+-* Landstalker: The Treasures of King Nole
+-* Final Fantasy Mystic Quest
+-* TUNIC
+-* Kirby's Dream Land 3
+-* Celeste 64
+-* Castlevania 64
+-* A Short Hike
+-* Yoshi's Island
+-* Mario & Luigi: Superstar Saga
+-* Bomb Rush Cyberfunk
+-* Aquaria
+-* Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006
+-* A Hat in Time
+-* Old School Runescape
+-* Kingdom Hearts 1
+-* Mega Man 2
+-* Yacht Dice
+-* Faxanadu
+-* Saving Princess
+-* Castlevania: Circle of the Moon
+-* Inscryption
+-* Civilization VI
+-* The Legend of Zelda: The Wind Waker
+-* Jak and Daxter: The Precursor Legacy
+-* Super Mario Land 2: 6 Golden Coins
+-* shapez
+-* Paint
+-* Celeste (Open World)
+-* Choo-Choo Charles
+-* APQuest
+-* Satisfactory
+-* EarthBound
+-* Mega Man 3
+-
+-For setup and instructions check out our [tutorials page](https://archipelago.gg/tutorial/).
+-Downloads can be found at [Releases](https://github.com/ArchipelagoMW/Archipelago/releases), including compiled
+-windows binaries.
+-
+-## History
+-
+-Archipelago is built upon a strong legacy of brilliant hobbyists. We want to honor that legacy by showing it here.
+-The repositories which Archipelago is built upon, inspired by, or otherwise owes its gratitude to are:
+-
+-* [bonta0's MultiWorld](https://github.com/Bonta0/ALttPEntranceRandomizer/tree/multiworld_31)
+-* [AmazingAmpharos' Entrance Randomizer](https://github.com/AmazingAmpharos/ALttPEntranceRandomizer)
+-* [VT Web Randomizer](https://github.com/sporchia/alttp_vt_randomizer)
+-* [Dessyreqt's alttprandomizer](https://github.com/Dessyreqt/alttprandomizer)
+-* [Zarby89's](https://github.com/Ijwu/Enemizer/commits?author=Zarby89)
+-  and [sosuke3's](https://github.com/Ijwu/Enemizer/commits?author=sosuke3) contributions to Enemizer, which make up the
+-  vast majority of Enemizer contributions.
+-
+-We recognize that there is a strong community of incredibly smart people that have come before us and helped pave the
+-path. Just because one person's name may be in a repository title does not mean that only one person made that project
+-happen. We can't hope to perfectly cover every single contribution that lead up to Archipelago, but we hope to honor
+-them fairly.
+-
+-### Path to the Archipelago
+-
+-Archipelago was directly forked from bonta0's `multiworld_31` branch of ALttPEntranceRandomizer (this project has a
+-long legacy of its own, please check it out linked above) on January 12, 2020. The repository was then named to
+-_MultiWorld-Utilities_ to better encompass its intended function. As Archipelago matured, then known as
+-"Berserker's MultiWorld" by some, we found it necessary to transform our repository into a root level repository
+-(as opposed to a 'forked repo') and change the name (which came later) to better reflect our project.
+-
+-## Running Archipelago
+-
+-For most people, all you need to do is head over to
+-the [releases page](https://github.com/ArchipelagoMW/Archipelago/releases), then download and run the appropriate
+-installer, or AppImage for Linux-based systems.
+-
+-If you are a developer or are running on a platform with no compiled releases available, please see our doc on
+-[running Archipelago from source](docs/running%20from%20source.md).
+-
+-## Related Repositories
+-
+-This project makes use of multiple other projects. We wouldn't be here without these other repositories and the
+-contributions of their developers, past and present.
+-
+-* [z3randomizer](https://github.com/ArchipelagoMW/z3randomizer)
+-* [Enemizer](https://github.com/Ijwu/Enemizer)
+-* [Ocarina of Time Randomizer](https://github.com/TestRunnerSRL/OoT-Randomizer)
+-
+-## Contributing
+-
+-To contribute to Archipelago, including the WebHost, core program, or by adding a new game, see our
+-[Contributing guidelines](/docs/contributing.md).
+-
+-## FAQ
+-
+-For Frequently asked questions, please see the website's [FAQ Page](https://archipelago.gg/faq/en/).
+-
+-## Code of Conduct
+-
+-Please refer to our [code of conduct](/docs/code_of_conduct.md).
++# Archipelago JSON Export Tools
++
++A suite of tools for exporting, visualizing, and tracking Archipelago game logic.
++
++This project exports all the multiworld data from an Archipelago seed generation — access rules, regions, locations, items, helper functions — to a JSON file. A JavaScript frontend reads this JSON, connects to an Archipelago server, and works as a logic-aware tracker. The project also includes an enhanced Universal Tracker, several new APWorlds, and alternate game modes.
++
++Most of the code for this project was written by Claude.
++
++**Live Demos:** [Latest Stable Version](https://peerinfinity.github.io/Archipelago/) | [Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)
++
++**Installer APWorld:** [Download](https://github.com/PeerInfinity/Archipelago/raw/JSONExport/apworlds/json_tools_installer.apworld) — install into an existing Archipelago directory without cloning this repository
++
++**Game Compatibility:** [Test Results](./docs/json/developer/test-results/test-results-fuzz-summary.md)
++
++**Full Feature List:** [Features Overview](./docs/json/features/README.md)
++
++## How the Tracker Works
++
++The exporter reads the Python AST for the multiworld data, including the full logic of all access rules and Python helper functions. By default it converts everything to [Rule Builder](https://github.com/ArchipelagoMW/Archipelago/pull/5048) format before saving to JSON. Some games are fully supported without any custom code. Others require a custom exporter that may need updating for future world versions. A few also require custom JavaScript in the frontend to parse game-specific logic.
++
++The JavaScript frontend reads this JSON, connects to an Archipelago server, and provides logic-aware tracking. The region graph displays all regions and locations, color coded by accessibility and check status.
++
++The frontend has a **discovery mode** that works especially well with entrance shuffle. Connect to the server, open the Region Graph, and click on nodes as you discover them. The graph shows only the regions you've discovered, and highlights when they contain newly accessible locations.
++
++## Universal Tracker Enhancements
++
++In addition to the JavaScript tracker, there is a modified [Universal Tracker](https://github.com/FarisTheAncient/Archipelago) that uses the JSON data. It uses Rule Builder to convert the data back into a Python APWorld with the seed's settings baked in. This means UT's `/explain` feature works even on games that didn't implement explain support.
++
++There is also a pickle-based exporter and a matching UT mode that loads the serialized multiworld directly. Some games work with pickle but not JSON, and vice versa. And some games work with the original UT but not either alternate version.
++
++A **hybrid mode** automatically selects the best UT variant for each game based on [fuzz test results](./docs/json/developer/test-results/test-results-fuzz-summary.md).
++
++All three of the new trackers fully support every ALttP setting combination — including inverted mode, glitches, and entrance shuffle — with 0 failures across 10,000 seeds.
++
++## Installation
++
++You can clone the whole repository, or use the **[installer APWorld](https://github.com/PeerInfinity/Archipelago/raw/JSONExport/apworlds/json_tools_installer.apworld)**, which adds an installer tool to the Archipelago Launcher menu. Use it to select which components to download and install into your Archipelago directory. The exporter runs automatically during seed generation via runtime hooks — no modifications to existing Archipelago files are needed.
++
++The installer also has an option to patch world init files so the generator and exporter can run without requiring any ROM files.
++
++For a detailed walkthrough, see the [User Quick Start Guide](./docs/json/user/quick-start.md). For tips and FAQs, see [Tips and Tricks](./docs/json/user/tips-and-tricks.md).
++
++## New APWorlds
++
++**[MetaMath](./worlds/metamath/docs/README.md)** — Turns any MetaMath theorem into a playable Archipelago world. Each proof step is a location, each proven statement is an item. The frontend includes modules that act as a MetaMath client. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=metamath)
++
++**[DepGraph](./docs/json/features/depgraph.md)** — Turns any directed acyclic graph into a playable world. Supports JSON, DOT, and CSV graph formats. Bundled examples include tech trees, skill trees, and recipe chains. Includes a tool to convert a to-do list into a dependency graph. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph)
++
++**[Journey to Ascension](./worlds/jta/docs/en_Journey%20to%20Ascension.md)** — An incremental/idle game integrated via the frontend's iframe interface. The APWorld randomizes game features, then an algorithm adjusts energy costs and XP multipliers to guarantee the game is completable with a specific strategy. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)
++
++## Alternate Game Modes
++
++**[Loops](./docs/json/features/loops.md)** — Turns any Archipelago game into an incremental game inspired by Idle Loops. Queue actions to move between regions, explore, and check locations, spending mana on each action. Spending mana in a region earns XP that reduces action costs in that region. Obtaining items boosts max mana. When mana runs out, the loop resets — but XP and checked locations persist. A cost generation algorithm guarantees at least one path through the game without grinding. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops)
++
++**[Maze Metagame](./docs/json/features/maze-metagame.md)** — A meta-progression layer using A-Mazing Idle. Before each region discovery or location check, complete a maze challenge. A proof of concept demonstrating the MetaGame system, which can layer any iframe-based game on top of Archipelago tracking. [Demo](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegame) | [Loops variant](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegameloops)
++
++**Text Adventure** — Play through any Archipelago world as a text adventure. Originally built for testing, but works as a standalone interface for any game.
++
++## Documentation
++
++This project contains a full documentation suite for both users and developers.
++
++- **[Documentation Portal](./docs/json/README.md)** — Main documentation index
++- **[Features Overview](./docs/json/features/README.md)** — All major features with links to detailed docs
++- **[User Overview](./docs/json/user/overview.md)** — What this project does and how to use it
++- **[Developer Getting Started](./docs/json/developer/getting-started.md)** — Set up a development environment
++- **[System Architecture](./docs/json/developer/architecture.md)** — High-level design overview
++- **[Project Roadmap](./docs/json/project-roadmap.md)** — Status, known issues, and future plans
++
++## About This Repository
++
++This is the active development repository for the Archipelago JSON Export Tools project, configured for development with [Claude Code](https://claude.ai/code).
++
++### Related Repositories
++
++- **[PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago)** (JSONExport branch) - Stable snapshot, periodically updated with current files (no git history). Use this for a clean starting point.
++- **[ArchipelagoMW/Archipelago](https://github.com/ArchipelagoMW/Archipelago)** - The main upstream Archipelago project.
++
++### Repository Notes
++
++- Code is maintained in the `main` branch
++- This repository is configured for Claude Code development (session branches are preserved)
++- The `frontend` directory is deployed to GitHub Pages automatically
++- **Note:** The commit history contains large files. See "Contributing" below for implications.
++
++### Contributing
++
++**To contribute to this project:** Clone or fork normally. The large file history will increase clone size but won't affect your work.
++
++**To contribute to upstream Archipelago or maintain your own clean fork:** Do not fork this repository directly. Instead:
++
++1. Fork the [main ArchipelagoMW repository](https://github.com/ArchipelagoMW/Archipelago)
++2. Copy the new directories (see [Repository Changes](./docs/json/developer/diffs/repository-changes.md))
++3. Apply the diff files (see [Diff Files](./docs/json/developer/diffs/README.md))
++
++This approach ensures your fork maintains a clean relationship with the upstream Archipelago project.
++
++## Credits
++
++- Based on the original [Archipelago](https://github.com/ArchipelagoMW/Archipelago) multiworld system.
++- Web client interface derived from [ArchipIDLE](https://github.com/LegendaryLinux/archipidle-client).
++- Loop mode inspired by games like [Idle Loops](https://github.com/dmchurch/omsi-loops/), Increlution, and Stuck In Time.
++- Uses [Golden Layout](https://github.com/golden-layout/golden-layout) for panel management.
++- Uses [CodeMirror](https://github.com/codemirror/codemirror5)
++- Uses [Cytoscape.js](https://github.com/cytoscape/cytoscape.js) for graph visualization
++- Uses [metamath-py](https://pypi.org/project/metamath-py/) for the MetaMath apworld
++- Uses [Rule Builder](https://github.com/ArchipelagoMW/Archipelago/pull/5048) by drtchops
++- Universal Tracker based on [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago)
++- Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
++- APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
++- APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
++- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth
++- Iframe integration of [A-Mazing-Idle](https://imgreghenry.github.io/A-Mazing-Idle/) by ImGregHenry
