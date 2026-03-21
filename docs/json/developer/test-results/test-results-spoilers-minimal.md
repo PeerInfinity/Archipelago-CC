@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-03-21 21:55:16 UTC
+**Generated:** 2026-03-21 22:45:04 UTC
 
-**Source Data Created:** 2026-03-21T20:01:12.857645+00:00
+**Source Data Created:** 2026-03-21T22:05:37.145346+00:00
 
-**Source Data Last Updated:** 2026-03-21T20:01:12.857655+00:00
+**Source Data Last Updated:** 2026-03-21T22:05:37.145354+00:00
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 76 (100.0%)
+- **Total Games:** 75
+- **Passed:** 75 (100.0%)
 - **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/76 (52.6% of passed)
-- **Passing with Generic Logic:** 70/76 (92.1% of passed)
-- **Passing with Both Generic:** 40/76 (52.6% of passed)
+- **Passing with Generic Exporter:** 40/75 (53.3% of passed)
+- **Passing with Generic Logic:** 70/75 (93.3% of passed)
+- **Passing with Both Generic:** 40/75 (53.3% of passed)
 
 ## Test Results
 
@@ -90,7 +90,6 @@
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 29.3KB | 90.1KB |
-| Stardew Valley | ✅ Passed | 0 | 37.2 | 37.2 | 🟢 Complete | 20.0KB | 9.8KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 96.3KB | ✅ |
