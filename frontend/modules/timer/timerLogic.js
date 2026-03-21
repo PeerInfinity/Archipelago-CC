@@ -494,9 +494,13 @@ export class TimerLogic {
 
         // Batch check via stateManager (single BFS pass instead of N individual ones)
         // Items are added locally from the rules JSON
-        // Note: We intentionally don't dispatch individual user:locationCheck events
-        // to avoid flooding the worker with redundant commands
-        this.stateManager.batchCheckLocations(locationNames).catch(err => {
+        this.stateManager.batchCheckLocations(locationNames).then(() => {
+          // After batch check completes locally, notify the server about all checked locations
+          const sendBatchLocationChecks = window.centralRegistry?.getPublicFunction('client', 'sendBatchLocationChecks');
+          if (sendBatchLocationChecks) {
+            sendBatchLocationChecks(locationNames);
+          }
+        }).catch(err => {
           log('warn', `[TimerLogic] Batch check error: ${err.message}`);
         });
       } else {
@@ -580,7 +584,12 @@ export class TimerLogic {
 
             if (newLocationsToCheck.length > 1 && typeof this.stateManager.batchCheckLocations === 'function') {
               const locationNames = newLocationsToCheck.map(loc => loc.name);
-              this.stateManager.batchCheckLocations(locationNames).catch(err => {
+              this.stateManager.batchCheckLocations(locationNames).then(() => {
+                const sendBatchLocationChecks = window.centralRegistry?.getPublicFunction('client', 'sendBatchLocationChecks');
+                if (sendBatchLocationChecks) {
+                  sendBatchLocationChecks(locationNames);
+                }
+              }).catch(err => {
                 log('warn', `[TimerLogic] Batch check error: ${err.message}`);
               });
             } else {
