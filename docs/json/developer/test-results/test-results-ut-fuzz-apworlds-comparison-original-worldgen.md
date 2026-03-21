@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen (APWorlds)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:40:14 UTC
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Worldgen Universal Tracker (regenerates world from rules.json).
 
@@ -92,7 +92,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Mario Kart Double Dash | ✅ | ❌ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 7/10 | ✅ | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ 2/10 | ❌ | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | ❌ 2/10 | ❌ | N/A | N/A | N/A |
 | Minishoot Adventures | ❌ | ❌ 4/10 | 25.9KB | ✅ | N/A |
 | Minit | ✅ | ⚠️ 6/10 | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 3/10 | ❌ | ✅ | ✅ | N/A |
@@ -137,7 +137,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | The Legend of Zelda - Oracle of Seasons | ❌ | ❌ | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 2/10 | ❌ | ✅ | ✅ | N/A |
 | The Sims 4 | ❌ | ✅ | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | N/A | ❌ | N/A | N/A | N/A |
+| ToeJam and Earl | N/A | ❌ | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tyrian | ⚠️ 6/9 | ⚠️ 3/6 | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -149,7 +149,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Forbidden Memories | N/A | ❌ | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ 2/10 | ✅ | ✅ | ✅ | N/A |
 | osu! | ❌ | ✅ | ✅ | ✅ | N/A |
-| plateup | ❌ 2/9 | ⚠️ 8/9 | ✅ | ✅ | N/A |
+| plateup | ❌ 2/9 | ⚠️ 8/9 | N/A | N/A | N/A |
 
 ## Games Passing Both (30)
 
@@ -273,7 +273,7 @@ These games fail in both Universal Tracker versions.
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
 | Lingo 2 | 17.1KB | ✅ | N/A |
 | Lunacid | 8.2KB | ✅ | N/A |
-| Metroid Zero Mission | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | N/A | N/A | N/A |
 | Minishoot Adventures | 25.9KB | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
 | Nine Sols | ✅ | ✅ | N/A |
@@ -296,12 +296,12 @@ These games fail in both Universal Tracker versions.
 | Tetris Attack | 23.1KB | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
-| ToeJam and Earl | N/A | N/A | N/A |
+| ToeJam and Earl | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
-| plateup | ✅ | ✅ | N/A |
+| plateup | N/A | N/A | N/A |
 
 ## Notes
 

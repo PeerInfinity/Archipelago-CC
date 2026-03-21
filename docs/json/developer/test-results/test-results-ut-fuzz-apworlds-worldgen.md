@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:40:14 UTC
 
 **Source Data Created:** 2026-01-24T05:05:20.633697
 
@@ -61,9 +61,9 @@ Of the 50 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 404.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 404.6KB
 
 ## Test Results
 
@@ -135,7 +135,7 @@ Of the 50 games with 100% pass rate:
 | *Mario Kart Double Dash* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *Metroid Zero Mission* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 9.8KB | ✅ | N/A |
+| *Metroid Zero Mission* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | N/A | N/A | N/A |
 | *Minishoot Adventures* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 25.9KB | ✅ | N/A |
 | *Minit* | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% | 23.9KB | ✅ | N/A |
 | *Monster Sanctuary* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
@@ -180,7 +180,7 @@ Of the 50 games with 100% pass rate:
 | *The Legend of Zelda - Oracle of Seasons* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | *The Legend of Zelda - Phantom Hourglass* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | *The Sims 4* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.5KB | ✅ | N/A |
-| *ToeJam and Earl* | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | N/A | N/A | N/A |
+| *ToeJam and Earl* | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | *Tyrian* | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |
@@ -192,7 +192,7 @@ Of the 50 games with 100% pass rate:
 | *Yu-Gi-Oh! Forbidden Memories* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *plateup* | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| *plateup* | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | N/A | N/A | N/A |
 
 ## Results Breakdown
 

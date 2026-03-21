@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid (APWorlds)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:40:14 UTC
 
 **Source Data Last Updated:** 2026-01-24T05:05:20
 
@@ -93,7 +93,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Mario Kart Double Dash | ❌ | ✅ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ | ✅ | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | ❌ | ✅ | N/A | N/A | N/A |
 | Minishoot Adventures | ❌ 4/10 | ❌ | 25.9KB | ✅ | N/A |
 | Minit | ⚠️ 6/10 | ✅ | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ | ❌ 3/10 | ✅ | ✅ | N/A |
@@ -138,7 +138,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | The Legend of Zelda - Oracle of Seasons | ❌ | ❌ 2/10 | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ | ❌ | ✅ | ✅ | N/A |
 | The Sims 4 | ✅ | ✅ | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ❌ | N/A | N/A | N/A | N/A |
+| ToeJam and Earl | ❌ | N/A | ✅ | ✅ | N/A |
 | TurnipBoy | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tyrian | ⚠️ 3/6 | ⚠️ 5/6 | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | ✅ | ✅ | ✅ | N/A |
@@ -150,7 +150,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Yu-Gi-Oh! Forbidden Memories | ❌ | ❌ | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | ✅ | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | ✅ | ✅ | N/A |
-| plateup | ⚠️ 8/9 | ❌ 2/9 | ✅ | ✅ | N/A |
+| plateup | ⚠️ 8/9 | ❌ 2/9 | N/A | N/A | N/A |
 
 ## Games Passing Both (49)
 
@@ -238,7 +238,7 @@ These games pass in the Hybrid UT but fail in the Worldgen UT.
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
-| Metroid Zero Mission | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | N/A | N/A | N/A |
 | Minit | 23.9KB | ✅ | N/A |
 | Ori and the Blind Forest | 23.2KB | ✅ | N/A |
 | Pseudoregalia | 17.1KB | ✅ | N/A |
@@ -297,12 +297,12 @@ These games fail in both Universal Tracker versions.
 | TCG Card Shop Simulator | ✅ | ✅ | N/A |
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
-| ToeJam and Earl | N/A | N/A | N/A |
+| ToeJam and Earl | ✅ | ✅ | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
-| plateup | ✅ | ✅ | N/A |
+| plateup | N/A | N/A | N/A |
 
 ## Notes
 
