@@ -26,10 +26,11 @@ Bug fixes for ALttP's `set_bunny_rules()` function:
 
 These bugs caused superbunny access rules to capture the wrong loop variable in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
 
-### 4. `diff-files/world-minor-fixes.diff` (22 lines)
-Minor fixes to upstream world files that improve output consistency without changing game behavior:
+### 4. `diff-files/world-minor-fixes.diff` (44 lines)
+Minor fixes to upstream world files that improve output consistency or fix UT tracking bugs:
 - **worlds/lufia2ac/Options.py** - Changed `Boss.extra_options` from `set(random_groups)` to `list(random_groups)` so that `enumerate()` in `AssembleCustomizableChoices.__new__` assigns stable integer keys to the random group names. Without this, set iteration order is non-deterministic, causing the `boss` option's `name_lookup` to map different integers to different group names on each run, producing inconsistent JSON export output.
 - **worlds/landstalker/Hints.py** - Changed `list(set(hint_texts))` to `sorted(set(hint_texts))` so that deduplication produces a stable ordering before the seeded `random.shuffle`. Without this, the set iteration order is non-deterministic, causing different hints to be assigned to different Foxy NPCs on each run even with the same seed.
+- **worlds/shapez/__init__.py** - Removed forced `early_balancer_tunnel_and_trash = 0` override during UT regeneration. The override made UT more permissive than the server by removing balancer/tunnel/trash requirements from region transitions when the player's YAML had them set to `3_buildings` or `5_buildings`.
 
 ### 5. `diff-files/test-files.diff` (62 lines)
 Changes to upstream test files for fork compatibility:
@@ -93,7 +94,7 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 ## Notes
 
 - These diffs are generated against upstream commit `fb45a2f8` (Archipelago 0.6.7)
-- Total lines changed across diff files: 1,622 lines (41 + 413 + 25 + 22 + 62 + 635 + 424)
+- Total lines changed across diff files: 1,644 lines (41 + 413 + 25 + 44 + 62 + 635 + 424)
 - Additionally, 2 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs

@@ -9,7 +9,7 @@ This document tracks the differences between this repository and the upstream Ar
 
 ## Summary
 
-- **Modified upstream files:** 25
+- **Modified upstream files:** 26
 - **New top-level directories:** 16
 - **New files in existing directories:** 29
 - **Auto-generated world directories:** 59
@@ -114,7 +114,7 @@ worlds/RomlessUtils.py
 
 ## Modified Files
 
-The following 25 files have been modified from the upstream version:
+The following 26 files have been modified from the upstream version:
 
 ### Core Files (see diff-files/core-files.diff)
 ```
@@ -143,6 +143,7 @@ Note: `rule_builder/` exists in upstream (merged from PR #5048). The fork extend
 worlds/alttp/Rules.py
 worlds/landstalker/Hints.py
 worlds/lufia2ac/Options.py
+worlds/shapez/__init__.py
 ```
 
 ### Test Files (modified)
@@ -296,7 +297,7 @@ The following major components were developed specifically for this project:
 
 - The latest sync from upstream was performed on March 20, 2026, bringing the fork up to Archipelago 0.6.7 (commit `fb45a2f8`)
 
-- Most changes are additions rather than modifications, with only 25 files modified from upstream
+- Most changes are additions rather than modifications, with only 26 files modified from upstream
 
 - The majority of the ~2,000 new files are contained within:
   - `frontend/` - Web client (~400 files)

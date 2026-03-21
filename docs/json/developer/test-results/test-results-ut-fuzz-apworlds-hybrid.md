@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 17:54:01 UTC
+**Generated:** 2026-02-19 21:59:55 UTC
 
 **Source Data Created:** 2026-02-04T21:03:09.652326
 
@@ -61,9 +61,9 @@ Of the 74 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 414.0KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 414.0KB
 
 ## Test Results
 
@@ -135,7 +135,7 @@ Of the 74 games with 100% pass rate:
 | *Mario Kart Double Dash* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.8KB | ✅ | N/A |
+| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.7KB | ✅ | N/A |
 | *Minishoot Adventures* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 25.9KB | ✅ | N/A |
 | *Minit* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 23.9KB | ✅ | N/A |
 | *Monster Sanctuary* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
@@ -148,7 +148,7 @@ Of the 74 games with 100% pass rate:
 | *Pokemon Mystery Dungeon Explorers of Sky* | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 | *Pseudoregalia* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
 | *Rabi-Ribi* | ❌ | 10 | 3 | 1 | 0 | 6 | ❌ 30.0% | ✅ | ✅ | N/A |
-| Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 11.8KB | ✅ | N/A |
+| Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% | 11.7KB | ✅ | N/A |
 | Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | *Reventure* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.7KB | ✅ | N/A |
@@ -164,15 +164,15 @@ Of the 74 games with 100% pass rate:
 | Sonic Heroes | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% | ✅ | ✅ | N/A |
 | *Sonic Rush* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Sonic the Hedgehog 1 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.4KB | ✅ | N/A |
-| *Soul Blazer* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.5KB | ✅ | N/A |
+| *Soul Blazer* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.6KB | ✅ | N/A |
 | Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *Spyro 3* | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% | 15.3KB | ✅ | N/A |
+| *Spyro 3* | ❌ | 10 | 3 | 5 | 0 | 2 | ❌ 30.0% | 15.2KB | ✅ | N/A |
 | *Stacklands* | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 12.7KB | ✅ | N/A |
-| Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.2KB | ✅ | N/A |
+| Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 17.1KB | ✅ | N/A |
 | Star Wars Episode I Racer | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *System Shock 2* | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% | 15.1KB | ✅ | N/A |
+| *System Shock 2* | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% | 15.0KB | ✅ | N/A |
 | *TCG Card Shop Simulator* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | *Tetris Attack* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 23.1KB | ✅ | N/A |
@@ -186,7 +186,7 @@ Of the 74 games with 100% pass rate:
 | *Wario Land* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Watery Words | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.1KB | ✅ | N/A |
 | Wordipelago | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 19.5KB | ✅ | N/A |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 0 | 0 | 0 | 0 | 0 | ❌ 0.0% | 28.8KB | ✅ | N/A |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 0 | 0 | 0 | 0 | 0 | ❌ 0.0% | 28.7KB | ✅ | N/A |
 | *Yu-Gi-Oh! Forbidden Memories* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |

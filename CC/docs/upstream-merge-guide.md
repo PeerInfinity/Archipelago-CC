@@ -54,6 +54,7 @@ If upstream does touch any of these in a future merge, use the diff files to und
 | `worlds/alttp/Rules.py` | Lambda late-binding closure fix | `alttp-bunny-rules.diff` |
 | `worlds/landstalker/Hints.py` | `list(set())` → `sorted(set())` | `world-minor-fixes.diff` |
 | `worlds/lufia2ac/Options.py` | `set()` → `list()` for determinism | `world-minor-fixes.diff` |
+| `worlds/shapez/__init__.py` | Remove forced UT option override | `world-minor-fixes.diff` |
 
 **Action:** After merging, check if upstream fixed these bugs independently. If not, reapply from the diff files. If upstream fixed them differently, compare approaches and keep whichever is better.
 
