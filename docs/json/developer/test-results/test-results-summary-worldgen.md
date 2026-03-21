@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-03-21 21:55:16 UTC
+**Generated:** 2026-03-21 22:05:38 UTC
 
 **Source Data Created:** 2026-02-18T23:40:25.407810+00:00
 
@@ -92,7 +92,7 @@ Of the 55 templates passing all 4 tests:
 | DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 49.0KB |
 | DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1064.6KB |
+| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 131.2KB |
 | EarthBound WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 352.9KB |
 | Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.8KB | ✅ | 231.5KB |
@@ -143,16 +143,16 @@ Of the 55 templates passing all 4 tests:
 
 | Rank | Game Name | Rules Size |
 |------|-----------|------------|
-| 1 | Dark Souls III WorldGen | 1064.6KB |
-| 2 | Super Mario Land 2 WorldGen | 920.6KB |
-| 3 | Links Awakening DX WorldGen | 696.9KB |
-| 4 | A Link to the Past WorldGen | 667.8KB |
-| 5 | A Link to the Past Vanilla WorldGen | 666.1KB |
-| 6 | A Link to the Past WorldGen2 | 665.2KB |
-| 7 | A Link to the Past Vanilla WorldGen2 | 664.6KB |
-| 8 | Final Fantasy Mystic Quest WorldGen | 556.7KB |
-| 9 | Overcooked! 2 WorldGen | 485.8KB |
-| 10 | Mario & Luigi Superstar Saga WorldGen | 403.9KB |
+| 1 | Super Mario Land 2 WorldGen | 920.6KB |
+| 2 | Links Awakening DX WorldGen | 696.9KB |
+| 3 | A Link to the Past WorldGen | 667.8KB |
+| 4 | A Link to the Past Vanilla WorldGen | 666.1KB |
+| 5 | A Link to the Past WorldGen2 | 665.2KB |
+| 6 | A Link to the Past Vanilla WorldGen2 | 664.6KB |
+| 7 | Final Fantasy Mystic Quest WorldGen | 556.7KB |
+| 8 | Overcooked! 2 WorldGen | 485.8KB |
+| 9 | Mario & Luigi Superstar Saga WorldGen | 403.9KB |
+| 10 | EarthBound WorldGen | 352.9KB |
 
 ### Exporter Files by Size
 
