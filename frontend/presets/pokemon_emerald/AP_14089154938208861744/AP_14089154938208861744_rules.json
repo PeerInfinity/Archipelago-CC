@@ -45404,9 +45404,9 @@
         "death_link": false,
         "dexsanity": false,
         "dexsanity_encounter_types": [
+          "Land",
           "Fishing",
-          "Water",
-          "Land"
+          "Water"
         ],
         "double_battle_chance": 0,
         "easter_egg": "EMERALD SECRET",
