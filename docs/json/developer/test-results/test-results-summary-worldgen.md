@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-03-21 18:02:52 UTC
+**Generated:** 2026-03-21 20:01:13 UTC
 
 **Source Data Created:** 2026-02-18T23:40:25.407810+00:00
 
@@ -197,6 +197,7 @@ These templates are excluded from testing:
 | Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | DOOM 1993.yaml | Temporarily excluded. Helper references original module data (Maps.map_names, self.all_boss_levels, self.included_episodes, Locations.location_table) causing NameError. |
 | DOOM II.yaml | Temporarily excluded. Same pattern as DOOM 1993 — helper references original module data (Maps.map_names) causing NameError. |
+| Dark Souls III.yaml | Temporarily excluded. It takes too long to process, and causes timeouts in the multiworld test. |
 | Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
 | Heretic.yaml | Temporarily excluded. Same pattern as DOOM 1993 — helper references original module data (Maps.map_names) causing NameError. |
 | Hollow Knight.yaml | The spoiler test currently freezes. |
