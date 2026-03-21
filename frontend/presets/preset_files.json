@@ -3005,7 +3005,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1-21Mar2026-220720_0.6.7.zip",
+          "AP-14089154938208861744-P1-Player1-21Mar2026-225804_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -4539,36 +4539,6 @@
       }
     },
     "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": false,
-        "client1_passed": true,
-        "client2_passed": false,
-        "locations_checked": 85,
-        "total_locations": 489
-      },
-      "multiworld": {
-        "passed": false,
-        "players_passed": 0,
-        "players_failed": 1,
-        "total_players": 1,
-        "first_failure_player": 6
-      },
       "spoiler_fuzz": {
         "passed": false,
         "total_runs": 10,
@@ -9297,7 +9267,7 @@
     }
   },
   "metadata": {
-    "test_data_updated": "2026-03-21T22:23:14.866558+00:00",
+    "test_data_updated": "2026-03-21T23:13:45.328381+00:00",
     "games_with_test_data": 141,
     "total_games": 160,
     "games_without_test_data": 19,
