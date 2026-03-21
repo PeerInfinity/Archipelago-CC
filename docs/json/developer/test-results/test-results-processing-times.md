@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-03-21 08:05:29 UTC
+**Generated:** 2026-03-21 10:13:56 UTC
 
 **Source Data Created:** 2026-03-21T06:20:18.393241+00:00
 
@@ -129,8 +129,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Super Mario Land 2 | 54.5s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml (+2 more) |
+| 2 | Mega Man 3 | 41.0s | 5 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml |
+| 3 | The Witness | 37.9s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml (+3 more) |
+| 4 | Risk of Rain 2 | 29.7s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml (+1 more) |
+| 5 | Timespinner | 29.5s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+3 more) |
+| 6 | Super Mario World | 27.1s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+2 more) |
+| 7 | Satisfactory | 23.9s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 8 | Journey to Ascension | 22.6s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml |
+| 9 | Stardew Valley | 21.5s | 6 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 10 | Undertale | 21.4s | 8 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml, Meritous.yaml (+3 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 2700.7s | 6 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 2 | Satisfactory | 198.1s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml (+1 more) |
+| 3 | Starcraft 2 | 187.9s | 6 | Baking Adventure.yaml, Coding Adventure.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 4 | Dark Souls III | 179.1s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 5 | Kingdom Hearts 2 | 134.2s | 4 | A Link to the Past.yaml, Celeste (Open World).yaml, DepGraph.yaml, Kingdom Hearts 2.yaml |
+| 6 | Secret of Evermore | 79.1s | 6 | APQuest.yaml, ChecksFinder.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 7 | Super Mario Land 2 | 55.1s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml (+2 more) |
+| 8 | Kirby's Dream Land 3 | 55.0s | 4 | APQuest.yaml, ChecksFinder.yaml, EarthBound.yaml, Kirby's Dream Land 3.yaml |
+| 9 | The Witness | 54.1s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Journey to Ascension.yaml, Mega Man 3.yaml (+3 more) |
+| 10 | Kingdom Hearts | 42.7s | 4 | A Short Hike.yaml, Celeste 64.yaml, Donkey Kong Country 3.yaml, Kingdom Hearts.yaml |
