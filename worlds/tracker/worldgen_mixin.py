@@ -164,6 +164,7 @@ class WorldgenMixin:
         """
         try:
             import importlib
+            import importlib.util
             import sys
             from world_generator.generator import WorldGenerator
             from worlds import AutoWorld
@@ -197,6 +198,11 @@ class WorldgenMixin:
 
             self.logger.info(f"Generated world files in {output_dir}")
 
+            # Invalidate import caches so Python's FileFinder detects newly created
+            # worldgen directories. This is critical for parallel fuzzer runs where
+            # fork() inherits the parent's cached directory listings.
+            importlib.invalidate_caches()
+
             # Check if module was previously imported
             full_module_name = f"worlds.{module_name}"
             if full_module_name in sys.modules:
@@ -218,9 +224,23 @@ class WorldgenMixin:
                 self.logger.info(f"Reloading module: {full_module_name}")
                 importlib.reload(sys.modules[full_module_name])
             else:
-                # Import the module for the first time
+                # Import the module for the first time.
+                # Use spec_from_file_location for explicit file-based loading to avoid
+                # relying on cached directory listings in forked processes. This is more
+                # reliable than importlib.import_module() for dynamically generated modules.
+                init_path = output_dir / '__init__.py'
                 self.logger.info(f"Importing new world module: {full_module_name}")
-                importlib.import_module(full_module_name)
+                spec = importlib.util.spec_from_file_location(
+                    full_module_name,
+                    str(init_path.resolve()),
+                    submodule_search_locations=[str(output_dir.resolve())]
+                )
+                if spec is None or spec.loader is None:
+                    self.logger.error(f"Could not create module spec for {full_module_name}")
+                    return False
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[full_module_name] = module
+                spec.loader.exec_module(module)
 
             # Verify the world was registered
             if worldgen_game_name not in AutoWorld.AutoWorldRegister.world_types:

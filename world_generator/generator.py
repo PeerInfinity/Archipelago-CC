@@ -220,6 +220,10 @@ class WorldGenerator:
         }
         manifest_path = output_dir / 'archipelago.json'
         if not dry_run:
+            # Ensure output directory still exists before writing files.
+            # In parallel execution (e.g., fuzzer with -j 4), directory creation
+            # and file writing can race with other processes. Re-create if needed.
+            output_dir.mkdir(parents=True, exist_ok=True)
             manifest_path.write_text(json.dumps(manifest, indent=4))
             logger.info(f"Wrote manifest to {manifest_path}")
         else:
@@ -237,6 +241,7 @@ class WorldGenerator:
         if options_data:
             options_path = output_dir / '_worldgen_options.json'
             if not dry_run:
+                output_dir.mkdir(parents=True, exist_ok=True)
                 options_path.write_text(json.dumps(options_data, indent=2))
                 logger.info(f"Wrote worldgen options to {options_path}")
 
