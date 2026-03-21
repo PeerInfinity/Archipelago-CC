@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:39:25 UTC
 
 **Source Data Created:** 2026-03-21T22:05:16.406246+00:00
 
@@ -147,7 +147,7 @@ Of the 73 games with 100% pass rate:
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 250.2KB |
-| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 458.1KB |
+| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |

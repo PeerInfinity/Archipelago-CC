@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:39:25 UTC
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -92,7 +92,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Mario Kart Double Dash | ✅ | ✅ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 7/10 | ✅ | ✅ | ✅ | N/A |
-| Metroid Zero Mission | ❌ 2/10 | ✅ | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | ❌ 2/10 | ✅ | N/A | N/A | N/A |
 | Minishoot Adventures | ❌ | ❌ | 25.9KB | ✅ | N/A |
 | Minit | ✅ | ✅ | 23.9KB | ✅ | N/A |
 | Monster Sanctuary | ❌ 3/10 | ❌ 3/10 | ✅ | ✅ | N/A |
@@ -147,7 +147,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yu-Gi-Oh! Forbidden Memories | N/A | ❌ | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ❌ 2/10 | ✅ | ✅ | ✅ | N/A |
 | osu! | ❌ | ✅ | ✅ | ✅ | N/A |
-| plateup | ❌ 2/9 | ❌ 2/9 | ✅ | ✅ | N/A |
+| plateup | ❌ 2/9 | ❌ 2/9 | N/A | N/A | N/A |
 
 ## Games Passing Both (46)
 
@@ -239,7 +239,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Lil Gator Game | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
-| Metroid Zero Mission | 9.8KB | ✅ | N/A |
+| Metroid Zero Mission | N/A | N/A | N/A |
 | Sonic Rush | ✅ | ✅ | N/A |
 | Star Wars Episode I Racer | 5.7KB | ✅ | N/A |
 | Tetris Attack | 23.1KB | ✅ | N/A |
@@ -297,7 +297,7 @@ These games fail in both Universal Tracker versions.
 | Wario Land | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 28.8KB | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
-| plateup | ✅ | ✅ | N/A |
+| plateup | N/A | N/A | N/A |
 
 ## Notes
 

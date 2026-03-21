@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-21 23:39:25 UTC
 
 **Source Data Last Updated:** 2026-02-19T21:12:34
 
@@ -109,7 +109,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.6KB |
 | The Messenger | ❌ 1/10 | ✅ | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ❌ 1/5 | ✅ | 7.0KB | ✅ | 250.2KB |
-| The Witness | ✅ | ✅ | 14.6KB | ✅ | 458.1KB |
+| The Witness | ✅ | ✅ | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ❌ | ✅ | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ⚠️ 8/10 | ✅ | 3.8KB | ✅ | 22.7KB |
@@ -162,7 +162,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TOEM rule builder | 0.5KB | ✅ | 99.7KB |
 | TUNIC | 3.1KB | ✅ | 649.2KB |
 | The Legend of Zelda | ✅ | ✅ | 554.6KB |
-| The Witness | 14.6KB | ✅ | 458.1KB |
+| The Witness | 14.6KB | ✅ | 468.1KB |
 | Undertale | ✅ | ✅ | 56.3KB |
 | Wargroove | ✅ | ✅ | 44.1KB |
 
