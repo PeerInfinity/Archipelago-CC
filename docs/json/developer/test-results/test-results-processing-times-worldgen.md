@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-03-21 23:07:40 UTC
+**Generated:** 2026-03-21 23:18:11 UTC
 
 **Source Data Created:** 2026-03-21T22:57:37.647834+00:00
 
@@ -105,8 +105,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Yoshi's Island WorldGen | 11.4s | 7 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Landstalker - The Treasures of King Nole WorldGen.yaml, Old School Runescape WorldGen.yaml (+2 more) |
+| 2 | shapez WorldGen | 10.7s | 7 | A Link to the Past WorldGen2.yaml, Bumper Stickers WorldGen.yaml, DLCQuest WorldGen.yaml, Links Awakening DX WorldGen.yaml, Overcooked! 2 WorldGen.yaml (+2 more) |
+| 3 | TOEM original WorldGen | 9.9s | 6 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Landstalker - The Treasures of King Nole WorldGen.yaml, Old School Runescape WorldGen.yaml (+1 more) |
+| 4 | The Wind Waker WorldGen | 9.9s | 6 | Adventure WorldGen.yaml, ChecksFinder WorldGen.yaml, Factorio WorldGen.yaml, Mega Man 3 WorldGen.yaml, Sonic Adventure 2 Battle WorldGen.yaml (+1 more) |
+| 5 | TOEM rule builder WorldGen | 9.8s | 6 | A Link to the Past WorldGen2.yaml, Bumper Stickers WorldGen.yaml, DLCQuest WorldGen.yaml, Links Awakening DX WorldGen.yaml, Overcooked! 2 WorldGen.yaml (+1 more) |
+| 6 | Old School Runescape WorldGen | 9.6s | 5 | A Link to the Past WorldGen.yaml, Baking Adventure WorldGen.yaml, Coding Adventure WorldGen.yaml, Landstalker - The Treasures of King Nole WorldGen.yaml, Old School Runescape WorldGen.yaml |
+| 7 | Overcooked! 2 WorldGen | 9.5s | 5 | A Link to the Past WorldGen2.yaml, Bumper Stickers WorldGen.yaml, DLCQuest WorldGen.yaml, Links Awakening DX WorldGen.yaml, Overcooked! 2 WorldGen.yaml |
+| 8 | Timespinner WorldGen | 9.4s | 7 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml, Faxanadu WorldGen.yaml, MegaMan Battle Network 3 WorldGen.yaml (+2 more) |
+| 9 | Super Mario Land 2 WorldGen | 9.2s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Hylics 2 WorldGen.yaml, Super Mario Land 2 WorldGen.yaml |
+| 10 | Super Mario World WorldGen | 8.9s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Inscryption WorldGen.yaml, Super Mario World WorldGen.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Choo-Choo Charles WorldGen | 19.9s | 3 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml |
+| 2 | Mario & Luigi Superstar Saga WorldGen | 18.9s | 4 | A Short Hike WorldGen2.yaml, Castlevania 64 WorldGen.yaml, Donkey Kong Country 3 WorldGen.yaml, Mario & Luigi Superstar Saga WorldGen.yaml |
+| 3 | Links Awakening DX WorldGen | 18.6s | 4 | A Link to the Past WorldGen2.yaml, Bumper Stickers WorldGen.yaml, DLCQuest WorldGen.yaml, Links Awakening DX WorldGen.yaml |
+| 4 | Subnautica WorldGen | 17.9s | 6 | A Hat in Time WorldGen.yaml, Adventure WorldGen2.yaml, Choo-Choo Charles WorldGen.yaml, Faxanadu WorldGen.yaml, MegaMan Battle Network 3 WorldGen.yaml (+1 more) |
+| 5 | Super Mario World WorldGen | 14.6s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Inscryption WorldGen.yaml, Super Mario World WorldGen.yaml |
+| 6 | Noita WorldGen | 14.6s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Inscryption WorldGen.yaml, Noita WorldGen.yaml |
+| 7 | Wargroove WorldGen | 14.5s | 5 | A Link to the Past Vanilla WorldGen2.yaml, Baking Adventure Vanilla WorldGen2.yaml, Coding Adventure Vanilla WorldGen2.yaml, Inscryption WorldGen.yaml, Wargroove WorldGen.yaml |
+| 8 | Metamath WorldGen | 14.5s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Hylics 2 WorldGen.yaml, Metamath WorldGen.yaml |
+| 9 | Super Mario Land 2 WorldGen | 14.5s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Hylics 2 WorldGen.yaml, Super Mario Land 2 WorldGen.yaml |
+| 10 | VVVVVV WorldGen | 14.5s | 5 | A Link to the Past Vanilla WorldGen.yaml, Baking Adventure Vanilla WorldGen.yaml, Coding Adventure Vanilla WorldGen.yaml, Hylics 2 WorldGen.yaml, VVVVVV WorldGen.yaml |
