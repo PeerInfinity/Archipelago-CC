@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 01:50:32 UTC
+**Generated:** 2026-03-22 04:16:53 UTC
 
 **Source Data Created:** 2026-03-22T01:50:32.289674+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 36 (passes original mode per config)
-- **Unexpected Passes:** 3 (expected to fail but passed)
+- **Expected Passes:** 39 (passes original mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
 - **Expected Failures:** 49 (doesn't pass original mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -136,7 +136,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (36)
+### Expected Passes (39)
 
 Games that pass original mode per tracking-mode-config.json and passed the test.
 
@@ -162,10 +162,12 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Heretic | 10 | 10 | 0 | 0 | 100.0% |
 | Hylics 2 | 10 | 10 | 0 | 0 | 100.0% |
 | Inscryption | 10 | 10 | 0 | 0 | 100.0% |
+| Lingo | 10 | 3 | 0 | 0 | 30.0% |
 | Lufia II Ancient Cave | 10 | 10 | 0 | 0 | 100.0% |
 | Mario & Luigi Superstar Saga | 10 | 10 | 0 | 0 | 100.0% |
 | MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
 | Meritous | 10 | 10 | 0 | 0 | 100.0% |
+| Noita | 10 | 10 | 0 | 0 | 100.0% |
 | Old School Runescape | 10 | 10 | 0 | 0 | 100.0% |
 | Paint | 10 | 10 | 0 | 0 | 100.0% |
 | Raft | 10 | 10 | 0 | 0 | 100.0% |
@@ -178,15 +180,6 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | The Witness | 10 | 10 | 0 | 0 | 100.0% |
 | Undertale | 10 | 10 | 0 | 0 | 100.0% |
 | Wargroove | 10 | 10 | 0 | 0 | 100.0% |
-
-### Unexpected Passes (3)
-
-Games NOT expected to pass original mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Lingo | 10 | 3 | 0 | 0 | 30.0% |
-| Noita | 10 | 10 | 0 | 0 | 100.0% |
 | shapez | 10 | 10 | 0 | 0 | 100.0% |
 
 ### Expected Failures (49)

@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-03-22 01:50:32 UTC
+**Generated:** 2026-03-22 04:16:53 UTC
 
-**Source Data Last Updated:** 2026-02-19T21:14:34
+**Source Data Last Updated:** 2026-03-22T01:50:32
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -17,13 +17,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 90
-- **Passing Both:** 38 (42.2%)
-- **Passing Original Only:** 1 (1.1%)
-- **Passing Hybrid Only:** 27 (30.0%)
-- **Passing Neither:** 24 (26.7%)
-- **Passing Hybrid with no custom code:** 37 (41.1%)
-- **Passing Hybrid Only with no custom code:** 13 (14.4%)
+- **Total Games Tested:** 88
+- **Passing Both:** 32 (36.4%)
+- **Passing Original Only:** 7 (8.0%)
+- **Passing Hybrid Only:** 32 (36.4%)
+- **Passing Neither:** 17 (19.3%)
+- **Passing Hybrid with no custom code:** 39 (44.3%)
+- **Passing Hybrid Only with no custom code:** 15 (17.0%)
 
 ## Full Comparison
 
@@ -36,12 +36,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Adventure | ⚠️ 9/10 | ✅ | ✅ | ✅ | 25.7KB |
 | Aquaria | ✅ | ✅ | 1.8KB | ✅ | 277.3KB |
 | Baking Adventure | ✅ | ✅ | ✅ | ✅ | 17.9KB |
-| Blasphemous | ✅ | ✅ | ✅ | ✅ | 2760.8KB |
-| Bomb Rush Cyberfunk | ✅ | ✅ | 1.4KB | 40.3KB | 325.3KB |
+| Blasphemous | ✅ | ❌ | ✅ | ✅ | 2760.8KB |
+| Bomb Rush Cyberfunk | ✅ | ❌ | 1.4KB | 40.3KB | 325.3KB |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | ✅ | 4.0KB | ✅ | 93.8KB |
 | Castlevania 64 | ❌ | ✅ | ✅ | ✅ | 137.8KB |
-| Celeste (Open World) | ❌ 4/10 | ✅ | ✅ | ✅ | 1039.8KB |
+| Celeste (Open World) | ❌ 4/10 | ❌ | ✅ | ✅ | 1039.8KB |
 | Celeste 64 | ✅ | ✅ | 4.1KB | ✅ | 53.6KB |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | 16.4KB |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | 281.4KB |
@@ -51,30 +51,29 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | 281.9KB |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | 327.5KB |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | 1034.1KB |
-| DepGraph | ⚠️ 9/10 | N/A | ✅ | ✅ | 201.9KB |
+| DepGraph | ⚠️ 9/10 | ✅ | ✅ | ✅ | 201.9KB |
 | Donkey Kong Country 3 | ⚠️ 7/10 | ✅ | ✅ | ✅ | 122.4KB |
-| EarthBound | ⚠️ 5/10 | ⚠️ 5/10 | ✅ | ✅ | 337.6KB |
+| EarthBound | ⚠️ 5/10 | ✅ | ✅ | ✅ | 337.6KB |
 | Factorio | ❌ | ✅ | 8.8KB | ✅ | 290.1KB |
 | Faxanadu | ❌ 2/10 | ✅ | ✅ | ✅ | 68.1KB |
 | Final Fantasy | ✅ | ✅ | ✅ | ✅ | 50.3KB |
-| Final Fantasy Mystic Quest | ⚠️ 9/10 | ⚠️ 8/9 | 13.9KB | ✅ | 548.1KB |
+| Final Fantasy Mystic Quest | ⚠️ 9/10 | ✅ | 13.9KB | ✅ | 548.1KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 367.6KB |
 | Hollow Knight | ❌ | ❌ | ✅ | ✅ | 3501.1KB |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 100.4KB |
 | Inscryption | ✅ | ✅ | 8.0KB | ✅ | 84.3KB |
-| Jak and Daxter: The Precursor Legacy | ❌ 3/10 | ✅ | 21.7KB | 4.6KB | 257.9KB |
-| Journey to Ascension | ❌ | N/A | ✅ | ✅ | 48.3KB |
+| Jak and Daxter: The Precursor Legacy | ❌ 3/10 | ❌ | 21.7KB | 4.6KB | 257.9KB |
+| Journey to Ascension | ❌ | ❌ | ✅ | ✅ | 48.3KB |
 | Kingdom Hearts | ❌ 4/10 | ❌ 4/10 | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ⚠️ 6/10 | 20.4KB | ✅ | 1630.7KB |
 | Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.7KB |
 | Landstalker - The Treasures of King Nole | ❌ 2/10 | ✅ | 3.6KB | ✅ | 209.2KB |
-| Lingo | ✅ | ✅ | 38.2KB | 10.7KB | 940.0KB |
+| Lingo | ✅ | ❌ | 38.2KB | 10.7KB | 940.0KB |
 | Links Awakening DX | ❌ 1/10 | ✅ | 7.3KB | ✅ | 703.1KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | 395.5KB |
-| Math Adventure | N/A | ✅ | N/A | N/A | N/A |
 | Mega Man 2 | ⚠️ 9/10 | ✅ | ✅ | ✅ | 51.7KB |
-| Mega Man 3 | ❌ | N/A | ✅ | ✅ | 71.7KB |
+| Mega Man 3 | ❌ | ✅ | ✅ | ✅ | 71.7KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | 204.7KB |
 | Meritous | ✅ | ✅ | ✅ | ✅ | 57.0KB |
 | Metamath | ⚠️ 9/10 | ✅ | ✅ | ✅ | 56.0KB |
@@ -86,41 +85,40 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.5KB |
 | Pokemon Emerald | ❌ 3/7 | ❌ 3/7 | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | ❌ | ❌ | 12.2KB | 13.0KB | 1270.2KB |
-| Raft | ✅ | ✅ | 6.5KB | ✅ | 198.4KB |
+| Raft | ✅ | ❌ | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 131.4KB |
 | SMZ3 | ❌ 1/10 | ❌ 1/10 | 54.2KB | 51.3KB | 1890.6KB |
-| Satisfactory | ❌ | ❌ | 41.8KB | ✅ | 1619.5KB |
+| Satisfactory | ❌ | ✅ | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ❌ 3/10 | ✅ | ✅ | ✅ | 33.6KB |
-| Secret of Evermore | ✅ | ✅ | 5.6KB | 7.5KB | 415.0KB |
+| Secret of Evermore | ✅ | ❌ | 5.6KB | 7.5KB | 415.0KB |
 | Shivers | ❌ | ✅ | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ❌ 1/10 | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.9KB |
-| Stardew Valley | ❌ | ⚠️ 9/10 | 20.0KB | 9.8KB | 2558.2KB |
+| Stardew Valley | ❌ | ⚠️ 5/10 | 20.0KB | 9.8KB | 2558.2KB |
 | Subnautica | ❌ 1/10 | ✅ | 2.2KB | ✅ | 205.5KB |
-| Sudoku | N/A | ✅ | N/A | N/A | N/A |
 | Super Mario 64 | ❌ 4/10 | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ❌ 4/10 | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ⚠️ 7/10 | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ❌ | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | ❌ | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
-| TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
-| Terraria | ⚠️ 9/10 | ❌ 2/9 | 16.9KB | ✅ | 279.0KB |
+| TUNIC | ✅ | ⚠️ 6/10 | 3.1KB | ✅ | 649.2KB |
+| Terraria | ⚠️ 9/10 | ✅ | 16.9KB | ✅ | 279.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.6KB |
 | The Messenger | ❌ | ✅ | 15.2KB | ✅ | 210.4KB |
-| The Wind Waker | ❌ | ⚠️ 4/5 | 7.0KB | ✅ | 250.2KB |
-| The Witness | ✅ | ✅ | 14.6KB | ✅ | 468.1KB |
-| Timespinner | ❌ | ❌ 4/10 | 2.2KB | ✅ | 262.9KB |
+| The Wind Waker | ❌ | ✅ | 7.0KB | ✅ | 250.2KB |
+| The Witness | ✅ | ❌ 2/10 | 14.6KB | ✅ | 468.1KB |
+| Timespinner | ❌ | ✅ | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ⚠️ 8/10 | ✅ | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.1KB |
 | Yacht Dice | ❌ | ❌ | 0.9KB | 285.0KB | 248.5KB |
-| Yoshi's Island | ❌ 3/10 | ⚠️ 9/10 | 9.2KB | ✅ | 295.3KB |
+| Yoshi's Island | ❌ 3/10 | ✅ | 9.2KB | ✅ | 295.3KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ⚠️ 5/10 | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.2KB |
-| shapez | ✅ | ⚠️ 9/10 | ✅ | ✅ | 153.8KB |
+| shapez | ✅ | ✅ | ✅ | ✅ | 153.8KB |
 
-## Games Passing Both (38)
+## Games Passing Both (32)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -130,8 +128,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | APQuest | ✅ | ✅ | 11.0KB |
 | Aquaria | 1.8KB | ✅ | 277.3KB |
 | Baking Adventure | ✅ | ✅ | 17.9KB |
-| Blasphemous | ✅ | ✅ | 2760.8KB |
-| Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 325.3KB |
 | Bumper Stickers | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | 4.0KB | ✅ | 93.8KB |
 | Celeste 64 | 4.1KB | ✅ | 53.6KB |
@@ -146,7 +142,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | Heretic | ✅ | ✅ | 367.6KB |
 | Hylics 2 | ✅ | ✅ | 100.4KB |
 | Inscryption | 8.0KB | ✅ | 84.3KB |
-| Lingo | 38.2KB | 10.7KB | 940.0KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 395.5KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | 204.7KB |
@@ -154,26 +149,29 @@ These games have 100% success rate in both Universal Tracker versions.
 | Noita | ✅ | ✅ | 73.9KB |
 | Old School Runescape | 1.0KB | ✅ | 305.2KB |
 | Paint | 2.7KB | ✅ | 123.5KB |
-| Raft | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | 131.4KB |
-| Secret of Evermore | 5.6KB | 7.5KB | 415.0KB |
 | TOEM original | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | 0.5KB | ✅ | 99.7KB |
-| TUNIC | 3.1KB | ✅ | 649.2KB |
 | The Legend of Zelda | ✅ | ✅ | 554.6KB |
-| The Witness | 14.6KB | ✅ | 468.1KB |
 | Undertale | ✅ | ✅ | 56.3KB |
 | Wargroove | ✅ | ✅ | 44.1KB |
+| shapez | ✅ | ✅ | 153.8KB |
 
-## Games Passing Original Only (1)
+## Games Passing Original Only (7)
 
 These games pass in the Original UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| shapez | ✅ | ✅ | 153.8KB |
+| Blasphemous | ✅ | ✅ | 2760.8KB |
+| Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 325.3KB |
+| Lingo | 38.2KB | 10.7KB | 940.0KB |
+| Raft | 6.5KB | ✅ | 198.4KB |
+| Secret of Evermore | 5.6KB | 7.5KB | 415.0KB |
+| TUNIC | 3.1KB | ✅ | 649.2KB |
+| The Witness | 14.6KB | ✅ | 468.1KB |
 
-## Games Passing Hybrid Only (27)
+## Games Passing Hybrid Only (32)
 
 These games pass in the Hybrid UT but fail in the Original UT.
 
@@ -183,58 +181,56 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | A Link to the Past | 14.0KB | ✅ | 664.0KB |
 | Adventure | ✅ | ✅ | 25.7KB |
 | Castlevania 64 | ✅ | ✅ | 137.8KB |
-| Celeste (Open World) | ✅ | ✅ | 1039.8KB |
 | DLCQuest | 1.2KB | ✅ | 49.8KB |
+| DepGraph | ✅ | ✅ | 201.9KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.4KB |
+| EarthBound | ✅ | ✅ | 337.6KB |
 | Factorio | 8.8KB | ✅ | 290.1KB |
 | Faxanadu | ✅ | ✅ | 68.1KB |
-| Jak and Daxter: The Precursor Legacy | 21.7KB | 4.6KB | 257.9KB |
+| Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.1KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 209.2KB |
 | Links Awakening DX | 7.3KB | ✅ | 703.1KB |
-| Math Adventure | N/A | N/A | N/A |
 | Mega Man 2 | ✅ | ✅ | 51.7KB |
+| Mega Man 3 | ✅ | ✅ | 71.7KB |
 | Metamath | ✅ | ✅ | 56.0KB |
 | Muse Dash | ✅ | ✅ | 228.3KB |
 | Overcooked! 2 | 28.5KB | ✅ | 488.3KB |
+| Satisfactory | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ✅ | ✅ | 33.6KB |
 | Shivers | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 262.2KB |
 | Subnautica | 2.2KB | ✅ | 205.5KB |
-| Sudoku | N/A | N/A | N/A |
 | Super Mario 64 | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | ✅ | 177.7KB |
+| Terraria | 16.9KB | ✅ | 279.0KB |
 | The Messenger | 15.2KB | ✅ | 210.4KB |
+| The Wind Waker | 7.0KB | ✅ | 250.2KB |
+| Timespinner | 2.2KB | ✅ | 262.9KB |
 | VVVVVV | 3.8KB | ✅ | 22.7KB |
+| Yoshi's Island | 9.2KB | ✅ | 295.3KB |
 
-## Games Passing Neither (24)
+## Games Passing Neither (17)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| DepGraph | ✅ | ✅ | 201.9KB |
-| EarthBound | ✅ | ✅ | 337.6KB |
-| Final Fantasy Mystic Quest | 13.9KB | ✅ | 548.1KB |
+| Celeste (Open World) | ✅ | ✅ | 1039.8KB |
 | Hollow Knight | ✅ | ✅ | 3501.1KB |
+| Jak and Daxter: The Precursor Legacy | 21.7KB | 4.6KB | 257.9KB |
 | Journey to Ascension | ✅ | ✅ | 48.3KB |
 | Kingdom Hearts | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | 20.4KB | ✅ | 1630.7KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 528.7KB |
-| Mega Man 3 | ✅ | ✅ | 71.7KB |
 | Ocarina of Time | ✅ | ✅ | 1274.4KB |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1270.2KB |
 | SMZ3 | 54.2KB | 51.3KB | 1890.6KB |
-| Satisfactory | 41.8KB | ✅ | 1619.5KB |
 | Starcraft 2 | 29.3KB | 90.1KB | 1086.9KB |
 | Stardew Valley | 20.0KB | 9.8KB | 2558.2KB |
-| Super Metroid | 61.0KB | 114.5KB | 625.1KB |
-| Terraria | 16.9KB | ✅ | 279.0KB |
-| The Wind Waker | 7.0KB | ✅ | 250.2KB |
-| Timespinner | 2.2KB | ✅ | 262.9KB |
+| Super Metroid | 61.0KB | 119.4KB | 625.1KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.5KB |
-| Yoshi's Island | 9.2KB | ✅ | 295.3KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ✅ | ✅ | 321.2KB |
 
