@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-03-22 02:13:17 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
 **Source Data Last Updated:** 2026-03-21T22:05:16
 
@@ -99,7 +99,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Super Mario 64 | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ⚠️ 3/5 | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | ⚠️ 3/5 | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
@@ -231,7 +231,7 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1350.2KB |
 | Starcraft 2 | 29.3KB | 90.1KB | 1086.9KB |
 | Stardew Valley | 20.0KB | 9.8KB | 2558.2KB |
-| Super Metroid | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | 61.0KB | 119.4KB | 625.1KB |
 | Zillion | ✅ | ✅ | 321.2KB |
 
 ## Notes

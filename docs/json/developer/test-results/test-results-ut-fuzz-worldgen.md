@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 02:13:17 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
 **Source Data Created:** 2026-03-21T22:05:16.406246+00:00
 
@@ -62,8 +62,8 @@ Of the 73 games with 100% pass rate:
 **Combined Custom Code Size:**
 
 - **Total Exporter Code:** 618.2KB
-- **Total Game Logic Code:** 657.1KB
-- **Combined Total:** 1275.3KB
+- **Total Game Logic Code:** 662.0KB
+- **Combined Total:** 1280.2KB
 
 ## Test Results
 
@@ -139,7 +139,7 @@ Of the 73 games with 100% pass rate:
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 177.7KB |
-| *Super Metroid* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 61.0KB | 114.5KB | 625.1KB |
+| *Super Metroid* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 0.5KB | ✅ | 99.7KB |
 | *TUNIC* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | 649.2KB |

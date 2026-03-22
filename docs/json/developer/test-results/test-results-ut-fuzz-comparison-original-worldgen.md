@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-03-22 02:13:17 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
 **Source Data Last Updated:** 2026-03-21T22:05:16
 
@@ -99,7 +99,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Super Mario 64 | ❌ 4/10 | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ❌ 4/10 | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ⚠️ 7/10 | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ❌ | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ❌ | ❌ | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
@@ -222,7 +222,7 @@ These games fail in both Universal Tracker versions.
 | SMZ3 | 54.2KB | 51.3KB | 1890.6KB |
 | Starcraft 2 | 29.3KB | 90.1KB | 1086.9KB |
 | Stardew Valley | 20.0KB | 9.8KB | 2558.2KB |
-| Super Metroid | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | 61.0KB | 119.4KB | 625.1KB |
 | Yacht Dice | 0.9KB | 285.0KB | 248.5KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ✅ | ✅ | 321.2KB |
