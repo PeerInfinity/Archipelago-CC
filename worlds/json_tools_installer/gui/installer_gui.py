@@ -752,6 +752,13 @@ For more information, see the README.md file."""
                 remove_component(comp)
                 self.update_progress(50 + (len(installed) * 10))
 
+            # Uninstall monkey patch hooks
+            try:
+                from ..monkey_patches.hooks import uninstall_hooks
+                uninstall_hooks()
+            except Exception:
+                pass
+
             from ..config import clear_installation
             clear_installation(self.installer_config)
 
