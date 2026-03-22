@@ -6,8 +6,12 @@ import yaml
 import argparse
 import os
 
-# Define the available settings with their types
-BOOLEAN_SETTINGS = [
+# Settings that stay under general_options
+GENERAL_OPTIONS_BOOLEAN_SETTINGS = [
+]
+
+# Settings that go under json_tools namespace
+JSON_TOOLS_BOOLEAN_SETTINGS = [
     'skip_required_files',
     'save_rules_json',
     'save_tracker_pickle',
@@ -26,11 +30,15 @@ BOOLEAN_SETTINGS = [
     'use_tracking_mode_config',
 ]
 
+# Combined list for CLI argument generation
+BOOLEAN_SETTINGS = GENERAL_OPTIONS_BOOLEAN_SETTINGS + JSON_TOOLS_BOOLEAN_SETTINGS
+
 STRING_SETTINGS = {
     'rules_json_format': ['rule_builder', 'ast', 'both'],  # list of valid choices
 }
 
 # Preset configurations
+# Settings are split between general_options (skip_required_files) and json_tools (everything else)
 PRESETS = {
     'normal': {
         'skip_required_files': False,
@@ -89,7 +97,26 @@ PRESETS = {
         'resolve_options_to_constants': True,
         'use_tracking_mode_config': False,
     },
-    'ut-fuzz': {
+    'ut-hybrid': {
+        'skip_required_files': True,
+        'save_rules_json': False,
+        'save_tracker_pickle': False,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+        'clear_game_presets': False,
+        'clear_all_presets': False,
+        'resolve_options_to_constants': True,
+        'use_tracking_mode_config': True,  # Config picks best tracking mode per game
+    },
+    'ut-worldgen': {
         'skip_required_files': True,
         'save_rules_json': True,
         'save_tracker_pickle': False,
@@ -100,18 +127,37 @@ PRESETS = {
         'extend_sphere_log_to_all_locations': False,
         'log_fractional_sphere_details': True,
         'log_integer_sphere_details': False,
-        'auto_collect_events': True,  # Enable event auto-collection to match UT behavior
-        'filter_event_items': True,  # Filter out event locations/items to match UT output
+        'auto_collect_events': False,
+        'filter_event_items': False,
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
         'resolve_options_to_constants': True,
-        'use_tracking_mode_config': True,  # Use tracking-mode-config.json for per-game export decisions
+        'use_tracking_mode_config': False,
     },
-    'pickle-mode': {
+    'ut-pickle': {
         'skip_required_files': True,
-        'save_rules_json': False,  # Disable JSON export
-        'save_tracker_pickle': True,  # Enable pickle export
+        'save_rules_json': False,
+        'save_tracker_pickle': True,
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+        'clear_game_presets': False,
+        'clear_all_presets': False,
+        'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
+    },
+    'ut-original': {
+        'skip_required_files': True,
+        'save_rules_json': False,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': True,
@@ -131,7 +177,12 @@ PRESETS = {
 
 
 def update_host_yaml(settings=None):
-    """Update specific settings in host.yaml"""
+    """Update specific settings in host.yaml.
+
+    Routes settings to the correct namespace:
+    - skip_required_files -> general_options
+    - all other export settings -> json_tools
+    """
     # Get the project root directory (parent of scripts directory)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     # Go up two levels: setup -> scripts -> project root
@@ -148,11 +199,17 @@ def update_host_yaml(settings=None):
 
     # Update settings if provided
     if settings:
-        # Ensure general_options section exists
+        # Ensure sections exist
         if 'general_options' not in data:
             data['general_options'] = {}
+        if 'json_tools' not in data:
+            data['json_tools'] = {}
+
         for key, value in settings.items():
-            data['general_options'][key] = value
+            if key in GENERAL_OPTIONS_BOOLEAN_SETTINGS:
+                data['general_options'][key] = value
+            else:
+                data['json_tools'][key] = value
             print(f"Set {key} = {value}")
 
     # Write back to file
@@ -173,6 +230,10 @@ Examples:
   %(prog)s normal                          # Apply normal preset
   %(prog)s minimal-spoilers                # Apply minimal spoiler testing settings
   %(prog)s full-spoilers                   # Apply full spoiler testing settings
+  %(prog)s ut-hybrid                       # Apply UT hybrid mode (config picks best mode per game)
+  %(prog)s ut-worldgen                     # Apply UT worldgen mode (rules.json export)
+  %(prog)s ut-pickle                       # Apply UT pickle mode (pickle export)
+  %(prog)s ut-original                     # Apply UT original mode (YAML-based tracking)
   %(prog)s --save-rules-json               # Enable save_rules_json only
   %(prog)s --no-save-rules-json            # Disable save_rules_json only
   %(prog)s minimal-spoilers --no-verbose-sphere-log  # Apply preset then override

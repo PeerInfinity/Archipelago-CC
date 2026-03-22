@@ -5,8 +5,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "A Dance of Fire and Ice",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "A Dance of Fire and Ice.yaml",
     "world_directory": "adofai"
   },
   "A Difficult Game About Climbing": {
@@ -15,8 +17,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "A Difficult Game About Climbing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "A Difficult Game About Climbing.yaml",
     "world_directory": "difficult_climbing"
   },
   "A Link Between Worlds": {
@@ -25,8 +29,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "A Link Between Worlds",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "A Link Between Worlds.yaml",
     "world_directory": "albw"
   },
   "ANIMAL WELL": {
@@ -35,8 +41,10 @@
     "exporter_size": 1501,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "ANIMAL WELL",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "ANIMAL WELL.yaml",
     "world_directory": "animal_well"
   },
   "Actraiser": {
@@ -45,8 +53,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Actraiser",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Actraiser.yaml",
     "world_directory": "actraiser"
   },
   "Against the Storm": {
@@ -55,8 +65,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Against the Storm",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Against the Storm.yaml",
     "world_directory": "against_the_storm"
   },
   "Air Delivery": {
@@ -65,28 +77,34 @@
     "exporter_size": 6804,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Air Delivery",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Air Delivery.yaml",
     "world_directory": "air_delivery"
   },
   "An Untitled Story": {
     "apworld_path": "custom_worlds/aus.apworld",
     "exporter_path": "exporter/games/unofficial/aus.py",
-    "exporter_size": 8885,
+    "exporter_size": 8905,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "An Untitled Story",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "An Untitled Story.yaml",
     "world_directory": "aus"
   },
   "Anodyne": {
     "apworld_path": "custom_worlds/anodyne.apworld",
     "exporter_path": "exporter/games/unofficial/anodyne.py",
-    "exporter_size": 10946,
+    "exporter_size": 10961,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Anodyne",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Anodyne.yaml",
     "world_directory": "anodyne"
   },
   "Another Crabs Treasure": {
@@ -95,8 +113,10 @@
     "exporter_size": 3153,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Another Crabs Treasure",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Another Crabs Treasure.yaml",
     "world_directory": "another_crab"
   },
   "Ape Escape": {
@@ -105,8 +125,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ape Escape",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ape Escape.yaml",
     "world_directory": "apeescape"
   },
   "Ape Escape 3": {
@@ -115,8 +137,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ape Escape 3",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ape Escape 3.yaml",
     "world_directory": "ape_escape_3"
   },
   "Astalon": {
@@ -125,18 +149,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Astalon",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Astalon.yaml",
     "world_directory": "astalon"
   },
   "Autopelago": {
     "apworld_path": "custom_worlds/autopelago.apworld",
     "exporter_path": "exporter/games/unofficial/autopelago.py",
-    "exporter_size": 9399,
+    "exporter_size": 9433,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Autopelago",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Autopelago.yaml",
     "world_directory": "autopelago"
   },
   "Axiom Verge": {
@@ -145,8 +173,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Axiom Verge",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Axiom Verge.yaml",
     "world_directory": "axiomverge"
   },
   "Balatro": {
@@ -155,8 +185,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Balatro",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Balatro.yaml",
     "world_directory": "balatro"
   },
   "Brotato": {
@@ -165,8 +197,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Brotato",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Brotato.yaml",
     "world_directory": "brotato"
   },
   "Castlevania: Dawn of Sorrow": {
@@ -175,8 +209,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Castlevania: Dawn of Sorrow",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Castlevania Dawn of Sorrow.yaml",
     "world_directory": "cv_dos"
   },
   "Cavern of Dreams": {
@@ -185,8 +221,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Cavern of Dreams",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Cavern of Dreams.yaml",
     "world_directory": "cavern_of_dreams"
   },
   "ChecksMate": {
@@ -195,8 +233,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "ChecksMate",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "ChecksMate.yaml",
     "world_directory": "checksmate"
   },
   "Chrono Trigger Jets of Time": {
@@ -205,8 +245,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Chrono Trigger Jets of Time",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Chrono Trigger Jets of Time.yaml",
     "world_directory": "ctjot"
   },
   "ClusterTruck": {
@@ -215,8 +257,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "ClusterTruck",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "ClusterTruck.yaml",
     "world_directory": "cluster_truck"
   },
   "Corn Kidz 64": {
@@ -225,8 +269,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Corn Kidz 64",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Corn Kidz 64.yaml",
     "world_directory": "cornkidz64"
   },
   "CrossCode": {
@@ -235,8 +281,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "CrossCode",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "CrossCode.yaml",
     "world_directory": "crosscode"
   },
   "Crystal Project": {
@@ -245,8 +293,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Crystal Project",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Crystal Project.yaml",
     "world_directory": "crystal_project"
   },
   "Crystalis": {
@@ -255,8 +305,10 @@
     "exporter_size": 9452,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Crystalis",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Crystalis.yaml",
     "world_directory": "crystalis"
   },
   "Cuphead": {
@@ -265,8 +317,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Cuphead",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Cuphead.yaml",
     "world_directory": "cuphead"
   },
   "DORONKO WANKO": {
@@ -275,8 +329,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "DORONKO WANKO",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "DORONKO WANKO.yaml",
     "world_directory": "doronko_wanko"
   },
   "Deep Rock Galactic": {
@@ -285,8 +341,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Deep Rock Galactic",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Deep Rock Galactic.yaml",
     "world_directory": "deep_rock_galactic"
   },
   "Diddy Kong Racing": {
@@ -295,8 +353,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Diddy Kong Racing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Diddy Kong Racing.yaml",
     "world_directory": "diddy_kong_racing"
   },
   "Digimon World": {
@@ -305,8 +365,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Digimon World",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Digimon World.yaml",
     "world_directory": "dw1"
   },
   "Dome Keeper": {
@@ -315,8 +377,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Dome Keeper",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Dome Keeper.yaml",
     "world_directory": "dome_keeper"
   },
   "Duke Nukem 3D": {
@@ -325,8 +389,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Duke Nukem 3D",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Duke Nukem 3D.yaml",
     "world_directory": "duke3d"
   },
   "Final Fantasy Tactics A2": {
@@ -335,8 +401,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Final Fantasy Tactics A2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Final Fantasy Tactics A2.yaml",
     "world_directory": "ffta2"
   },
   "Final Fantasy Tactics Advance": {
@@ -345,8 +413,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Final Fantasy Tactics Advance",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Final Fantasy Tactics Advance.yaml",
     "world_directory": "ffta"
   },
   "Fire Emblem Sacred Stones": {
@@ -355,8 +425,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Fire Emblem Sacred Stones",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Fire Emblem Sacred Stones.yaml",
     "world_directory": "fe8"
   },
   "Frogmonster": {
@@ -365,8 +437,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Frogmonster",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Frogmonster.yaml",
     "world_directory": "frogmonster"
   },
   "GZDoom": {
@@ -375,8 +449,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "GZDoom",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "GZDoom.yaml",
     "world_directory": "gzdoom"
   },
   "Garfield Kart - Furious Racing": {
@@ -385,8 +461,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Garfield Kart - Furious Racing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Garfield Kart - Furious Racing.yaml",
     "world_directory": "garfkart"
   },
   "Golden Sun The Lost Age": {
@@ -395,8 +473,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Golden Sun The Lost Age",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Golden Sun The Lost Age.yaml",
     "world_directory": "gstla"
   },
   "Grim Dawn": {
@@ -405,8 +485,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Grim Dawn",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Grim Dawn.yaml",
     "world_directory": "grim_dawn"
   },
   "Hammerwatch": {
@@ -415,8 +497,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Hammerwatch",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Hammerwatch.yaml",
     "world_directory": "hammerwatch"
   },
   "Hatsune Miku Project Diva Mega Mix+": {
@@ -425,8 +509,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Hatsune Miku Project Diva Mega Mix+",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Hatsune Miku Project Diva Mega Mix+.yaml",
     "world_directory": "megamix"
   },
   "Here Comes Niko!": {
@@ -435,8 +521,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Here Comes Niko!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Here Comes Niko!.yaml",
     "world_directory": "hcniko"
   },
   "Iji": {
@@ -445,8 +533,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Iji",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Iji.yaml",
     "world_directory": "iji"
   },
   "Into the Breach": {
@@ -455,8 +545,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Into the Breach",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Into the Breach.yaml",
     "world_directory": "into_the_breach"
   },
   "Isles Of Sea And Sky": {
@@ -465,8 +557,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Isles Of Sea And Sky",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Isles Of Sea And Sky.yaml",
     "world_directory": "isles_of_sea_and_sky"
   },
   "Ittle Dew 2": {
@@ -475,8 +569,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ittle Dew 2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ittle Dew 2.yaml",
     "world_directory": "ittle_dew_2"
   },
   "Jigsaw": {
@@ -485,8 +581,10 @@
     "exporter_size": 1632,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Jigsaw",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Jigsaw.yaml",
     "world_directory": "jigsaw"
   },
   "K-On! After School Live!!": {
@@ -495,8 +593,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "K-On! After School Live!!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "K-On! After School Live!!.yaml",
     "world_directory": "kon"
   },
   "Keep Talking and Nobody Explodes": {
@@ -505,8 +605,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Keep Talking and Nobody Explodes",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Keep Talking and Nobody Explodes.yaml",
     "world_directory": "ktane"
   },
   "Kingdom Hearts Birth by Sleep": {
@@ -515,8 +617,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Kingdom Hearts Birth by Sleep",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Kingdom Hearts Birth by Sleep.yaml",
     "world_directory": "khbbs"
   },
   "Kingdom Hearts Chain of Memories": {
@@ -525,8 +629,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Kingdom Hearts Chain of Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Kingdom Hearts Chain of Memories.yaml",
     "world_directory": "khcom"
   },
   "Kingdom Hearts RE Chain of Memories": {
@@ -535,8 +641,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Kingdom Hearts RE Chain of Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Kingdom Hearts RE Chain of Memories.yaml",
     "world_directory": "khrecom"
   },
   "Kirby Super Star": {
@@ -545,8 +653,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Kirby Super Star",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Kirby Super Star.yaml",
     "world_directory": "kss"
   },
   "League of Legends": {
@@ -555,8 +665,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "League of Legends",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "League of Legends.yaml",
     "world_directory": "lol"
   },
   "Lego Star Wars: The Complete Saga": {
@@ -565,8 +677,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Lego Star Wars: The Complete Saga",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Lego Star Wars The Complete Saga.yaml",
     "world_directory": "lego_star_wars_tcs"
   },
   "Lil Gator Game": {
@@ -575,18 +689,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Lil Gator Game",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Lil Gator Game.yaml",
     "world_directory": "lil_gator_game"
   },
   "Lingo 2": {
     "apworld_path": "custom_worlds/lingo2.apworld",
     "exporter_path": "exporter/games/unofficial/lingo2.py",
-    "exporter_size": 17503,
+    "exporter_size": 17485,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Lingo 2",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Lingo 2.yaml",
     "world_directory": "lingo2"
   },
   "Little Witch Nobeta": {
@@ -595,8 +713,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Little Witch Nobeta",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Little Witch Nobeta.yaml",
     "world_directory": "little_witch_nobeta"
   },
   "Luigi's Mansion": {
@@ -605,8 +725,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Luigi's Mansion",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Luigi's Mansion.yaml",
     "world_directory": "luigismansion"
   },
   "Lunacid": {
@@ -615,18 +737,22 @@
     "exporter_size": 8359,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Lunacid",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Lunacid.yaml",
     "world_directory": "lunacid"
   },
   "Majora's Mask Recompiled": {
     "apworld_path": "custom_worlds/mm_recomp.apworld",
     "exporter_path": "exporter/games/unofficial/mm_recomp.py",
-    "exporter_size": 10657,
+    "exporter_size": 10683,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Majora's Mask Recompiled",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Majora's Mask Recompiled.yaml",
     "world_directory": "mm_recomp"
   },
   "Mario Kart Double Dash": {
@@ -635,8 +761,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Mario Kart Double Dash",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Mario Kart Double Dash.yaml",
     "world_directory": "mario_kart_double_dash"
   },
   "MetroCUBEvania": {
@@ -645,8 +773,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "MetroCUBEvania",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "MetroCUBEvania.yaml",
     "world_directory": "metrocubevania"
   },
   "Metroid Fusion": {
@@ -655,28 +785,34 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Metroid Fusion",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Metroid Fusion.yaml",
     "world_directory": "metroidfusion"
   },
-  "Metroid Zero Mission": {
+  "Metroid: Zero Mission": {
     "apworld_path": "custom_worlds/mzm.apworld",
     "exporter_path": "exporter/games/unofficial/mzm.py",
-    "exporter_size": 9958,
+    "exporter_size": 10028,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Metroid: Zero Mission",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Metroid Zero Mission.yaml",
     "world_directory": "mzm"
   },
   "Minishoot Adventures": {
     "apworld_path": "custom_worlds/minishoot.apworld",
     "exporter_path": "exporter/games/unofficial/minishoot.py",
-    "exporter_size": 26561,
+    "exporter_size": 26572,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Minishoot Adventures",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Minishoot Adventures.yaml",
     "world_directory": "minishoot"
   },
   "Minit": {
@@ -685,8 +821,10 @@
     "exporter_size": 24445,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Minit",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Minit.yaml",
     "world_directory": "minit"
   },
   "Monster Sanctuary": {
@@ -695,8 +833,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Monster Sanctuary",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Monster Sanctuary.yaml",
     "world_directory": "monster_sanctuary"
   },
   "Nine Sols": {
@@ -705,18 +845,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Nine Sols",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Nine Sols.yaml",
     "world_directory": "nine_sols"
   },
   "Ori and the Blind Forest": {
     "apworld_path": "custom_worlds/oribf.apworld",
     "exporter_path": "exporter/games/unofficial/oribf.py",
-    "exporter_size": 23707,
+    "exporter_size": 23767,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ori and the Blind Forest",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Ori and the Blind Forest.yaml",
     "world_directory": "oribf"
   },
   "Ori and the Will of the Wisps": {
@@ -725,8 +869,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ori and the Will of the Wisps",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ori and the Will of the Wisps.yaml",
     "world_directory": "ori_wotw"
   },
   "Oxygen Not Included": {
@@ -735,19 +881,35 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Oxygen Not Included",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Oxygen Not Included.yaml",
     "world_directory": "oni"
   },
   "Pizza Tower": {
     "apworld_path": "custom_worlds/pizza_tower.apworld",
     "exporter_path": "exporter/games/unofficial/pizza_tower.py",
-    "exporter_size": 7134,
+    "exporter_size": 7145,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Pizza Tower",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Pizza Tower.yaml",
     "world_directory": "pizza_tower"
+  },
+  "PlateUp": {
+    "apworld_path": "custom_worlds/plateup.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "PlateUp",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "PlateUp.yaml",
+    "world_directory": "plateup"
   },
   "Pokemon FireRed and LeafGreen": {
     "apworld_path": "custom_worlds/pokemon_frlg.apworld",
@@ -755,8 +917,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Pokemon FireRed and LeafGreen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Pokemon FireRed and LeafGreen.yaml",
     "world_directory": "pokemon_frlg"
   },
   "Pokemon Mystery Dungeon Explorers of Sky": {
@@ -765,8 +929,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Pokemon Mystery Dungeon Explorers of Sky",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Pokemon Mystery Dungeon Explorers of Sky.yaml",
     "world_directory": "pmd_eos"
   },
   "Pseudoregalia": {
@@ -775,8 +941,10 @@
     "exporter_size": 17477,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Pseudoregalia",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Pseudoregalia.yaml",
     "world_directory": "pseudoregalia"
   },
   "Rabi-Ribi": {
@@ -785,18 +953,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Rabi-Ribi",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Rabi-Ribi.yaml",
     "world_directory": "rabi_ribi"
   },
   "Rain World": {
     "apworld_path": "custom_worlds/rain_world.apworld",
     "exporter_path": "exporter/games/unofficial/rain_world.py",
-    "exporter_size": 11997,
+    "exporter_size": 12038,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Rain World",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Rain World.yaml",
     "world_directory": "rain_world"
   },
   "Ratchet & Clank 2": {
@@ -805,8 +977,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ratchet & Clank 2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ratchet & Clank 2.yaml",
     "world_directory": "rac2"
   },
   "Reventure": {
@@ -815,8 +989,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Reventure",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Reventure.yaml",
     "world_directory": "reventure"
   },
   "Rift Wizard": {
@@ -825,8 +1001,10 @@
     "exporter_size": 7891,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Rift Wizard",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Rift Wizard.yaml",
     "world_directory": "riftwizard"
   },
   "Rift of the Necrodancer": {
@@ -835,8 +1013,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Rift of the Necrodancer",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Rift of the Necrodancer.yaml",
     "world_directory": "rotn"
   },
   "Rusted Moss": {
@@ -845,8 +1025,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Rusted Moss",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Rusted Moss.yaml",
     "world_directory": "rusted_moss"
   },
   "Sentinels of the Multiverse": {
@@ -855,8 +1037,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sentinels of the Multiverse",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Sentinels of the Multiverse.yaml",
     "world_directory": "sotm"
   },
   "Shadow The Hedgehog": {
@@ -865,8 +1049,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Shadow The Hedgehog",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Shadow The Hedgehog.yaml",
     "world_directory": "shadow_the_hedgehog"
   },
   "Ship of Harkinian": {
@@ -875,8 +1061,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Ship of Harkinian",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Ship of Harkinian.yaml",
     "world_directory": "oot_soh"
   },
   "Simon Tatham's Portable Puzzle Collection": {
@@ -885,8 +1073,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Simon Tatham's Portable Puzzle Collection",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Simon Tatham's Portable Puzzle Collection.yaml",
     "world_directory": "sgtpuzzles"
   },
   "Sly 2: Band of Thieves": {
@@ -895,8 +1085,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sly 2: Band of Thieves",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Sly 2 Band of Thieves.yaml",
     "world_directory": "sly2"
   },
   "Sly Cooper and the Thievius Raccoonus": {
@@ -905,8 +1097,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sly Cooper and the Thievius Raccoonus",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Sly Cooper and the Thievius Raccoonus.yaml",
     "world_directory": "sly1"
   },
   "Sonic Adventure DX": {
@@ -915,8 +1109,10 @@
     "exporter_size": 30625,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sonic Adventure DX",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Sonic Adventure DX.yaml",
     "world_directory": "sadx"
   },
   "Sonic Heroes": {
@@ -925,8 +1121,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sonic Heroes",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Sonic Heroes.yaml",
     "world_directory": "sonic_heroes"
   },
   "Sonic Rush": {
@@ -935,8 +1133,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sonic Rush",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Sonic Rush.yaml",
     "world_directory": "sonic_rush"
   },
   "Sonic the Hedgehog 1": {
@@ -945,18 +1145,22 @@
     "exporter_size": 9633,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Sonic the Hedgehog 1",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Sonic the Hedgehog 1.yaml",
     "world_directory": "sonic1"
   },
   "Soul Blazer": {
     "apworld_path": "custom_worlds/soulblazer.apworld",
     "exporter_path": "exporter/games/unofficial/soulblazer.py",
-    "exporter_size": 10837,
+    "exporter_size": 10773,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Soul Blazer",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Soul Blazer.yaml",
     "world_directory": "soulblazer"
   },
   "Spinball": {
@@ -965,18 +1169,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Spinball",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Spinball.yaml",
     "world_directory": "spinball"
   },
   "Spyro 3": {
     "apworld_path": "custom_worlds/spyro3.apworld",
     "exporter_path": "exporter/games/unofficial/spyro3.py",
-    "exporter_size": 15584,
+    "exporter_size": 15674,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Spyro 3",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Spyro 3.yaml",
     "world_directory": "spyro3"
   },
   "Stacklands": {
@@ -985,18 +1193,22 @@
     "exporter_size": 13032,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Stacklands",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Stacklands.yaml",
     "world_directory": "stacklands"
   },
   "Star Fox 64": {
     "apworld_path": "custom_worlds/star_fox_64.apworld",
     "exporter_path": "exporter/games/unofficial/star_fox_64.py",
-    "exporter_size": 17536,
+    "exporter_size": 17632,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Star Fox 64",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Star Fox 64.yaml",
     "world_directory": "star_fox_64"
   },
   "Star Wars Episode I Racer": {
@@ -1005,8 +1217,10 @@
     "exporter_size": 5863,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Star Wars Episode I Racer",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Star Wars Episode I Racer.yaml",
     "world_directory": "swr"
   },
   "Super Cat Planet": {
@@ -1015,8 +1229,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Super Cat Planet",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Super Cat Planet.yaml",
     "world_directory": "scp"
   },
   "Symphony of the Night": {
@@ -1025,18 +1241,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Symphony of the Night",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Symphony of the Night.yaml",
     "world_directory": "sotn"
   },
   "System Shock 2": {
     "apworld_path": "custom_worlds/ss2.apworld",
     "exporter_path": "exporter/games/unofficial/ss2.py",
-    "exporter_size": 15392,
+    "exporter_size": 15413,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "System Shock 2",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "System Shock 2.yaml",
     "world_directory": "ss2"
   },
   "TCG Card Shop Simulator": {
@@ -1045,8 +1265,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "TCG Card Shop Simulator",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "TCG Card Shop Simulator.yaml",
     "world_directory": "tcg_card_shop_simulator"
   },
   "TOEM: A Photo Adventure": {
@@ -1055,18 +1277,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "TOEM: A Photo Adventure",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "TOEM A Photo Adventure.yaml",
     "world_directory": "toem"
   },
   "Tetris Attack": {
     "apworld_path": "custom_worlds/tetrisattack.apworld",
     "exporter_path": "exporter/games/unofficial/tetrisattack.py",
-    "exporter_size": 23642,
+    "exporter_size": 23680,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Tetris Attack",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Tetris Attack.yaml",
     "world_directory": "tetrisattack"
   },
   "Tevi": {
@@ -1075,8 +1301,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Tevi",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Tevi.yaml",
     "world_directory": "tevi"
   },
   "The Legend of Zelda - Oracle of Seasons": {
@@ -1085,8 +1313,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "The Legend of Zelda - Oracle of Seasons",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "The Legend of Zelda - Oracle of Seasons.yaml",
     "world_directory": "tloz_oos"
   },
   "The Legend of Zelda - Phantom Hourglass": {
@@ -1095,28 +1325,34 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "The Legend of Zelda - Phantom Hourglass",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "The Legend of Zelda - Phantom Hourglass.yaml",
     "world_directory": "tloz_ph"
   },
   "The Sims 4": {
     "apworld_path": "custom_worlds/sims4.apworld",
     "exporter_path": "exporter/games/unofficial/sims4.py",
-    "exporter_size": 5604,
+    "exporter_size": 5672,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "The Sims 4",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "The Sims 4.yaml",
     "world_directory": "sims4"
   },
-  "ToeJam & Earl": {
+  "ToeJam and Earl": {
     "apworld_path": "custom_worlds/tje.apworld",
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "ToeJam and Earl",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "ToeJam and Earl.yaml",
     "world_directory": "tje"
   },
   "TurnipBoy": {
@@ -1125,8 +1361,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "TurnipBoy",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "TurnipBoy.yaml",
     "world_directory": "turnipboy"
   },
   "Tyrian": {
@@ -1135,8 +1373,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Tyrian",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Tyrian.yaml",
     "world_directory": "tyrian"
   },
   "Vampire Survivors": {
@@ -1145,8 +1385,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Vampire Survivors",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Vampire Survivors.yaml",
     "world_directory": "vampire_survivors"
   },
   "Wario Land": {
@@ -1155,28 +1397,34 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Wario Land",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Wario Land.yaml",
     "world_directory": "wl"
   },
   "Watery Words": {
     "apworld_path": "custom_worlds/waterywords.apworld",
     "exporter_path": "exporter/games/unofficial/waterywords.py",
-    "exporter_size": 9294,
+    "exporter_size": 9301,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Watery Words",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Watery Words.yaml",
     "world_directory": "waterywords"
   },
   "Wordipelago": {
     "apworld_path": "custom_worlds/wordipelago.apworld",
     "exporter_path": "exporter/games/unofficial/wordipelago.py",
-    "exporter_size": 20011,
+    "exporter_size": 19919,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Wordipelago",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Wordipelago.yaml",
     "world_directory": "wordipelago"
   },
   "XCOM 2 War of the Chosen": {
@@ -1185,18 +1433,22 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "XCOM 2 War of the Chosen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "XCOM 2 War of the Chosen.yaml",
     "world_directory": "x2wotc"
   },
   "Yu-Gi-Oh! Dungeon Dice Monsters": {
     "apworld_path": "custom_worlds/yugiohddm.apworld",
     "exporter_path": "exporter/games/unofficial/yugiohddm.py",
-    "exporter_size": 29381,
+    "exporter_size": 29440,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Yu-Gi-Oh! Dungeon Dice Monsters",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
+    "template_file": "Yu-Gi-Oh! Dungeon Dice Monsters.yaml",
     "world_directory": "yugiohddm"
   },
   "Yu-Gi-Oh! Forbidden Memories": {
@@ -1205,8 +1457,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Yu-Gi-Oh! Forbidden Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Yu-Gi-Oh! Forbidden Memories.yaml",
     "world_directory": "fm"
   },
   "Zelda II: The Adventure of Link": {
@@ -1215,8 +1469,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "Zelda II: The Adventure of Link",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "Zelda II The Adventure of Link.yaml",
     "world_directory": "zelda2"
   },
   "osu!": {
@@ -1225,18 +1481,10 @@
     "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
+    "game_name": "osu!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
+    "template_file": "osu!.yaml",
     "world_directory": "osu"
-  },
-  "plateup": {
-    "apworld_path": "custom_worlds/plateup.apworld",
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "plateup"
   }
 }

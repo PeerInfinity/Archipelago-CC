@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-19 21:12:34 UTC
+**Generated:** 2026-03-21 22:05:16 UTC
 
 **Source Data Created:** 2026-02-04T19:44:47.367772
 
@@ -14,7 +14,7 @@
 
 **Universal Tracker Version:** Pickle (loads serialized multiworld)
 
-**Seed Mode:** Fixed (seed=1)
+**Seed Mode:** Random
 
 **Runs Per Game:** 10
 

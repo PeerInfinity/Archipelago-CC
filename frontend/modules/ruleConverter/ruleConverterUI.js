@@ -5,7 +5,7 @@
  * and Archipelago-CC JSON rule format.
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { convertJsonToPython, convertJsonToLambda, convertJsonToFunction } from './jsonToPython.js';
 import { convertPythonToJson } from './pythonToJson.js';
 
@@ -24,6 +24,7 @@ function log(level, message, ...data) {
  */
 class RuleConverterUI {
   constructor(container, componentState) {
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     log('info', 'RuleConverterUI instance created');
     this.container = container;
     this.componentState = componentState;
@@ -411,7 +412,7 @@ class RuleConverterUI {
 
   _subscribeToEvents() {
     // Listen for requests to set content
-    eventBus.subscribe('ruleConverter:setJson', (data) => {
+    this.eventBus.subscribe('ruleConverter:setJson', (data) => {
       if (data && data.rule) {
         const jsonStr = typeof data.rule === 'string' ? data.rule : JSON.stringify(data.rule, null, 2);
         this.jsonEditor.value = jsonStr;
@@ -419,16 +420,16 @@ class RuleConverterUI {
           this._convertJsonToPython(jsonStr);
         }
       }
-    }, 'ruleConverter');
+    });
 
-    eventBus.subscribe('ruleConverter:setPython', (data) => {
+    this.eventBus.subscribe('ruleConverter:setPython', (data) => {
       if (data && data.code) {
         this.pythonEditor.value = data.code;
         if (data.convert !== false) {
           this._convertPythonToJson(data.code);
         }
       }
-    }, 'ruleConverter');
+    });
   }
 
   _scheduleConversion(source) {
@@ -487,18 +488,18 @@ class RuleConverterUI {
         this._setStatus('success', 'Converted');
 
         // Publish event
-        eventBus.publish('ruleConverter:conversionComplete', {
+        this.eventBus.publish('ruleConverter:conversionComplete', {
           direction: 'python-to-json',
           python: code,
           json: result.rule,
-        }, 'ruleConverter');
+        });
       } else {
         this._showError(result.errors.join('\n'));
 
-        eventBus.publish('ruleConverter:conversionError', {
+        this.eventBus.publish('ruleConverter:conversionError', {
           direction: 'python-to-json',
           error: result.errors.join('\n'),
-        }, 'ruleConverter');
+        });
       }
     } catch (e) {
       this._showError('Conversion error: ' + e.message);
@@ -544,18 +545,18 @@ class RuleConverterUI {
         this.timing.textContent = `${elapsed}ms`;
         this._setStatus('success', 'Converted');
 
-        eventBus.publish('ruleConverter:conversionComplete', {
+        this.eventBus.publish('ruleConverter:conversionComplete', {
           direction: 'json-to-python',
           python: result.code,
           json: rule,
-        }, 'ruleConverter');
+        });
       } else {
         this._showError(result.errors.join('\n'));
 
-        eventBus.publish('ruleConverter:conversionError', {
+        this.eventBus.publish('ruleConverter:conversionError', {
           direction: 'json-to-python',
           error: result.errors.join('\n'),
-        }, 'ruleConverter');
+        });
       }
     } catch (e) {
       this._showError('Conversion error: ' + e.message);

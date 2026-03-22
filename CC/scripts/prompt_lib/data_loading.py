@@ -93,7 +93,7 @@ def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spo
 
     # Otherwise, read host.yaml to check extend_sphere_log_to_all_locations setting
     host_config = read_host_yaml_config(project_root)
-    extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
+    extend_sphere_log = host_config.get('json_tools', {}).get('extend_sphere_log_to_all_locations', True)
 
     # Use appropriate output directory based on configuration
     if extend_sphere_log:

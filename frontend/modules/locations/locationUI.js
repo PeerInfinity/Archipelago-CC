@@ -12,13 +12,12 @@ import commonUI, {
 } from '../commonUI/index.js';
 // Discovery mode tracking will be done via event listener
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus, getDispatcher } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
 } from '../commonUI/index.js';
-import { getDispatcher } from './index.js'; // Added import for dispatcher
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -35,6 +34,7 @@ export class LocationUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.columns = 2; // Default number of columns
     this.rootElement = this.createRootElement(); // Create the root element on instantiation
     this.locationsGrid = this.rootElement.querySelector('#locations-grid'); // Cache grid element
@@ -92,13 +92,26 @@ export class LocationUI {
         '[LocationUI] Basic panel setup complete after app:readyForUiDataLoad. Awaiting StateManager readiness.'
       );
 
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'locations');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
     });
+
+    // If the app is already initialized (e.g., this panel was created after a layout reload
+    // via goldenLayoutInstance.loadLayout()), app:readyForUiDataLoad will never fire again.
+    // In that case, initialize immediately and render with whatever data is available.
+    const existingStaticData = stateManager.getStaticData();
+    if (existingStaticData?.locations) {
+      this.initialize();
+      this.dispatcher = getDispatcher();
+      this.isInitialized = true;
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.originalLocationOrder = stateManager.getOriginalLocationOrder() || [];
+      this.updateLocationDisplay();
+    }
   }
 
   async subscribeToSettings() {
@@ -112,6 +125,7 @@ export class LocationUI {
       this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
       this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
       this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+      this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
       // Load discovery settings
       this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting('moduleSettings.discovery.undiscoveredDisplay', 'hidden');
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting('moduleSettings.discovery.clickDiscoversLocation', true);
@@ -125,12 +139,13 @@ export class LocationUI {
       this.showName = true;
       this.showLabel1 = false;
       this.showLabel2 = false;
+      this.useSubstitutedNames = true;
     }
 
-    this.settingsUnsubscribe = eventBus.subscribe(
+    this.settingsUnsubscribe = this.eventBus.subscribe(
       'settings:changed',
       async ({ key, value }) => {
-        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2')) {
+        if (key === '*' || key.startsWith('colorblindMode.locations') || key.startsWith('moduleSettings.commonUI.showLocationItems') || key.startsWith('moduleSettings.locations.showName') || key.startsWith('moduleSettings.locations.showLabel1') || key.startsWith('moduleSettings.locations.showLabel2') || key.startsWith('generalSettings.useSubstitutedNames')) {
           log('info', 'LocationUI reacting to settings change:', key);
           // Update cache
           try {
@@ -139,6 +154,7 @@ export class LocationUI {
             this.showName = await settingsManager.getSetting('moduleSettings.locations.showName', true);
             this.showLabel1 = await settingsManager.getSetting('moduleSettings.locations.showLabel1', false);
             this.showLabel2 = await settingsManager.getSetting('moduleSettings.locations.showLabel2', false);
+            this.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
           } catch (error) {
             log('error', 'Error loading settings during update:', error);
             this.colorblindSettings = false;
@@ -146,11 +162,12 @@ export class LocationUI {
             this.showName = true;
             this.showLabel1 = false;
             this.showLabel2 = false;
+            this.useSubstitutedNames = true;
           }
           this.updateLocationDisplay(); // Trigger redraw
         }
       }
-      , 'locations');
+    );
   }
 
   onPanelDestroy() {
@@ -169,8 +186,10 @@ export class LocationUI {
     // Build array of display elements based on enabled settings
     const elements = [];
 
-    if (this.showName && location.name) {
-      elements.push({ type: 'name', text: location.name });
+    const name = (this.useSubstitutedNames && location.displayName) ? location.displayName : location.name;
+
+    if (this.showName && name) {
+      elements.push({ type: 'name', text: name });
     }
 
     if (this.showLabel1 && location.label1) {
@@ -195,14 +214,14 @@ export class LocationUI {
       this.unsubscribeFromStateEvents();
 
       log('info', '[LocationUI] Subscribing to state and loop events...');
-      if (!eventBus) {
-        log('error', '[LocationUI] Imported EventBus is not available!');
+      if (!this.eventBus) {
+        log('error', '[LocationUI] EventBus is not available!');
         return;
       }
 
       const subscribe = (eventName, handler) => {
         log('info', `[LocationUI] Subscribing to ${eventName}`);
-        const unsubscribe = eventBus.subscribe(eventName, handler, 'locations');
+        const unsubscribe = this.eventBus.subscribe(eventName, handler);
         this.stateUnsubscribeHandles.push(unsubscribe);
       };
 
@@ -340,6 +359,9 @@ export class LocationUI {
 
       // Subscribe to state manager location check rejection events
       subscribe('stateManager:locationCheckRejected', this.handleLocationCheckRejected.bind(this));
+
+      // Subscribe to metaGame progress bar cancellation (e.g. user clicked a new location while previous check was in progress)
+      subscribe('metaGame:progressBarCancelled', this.handleProgressBarCancelled.bind(this));
 
       // Subscribe to loop state changes if relevant
       subscribe('loop:stateChanged', debouncedUpdate); // May affect explored status visibility
@@ -610,16 +632,14 @@ export class LocationUI {
     const locationName = locationData.name;
     const regionName = locationData.region || locationData.parent_region;
 
-    // Publish click event for Discovery module to handle
-    eventBus.publish('ui:locationClicked', {
-      locationName,
-      regionName
-    }, 'locations');
-
-    // Discovery mode: if location checks are disabled, don't perform the check
+    // Discovery mode: if location checks are disabled, only block clicks in undiscovered regions
+    // Locations in discovered regions remain clickable (for loop mode explore)
     if (this.isDiscoveryModeActive && this.discoverySettings.disableLocationCheckUI) {
-      log('info', `[LocationUI] Location check disabled by discovery settings, skipping: ${locationName}`);
-      return;
+      const isRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(regionName);
+      if (!isRegionDiscovered) {
+        log('info', `[LocationUI] Location check disabled (region ${regionName} not discovered), skipping: ${locationName}`);
+        return;
+      }
     }
 
     // ADDED: Add to pending set and update UI
@@ -659,6 +679,8 @@ export class LocationUI {
       regionName: locationData.region, // Ensure regionName is correctly passed
       originator: 'LocationCardClick',
       originalDOMEvent: true, // Assuming this is a direct user click
+      isLocationDiscovered: !this.isDiscoveryModeActive || discoveryStateSingleton.isLocationDiscovered(locationName),
+      isRegionDiscovered: !this.isDiscoveryModeActive || discoveryStateSingleton.isRegionDiscovered(regionName),
     };
 
     const currentDispatcher = getDispatcher(); // Re-fetch dispatcher instance when needed
@@ -702,6 +724,19 @@ export class LocationUI {
       log('info', `[LocationUI] Cleared pending state for rejected location: ${locationName}`);
 
       // Update the display to reflect the cleared pending state
+      this.updateLocationDisplay();
+    }
+  }
+
+  /**
+   * Handles metaGame progress bar cancellation.
+   * Clears pending state for the location whose check was cancelled.
+   */
+  handleProgressBarCancelled(data) {
+    const locationName = data?.eventData?.locationName;
+    if (locationName && this.pendingLocations.has(locationName)) {
+      this.pendingLocations.delete(locationName);
+      log('info', `[LocationUI] Cleared pending state for cancelled location check: ${locationName}`);
       this.updateLocationDisplay();
     }
   }
@@ -921,7 +956,9 @@ export class LocationUI {
           loc._showAsPlaceholder = shouldShowAsPlaceholder;
 
           // Apply "Show Undiscovered" filter
-          if (shouldShowAsPlaceholder && !showUndiscovered) {
+          // Only filter out locations in undiscovered regions.
+          // Locations in discovered regions should always be visible (as clickable ??? cards).
+          if (shouldShowAsPlaceholder && !showUndiscovered && !isRegionDiscovered) {
             return false;
           }
         } else {
@@ -1297,9 +1334,12 @@ export class LocationUI {
         // Check if this should be shown as a placeholder (undiscovered)
         const showAsPlaceholder = location._showAsPlaceholder === true;
         const showFullDetails = this.discoverySettings.showUndiscoveredDetails;
+        const parentRegionIsDiscovered = this.isDiscoveryModeActive &&
+          discoveryStateSingleton.isRegionDiscovered(parentRegionName);
 
-        // Add undiscovered class for styling
-        if (showAsPlaceholder) {
+        // Add undiscovered class for styling, but not when region is discovered
+        // (locations in discovered regions should look clickable, not grayed out)
+        if (showAsPlaceholder && !parentRegionIsDiscovered) {
           locationCard.classList.add('undiscovered-location');
         }
 
@@ -1316,9 +1356,16 @@ export class LocationUI {
           placeholderDiv.className = 'location-name location-placeholder';
           placeholderDiv.textContent = '???';
           placeholderDiv.style.fontStyle = 'italic';
-          placeholderDiv.style.color = '#888';
+          if (parentRegionIsDiscovered) {
+            // Region is discovered - card is clickable (queues explore)
+            placeholderDiv.style.color = '#ccc';
+            locationTextContainer.title = 'Click to explore this region';
+            locationCard.style.cursor = 'pointer';
+          } else {
+            placeholderDiv.style.color = '#888';
+            locationTextContainer.title = 'Undiscovered location';
+          }
           locationTextContainer.appendChild(placeholderDiv);
-          locationTextContainer.title = 'Undiscovered location';
         } else {
           // Get display elements based on enabled settings
           const displayElements = this.getLocationDisplayElements(location);
@@ -1347,7 +1394,12 @@ export class LocationUI {
           const regionNameForLink = location.parent_region || location.region;
           const regionInfoDiv = document.createElement('div');
           regionInfoDiv.className = 'text-sm location-card-region-link';
-          if (regionNameForLink) {
+          if (this.isDiscoveryModeActive && regionNameForLink && !discoveryStateSingleton.isRegionDiscovered(regionNameForLink)) {
+            // Region is undiscovered - mask the name
+            regionInfoDiv.textContent = 'Region: ???';
+            regionInfoDiv.style.fontStyle = 'italic';
+            regionInfoDiv.style.color = '#888';
+          } else if (regionNameForLink) {
             const regionLink = commonUI.createRegionLink(
               regionNameForLink,
               this.colorblindSettings,
@@ -1375,7 +1427,8 @@ export class LocationUI {
               const itemDiv = document.createElement('div');
               itemDiv.className = 'text-sm location-item-name';
               itemDiv.style.fontStyle = 'italic';
-              itemDiv.textContent = `Item: ${itemAtLocation.name}`;
+              const itemDisplayName = (this.useSubstitutedNames && itemAtLocation.displayName) ? itemAtLocation.displayName : itemAtLocation.name;
+              itemDiv.textContent = `Item: ${itemDisplayName}`;
               if (itemAtLocation.player) {
                 itemDiv.textContent += ` (Player ${itemAtLocation.player})`;
               }
@@ -1387,7 +1440,12 @@ export class LocationUI {
           const regionNameForLink = location.parent_region || location.region;
           const regionInfoDiv = document.createElement('div');
           regionInfoDiv.className = 'text-sm location-card-region-link';
-          if (regionNameForLink) {
+          if (this.isDiscoveryModeActive && regionNameForLink && !discoveryStateSingleton.isRegionDiscovered(regionNameForLink)) {
+            // Region is undiscovered - mask the name
+            regionInfoDiv.textContent = 'Region: ???';
+            regionInfoDiv.style.fontStyle = 'italic';
+            regionInfoDiv.style.color = '#888';
+          } else if (regionNameForLink) {
             const regionLink = commonUI.createRegionLink(
               regionNameForLink,
               this.colorblindSettings,
@@ -1668,14 +1726,14 @@ export class LocationUI {
       log('info', `[LocationUI] Dungeon link clicked for: ${dungeonName}`);
 
       // Publish panel activation first
-      eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'locations');
+      this.eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
       log('info', `[LocationUI] Published ui:activatePanel for dungeonsPanel.`);
 
       // Then publish navigation
-      eventBus.publish('ui:navigateToDungeon', {
+      this.eventBus.publish('ui:navigateToDungeon', {
         dungeonName: dungeonName,
         sourcePanel: 'locations',
-      }, 'locations');
+      });
       log(
         'info',
         `[LocationUI] Published ui:navigateToDungeon for ${dungeonName}.`

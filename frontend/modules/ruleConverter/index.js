@@ -2,6 +2,23 @@
 // Converts between Python code and Archipelago-CC JSON rule format using Pyodide
 
 import RuleConverterUI from './ruleConverterUI.js';
+import eventBus from '../../app/core/eventBus.js';
+
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'ruleConverter'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'ruleConverter'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'ruleConverter'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -36,4 +53,15 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('ruleConverter:conversionError');
   registrationApi.registerEventBusPublisher('ruleConverter:stateChanged');
   registrationApi.registerEventBusPublisher('ruleConverter:pyodideLoaded');
+}
+
+/**
+ * Initialization function for the Rule Converter module.
+ */
+export function initialize(moduleId, priorityIndex, initializationApi) {
+  _moduleEventBus = initializationApi.getEventBus();
+
+  return () => {
+    _moduleEventBus = null;
+  };
 }

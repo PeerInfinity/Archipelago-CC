@@ -28,6 +28,13 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
     nodes to reduce rules.json file size.
     """
 
+    # Use resolved_items from sphere log. SDV's collect() computes virtual event
+    # items (Received Progressive Weapon, Received Progression Item/Percent) that
+    # depend on per-item events_to_collect data not available in the frontend.
+    # The JS game logic hooks are skipped when adding resolved items to avoid
+    # double-counting (see SKIP_HOOKS_FOR_RESOLVED_ITEMS below).
+    USE_RESOLVED_ITEMS = True
+
     # Threshold for preserving Has rules as helpers (in rule nodes)
     # Has rules with more than this many nodes will be preserved as helper calls
     # Set to 0 to disable (inline everything), or a positive number to enable
@@ -75,6 +82,17 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                 'event': True,
                 'type': 'Event',
                 'max_count': 1000  # Arbitrary high limit
+            },
+            'Received Progressive Weapon': {
+                'name': 'Received Progressive Weapon',
+                'id': None,  # Event items have no ID
+                'groups': ['Event'],
+                'advancement': True,
+                'useful': False,
+                'trap': False,
+                'event': True,
+                'type': 'Event',
+                'max_count': 5  # Tracks best weapon tier (1-5)
             }
         }
 
@@ -334,18 +352,22 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             # Handle Count rule (requires N of M conditions to be true)
             elif rule_type == 'Count':
                 # Count uses a Counter to track duplicate rules
-                # rule_obj.rules contains only UNIQUE rules
-                # rule_obj.counter contains the multiplicity of each rule
+                # rule_obj.counter maps original rule objects to their multiplicity
                 # We use weighted_count_true for compact representation
 
                 weighted_conditions = []
                 total_weight = 0
 
                 if hasattr(rule_obj, 'counter') and hasattr(rule_obj, 'rules'):
-                    for sub_rule in rule_obj.rules:
+                    # IMPORTANT: Iterate counter.items() instead of rule_obj.rules.
+                    # Count.evaluate_without_shortcircuit() mutates self.rules in-place,
+                    # replacing Has("X") wrappers with their underlying simplified rules
+                    # (e.g., an Or of And conditions). The counter's keys are never mutated,
+                    # so they always contain the original Has objects, ensuring the exporter
+                    # consistently follows the Has->helper serialization path.
+                    for sub_rule, multiplicity in rule_obj.counter.items():
                         serialized = self._serialize_stardew_rule(sub_rule)
                         if serialized:
-                            multiplicity = rule_obj.counter.get(sub_rule, 1)
                             weighted_conditions.append([serialized, multiplicity])
                             total_weight += multiplicity
                 elif hasattr(rule_obj, 'rules'):

@@ -38,7 +38,7 @@ The APWorld will be created in `apworlds/json_tools_installer.apworld`.
 After installation, new components appear in the Launcher:
 
 - **JSON Tools Installer**: Main installation/update GUI
-- **JSON Tools Status**: Check installation status and version info
+- **JSON Tools Status**: Check installation status, toggle monkey patches
 - **JSON Tools Scripts**: Run utility scripts
 
 ### Via Command Line
@@ -93,8 +93,7 @@ The installer can install these components:
 | `presets` | Pre-generated game data (~75MB, requires frontend) | No |
 | `docs` | JSON Tools documentation | Yes |
 | `scripts` | Utility scripts for testing and setup | Yes |
-| `main_patches` | Patched core files for JSON export support | Yes |
-| `romless_patches` | Patched world files for generation without ROMs (requires main patches) | Yes |
+| `romless_patches` | Patched world files for generation without ROMs | Yes |
 | `demo_worlds` | Example worlds (bakingadventure, codingadventure, etc.) | Yes |
 | `tracker` | PopTracker integration world for auto-tracking | No |
 | `testing` | Test config files (package.json, playwright, vitest) | No |
@@ -113,13 +112,16 @@ python -m worlds.json_tools_installer config --dev-repo owner/repo --dev-branch 
 
 ## Patching Methods
 
-The installer supports three patching modes:
+### Monkey Patching
+Runtime patching that hooks into Archipelago's core functions without modifying any files. This works across AP versions.
 
-### 1. Monkey Patching (Default)
-Runtime patching that hooks into Archipelago's core functions without modifying any files. This is the safest option and works across AP versions:
+Monkey patching is initially disabled when the APWorld is first loaded. Running the installer enables it by default (the checkbox is checked). You can also toggle it at any time through the **JSON Tools Status** GUI, or disable it during installation with `--no-patch`:
 ```bash
-# Default - no flag needed
+# Install with monkey patching enabled (default)
 python -m worlds.json_tools_installer install
+
+# Install without monkey patching
+python -m worlds.json_tools_installer install --no-patch
 ```
 
 For technical details on how monkey patching works internally, see [docs/monkey-patching.md](docs/monkey-patching.md).
@@ -129,33 +131,21 @@ For technical details on how monkey patching works internally, see [docs/monkey-
 - Requires either configured `host.yaml` export settings or installer config for settings
 - The exporter module must be installed separately for actual export functionality
 
-For full integration without these limitations, use file-based patching or the Archipelago-CC fork.
+For full integration without these limitations, use the Archipelago-CC fork.
 
-### 2. File-Based Patching
-Replaces core Archipelago files with patched versions. Original files are backed up and can be restored. Requires confirmation before applying:
+### ROM-less Patches
+Additionally, ROM-less patches can be applied to allow generation without ROM files. These patches modify world `__init__.py` files and add supporting infrastructure (`settings.py`, `worlds/RomlessUtils.py`):
 ```bash
-python -m worlds.json_tools_installer install --file-patch
-
-# Skip confirmation prompt
-python -m worlds.json_tools_installer install --file-patch --yes
-```
-
-**Files modified by file-based patching:**
-- `Main.py` - Entry point for seed generation
-- `BaseClasses.py` - Core Archipelago classes
-- `settings.py` - Settings management
-
-### 3. No Patching
-Skip all patching. JSON export will not work without manual setup:
-```bash
-python -m worlds.json_tools_installer install --no-patch
+# Enable ROM-less patches during install
+python -m worlds.json_tools_installer install --romless
 ```
 
 ### GUI Patch Options
-In the installer GUI, you'll see three checkboxes under "Apply patches after download:":
-- **Monkey patch** (checked by default) - Runtime hooks
-- **Main patches** - File-based patching (mutually exclusive with monkey patch)
-- **ROM-less patches** - Additional patches for testing without ROM files
+In the installer GUI, you'll see two checkboxes under "Apply patches after download:":
+- **Monkey patch** (checked by default) - Enables runtime hooks for JSON export
+- **ROM-less patches** - Patches for testing without ROM files
+
+You can also toggle monkey patching after installation through the **JSON Tools Status** GUI.
 
 ## Export Settings Configuration
 
@@ -217,7 +207,7 @@ Configuration is stored in `json_tools_config.json`:
     "commit_hash": "abc123..."
   },
   "patches": {
-    "method": "monkey",
+    "method": "none",
     "backups": [],
     "applied_at": null,
     "romless_applied": false
@@ -237,9 +227,7 @@ The `export_settings` section mirrors the settings written to `host.yaml` and se
 
 | AP Version | Support Level | Method |
 |------------|---------------|--------|
-| 0.6.7 | Full | File patches |
-| 0.6.3–0.6.6 | Supported | Monkey patches |
-| > 0.6.7 | Experimental | Monkey patches |
+| 0.6.3+ | Supported | Monkey patches |
 | < 0.6.3 | Unsupported | N/A |
 
 ## Troubleshooting
@@ -248,9 +236,7 @@ The `export_settings` section mirrors the settings written to `host.yaml` and se
 Check your internet connection. The installer needs to download files from GitHub.
 
 ### "No bundled patches for version X"
-Your AP version doesn't have pre-made patches. This is fine - monkey patching (the default) works across all versions. If you specifically need file-based patches:
-- Use the default monkey patching (no flags needed)
-- Or check if patches are available for your version in `json_tools_patches/`
+Your AP version doesn't have pre-made patches. Monkey patching works across all versions and is enabled by default when using the installer.
 
 ### "File already patched"
 Use `--revert-patches` first, then reinstall:
@@ -298,7 +284,6 @@ worlds/json_tools_installer/
 │   ├── dependencies.py      # Auto-install missing pip packages
 │   ├── downloader.py        # GitHub download with retry
 │   ├── extractor.py         # Archive extraction
-│   ├── patcher.py           # Main file patching
 │   └── romless_patcher.py   # ROM-less world patching
 ├── cli/
 │   ├── __init__.py
@@ -316,8 +301,7 @@ worlds/json_tools_installer/
 # Patches are downloaded to (not bundled in the module):
 json_tools_patches/
 └── 0.6.7/
-    ├── main/             # Main patches (Main.py, BaseClasses.py, settings.py)
-    └── romless/          # ROM-less world patches
+    └── romless/          # ROM-less world patches + infrastructure files
 ```
 
 ## License

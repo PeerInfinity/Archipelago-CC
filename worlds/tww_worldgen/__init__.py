@@ -145,7 +145,7 @@ class TWWWorld(RuleWorldMixin, World):
     options: TheWindWakerWorldGenOptions
 
     origin_region_name: str = "The Great Sea"
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -175,7 +175,6 @@ class TWWWorld(RuleWorldMixin, World):
         "Big Keys": frozenset(["DRC Big Key", "FW Big Key", "TotG Big Key", "ET Big Key", "WT Big Key"]),
         "Small Keys": frozenset(["DRC Small Key", "FW Small Key", "TotG Small Key", "ET Small Key", "WT Small Key"]),
         "Dungeon Items": frozenset(["DRC Dungeon Map", "DRC Compass", "FW Dungeon Map", "FW Compass", "TotG Dungeon Map", "TotG Compass", "FF Dungeon Map", "FF Compass", "ET Dungeon Map", "ET Compass", "WT Dungeon Map", "WT Compass"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -438,6 +437,12 @@ class TWWWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -578,7 +583,7 @@ class TWWWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Defeat Ganondorf", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

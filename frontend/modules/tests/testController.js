@@ -92,7 +92,7 @@ export class TestController {
     switch (actionDetails.type) {
       case 'DISPATCH_EVENT':
         if (this.eventBus) {
-          this.eventBus.publish(actionDetails.eventName, actionDetails.payload, 'tests');
+          this.eventBus.publish(actionDetails.eventName, actionDetails.payload);
         } else {
           this.log(
             'Error: eventBus not available for DISPATCH_EVENT.',
@@ -841,7 +841,7 @@ export class TestController {
       }, timeoutMilliseconds);
 
       if (this.eventBus && typeof this.eventBus.subscribe === 'function') {
-        this.eventBus.subscribe(eventName, handler, 'tests');
+        this.eventBus.subscribe(eventName, handler);
         
         // Track this listener for cleanup
         this._addEventListenerToTracking(eventName, handler);

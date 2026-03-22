@@ -1,6 +1,6 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import commonUI, { renderLogicTree } from '../commonUI/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { debounce } from '../commonUI/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
@@ -21,6 +21,7 @@ export class HelperUI {
     this.componentState = componentState;
     this.unsubscribeHandles = [];
     this.isInitialized = false;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
     this.helperStates = {}; // Track expanded/collapsed state and parameter values
     this.exampleArgs = null; // Cache of example arguments found in helper calls
 
@@ -54,7 +55,7 @@ export class HelperUI {
         this.colorblindSettings = false;
       }
       this.update();
-      eventBus.unsubscribe('stateManager:ready', readyHandler);
+      this.eventBus.unsubscribe('stateManager:ready', readyHandler);
     };
 
     const settingsHandler = async ({ key, value }) => {
@@ -69,15 +70,15 @@ export class HelperUI {
       }
     };
 
-    eventBus.subscribe('settings:changed', settingsHandler, 'helpers');
-    eventBus.subscribe('stateManager:ready', readyHandler, 'helpers');
-    eventBus.subscribe('stateManager:snapshotUpdated', debouncedUpdate, 'helpers');
-    eventBus.subscribe('stateManager:rulesLoaded', () => this.update(), 'helpers');
+    this.eventBus.subscribe('settings:changed', settingsHandler);
+    this.eventBus.subscribe('stateManager:ready', readyHandler);
+    this.eventBus.subscribe('stateManager:snapshotUpdated', debouncedUpdate);
+    this.eventBus.subscribe('stateManager:rulesLoaded', () => this.update());
 
     // Store handlers for cleanup
     this.unsubscribeHandles.push(
-      () => eventBus.unsubscribe('settings:changed', settingsHandler),
-      () => eventBus.unsubscribe('stateManager:snapshotUpdated', debouncedUpdate)
+      () => this.eventBus.unsubscribe('settings:changed', settingsHandler),
+      () => this.eventBus.unsubscribe('stateManager:snapshotUpdated', debouncedUpdate)
     );
   }
 

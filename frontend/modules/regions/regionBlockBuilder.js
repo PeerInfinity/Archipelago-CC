@@ -6,7 +6,7 @@ import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -25,6 +25,7 @@ function log(level, message, ...data) {
 export class RegionBlockBuilder {
   constructor(regionUI) {
     this.regionUI = regionUI;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
   }
 
   /**
@@ -321,7 +322,7 @@ export class RegionBlockBuilder {
     for (const section of sections) {
       switch (section) {
         case 'entrances':
-          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext);
+          this.addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext, isDiscoveryModeActive, discoverySettings);
           break;
         case 'exits':
           this.addExits(
@@ -419,7 +420,7 @@ export class RegionBlockBuilder {
   /**
    * Adds entrances list to the content element
    */
-  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext = null) {
+  addEntrances(contentEl, regionName, staticData, snapshot, snapshotInterface, useColorblind, navigationContext = null, isDiscoveryModeActive = false, discoverySettings = {}) {
     const entrancesList = document.createElement('ul');
     entrancesList.classList.add('region-entrances-list');
     
@@ -498,16 +499,31 @@ export class RegionBlockBuilder {
           headerRow.insertBefore(this.createPathUsedBadge(), headerRow.firstChild);
         }
 
-        // Create entrance info span
+        // Create entrance info span with discovery checks
         const entranceInfo = document.createElement('span');
         entranceInfo.style.flex = '1';
-        const regionLink = commonUI.createRegionLink(
-          entrance.sourceRegion,
-          useColorblind,
-          snapshot
-        );
-        entranceInfo.appendChild(regionLink);
-        entranceInfo.appendChild(document.createTextNode(` - ${entrance.exitName}`));
+        const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
+        const sourceRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(entrance.sourceRegion);
+        const sourceExitDiscovered = discoveryStateSingleton.isExitDiscovered(entrance.sourceRegion, entrance.exitName);
+        const hideSourceName = isDiscoveryModeActive && !sourceRegionDiscovered && !showFullDetails;
+        const hideExitName = isDiscoveryModeActive && (!sourceRegionDiscovered || !sourceExitDiscovered) && !showFullDetails;
+
+        if (hideSourceName) {
+          const placeholderSpan = document.createElement('span');
+          placeholderSpan.textContent = '???';
+          placeholderSpan.style.fontStyle = 'italic';
+          placeholderSpan.style.opacity = '0.6';
+          entranceInfo.appendChild(placeholderSpan);
+        } else {
+          const regionLink = commonUI.createRegionLink(
+            entrance.sourceRegion,
+            useColorblind,
+            snapshot
+          );
+          entranceInfo.appendChild(regionLink);
+        }
+        const exitNameDisplay = hideExitName ? '???' : entrance.exitName;
+        entranceInfo.appendChild(document.createTextNode(` - ${exitNameDisplay}`));
         headerRow.appendChild(entranceInfo);
         
         // Evaluate entrance accessibility
@@ -624,13 +640,11 @@ export class RegionBlockBuilder {
             
             if (showAllEnabled) {
               // In "Show All" mode, navigate to the source region
-              import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-                eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
-                eventBus.publish('ui:navigateToRegion', {
-                  regionName: entrance.sourceRegion
-                }, 'regions');
-                log('info', `[Entrance Block] Navigating to region: ${entrance.sourceRegion} (Show All mode)`);
+              this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
+              this.eventBus.publish('ui:navigateToRegion', {
+                regionName: entrance.sourceRegion
               });
+              log('info', `[Entrance Block] Navigating to region: ${entrance.sourceRegion} (Show All mode)`);
             } else {
               // Normal mode - execute region move to source region
               // We need to get the UID for this region block
@@ -655,10 +669,12 @@ export class RegionBlockBuilder {
         }
         
         // Apply classes based on status
+        const entranceUndiscovered = isDiscoveryModeActive && (!sourceRegionDiscovered || !sourceExitDiscovered);
         li.classList.toggle('accessible', isTraversable);
         li.classList.toggle('inaccessible', !isTraversable);
         li.classList.toggle('bidirectional', entrance.isBidirectional);
-        
+        li.classList.toggle('undiscovered', entranceUndiscovered);
+
         li.appendChild(entranceWrapper);
         entrancesList.appendChild(li);
       });
@@ -770,13 +786,24 @@ export class RegionBlockBuilder {
         const exitInfo = document.createElement('span');
         exitInfo.style.flex = '1';
         exitInfo.appendChild(document.createTextNode(`${exitNameDisplay} → `));
-        exitInfo.appendChild(
-          commonUI.createRegionLink(
-            connectedRegionName,
-            useColorblind,
-            snapshot
-          )
-        );
+        // Hide connected region name if exit is placeholder or connected region is undiscovered
+        const connectedRegionDiscovered = discoveryStateSingleton.isRegionDiscovered(connectedRegionName);
+        const hideConnectedName = showAsPlaceholder || (isDiscoveryModeActive && !connectedRegionDiscovered && !showFullDetails);
+        if (hideConnectedName) {
+          const placeholderSpan = document.createElement('span');
+          placeholderSpan.textContent = '???';
+          placeholderSpan.style.fontStyle = 'italic';
+          placeholderSpan.style.opacity = '0.6';
+          exitInfo.appendChild(placeholderSpan);
+        } else {
+          exitInfo.appendChild(
+            commonUI.createRegionLink(
+              connectedRegionName,
+              useColorblind,
+              snapshot
+            )
+          );
+        }
         headerRow.appendChild(exitInfo);
 
         // Add status indicator
@@ -849,17 +876,15 @@ export class RegionBlockBuilder {
               
               if (showAllEnabled) {
                 // In "Show All" mode, navigate to the region instead of moving
-                import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-                  // First activate the regions panel if not already active
-                  eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' }, 'regions');
-                  
-                  // Then navigate to the target region
-                  eventBus.publish('ui:navigateToRegion', {
-                    regionName: connectedRegionName
-                  }, 'regions');
-                  
-                  log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
+                // First activate the regions panel if not already active
+                this.eventBus.publish('ui:activatePanel', { panelId: 'regionsPanel' });
+
+                // Then navigate to the target region
+                this.eventBus.publish('ui:navigateToRegion', {
+                  regionName: connectedRegionName
                 });
+
+                log('info', `[Exit Block] Navigating to region: ${connectedRegionName} (Show All mode)`);
               } else {
                 // Normal mode - execute region move
                 // Import playerState to get current region instead of assuming regionName is current
@@ -997,7 +1022,9 @@ export class RegionBlockBuilder {
         li.classList.add('location-item');
         li.dataset.locationName = locationDef.name; // Add data attribute for easy targeting
         const showFullDetails = discoverySettings.showUndiscoveredDetails ?? false;
-        const locationNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : locationDef.name;
+        const useSubNames = this.regionUI?.displaySettings?.getSetting('useSubstitutedNames') ?? true;
+        const locationDisplayName = (useSubNames && locationDef.displayName) ? locationDef.displayName : locationDef.name;
+        const locationNameDisplay = showAsPlaceholder && !showFullDetails ? '???' : locationDisplayName;
         
         // Create a wrapper div for the entire clickable area
         const locationWrapper = document.createElement('div');
@@ -1027,7 +1054,9 @@ export class RegionBlockBuilder {
               itemSpan.style.fontStyle = 'italic';
               itemSpan.style.fontSize = '0.9em';
               itemSpan.style.color = '#888';
-              itemSpan.textContent = `(${itemAtLocation.name}`;
+              const useSubNamesForItem = this.regionUI?.displaySettings?.getSetting('useSubstitutedNames') ?? true;
+              const itemDisplayName = (useSubNamesForItem && itemAtLocation.displayName) ? itemAtLocation.displayName : itemAtLocation.name;
+              itemSpan.textContent = `(${itemDisplayName}`;
               if (itemAtLocation.player) {
                 itemSpan.textContent += ` - P${itemAtLocation.player}`;
               }
@@ -1039,7 +1068,7 @@ export class RegionBlockBuilder {
         });
 
         // Check if location is queued in the path (only if the setting is enabled)
-        settingsManager.getSetting('regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
+        settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false).then(addToPathEnabled => {
           if (addToPathEnabled) {
             import('../playerState/singleton.js').then(({ getPlayerStateSingleton }) => {
               try {
@@ -1048,7 +1077,7 @@ export class RegionBlockBuilder {
                 const isQueued = fullPath.some(entry => 
                   entry.type === 'locationCheck' && 
                   entry.locationName === locationDef.name &&
-                  entry.region === regionName
+                  entry.sourceRegion === regionName
                 );
                 
                 // Update status if queued (need to update after initial render)
@@ -1137,7 +1166,7 @@ export class RegionBlockBuilder {
               );
 
               // Check if we should add to path (use same setting as regionGraph)
-              const shouldAddToPath = await settingsManager.getSetting('regionGraph.addLocationsToPath', false);
+              const shouldAddToPath = await settingsManager.getSetting('moduleSettings.regionGraph.addLocationsToPath', false);
               
               if (shouldAddToPath) {
                 // Add location check to path
@@ -1268,7 +1297,7 @@ export class RegionBlockBuilder {
     // Header click listener - entire header is clickable to toggle expand/collapse
     headerEl.addEventListener('click', () => {
       // Publish click event for Discovery module to handle
-      eventBus.publish('ui:regionHeaderClicked', { regionName }, 'regions');
+      this.eventBus.publish('ui:regionHeaderClicked', { regionName });
 
       this.regionUI.toggleRegionByUID(uid);
     });
@@ -1306,7 +1335,7 @@ export class RegionBlockBuilder {
         for (let i = 0; i < currentPath.length; i++) {
           const entry = currentPath[i];
           // Only consider regionMove entries
-          if (entry.type === 'regionMove' && entry.region === regionName) {
+          if (entry.type === 'regionMove' && entry.destinationRegion === regionName) {
             // Check if this matches our specific instance (by UID if available)
             if (uid && this.regionUI && this.regionUI.visitedRegions) {
               const visitedRegion = this.regionUI.visitedRegions.find(vr => vr.uid == uid);
@@ -1375,20 +1404,17 @@ export class RegionBlockBuilder {
 
       log('info', `Dungeon link clicked for: ${dungeonName}`);
 
-      // Import eventBus dynamically to avoid circular dependencies
-      import('../../app/core/eventBus.js').then(({ default: eventBus }) => {
-        eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' }, 'regions');
-        log('info', `Published ui:activatePanel for dungeonsPanel.`);
+      this.eventBus.publish('ui:activatePanel', { panelId: 'dungeonsPanel' });
+      log('info', `Published ui:activatePanel for dungeonsPanel.`);
 
-        eventBus.publish('ui:navigateToDungeon', {
-          dungeonName: dungeonName,
-          sourcePanel: 'regions',
-        }, 'regions');
-        log(
-          'info',
-          `Published ui:navigateToDungeon for ${dungeonName}.`
-        );
+      this.eventBus.publish('ui:navigateToDungeon', {
+        dungeonName: dungeonName,
+        sourcePanel: 'regions',
       });
+      log(
+        'info',
+        `Published ui:navigateToDungeon for ${dungeonName}.`
+      );
     });
 
     // Add hover effect
