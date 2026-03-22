@@ -352,18 +352,22 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             # Handle Count rule (requires N of M conditions to be true)
             elif rule_type == 'Count':
                 # Count uses a Counter to track duplicate rules
-                # rule_obj.rules contains only UNIQUE rules
-                # rule_obj.counter contains the multiplicity of each rule
+                # rule_obj.counter maps original rule objects to their multiplicity
                 # We use weighted_count_true for compact representation
 
                 weighted_conditions = []
                 total_weight = 0
 
                 if hasattr(rule_obj, 'counter') and hasattr(rule_obj, 'rules'):
-                    for sub_rule in rule_obj.rules:
+                    # IMPORTANT: Iterate counter.items() instead of rule_obj.rules.
+                    # Count.evaluate_without_shortcircuit() mutates self.rules in-place,
+                    # replacing Has("X") wrappers with their underlying simplified rules
+                    # (e.g., an Or of And conditions). The counter's keys are never mutated,
+                    # so they always contain the original Has objects, ensuring the exporter
+                    # consistently follows the Has->helper serialization path.
+                    for sub_rule, multiplicity in rule_obj.counter.items():
                         serialized = self._serialize_stardew_rule(sub_rule)
                         if serialized:
-                            multiplicity = rule_obj.counter.get(sub_rule, 1)
                             weighted_conditions.append([serialized, multiplicity])
                             total_weight += multiplicity
                 elif hasattr(rule_obj, 'rules'):

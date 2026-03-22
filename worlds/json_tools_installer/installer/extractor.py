@@ -8,6 +8,7 @@ import fnmatch
 import shutil
 import zipfile
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Set, Callable, Dict
 
@@ -50,7 +51,7 @@ COMPONENTS: Dict[str, Component] = {
     "rule_builder": Component(
         name="rule_builder",
         display_name="Rule Builder",
-        description="Build access rules from JSON definitions",
+        description="Extended Rule Builder (WARNING: replaces vanilla rule_builder/)",
         source_paths=["rule_builder"],
         required=False,
         size_estimate_mb=0.5,
@@ -135,7 +136,6 @@ COMPONENTS: Dict[str, Component] = {
         source_paths=[
             "worlds/bakingadventure",
             "worlds/codingadventure",
-            "worlds/mathadventure",
             "worlds/metamath",
             "worlds/toem_original",
             "worlds/toem_rule_builder",
@@ -157,7 +157,6 @@ COMPONENTS: Dict[str, Component] = {
 # Default components to install
 DEFAULT_COMPONENTS = {
     "exporter",
-    "rule_builder",
     "world_generator",
     "frontend",
     "docs",
@@ -183,6 +182,108 @@ EXCLUDE_PATTERNS: Set[str] = {
 FRONTEND_EXCLUDE_IF_NO_PRESETS: Set[str] = {
     "presets",
 }
+
+
+BACKUP_DIR_NAME = "json_tools_backups"
+COMPONENT_BACKUP_SUBDIR = "components"
+
+
+def get_component_backup_root(dest_root: Optional[Path] = None) -> Path:
+    """Get the root directory for component backups."""
+    if dest_root is None:
+        dest_root = Path(local_path())
+    return dest_root / BACKUP_DIR_NAME / COMPONENT_BACKUP_SUBDIR
+
+
+def backup_component_directory(
+    source_dir: Path,
+    component_name: str,
+    dest_root: Optional[Path] = None,
+) -> Optional[Path]:
+    """
+    Back up a component directory before it is overwritten.
+
+    Creates a timestamped copy in json_tools_backups/components/{component_name}/.
+
+    Args:
+        source_dir: The directory to back up.
+        component_name: Name of the component (used for backup subdirectory).
+        dest_root: Archipelago root directory.
+
+    Returns:
+        Path to the backup directory, or None if nothing to back up.
+    """
+    if not source_dir.is_dir():
+        return None
+
+    backup_root = get_component_backup_root(dest_root)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_dir = backup_root / component_name / timestamp
+
+    backup_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source_dir, backup_dir)
+    return backup_dir
+
+
+def restore_component_backup(
+    component_name: str,
+    dest_root: Optional[Path] = None,
+) -> bool:
+    """
+    Restore the most recent backup of a component.
+
+    Removes the current component directory and replaces it with the
+    latest backup.
+
+    Args:
+        component_name: Name of the component to restore.
+        dest_root: Archipelago root directory.
+
+    Returns:
+        True if a backup was found and restored.
+    """
+    if dest_root is None:
+        dest_root = Path(local_path())
+
+    if component_name not in COMPONENTS:
+        return False
+
+    comp = COMPONENTS[component_name]
+    backup_root = get_component_backup_root(dest_root)
+    backup_comp_dir = backup_root / component_name
+
+    if not backup_comp_dir.is_dir():
+        return False
+
+    # Find the most recent backup (sorted by timestamp directory name)
+    backups = sorted(backup_comp_dir.iterdir(), reverse=True)
+    if not backups:
+        return False
+
+    latest_backup = backups[0]
+
+    # Restore each source path
+    for source_path in comp.source_paths:
+        target = dest_root / source_path
+        if target.is_dir():
+            shutil.rmtree(target)
+        shutil.copytree(latest_backup, target)
+
+    return True
+
+
+def list_component_backups(
+    component_name: str,
+    dest_root: Optional[Path] = None,
+) -> List[str]:
+    """List available backups for a component (as timestamp strings)."""
+    backup_root = get_component_backup_root(dest_root)
+    backup_comp_dir = backup_root / component_name
+
+    if not backup_comp_dir.is_dir():
+        return []
+
+    return sorted([d.name for d in backup_comp_dir.iterdir() if d.is_dir()], reverse=True)
 
 
 def get_extractable_components() -> Dict[str, Component]:
@@ -286,14 +387,16 @@ def extract_tools(
                 and should_extract_file(f, components, archive_root)
             ]
 
-            # Clean directories for components that require it AFTER validating
-            # the zip, so a bad download doesn't leave the install broken
+            # Back up and clean directories for components that require it
+            # AFTER validating the zip, so a bad download doesn't leave
+            # the install broken
             for comp_name in components:
                 comp = COMPONENTS.get(comp_name)
                 if comp and comp.clean_before_extract:
                     for source_path in comp.source_paths:
                         clean_path = dest_root / source_path
                         if clean_path.is_dir():
+                            backup_component_directory(clean_path, comp_name, dest_root)
                             shutil.rmtree(clean_path)
 
             total = len(files_to_extract)

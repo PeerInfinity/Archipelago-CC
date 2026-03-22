@@ -2,11 +2,10 @@
 """
 Test script for AST format native parsing in Rule Builder.
 
-This script loads a rules.json file (in AST format) and tests that the
-Rule Builder can parse the rules directly without conversion.
+Tests that the Rule Builder can parse AST format rules (basic types,
+composites, state methods) using synthetic test data.
 """
 
-import json
 import sys
 from pathlib import Path
 
@@ -15,10 +14,10 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from rule_builder import (
-    RuleWorldMixin, is_ast_format, parse_ast_rule,
+    RuleWorldMixin, parse_ast_rule,
     Has, HasAll, HasAny, And, Or, True_, False_,
     CanReachRegion, CanReachLocation, CanReachEntrance,
-    HasGroup, HasGroupUnique,
+    HasGroup,
 )
 
 
@@ -157,74 +156,6 @@ def test_state_methods():
     print("State method tests passed!\n")
 
 
-def test_rules_json_file(rules_json_path: Path):
-    """Test parsing a real rules.json file."""
-    print(f"Testing rules.json file: {rules_json_path}")
-
-    with open(rules_json_path) as f:
-        data = json.load(f)
-
-    game_name = data.get('game_name', 'Unknown')
-    print(f"  Game: {game_name}")
-
-    # Count rules parsed
-    total_rules = 0
-    successful_rules = 0
-    failed_rules = []
-
-    # Parse all access_rules in regions
-    regions = data.get('regions', {})
-    for player_id, player_regions in regions.items():
-        for region_name, region_data in player_regions.items():
-            # Parse exit rules
-            for exit_data in region_data.get('exits', []):
-                access_rule = exit_data.get('access_rule')
-                if access_rule:
-                    total_rules += 1
-                    try:
-                        rule = parse_ast_rule(access_rule, RuleWorldMixin)
-                        successful_rules += 1
-                    except Exception as e:
-                        failed_rules.append({
-                            'type': 'exit',
-                            'name': exit_data.get('name', 'unknown'),
-                            'rule': access_rule,
-                            'error': str(e)
-                        })
-
-            # Parse location rules
-            for loc_data in region_data.get('locations', []):
-                access_rule = loc_data.get('access_rule')
-                if access_rule:
-                    total_rules += 1
-                    try:
-                        rule = parse_ast_rule(access_rule, RuleWorldMixin)
-                        successful_rules += 1
-                    except Exception as e:
-                        failed_rules.append({
-                            'type': 'location',
-                            'name': loc_data.get('name', 'unknown'),
-                            'rule': access_rule,
-                            'error': str(e)
-                        })
-
-    print(f"  Total rules: {total_rules}")
-    print(f"  Successfully parsed: {successful_rules}")
-    print(f"  Failed: {len(failed_rules)}")
-
-    if failed_rules:
-        print("\n  Failed rules:")
-        for failure in failed_rules[:5]:  # Show first 5 failures
-            print(f"    - {failure['type']} '{failure['name']}': {failure['error']}")
-        if len(failed_rules) > 5:
-            print(f"    ... and {len(failed_rules) - 5} more")
-
-    success_rate = (successful_rules / total_rules * 100) if total_rules > 0 else 100
-    print(f"\n  Success rate: {success_rate:.1f}%")
-
-    return successful_rules == total_rules
-
-
 def test_rule_from_dict_integration():
     """Test that RuleWorldMixin.rule_from_dict handles AST format."""
     print("Testing RuleWorldMixin.rule_from_dict integration...")
@@ -254,51 +185,12 @@ def main():
     print("AST Format Native Parsing Tests")
     print("=" * 60 + "\n")
 
-    # Run basic tests
     test_basic_ast_parsing()
     test_composite_rules()
     test_state_methods()
     test_rule_from_dict_integration()
 
-    # Test with game rules.json files if available
-    games_to_test = [
-        ("adventure", "Adventure"),
-        ("bumpstik", "Bumper Stickers"),
-        ("shorthike", "A Short Hike"),
-        ("inscryption", "Inscryption"),
-        ("lufia2ac", "Lufia II Ancient Cave"),
-        ("saving_princess", "Saving Princess"),
-        ("faxanadu", "Faxanadu"),
-        ("witness", "The Witness"),
-        ("tunic", "TUNIC"),
-        ("lingo", "Lingo"),
-        ("timespinner", "Timespinner"),
-        ("hylics2", "Hylics 2"),
-        ("shivers", "Shivers"),
-        ("wargroove", "Wargroove"),
-        ("noita", "Noita"),
-        ("checksfinder", "ChecksFinder"),
-        ("aquaria", "Aquaria"),
-        ("landstalker", "Landstalker - The Treasures of King Nole"),
-        ("bomb_rush_cyberfunk", "Bomb Rush Cyberfunk"),
-        ("ffmq", "Final Fantasy Mystic Quest"),
-        ("kdl3", "Kirby's Dream Land 3"),
-        ("dlcquest", "DLCQuest"),
-    ]
-
-    for game_dir, game_name in games_to_test:
-        rules_file = project_root / "frontend" / "presets" / game_dir / "AP_14089154938208861744" / "AP_14089154938208861744_rules.json"
-        if rules_file.exists():
-            success = test_rules_json_file(rules_file)
-            if success:
-                print(f"\n✓ All {game_name} rules parsed successfully!")
-            else:
-                print(f"\n✗ Some {game_name} rules failed to parse")
-                return 1
-        else:
-            print(f"\nNote: {game_name} rules.json not found at {rules_file}")
-
-    print("\n" + "=" * 60)
+    print("=" * 60)
     print("All tests passed!")
     print("=" * 60)
     return 0

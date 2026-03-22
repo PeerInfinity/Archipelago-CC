@@ -23,9 +23,7 @@ export async function testInitialMenuNotProcessed(testController) {
 
     // 1. Activate the Loops panel
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
 
     // 2. Wait for the loops panel to appear in DOM
     const loopsPanelElement = await testController.pollForValue(
@@ -158,7 +156,7 @@ export async function testInitialMenuNotProcessed(testController) {
       testController.log(`[${testRunId}] Action started:`, processedActionDetails);
     };
     
-    eventBus.subscribe('loopState:newActionStarted', actionStartHandler, 'tests');
+    testController.eventBus.subscribe('loopState:newActionStarted', actionStartHandler);
 
     // 9. Click Resume and wait briefly
     testController.log(`[${testRunId}] Clicking Resume button...`);
@@ -187,7 +185,7 @@ export async function testInitialMenuNotProcessed(testController) {
     }
 
     // 11. Clean up - unsubscribe from event
-    eventBus.unsubscribe('loopState:newActionStarted', actionStartHandler);
+    testController.eventBus.unsubscribe('loopState:newActionStarted', actionStartHandler);
     
     // 12. Exit loop mode
     const exitBtn = loopsPanelElement.querySelector('#loop-ui-toggle-loop-mode');
@@ -221,9 +219,7 @@ export async function testRealActionsProcessed(testController) {
 
     // 1. Activate the Loops panel
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
 
     // 2. Wait for the loops panel
     const loopsPanelElement = await testController.pollForValue(
@@ -300,14 +296,14 @@ export async function testRealActionsProcessed(testController) {
         }
       };
       
-      eventBus.subscribe('loopState:newActionStarted', actionHandler, 'tests');
-      
+      testController.eventBus.subscribe('loopState:newActionStarted', actionHandler);
+
       // Click Resume
       const pauseBtn = loopsPanelElement.querySelector('#loop-ui-toggle-pause');
       if (pauseBtn && pauseBtn.textContent === 'Resume') {
         testController.log(`[${testRunId}] Clicking Resume to process real action...`);
         pauseBtn.click();
-        
+
         // Wait for action to start
         await testController.pollForCondition(
           () => actionProcessed,
@@ -316,7 +312,7 @@ export async function testRealActionsProcessed(testController) {
           50
         );
       }
-      
+
       if (actionProcessed) {
         testController.reportCondition('Real action processed correctly', true);
       } else {
@@ -324,8 +320,8 @@ export async function testRealActionsProcessed(testController) {
         testController.log(`[${testRunId}] ERROR: Real action was not processed`);
         overallResult = false;
       }
-      
-      eventBus.unsubscribe('loopState:newActionStarted', actionHandler);
+
+      testController.eventBus.unsubscribe('loopState:newActionStarted', actionHandler);
     }
 
     // Clean up - exit loop mode
@@ -350,9 +346,7 @@ export async function testRealActionsProcessed(testController) {
  * @returns {Promise<{eventBus: object, loopsPanelElement: Element, loopState: object}>}
  */
 async function setupLoopsPanelAndEnterMode(testController) {
-  const eventBusModule = await import('../../../app/core/eventBus.js');
-  const eventBus = eventBusModule.default;
-  eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
+  testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
 
   const loopsPanelElement = await testController.pollForValue(
     () => document.querySelector('.loop-panel-container'),
@@ -382,7 +376,7 @@ async function setupLoopsPanelAndEnterMode(testController) {
   const loopStateModule = await import('../../loops/loopStateSingleton.js');
   const loopState = loopStateModule.default;
 
-  return { eventBus, loopsPanelElement, loopState };
+  return { eventBus: testController.eventBus, loopsPanelElement, loopState };
 }
 
 /**
@@ -421,7 +415,7 @@ export async function testManaConsumption(testController) {
         testController.log(`[${testRunId}] Mana decreased to: ${data.mana}`);
       }
     };
-    eventBus.subscribe('loopState:manaChanged', manaHandler, 'tests');
+    eventBus.subscribe('loopState:manaChanged', manaHandler);
 
     // Start processing (unpause)
     const pauseBtn = loopsPanelElement.querySelector('#loop-ui-toggle-pause');
@@ -554,7 +548,7 @@ export async function testLevelUpMechanics(testController) {
         testController.log(`[${testRunId}] Level up detected! New level: ${newLevel}`);
       }
     };
-    eventBus.subscribe('loopState:xpChanged', xpHandler, 'tests');
+    eventBus.subscribe('loopState:xpChanged', xpHandler);
 
     // Add enough XP to trigger a level-up (XP per level = 100 + level * 20)
     // For level 0 -> 1, need 120 XP
@@ -634,7 +628,7 @@ export async function testSpeedAdjustment(testController) {
       speedChangeDetected = true;
       testController.log(`[${testRunId}] Speed change event: ${JSON.stringify(data)}`);
     };
-    eventBus.subscribe('loopState:speedChanged', speedHandler, 'tests');
+    eventBus.subscribe('loopState:speedChanged', speedHandler);
 
     // Change speed
     const newSpeed = 50;
@@ -707,8 +701,8 @@ export async function testPauseResume(testController) {
       resumeEventReceived = true;
       testController.log(`[${testRunId}] Resume event received`);
     };
-    eventBus.subscribe('loopState:paused', pauseHandler, 'tests');
-    eventBus.subscribe('loopState:resumed', resumeHandler, 'tests');
+    eventBus.subscribe('loopState:paused', pauseHandler);
+    eventBus.subscribe('loopState:resumed', resumeHandler);
 
     // If currently paused, resume
     if (initialBtnText === 'Resume') {
@@ -839,9 +833,7 @@ export async function testEnterExitLoopMode(testController) {
     testController.reportCondition('Test started', true);
 
     // Activate loops panel
-    const eventBusModule = await import('../../../app/core/eventBus.js');
-    const eventBus = eventBusModule.default;
-    eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
 
     const loopsPanelElement = await testController.pollForValue(
       () => document.querySelector('.loop-panel-container'),
@@ -870,8 +862,8 @@ export async function testEnterExitLoopMode(testController) {
       modeChangeEvents.push(data);
       testController.log(`[${testRunId}] Mode change event: ${JSON.stringify(data)}`);
     };
-    eventBus.subscribe('loopUI:modeChanged', modeHandler, 'tests');
-    eventBus.subscribe('loops:setLoopMode', modeHandler, 'tests');
+    testController.eventBus.subscribe('loopUI:modeChanged', modeHandler);
+    testController.eventBus.subscribe('loops:setLoopMode', modeHandler);
 
     // Toggle mode
     loopModeBtn.click();
@@ -902,8 +894,8 @@ export async function testEnterExitLoopMode(testController) {
     }
 
     // Cleanup
-    eventBus.unsubscribe('loopUI:modeChanged', modeHandler);
-    eventBus.unsubscribe('loops:setLoopMode', modeHandler);
+    testController.eventBus.unsubscribe('loopUI:modeChanged', modeHandler);
+    testController.eventBus.unsubscribe('loops:setLoopMode', modeHandler);
 
     testController.log(`[${testRunId}] Enter/exit loop mode test completed`);
     return overallResult;

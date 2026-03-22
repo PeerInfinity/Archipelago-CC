@@ -37,13 +37,13 @@ These proposals aim to eliminate the following modifications from the upstream. 
 
 | File | Proposal | Diff File |
 |------|----------|-----------|
-| Main.py | Generation Hooks | [core-files.diff](../diffs/core-files.diff) |
-| BaseClasses.py | Generation Hooks | [core-files.diff](../diffs/core-files.diff) |
-| settings.py | ROM-less Generation | [core-files.diff](../diffs/core-files.diff) |
-| worlds/alttp/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
-| worlds/dkc3/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
-| worlds/smw/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
-| (8 more world files) | ROM-less Generation | [world-init-files.diff](../diffs/world-init-files.diff) |
+| Main.py | Generation Hooks | [core-files.diff](../diffs/diff-files/core-files.diff) |
+| BaseClasses.py | Generation Hooks | [core-files.diff](../diffs/diff-files/core-files.diff) |
+| settings.py | ROM-less Generation | [core-files.diff](../diffs/diff-files/core-files.diff) |
+| worlds/alttp/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/diff-files/world-init-files.diff) |
+| worlds/dkc3/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/diff-files/world-init-files.diff) |
+| worlds/smw/\_\_init\_\_.py | ROM-less Generation | [world-init-files.diff](../diffs/diff-files/world-init-files.diff) |
+| (8 more world files) | ROM-less Generation | [world-init-files.diff](../diffs/diff-files/world-init-files.diff) |
 
 For a complete overview of all repository changes, see [repository-changes.md](../diffs/repository-changes.md).
 

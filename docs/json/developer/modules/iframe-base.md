@@ -6,7 +6,9 @@
 
 ## Key Files
 
-- `frontend/modules/iframe-base/iframeClient.js` - Main communication client
+- `frontend/modules/iframe-base/iframeClient.js` - Re-exports `AdapterClient` as `IframeClient` for backward compatibility
+- `frontend/modules/shared/adapterClient.js` - Unified communication client (auto-detects iframe vs window context)
+- `frontend/modules/shared/communicationProtocol.js` - Unified communication protocol
 - `frontend/modules/iframe-base/standalone.js` - Standalone app entry point
 - `frontend/modules/iframe-base/mockDependencies.js` - Mock implementations for testing
 - `frontend/modules/iframe-base/index.html` - Example standalone page
@@ -77,14 +79,21 @@ client.disconnect();
 - **State Caching:** Caches latest snapshot and static data locally
 - **Browser Detection:** Firefox/Chrome compatibility handling
 
+## Unified AdapterClient
+
+`IframeClient` is a backward-compatible re-export of the unified `AdapterClient` class (`frontend/modules/shared/adapterClient.js`). The `AdapterClient` auto-detects whether it is running in an iframe (`window.parent`) or a separate window (`window.opener`) and uses the appropriate transport and handshake. This means the same application code works in both contexts without changes.
+
+See also: [Window Base Module](window-base.md) — `WindowClient` is the same `AdapterClient` class under a different name.
+
 ## Integration with iframeAdapter
 
 The `iframe-base` module is the client-side counterpart to the `iframeAdapter` module:
 
 ```
 ┌─────────────────────┐     postMessage     ┌─────────────────────┐
-│   Parent App        │◄───────────────────►│   Iframe App        │
-│   (iframeAdapter)   │                     │   (IframeClient)    │
+│   Parent App        │◄───────────────────►│   Iframe/Window App │
+│   (iframeAdapter    │                     │   (AdapterClient)   │
+│    or windowAdapter) │                     │                     │
 └─────────────────────┘                     └─────────────────────┘
 ```
 
@@ -107,6 +116,6 @@ client.subscribeEventBus('stateManager:snapshotUpdated', (data) => {
 
 ## Dependencies
 
-- Uses communication protocol from `iframeAdapter/communicationProtocol.js`
+- Uses unified communication protocol from `shared/communicationProtocol.js` (re-exported by `iframeAdapter/communicationProtocol.js`)
 - Optional shared logger for debugging
 - No external library dependencies

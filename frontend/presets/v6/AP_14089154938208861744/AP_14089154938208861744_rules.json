@@ -834,7 +834,22 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "V"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
+      }
+    }
   },
   "helpers": {
     "1": {

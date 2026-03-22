@@ -300,13 +300,24 @@ class Accessibility(Choice):
 
     # Generate option classes from definitions
     name_lookup_overrides = []
+    seen_class_names = set()
     for setting_name in sorted(option_definitions.keys()):
         if setting_name in skip_options:
             continue
 
+        # Skip hidden/backwards-compat options (visibility == 0)
         option_def = option_definitions[setting_name]
+        if option_def.get('visibility') == 0:
+            continue
+
         class_code, field_code, import_name, name_lookup_override = _generate_option_class_from_definition(setting_name, option_def)
         if class_code:
+            # Deduplicate by class name - some worlds export both snake_case and
+            # CamelCase variants of the same option (backwards-compat aliases)
+            option_class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
+            if option_class_name in seen_class_names:
+                continue
+            seen_class_names.add(option_class_name)
             option_classes.append(class_code)
             option_fields.append(field_code)
             imports_needed.add(import_name)

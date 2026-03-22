@@ -216,7 +216,6 @@ class LinksAwakeningWorld(RuleWorldMixin, World):
         "Songs": frozenset(["Ballad of the Wind Fish", "Manbo's Mambo", "Frog's Song of Soul"]),
         "Instruments": frozenset(["Full Moon Cello", "Conch Horn", "Sea Lily's Bell", "Surf Harp", "Wind Marimba", "Coral Triangle", "Organ of Evening Calm", "Thunder Drum"]),
         "Trading Items": frozenset(["Yoshi Doll", "Ribbon", "Dog Food", "Bananas", "Stick", "Honeycomb", "Pineapple", "Hibiscus", "Letter", "Broom", "Fishing Hook", "Necklace", "Scale", "Magnifying Glass"]),
-        "Event": frozenset(["ANGLER_KEYHOLE", "CASTLE_BUTTON", "RAFT", "MEDICINE2", "An Alarm Clock", "Can Play Trendy Game"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)
@@ -719,6 +718,12 @@ class LinksAwakeningWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -889,6 +894,11 @@ class LinksAwakeningWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("An Alarm Clock", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

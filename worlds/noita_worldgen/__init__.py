@@ -127,7 +127,6 @@ class NoitaWorld(RuleWorldMixin, World):
         "Repeatable Perks": frozenset(["Extra Life Perk"]),
         "Orbs": frozenset(["Orb"]),
         "Items": frozenset(["Random Potion", "Secret Potion", "Powder Pouch", "Chaos Die", "Greed Die", "Kammi", "Refreshing Gourd", "Sädekivi", "Broken Wand"]),
-        "Event": frozenset(["Victory", "Portal to Holy Mountain 1", "Portal to Holy Mountain 2", "Portal to Holy Mountain 3", "Portal to Holy Mountain 4", "Portal to Holy Mountain 5", "Portal to Holy Mountain 6", "Portal to Holy Mountain 7"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -390,6 +389,12 @@ class NoitaWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -530,7 +535,7 @@ class NoitaWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Victory", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

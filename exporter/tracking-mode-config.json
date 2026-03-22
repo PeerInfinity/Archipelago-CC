@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-02-04T14:40:45.872388",
+  "generated": "2026-03-22T01:54:45.403408+00:00",
   "fallback_order": [
     "worldgen",
     "pickle",
@@ -41,10 +41,12 @@
         "original"
       ],
       "Blasphemous": [
+        "worldgen",
         "pickle",
         "original"
       ],
       "Bomb Rush Cyberfunk": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -63,6 +65,7 @@
         "pickle"
       ],
       "Celeste (Open World)": [
+        "worldgen",
         "pickle"
       ],
       "Celeste 64": [
@@ -109,7 +112,15 @@
         "pickle",
         "original"
       ],
+      "DepGraph": [
+        "worldgen",
+        "pickle"
+      ],
       "Donkey Kong Country 3": [
+        "worldgen",
+        "pickle"
+      ],
+      "EarthBound": [
         "worldgen",
         "pickle"
       ],
@@ -125,6 +136,10 @@
         "worldgen",
         "pickle",
         "original"
+      ],
+      "Final Fantasy Mystic Quest": [
+        "worldgen",
+        "pickle"
       ],
       "Heretic": [
         "worldgen",
@@ -145,6 +160,7 @@
         "original"
       ],
       "Jak and Daxter: The Precursor Legacy": [
+        "worldgen",
         "pickle"
       ],
       "Kingdom Hearts": [
@@ -158,11 +174,12 @@
         "pickle"
       ],
       "Lingo": [
-        "pickle"
+        "worldgen",
+        "pickle",
+        "original"
       ],
       "Links Awakening DX": [
-        "worldgen",
-        "pickle"
+        "worldgen"
       ],
       "Lufia II Ancient Cave": [
         "worldgen",
@@ -174,12 +191,11 @@
         "pickle",
         "original"
       ],
-      "Math Adventure": [
-        "worldgen",
-        "pickle",
-        "original"
-      ],
       "Mega Man 2": [
+        "worldgen",
+        "pickle"
+      ],
+      "Mega Man 3": [
         "worldgen",
         "pickle"
       ],
@@ -203,6 +219,10 @@
       ],
       "Noita": [
         "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Ocarina of Time": [
         "pickle"
       ],
       "Old School Runescape": [
@@ -219,13 +239,11 @@
         "pickle",
         "original"
       ],
-      "Pokemon Emerald": [
-        "pickle"
-      ],
       "Pokemon Red and Blue": [
         "pickle"
       ],
       "Raft": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -237,11 +255,16 @@
       "SMZ3": [
         "pickle"
       ],
+      "Satisfactory": [
+        "worldgen"
+      ],
       "Saving Princess": [
         "worldgen",
         "pickle"
       ],
       "Secret of Evermore": [
+        "worldgen",
+        "pickle",
         "original"
       ],
       "Shivers": [
@@ -254,11 +277,6 @@
       "Subnautica": [
         "worldgen",
         "pickle"
-      ],
-      "Sudoku": [
-        "worldgen",
-        "pickle",
-        "original"
       ],
       "Super Mario 64": [
         "worldgen",
@@ -283,6 +301,7 @@
         "original"
       ],
       "TUNIC": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -303,6 +322,7 @@
         "pickle"
       ],
       "The Witness": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -336,44 +356,66 @@
       ],
       "shapez": [
         "worldgen",
-        "pickle"
+        "pickle",
+        "original"
       ]
     },
     "apworlds": {
       "A Dance of Fire and Ice": [
-        "worldgen",
-        "pickle"
+        "worldgen"
       ],
       "A Difficult Game About Climbing": [
         "worldgen",
         "pickle"
       ],
-      "Actraiser": [
-        "worldgen",
+      "ANIMAL WELL": [
         "pickle"
       ],
+      "Actraiser": [
+        "worldgen",
+        "pickle",
+        "original"
+      ],
       "Air Delivery": [
+        "worldgen",
+        "pickle",
         "original"
       ],
       "An Untitled Story": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Anodyne": [
+        "worldgen",
         "pickle",
         "original"
       ],
       "Another Crabs Treasure": [
-        "worldgen",
         "pickle"
       ],
-      "Astalon": [
+      "Ape Escape": [
         "pickle",
+        "original"
+      ],
+      "Ape Escape 3": [
+        "pickle",
+        "original"
+      ],
+      "Astalon": [
+        "worldgen",
         "original"
       ],
       "Autopelago": [
         "worldgen",
+        "pickle",
         "original"
+      ],
+      "Axiom Verge": [
+        "pickle"
+      ],
+      "Balatro": [
+        "pickle"
       ],
       "Brotato": [
         "worldgen",
@@ -381,10 +423,21 @@
       ],
       "Castlevania: Dawn of Sorrow": [
         "worldgen",
+        "pickle",
         "original"
       ],
-      "Cuphead": [
-        "worldgen",
+      "Cavern of Dreams": [
+        "pickle"
+      ],
+      "Corn Kidz 64": [
+        "pickle",
+        "original"
+      ],
+      "CrossCode": [
+        "pickle",
+        "original"
+      ],
+      "Crystalis": [
         "pickle",
         "original"
       ],
@@ -394,57 +447,82 @@
         "original"
       ],
       "Diddy Kong Racing": [
-        "worldgen"
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Digimon World": [
+        "pickle"
       ],
       "Dome Keeper": [
         "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Duke Nukem 3D": [
         "pickle"
       ],
       "Final Fantasy Tactics Advance": [
-        "original"
-      ],
-      "Frogmonster": [
+        "worldgen",
         "pickle",
         "original"
+      ],
+      "Fire Emblem Sacred Stones": [
+        "pickle"
+      ],
+      "Frogmonster": [
+        "pickle"
       ],
       "Golden Sun The Lost Age": [
         "worldgen",
         "pickle"
       ],
+      "Grim Dawn": [
+        "pickle"
+      ],
       "Hatsune Miku Project Diva Mega Mix+": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "Here Comes Niko!": [
         "worldgen",
         "pickle"
       ],
+      "Iji": [
+        "pickle"
+      ],
       "Isles Of Sea And Sky": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Ittle Dew 2": [
         "worldgen",
-        "pickle"
+        "pickle",
+        "original"
       ],
       "Jigsaw": [
         "worldgen"
       ],
       "K-On! After School Live!!": [
         "worldgen",
+        "pickle",
         "original"
+      ],
+      "Keep Talking and Nobody Explodes": [
+        "pickle"
       ],
       "Kingdom Hearts Birth by Sleep": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Kingdom Hearts Chain of Memories": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Kingdom Hearts RE Chain of Memories": [
-        "worldgen"
-      ],
-      "Kirby Super Star": [
         "worldgen",
         "pickle",
         "original"
@@ -453,12 +531,12 @@
         "worldgen"
       ],
       "Lego Star Wars: The Complete Saga": [
-        "original"
-      ],
-      "Lil Gator Game": [
         "worldgen",
         "pickle",
         "original"
+      ],
+      "Lingo 2": [
+        "pickle"
       ],
       "Little Witch Nobeta": [
         "worldgen",
@@ -466,7 +544,21 @@
         "original"
       ],
       "Luigi's Mansion": [
-        "worldgen"
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Lunacid": [
+        "pickle",
+        "original"
+      ],
+      "Majora's Mask Recompiled": [
+        "pickle",
+        "original"
+      ],
+      "Mario Kart Double Dash": [
+        "pickle",
+        "original"
       ],
       "MetroCUBEvania": [
         "worldgen",
@@ -474,44 +566,96 @@
         "original"
       ],
       "Metroid Fusion": [
-        "worldgen"
-      ],
-      "Pseudoregalia": [
-        "pickle",
-        "original"
-      ],
-      "Rain World": [
         "worldgen",
         "pickle"
       ],
+      "Metroid: Zero Mission": [
+        "pickle"
+      ],
+      "Minishoot Adventures": [
+        "pickle"
+      ],
+      "Minit": [
+        "pickle",
+        "original"
+      ],
+      "Nine Sols": [
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Ori and the Blind Forest": [
+        "pickle",
+        "original"
+      ],
+      "Pizza Tower": [
+        "pickle"
+      ],
+      "Pokemon FireRed and LeafGreen": [
+        "pickle"
+      ],
+      "Pseudoregalia": [
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Rabi-Ribi": [
+        "pickle"
+      ],
+      "Rain World": [
+        "worldgen",
+        "pickle",
+        "original"
+      ],
       "Ratchet & Clank 2": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Reventure": [
+        "worldgen",
         "pickle",
         "original"
       ],
       "Rift Wizard": [
         "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Rift of the Necrodancer": [
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Shadow The Hedgehog": [
+        "pickle",
         "original"
       ],
       "Simon Tatham's Portable Puzzle Collection": [
         "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Sonic Adventure DX": [
         "pickle"
       ],
       "Sonic Heroes": [
         "worldgen",
-        "pickle"
+        "pickle",
+        "original"
       ],
       "Sonic Rush": [
-        "original"
+        "worldgen",
+        "pickle"
       ],
       "Sonic the Hedgehog 1": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Soul Blazer": [
+        "worldgen",
+        "pickle",
         "original"
       ],
       "Spinball": [
@@ -519,8 +663,16 @@
         "pickle",
         "original"
       ],
+      "Spyro 3": [
+        "pickle"
+      ],
+      "Stacklands": [
+        "pickle",
+        "original"
+      ],
       "Star Fox 64": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Star Wars Episode I Racer": [
@@ -529,10 +681,12 @@
       ],
       "Super Cat Planet": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "Symphony of the Night": [
         "worldgen",
+        "pickle",
         "original"
       ],
       "TOEM: A Photo Adventure": [
@@ -540,25 +694,31 @@
         "pickle",
         "original"
       ],
-      "Tevi": [
-        "worldgen"
+      "Tetris Attack": [
+        "pickle"
       ],
       "The Sims 4": [
         "worldgen"
+      ],
+      "ToeJam and Earl": [
+        "pickle"
       ],
       "TurnipBoy": [
         "worldgen",
         "pickle",
         "original"
       ],
+      "Tyrian": [
+        "pickle"
+      ],
       "Vampire Survivors": [
-        "worldgen",
         "pickle",
         "original"
       ],
       "Watery Words": [
         "worldgen",
-        "pickle"
+        "pickle",
+        "original"
       ],
       "Wordipelago": [
         "worldgen",
@@ -566,10 +726,17 @@
         "original"
       ],
       "XCOM 2 War of the Chosen": [
+        "worldgen",
+        "pickle",
         "original"
       ],
       "Yu-Gi-Oh! Dungeon Dice Monsters": [
-        "worldgen"
+        "worldgen",
+        "pickle",
+        "original"
+      ],
+      "Yu-Gi-Oh! Forbidden Memories": [
+        "pickle"
       ],
       "Zelda II: The Adventure of Link": [
         "worldgen"

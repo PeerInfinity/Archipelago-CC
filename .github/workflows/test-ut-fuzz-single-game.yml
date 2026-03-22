@@ -173,13 +173,13 @@ jobs:
 
           # Determine UT version flags
           if [ "${{ inputs.ut_version }}" = "original" ]; then
-            UT_FLAGS="--ut-version original"
+            UT_FLAGS="--ut-version original --no-use-tracking-config"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version worldgen --prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --prefer-native-ut --use-tracking-config"
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
-            UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
+            UT_FLAGS="--ut-version pickle --no-prefer-native-ut --no-use-tracking-config"
           else
-            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut --no-use-tracking-config"
           fi
 
           # Determine output filename based on seed
@@ -566,13 +566,13 @@ jobs:
 
           # Determine UT version flags
           if [ "${{ inputs.ut_version }}" = "original" ]; then
-            UT_FLAGS="--ut-version original"
+            UT_FLAGS="--ut-version original --no-use-tracking-config"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version worldgen --prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --prefer-native-ut --use-tracking-config"
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
-            UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
+            UT_FLAGS="--ut-version pickle --no-prefer-native-ut --no-use-tracking-config"
           else
-            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut --no-use-tracking-config"
           fi
 
           # Output file includes split number

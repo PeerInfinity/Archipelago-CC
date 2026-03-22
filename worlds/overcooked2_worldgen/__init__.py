@@ -290,7 +290,6 @@ class Overcooked2World(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Wood", "Coal Bucket", "Spare Plate", "Fire Extinguisher", "Bellows", "Clean Dishes", "Larger Tip Jar", "Progressive Dash", "Progressive Throw/Catch", "Coin Purse", "Control Stick Batteries", "Wok Wheels", "Dish Scrubber", "Burn Leniency", "Sharp Knife", "Order Lookahead", "Lightweight Backpack", "Faster Respawn Time", "Faster Condiment/Drink Switch", "Guest Patience", "Kevin-1", "Kevin-2", "Kevin-3", "Kevin-4", "Kevin-5", "Kevin-6", "Kevin-7", "Kevin-8", "Cooking Emote", "Curse Emote", "Serving Emote", "Preparing Emote", "Washing Up Emote", "Ok Emote", "Ramp Button", "Bonus Star", "Calmer Unbread", "Green Ramp", "Yellow Ramp", "Blue Ramp", "Pink Ramp", "Dark Green Ramp", "Red Ramp", "Purple Ramp", "Emote Wheel"]),
-        "Event": frozenset(["1-1 Level Complete", "Star", "1-2 Level Complete", "1-3 Level Complete", "1-4 Level Complete", "1-5 Level Complete", "1-6 Level Complete", "2-1 Level Complete", "2-2 Level Complete", "2-3 Level Complete", "2-4 Level Complete", "2-5 Level Complete", "2-6 Level Complete", "3-1 Level Complete", "3-2 Level Complete", "3-3 Level Complete", "3-4 Level Complete", "3-5 Level Complete", "3-6 Level Complete", "4-1 Level Complete", "4-2 Level Complete", "4-3 Level Complete", "4-4 Level Complete", "4-5 Level Complete", "4-6 Level Complete", "5-1 Level Complete", "5-2 Level Complete", "5-3 Level Complete", "5-4 Level Complete", "5-5 Level Complete", "5-6 Level Complete", "6-1 Level Complete", "6-2 Level Complete", "6-3 Level Complete", "6-4 Level Complete", "6-5 Level Complete", "Victory", "Kevin-1 Level Complete", "Kevin-2 Level Complete", "Kevin-3 Level Complete", "Kevin-4 Level Complete", "Kevin-5 Level Complete", "Kevin-6 Level Complete", "Kevin-7 Level Complete", "Kevin-8 Level Complete"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -752,6 +751,12 @@ class Overcooked2World(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -892,7 +897,7 @@ class Overcooked2World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("6-6 Completed", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

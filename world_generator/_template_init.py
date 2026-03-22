@@ -3,11 +3,201 @@
 Contains the __init__.py generator (the largest single template function).
 """
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from ._template_utils import _format_dict_repr, is_valid_identifier
 from .extractors import ExtractedData
 from ._sanitization import sanitize_for_class_name
+
+
+def _generate_completion_lambda(rule_dict: Dict[str, Any],
+                                helpers: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Generate a Python lambda string from an analyzed completion condition rule.
+
+    Pattern-matches the analyzed rule JSON and returns a lambda string like:
+        lambda state: state.has("Item", self.player)
+
+    Args:
+        rule_dict: Analyzed rule dictionary from the exporter's analyze_rule()
+        helpers: Optional dict of helper name -> HelperData for resolving helper references
+
+    Returns:
+        Lambda body string (the part after "lambda state: "), or None if unrecognized
+    """
+    rule_type = rule_dict.get('type')
+
+    if rule_type in ('item_check', 'count_check'):
+        item_raw = rule_dict.get('item', '')
+        # item can be a string or a dict (e.g., f_string with a 'value' field)
+        item = _extract_constant_value(item_raw) if isinstance(item_raw, dict) else item_raw
+        if not isinstance(item, str):
+            return None
+        item_escaped = item.replace('\\', '\\\\').replace('"', '\\"')
+        count_raw = rule_dict.get('count')
+        # count can be an int or a dict (e.g., {"type": "constant", "value": 9})
+        count = _extract_constant_value(count_raw) if isinstance(count_raw, dict) else count_raw
+        if isinstance(count, int) and count > 1:
+            return f'state.has("{item_escaped}", self.player, {count})'
+        elif count is not None and not isinstance(count, int):
+            return None  # Can't handle non-constant counts (e.g., helper-based)
+        return f'state.has("{item_escaped}", self.player)'
+
+    if rule_type == 'location_check':
+        # location_check -> state.can_reach(location, "Location", self.player)
+        loc_raw = rule_dict.get('location', '')
+        loc = _extract_constant_value(loc_raw) if isinstance(loc_raw, dict) else loc_raw
+        if isinstance(loc, str):
+            loc_escaped = loc.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.can_reach("{loc_escaped}", "Location", self.player)'
+
+    if rule_type == 'can_reach':
+        # Top-level can_reach (not wrapped in state_method)
+        region = rule_dict.get('region', '')
+        resolution = rule_dict.get('resolution', 'Region')
+        if isinstance(region, str) and isinstance(resolution, str):
+            region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
+            res_escaped = resolution.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.can_reach("{region_escaped}", "{res_escaped}", self.player)'
+
+    if rule_type == 'state_method':
+        method = rule_dict.get('method', '')
+        args = rule_dict.get('args', [])
+
+        if method == 'has_all_counts' and args:
+            # args[0] should be a dict or constant wrapping a dict
+            counts_dict = _extract_constant_value(args[0])
+            if isinstance(counts_dict, dict):
+                entries = ', '.join(
+                    f'"{k.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}": {v}'
+                    for k, v in counts_dict.items()
+                )
+                return f'state.has_all_counts({{{entries}}}, self.player)'
+
+        if method in ('has_all', 'has_any') and args:
+            items_list = _extract_constant_value(args[0])
+            if isinstance(items_list, list):
+                items_str = ', '.join(
+                    f'"{i.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"'
+                    for i in items_list
+                )
+                return f'state.{method}([{items_str}], self.player)'
+
+        if method == 'can_reach' and len(args) >= 2:
+            target = _extract_constant_value(args[0])
+            reach_type = _extract_constant_value(args[1])
+            if isinstance(target, str) and isinstance(reach_type, str):
+                target_escaped = target.replace('\\', '\\\\').replace('"', '\\"')
+                type_escaped = reach_type.replace('\\', '\\\\').replace('"', '\\"')
+                return f'state.can_reach("{target_escaped}", "{type_escaped}", self.player)'
+
+        if method == 'can_reach_location' and args:
+            loc = _extract_constant_value(args[0])
+            if isinstance(loc, str):
+                loc_escaped = loc.replace('\\', '\\\\').replace('"', '\\"')
+                return f'state.can_reach_location("{loc_escaped}", self.player)'
+
+    if rule_type == 'helper' and helpers:
+        helper_name = rule_dict.get('name', '')
+        helper_args = rule_dict.get('args', [])
+        helper_data = helpers.get(helper_name)
+        if helper_data is not None:
+            body = helper_data.body if hasattr(helper_data, 'body') else helper_data.get('body')
+            params = helper_data.params if hasattr(helper_data, 'params') else helper_data.get('params', [])
+            if body:
+                # Substitute args into the body if the helper has parameters
+                resolved_body = body
+                if params and helper_args:
+                    resolved_body = _substitute_helper_args(body, params, helper_args)
+                return _generate_completion_lambda(resolved_body, helpers=helpers)
+
+    if rule_type == 'and':
+        conditions = rule_dict.get('conditions', [])
+        parts = []
+        for cond in conditions:
+            part = _generate_completion_lambda(cond, helpers=helpers)
+            if part is None:
+                return None
+            parts.append(part)
+        if parts:
+            return ' and '.join(parts)
+
+    if rule_type == 'or':
+        conditions = rule_dict.get('conditions', [])
+        parts = []
+        for cond in conditions:
+            part = _generate_completion_lambda(cond, helpers=helpers)
+            if part is None:
+                return None
+            parts.append(f'({part})' if ' and ' in part else part)
+        if parts:
+            return ' or '.join(parts)
+
+    # Fallback: walk the tree looking for the first item_check
+    first_item_check = _find_first_item_check(rule_dict)
+    if first_item_check:
+        return _generate_completion_lambda(first_item_check, helpers=helpers)
+
+    return None
+
+
+def _extract_constant_value(arg: Any) -> Any:
+    """Extract the value from a constant wrapper or return as-is."""
+    if isinstance(arg, dict):
+        if arg.get('type') == 'constant':
+            return arg.get('value')
+        if arg.get('type') == 'f_string' and 'value' in arg:
+            return arg.get('value')
+        # Some analyzers put values directly
+        if 'value' in arg:
+            return arg.get('value')
+    return arg
+
+
+def _substitute_helper_args(body: Dict[str, Any], params: list, args: list) -> Dict[str, Any]:
+    """Substitute helper arguments into a helper body.
+
+    Replaces {"type": "name", "name": param_name} nodes with the corresponding
+    argument value from the call site.
+    """
+    import copy
+    result = copy.deepcopy(body)
+    # Build param -> arg mapping
+    param_map = {}
+    for i, param_name in enumerate(params):
+        if i < len(args):
+            param_map[param_name] = args[i]
+    return _substitute_names(result, param_map)
+
+
+def _substitute_names(node: Any, param_map: Dict[str, Any]) -> Any:
+    """Recursively substitute name references in a rule tree."""
+    if isinstance(node, dict):
+        if node.get('type') == 'name' and node.get('name') in param_map:
+            return param_map[node['name']]
+        return {k: _substitute_names(v, param_map) for k, v in node.items()}
+    if isinstance(node, list):
+        return [_substitute_names(item, param_map) for item in node]
+    return node
+
+
+def _find_first_item_check(rule_dict: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Recursively find the first item_check or count_check node in a rule tree."""
+    if not isinstance(rule_dict, dict):
+        return None
+    if rule_dict.get('type') in ('item_check', 'count_check'):
+        return rule_dict
+    for key in ('conditions', 'condition', 'left', 'right'):
+        val = rule_dict.get(key)
+        if isinstance(val, list):
+            for item in val:
+                found = _find_first_item_check(item)
+                if found:
+                    return found
+        elif isinstance(val, dict):
+            found = _find_first_item_check(val)
+            if found:
+                return found
+    return None
 
 
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
@@ -52,22 +242,41 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
     canonical_advancement_content = '\n'.join(canonical_advancement_entries)
 
-    # Find victory location and item
+    # Find victory location and item (heuristic: event with "victory" in name)
     victory_location = None
     victory_item = None
+    all_events = []
     for loc_name, loc_data in data.locations.items():
         if loc_data.is_event:
             item_name = data.original_placements.get(loc_name, '')
+            all_events.append((loc_name, item_name))
             if 'victory' in item_name.lower() or 'victory' in loc_name.lower():
                 victory_location = loc_name
                 victory_item = item_name
                 break
 
+    # If no "victory" match found but there's exactly one event, use it as the victory
+    if not victory_location and len(all_events) == 1:
+        victory_location, victory_item = all_events[0]
+
+    # Determine completion condition lambda body
+    completion_lambda_body = None
+    if data.completion_condition:
+        completion_lambda_body = _generate_completion_lambda(data.completion_condition,
+                                                              helpers=data.helpers)
+
+    # Fall back to victory item heuristic
+    if completion_lambda_body is None and victory_item:
+        vi_escaped = victory_item.replace('\\', '\\\\').replace('"', '\\"')
+        completion_lambda_body = f'state.has("{vi_escaped}", self.player)'
+
+    # Build victory_section: place event item + set completion condition
     victory_section = ''
-    if victory_location and victory_item:
+    if victory_location and victory_item and completion_lambda_body:
+        # Have both event placement and completion condition
         victory_section = f'''
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("{victory_location}", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)
@@ -82,7 +291,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \\
-            lambda state: state.has("{victory_item}", self.player)
+            lambda state: {completion_lambda_body}
+'''
+    elif completion_lambda_body:
+        # Have completion condition but no event placement needed
+        victory_section = f'''
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \\
+            lambda state: {completion_lambda_body}
 '''
 
     # Generate canonical seed sections only if enabled
@@ -94,6 +311,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{{base}} v" if is_vanilla else f"{{base}} s{{self.multiworld.seed}}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -245,6 +468,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     def generate_early(self) -> None:
         """Push starting items as precollected."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
 '''
         create_items_section = '''
     def create_items(self) -> None:
@@ -262,9 +491,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         # Only include truly locked items (events) - not canonical placements
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
-                # Check if this is an event item (id=None)
+                # Check if this is an event item (id=None) or placed at an event location
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
+                loc_data = data.locations.get(loc_name)
+                is_event_item = item_data and item_data.is_event
+                is_event_location = loc_data and loc_data.is_event
+                if is_event_item or is_event_location:
                     loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
                     item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                     locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
@@ -435,6 +667,15 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             placement_type_section = '''
     # Placements are deterministically reproduced by world generator
     is_canonical: ClassVar[bool] = True
+'''
+
+    # Generate preset_label class attribute (for frontend display in preset buttons)
+    preset_label_section = ''
+    if data.preset_label:
+        escaped_label = data.preset_label.replace('\\', '\\\\').replace('"', '\\"')
+        preset_label_section = f'''
+    # Frontend preset button label (e.g., "canth s4")
+    preset_label: ClassVar[str] = "{escaped_label}"
 '''
 
     # Generate canonical_placements class attribute (for exporter to read)
@@ -627,41 +868,46 @@ class _ShopWrapper:
 {create_shops_method}'''
 
     # Build itempool_counts dictionary
-    # When canonical_placements is available OR canonical_seed is enabled,
-    # we use the full itempool_counts (items are either in the pool for randomization,
-    # or placed canonically for seed=1). Only subtract event items and starting items.
-    # Non-event locked items are placed via canonical_placements in _place_original_items().
+    # The subtraction logic must match what actually ends up in LOCKED_PLACEMENTS:
+    # - When canonical_placements exist: LOCKED_PLACEMENTS only has event items/locations,
+    #   so only subtract those. Non-event locked items stay in the pool for non-seed-1 games
+    #   (they're placed via canonical_placements only for seed=1).
+    # - When no canonical_placements: all locked items go into LOCKED_PLACEMENTS,
+    #   so subtract all of them from the pool.
     itempool_entries = []
     if data.canonical_placements or canonical_seed is not None:
-        # Count only event items that are locked (these are subtracted from pool)
-        event_item_counts: Dict[str, int] = {}
+        # Only subtract items that are in LOCKED_PLACEMENTS
+        # (event items or items at event locations)
+        locked_event_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
-                    event_item_counts[item_name] = event_item_counts.get(item_name, 0) + 1
+                loc_data = data.locations.get(loc_name)
+                is_event_item = item_data and item_data.is_event
+                is_event_location = loc_data and loc_data.is_event
+                if is_event_item or is_event_location:
+                    locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
-            # Subtract event items and starting items from the count
-            adjusted_count = count - event_item_counts.get(item_name, 0)
+            adjusted_count = count - locked_event_counts.get(item_name, 0)
             adjusted_count -= data.starting_items.get(item_name, 0)
             if adjusted_count > 0:
-                # Skip event items entirely (they shouldn't be in the pool)
                 item_data = data.items.get(item_name)
-                if item_data and item_data.is_event:
+                # Skip true event items (id=None) - they have no ID and can't be in the pool.
+                # Don't use is_event here because some items (e.g., ALttP small keys) have
+                # event=True in the JSON but still have valid IDs and must be in the pool.
+                if item_data and item_data.item_id is None:
                     continue
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements and no canonical_seed - subtract all locked items and starting items
-        # (locked items are truly locked and won't go into the random pool)
+        # No canonical_placements - subtract all locked items
         locked_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
                 locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
-            # Subtract locked items and starting items from the count
             adjusted_count = count - locked_item_counts.get(item_name, 0)
             adjusted_count -= data.starting_items.get(item_name, 0)
             if adjusted_count > 0:
@@ -671,8 +917,14 @@ class _ShopWrapper:
     itempool_content = '\n'.join(itempool_entries)
 
     # Build item_name_groups dictionary (preserve original order)
+    # Skip the "Event" group — event items have no ID and aren't in item_name_to_id,
+    # so including them causes test_item_name_group_has_valid_item to fail.
+    # Other groups (e.g., "Crystals", "Pendants") may contain event items but are
+    # needed for count_group rules, so we keep them as-is.
     item_name_groups_entries = []
     for group_name, item_names in data.item_name_groups.items():
+        if group_name == "Event":
+            continue
         group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
         items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in item_names)
         item_name_groups_entries.append(f'        "{group_escaped}": frozenset([{items_list}]),')
@@ -903,7 +1155,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{placement_type_section}{preset_label_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)

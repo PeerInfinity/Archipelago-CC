@@ -16,13 +16,15 @@
 - **Content Source Selection:** Dropdown to switch between different data sources
 - **Auto-Update:** Optional automatic refresh of dynamic content
 - **Code Folding:** Collapse/expand JSON structure sections
-- **Apply Changes:** Apply edits back to application (for supported sources)
+- **Apply Changes:** The green **Apply** button (or Ctrl+Enter) applies edits back to the running application. For `dataForExport` mode, this uses the shared `applyLoadedData()` utility from `frontend/utils/dataApplicator.js`, which handles rules, settings, layout (applied live), and registered module data.
 
 ## Events Published
 
 | Event | Data | Description |
 |-------|------|-------------|
-| `files:jsonLoaded` | File data | Published when JSON is loaded |
+| `files:jsonLoaded` | File data | Published when applying rules changes |
+| `editor:metaGameConfigApply` | Configuration | Published when applying metaGame config |
+| `editor:snapshotApply` | Snapshot data | Published when applying snapshot edits |
 
 ## Events Subscribed To
 
@@ -37,6 +39,7 @@ This module does not register public functions. It is a UI panel component.
 ## Dependencies & Interactions
 
 - **`editorCore`:** Uses `editorDataService` for content management
+- **`dataApplicator`:** Uses the shared `applyLoadedData()` utility for applying export data
 - **`settingsManager`:** Gets configuration settings
 - **`eventBus`:** Subscribes to app ready events
 - **CodeMirror 6:** External library for editor functionality
@@ -67,7 +70,7 @@ Select content source to view/edit:
 ### Action Buttons
 
 - **Update Now:** Manually refresh content
-- **Apply:** Apply edits to application (when supported)
+- **Apply:** Apply edits to application (green button, when supported)
 - **Fold All / Unfold All:** Control JSON structure visibility
 
 ### Auto-Update Checkbox

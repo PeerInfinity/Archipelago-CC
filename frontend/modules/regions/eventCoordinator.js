@@ -41,7 +41,7 @@ export class EventCoordinator {
 
     const subscribe = (eventName, handler) => {
       logger.info(`Subscribing to ${eventName}`);
-      const unsubscribe = this.eventBus.subscribe(eventName, handler, 'regions');
+      const unsubscribe = this.eventBus.subscribe(eventName, handler);
       this.unsubscribeHandles.push(unsubscribe);
     };
 

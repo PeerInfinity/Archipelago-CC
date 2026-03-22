@@ -1,5 +1,6 @@
 // frontend/modules/timerPanel/index.js
 import { TimerPanelUI } from './timerPanelUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -44,8 +45,6 @@ export function register(registrationApi) {
     'timerPanel', // componentType for GoldenLayout
     TimerPanelUI // The class constructor for this panel's UI
   );
-
-  registrationApi.registerEventBusPublisher('ui:panelManuallyClosed');
 
   // Register dispatcher receiver for system:rehomeTimerUI
   registrationApi.registerDispatcherReceiver(
@@ -154,5 +153,15 @@ export function getModuleDispatcher() {
 
 // ADDED: Helper function to get the module's event bus instance
 export function getModuleEventBus() {
-  return moduleEventBus;
+  if (moduleEventBus) return moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'timerPanel'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'timerPanel'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'timerPanel'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }

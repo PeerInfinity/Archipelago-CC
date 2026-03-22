@@ -149,7 +149,6 @@ class Hylics2World(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["DUBIOUS BERRY", "BURRITO", "COFFEE", "SOUL SPONGE", "MUSCLE APPLIQUE", "POOLWINE", "CUPCAKE", "COOKIE", "HOUSE KEY", "MEAT", "PNEUMATOPHORE", "CAVE KEY", "JUICE", "DOCK KEY", "BANANA", "PAPER CUP", "JAIL KEY", "PADDLE", "WORM ROOM KEY", "BRIDGE KEY", "STEM CELL", "UPPER CHAMBER KEY", "VESSEL ROOM KEY", "CLOUD GERM", "SKULL BOMB", "TOWER KEY", "DEEP KEY", "MULTI-COFFEE", "MULTI-JUICE", "MULTI STEM CELL", "MULTI SOUL SPONGE", "UPPER HOUSE KEY", "BOTTOMLESS JUICE", "SAGE TOKEN", "CLICKER", "CURSED GLOVES", "LONG GLOVES", "BRAIN DIGITS", "MATERIEL MITTS", "PLEATHER GAGE", "PEPTIDE BODKINS", "TELESCOPIC SLEEVE", "TENDRIL HAND", "PSYCHIC KNUCKLE", "SINGLE GLOVE", "FADED PONCHO", "JUMPSUIT", "BOOTS", "CONVERTER WORM", "COFFEE CHIP", "RANCHER PONCHO", "ORGAN FORT", "LOOPED DOME", "DUCTILE HABIT", "TARP", "POROMER BLEB", "SOUL CRISPER", "TIME SIGIL", "CHARGE UP", "FATE SANDBOX", "TELEDENUDATE", "LINK MOLLUSC", "BOMBO - GENESIS", "100 Bones", "50 Bones", "NEMATODE INTERFACE", "Pongorma", "Dedusmuln", "Somsnosa", "10 Bones"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)
@@ -457,6 +456,12 @@ class Hylics2World(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -629,7 +634,7 @@ class Hylics2World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
-        """Place victory event item."""
+        """Place victory event item and set completion condition."""
         victory_location = self.multiworld.get_location("Defeat Gibby", self.player)
 
         # Only place if not already filled (e.g., by _place_original_items)

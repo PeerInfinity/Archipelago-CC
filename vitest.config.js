@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     // Test file patterns
-    include: ['frontend/**/*.test.js', 'tests/unit/**/*.test.js'],
+    include: ['frontend/**/*.test.js', 'test_json/unit/**/*.test.js'],
 
     // Environment settings
     environment: 'node',

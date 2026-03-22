@@ -131,7 +131,6 @@ class UndertaleWorld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Key Piece", "Monster Candy", "Croquet Roll", "Stick", "Bandage", "Rock Candy", "Pumpkin Rings", "Spider Donut", "Stoic Onion", "Ghost Fruit", "Spider Cider", "Butterscotch Pie", "Faded Ribbon", "Toy Knife", "Tough Glove", "Manly Bandanna", "Snowman Piece", "Nice Cream", "Puppydough Icecream", "Bisicle", "Unisicle", "Cinnamon Bun", "Temmie Flakes", "Abandoned Quiche", "Old Tutu", "Ballet Shoes", "Punch Card", "Annoying Dog", "Dog Salad", "Dog Residue", "Astronaut Food", "Instant Noodles", "Crab Apple", "Hot Dog...?", "Hot Cat", "Glamburger", "Sea Tea", "Starfait", "Legendary Hero", "Cloudy Glasses", "Torn Notebook", "Stained Apron", "Burnt Pan", "Cowboy Hat", "Empty Gun", "Heart Locket", "Worn Dagger", "Real Knife", "The Locket", "Bad Memory", "Dream", "Undyne's Letter", "Undyne Letter EX", "Popato Chisps", "Junk Food", "Mystery Key", "Face Steak", "Hush Puppy", "Snail Pie", "temy armor", "ATK Up", "DEF Up", "HP Up", "FIGHT", "ACT", "ITEM", "MERCY", "Ruins Key", "Snowdin Key", "Waterfall Key", "Hotland Key", "Core Key", "Progressive Plot", "Progressive Weapons", "Progressive Armor", "Complete Skeleton", "Fish", "DT Extractor", "Mettaton Plush", "Left Home Key", "LOVE", "Right Home Key", "1000G", "500G", "100G"]),
-        "Event": frozenset(["Papyrus Date", "Undyne Date", "Alphys Date"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -262,6 +261,12 @@ class UndertaleWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -400,6 +405,11 @@ class UndertaleWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.can_reach("Barrier", "Region", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

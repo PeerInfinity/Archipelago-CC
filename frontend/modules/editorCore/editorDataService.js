@@ -6,7 +6,7 @@
  * (textarea, CodeMirror, etc.).
  */
 
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { EDITOR_EVENTS } from './editorEvents.js';
 import { defaultContentSources } from './editorConfig.js';
@@ -68,7 +68,7 @@ class EditorDataService {
       ? this.registeredPanelIds
       : ['editorPanel']; // fallback for backwards-compat if nothing registered yet
     for (const panelId of ids) {
-      eventBus.publish(EDITOR_EVENTS.ACTIVATE_PANEL, { panelId }, 'editorCore');
+      this.eventBus.publish(EDITOR_EVENTS.ACTIVATE_PANEL, { panelId });
     }
   }
 
@@ -82,6 +82,8 @@ class EditorDataService {
     }
 
     log('info', 'Initializing EditorDataService...');
+
+    this.eventBus = getModuleEventBus();
 
     // Attempt to populate from global G_combinedModeData if available
     if (window.G_combinedModeData) {
@@ -248,26 +250,26 @@ class EditorDataService {
 
           // Get content from the newly selected source
           const newContent = this.getContent();
-          eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
+          this.eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
             ...newContent,
             requestId: eventData.requestId,
-          }, 'editorCore');
+          });
         } else {
           // Respond with error if requested source doesn't exist
-          eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
+          this.eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
             text: '',
             source: 'error',
             error: `Requested source '${eventData.requestedSource}' not found`,
             requestId: eventData.requestId,
-          }, 'editorCore');
+          });
         }
       } else {
         // Respond with current content
         const content = this.getContent();
-        eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
+        this.eventBus.publish(EDITOR_EVENTS.CONTENT_RESPONSE, {
           ...content,
           requestId: eventData.requestId,
-        }, 'editorCore');
+        });
       }
     });
 
@@ -306,7 +308,7 @@ class EditorDataService {
       this.unsubscribeHandles[key]();
     }
     log('info', `Subscribing to '${eventName}'`);
-    this.unsubscribeHandles[key] = eventBus.subscribe(eventName, handler, 'editorCore');
+    this.unsubscribeHandles[key] = this.eventBus.subscribe(eventName, handler);
   }
 
   /**

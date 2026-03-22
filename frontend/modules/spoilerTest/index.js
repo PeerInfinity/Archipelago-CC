@@ -1,5 +1,6 @@
 // frontend/modules/spoilerTest/index.js
 import { TestSpoilerUI } from './testSpoilerUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -24,7 +25,21 @@ export const moduleInfo = {
 
 // --- Module Scope Variables ---
 // let testSpoilerUIInstance = null;
-// let moduleEventBus = null;
+let _moduleEventBus = null;
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'spoilerTest'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'spoilerTest'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'spoilerTest'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
+}
 
 /**
  * Registration function for the TestSpoilers module.
@@ -67,8 +82,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     `[SpoilerTest Module] Initializing with priority ${priorityIndex}...`
   );
 
-  // moduleEventBus = initializationApi.getEventBus();
-  // No dependency injection needed via this function for now.
+  _moduleEventBus = initializationApi.getEventBus();
 
   log('info', '[SpoilerTest Module] Initialization complete.');
 
