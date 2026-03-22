@@ -172,14 +172,13 @@ jobs:
           echo "========================================"
 
           # Determine UT version flags
-          if [ "${{ inputs.ut_version }}" = "original" ]; then
-            UT_FLAGS="--ut-version original --no-use-tracking-config"
-          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version worldgen --prefer-native-ut --use-tracking-config"
-          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
-            UT_FLAGS="--ut-version pickle --no-prefer-native-ut --no-use-tracking-config"
+          UT_VERSION="${{ inputs.ut_version }}"
+          TRACKING_CONFIG=""
+          if [ "$UT_VERSION" = "hybrid" ]; then
+            UT_VERSION="worldgen"
+            TRACKING_CONFIG="--use-tracking-config"
           else
-            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut --no-use-tracking-config"
+            TRACKING_CONFIG="--no-use-tracking-config"
           fi
 
           # Determine output filename based on seed
@@ -202,7 +201,8 @@ jobs:
           CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
           CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
           CMD="$CMD ${{ inputs.starting_seed && '--number-by-seed' || '' }}"
-          CMD="$CMD $UT_FLAGS"
+          CMD="$CMD --ut-version $UT_VERSION"
+          CMD="$CMD $TRACKING_CONFIG"
 
           echo "Running: $CMD"
           eval $CMD
@@ -565,14 +565,13 @@ jobs:
           echo "========================================"
 
           # Determine UT version flags
-          if [ "${{ inputs.ut_version }}" = "original" ]; then
-            UT_FLAGS="--ut-version original --no-use-tracking-config"
-          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version worldgen --prefer-native-ut --use-tracking-config"
-          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
-            UT_FLAGS="--ut-version pickle --no-prefer-native-ut --no-use-tracking-config"
+          UT_VERSION="${{ inputs.ut_version }}"
+          TRACKING_CONFIG=""
+          if [ "$UT_VERSION" = "hybrid" ]; then
+            UT_VERSION="worldgen"
+            TRACKING_CONFIG="--use-tracking-config"
           else
-            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut --no-use-tracking-config"
+            TRACKING_CONFIG="--no-use-tracking-config"
           fi
 
           # Output file includes split number
@@ -591,7 +590,8 @@ jobs:
           CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
           CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
           CMD="$CMD --number-by-seed"
-          CMD="$CMD $UT_FLAGS"
+          CMD="$CMD --ut-version $UT_VERSION"
+          CMD="$CMD $TRACKING_CONFIG"
 
           echo "Running: $CMD"
           eval $CMD
