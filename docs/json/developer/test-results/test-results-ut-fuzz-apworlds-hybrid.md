@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-22 02:03:57 UTC
 
 **Source Data Created:** 2026-02-04T21:03:09.652326
 
@@ -35,11 +35,11 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 58 (passes hybrid mode per config)
-- **Unexpected Passes:** 16 (expected to fail but passed)
-- **Expected Failures:** 46 (doesn't pass hybrid mode per config)
-- **Unexpected Failures (logic):** 1 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 1 (expected to pass but timed out)
+- **Expected Passes:** 69 (passes hybrid mode per config)
+- **Unexpected Passes:** 5 (expected to fail but passed)
+- **Expected Failures:** 27 (doesn't pass hybrid mode per config)
+- **Unexpected Failures (logic):** 19 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 2 (expected to pass but timed out)
 
 ### Explain Support Summary
 
@@ -55,15 +55,15 @@
 
 Of the 74 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 51/74 (68.9%)
+- **Passing with Generic Exporter:** 52/74 (70.3%)
 - **Passing with Generic Logic:** 74/74 (100.0%)
-- **Passing with Both Generic:** 51/74 (68.9%)
+- **Passing with Both Generic:** 52/74 (70.3%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 404.6KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 404.6KB
 
 ## Test Results
 
@@ -135,7 +135,7 @@ Of the 74 games with 100% pass rate:
 | *Mario Kart Double Dash* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 9.8KB | ✅ | N/A |
+| *Metroid Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | N/A | N/A | N/A |
 | *Minishoot Adventures* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 25.9KB | ✅ | N/A |
 | *Minit* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 23.9KB | ✅ | N/A |
 | *Monster Sanctuary* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | N/A |
@@ -190,11 +190,11 @@ Of the 74 games with 100% pass rate:
 | *Yu-Gi-Oh! Forbidden Memories* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Zelda II: The Adventure of Link | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| *plateup* | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | ✅ | ✅ | N/A |
+| *plateup* | ❌ | 10 | 2 | 7 | 0 | 1 | ❌ 20.0% | N/A | N/A | N/A |
 
 ## Results Breakdown
 
-### Expected Passes (58)
+### Expected Passes (69)
 
 Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 
@@ -202,43 +202,54 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | A Dance of Fire and Ice | 10 | 10 | 0 | 0 | 100.0% |
 | A Difficult Game About Climbing | 10 | 9 | 0 | 0 | 90.0% |
+| ANIMAL WELL | 10 | 9 | 0 | 0 | 90.0% |
 | Actraiser | 10 | 9 | 0 | 0 | 90.0% |
 | Air Delivery | 10 | 10 | 0 | 0 | 100.0% |
 | An Untitled Story | 10 | 10 | 0 | 0 | 100.0% |
 | Anodyne | 10 | 10 | 0 | 0 | 100.0% |
 | Another Crabs Treasure | 10 | 10 | 0 | 0 | 100.0% |
+| Ape Escape | 10 | 10 | 0 | 0 | 100.0% |
 | Autopelago | 10 | 10 | 0 | 0 | 100.0% |
+| Axiom Verge | 10 | 10 | 0 | 0 | 100.0% |
 | Brotato | 10 | 7 | 0 | 0 | 70.0% |
 | Castlevania: Dawn of Sorrow | 10 | 10 | 0 | 0 | 100.0% |
-| Cuphead | 10 | 0 | 0 | 0 | 0.0% |
+| Corn Kidz 64 | 10 | 10 | 0 | 0 | 100.0% |
+| CrossCode | 10 | 10 | 0 | 0 | 100.0% |
+| Crystalis | 10 | 7 | 0 | 0 | 70.0% |
 | DORONKO WANKO | 10 | 10 | 0 | 0 | 100.0% |
 | Diddy Kong Racing | 10 | 10 | 0 | 0 | 100.0% |
+| Digimon World | 10 | 6 | 0 | 0 | 60.0% |
 | Dome Keeper | 10 | 10 | 0 | 0 | 100.0% |
 | Final Fantasy Tactics Advance | 10 | 10 | 0 | 0 | 100.0% |
 | Frogmonster | 10 | 10 | 0 | 0 | 100.0% |
 | Golden Sun The Lost Age | 10 | 10 | 0 | 0 | 100.0% |
 | Hatsune Miku Project Diva Mega Mix+ | 10 | 10 | 0 | 0 | 100.0% |
 | Here Comes Niko! | 10 | 10 | 0 | 0 | 100.0% |
+| Iji | 10 | 10 | 0 | 0 | 100.0% |
 | Isles Of Sea And Sky | 10 | 10 | 0 | 0 | 100.0% |
 | Ittle Dew 2 | 10 | 9 | 0 | 0 | 90.0% |
 | Jigsaw | 10 | 10 | 0 | 0 | 100.0% |
 | K-On! After School Live!! | 10 | 10 | 0 | 0 | 100.0% |
+| Keep Talking and Nobody Explodes | 10 | 7 | 0 | 0 | 70.0% |
 | Kingdom Hearts Birth by Sleep | 10 | 10 | 0 | 0 | 100.0% |
 | Kingdom Hearts Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
 | Kingdom Hearts RE Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
-| Kirby Super Star | 10 | 0 | 0 | 0 | 0.0% |
 | League of Legends | 10 | 10 | 0 | 0 | 100.0% |
 | Lego Star Wars: The Complete Saga | 10 | 9 | 0 | 0 | 90.0% |
-| Lil Gator Game | 10 | 10 | 0 | 0 | 100.0% |
 | Little Witch Nobeta | 10 | 10 | 0 | 0 | 100.0% |
 | Luigi's Mansion | 10 | 7 | 0 | 0 | 70.0% |
+| Majora's Mask Recompiled | 10 | 10 | 0 | 0 | 100.0% |
+| Mario Kart Double Dash | 10 | 10 | 0 | 0 | 100.0% |
 | MetroCUBEvania | 10 | 10 | 0 | 0 | 100.0% |
 | Metroid Fusion | 10 | 10 | 0 | 0 | 100.0% |
+| Minit | 10 | 10 | 0 | 0 | 100.0% |
+| Ori and the Blind Forest | 10 | 10 | 0 | 0 | 100.0% |
 | Pseudoregalia | 10 | 10 | 0 | 0 | 100.0% |
 | Rain World | 10 | 3 | 0 | 0 | 30.0% |
 | Ratchet & Clank 2 | 10 | 10 | 0 | 0 | 100.0% |
 | Reventure | 10 | 10 | 0 | 0 | 100.0% |
 | Rift Wizard | 10 | 10 | 0 | 0 | 100.0% |
+| Shadow The Hedgehog | 10 | 2 | 0 | 0 | 20.0% |
 | Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Heroes | 10 | 0 | 0 | 0 | 0.0% |
 | Sonic Rush | 10 | 10 | 0 | 0 | 100.0% |
@@ -250,7 +261,7 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Super Cat Planet | 10 | 10 | 0 | 0 | 100.0% |
 | Symphony of the Night | 10 | 10 | 0 | 0 | 100.0% |
 | TOEM: A Photo Adventure | 10 | 10 | 0 | 0 | 100.0% |
-| Tevi | 10 | 10 | 0 | 0 | 100.0% |
+| Tetris Attack | 10 | 8 | 0 | 0 | 80.0% |
 | The Sims 4 | 10 | 10 | 0 | 0 | 100.0% |
 | TurnipBoy | 10 | 10 | 0 | 0 | 100.0% |
 | Vampire Survivors | 10 | 4 | 0 | 0 | 40.0% |
@@ -259,30 +270,19 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Zelda II: The Adventure of Link | 10 | 10 | 0 | 0 | 100.0% |
 | osu! | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (16)
+### Unexpected Passes (5)
 
 Games NOT expected to pass hybrid mode (not in config or mode not listed) but passed anyway.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| ANIMAL WELL | 10 | 9 | 0 | 0 | 90.0% |
-| Ape Escape | 10 | 10 | 0 | 0 | 100.0% |
-| Axiom Verge | 10 | 10 | 0 | 0 | 100.0% |
-| Corn Kidz 64 | 10 | 10 | 0 | 0 | 100.0% |
-| CrossCode | 10 | 10 | 0 | 0 | 100.0% |
-| Crystalis | 10 | 7 | 0 | 0 | 70.0% |
-| Digimon World | 10 | 6 | 0 | 0 | 60.0% |
-| Iji | 10 | 10 | 0 | 0 | 100.0% |
-| Keep Talking and Nobody Explodes | 10 | 7 | 0 | 0 | 70.0% |
-| Majora's Mask Recompiled | 10 | 10 | 0 | 0 | 100.0% |
-| Mario Kart Double Dash | 10 | 10 | 0 | 0 | 100.0% |
+| Cuphead | 10 | 0 | 0 | 0 | 0.0% |
+| Kirby Super Star | 10 | 0 | 0 | 0 | 0.0% |
+| Lil Gator Game | 10 | 10 | 0 | 0 | 100.0% |
 | Metroid Zero Mission | 10 | 10 | 0 | 0 | 100.0% |
-| Minit | 10 | 10 | 0 | 0 | 100.0% |
-| Ori and the Blind Forest | 10 | 10 | 0 | 0 | 100.0% |
-| Shadow The Hedgehog | 10 | 2 | 0 | 0 | 20.0% |
-| Tetris Attack | 10 | 8 | 0 | 0 | 80.0% |
+| Tevi | 10 | 10 | 0 | 0 | 100.0% |
 
-### Expected Failures (46)
+### Expected Failures (27)
 
 Games NOT expected to pass hybrid mode and failed as expected.
 
@@ -290,65 +290,65 @@ Games NOT expected to pass hybrid mode and failed as expected.
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | A Link Between Worlds | 10 | 2 | 8 | 0 | 20.0% |
 | Against the Storm | 10 | 0 | 10 | 0 | 0.0% |
-| Ape Escape 3 | 10 | 4 | 6 | 0 | 40.0% |
-| Balatro | 10 | 0 | 6 | 0 | 0.0% |
-| Cavern of Dreams | 10 | 2 | 6 | 0 | 20.0% |
 | ChecksMate | 10 | 9 | 1 | 0 | 90.0% |
 | Chrono Trigger Jets of Time | 10 | 0 | 10 | 0 | 0.0% |
 | ClusterTruck | 10 | 3 | 7 | 0 | 30.0% |
 | Crystal Project | 10 | 3 | 7 | 0 | 30.0% |
 | Deep Rock Galactic | 10 | 0 | 10 | 0 | 0.0% |
-| Duke Nukem 3D | 10 | 1 | 8 | 0 | 10.0% |
 | Final Fantasy Tactics A2 | 10 | 0 | 7 | 0 | 0.0% |
-| Fire Emblem Sacred Stones | 10 | 3 | 7 | 0 | 30.0% |
 | GZDoom | 10 | 0 | 10 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 10 | 0 | 10 | 0 | 0.0% |
-| Grim Dawn | 10 | 7 | 2 | 0 | 70.0% |
 | Hammerwatch | 10 | 4 | 5 | 0 | 40.0% |
 | Into the Breach | 10 | 2 | 8 | 0 | 20.0% |
-| Lingo 2 | 10 | 9 | 0 | 1 | 90.0% |
-| Lunacid | 10 | 1 | 9 | 0 | 10.0% |
-| Minishoot Adventures | 10 | 0 | 10 | 0 | 0.0% |
 | Monster Sanctuary | 10 | 3 | 7 | 0 | 30.0% |
-| Nine Sols | 10 | 3 | 5 | 0 | 30.0% |
 | Ori and the Will of the Wisps | 10 | 3 | 5 | 0 | 30.0% |
 | Oxygen Not Included | 10 | 8 | 1 | 0 | 80.0% |
-| Pizza Tower | 10 | 6 | 4 | 0 | 60.0% |
-| Pokemon FireRed and LeafGreen | 10 | 9 | 1 | 0 | 90.0% |
 | Pokemon Mystery Dungeon Explorers of Sky | 10 | 8 | 2 | 0 | 80.0% |
-| Rabi-Ribi | 10 | 3 | 1 | 0 | 30.0% |
-| Rift of the Necrodancer | 10 | 3 | 3 | 0 | 30.0% |
 | Rusted Moss | 10 | 6 | 4 | 0 | 60.0% |
 | Sentinels of the Multiverse | 10 | 0 | 8 | 2 | 0.0% |
 | Ship of Harkinian | 10 | 2 | 8 | 0 | 20.0% |
 | Sly 2: Band of Thieves | 10 | 0 | 6 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 10 | 8 | 2 | 0 | 80.0% |
-| Sonic Adventure DX | 10 | 0 | 5 | 0 | 0.0% |
-| Spyro 3 | 10 | 3 | 5 | 0 | 30.0% |
-| Stacklands | 10 | 9 | 1 | 0 | 90.0% |
 | System Shock 2 | 10 | 6 | 3 | 0 | 60.0% |
 | TCG Card Shop Simulator | 10 | 0 | 10 | 0 | 0.0% |
 | The Legend of Zelda - Oracle of Seasons | 10 | 2 | 8 | 0 | 20.0% |
 | The Legend of Zelda - Phantom Hourglass | 10 | 0 | 10 | 0 | 0.0% |
-| Tyrian | 10 | 5 | 1 | 0 | 50.0% |
 | Wario Land | 10 | 0 | 10 | 0 | 0.0% |
-| Yu-Gi-Oh! Forbidden Memories | 10 | 0 | 10 | 0 | 0.0% |
 | plateup | 10 | 2 | 7 | 0 | 20.0% |
 
-### Unexpected Failures (Logic Mismatch) (1)
+### Unexpected Failures (Logic Mismatch) (19)
 
 Games expected to pass hybrid mode but failed due to logic mismatches.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Ape Escape 3 | 10 | 4 | 6 | 0 | 40.0% |
 | Astalon | 10 | 5 | 3 | 0 | 50.0% |
+| Balatro | 10 | 0 | 6 | 0 | 0.0% |
+| Cavern of Dreams | 10 | 2 | 6 | 0 | 20.0% |
+| Duke Nukem 3D | 10 | 1 | 8 | 0 | 10.0% |
+| Fire Emblem Sacred Stones | 10 | 3 | 7 | 0 | 30.0% |
+| Grim Dawn | 10 | 7 | 2 | 0 | 70.0% |
+| Lunacid | 10 | 1 | 9 | 0 | 10.0% |
+| Minishoot Adventures | 10 | 0 | 10 | 0 | 0.0% |
+| Nine Sols | 10 | 3 | 5 | 0 | 30.0% |
+| Pizza Tower | 10 | 6 | 4 | 0 | 60.0% |
+| Pokemon FireRed and LeafGreen | 10 | 9 | 1 | 0 | 90.0% |
+| Rabi-Ribi | 10 | 3 | 1 | 0 | 30.0% |
+| Rift of the Necrodancer | 10 | 3 | 3 | 0 | 30.0% |
+| Sonic Adventure DX | 10 | 0 | 5 | 0 | 0.0% |
+| Spyro 3 | 10 | 3 | 5 | 0 | 30.0% |
+| Stacklands | 10 | 9 | 1 | 0 | 90.0% |
+| Tyrian | 10 | 5 | 1 | 0 | 50.0% |
+| Yu-Gi-Oh! Forbidden Memories | 10 | 0 | 10 | 0 | 0.0% |
 
-### Unexpected Failures (Timeout Only) (1)
+### Unexpected Failures (Timeout Only) (2)
 
 Games expected to pass hybrid mode but failed only due to timeouts.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Lingo 2 | 10 | 9 | 0 | 1 | 90.0% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 0 | 0 | 0 | 0 | 0.0% |
 
 ## Explain Support Details
