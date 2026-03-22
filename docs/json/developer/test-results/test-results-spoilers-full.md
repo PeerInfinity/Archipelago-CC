@@ -6,9 +6,11 @@
 
 [📖 Learn about this test](../tests/test-spoilers.md)
 
+[View APWorld Template Results](./test-results-spoilers-full-apworld.md)
+
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-03-22 00:10:04 UTC
+**Generated:** 2026-03-22 00:25:22 UTC
 
 **Source Data Created:** 2026-03-21T22:13:11.595839+00:00
 
