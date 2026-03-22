@@ -412,7 +412,7 @@ class InstallerApp(App):
                 "rule_builder/ directory with the extended version from\n"
                 "this project.\n\n"
                 "A backup of the existing rule_builder/ directory will be\n"
-                "created automatically before overwriting.\n\n"
+                "saved to json_tools_backups/components/rule_builder/.\n\n"
                 "You can restore the original files later via the CLI:\n"
                 "  python -m worlds.json_tools_installer.cli.install --restore-rule-builder"
             ),
