@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 16:37:44 UTC
+**Generated:** 2026-03-22 17:48:53 UTC
 
 **Source Data Created:** 2026-03-22T06:18:18.771896+00:00
 
@@ -35,11 +35,11 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 74 (passes pickle mode per config)
-- **Unexpected Passes:** 1 (expected to fail but passed)
-- **Expected Failures:** 36 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 10 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 2 (expected to pass but timed out)
+- **Expected Passes:** 75 (passes pickle mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 48 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
 
@@ -171,7 +171,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (74)
+### Expected Passes (75)
 
 Games that pass pickle mode per tracking-mode-config.json and passed the test.
 
@@ -186,6 +186,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Another Crabs Treasure | 100 | 100 | 0 | 0 | 100.0% |
 | Ape Escape | 100 | 100 | 0 | 0 | 100.0% |
 | Ape Escape 3 | 100 | 91 | 0 | 0 | 91.0% |
+| Astalon | 100 | 87 | 0 | 0 | 87.0% |
 | Autopelago | 100 | 100 | 0 | 0 | 100.0% |
 | Axiom Verge | 100 | 99 | 0 | 0 | 99.0% |
 | Brotato | 100 | 79 | 0 | 0 | 79.0% |
@@ -252,15 +253,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | XCOM 2 War of the Chosen | 100 | 86 | 0 | 0 | 86.0% |
 | Yu-Gi-Oh! Forbidden Memories | 100 | 100 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (1)
-
-Games NOT expected to pass pickle mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Astalon | 100 | 87 | 0 | 0 | 87.0% |
-
-### Expected Failures (36)
+### Expected Failures (48)
 
 Games NOT expected to pass pickle mode and failed as expected.
 
@@ -269,20 +262,26 @@ Games NOT expected to pass pickle mode and failed as expected.
 | A Dance of Fire and Ice | 100 | 0 | 100 | 0 | 0.0% |
 | A Link Between Worlds | 100 | 14 | 86 | 0 | 14.0% |
 | Against the Storm | 100 | 64 | 35 | 1 | 64.0% |
+| Balatro | 100 | 18 | 1 | 0 | 18.0% |
+| Cavern of Dreams | 100 | 60 | 3 | 0 | 60.0% |
 | ChecksMate | 100 | 83 | 15 | 0 | 83.0% |
 | Chrono Trigger Jets of Time | 100 | 0 | 100 | 0 | 0.0% |
 | ClusterTruck | 100 | 51 | 49 | 0 | 51.0% |
 | Crystal Project | 100 | 71 | 29 | 0 | 71.0% |
+| Crystalis | 100 | 59 | 2 | 0 | 59.0% |
 | Cuphead | 100 | 0 | 100 | 0 | 0.0% |
 | Deep Rock Galactic | 100 | 97 | 3 | 0 | 97.0% |
+| Duke Nukem 3D | 100 | 89 | 6 | 0 | 89.0% |
 | Final Fantasy Tactics A2 | 100 | 10 | 88 | 0 | 10.0% |
 | GZDoom | 100 | 0 | 100 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 100 | 0 | 100 | 0 | 0.0% |
+| Golden Sun The Lost Age | 100 | 87 | 3 | 0 | 87.0% |
 | Hammerwatch | 100 | 88 | 10 | 0 | 88.0% |
 | Into the Breach | 100 | 45 | 55 | 0 | 45.0% |
 | Jigsaw | 100 | 48 | 52 | 0 | 48.0% |
 | Kirby Super Star | 100 | 16 | 80 | 0 | 16.0% |
 | League of Legends | 100 | 61 | 37 | 0 | 61.0% |
+| Lego Star Wars: The Complete Saga | 100 | 12 | 73 | 0 | 12.0% |
 | Lil Gator Game | 100 | 0 | 100 | 0 | 0.0% |
 | Monster Sanctuary | 100 | 36 | 64 | 0 | 36.0% |
 | Ori and the Will of the Wisps | 100 | 56 | 15 | 0 | 56.0% |
@@ -291,43 +290,23 @@ Games NOT expected to pass pickle mode and failed as expected.
 | Pokemon Mystery Dungeon Explorers of Sky | 100 | 78 | 22 | 0 | 78.0% |
 | Rusted Moss | 100 | 43 | 57 | 0 | 43.0% |
 | Sentinels of the Multiverse | 100 | 0 | 65 | 34 | 0.0% |
+| Shadow The Hedgehog | 100 | 14 | 4 | 0 | 14.0% |
 | Ship of Harkinian | 100 | 30 | 70 | 0 | 30.0% |
+| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
 | Sly 2: Band of Thieves | 100 | 0 | 53 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 100 | 87 | 13 | 0 | 87.0% |
+| Sonic Adventure DX | 100 | 39 | 4 | 0 | 39.0% |
 | System Shock 2 | 100 | 43 | 17 | 0 | 43.0% |
 | TCG Card Shop Simulator | 100 | 82 | 16 | 0 | 82.0% |
 | The Legend of Zelda - Oracle of Seasons | 100 | 41 | 59 | 0 | 41.0% |
 | The Legend of Zelda - Phantom Hourglass | 100 | 54 | 44 | 0 | 54.0% |
 | The Sims 4 | 100 | 0 | 100 | 0 | 0.0% |
+| Tyrian | 100 | 70 | 1 | 0 | 70.0% |
 | Wario Land | 100 | 0 | 100 | 0 | 0.0% |
+| Watery Words | 100 | 98 | 0 | 2 | 98.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 47 | 53 | 0 | 47.0% |
 | Zelda II: The Adventure of Link | 100 | 12 | 88 | 0 | 12.0% |
 | osu! | 100 | 1 | 99 | 0 | 1.0% |
-
-### Unexpected Failures (Logic Mismatch) (10)
-
-Games expected to pass pickle mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Balatro | 100 | 18 | 1 | 0 | 18.0% |
-| Cavern of Dreams | 100 | 60 | 3 | 0 | 60.0% |
-| Crystalis | 100 | 59 | 2 | 0 | 59.0% |
-| Duke Nukem 3D | 100 | 89 | 6 | 0 | 89.0% |
-| Golden Sun The Lost Age | 100 | 87 | 3 | 0 | 87.0% |
-| Lego Star Wars: The Complete Saga | 100 | 12 | 73 | 0 | 12.0% |
-| Shadow The Hedgehog | 100 | 14 | 4 | 0 | 14.0% |
-| Sonic Adventure DX | 100 | 39 | 4 | 0 | 39.0% |
-| Tyrian | 100 | 70 | 1 | 0 | 70.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 47 | 53 | 0 | 47.0% |
-
-### Unexpected Failures (Timeout Only) (2)
-
-Games expected to pass pickle mode but failed only due to timeouts.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
-| Watery Words | 100 | 98 | 0 | 2 | 98.0% |
 
 ## Notes
 

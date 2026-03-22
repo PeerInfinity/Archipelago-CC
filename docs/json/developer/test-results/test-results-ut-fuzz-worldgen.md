@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 16:37:44 UTC
+**Generated:** 2026-03-22 17:48:53 UTC
 
 **Source Data Created:** 2026-03-22T05:44:04.815754+00:00
 
@@ -37,8 +37,8 @@
 
 - **Expected Passes:** 63 (passes worldgen mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 15 (doesn't pass worldgen mode per config)
-- **Unexpected Failures (logic):** 10 (expected to pass but had logic mismatch)
+- **Expected Failures:** 25 (doesn't pass worldgen mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -230,44 +230,37 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Yoshi's Island | 100 | 100 | 0 | 0 | 100.0% |
 | shapez | 100 | 100 | 0 | 0 | 100.0% |
 
-### Expected Failures (15)
+### Expected Failures (25)
 
 Games NOT expected to pass worldgen mode and failed as expected.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Hollow Knight | 100 | 8 | 92 | 0 | 8.0% |
-| Journey to Ascension | 100 | 0 | 100 | 0 | 0.0% |
-| Kingdom Hearts | 100 | 18 | 81 | 1 | 18.0% |
-| Kingdom Hearts 2 | 100 | 0 | 95 | 0 | 0.0% |
-| Kirby's Dream Land 3 | 100 | 0 | 98 | 0 | 0.0% |
-| Ocarina of Time | 100 | 0 | 98 | 0 | 0.0% |
-| Pokemon Emerald | 100 | 31 | 61 | 0 | 31.0% |
-| Pokemon Red and Blue | 100 | 0 | 89 | 0 | 0.0% |
-| SMZ3 | 100 | 0 | 100 | 0 | 0.0% |
-| Starcraft 2 | 100 | 0 | 100 | 0 | 0.0% |
-| Stardew Valley | 100 | 0 | 97 | 3 | 0.0% |
-| Super Metroid | 100 | 0 | 57 | 0 | 0.0% |
-| Yacht Dice | 100 | 1 | 99 | 0 | 1.0% |
-| Yu-Gi-Oh! 2006 | 100 | 34 | 66 | 0 | 34.0% |
-| Zillion | 100 | 0 | 76 | 17 | 0.0% |
-
-### Unexpected Failures (Logic Mismatch) (10)
-
-Games expected to pass worldgen mode but failed due to logic mismatches.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | Blasphemous | 100 | 0 | 56 | 0 | 0.0% |
 | Bomb Rush Cyberfunk | 100 | 0 | 100 | 0 | 0.0% |
 | Celeste (Open World) | 100 | 0 | 100 | 0 | 0.0% |
+| Hollow Knight | 100 | 8 | 92 | 0 | 8.0% |
 | Jak and Daxter: The Precursor Legacy | 100 | 1 | 99 | 0 | 1.0% |
+| Journey to Ascension | 100 | 0 | 100 | 0 | 0.0% |
+| Kingdom Hearts | 100 | 18 | 81 | 1 | 18.0% |
+| Kingdom Hearts 2 | 100 | 0 | 95 | 0 | 0.0% |
+| Kirby's Dream Land 3 | 100 | 0 | 98 | 0 | 0.0% |
 | Lingo | 100 | 2 | 43 | 0 | 2.0% |
 | Metamath | 100 | 99 | 1 | 0 | 99.0% |
+| Ocarina of Time | 100 | 0 | 98 | 0 | 0.0% |
+| Pokemon Emerald | 100 | 31 | 61 | 0 | 31.0% |
+| Pokemon Red and Blue | 100 | 0 | 89 | 0 | 0.0% |
 | Raft | 100 | 0 | 100 | 0 | 0.0% |
+| SMZ3 | 100 | 0 | 100 | 0 | 0.0% |
 | Secret of Evermore | 100 | 0 | 100 | 0 | 0.0% |
+| Starcraft 2 | 100 | 0 | 100 | 0 | 0.0% |
+| Stardew Valley | 100 | 0 | 97 | 3 | 0.0% |
+| Super Metroid | 100 | 0 | 57 | 0 | 0.0% |
 | TUNIC | 100 | 58 | 42 | 0 | 58.0% |
 | The Witness | 100 | 15 | 85 | 0 | 15.0% |
+| Yacht Dice | 100 | 1 | 99 | 0 | 1.0% |
+| Yu-Gi-Oh! 2006 | 100 | 34 | 66 | 0 | 34.0% |
+| Zillion | 100 | 0 | 76 | 17 | 0.0% |
 
 ## Explain Support Details
 
