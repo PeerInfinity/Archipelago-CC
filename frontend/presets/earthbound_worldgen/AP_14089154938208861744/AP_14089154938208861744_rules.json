@@ -8386,7 +8386,6 @@
       "Broken Items",
       "Characters",
       "Condiments",
-      "Event",
       "Everything",
       "Field Items",
       "Food",
@@ -14374,7 +14373,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Saved Earth"
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true

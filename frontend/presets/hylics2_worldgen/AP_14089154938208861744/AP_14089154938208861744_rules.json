@@ -3436,7 +3436,6 @@
   },
   "item_groups": {
     "1": [
-      "Event",
       "Everything"
     ]
   },
@@ -3794,6 +3793,10 @@
       ],
       "prog_items_init": {
         "BONES": 0
+      },
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
       }
     }
   },

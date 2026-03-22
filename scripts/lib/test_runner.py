@@ -256,7 +256,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             # Single-client mode
             multiclient_cmd = [
                 "npx", "playwright", "test",
-                "tests/e2e/multiclient.spec.js",
+                "test_json/e2e/multiclient.spec.js",
                 "-g", "single client timer test"
             ]
             multiclient_env = os.environ.copy()
@@ -265,7 +265,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             # Dual-client mode (default)
             multiclient_cmd = [
                 "npx", "playwright", "test",
-                "tests/e2e/multiclient.spec.js",
+                "test_json/e2e/multiclient.spec.js",
                 "-g", "multiclient timer test"
             ]
             multiclient_env = os.environ.copy()

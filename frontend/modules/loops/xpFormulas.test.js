@@ -140,23 +140,23 @@ describe('xpFormulas', () => {
 
   describe('calculateXPGain', () => {
     it('returns base cost as XP for normal actions', () => {
-      expect(calculateXPGain('explore', 50)).toBe(50);
-      expect(calculateXPGain('checkLocation', 100)).toBe(100);
-      expect(calculateXPGain('moveToRegion', 10)).toBe(10);
+      expect(calculateXPGain('customAction', 50)).toBe(50);
+      expect(calculateXPGain('locationCheck', 100)).toBe(100);
+      expect(calculateXPGain('regionMove', 10)).toBe(10);
     });
 
     it('returns 4x XP for explore in farming mode', () => {
-      expect(calculateXPGain('explore', 50, false, true)).toBe(200);
+      expect(calculateXPGain('customAction', 50, false, true)).toBe(200);
     });
 
     it('does not apply farming multiplier to non-explore actions', () => {
-      expect(calculateXPGain('checkLocation', 100, false, true)).toBe(100);
-      expect(calculateXPGain('moveToRegion', 10, false, true)).toBe(10);
+      expect(calculateXPGain('locationCheck', 100, false, true)).toBe(100);
+      expect(calculateXPGain('regionMove', 10, false, true)).toBe(10);
     });
 
     it('ignores isFirstTime parameter (returns same XP)', () => {
-      expect(calculateXPGain('explore', 50, true, false)).toBe(50);
-      expect(calculateXPGain('explore', 50, false, false)).toBe(50);
+      expect(calculateXPGain('customAction', 50, true, false)).toBe(50);
+      expect(calculateXPGain('customAction', 50, false, false)).toBe(50);
     });
   });
 

@@ -22,7 +22,7 @@ from typing import Dict, Any, List, Optional, cast
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from chart_generators.utils import format_file_size, get_rules_json_size
-from lib.test_utils import get_expected_failures_for_mode, get_games_passing_mode, load_template_exclude_list
+from lib.test_utils import get_games_passing_mode, load_template_exclude_list
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -152,8 +152,12 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         excluded_games: Dict mapping game names to exclusion reasons (from template-exclude-list.json)
     """
     # Determine seed info and UT version
-    seed = metadata.get('seed', 'random')
-    seed_display = f"Fixed (seed={seed})" if seed != 'random' else "Random"
+    seed_mode = metadata.get('seed_mode', 'random')
+    starting_seed = metadata.get('starting_seed')
+    if seed_mode == 'fixed' and starting_seed is not None:
+        seed_display = f"Fixed (seed={starting_seed})"
+    else:
+        seed_display = "Random"
     ut_version = metadata.get('ut_version', 'worldgen')
 
     # Map ut_version to display strings
@@ -215,15 +219,6 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     unexpected_pass_games = []
     unexpected_fail_games = []  # Games with actual logic failures
     unexpected_fail_timeout_only_games = []  # Games that only failed due to timeouts
-
-    # Load expected failures from tracking-mode-config.json based on UT version
-    # This is for the "Expected Failures" section at the bottom of the doc
-    expected_failure_list = get_expected_failures_for_mode(
-        ut_mode=ut_version,
-        category=world_source,
-        project_root=project_root,
-        include_reasons=True
-    )
 
     # Build set of game names expected to PASS (games in config that pass this mode)
     # Games NOT in this set are expected to fail (either not in config, or don't pass the mode)
@@ -1052,7 +1047,6 @@ def main():
     # Generate comparison files if we have both versions for a world source
     for world_source in ['bundled', 'apworlds']:
         original_key = f"{world_source}-original"
-        original_seeded_key = f"{world_source}-original_seeded"
         worldgen_key = f"{world_source}-worldgen"
         hybrid_key = f"{world_source}-hybrid"
         pickle_key = f"{world_source}-pickle"

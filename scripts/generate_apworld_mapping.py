@@ -3,7 +3,7 @@
 Generate APWorld spreadsheet mapping from CSV data and apworld files.
 
 This script reads:
-- Spreadsheet CSV from docs/archipelago-games-sheet/playable_worlds.csv
+- Spreadsheet CSV from docs/json/archipelago-games-sheet/playable_worlds.csv
 - APWorld files from custom_worlds/ and custom_worlds_disabled/
 
 And produces:
@@ -26,7 +26,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
 DATA_DIR = SCRIPT_DIR / "data"
-SPREADSHEET_CSV = Path("docs/archipelago-games-sheet/playable_worlds.csv")
+SPREADSHEET_CSV = Path("docs/json/archipelago-games-sheet/playable_worlds.csv")
 OUTPUT_FILE = DATA_DIR / "apworld-spreadsheet-mapping.json"
 
 # Google Sheets gviz API

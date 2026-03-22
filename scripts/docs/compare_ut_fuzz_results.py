@@ -15,7 +15,7 @@ import argparse
 import json
 import os
 import sys
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List
 
 
 def load_results(filepath: str) -> Dict[str, Any]:
@@ -120,13 +120,13 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, worldgen_
     # Metadata
     print("Original UT:")
     print(f"  Version: {original_meta.get('ut_version', 'unknown')}")
-    print(f"  Seed: {original_meta.get('seed', 'unknown')}")
+    print(f"  Seed: {original_meta.get('starting_seed', original_meta.get('seed', 'unknown'))}")
     print(f"  Runs per game: {original_meta.get('runs_per_game', 'unknown')}")
     print()
 
     print("Worldgen UT:")
     print(f"  Version: {worldgen_meta.get('ut_version', 'unknown')}")
-    print(f"  Seed: {worldgen_meta.get('seed', 'unknown')}")
+    print(f"  Seed: {worldgen_meta.get('starting_seed', worldgen_meta.get('seed', 'unknown'))}")
     print(f"  Runs per game: {worldgen_meta.get('runs_per_game', 'unknown')}")
     print()
 

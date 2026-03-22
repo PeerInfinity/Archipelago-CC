@@ -16,9 +16,9 @@ This document outlines the remaining work for the Loops module, an incremental g
 |------|--------|-------|
 | Phase 1: loopStats module | ✅ Complete | `frontend/modules/loopStats/` with queueAnalyzer, UI, tests |
 | loopStats public API | ✅ Complete | getQueueAnalyzer, getAnalysis, analyzeQueue exposed via centralRegistry |
-| loopStats e2e tests | ✅ Complete | `tests/e2e/loopStats.spec.js` |
+| loopStats e2e tests | ✅ Complete | `test_json/e2e/loopStats.spec.js` |
 | Timer test integration | ✅ Complete | loops queue test uses loopStats, has maxLoops limit |
-| Bug investigation tests | ✅ Complete | `tests/e2e/loopBugs.spec.js` |
+| Bug investigation tests | ✅ Complete | `test_json/e2e/loopBugs.spec.js` |
 | Bug 1: Mana 100/110 | ✅ Fixed | Was ALTTP-specific (event item awarded at start) - mana now initializes correctly |
 | Bug 5: Unpause mana | ✅ Fixed | Added `_shouldResetOnResume()` to refill mana when queue is complete |
 | Bug 8: mode=loop URL | ✅ Clarified | Not a bug - mode is named `loops` (plural), use `?mode=loops` |
@@ -165,20 +165,31 @@ loopStats/
   entries: [
     {
       index: 0,
-      type: 'move' | 'explore' | 'checkLocation',
+      pathIndex: 1,
+      type: 'regionMove' | 'customAction' | 'locationCheck',
       description: 'Move: Links House',        // Full description
-      truncatedDescription: 'Move: Links H…',  // For display
-      regionName: 'Light World',
+      sourceRegion: 'Light World',              // Where the player is (all entry types have this)
+      destinationRegion: 'Links House',         // Where a move goes to (regionMove only)
+      locationName: 'Chest 1',                  // Location name (locationCheck only)
 
       // Cost breakdown
       baseCost: 10,
       levelDiscount: 2,           // From region/item XP
+      level: 5,                   // Region XP level
       itemPenalties: [],          // Phase 3: missing item costs
       finalCost: 8,
 
       // Mana tracking
       manaBeforeAction: 95,
       manaAfterAction: 87,
+
+      // Time
+      predictedTime: 2.5,         // Predicted real time in seconds
+
+      // Status
+      status: 'pending',          // 'pending', 'active', or 'completed'
+      isCompleted: false,
+      progress: 0,                // 0-100
 
       // Display flags
       isDoubledCost: false,       // Phase 3: yellow highlight
@@ -188,8 +199,13 @@ loopStats/
   ],
   totalCost: 45,
   finalMana: 55,
+  startingMana: 100,
+  maxMana: 100,
+  timestamp: 1710000000000,
 }
 ```
+
+**Path entry field naming convention**: All path entry types (`regionMove`, `locationCheck`, `customAction`) use `sourceRegion` for the region where the player currently is. Only `regionMove` entries have `destinationRegion` (where the move takes the player). This consistency allows most code to use `entry.sourceRegion` directly without checking the entry type.
 
 #### 1.4 Previous Loop Data
 

@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """
-Standalone installation script for JSON Tools.
+End-to-end installation test script for JSON Tools.
 
-This script automates the complete setup process for JSON Tools in a fresh
-Archipelago installation. It:
+This is a developer tool for testing the installation pipeline — not intended
+for end users. It verifies that JSON Tools can be installed from scratch into
+a fresh Archipelago clone and that the resulting installation works correctly.
+
+Steps:
 
 1. Clones the official Archipelago repository
 2. Creates a virtual environment and installs dependencies
 3. Downloads and installs the JSON Tools Installer apworld
-4. Runs the installer to download and patch JSON Tools components
+4. Runs the installer to download, patch, and optionally apply ROM-less patches
 5. Sets up the development environment
-6. Optionally applies ROM-less patches for testing ROM-based games
-7. Runs a verification test (Adventure by default, or ALTTP with --romless)
+6. Runs verification tests (spoiler + UT fuzz) on a single game
 
 Usage:
     # Install stable version with default components (tests with Adventure)
@@ -20,25 +22,27 @@ Usage:
     # Install dev version with all components
     python scripts/install_json_tools.py --dev --all
 
-    # Install with ROM-less patches (tests with ALTTP)
+    # Install with ROM-less patches (auto-selects ALTTP for testing)
     python scripts/install_json_tools.py --romless
 
     # Install to a specific directory
     python scripts/install_json_tools.py --target-dir /path/to/install
 
+    # Fresh install (delete existing target directory first)
+    python scripts/install_json_tools.py --fresh --target-dir /path/to/install
+
     # Skip tests
     python scripts/install_json_tools.py --skip-tests
-
-    # Run the full fuzzer test
-    python scripts/install_json_tools.py --test fuzzer
 
 Options:
     --dev               Use development branch (PeerInfinity/Archipelago-CC @ main)
                         Default is stable (PeerInfinity/Archipelago @ JSONExport)
     --all               Install all components (frontend, presets, docs, etc.)
     --romless           Install and apply ROM-less patches (enables ALTTP testing)
+    --patch-mode MODE   Patching mode: monkey (default) or none
+    --fresh             Delete existing target directory before cloning
     --target-dir DIR    Install to specified directory (default: ./archipelago-json-tools)
-    --test MODE         Test mode: adventure (default), alttp (needs --romless), fuzzer, none
+    --test MODE         Test mode: auto (default), adventure, alttp, or none
     --skip-tests        Same as --test none
     --skip-clone        Skip cloning (assume Archipelago already exists in target dir)
     --skip-setup        Skip development environment setup
@@ -66,9 +70,6 @@ STABLE_BRANCH = "JSONExport"
 DEV_REPO = "PeerInfinity/Archipelago-CC"
 DEV_BRANCH = "main"
 
-# Tracking mode config path (relative to project root)
-TRACKING_MODE_CONFIG = "exporter/tracking-mode-config.json"
-
 # Default target directory
 DEFAULT_TARGET_DIR = "archipelago-json-tools"
 
@@ -93,9 +94,13 @@ def run_command(
     check: bool = True,
     capture_output: bool = True,
     env: Optional[dict] = None,
+    stdin_text: Optional[str] = None,
 ) -> Tuple[bool, str, str]:
     """
     Run a command and return (success, stdout, stderr).
+
+    If stdin_text is provided, it is piped to the process's stdin.
+    This is useful for auto-answering interactive prompts.
     """
     print(f"\n  Running: {description}")
     print(f"  Command: {' '.join(str(c) for c in cmd)}")
@@ -112,6 +117,7 @@ def run_command(
             capture_output=capture_output,
             text=True,
             env=full_env,
+            input=stdin_text,
         )
 
         if result.stdout and not capture_output:
@@ -146,9 +152,16 @@ def get_pip_executable(venv_path: Path) -> Path:
     return venv_path / "bin" / "pip"
 
 
-def clone_archipelago(target_dir: Path, dry_run: bool = False) -> bool:
+def clone_archipelago(target_dir: Path, fresh: bool = False, dry_run: bool = False) -> bool:
     """Clone the official Archipelago repository."""
     print_header("Cloning Official Archipelago Repository")
+
+    if fresh and target_dir.exists():
+        if dry_run:
+            print(f"  [DRY RUN] Would delete existing directory: {target_dir}")
+        else:
+            print(f"  Deleting existing directory (--fresh): {target_dir}")
+            shutil.rmtree(target_dir)
 
     if target_dir.exists():
         print(f"  Target directory already exists: {target_dir}")
@@ -305,10 +318,12 @@ def run_installer(
     target_dir: Path,
     version: str,
     install_all: bool,
+    patch_mode: str = "monkey",
+    romless: bool = False,
     dry_run: bool = False,
 ) -> bool:
     """Run the JSON Tools installer."""
-    print_header(f"Running JSON Tools Installer ({version})")
+    print_header(f"Running JSON Tools Installer ({version}, {patch_mode} patching)")
 
     venv_path = target_dir / ".venv"
     python_exe = get_python_executable(venv_path)
@@ -319,22 +334,30 @@ def run_installer(
         "install",
         "--version", version,
         "--yes",  # Skip confirmation prompts
-        # Monkey patching is the default, no flag needed
     ]
+
+    if patch_mode == "none":
+        cmd.append("--no-patch")
+    # monkey patching is the default, no flag needed
 
     if install_all:
         cmd.append("--all")
+
+    if romless:
+        cmd.append("--apply-romless-patches")
 
     if dry_run:
         print(f"  [DRY RUN] Would run: {' '.join(cmd)}")
         return True
 
-    # Run the installer
+    # Run the installer (pipe newlines to auto-answer any "press enter" prompts
+    # from Archipelago's ModuleUpdate.py)
     success, _, _ = run_command(
         cmd,
         f"Install JSON Tools ({version})",
         cwd=target_dir,
         capture_output=False,
+        stdin_text="\n",
     )
 
     return success
@@ -367,269 +390,71 @@ def setup_dev_environment(target_dir: Path, dry_run: bool = False) -> bool:
     return success
 
 
-def apply_romless_patches(target_dir: Path, dry_run: bool = False) -> bool:
-    """Apply ROM-less patches to allow generation without ROM files.
-
-    This delegates to scripts/setup/apply_romless_patches.py which uses
-    the world-init-files.diff to patch world files. The diff-based approach
-    will fail cleanly if the Archipelago version doesn't match.
-
-    Note: ROM-less generation also requires skip_required_files support in
-    settings.py, which should be provided by the core JSON Tools patches.
-    If that support is missing, the world patches will fail at runtime.
-    """
-    print_header("Applying ROM-less Patches")
-
-    venv_path = target_dir / ".venv"
-    python_exe = get_python_executable(venv_path)
-    patch_script = target_dir / "scripts" / "setup" / "apply_romless_patches.py"
-
-    if dry_run:
-        print(f"  [DRY RUN] Would run: {python_exe} {patch_script}")
-        return True
-
-    if not patch_script.exists():
-        print(f"  [SKIP] ROM-less patches script not found: {patch_script}")
-        print("  (romless_patches component may not be installed)")
-        return True  # Not a failure, just skip
-
-    success, _, _ = run_command(
-        [str(python_exe), str(patch_script)],
-        "Apply ROM-less patches to world files",
-        cwd=target_dir,
-        capture_output=False,
-    )
-
-    if not success:
-        print("  [FAIL] Failed to apply ROM-less patches")
-        print("  This may indicate an incompatible Archipelago version.")
-        print("  ROM-less generation will not be available.")
-        return False
-
-    return True
-
-
-def run_adventure_test(target_dir: Path, dry_run: bool = False) -> bool:
-    """Run a quick verification test using Adventure (no ROM required)."""
-    print_header("Running Verification Test (Adventure)")
-
-    venv_path = target_dir / ".venv"
-    python_exe = get_python_executable(venv_path)
-    test_script = target_dir / "scripts" / "test" / "test-all-templates.py"
-
-    if dry_run:
-        print(f"  [DRY RUN] Would run: {python_exe} {test_script} --include-list \"Adventure.yaml\"")
-        return True
-
-    if not test_script.exists():
-        print(f"  [WARN] Test script not found: {test_script}")
-        return False
-
-    print("  Running Adventure template test...")
-    print("  This verifies the installation is working correctly.\n")
-
-    success, stdout, stderr = run_command(
-        [str(python_exe), str(test_script), "--include-list", "Adventure.yaml"],
-        "Run Adventure test",
-        cwd=target_dir,
-        capture_output=False,
-    )
-
-    if success:
-        print("\n  [OK] Adventure test passed!")
-    else:
-        print("\n  [FAIL] Adventure test failed")
-
-    return success
-
-
-def run_alttp_test(target_dir: Path, dry_run: bool = False) -> bool:
-    """Run a quick verification test using A Link to the Past."""
-    print_header("Running Verification Test (A Link to the Past)")
-
-    venv_path = target_dir / ".venv"
-    python_exe = get_python_executable(venv_path)
-    test_script = target_dir / "scripts" / "test" / "test-all-templates.py"
-
-    if dry_run:
-        print(f"  [DRY RUN] Would run: {python_exe} {test_script} --include-list \"A Link to the Past.yaml\"")
-        return True
-
-    if not test_script.exists():
-        print(f"  [WARN] Test script not found: {test_script}")
-        return False
-
-    print("  Running A Link to the Past template test...")
-    print("  This verifies the installation is working correctly.\n")
-
-    success, stdout, stderr = run_command(
-        [str(python_exe), str(test_script), "--include-list", "A Link to the Past.yaml"],
-        "Run A Link to the Past test",
-        cwd=target_dir,
-        capture_output=False,
-    )
-
-    if success:
-        print("\n  [OK] A Link to the Past test passed!")
-    else:
-        print("\n  [FAIL] A Link to the Past test failed")
-
-    return success
-
-
-def run_fuzzer_test(target_dir: Path, dry_run: bool = False) -> Optional[dict]:
-    """Run the UT fuzzer test with 1 run per game."""
-    print_header("Running UT Fuzzer Test")
-
-    venv_path = target_dir / ".venv"
-    python_exe = get_python_executable(venv_path)
-    test_script = target_dir / "scripts" / "test" / "test-all-ut-fuzz.py"
-
-    if dry_run:
-        print(f"  [DRY RUN] Would run: {python_exe} {test_script} --runs 1")
-        return {"dry_run": True}
-
-    if not test_script.exists():
-        print(f"  [WARN] Test script not found: {test_script}")
-        return None
-
-    print("  Running fuzzer test with 1 run per game...")
-    print("  This may take a while...\n")
-
-    success, stdout, stderr = run_command(
-        [str(python_exe), str(test_script), "--runs", "1"],
-        "Run UT fuzzer test (1 run per game)",
-        cwd=target_dir,
-        capture_output=False,
-    )
-
-    # Try to load the results file
-    results_file = target_dir / "scripts" / "output" / "ut-fuzz" / "test-results.json"
-    if results_file.exists():
-        try:
-            import json
-            with open(results_file) as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"  [WARN] Could not parse results file: {e}")
-
-    return {"success": success}
-
-
-def load_expected_failures_from_config(config_path: Path, ut_mode: str = "worldgen") -> set:
-    """Load expected failures from tracking-mode-config.json.
-
-    For regular modes (worldgen, pickle, original, original_seeded):
-        A game is expected to fail if that mode is NOT in its list of passing modes.
-
-    For hybrid mode:
-        A game is expected to fail only if it has NO passing modes (empty list).
-
-    Args:
-        config_path: Path to tracking-mode-config.json
-        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'original_seeded', 'hybrid')
-
-    Returns:
-        Set of template filenames expected to fail the given mode.
-    """
-    expected_failures = set()
-
-    if not config_path.exists():
-        print(f"  [WARN] Tracking mode config not found: {config_path}")
-        return expected_failures
-
-    try:
-        import json
-        with open(config_path, 'r') as f:
-            config = json.load(f)
-
-        game_results = config.get('game_results', {})
-
-        # Check both bundled and apworlds categories
-        for category in ['bundled', 'apworlds']:
-            category_results = game_results.get(category, {})
-            for game_name, passing_modes in category_results.items():
-                # Determine if this game is expected to fail
-                if ut_mode == 'hybrid':
-                    # For hybrid mode, expect failure only if NO modes pass
-                    is_expected_failure = len(passing_modes) == 0
-                else:
-                    # For specific modes, expect failure if that mode is not in passing list
-                    is_expected_failure = ut_mode not in passing_modes
-
-                if is_expected_failure:
-                    expected_failures.add(f"{game_name}.yaml")
-
-        return expected_failures
-
-    except Exception as e:
-        print(f"  [WARN] Could not load tracking mode config: {e}")
-        return expected_failures
-
-
-def compare_results(
+def run_verification_tests(
     target_dir: Path,
-    test_results: Optional[dict],
+    game_name: str,
+    template_name: str,
     dry_run: bool = False,
-    ut_mode: str = "worldgen",
 ) -> bool:
-    """Compare test results to expected failures from tracking-mode-config.json."""
-    print_header("Comparing Results to Expected Failures")
+    """Run spoiler and UT fuzz verification tests for a single game.
+
+    Runs two tests:
+    1. Spoiler test via test-all-templates.py
+    2. UT fuzz test via test-all-ut-fuzz.py (1 run)
+
+    Returns True only if both pass.
+    """
+    print_header(f"Running Verification Tests ({game_name})")
+
+    venv_path = target_dir / ".venv"
+    python_exe = get_python_executable(venv_path)
+    spoiler_script = target_dir / "scripts" / "test" / "test-all-templates.py"
+    fuzz_script = target_dir / "scripts" / "test" / "test-all-ut-fuzz.py"
 
     if dry_run:
-        print("  [DRY RUN] Would compare results to expected failures")
+        print(f"  [DRY RUN] Would run spoiler test: {python_exe} {spoiler_script} --include-list \"{template_name}\"")
+        print(f"  [DRY RUN] Would run UT fuzz test: {python_exe} {fuzz_script} --runs 10 --include-list \"{template_name}\"")
         return True
 
-    if not test_results:
-        print("  [WARN] No test results available for comparison")
-        return False
+    all_passed = True
 
-    config_path = target_dir / TRACKING_MODE_CONFIG
-    expected_excluded = load_expected_failures_from_config(config_path, ut_mode)
+    # Test 1: Spoiler test
+    if not spoiler_script.exists():
+        print(f"  [WARN] Spoiler test script not found: {spoiler_script}")
+        all_passed = False
+    else:
+        print(f"  Running spoiler test for {game_name}...\n")
+        success, _, _ = run_command(
+            [str(python_exe), str(spoiler_script), "--include-list", template_name],
+            f"Spoiler test ({game_name})",
+            cwd=target_dir,
+            capture_output=False,
+        )
+        if success:
+            print(f"\n  [OK] Spoiler test passed!")
+        else:
+            print(f"\n  [FAIL] Spoiler test failed")
+            all_passed = False
 
-    print(f"  Expected failures for {ut_mode} mode: {len(expected_excluded)}")
+    # Test 2: UT fuzz test
+    if not fuzz_script.exists():
+        print(f"  [WARN] UT fuzz test script not found: {fuzz_script}")
+        all_passed = False
+    else:
+        print(f"\n  Running UT fuzz test for {game_name}...\n")
+        success, _, _ = run_command(
+            [str(python_exe), str(fuzz_script), "--runs", "10", "--include-list", template_name],
+            f"UT fuzz test ({game_name})",
+            cwd=target_dir,
+            capture_output=False,
+        )
+        if success:
+            print(f"\n  [OK] UT fuzz test passed!")
+        else:
+            print(f"\n  [FAIL] UT fuzz test failed")
+            all_passed = False
 
-    # Get actual failures from results
-    actual_failures = set()
-    actual_passes = set()
-
-    if "games" in test_results:
-        for game_name, game_data in test_results.get("games", {}).items():
-            if game_data.get("failures", 0) > 0 or game_data.get("timeouts", 0) > 0:
-                # Convert game name to template format
-                template = f"{game_name}.yaml"
-                actual_failures.add(template)
-            else:
-                template = f"{game_name}.yaml"
-                actual_passes.add(template)
-
-    # Analyze results
-    expected_and_failed = expected_excluded & actual_failures
-    expected_but_passed = expected_excluded & actual_passes
-    unexpected_failures = actual_failures - expected_excluded
-
-    print(f"\n  Results Summary:")
-    print(f"  ----------------")
-    print(f"  Total games tested: {len(actual_failures) + len(actual_passes)}")
-    print(f"  Passed: {len(actual_passes)}")
-    print(f"  Failed: {len(actual_failures)}")
-    print(f"")
-    print(f"  Expected failures (failed as expected): {len(expected_and_failed)}")
-    print(f"  Unexpected passes (excluded but passed): {len(expected_but_passed)}")
-    print(f"  Unexpected failures (not excluded): {len(unexpected_failures)}")
-
-    if expected_but_passed:
-        print(f"\n  Unexpected passes (these excluded games now pass):")
-        for game in sorted(expected_but_passed):
-            print(f"    - {game}")
-
-    if unexpected_failures:
-        print(f"\n  Unexpected failures (these need investigation):")
-        for game in sorted(unexpected_failures):
-            print(f"    - {game}")
-
-    # Return True if no unexpected failures
-    return len(unexpected_failures) == 0
+    return all_passed
 
 
 def main():
@@ -671,10 +496,21 @@ def main():
         help="Install and apply ROM-less patches (allows testing ROM-based games without ROMs)",
     )
     parser.add_argument(
+        "--patch-mode",
+        choices=["monkey", "none"],
+        default="monkey",
+        help="Patching mode: monkey (default, runtime patching) or none",
+    )
+    parser.add_argument(
+        "--fresh",
+        action="store_true",
+        help="Delete existing target directory before cloning",
+    )
+    parser.add_argument(
         "--test",
-        choices=["adventure", "alttp", "fuzzer", "none"],
-        default=None,  # Will be set based on --romless
-        help="Test mode: adventure (default), alttp (requires --romless), fuzzer, or none",
+        choices=["auto", "adventure", "alttp", "none"],
+        default=None,  # Will be set to "auto" below
+        help="Test mode: auto (default, picks ALTTP if --romless else Adventure), adventure, alttp, or none",
     )
     parser.add_argument(
         "--skip-tests",
@@ -693,9 +529,9 @@ def main():
     if args.skip_tests:
         args.test = "none"
 
-    # Default test based on --romless
+    # Default test mode
     if args.test is None:
-        args.test = "alttp" if args.romless else "adventure"
+        args.test = "auto"
 
     version = "dev" if args.dev else "stable"
     target_dir = args.target_dir.resolve()
@@ -704,6 +540,7 @@ def main():
     print(f"  Version: {version}")
     print(f"  Target: {target_dir}")
     print(f"  Install all: {args.all}")
+    print(f"  Patch mode: {args.patch_mode}")
     print(f"  ROM-less patches: {args.romless}")
     print(f"  Test: {args.test}")
     if args.dry_run:
@@ -711,7 +548,7 @@ def main():
 
     # Step 1: Clone Archipelago
     if not args.skip_clone:
-        if not clone_archipelago(target_dir, args.dry_run):
+        if not clone_archipelago(target_dir, args.fresh, args.dry_run):
             print("\n[FAIL] Failed to clone Archipelago repository")
             return 1
     else:
@@ -736,8 +573,8 @@ def main():
         print("\n[FAIL] Failed to extract apworld")
         return 1
 
-    # Step 5: Run installer
-    if not run_installer(target_dir, version, args.all, args.dry_run):
+    # Step 5: Run installer (includes romless patches if requested)
+    if not run_installer(target_dir, version, args.all, args.patch_mode, args.romless, args.dry_run):
         print("\n[FAIL] Failed to run JSON Tools installer")
         return 1
 
@@ -749,28 +586,20 @@ def main():
     else:
         print("\n[SKIP] Skipping development environment setup (--skip-setup)")
 
-    # Step 7: Apply ROM-less patches (if requested)
-    if args.romless:
-        apply_romless_patches(target_dir, args.dry_run)
-    else:
-        print("\n[SKIP] Skipping ROM-less patches (use --romless to enable)")
-
     # Step 8: Run tests
-    test_results = None
     results_ok = True
 
-    if args.test == "adventure":
-        results_ok = run_adventure_test(target_dir, args.dry_run)
-    elif args.test == "alttp":
-        results_ok = run_alttp_test(target_dir, args.dry_run)
-    elif args.test == "fuzzer":
-        test_results = run_fuzzer_test(target_dir, args.dry_run)
-        if test_results:
-            results_ok = compare_results(target_dir, test_results, args.dry_run)
-        else:
-            results_ok = False
-    else:
+    if args.test == "none":
         print("\n[SKIP] Skipping tests (--test none)")
+    else:
+        if args.test == "auto":
+            game_name = "A Link to the Past" if args.romless else "Adventure"
+        elif args.test == "alttp":
+            game_name = "A Link to the Past"
+        else:
+            game_name = "Adventure"
+        template_name = f"{game_name}.yaml"
+        results_ok = run_verification_tests(target_dir, game_name, template_name, args.dry_run)
 
     # Final summary
     print_header("Installation Complete!")

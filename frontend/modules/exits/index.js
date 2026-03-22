@@ -1,5 +1,6 @@
 // UI Class for this module
 import { ExitUI } from './exitUI.js';
+import eventBus from '../../app/core/eventBus.js';
 
 
 // Helper function for logging with fallback
@@ -24,10 +25,25 @@ export const moduleInfo = {
 
 // Store module-level references
 let moduleDispatcher = null;
+let _moduleEventBus = null;
 
 // Export function to get dispatcher for use by exitUI
 export function getExitsModuleDispatcher() {
   return moduleDispatcher;
+}
+
+export function getModuleEventBus() {
+  if (_moduleEventBus) return _moduleEventBus;
+  // Fallback wrapper before initialize() runs (e.g., GoldenLayout component creation)
+  return {
+    publish: (event, data) => eventBus.publish(event, data, 'exits'),
+    subscribe: (event, callback) => eventBus.subscribe(event, callback, 'exits'),
+    unsubscribe: (event, callback) => eventBus.unsubscribe(event, callback, 'exits'),
+    publishAs: (event, data, source) => eventBus.publish(event, data, source),
+    getAllPublishers: () => eventBus.getAllPublishers(),
+    getAllSubscribers: () => eventBus.getAllSubscribers(),
+    getAllPublishCounts: () => eventBus.getAllPublishCounts(),
+  };
 }
 
 /**
@@ -57,6 +73,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
 
   // Store the dispatcher for use by exitUI
   moduleDispatcher = initializationApi.getDispatcher();
+  _moduleEventBus = initializationApi.getEventBus();
 
   log('info', '[Exits Module] Initialization complete.');
 
@@ -64,5 +81,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   return () => {
     log('info', '[Exits Module] Cleaning up...');
     moduleDispatcher = null;
+    _moduleEventBus = null;
   };
 }

@@ -130,7 +130,7 @@ class ShapezWorld(RuleWorldMixin, World):
     options: shapezWorldGenOptions
 
     base_id: ClassVar[int] = 20010707
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
@@ -163,7 +163,6 @@ class ShapezWorld(RuleWorldMixin, World):
         "Traps": frozenset(["Belt Upgrade Trap", "Miner Upgrade Trap", "Processors Upgrade Trap", "Painting Upgrade Trap", "Demonic Belt Upgrade Trap", "Demonic Miner Upgrade Trap", "Demonic Processors Upgrade Trap", "Demonic Painting Upgrade Trap", "Locked Building Trap", "Throttled Building Trap", "Malfunctioning Trap", "Inflation Trap", "Belts Clearing Trap", "Inventory Draining Trap", "Blueprint Shapes Draining Trap", "Level Shapes Draining Trap", "Upgrade Shapes Draining Trap"]),
         "Bundles": frozenset(["Blueprint Shapes Bundle", "Level Shapes Bundle", "Upgrade Shapes Bundle"]),
         "Most Important Buildings": frozenset(["Belt", "Extractor"]),
-        "Event": frozenset(["Goal"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -487,6 +486,12 @@ class ShapezWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -625,6 +630,24 @@ class ShapezWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Place victory event item and set completion condition."""
+        victory_location = self.multiworld.get_location("Goal", self.player)
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = shapezWorldGenItem(
+                "Goal",
+                item_table["Goal"].classification,
+                None,
+                self.player
+            )
+            victory_location.place_locked_item(victory_item)
+
+        # Set completion condition
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Goal", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

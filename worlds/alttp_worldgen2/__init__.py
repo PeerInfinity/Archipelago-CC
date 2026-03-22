@@ -24,7 +24,6 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
-    "Activated Flute": 1,
     "Arrows (10)": 12,
     "Big Key (Desert Palace)": 1,
     "Big Key (Eastern Palace)": 1,
@@ -118,7 +117,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Small Key (Thieves Town)": 3,
     "Small Key (Tower of Hera)": 1,
     "Small Key (Turtle Rock)": 6,
-    "Triforce": 1,
     "__max_boss_heart_container": 10,
     "__max_heart_piece": 24,
     "__max_progressive_bottle": 4,
@@ -126,6 +124,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
+    "Flute Activation Spot": "Activated Flute",
     "Floodgate": "Open Floodgate",
     "Missing Smith": "Return Smith",
     "Capacity Upgrade Shop": "Capacity Upgrade Shop",
@@ -143,6 +142,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
     "Turtle Rock - Prize": "Crystal 3",
     "Palace of Darkness - Prize": "Blue Pendant",
     "Agahnim 2": "Beat Agahnim 2",
+    "Ganon": "Triforce",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -341,7 +341,7 @@ class ALTTPWorld(RuleWorldMixin, World):
     options_dataclass = ALinktothePastWorldGen2Options
     options: ALinktothePastWorldGen2Options
 
-    # Disable rule caching - requires CollectionState.rule_cache from PR #5048
+    # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
     # Use auto indirect conditions since entrance rules have region dependencies
     # that aren't registered via RuleBuilder.set_rule()
@@ -382,7 +382,6 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Compasses": frozenset(["Compass (Ganons Tower)", "Compass (Turtle Rock)", "Compass (Thieves Town)", "Compass (Tower of Hera)", "Compass (Ice Palace)", "Compass (Skull Woods)", "Compass (Misery Mire)", "Compass (Palace of Darkness)", "Compass (Swamp Palace)", "Compass (Agahnims Tower)", "Compass (Desert Palace)", "Compass (Eastern Palace)", "Compass (Hyrule Castle)"]),
         "Big Keys": frozenset(["Big Key (Ganons Tower)", "Big Key (Turtle Rock)", "Big Key (Thieves Town)", "Big Key (Tower of Hera)", "Big Key (Ice Palace)", "Big Key (Skull Woods)", "Big Key (Misery Mire)", "Big Key (Palace of Darkness)", "Big Key (Swamp Palace)", "Big Key (Agahnims Tower)", "Big Key (Desert Palace)", "Big Key (Eastern Palace)", "Big Key (Hyrule Castle)"]),
         "Small Keys": frozenset(["Small Key (Hyrule Castle)", "Small Key (Eastern Palace)", "Small Key (Desert Palace)", "Small Key (Agahnims Tower)", "Small Key (Swamp Palace)", "Small Key (Palace of Darkness)", "Small Key (Misery Mire)", "Small Key (Skull Woods)", "Small Key (Ice Palace)", "Small Key (Tower of Hera)", "Small Key (Thieves Town)", "Small Key (Turtle Rock)", "Small Key (Ganons Tower)", "Small Key (Universal)"]),
-        "Event": frozenset(["Open Floodgate", "Return Smith", "Capacity Upgrade Shop", "Red Pendant", "Crystal 2", "Beat Agahnim 1", "Crystal 7", "Get Frog", "Pick Up Purple Chest", "Crystal 5", "Crystal 4", "Green Pendant", "Crystal 1", "Crystal 6", "Crystal 3", "Blue Pendant", "Beat Agahnim 2"]),
         "Pendants": frozenset(["Red Pendant", "Green Pendant", "Blue Pendant"]),
         "Crystals": frozenset(["Crystal 2", "Crystal 7", "Crystal 5", "Crystal 4", "Crystal 1", "Crystal 6", "Crystal 3"]),
     }
@@ -992,6 +991,12 @@ class ALTTPWorld(RuleWorldMixin, World):
     def generate_early(self) -> None:
         """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
+        # Set preset_label for exporter: use class-level label as base, append seed/vanilla suffix
+        base_label = getattr(self.__class__, 'preset_label', '')
+        if base_label:
+            base = base_label.split()[0] if ' ' in base_label else base_label
+            is_vanilla = getattr(self.__class__, 'is_vanilla', False)
+            self.preset_label = f"{base} v" if is_vanilla else f"{base} s{self.multiworld.seed}"
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
@@ -1130,6 +1135,11 @@ class ALTTPWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def generate_basic(self) -> None:
+        """Set completion condition."""
+        self.multiworld.completion_condition[self.player] = \
+            lambda state: state.has("Triforce", self.player)
 
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing or when tracking.

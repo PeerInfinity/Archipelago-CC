@@ -43,7 +43,6 @@ class CodingAdventureWorld(World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["HTML", "CSS", "Design Systems", "JavaScript Basics", "DOM Manipulation", "Algorithms", "Server Basics", "File I/O", "HTTP Basics", "Git", "Command Line", "Package Managers", "Static Website Complete", "React", "Vue", "Frontend Framework", "State Management", "Express", "Django", "Flask", "REST APIs", "Database Integration", "UI/UX", "Responsive Design", "Accessibility", "SQL", "NoSQL", "Database Basics", "Query Optimization", "Interactive App Complete", "Sessions", "JWT", "Authentication", "Caching", "CDN", "Performance", "Unit Tests", "Integration Tests", "Testing", "Docker", "CI/CD", "DevOps", "Full-Stack Complete", "HTTPS", "CORS", "Security Complete", "Horizontal Scaling", "Scaling Complete", "Cloud Provider", "Domain", "Deployment Complete"]),
-        "Event": frozenset(["Victory"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game

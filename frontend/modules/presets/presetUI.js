@@ -1,5 +1,5 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import eventBus from '../../app/core/eventBus.js';
+import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 
@@ -17,6 +17,7 @@ export class PresetUI {
   constructor(container, componentState) {
     this.container = container;
     this.componentState = componentState;
+    Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
 
     this.presets = null;
     this.currentPlayer = null;
@@ -38,9 +39,9 @@ export class PresetUI {
         '[PresetUI] Received app:readyForUiDataLoad. Initializing presets.'
       );
       this.initialize();
-      eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
+      this.eventBus.unsubscribe('app:readyForUiDataLoad', readyHandler);
     };
-    eventBus.subscribe('app:readyForUiDataLoad', readyHandler, 'presets');
+    this.eventBus.subscribe('app:readyForUiDataLoad', readyHandler);
 
     this.container.on('destroy', () => {
       this.onPanelDestroy();
@@ -192,13 +193,11 @@ export class PresetUI {
     nameGroups.forEach((group, name) => {
       const { primaryGameData, seeds, hasMultiworld } = group;
 
-      html += `
-        <div class="game-row">
-          <h4 class="game-name">${this.escapeHtml(name)}</h4>
-      `;
+      html += `<div class="game-row">`;
 
       if (hasMultiworld) {
-        // Special layout for multiworld - block format
+        // Multiworld: game-name is a direct child of game-row (closed immediately after)
+        html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         html += `</div>`; // Close the inline game-row
         html += `<div class="multiworld-container">`;
         html += `<div class="multiworld-seeds">`;
@@ -232,8 +231,9 @@ export class PresetUI {
         html += `</div>`; // Close multiworld-container
         // Don't add the closing </div> here since we already closed the game-row
       } else {
-        // Standard layout for single-player games
-        html += `<div class="game-presets">`;
+        // Flat layout: game-name first (top-left), seed buttons flow naturally,
+        // test badges last with margin-left:auto (bottom-right)
+        html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         seeds.forEach(({ gameDirectory, seedName, folderData }) => {
           const isVanilla = !!folderData.is_vanilla;
           const vanillaBadge = isVanilla
@@ -244,13 +244,12 @@ export class PresetUI {
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.description || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
+                      folderData.label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.seed)}${vanillaBadge}
+              ${this.escapeHtml(folderData.label || folderData.seed)}${vanillaBadge}
             </button>
           `;
         });
-        html += `</div>`; // Close game-presets
         html += this.renderTestResultBadge(primaryGameData);
       }
 
@@ -268,18 +267,17 @@ export class PresetUI {
         .presets-container {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 4px;
           margin-top: 16px;
         }
         .game-row {
           background-color: rgba(0, 0, 0, 0.1);
           border-radius: 8px;
           padding: 16px;
-          margin-bottom: 16px;
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
-          gap: 16px;
-          justify-content: space-between;
+          gap: 8px;
         }
         .game-name {
           margin: 0;
@@ -294,6 +292,7 @@ export class PresetUI {
           font-weight: 600;
           color: #aaa;
           font-size: 0.85em;
+          flex-wrap: nowrap;
         }
         .game-name-header {
           min-width: 200px;
@@ -317,6 +316,7 @@ export class PresetUI {
           display: flex;
           gap: 4px;
           flex-shrink: 0;
+          margin-left: auto;
         }
         .test-badge-mini {
           display: flex;
@@ -349,8 +349,8 @@ export class PresetUI {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          flex: 1;
-          justify-content: center;
+          flex: 1 1 auto;
+          align-items: center;
         }
         .preset-button {
           background-color: rgba(0, 0, 0, 0.3);
@@ -517,18 +517,18 @@ export class PresetUI {
                 this.displayLoadedJsonFileDetails(jsonData, file.name);
               } catch (err) {
                 log('error', 'Error parsing JSON file:', err);
-                eventBus.publish('ui:notification', {
+                this.eventBus.publish('ui:notification', {
                   type: 'error',
                   message: `Error parsing ${file.name}: ${err.message}`,
-                }, 'presets');
+                });
               }
             };
             reader.onerror = (err) => {
               log('error', 'Error reading file:', err);
-              eventBus.publish('ui:notification', {
+              this.eventBus.publish('ui:notification', {
                 type: 'error',
                 message: `Error reading ${file.name}.`,
-              }, 'presets');
+              });
             };
             reader.readAsText(file);
           }
@@ -542,6 +542,9 @@ export class PresetUI {
     );
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
+        // Save scroll position so we can restore it when navigating back
+        this._savedScrollTop = this.presetsListContainer ? this.presetsListContainer.scrollTop : 0;
+
         const gameDirectory = button.getAttribute('data-game-directory');
         const seedName = button.getAttribute('data-seed-name');
         const playerId = button.getAttribute('data-player'); // Will be null for standard buttons
@@ -563,6 +566,13 @@ export class PresetUI {
         }
       });
     });
+
+    // Restore scroll position if returning from a preset detail view
+    if (this._savedScrollTop && this.presetsListContainer) {
+      requestAnimationFrame(() => {
+        this.presetsListContainer.scrollTop = this._savedScrollTop;
+      });
+    }
   }
 
   displayLoadedJsonFileDetails(jsonData, fileName) {
@@ -635,16 +645,16 @@ export class PresetUI {
           rulesData.game || 'unknown_game'
         }, player ${playerId}. Publishing files:jsonLoaded.`
       );
-      eventBus.publish('files:jsonLoaded', {
+      this.eventBus.publish('files:jsonLoaded', {
         jsonData: rulesData,
         selectedPlayerId: playerId,
         sourceName: `userLoaded:${fileName}` // Prefix to indicate manually loaded file
-      }, 'presets');
+      });
 
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'success',
         message: `Loaded ${fileName} for Player ${playerId}`,
-      }, 'presets');
+      });
 
       const statusElement = document.getElementById('preset-status');
       if (statusElement) {
@@ -658,7 +668,7 @@ export class PresetUI {
         `;
       }
 
-      eventBus.publish('rules:loaded', {}, 'presets');
+      this.eventBus.publish('rules:loaded', {});
     } catch (error) {
       log('error', 'Error processing manually loaded rules file:', error);
       const statusElement = document.getElementById('preset-status');
@@ -751,10 +761,10 @@ export class PresetUI {
 
     } catch (err) {
       log('error', 'Error loading .archipelago file:', err);
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'error',
         message: `Error loading ${file.name}: ${err.message}`,
-      }, 'presets');
+      });
     }
   }
 
@@ -952,17 +962,17 @@ export class PresetUI {
       log('info',
         `Rules loaded for ${gameDirectory}, player ${playerId}. Publishing files:jsonLoaded.`
       );
-      eventBus.publish('files:jsonLoaded', {
+      this.eventBus.publish('files:jsonLoaded', {
         jsonData: rulesData,
         selectedPlayerId: playerId,
         sourceName: fullPath
-      }, 'presets');
+      });
 
       // Publish success notification
-      eventBus.publish('ui:notification', {
+      this.eventBus.publish('ui:notification', {
         type: 'success',
         message: `Loaded ${rulesFile} for Player ${playerId}`,
-      }, 'presets');
+      });
 
       // Temporarily comment out direct calls to stateManager, as the new flow
       // via files:jsonLoaded -> proxy.loadRules -> worker.loadRules (which calls loadFromJSON & initializeInventory)
@@ -1055,7 +1065,7 @@ export class PresetUI {
       }
 
       // Trigger rules:loaded event to enable offline play
-      eventBus.publish('rules:loaded', {}, 'presets');
+      this.eventBus.publish('rules:loaded', {});
 
       // Re-enable control buttons if needed (though rules:loaded might handle this elsewhere)
       // This is likely a remnant of an older architecture and this.gameUI is not defined here.

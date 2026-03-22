@@ -425,22 +425,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Run"
-                          }
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
                         }
-                      ]
+                      }
                     },
                     {
                       "rule": "HasAny",
@@ -920,22 +911,13 @@
             "name": "Donut Ghost House -> Donut Ghost House - Normal Exit",
             "connected_region": "Donut Ghost House - Normal Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Run"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 3,
+                  "Run": 1
                 }
-              ]
+              }
             }
           },
           {
@@ -945,22 +927,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Run"
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Run": 1
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1066,22 +1039,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Run"
-                          }
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
                         }
-                      ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -2247,22 +2211,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Yoshi"
-                      }
+                  "rule": "HasAnyCount",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Yoshi": 1
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3402,22 +3357,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Powerup",
-                        "count": 3
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Run"
-                      }
+                  "rule": "HasAllCounts",
+                  "args": {
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Run": 1
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3432,22 +3378,13 @@
             "name": "Chocolate Island 3 -> Chocolate Island 3 - Secret Exit",
             "connected_region": "Chocolate Island 3 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Run"
-                  }
+              "rule": "HasAllCounts",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 3,
+                  "Run": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -5285,22 +5222,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Powerup",
-                            "count": 3
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Run"
-                          }
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Progressive Powerup": 3,
+                          "Run": 1
                         }
-                      ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -5487,22 +5415,13 @@
             "name": "Awesome -> Awesome - Normal Exit",
             "connected_region": "Awesome - Normal Exit",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Star Activate"
-                  }
+              "rule": "HasAnyCount",
+              "args": {
+                "items": {
+                  "Progressive Powerup": 2,
+                  "Super Star Activate": 1
                 }
-              ]
+              }
             }
           }
         ],
@@ -5739,19 +5658,13 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAnyCount",
                   "args": {
-                    "item_name": "Progressive Powerup",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Carry",
-                      "Yoshi"
-                    ]
+                    "items": {
+                      "Progressive Powerup": 3,
+                      "Carry": 1,
+                      "Yoshi": 1
+                    }
                   }
                 }
               ]
@@ -6847,7 +6760,12 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "The Princess"
+      }
+    }
   },
   "helpers": {},
   "is_canonical": true

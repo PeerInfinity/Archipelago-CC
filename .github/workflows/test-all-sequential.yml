@@ -135,25 +135,27 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Delete test-results.json files based on template_type selection
-          if [[ "${{ inputs.template_type }}" == "original" ]]; then
-            # Original template results
-            git rm -f scripts/output/spoiler-minimal/test-results.json || true
-            git rm -f scripts/output/spoiler-full/test-results.json || true
-            git rm -f scripts/output/multiclient/test-results.json || true
-            git rm -f scripts/output/multiworld/test-results.json || true
-          elif [[ "${{ inputs.template_type }}" == "worldgen" ]]; then
-            # WorldGen template results
-            git rm -f scripts/output/spoiler-minimal-worldgen/test-results.json || true
-            git rm -f scripts/output/spoiler-full-worldgen/test-results.json || true
-            git rm -f scripts/output/multiclient-worldgen/test-results.json || true
-            git rm -f scripts/output/multiworld-worldgen/test-results.json || true
+          # Determine suffix based on template_type
+          if [[ "${{ inputs.template_type }}" == "worldgen" ]]; then
+            SUFFIX="-worldgen"
+          elif [[ "${{ inputs.template_type }}" == "apworld" ]]; then
+            SUFFIX="-apworld"
           else
-            # APWorld template results
-            git rm -f scripts/output/spoiler-minimal-apworld/test-results.json || true
-            git rm -f scripts/output/spoiler-full-apworld/test-results.json || true
-            git rm -f scripts/output/multiclient-apworld/test-results.json || true
-            git rm -f scripts/output/multiworld-apworld/test-results.json || true
+            SUFFIX=""
+          fi
+
+          # Only delete results for enabled test types
+          if [[ "${{ inputs.enable_minimal_spoilers }}" == "true" ]]; then
+            git rm -f scripts/output/spoiler-minimal${SUFFIX}/test-results.json || true
+          fi
+          if [[ "${{ inputs.enable_full_spoilers }}" == "true" ]]; then
+            git rm -f scripts/output/spoiler-full${SUFFIX}/test-results.json || true
+          fi
+          if [[ "${{ inputs.enable_multiclient }}" == "true" ]]; then
+            git rm -f scripts/output/multiclient${SUFFIX}/test-results.json || true
+          fi
+          if [[ "${{ inputs.enable_multiworld }}" == "true" ]]; then
+            git rm -f scripts/output/multiworld${SUFFIX}/test-results.json || true
           fi
 
           # Commit if there are changes

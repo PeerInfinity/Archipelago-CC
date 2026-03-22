@@ -21,7 +21,7 @@ import urllib.request
 import urllib.error
 import yaml
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Literal, Optional, Tuple, overload
 
 
 def read_host_yaml_config(project_root: str) -> Dict:
@@ -36,6 +36,10 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
+@overload
+def load_template_exclude_list(project_root: Optional[str] = ..., include_reasons: Literal[False] = ..., test_type: str = ..., skip_worldgen_variants: bool = ...) -> List[str]: ...
+@overload
+def load_template_exclude_list(project_root: Optional[str] = ..., *, include_reasons: Literal[True], test_type: str = ..., skip_worldgen_variants: bool = ...) -> List[Dict[str, str]]: ...
 def load_template_exclude_list(project_root: Optional[str] = None, include_reasons: bool = False, test_type: str = 'all', skip_worldgen_variants: bool = False):
     """
     Load the template exclude list from scripts/data/template-exclude-list.json.
@@ -321,7 +325,7 @@ def check_virtual_environment() -> bool:
             sys.path.insert(0, project_root)
 
         # Try to import a dependency that should be available
-        import BaseClasses
+        __import__('BaseClasses')
 
         # If import works but no VIRTUAL_ENV, warn but allow to continue
         return True

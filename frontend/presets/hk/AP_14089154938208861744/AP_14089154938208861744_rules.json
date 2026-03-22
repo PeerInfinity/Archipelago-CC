@@ -112176,6 +112176,30 @@
         ]
       },
       "created_shop_items": 0,
+      "cached_filler_items": [
+        "One_Geo",
+        "Soul_Refill",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg",
+        "Rancid_Egg"
+      ],
       "charm_costs": [
         1,
         1,
@@ -112580,7 +112604,35 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "completion_condition": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_hk_siblings_ending"
+          },
+          {
+            "type": "helper",
+            "name": "_hk_can_beat_radiance"
+          },
+          {
+            "type": "state_method",
+            "method": "count",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Godhome_Flower_Quest"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_grub_goal"
+          }
+        ]
+      }
+    }
   },
   "helpers": {}
 }
