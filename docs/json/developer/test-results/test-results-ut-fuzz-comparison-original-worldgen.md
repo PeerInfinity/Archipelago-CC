@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-03-22 04:16:53 UTC
+**Generated:** 2026-03-22 05:44:05 UTC
 
 **Source Data Last Updated:** 2026-03-22T01:50:32
 
@@ -20,8 +20,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 88
 - **Passing Both:** 32 (36.4%)
 - **Passing Original Only:** 7 (8.0%)
-- **Passing Worldgen Only:** 30 (34.1%)
-- **Passing Neither:** 19 (21.6%)
+- **Passing Worldgen Only:** 31 (35.2%)
+- **Passing Neither:** 18 (20.5%)
 - **Passing Worldgen with no custom code:** 38 (43.2%)
 - **Passing Worldgen Only with no custom code:** 14 (15.9%)
 
@@ -30,7 +30,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Result | Worldgen Result | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 1/10 | ✅ | 18.2KB | ✅ | 230.2KB |
-| A Link to the Past | ❌ | ⚠️ 97/98 | 14.0KB | ✅ | 664.0KB |
+| A Link to the Past | ❌ | ✅ | 14.0KB | ✅ | 664.0KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 74.4KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 9/10 | ✅ | ✅ | ✅ | 25.7KB |
@@ -64,7 +64,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Inscryption | ✅ | ✅ | 8.0KB | ✅ | 84.3KB |
 | Jak and Daxter: The Precursor Legacy | ❌ 3/10 | ❌ 1/100 | 21.7KB | 4.6KB | 257.9KB |
 | Journey to Ascension | ❌ | ❌ | ✅ | ✅ | 48.3KB |
-| Kingdom Hearts | ❌ 4/10 | ❌ 20/99 | ✅ | ✅ | 748.7KB |
+| Kingdom Hearts | ❌ 4/10 | ❌ 18/99 | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ❌ | 20.4KB | ✅ | 1630.7KB |
 | Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.7KB |
 | Landstalker - The Treasures of King Nole | ❌ 2/10 | ✅ | 3.6KB | ✅ | 209.2KB |
@@ -83,11 +83,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Old School Runescape | ✅ | ✅ | 1.0KB | ✅ | 305.2KB |
 | Overcooked! 2 | ❌ | ✅ | 28.5KB | ✅ | 488.3KB |
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.5KB |
-| Pokemon Emerald | ❌ 3/7 | ❌ 32/92 | 5.2KB | 8.7KB | 1350.2KB |
+| Pokemon Emerald | ❌ 3/7 | ❌ 31/92 | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | ❌ | ❌ | 12.2KB | 13.0KB | 1270.2KB |
 | Raft | ✅ | ❌ | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 131.4KB |
-| SMZ3 | ❌ 1/10 | ❌ 1/100 | 54.2KB | 51.3KB | 1890.6KB |
+| SMZ3 | ❌ 1/10 | ❌ | 54.2KB | 51.3KB | 1890.6KB |
 | Satisfactory | ❌ | ✅ | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ❌ 3/10 | ✅ | ✅ | ✅ | 33.6KB |
 | Secret of Evermore | ✅ | ❌ | 5.6KB | 7.5KB | 415.0KB |
@@ -112,7 +112,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ⚠️ 8/10 | ✅ | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.1KB |
-| Yacht Dice | ❌ | ❌ 2/100 | 0.9KB | 285.0KB | 248.5KB |
+| Yacht Dice | ❌ | ❌ 1/100 | 0.9KB | 285.0KB | 248.5KB |
 | Yoshi's Island | ❌ 3/10 | ✅ | 9.2KB | ✅ | 295.3KB |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ❌ 34/100 | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.2KB |
@@ -171,13 +171,14 @@ These games pass in the Original UT but fail in the Worldgen UT.
 | TUNIC | 3.1KB | ✅ | 649.2KB |
 | The Witness | 14.6KB | ✅ | 468.1KB |
 
-## Games Passing Worldgen Only (30)
+## Games Passing Worldgen Only (31)
 
 These games pass in the Worldgen UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.2KB | ✅ | 230.2KB |
+| A Link to the Past | 14.0KB | ✅ | 664.0KB |
 | Adventure | ✅ | ✅ | 25.7KB |
 | Castlevania 64 | ✅ | ✅ | 137.8KB |
 | DLCQuest | 1.2KB | ✅ | 49.8KB |
@@ -208,13 +209,12 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | VVVVVV | 3.8KB | ✅ | 22.7KB |
 | Yoshi's Island | 9.2KB | ✅ | 295.3KB |
 
-## Games Passing Neither (19)
+## Games Passing Neither (18)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 14.0KB | ✅ | 664.0KB |
 | Celeste (Open World) | ✅ | ✅ | 1039.8KB |
 | Hollow Knight | ✅ | ✅ | 3501.1KB |
 | Jak and Daxter: The Precursor Legacy | 21.7KB | 4.6KB | 257.9KB |
