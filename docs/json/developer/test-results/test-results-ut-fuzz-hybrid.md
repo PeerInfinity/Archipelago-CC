@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-22 02:13:17 UTC
 
 **Source Data Created:** 2026-02-19T21:14:34.502625+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 64 (passes hybrid mode per config)
-- **Unexpected Passes:** 1 (expected to fail but passed)
-- **Expected Failures:** 9 (doesn't pass hybrid mode per config)
-- **Unexpected Failures (logic):** 13 (expected to pass but had logic mismatch)
+- **Expected Passes:** 63 (passes hybrid mode per config)
+- **Unexpected Passes:** 2 (expected to fail but passed)
+- **Expected Failures:** 6 (doesn't pass hybrid mode per config)
+- **Unexpected Failures (logic):** 16 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -146,7 +146,7 @@ Of the 65 games with 100% pass rate:
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ❌ | 10 | 4 | 1 | 0 | 5 | ❌ 40.0% | 7.0KB | ✅ | 250.2KB |
-| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 458.1KB |
+| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |
@@ -159,7 +159,7 @@ Of the 65 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (64)
+### Expected Passes (63)
 
 Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 
@@ -216,7 +216,6 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Shivers | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Adventure 2 Battle | 10 | 10 | 0 | 0 | 100.0% |
 | Subnautica | 10 | 10 | 0 | 0 | 100.0% |
-| Sudoku | 10 | 10 | 0 | 0 | 100.0% |
 | Super Mario 64 | 10 | 10 | 0 | 0 | 100.0% |
 | Super Mario Land 2 | 10 | 10 | 0 | 0 | 100.0% |
 | Super Mario World | 10 | 10 | 0 | 0 | 100.0% |
@@ -230,42 +229,43 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | VVVVVV | 10 | 10 | 0 | 0 | 100.0% |
 | Wargroove | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (1)
+### Unexpected Passes (2)
 
 Games NOT expected to pass hybrid mode (not in config or mode not listed) but passed anyway.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | Math Adventure | 10 | 10 | 0 | 0 | 100.0% |
+| Sudoku | 10 | 10 | 0 | 0 | 100.0% |
 
-### Expected Failures (9)
+### Expected Failures (6)
 
 Games NOT expected to pass hybrid mode and failed as expected.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| EarthBound | 10 | 5 | 5 | 0 | 50.0% |
-| Final Fantasy Mystic Quest | 10 | 8 | 1 | 0 | 80.0% |
 | Kingdom Hearts 2 | 10 | 6 | 4 | 0 | 60.0% |
-| Ocarina of Time | 10 | 0 | 8 | 0 | 0.0% |
-| Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
+| Pokemon Emerald | 10 | 3 | 4 | 0 | 30.0% |
 | Starcraft 2 | 10 | 0 | 10 | 0 | 0.0% |
 | Stardew Valley | 10 | 9 | 1 | 0 | 90.0% |
 | Super Metroid | 10 | 0 | 6 | 0 | 0.0% |
 | Zillion | 10 | 0 | 8 | 1 | 0.0% |
 
-### Unexpected Failures (Logic Mismatch) (13)
+### Unexpected Failures (Logic Mismatch) (16)
 
 Games expected to pass hybrid mode but failed due to logic mismatches.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| EarthBound | 10 | 5 | 5 | 0 | 50.0% |
+| Final Fantasy Mystic Quest | 10 | 8 | 1 | 0 | 80.0% |
 | Hollow Knight | 10 | 0 | 10 | 0 | 0.0% |
 | Kingdom Hearts | 10 | 4 | 6 | 0 | 40.0% |
 | Kirby's Dream Land 3 | 10 | 0 | 10 | 0 | 0.0% |
-| Pokemon Emerald | 10 | 3 | 4 | 0 | 30.0% |
+| Ocarina of Time | 10 | 0 | 8 | 0 | 0.0% |
 | Pokemon Red and Blue | 10 | 0 | 8 | 0 | 0.0% |
 | SMZ3 | 10 | 1 | 9 | 0 | 10.0% |
+| Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
 | Terraria | 10 | 2 | 7 | 0 | 20.0% |
 | The Wind Waker | 10 | 4 | 1 | 0 | 40.0% |
 | Timespinner | 10 | 4 | 6 | 0 | 40.0% |
