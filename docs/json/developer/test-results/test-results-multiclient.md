@@ -10,17 +10,17 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-03-21 21:55:16 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
-**Source Data Created:** 2026-03-21T20:17:54.340616+00:00
+**Source Data Created:** 2026-03-21T22:20:19.876903+00:00
 
-**Source Data Last Updated:** 2026-03-21T20:17:54.340626+00:00
+**Source Data Last Updated:** 2026-03-21T22:20:19.876912+00:00
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Total Games:** 75
+- **Passed:** 75 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -90,12 +90,11 @@
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 29.3KB | 90.1KB |
-| Stardew Valley | ❌ Failed | 0 | ✅ | 489/489 | 472/472 | 17/17 | ❌ | 85/489 | 20.0KB | 9.8KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | 119.4KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 3.1KB | ✅ |

@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-03-21 21:55:16 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
-**Source Data Created:** 2026-03-21T20:01:12.857645+00:00
+**Source Data Created:** 2026-03-21T22:05:37.145346+00:00
 
-**Source Data Last Updated:** 2026-03-21T20:01:12.857655+00:00
+**Source Data Last Updated:** 2026-03-21T22:05:37.145354+00:00
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -29,10 +29,10 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 76/76 passed (100.0%)
-- **Full Test:** 76/76 passed (100.0%)
-- **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 74/76 passed (97.4%)
+- **Minimal Test:** 75/75 passed (100.0%)
+- **Full Test:** 75/75 passed (100.0%)
+- **Multiclient Test:** 75/75 passed (100.0%)
+- **Multiworld Test:** 74/75 passed (98.7%)
 
 ### Intermittent Failures
 
@@ -43,11 +43,11 @@ Additional information:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 74/76 (97.4%)
-- **Templates passing 3 tests:** 1/76 (1.3%)
-- **Templates passing 2 tests:** 1/76 (1.3%)
-- **Templates passing 1 test:** 0/76 (0.0%)
-- **Templates passing 0 tests:** 0/76 (0.0%)
+- **Templates passing all 4 tests:** 74/75 (98.7%)
+- **Templates passing 3 tests:** 1/75 (1.3%)
+- **Templates passing 2 tests:** 0/75 (0.0%)
+- **Templates passing 1 test:** 0/75 (0.0%)
+- **Templates passing 0 tests:** 0/75 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -59,9 +59,9 @@ Of the 74 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 522.7KB
-- **Total Game Logic Code:** 273.0KB
-- **Combined Total:** 795.7KB
+- **Total Exporter Code:** 502.7KB
+- **Total Game Logic Code:** 268.0KB
+- **Combined Total:** 770.7KB
 
 ## Test Results
 
@@ -123,12 +123,11 @@ Of the 74 templates passing all 4 tests:
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 29.3KB | 90.1KB | 1086.9KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 20.0KB | 9.8KB | 2558.2KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 205.5KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
@@ -136,7 +135,7 @@ Of the 74 templates passing all 4 tests:
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 250.2KB |
-| The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 14.6KB | ✅ | 457.8KB |
+| The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 22.7KB |
@@ -148,16 +147,16 @@ Of the 74 templates passing all 4 tests:
 
 | Rank | Game Name | Rules Size |
 |------|-----------|------------|
-| 1 | Stardew Valley | 2558.2KB |
-| 2 | Kingdom Hearts 2 | 1630.7KB |
-| 3 | Satisfactory | 1619.5KB |
-| 4 | Starcraft 2 | 1086.9KB |
-| 5 | Celeste (Open World) | 1039.8KB |
-| 6 | Lingo | 940.0KB |
-| 7 | Super Mario Land 2 | 919.1KB |
-| 8 | Kingdom Hearts | 748.7KB |
-| 9 | Links Awakening DX | 703.1KB |
-| 10 | A Link to the Past | 664.0KB |
+| 1 | Kingdom Hearts 2 | 1630.7KB |
+| 2 | Satisfactory | 1619.5KB |
+| 3 | Starcraft 2 | 1086.9KB |
+| 4 | Celeste (Open World) | 1039.8KB |
+| 5 | Lingo | 940.0KB |
+| 6 | Super Mario Land 2 | 919.1KB |
+| 7 | Kingdom Hearts | 748.7KB |
+| 8 | Links Awakening DX | 703.1KB |
+| 9 | A Link to the Past | 664.0KB |
+| 10 | TUNIC | 649.2KB |
 
 ### Exporter Files by Size
 
@@ -170,46 +169,44 @@ Of the 74 templates passing all 4 tests:
 | 5 | Starcraft 2 | 29.3KB |
 | 6 | Overcooked! 2 | 28.5KB |
 | 7 | Kingdom Hearts 2 | 20.4KB |
-| 8 | Stardew Valley | 20.0KB |
-| 9 | A Hat in Time | 18.2KB |
-| 10 | Terraria | 16.9KB |
-| 11 | The Messenger | 15.2KB |
-| 12 | The Witness | 14.6KB |
-| 13 | A Link to the Past | 14.0KB |
-| 14 | Final Fantasy Mystic Quest | 13.9KB |
-| 15 | Kirby's Dream Land 3 | 10.1KB |
-| 16 | Yoshi's Island | 9.2KB |
-| 17 | Factorio | 8.8KB |
-| 18 | Inscryption | 8.0KB |
-| 19 | Links Awakening DX | 7.3KB |
-| 20 | The Wind Waker | 7.0KB |
-| 21 | Raft | 6.5KB |
-| 22 | Secret of Evermore | 5.6KB |
-| 23 | Celeste 64 | 4.1KB |
-| 24 | Castlevania - Circle of the Moon | 4.0KB |
-| 25 | VVVVVV | 3.8KB |
-| 26 | Landstalker - The Treasures of King Nole | 3.6KB |
-| 27 | TUNIC | 3.1KB |
-| 28 | Paint | 2.7KB |
-| 29 | Timespinner | 2.2KB |
-| 30 | Subnautica | 2.2KB |
-| 31 | Aquaria | 1.8KB |
-| 32 | Bomb Rush Cyberfunk | 1.4KB |
-| 33 | DLCQuest | 1.2KB |
-| 34 | Old School Runescape | 1.0KB |
-| 35 | TOEM original | 0.6KB |
-| 36 | TOEM rule builder | 0.5KB |
+| 8 | A Hat in Time | 18.2KB |
+| 9 | Terraria | 16.9KB |
+| 10 | The Messenger | 15.2KB |
+| 11 | The Witness | 14.6KB |
+| 12 | A Link to the Past | 14.0KB |
+| 13 | Final Fantasy Mystic Quest | 13.9KB |
+| 14 | Kirby's Dream Land 3 | 10.1KB |
+| 15 | Yoshi's Island | 9.2KB |
+| 16 | Factorio | 8.8KB |
+| 17 | Inscryption | 8.0KB |
+| 18 | Links Awakening DX | 7.3KB |
+| 19 | The Wind Waker | 7.0KB |
+| 20 | Raft | 6.5KB |
+| 21 | Secret of Evermore | 5.6KB |
+| 22 | Celeste 64 | 4.1KB |
+| 23 | Castlevania - Circle of the Moon | 4.0KB |
+| 24 | VVVVVV | 3.8KB |
+| 25 | Landstalker - The Treasures of King Nole | 3.6KB |
+| 26 | TUNIC | 3.1KB |
+| 27 | Paint | 2.7KB |
+| 28 | Timespinner | 2.2KB |
+| 29 | Subnautica | 2.2KB |
+| 30 | Aquaria | 1.8KB |
+| 31 | Bomb Rush Cyberfunk | 1.4KB |
+| 32 | DLCQuest | 1.2KB |
+| 33 | Old School Runescape | 1.0KB |
+| 34 | TOEM original | 0.6KB |
+| 35 | TOEM rule builder | 0.5KB |
 
 ### GameLogic Files by Size
 
 | Rank | Game Name | GameLogic Size |
 |------|-----------|----------------|
-| 1 | Super Metroid | 114.5KB |
+| 1 | Super Metroid | 119.4KB |
 | 2 | Starcraft 2 | 90.1KB |
 | 3 | Bomb Rush Cyberfunk | 40.3KB |
 | 4 | Lingo | 10.7KB |
-| 5 | Stardew Valley | 9.8KB |
-| 6 | Secret of Evermore | 7.5KB |
+| 5 | Secret of Evermore | 7.5KB |
 
 ## Fuzz Tests
 
@@ -242,6 +239,7 @@ These templates are excluded from testing:
 | Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
 | Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
 | SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
+| Stardew Valley.yaml | Temporarily excluded. This was working before, but a recent update introduced some issues. |
 | Sudoku.yaml | Cannot be used for generating worlds. |
 | Universal Tracker.yaml | Not a game. |
 | Yacht Dice.yaml | Temporarily excluded. It currently times out the multiworld test. |

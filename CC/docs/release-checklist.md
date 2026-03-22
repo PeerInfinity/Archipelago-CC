@@ -124,6 +124,12 @@ The workflow generates presets on the `generated-presets` branch. Key inputs:
 - `update_preset_files`: true
 - `sync_mode`: merge or reset
 
+**Run the workflow twice:**
+
+1. **First run with `reset` mode** — replaces `generated-presets` with an exact copy of `main` before generating. This cleanly removes presets for deleted games and ensures no stale data from the upstream merge lingers.
+
+2. **Second run with `merge` mode** — advances the merge base so that any file deletions made by the workflow (e.g., worldgen directories that failed to generate) will correctly propagate when merging back to `main`.
+
 The workflow also rebuilds the world mapping (`scripts/data/world-mapping.json`) and updates the preset files index (`frontend/presets/preset_files.json`).
 
 After the workflow completes, merge the `generated-presets` branch into `main`:
@@ -157,16 +163,18 @@ Use the freshness report to identify which test workflows need to be run and whi
 
 Quick local checks that don't require workflow infrastructure. Run these before triggering CI workflows.
 
-### 4.1 Run local unit tests
+### 4.1 Run unit tests locally (optional early check)
+
+These are also run by workflows in Phase 5 (`unittests.yml` and `unittests_json.yml`). Running them locally first gives faster feedback before committing to workflow runs.
 
 ```bash
 pytest                    # Python unit tests (test/, test_json/, worlds/)
 npm run test:unit         # JavaScript unit tests (Vitest)
 ```
 
-### 4.2 Run documentation and coverage checks
+### 4.2 Run documentation and coverage checks (optional)
 
-These scripts are read-only by default — they report discrepancies without modifying files. Note: `generate-freshness-report.py` (Phase 3) automatically runs these same scripts with `--json` and includes their results in the freshness report. Running them here gives more detailed interactive output.
+These scripts are read-only by default — they report discrepancies without modifying files. They are already run automatically by `generate-freshness-report.py` in Phase 3 (with `--json`). Running them here gives more detailed interactive output.
 
 ```bash
 python scripts/docs/sync-rule-docs.py        # Check rule types are documented
@@ -180,13 +188,12 @@ python scripts/docs/find_orphaned_docs.py     # Check all .md files are linked f
 - `sync-script-docs.py` — Scans `scripts/` for executables and checks they're documented in `scripts/README.md`. Use `--generate` to create stubs.
 - `find_orphaned_docs.py` — Crawls markdown links from entry points (`README.md`, `docs/json/README.md`, etc.) and reports `.md` files not reachable from any entry point.
 
-### 4.3 Run additional local-only tests
+### 4.3 Run local-only tests
 
-These tests are not covered by any workflow:
+These tests are **not covered by any workflow** and must be run locally:
 
 ```bash
 python scripts/test/test_ast_format_parsing.py                   # AST format rule parsing
-python scripts/test/test-json-world-builder.py --game "Adventure" # JSON world builder round-trip
 node scripts/test/test-bidirectional-detection.js                 # Exit bidirectionality detection
 npm run bench                                                     # JS rule engine benchmarks
 ```
@@ -208,10 +215,11 @@ Run **all** of the following workflows (can be started in parallel):
 | Test All Templates (Sequential) | `test-all-sequential.yml` | `template_type`: original, worldgen, apworld |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | All UT modes (original, worldgen, hybrid, etc.) |
 | Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
-| Test Multiworld UT Fuzz | `test-multiworld-ut-fuzz.yml` | Default settings |
 | Test World Generator | `test-world-generator.yml` | `test_mode`: both |
 | Unit Tests | `unittests.yml` | |
 | Unit Tests (JSON) | `unittests_json.yml` | |
+
+The UT Fuzzer workflow should be run for each mode that feeds into the tracking mode config: `original`, `worldgen`, and `pickle`. These can run in parallel.
 
 ### 5.2 Merge workflow results
 
@@ -237,6 +245,24 @@ Common failure types:
 - Spoiler test failures — may indicate rule export/import issues
 - UT fuzz failures — may indicate tracking discrepancies
 - World generator failures — may indicate new upstream rule types not yet supported
+
+### 5.4 Regenerate tracking mode config
+
+After the UT fuzz results for all modes (original, worldgen, pickle) have been merged, regenerate the tracking mode config that UT Hybrid mode uses to select the best mode per-game:
+
+```bash
+python scripts/test/generate-tracking-mode-config.py
+```
+
+This reads the test result files in `scripts/output/ut-fuzz/` and generates `exporter/tracking-mode-config.json`, which specifies:
+- `fallback_order` — priority order for mode selection (worldgen > pickle > original)
+- `game_results` — which modes pass for each game (bundled and apworld)
+
+The config is used by:
+- **Exporter** (`exporter/exporter.py`) — decides whether to export `_rules.json` (worldgen) or `.pkl` (pickle) per-game
+- **TrackerCore** (`worlds/tracker/TrackerCore.py`) — selects which tracking mode to use per-game
+
+After regenerating, run the UT Fuzzer workflow once more in `hybrid` mode to verify the config produces correct results. Then merge those results and commit the updated config.
 
 ---
 

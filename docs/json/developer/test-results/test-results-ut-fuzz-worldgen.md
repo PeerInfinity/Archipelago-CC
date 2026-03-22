@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-22 03:26:59 UTC
 
 **Source Data Created:** 2026-03-21T22:05:16.406246+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 59 (passes worldgen mode per config)
-- **Unexpected Passes:** 14 (expected to fail but passed)
+- **Expected Passes:** 73 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
 - **Expected Failures:** 15 (doesn't pass worldgen mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -62,8 +62,8 @@ Of the 73 games with 100% pass rate:
 **Combined Custom Code Size:**
 
 - **Total Exporter Code:** 618.2KB
-- **Total Game Logic Code:** 657.1KB
-- **Combined Total:** 1275.3KB
+- **Total Game Logic Code:** 662.0KB
+- **Combined Total:** 1280.2KB
 
 ## Test Results
 
@@ -139,7 +139,7 @@ Of the 73 games with 100% pass rate:
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 177.7KB |
-| *Super Metroid* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 61.0KB | 114.5KB | 625.1KB |
+| *Super Metroid* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 0.5KB | ✅ | 99.7KB |
 | *TUNIC* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.1KB | ✅ | 649.2KB |
@@ -147,7 +147,7 @@ Of the 73 games with 100% pass rate:
 | The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 250.2KB |
-| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 458.1KB |
+| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 262.9KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.7KB |
@@ -160,7 +160,7 @@ Of the 73 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (59)
+### Expected Passes (73)
 
 Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 
@@ -173,9 +173,12 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | Aquaria | 10 | 10 | 0 | 0 | 100.0% |
 | Baking Adventure | 10 | 10 | 0 | 0 | 100.0% |
+| Blasphemous | 10 | 4 | 0 | 0 | 40.0% |
+| Bomb Rush Cyberfunk | 10 | 10 | 0 | 0 | 100.0% |
 | Bumper Stickers | 10 | 10 | 0 | 0 | 100.0% |
 | Castlevania - Circle of the Moon | 10 | 10 | 0 | 0 | 100.0% |
 | Castlevania 64 | 10 | 10 | 0 | 0 | 100.0% |
+| Celeste (Open World) | 10 | 10 | 0 | 0 | 100.0% |
 | Celeste 64 | 10 | 10 | 0 | 0 | 100.0% |
 | ChecksFinder | 10 | 10 | 0 | 0 | 100.0% |
 | Choo-Choo Charles | 10 | 10 | 0 | 0 | 100.0% |
@@ -185,18 +188,24 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | DOOM 1993 | 10 | 10 | 0 | 0 | 100.0% |
 | DOOM II | 10 | 10 | 0 | 0 | 100.0% |
 | Dark Souls III | 10 | 10 | 0 | 0 | 100.0% |
+| DepGraph | 10 | 10 | 0 | 0 | 100.0% |
 | Donkey Kong Country 3 | 10 | 10 | 0 | 0 | 100.0% |
+| EarthBound | 10 | 10 | 0 | 0 | 100.0% |
 | Factorio | 10 | 10 | 0 | 0 | 100.0% |
 | Faxanadu | 10 | 10 | 0 | 0 | 100.0% |
 | Final Fantasy | 10 | 10 | 0 | 0 | 100.0% |
+| Final Fantasy Mystic Quest | 10 | 9 | 0 | 0 | 90.0% |
 | Heretic | 10 | 10 | 0 | 0 | 100.0% |
 | Hylics 2 | 10 | 10 | 0 | 0 | 100.0% |
 | Inscryption | 10 | 10 | 0 | 0 | 100.0% |
+| Jak and Daxter: The Precursor Legacy | 10 | 10 | 0 | 0 | 100.0% |
 | Landstalker - The Treasures of King Nole | 10 | 10 | 0 | 0 | 100.0% |
+| Lingo | 10 | 3 | 0 | 0 | 30.0% |
 | Links Awakening DX | 10 | 10 | 0 | 0 | 100.0% |
 | Lufia II Ancient Cave | 10 | 10 | 0 | 0 | 100.0% |
 | Mario & Luigi Superstar Saga | 10 | 10 | 0 | 0 | 100.0% |
 | Mega Man 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Mega Man 3 | 10 | 10 | 0 | 0 | 100.0% |
 | MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
 | Meritous | 10 | 10 | 0 | 0 | 100.0% |
 | Metamath | 10 | 10 | 0 | 0 | 100.0% |
@@ -205,8 +214,11 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Old School Runescape | 10 | 10 | 0 | 0 | 100.0% |
 | Overcooked! 2 | 10 | 5 | 0 | 0 | 50.0% |
 | Paint | 10 | 10 | 0 | 0 | 100.0% |
+| Raft | 10 | 10 | 0 | 0 | 100.0% |
 | Risk of Rain 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Satisfactory | 10 | 10 | 0 | 0 | 100.0% |
 | Saving Princess | 10 | 10 | 0 | 0 | 100.0% |
+| Secret of Evermore | 10 | 10 | 0 | 0 | 100.0% |
 | Shivers | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Adventure 2 Battle | 10 | 10 | 0 | 0 | 100.0% |
 | Subnautica | 10 | 10 | 0 | 0 | 100.0% |
@@ -215,37 +227,18 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Super Mario World | 10 | 10 | 0 | 0 | 100.0% |
 | TOEM original | 10 | 10 | 0 | 0 | 100.0% |
 | TOEM rule builder | 10 | 10 | 0 | 0 | 100.0% |
+| TUNIC | 10 | 10 | 0 | 0 | 100.0% |
 | Terraria | 10 | 9 | 0 | 0 | 90.0% |
 | The Legend of Zelda | 10 | 10 | 0 | 0 | 100.0% |
 | The Messenger | 10 | 10 | 0 | 0 | 100.0% |
 | The Wind Waker | 10 | 5 | 0 | 0 | 50.0% |
+| The Witness | 10 | 10 | 0 | 0 | 100.0% |
 | Timespinner | 10 | 10 | 0 | 0 | 100.0% |
 | Undertale | 10 | 10 | 0 | 0 | 100.0% |
 | VVVVVV | 10 | 10 | 0 | 0 | 100.0% |
 | Wargroove | 10 | 10 | 0 | 0 | 100.0% |
 | Yoshi's Island | 10 | 10 | 0 | 0 | 100.0% |
 | shapez | 10 | 10 | 0 | 0 | 100.0% |
-
-### Unexpected Passes (14)
-
-Games NOT expected to pass worldgen mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Blasphemous | 10 | 4 | 0 | 0 | 40.0% |
-| Bomb Rush Cyberfunk | 10 | 10 | 0 | 0 | 100.0% |
-| Celeste (Open World) | 10 | 10 | 0 | 0 | 100.0% |
-| DepGraph | 10 | 10 | 0 | 0 | 100.0% |
-| EarthBound | 10 | 10 | 0 | 0 | 100.0% |
-| Final Fantasy Mystic Quest | 10 | 9 | 0 | 0 | 90.0% |
-| Jak and Daxter: The Precursor Legacy | 10 | 10 | 0 | 0 | 100.0% |
-| Lingo | 10 | 3 | 0 | 0 | 30.0% |
-| Mega Man 3 | 10 | 10 | 0 | 0 | 100.0% |
-| Raft | 10 | 10 | 0 | 0 | 100.0% |
-| Satisfactory | 10 | 10 | 0 | 0 | 100.0% |
-| Secret of Evermore | 10 | 10 | 0 | 0 | 100.0% |
-| TUNIC | 10 | 10 | 0 | 0 | 100.0% |
-| The Witness | 10 | 10 | 0 | 0 | 100.0% |
 
 ### Expected Failures (15)
 
