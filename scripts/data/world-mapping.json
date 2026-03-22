@@ -964,7 +964,7 @@
     "game_name": "Mega Man 3 WorldGen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Mega Man 3 WorldGen.yaml",
+    "template_file": null,
     "world_directory": "mm3_worldgen"
   },
   "MegaMan Battle Network 3": {
@@ -1400,7 +1400,7 @@
     "exporter_path": "exporter/games/official/sm.py",
     "exporter_size": 62416,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
-    "game_logic_size": 117281,
+    "game_logic_size": 122283,
     "game_name": "Super Metroid",
     "has_custom_exporter": true,
     "has_custom_game_logic": true,

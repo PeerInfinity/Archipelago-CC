@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 23:39:25 UTC
+**Generated:** 2026-03-22 04:16:53 UTC
 
 **Source Data Created:** 2026-03-21T23:39:25.613000+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 44 (passes worldgen mode per config)
-- **Unexpected Passes:** 12 (expected to fail but passed)
-- **Expected Failures:** 62 (doesn't pass worldgen mode per config)
-- **Unexpected Failures (logic):** 5 (expected to pass but had logic mismatch)
+- **Expected Passes:** 56 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 67 (doesn't pass worldgen mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -195,7 +195,7 @@ Of the 56 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (44)
+### Expected Passes (56)
 
 Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 
@@ -204,13 +204,17 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | A Dance of Fire and Ice | 10 | 10 | 0 | 0 | 100.0% |
 | A Difficult Game About Climbing | 10 | 9 | 0 | 0 | 90.0% |
 | Actraiser | 10 | 10 | 0 | 0 | 100.0% |
+| Air Delivery | 10 | 10 | 0 | 0 | 100.0% |
 | An Untitled Story | 10 | 10 | 0 | 0 | 100.0% |
+| Anodyne | 10 | 9 | 0 | 0 | 90.0% |
+| Astalon | 10 | 8 | 0 | 0 | 80.0% |
 | Autopelago | 10 | 10 | 0 | 0 | 100.0% |
 | Brotato | 10 | 7 | 0 | 0 | 70.0% |
 | Castlevania: Dawn of Sorrow | 10 | 10 | 0 | 0 | 100.0% |
 | DORONKO WANKO | 10 | 10 | 0 | 0 | 100.0% |
 | Diddy Kong Racing | 10 | 10 | 0 | 0 | 100.0% |
 | Dome Keeper | 10 | 10 | 0 | 0 | 100.0% |
+| Final Fantasy Tactics Advance | 10 | 10 | 0 | 0 | 100.0% |
 | Golden Sun The Lost Age | 10 | 10 | 0 | 0 | 100.0% |
 | Hatsune Miku Project Diva Mega Mix+ | 10 | 10 | 0 | 0 | 100.0% |
 | Here Comes Niko! | 10 | 10 | 0 | 0 | 100.0% |
@@ -222,16 +226,23 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Kingdom Hearts Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
 | Kingdom Hearts RE Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
 | League of Legends | 10 | 10 | 0 | 0 | 100.0% |
+| Lego Star Wars: The Complete Saga | 10 | 9 | 0 | 0 | 90.0% |
 | Little Witch Nobeta | 10 | 10 | 0 | 0 | 100.0% |
 | Luigi's Mansion | 10 | 3 | 0 | 0 | 30.0% |
 | MetroCUBEvania | 10 | 10 | 0 | 0 | 100.0% |
 | Metroid Fusion | 10 | 9 | 0 | 0 | 90.0% |
+| Nine Sols | 10 | 8 | 0 | 0 | 80.0% |
+| Pseudoregalia | 10 | 10 | 0 | 0 | 100.0% |
 | Rain World | 10 | 3 | 0 | 0 | 30.0% |
 | Ratchet & Clank 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Reventure | 10 | 10 | 0 | 0 | 100.0% |
 | Rift Wizard | 10 | 10 | 0 | 0 | 100.0% |
+| Rift of the Necrodancer | 10 | 10 | 0 | 0 | 100.0% |
 | Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Heroes | 10 | 0 | 0 | 0 | 0.0% |
+| Sonic Rush | 10 | 9 | 0 | 0 | 90.0% |
 | Sonic the Hedgehog 1 | 10 | 10 | 0 | 0 | 100.0% |
+| Soul Blazer | 10 | 10 | 0 | 0 | 100.0% |
 | Spinball | 10 | 10 | 0 | 0 | 100.0% |
 | Star Fox 64 | 10 | 10 | 0 | 0 | 100.0% |
 | Star Wars Episode I Racer | 10 | 10 | 0 | 0 | 100.0% |
@@ -242,30 +253,12 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | TurnipBoy | 10 | 10 | 0 | 0 | 100.0% |
 | Watery Words | 10 | 10 | 0 | 0 | 100.0% |
 | Wordipelago | 10 | 10 | 0 | 0 | 100.0% |
+| XCOM 2 War of the Chosen | 10 | 10 | 0 | 0 | 100.0% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 10 | 0 | 0 | 100.0% |
 | Zelda II: The Adventure of Link | 10 | 10 | 0 | 0 | 100.0% |
 | osu! | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (12)
-
-Games NOT expected to pass worldgen mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Air Delivery | 10 | 10 | 0 | 0 | 100.0% |
-| Anodyne | 10 | 9 | 0 | 0 | 90.0% |
-| Astalon | 10 | 8 | 0 | 0 | 80.0% |
-| Final Fantasy Tactics Advance | 10 | 10 | 0 | 0 | 100.0% |
-| Lego Star Wars: The Complete Saga | 10 | 9 | 0 | 0 | 90.0% |
-| Nine Sols | 10 | 8 | 0 | 0 | 80.0% |
-| Pseudoregalia | 10 | 10 | 0 | 0 | 100.0% |
-| Reventure | 10 | 10 | 0 | 0 | 100.0% |
-| Rift of the Necrodancer | 10 | 10 | 0 | 0 | 100.0% |
-| Sonic Rush | 10 | 9 | 0 | 0 | 90.0% |
-| Soul Blazer | 10 | 10 | 0 | 0 | 100.0% |
-| XCOM 2 War of the Chosen | 10 | 10 | 0 | 0 | 100.0% |
-
-### Expected Failures (62)
+### Expected Failures (67)
 
 Games NOT expected to pass worldgen mode and failed as expected.
 
@@ -274,6 +267,7 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | A Link Between Worlds | 10 | 0 | 10 | 0 | 0.0% |
 | ANIMAL WELL | 10 | 2 | 7 | 0 | 20.0% |
 | Against the Storm | 10 | 0 | 10 | 0 | 0.0% |
+| Another Crabs Treasure | 10 | 9 | 1 | 0 | 90.0% |
 | Ape Escape | 10 | 6 | 4 | 0 | 60.0% |
 | Ape Escape 3 | 10 | 0 | 8 | 0 | 0.0% |
 | Axiom Verge | 10 | 0 | 10 | 0 | 0.0% |
@@ -286,6 +280,7 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | CrossCode | 10 | 0 | 9 | 0 | 0.0% |
 | Crystal Project | 10 | 0 | 10 | 0 | 0.0% |
 | Crystalis | 10 | 1 | 7 | 0 | 10.0% |
+| Cuphead | 10 | 0 | 10 | 0 | 0.0% |
 | Deep Rock Galactic | 10 | 7 | 3 | 0 | 70.0% |
 | Digimon World | 10 | 0 | 6 | 0 | 0.0% |
 | Duke Nukem 3D | 10 | 1 | 8 | 0 | 10.0% |
@@ -299,6 +294,8 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | Iji | 10 | 0 | 10 | 0 | 0.0% |
 | Into the Breach | 10 | 0 | 10 | 0 | 0.0% |
 | Keep Talking and Nobody Explodes | 10 | 2 | 7 | 0 | 20.0% |
+| Kirby Super Star | 10 | 0 | 10 | 0 | 0.0% |
+| Lil Gator Game | 10 | 0 | 10 | 0 | 0.0% |
 | Lingo 2 | 10 | 0 | 4 | 0 | 0.0% |
 | Lunacid | 10 | 3 | 7 | 0 | 30.0% |
 | Majora's Mask Recompiled | 10 | 4 | 6 | 0 | 40.0% |
@@ -331,20 +328,9 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | The Legend of Zelda - Phantom Hourglass | 10 | 0 | 10 | 0 | 0.0% |
 | ToeJam and Earl | 10 | 0 | 10 | 0 | 0.0% |
 | Tyrian | 10 | 3 | 4 | 0 | 30.0% |
+| Vampire Survivors | 10 | 3 | 1 | 0 | 30.0% |
 | Wario Land | 10 | 0 | 10 | 0 | 0.0% |
 | Yu-Gi-Oh! Forbidden Memories | 10 | 0 | 10 | 0 | 0.0% |
-
-### Unexpected Failures (Logic Mismatch) (5)
-
-Games expected to pass worldgen mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Another Crabs Treasure | 10 | 9 | 1 | 0 | 90.0% |
-| Cuphead | 10 | 0 | 10 | 0 | 0.0% |
-| Kirby Super Star | 10 | 0 | 10 | 0 | 0.0% |
-| Lil Gator Game | 10 | 0 | 10 | 0 | 0.0% |
-| Vampire Survivors | 10 | 3 | 1 | 0 | 30.0% |
 
 ## Explain Support Details
 

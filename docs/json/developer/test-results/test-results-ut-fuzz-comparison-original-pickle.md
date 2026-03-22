@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle
 
-**Generated:** 2026-03-21 23:39:25 UTC
+**Generated:** 2026-03-22 04:16:53 UTC
 
-**Source Data Last Updated:** 2026-02-19T21:12:34
+**Source Data Last Updated:** 2026-03-21T23:01:02
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -17,11 +17,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 90
-- **Passing Both:** 39 (43.3%)
-- **Passing Original Only:** 2 (2.2%)
-- **Passing Pickle Only:** 38 (42.2%)
-- **Passing Neither:** 11 (12.2%)
+- **Total Games Tested:** 88
+- **Passing Both:** 39 (44.3%)
+- **Passing Original Only:** 0 (0.0%)
+- **Passing Pickle Only:** 38 (43.2%)
+- **Passing Neither:** 11 (12.5%)
 
 ## Full Comparison
 
@@ -31,14 +31,14 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | A Link to the Past | ❌ | ✅ |
 | A Short Hike | ✅ | ✅ |
 | APQuest | ✅ | ✅ |
-| Adventure | ✅ | ✅ |
+| Adventure | ⚠️ 9/10 | ✅ |
 | Aquaria | ✅ | ✅ |
 | Baking Adventure | ✅ | ✅ |
 | Blasphemous | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ | ✅ |
 | Bumper Stickers | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ | ✅ |
-| Castlevania 64 | ❌ 1/10 | ✅ |
+| Castlevania 64 | ❌ | ✅ |
 | Celeste (Open World) | ❌ 4/10 | ✅ |
 | Celeste 64 | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ |
@@ -49,11 +49,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM 1993 | ✅ | ✅ |
 | DOOM II | ✅ | ✅ |
 | Dark Souls III | ✅ | ✅ |
-| DepGraph | N/A | ✅ |
+| DepGraph | ⚠️ 9/10 | ✅ |
 | Donkey Kong Country 3 | ⚠️ 7/10 | ✅ |
 | EarthBound | ⚠️ 5/10 | ✅ |
 | Factorio | ❌ | ✅ |
-| Faxanadu | ❌ 1/10 | ✅ |
+| Faxanadu | ❌ 2/10 | ✅ |
 | Final Fantasy | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ⚠️ 9/10 | ✅ |
 | Heretic | ✅ | ✅ |
@@ -61,32 +61,31 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Hylics 2 | ✅ | ✅ |
 | Inscryption | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ 3/10 | ✅ |
-| Journey to Ascension | N/A | ❌ |
+| Journey to Ascension | ❌ | ❌ |
 | Kingdom Hearts | ❌ 4/10 | ✅ |
 | Kingdom Hearts 2 | ⚠️ 7/10 | ⚠️ 7/10 |
 | Kirby's Dream Land 3 | ❌ | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ | ✅ |
+| Landstalker - The Treasures of King Nole | ❌ 2/10 | ✅ |
 | Lingo | ✅ | ✅ |
 | Links Awakening DX | ❌ 1/10 | ❌ 1/10 |
 | Lufia II Ancient Cave | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ | ✅ |
-| Math Adventure | ✅ | N/A |
 | Mega Man 2 | ⚠️ 9/10 | ✅ |
-| Mega Man 3 | N/A | ✅ |
+| Mega Man 3 | ❌ | ✅ |
 | MegaMan Battle Network 3 | ✅ | ✅ |
 | Meritous | ✅ | ✅ |
-| Metamath | ⚠️ 8/10 | ✅ |
+| Metamath | ⚠️ 9/10 | ✅ |
 | Muse Dash | ❌ | ✅ |
 | Noita | ✅ | ✅ |
 | Ocarina of Time | ❌ | ✅ |
 | Old School Runescape | ✅ | ✅ |
 | Overcooked! 2 | ❌ | ✅ |
 | Paint | ✅ | ✅ |
-| Pokemon Emerald | ❌ 3/8 | ⚠️ 5/7 |
+| Pokemon Emerald | ❌ 3/7 | ⚠️ 5/7 |
 | Pokemon Red and Blue | ❌ | ✅ |
 | Raft | ✅ | ✅ |
 | Risk of Rain 2 | ✅ | ✅ |
-| SMZ3 | ❌ | ✅ |
+| SMZ3 | ❌ 1/10 | ✅ |
 | Satisfactory | ❌ | ❌ |
 | Saving Princess | ❌ 3/10 | ✅ |
 | Secret of Evermore | ✅ | ✅ |
@@ -95,9 +94,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Starcraft 2 | ❌ | ❌ |
 | Stardew Valley | ❌ | ❌ 4/10 |
 | Subnautica | ❌ 1/10 | ✅ |
-| Sudoku | ✅ | N/A |
 | Super Mario 64 | ❌ 4/10 | ✅ |
-| Super Mario Land 2 | ❌ 3/10 | ✅ |
+| Super Mario Land 2 | ❌ 4/10 | ✅ |
 | Super Mario World | ⚠️ 7/10 | ✅ |
 | Super Metroid | ❌ | ⚠️ 3/5 |
 | TOEM original | ✅ | ✅ |
@@ -105,8 +103,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | TUNIC | ✅ | ✅ |
 | Terraria | ⚠️ 9/10 | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ 1/10 | ❌ 1/10 |
-| The Wind Waker | ❌ 1/5 | ✅ |
+| The Messenger | ❌ | ❌ 1/10 |
+| The Wind Waker | ❌ | ✅ |
 | The Witness | ✅ | ✅ |
 | Timespinner | ❌ | ✅ |
 | Undertale | ✅ | ✅ |
@@ -116,7 +114,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yoshi's Island | ❌ 3/10 | ✅ |
 | Yu-Gi-Oh! 2006 | ⚠️ 5/10 | ✅ |
 | Zillion | ❌ | ✅ |
-| shapez | ⚠️ 8/10 | ✅ |
+| shapez | ✅ | ✅ |
 
 ## Games Passing Both (39)
 
@@ -126,7 +124,6 @@ These games have 100% success rate in both Universal Tracker versions.
 |-----------|
 | A Short Hike |
 | APQuest |
-| Adventure |
 | Aquaria |
 | Baking Adventure |
 | Blasphemous |
@@ -163,15 +160,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | The Witness |
 | Undertale |
 | Wargroove |
-
-## Games Passing Original Only (2)
-
-These games pass in the Original UT but fail in the Pickle UT.
-
-| Game Name |
-|-----------|
-| Math Adventure |
-| Sudoku |
+| shapez |
 
 ## Games Passing Pickle Only (38)
 
@@ -181,6 +170,7 @@ These games pass in the Pickle UT but fail in the Original UT.
 |-----------|
 | A Hat in Time |
 | A Link to the Past |
+| Adventure |
 | Castlevania 64 |
 | Celeste (Open World) |
 | DLCQuest |
@@ -216,7 +206,6 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Yacht Dice |
 | Yoshi's Island |
 | Yu-Gi-Oh! 2006 |
-| shapez |
 
 ## Games Passing Neither (11)
 
