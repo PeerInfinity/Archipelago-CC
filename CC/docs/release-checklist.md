@@ -215,7 +215,6 @@ Run **all** of the following workflows (can be started in parallel):
 | Test All Templates (Sequential) | `test-all-sequential.yml` | `template_type`: original, worldgen, apworld |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | All UT modes (original, worldgen, hybrid, etc.) |
 | Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
-| Test Multiworld UT Fuzz | `test-multiworld-ut-fuzz.yml` | Default settings |
 | Test World Generator | `test-world-generator.yml` | `test_mode`: both |
 | Unit Tests | `unittests.yml` | |
 | Unit Tests (JSON) | `unittests_json.yml` | |
