@@ -1,0 +1,1371 @@
+{
+  "metadata": {
+    "created": "2026-03-22T03:15:17.768209+00:00",
+    "last_updated": "2026-03-22T03:15:17.768218+00:00",
+    "script_version": "1.0.0",
+    "combined_from": 10,
+    "test_type": "spoiler_fuzz",
+    "seed_mode": "fixed",
+    "starting_seed": 1,
+    "runs_per_game": 10,
+    "generation_timeout": 300,
+    "test_timeout": 120,
+    "total_templates": 50
+  },
+  "results": {
+    "A Dance of Fire and Ice.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "A Dance of Fire and Ice",
+        "world_directory": "adofai"
+      },
+      "timestamp": "2026-03-22T02:31:42.982274+00:00"
+    },
+    "Diddy Kong Racing.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Diddy Kong Racing",
+        "world_directory": "diddy_kong_racing"
+      },
+      "timestamp": "2026-03-22T02:36:47.028072+00:00"
+    },
+    "Kingdom Hearts Chain of Memories.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kingdom Hearts Chain of Memories",
+        "world_directory": "khcom"
+      },
+      "timestamp": "2026-03-22T02:41:43.122731+00:00"
+    },
+    "Rain World.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 7,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            4,
+            5,
+            9
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Rain World",
+        "world_directory": "rain_world"
+      },
+      "timestamp": "2026-03-22T02:46:28.560505+00:00"
+    },
+    "Symphony of the Night.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Symphony of the Night",
+        "world_directory": "sotn"
+      },
+      "timestamp": "2026-03-22T02:51:46.818811+00:00"
+    },
+    "DORONKO WANKO.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "DORONKO WANKO",
+        "world_directory": "doronko_wanko"
+      },
+      "timestamp": "2026-03-22T02:33:24.215969+00:00"
+    },
+    "Kingdom Hearts Birth by Sleep.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kingdom Hearts Birth by Sleep",
+        "world_directory": "khbbs"
+      },
+      "timestamp": "2026-03-22T02:38:49.459865+00:00"
+    },
+    "PlateUp.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 7,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            3,
+            6,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "PlateUp",
+        "world_directory": "plateup"
+      },
+      "timestamp": "2026-03-22T02:48:46.628439+00:00"
+    },
+    "Super Cat Planet.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Super Cat Planet",
+        "world_directory": "scp"
+      },
+      "timestamp": "2026-03-22T02:55:29.025187+00:00"
+    },
+    "osu!.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "osu!",
+        "world_directory": "osu"
+      },
+      "timestamp": "2026-03-22T03:07:40.281262+00:00"
+    },
+    "A Difficult Game About Climbing.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 9,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "A Difficult Game About Climbing",
+        "world_directory": "difficult_climbing"
+      },
+      "timestamp": "2026-03-22T02:31:51.895302+00:00"
+    },
+    "Dome Keeper.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Dome Keeper",
+        "world_directory": "dome_keeper"
+      },
+      "timestamp": "2026-03-22T02:37:08.645838+00:00"
+    },
+    "Kingdom Hearts RE Chain of Memories.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kingdom Hearts RE Chain of Memories",
+        "world_directory": "khrecom"
+      },
+      "timestamp": "2026-03-22T02:42:32.296570+00:00"
+    },
+    "Ratchet & Clank 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Ratchet & Clank 2",
+        "world_directory": "rac2"
+      },
+      "timestamp": "2026-03-22T02:47:52.637079+00:00"
+    },
+    "TOEM A Photo Adventure.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "TOEM: A Photo Adventure",
+        "world_directory": "toem"
+      },
+      "timestamp": "2026-03-22T02:53:01.190958+00:00"
+    },
+    "Actraiser.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Actraiser",
+        "world_directory": "actraiser"
+      },
+      "timestamp": "2026-03-22T02:32:26.267705+00:00"
+    },
+    "Golden Sun The Lost Age.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Golden Sun The Lost Age",
+        "world_directory": "gstla"
+      },
+      "timestamp": "2026-03-22T02:39:24.197385+00:00"
+    },
+    "Kirby Super Star.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 10,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kirby Super Star",
+        "world_directory": "kss"
+      },
+      "timestamp": "2026-03-22T02:43:26.773832+00:00"
+    },
+    "Rift Wizard.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Rift Wizard",
+        "world_directory": "riftwizard"
+      },
+      "timestamp": "2026-03-22T02:48:43.482530+00:00"
+    },
+    "Tevi.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Tevi",
+        "world_directory": "tevi"
+      },
+      "timestamp": "2026-03-22T02:56:58.619283+00:00"
+    },
+    "An Untitled Story.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "An Untitled Story",
+        "world_directory": "aus"
+      },
+      "timestamp": "2026-03-22T02:31:35.018073+00:00"
+    },
+    "Hatsune Miku Project Diva Mega Mix+.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Hatsune Miku Project Diva Mega Mix+",
+        "world_directory": "megamix"
+      },
+      "timestamp": "2026-03-22T02:37:52.307975+00:00"
+    },
+    "League of Legends.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 6,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 4,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            6,
+            7,
+            8,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "League of Legends",
+        "world_directory": "lol"
+      },
+      "timestamp": "2026-03-22T02:55:15.237278+00:00"
+    },
+    "Simon Tatham's Portable Puzzle Collection.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 2,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 8,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s",
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            3,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Simon Tatham's Portable Puzzle Collection",
+        "world_directory": "sgtpuzzles"
+      },
+      "timestamp": "2026-03-22T03:10:07.367273+00:00"
+    },
+    "TurnipBoy.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "TurnipBoy",
+        "world_directory": "turnipboy"
+      },
+      "timestamp": "2026-03-22T03:14:44.725235+00:00"
+    },
+    "Another Crabs Treasure.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Another Crabs Treasure",
+        "world_directory": "another_crab"
+      },
+      "timestamp": "2026-03-22T02:33:38.304028+00:00"
+    },
+    "Here Comes Niko!.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Here Comes Niko!",
+        "world_directory": "hcniko"
+      },
+      "timestamp": "2026-03-22T02:42:36.787368+00:00"
+    },
+    "Lil Gator Game.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 10,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 718, in __call__\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 718, in __call__\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: \"/home/runner/work/Archipelago-CC/Archipelago-CC/rule_builder/rules.py\", line 459, in reached_region\n    player_results = cast(dict[int, bool], state.rule_builder_cache[self.player])  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'CollectionState' object has no attribute 'rule_builder_cache'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Lil Gator Game",
+        "world_directory": "lil_gator_game"
+      },
+      "timestamp": "2026-03-22T02:46:23.337782+00:00"
+    },
+    "Sonic Heroes.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 10,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Sonic Heroes",
+        "world_directory": "sonic_heroes"
+      },
+      "timestamp": "2026-03-22T02:50:09.363390+00:00"
+    },
+    "Vampire Survivors.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 4,
+        "generation_failure": 0,
+        "ignored": 6,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Vampire Survivors",
+        "world_directory": "vampire_survivors"
+      },
+      "timestamp": "2026-03-22T02:55:39.892311+00:00"
+    },
+    "Autopelago.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Autopelago",
+        "world_directory": "autopelago"
+      },
+      "timestamp": "2026-03-22T02:31:49.885922+00:00"
+    },
+    "Isles Of Sea And Sky.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Isles Of Sea And Sky",
+        "world_directory": "isles_of_sea_and_sky"
+      },
+      "timestamp": "2026-03-22T02:38:18.801624+00:00"
+    },
+    "Little Witch Nobeta.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Little Witch Nobeta",
+        "world_directory": "little_witch_nobeta"
+      },
+      "timestamp": "2026-03-22T02:44:39.479365+00:00"
+    },
+    "Sonic the Hedgehog 1.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 9,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 1,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Sonic the Hedgehog 1",
+        "world_directory": "sonic1"
+      },
+      "timestamp": "2026-03-22T02:50:31.522302+00:00"
+    },
+    "Watery Words.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Watery Words",
+        "world_directory": "waterywords"
+      },
+      "timestamp": "2026-03-22T02:57:02.784347+00:00"
+    },
+    "Brotato.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 3,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Brotato",
+        "world_directory": "brotato"
+      },
+      "timestamp": "2026-03-22T02:31:05.079900+00:00"
+    },
+    "Ittle Dew 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 9,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Ittle Dew 2",
+        "world_directory": "ittle_dew_2"
+      },
+      "timestamp": "2026-03-22T02:36:50.650493+00:00"
+    },
+    "Luigi's Mansion.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 3,
+        "generation_failure": 0,
+        "ignored": 7,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Luigi's Mansion",
+        "world_directory": "luigismansion"
+      },
+      "timestamp": "2026-03-22T02:41:35.256019+00:00"
+    },
+    "Spinball.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Spinball",
+        "world_directory": "spinball"
+      },
+      "timestamp": "2026-03-22T02:46:06.440000+00:00"
+    },
+    "Wordipelago.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Wordipelago",
+        "world_directory": "wordipelago"
+      },
+      "timestamp": "2026-03-22T02:52:15.771251+00:00"
+    },
+    "Castlevania Dawn of Sorrow.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Castlevania: Dawn of Sorrow",
+        "world_directory": "cv_dos"
+      },
+      "timestamp": "2026-03-22T02:31:59.573807+00:00"
+    },
+    "Jigsaw.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Jigsaw",
+        "world_directory": "jigsaw"
+      },
+      "timestamp": "2026-03-22T02:38:42.358504+00:00"
+    },
+    "MetroCUBEvania.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "MetroCUBEvania",
+        "world_directory": "metrocubevania"
+      },
+      "timestamp": "2026-03-22T02:43:41.149920+00:00"
+    },
+    "Star Fox 64.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 10,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Star Fox 64",
+        "world_directory": "star_fox_64"
+      },
+      "timestamp": "2026-03-22T02:50:24.090884+00:00"
+    },
+    "Yu-Gi-Oh! Dungeon Dice Monsters.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 6,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 4,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            2,
+            3,
+            4,
+            6
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Yu-Gi-Oh! Dungeon Dice Monsters",
+        "world_directory": "yugiohddm"
+      },
+      "timestamp": "2026-03-22T02:56:02.148934+00:00"
+    },
+    "Cuphead.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 10,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Cuphead",
+        "world_directory": "cuphead"
+      },
+      "timestamp": "2026-03-22T02:30:51.763866+00:00"
+    },
+    "K-On! After School Live!!.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "K-On! After School Live!!",
+        "world_directory": "kon"
+      },
+      "timestamp": "2026-03-22T02:38:34.133138+00:00"
+    },
+    "Metroid Fusion.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 9,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Metroid Fusion",
+        "world_directory": "metroidfusion"
+      },
+      "timestamp": "2026-03-22T02:45:26.960171+00:00"
+    },
+    "Star Wars Episode I Racer.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Star Wars Episode I Racer",
+        "world_directory": "swr"
+      },
+      "timestamp": "2026-03-22T02:50:49.240543+00:00"
+    },
+    "Zelda II The Adventure of Link.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Zelda II: The Adventure of Link",
+        "world_directory": "zelda2"
+      },
+      "timestamp": "2026-03-22T02:56:11.821022+00:00"
+    }
+  }
+}
