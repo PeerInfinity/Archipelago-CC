@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-03-22 16:37:45 UTC
+**Generated:** 2026-03-22 17:48:53 UTC
 
 **Source Data Created:** 2026-03-22T05:44:04.815754+00:00
 
@@ -30,15 +30,15 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Orig Seeded:** 48/88 passed (54.5%)
 - **UT Fuzz Worldgen:** 63/88 passed (71.6%)
 - **UT Fuzz Pickle:** 74/88 passed (84.1%)
-- **UT Fuzz Hybrid:** 64/88 passed (72.7%)
+- **UT Fuzz Hybrid:** 71/88 passed (80.7%)
 
 ### Combined Results (All 6 Tests)
 
 - **Games passing all 6 fuzz tests:** 28/88 (31.8%)
-- **Games passing 5 fuzz tests:** 10/88 (11.4%)
-- **Games passing 4 fuzz tests:** 21/88 (23.9%)
-- **Games passing 3 fuzz tests:** 11/88 (12.5%)
-- **Games passing 2 fuzz tests:** 3/88 (3.4%)
+- **Games passing 5 fuzz tests:** 11/88 (12.5%)
+- **Games passing 4 fuzz tests:** 25/88 (28.4%)
+- **Games passing 3 fuzz tests:** 7/88 (8.0%)
+- **Games passing 2 fuzz tests:** 2/88 (2.3%)
 - **Games passing 1 fuzz test:** 6/88 (6.8%)
 - **Games passing 0 fuzz tests:** 9/88 (10.2%)
 
@@ -47,9 +47,9 @@ This summary combines results from fuzz tests that validate game configurations 
 This view excludes UT Original and UT Orig Seeded, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.
 
 - **Games passing all 4 fuzz tests:** 55/88 (62.5%)
-- **Games passing 3 fuzz tests:** 8/88 (9.1%)
-- **Games passing 2 fuzz tests:** 2/88 (2.3%)
-- **Games passing 1 fuzz test:** 14/88 (15.9%)
+- **Games passing 3 fuzz tests:** 9/88 (10.2%)
+- **Games passing 2 fuzz tests:** 7/88 (8.0%)
+- **Games passing 1 fuzz test:** 8/88 (9.1%)
 - **Games passing 0 fuzz tests:** 9/88 (10.2%)
 
 ## Test Results
@@ -63,12 +63,12 @@ This view excludes UT Original and UT Orig Seeded, showing results for Javascrip
 | Adventure | ✅ | 🔶 86/100 | ✅ | ✅ | ✅ | ✅ | 25.7KB |
 | Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 277.3KB |
 | Baking Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 17.9KB |
-| Blasphemous | — | ✅ | ✅ | ❌ | ✅ | ❌ | 2760.8KB |
-| Bomb Rush Cyberfunk | 🔶 8/10 | ✅ | ✅ | ❌ | ✅ | ❌ | 325.3KB |
+| Blasphemous | — | ✅ | ✅ | ❌ | ✅ | ✅ | 2760.8KB |
+| Bomb Rush Cyberfunk | 🔶 8/10 | ✅ | ✅ | ❌ | ✅ | ✅ | 325.3KB |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 93.8KB |
 | Castlevania 64 | ✅ | ❌ 6/100 | ❌ | ✅ | ✅ | ✅ | 137.8KB |
-| Celeste (Open World) | ⚠️ 9/10 | ❌ 46/100 | ✅ | ❌ | ✅ | ❌ | 1039.8KB |
+| Celeste (Open World) | ⚠️ 9/10 | ❌ 46/100 | ✅ | ❌ | ✅ | ✅ | 1039.8KB |
 | Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 53.6KB |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 16.4KB |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 281.4KB |
@@ -86,16 +86,16 @@ This view excludes UT Original and UT Orig Seeded, showing results for Javascrip
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | ✅ | 50.3KB |
 | Final Fantasy Mystic Quest | ✅ | 🔶 89/100 | ✅ | ✅ | ✅ | ✅ | 548.1KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 367.6KB |
-| Hollow Knight | — | ❌ 9/100 | ❌ | ❌ 8/100 | ✅ | ❌ | 3501.1KB |
+| Hollow Knight | — | ❌ 9/100 | ❌ | ❌ 8/100 | ✅ | ❌ 8/100 | 3501.1KB |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 100.4KB |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 84.3KB |
-| Jak and Daxter: The Precursor Legacy | — | 🔶 62/100 | ✅ | ❌ 1/100 | ✅ | ❌ | 257.9KB |
+| Jak and Daxter: The Precursor Legacy | — | 🔶 62/100 | ✅ | ❌ 1/100 | ✅ | ✅ | 257.9KB |
 | Journey to Ascension | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 48.3KB |
-| Kingdom Hearts | 🔶 8/10 | ❌ 18/100 | ❌ 4/10 | ❌ 18/99 | ⚠️ 99/99 | ❌ 4/10 | 748.7KB |
-| Kingdom Hearts 2 | ❌ 3/7 | ❌ 44/100 | 🔶 7/10 | ❌ | ❌ 44/95 | 🔶 6/10 | 1630.7KB |
+| Kingdom Hearts | 🔶 8/10 | ❌ 18/100 | ❌ 4/10 | ❌ 18/99 | ⚠️ 99/99 | ❌ 18/100 | 748.7KB |
+| Kingdom Hearts 2 | ❌ 3/7 | ❌ 44/100 | 🔶 7/10 | ❌ | ❌ 44/95 | ❌ 43/95 | 1630.7KB |
 | Kirby's Dream Land 3 | ❌ 3/10 | ❌ | ❌ | ❌ | ✅ | ❌ | 528.7KB |
 | Landstalker - The Treasures of King Nole | ✅ | ❌ 31/100 | ❌ 3/10 | ✅ | ✅ | ✅ | 209.2KB |
-| Lingo | 🔶 2/3 | ❌ 19/45 | ✅ | ❌ 2/45 | ✅ | ❌ | 940.0KB |
+| Lingo | 🔶 2/3 | ❌ 19/45 | ✅ | ❌ 2/45 | ✅ | ❌ 19/45 | 940.0KB |
 | Links Awakening DX | ✅ | ❌ 23/100 | ❌ 1/10 | ✅ | ❌ 23/100 | ✅ | 703.1KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 122.8KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 395.5KB |
@@ -103,45 +103,45 @@ This view excludes UT Original and UT Orig Seeded, showing results for Javascrip
 | Mega Man 3 | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | 71.7KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 204.7KB |
 | Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 57.0KB |
-| Metamath | ✅ | 🔶 89/100 | ✅ | ⚠️ 99/100 | ⚠️ 99/100 | ✅ | 56.0KB |
+| Metamath | ✅ | 🔶 89/100 | ✅ | ⚠️ 99/100 | ⚠️ 99/100 | 🔶 83/100 | 56.0KB |
 | Muse Dash | ✅ | ❌ | ❌ 3/10 | ✅ | ✅ | ✅ | 228.3KB |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 73.9KB |
 | Ocarina of Time | — | ❌ | ❌ | ❌ | ⚠️ 96/98 | ❌ | 1274.4KB |
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 305.2KB |
 | Overcooked! 2 | ✅ | ❌ 9/100 | 🔶 3/5 | ✅ | ✅ | ✅ | 488.3KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 123.5KB |
-| Pokemon Emerald | — | 🔶 56/92 | ❌ 3/7 | ❌ 31/92 | ⚠️ 86/92 | ❌ 3/7 | 1350.2KB |
+| Pokemon Emerald | — | 🔶 56/92 | ❌ 3/7 | ❌ 31/92 | ⚠️ 86/92 | 🔶 54/92 | 1350.2KB |
 | Pokemon Red and Blue | — | ❌ | ❌ | ❌ | ✅ | ❌ | 1270.2KB |
-| Raft | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | 198.4KB |
+| Raft | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 131.4KB |
-| SMZ3 | — | ❌ 1/100 | ❌ 2/10 | ❌ | ✅ | ❌ 1/10 | 1890.6KB |
+| SMZ3 | — | ❌ 1/100 | ❌ 2/10 | ❌ | ✅ | ❌ | 1890.6KB |
 | Satisfactory | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ | 1619.5KB |
 | Saving Princess | ✅ | ❌ 24/100 | ✅ | ✅ | ✅ | ✅ | 33.6KB |
-| Secret of Evermore | 🔶 5/10 | ✅ | ✅ | ❌ | ✅ | ❌ | 415.0KB |
+| Secret of Evermore | 🔶 5/10 | ✅ | ✅ | ❌ | ✅ | ✅ | 415.0KB |
 | Shivers | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ⚠️ 9/10 | ❌ 6/100 | ❌ 2/10 | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 1086.9KB |
-| Stardew Valley | — | ❌ 10/100 | ❌ 3/10 | ❌ | ❌ 19/100 | 🔶 5/10 | 2558.2KB |
+| Stardew Valley | — | ❌ 10/100 | ❌ 3/10 | ❌ | ❌ 19/100 | ❌ 21/99 | 2558.2KB |
 | Subnautica | ✅ | ❌ 12/100 | ❌ 1/10 | ✅ | ✅ | ✅ | 205.5KB |
 | Super Mario 64 | ✅ | ❌ 28/100 | ❌ 4/10 | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | ❌ 24/100 | ❌ 1/10 | ✅ | ✅ | ✅ | 919.1KB |
 | Super Mario World | ✅ | 🔶 55/100 | 🔶 7/10 | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ❌ | ❌ 6/99 | ❌ | ❌ | 🔶 51/59 | ❌ | 625.1KB |
+| Super Metroid | ❌ | ❌ 6/99 | ❌ | ❌ | 🔶 51/59 | ❌ 8/57 | 625.1KB |
 | TOEM original | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 99.7KB |
 | TOEM rule builder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 99.7KB |
-| TUNIC | ❌ 2/10 | ✅ | ✅ | 🔶 58/100 | ✅ | 🔶 6/10 | 649.2KB |
+| TUNIC | ❌ 2/10 | ✅ | ✅ | 🔶 58/100 | ✅ | ✅ | 649.2KB |
 | Terraria | ✅ | ⚠️ 98/100 | ✅ | ✅ | ✅ | ✅ | 279.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 554.6KB |
 | The Messenger | ✅ | ❌ 9/100 | ❌ 1/10 | ✅ | ❌ 7/100 | ✅ | 210.4KB |
 | The Wind Waker | ✅ | ❌ 4/57 | ❌ 1/5 | ✅ | ✅ | ✅ | 250.2KB |
-| The Witness | ❌ 2/10 | ✅ | ✅ | ❌ 15/100 | ✅ | ❌ 2/10 | 468.1KB |
+| The Witness | ❌ 2/10 | ✅ | ✅ | ❌ 15/100 | ✅ | ✅ | 468.1KB |
 | Timespinner | ✅ | ❌ 6/100 | ❌ | ✅ | ✅ | ✅ | 262.9KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | 🔶 64/100 | 🔶 8/10 | ✅ | ✅ | ✅ | 22.7KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 44.1KB |
-| Yacht Dice | — | ❌ 1/100 | ❌ | ❌ 1/100 | ✅ | ❌ | 248.5KB |
+| Yacht Dice | — | ❌ 1/100 | ❌ | ❌ 1/100 | ✅ | ❌ 1/100 | 248.5KB |
 | Yoshi's Island | ✅ | ❌ 25/100 | ❌ 2/10 | ✅ | ✅ | ✅ | 295.3KB |
-| Yu-Gi-Oh! 2006 | — | ❌ 34/100 | 🔶 5/10 | ❌ 34/100 | ✅ | 🔶 5/10 | 644.0KB |
+| Yu-Gi-Oh! 2006 | — | ❌ 34/100 | 🔶 5/10 | ❌ 34/100 | ✅ | ❌ 34/100 | 644.0KB |
 | Zillion | — | ❌ | ❌ | ❌ | ⚠️ 79/79 | ❌ | 321.2KB |
 | shapez | 🔶 8/10 | ✅ | ✅ | ✅ | ✅ | ✅ | 153.8KB |
 

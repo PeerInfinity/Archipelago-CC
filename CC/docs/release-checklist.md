@@ -334,6 +334,33 @@ Key options:
 - `--skip-tests` — Skip running verification tests
 - `--test MODE` — Choose test game (`auto`, `adventure`, `alttp`, or `none`)
 
+### 7.3 Manual GUI installer test
+
+Test the installer APWorld the way an end user would — downloading it into a fresh vanilla Archipelago and running it from the Launcher GUI. This verifies the download URL, APWorld loading, and GUI components work end-to-end.
+
+Push all changes before running, since the installer downloads from GitHub:
+
+```bash
+rm -rf ~/CC/Archipelago-vanilla/
+git clone https://github.com/ArchipelagoMW/Archipelago.git ~/CC/Archipelago-vanilla/
+cd ~/CC/Archipelago-vanilla/
+mkdir -p custom_worlds
+wget -O custom_worlds/json_tools_installer.apworld \
+    https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld
+python3 -m venv .venv
+source .venv/bin/activate
+python ModuleUpdate.py -y
+python Launcher.py
+```
+
+In the Launcher GUI, verify:
+- **JSON Tools Installer** component appears and opens
+- Install completes successfully (dev version, all components including Rule Builder)
+- **JSON Tools Status** shows correct installation state
+- **JSON Tools Scripts** — run the spoiler test to verify export works
+
+**Note:** The Rule Builder component must be installed for the exporter to work. The exporter has a transitive import dependency on the fork's extended `rule_builder/__init__.py` (via `world_generator._sanitization`). Without it, the exporter silently fails to write preset files. A future fix would make the exporter fall back to AST format when the Rule Builder isn't present.
+
 ---
 
 ## Phase 8: Stable Release
