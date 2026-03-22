@@ -8,7 +8,7 @@
     "game_name": "A Dance of Fire and Ice",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "A Dance of Fire and Ice.yaml",
+    "template_file": null,
     "world_directory": "adofai"
   },
   "A Difficult Game About Climbing": {
@@ -20,7 +20,7 @@
     "game_name": "A Difficult Game About Climbing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "A Difficult Game About Climbing.yaml",
+    "template_file": null,
     "world_directory": "difficult_climbing"
   },
   "A Link Between Worlds": {
@@ -32,7 +32,7 @@
     "game_name": "A Link Between Worlds",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "A Link Between Worlds.yaml",
+    "template_file": null,
     "world_directory": "albw"
   },
   "ANIMAL WELL": {
@@ -44,7 +44,7 @@
     "game_name": "ANIMAL WELL",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "ANIMAL WELL.yaml",
+    "template_file": null,
     "world_directory": "animal_well"
   },
   "Actraiser": {
@@ -56,7 +56,7 @@
     "game_name": "Actraiser",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Actraiser.yaml",
+    "template_file": null,
     "world_directory": "actraiser"
   },
   "Against the Storm": {
@@ -68,7 +68,7 @@
     "game_name": "Against the Storm",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Against the Storm.yaml",
+    "template_file": null,
     "world_directory": "against_the_storm"
   },
   "Air Delivery": {
@@ -80,7 +80,7 @@
     "game_name": "Air Delivery",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Air Delivery.yaml",
+    "template_file": null,
     "world_directory": "air_delivery"
   },
   "An Untitled Story": {
@@ -92,7 +92,7 @@
     "game_name": "An Untitled Story",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "An Untitled Story.yaml",
+    "template_file": null,
     "world_directory": "aus"
   },
   "Anodyne": {
@@ -104,7 +104,7 @@
     "game_name": "Anodyne",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Anodyne.yaml",
+    "template_file": null,
     "world_directory": "anodyne"
   },
   "Another Crabs Treasure": {
@@ -116,7 +116,7 @@
     "game_name": "Another Crabs Treasure",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Another Crabs Treasure.yaml",
+    "template_file": null,
     "world_directory": "another_crab"
   },
   "Ape Escape": {
@@ -128,7 +128,7 @@
     "game_name": "Ape Escape",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ape Escape.yaml",
+    "template_file": null,
     "world_directory": "apeescape"
   },
   "Ape Escape 3": {
@@ -140,7 +140,7 @@
     "game_name": "Ape Escape 3",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ape Escape 3.yaml",
+    "template_file": null,
     "world_directory": "ape_escape_3"
   },
   "Astalon": {
@@ -152,7 +152,7 @@
     "game_name": "Astalon",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Astalon.yaml",
+    "template_file": null,
     "world_directory": "astalon"
   },
   "Autopelago": {
@@ -164,7 +164,7 @@
     "game_name": "Autopelago",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Autopelago.yaml",
+    "template_file": null,
     "world_directory": "autopelago"
   },
   "Axiom Verge": {
@@ -176,7 +176,7 @@
     "game_name": "Axiom Verge",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Axiom Verge.yaml",
+    "template_file": null,
     "world_directory": "axiomverge"
   },
   "Balatro": {
@@ -188,7 +188,7 @@
     "game_name": "Balatro",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Balatro.yaml",
+    "template_file": null,
     "world_directory": "balatro"
   },
   "Brotato": {
@@ -200,7 +200,7 @@
     "game_name": "Brotato",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Brotato.yaml",
+    "template_file": null,
     "world_directory": "brotato"
   },
   "Castlevania: Dawn of Sorrow": {
@@ -212,7 +212,7 @@
     "game_name": "Castlevania: Dawn of Sorrow",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Castlevania Dawn of Sorrow.yaml",
+    "template_file": null,
     "world_directory": "cv_dos"
   },
   "Cavern of Dreams": {
@@ -224,7 +224,7 @@
     "game_name": "Cavern of Dreams",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Cavern of Dreams.yaml",
+    "template_file": null,
     "world_directory": "cavern_of_dreams"
   },
   "ChecksMate": {
@@ -236,7 +236,7 @@
     "game_name": "ChecksMate",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "ChecksMate.yaml",
+    "template_file": null,
     "world_directory": "checksmate"
   },
   "Chrono Trigger Jets of Time": {
@@ -248,7 +248,7 @@
     "game_name": "Chrono Trigger Jets of Time",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Chrono Trigger Jets of Time.yaml",
+    "template_file": null,
     "world_directory": "ctjot"
   },
   "ClusterTruck": {
@@ -260,7 +260,7 @@
     "game_name": "ClusterTruck",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "ClusterTruck.yaml",
+    "template_file": null,
     "world_directory": "cluster_truck"
   },
   "Corn Kidz 64": {
@@ -272,7 +272,7 @@
     "game_name": "Corn Kidz 64",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Corn Kidz 64.yaml",
+    "template_file": null,
     "world_directory": "cornkidz64"
   },
   "CrossCode": {
@@ -284,7 +284,7 @@
     "game_name": "CrossCode",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "CrossCode.yaml",
+    "template_file": null,
     "world_directory": "crosscode"
   },
   "Crystal Project": {
@@ -296,7 +296,7 @@
     "game_name": "Crystal Project",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Crystal Project.yaml",
+    "template_file": null,
     "world_directory": "crystal_project"
   },
   "Crystalis": {
@@ -308,7 +308,7 @@
     "game_name": "Crystalis",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Crystalis.yaml",
+    "template_file": null,
     "world_directory": "crystalis"
   },
   "Cuphead": {
@@ -320,7 +320,7 @@
     "game_name": "Cuphead",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Cuphead.yaml",
+    "template_file": null,
     "world_directory": "cuphead"
   },
   "DORONKO WANKO": {
@@ -332,7 +332,7 @@
     "game_name": "DORONKO WANKO",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "DORONKO WANKO.yaml",
+    "template_file": null,
     "world_directory": "doronko_wanko"
   },
   "Deep Rock Galactic": {
@@ -344,7 +344,7 @@
     "game_name": "Deep Rock Galactic",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Deep Rock Galactic.yaml",
+    "template_file": null,
     "world_directory": "deep_rock_galactic"
   },
   "Diddy Kong Racing": {
@@ -356,7 +356,7 @@
     "game_name": "Diddy Kong Racing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Diddy Kong Racing.yaml",
+    "template_file": null,
     "world_directory": "diddy_kong_racing"
   },
   "Digimon World": {
@@ -368,7 +368,7 @@
     "game_name": "Digimon World",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Digimon World.yaml",
+    "template_file": null,
     "world_directory": "dw1"
   },
   "Dome Keeper": {
@@ -380,7 +380,7 @@
     "game_name": "Dome Keeper",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Dome Keeper.yaml",
+    "template_file": null,
     "world_directory": "dome_keeper"
   },
   "Duke Nukem 3D": {
@@ -392,7 +392,7 @@
     "game_name": "Duke Nukem 3D",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Duke Nukem 3D.yaml",
+    "template_file": null,
     "world_directory": "duke3d"
   },
   "Final Fantasy Tactics A2": {
@@ -404,7 +404,7 @@
     "game_name": "Final Fantasy Tactics A2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Final Fantasy Tactics A2.yaml",
+    "template_file": null,
     "world_directory": "ffta2"
   },
   "Final Fantasy Tactics Advance": {
@@ -416,7 +416,7 @@
     "game_name": "Final Fantasy Tactics Advance",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Final Fantasy Tactics Advance.yaml",
+    "template_file": null,
     "world_directory": "ffta"
   },
   "Fire Emblem Sacred Stones": {
@@ -428,7 +428,7 @@
     "game_name": "Fire Emblem Sacred Stones",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Fire Emblem Sacred Stones.yaml",
+    "template_file": null,
     "world_directory": "fe8"
   },
   "Frogmonster": {
@@ -440,7 +440,7 @@
     "game_name": "Frogmonster",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Frogmonster.yaml",
+    "template_file": null,
     "world_directory": "frogmonster"
   },
   "GZDoom": {
@@ -452,7 +452,7 @@
     "game_name": "GZDoom",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "GZDoom.yaml",
+    "template_file": null,
     "world_directory": "gzdoom"
   },
   "Garfield Kart - Furious Racing": {
@@ -464,7 +464,7 @@
     "game_name": "Garfield Kart - Furious Racing",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Garfield Kart - Furious Racing.yaml",
+    "template_file": null,
     "world_directory": "garfkart"
   },
   "Golden Sun The Lost Age": {
@@ -476,7 +476,7 @@
     "game_name": "Golden Sun The Lost Age",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Golden Sun The Lost Age.yaml",
+    "template_file": null,
     "world_directory": "gstla"
   },
   "Grim Dawn": {
@@ -488,7 +488,7 @@
     "game_name": "Grim Dawn",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Grim Dawn.yaml",
+    "template_file": null,
     "world_directory": "grim_dawn"
   },
   "Hammerwatch": {
@@ -500,7 +500,7 @@
     "game_name": "Hammerwatch",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Hammerwatch.yaml",
+    "template_file": null,
     "world_directory": "hammerwatch"
   },
   "Hatsune Miku Project Diva Mega Mix+": {
@@ -512,7 +512,7 @@
     "game_name": "Hatsune Miku Project Diva Mega Mix+",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Hatsune Miku Project Diva Mega Mix+.yaml",
+    "template_file": null,
     "world_directory": "megamix"
   },
   "Here Comes Niko!": {
@@ -524,7 +524,7 @@
     "game_name": "Here Comes Niko!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Here Comes Niko!.yaml",
+    "template_file": null,
     "world_directory": "hcniko"
   },
   "Iji": {
@@ -536,7 +536,7 @@
     "game_name": "Iji",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Iji.yaml",
+    "template_file": null,
     "world_directory": "iji"
   },
   "Into the Breach": {
@@ -548,7 +548,7 @@
     "game_name": "Into the Breach",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Into the Breach.yaml",
+    "template_file": null,
     "world_directory": "into_the_breach"
   },
   "Isles Of Sea And Sky": {
@@ -560,7 +560,7 @@
     "game_name": "Isles Of Sea And Sky",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Isles Of Sea And Sky.yaml",
+    "template_file": null,
     "world_directory": "isles_of_sea_and_sky"
   },
   "Ittle Dew 2": {
@@ -572,7 +572,7 @@
     "game_name": "Ittle Dew 2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ittle Dew 2.yaml",
+    "template_file": null,
     "world_directory": "ittle_dew_2"
   },
   "Jigsaw": {
@@ -584,7 +584,7 @@
     "game_name": "Jigsaw",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Jigsaw.yaml",
+    "template_file": null,
     "world_directory": "jigsaw"
   },
   "K-On! After School Live!!": {
@@ -596,7 +596,7 @@
     "game_name": "K-On! After School Live!!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "K-On! After School Live!!.yaml",
+    "template_file": null,
     "world_directory": "kon"
   },
   "Keep Talking and Nobody Explodes": {
@@ -608,7 +608,7 @@
     "game_name": "Keep Talking and Nobody Explodes",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Keep Talking and Nobody Explodes.yaml",
+    "template_file": null,
     "world_directory": "ktane"
   },
   "Kingdom Hearts Birth by Sleep": {
@@ -620,7 +620,7 @@
     "game_name": "Kingdom Hearts Birth by Sleep",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Kingdom Hearts Birth by Sleep.yaml",
+    "template_file": null,
     "world_directory": "khbbs"
   },
   "Kingdom Hearts Chain of Memories": {
@@ -632,7 +632,7 @@
     "game_name": "Kingdom Hearts Chain of Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Kingdom Hearts Chain of Memories.yaml",
+    "template_file": null,
     "world_directory": "khcom"
   },
   "Kingdom Hearts RE Chain of Memories": {
@@ -644,7 +644,7 @@
     "game_name": "Kingdom Hearts RE Chain of Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Kingdom Hearts RE Chain of Memories.yaml",
+    "template_file": null,
     "world_directory": "khrecom"
   },
   "Kirby Super Star": {
@@ -656,7 +656,7 @@
     "game_name": "Kirby Super Star",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Kirby Super Star.yaml",
+    "template_file": null,
     "world_directory": "kss"
   },
   "League of Legends": {
@@ -668,7 +668,7 @@
     "game_name": "League of Legends",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "League of Legends.yaml",
+    "template_file": null,
     "world_directory": "lol"
   },
   "Lego Star Wars: The Complete Saga": {
@@ -680,7 +680,7 @@
     "game_name": "Lego Star Wars: The Complete Saga",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Lego Star Wars The Complete Saga.yaml",
+    "template_file": null,
     "world_directory": "lego_star_wars_tcs"
   },
   "Lil Gator Game": {
@@ -692,7 +692,7 @@
     "game_name": "Lil Gator Game",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Lil Gator Game.yaml",
+    "template_file": null,
     "world_directory": "lil_gator_game"
   },
   "Lingo 2": {
@@ -704,7 +704,7 @@
     "game_name": "Lingo 2",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Lingo 2.yaml",
+    "template_file": null,
     "world_directory": "lingo2"
   },
   "Little Witch Nobeta": {
@@ -716,7 +716,7 @@
     "game_name": "Little Witch Nobeta",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Little Witch Nobeta.yaml",
+    "template_file": null,
     "world_directory": "little_witch_nobeta"
   },
   "Luigi's Mansion": {
@@ -728,7 +728,7 @@
     "game_name": "Luigi's Mansion",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Luigi's Mansion.yaml",
+    "template_file": null,
     "world_directory": "luigismansion"
   },
   "Lunacid": {
@@ -740,7 +740,7 @@
     "game_name": "Lunacid",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Lunacid.yaml",
+    "template_file": null,
     "world_directory": "lunacid"
   },
   "Majora's Mask Recompiled": {
@@ -752,7 +752,7 @@
     "game_name": "Majora's Mask Recompiled",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Majora's Mask Recompiled.yaml",
+    "template_file": null,
     "world_directory": "mm_recomp"
   },
   "Mario Kart Double Dash": {
@@ -764,7 +764,7 @@
     "game_name": "Mario Kart Double Dash",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Mario Kart Double Dash.yaml",
+    "template_file": null,
     "world_directory": "mario_kart_double_dash"
   },
   "MetroCUBEvania": {
@@ -776,7 +776,7 @@
     "game_name": "MetroCUBEvania",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "MetroCUBEvania.yaml",
+    "template_file": null,
     "world_directory": "metrocubevania"
   },
   "Metroid Fusion": {
@@ -788,7 +788,7 @@
     "game_name": "Metroid Fusion",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Metroid Fusion.yaml",
+    "template_file": null,
     "world_directory": "metroidfusion"
   },
   "Metroid: Zero Mission": {
@@ -800,7 +800,7 @@
     "game_name": "Metroid: Zero Mission",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Metroid Zero Mission.yaml",
+    "template_file": null,
     "world_directory": "mzm"
   },
   "Minishoot Adventures": {
@@ -812,7 +812,7 @@
     "game_name": "Minishoot Adventures",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Minishoot Adventures.yaml",
+    "template_file": null,
     "world_directory": "minishoot"
   },
   "Minit": {
@@ -824,7 +824,7 @@
     "game_name": "Minit",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Minit.yaml",
+    "template_file": null,
     "world_directory": "minit"
   },
   "Monster Sanctuary": {
@@ -836,7 +836,7 @@
     "game_name": "Monster Sanctuary",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Monster Sanctuary.yaml",
+    "template_file": null,
     "world_directory": "monster_sanctuary"
   },
   "Nine Sols": {
@@ -848,7 +848,7 @@
     "game_name": "Nine Sols",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Nine Sols.yaml",
+    "template_file": null,
     "world_directory": "nine_sols"
   },
   "Ori and the Blind Forest": {
@@ -860,7 +860,7 @@
     "game_name": "Ori and the Blind Forest",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Ori and the Blind Forest.yaml",
+    "template_file": null,
     "world_directory": "oribf"
   },
   "Ori and the Will of the Wisps": {
@@ -872,7 +872,7 @@
     "game_name": "Ori and the Will of the Wisps",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ori and the Will of the Wisps.yaml",
+    "template_file": null,
     "world_directory": "ori_wotw"
   },
   "Oxygen Not Included": {
@@ -884,7 +884,7 @@
     "game_name": "Oxygen Not Included",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Oxygen Not Included.yaml",
+    "template_file": null,
     "world_directory": "oni"
   },
   "Pizza Tower": {
@@ -896,7 +896,7 @@
     "game_name": "Pizza Tower",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Pizza Tower.yaml",
+    "template_file": null,
     "world_directory": "pizza_tower"
   },
   "PlateUp": {
@@ -908,7 +908,7 @@
     "game_name": "PlateUp",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "PlateUp.yaml",
+    "template_file": null,
     "world_directory": "plateup"
   },
   "Pokemon FireRed and LeafGreen": {
@@ -920,7 +920,7 @@
     "game_name": "Pokemon FireRed and LeafGreen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Pokemon FireRed and LeafGreen.yaml",
+    "template_file": null,
     "world_directory": "pokemon_frlg"
   },
   "Pokemon Mystery Dungeon Explorers of Sky": {
@@ -932,7 +932,7 @@
     "game_name": "Pokemon Mystery Dungeon Explorers of Sky",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Pokemon Mystery Dungeon Explorers of Sky.yaml",
+    "template_file": null,
     "world_directory": "pmd_eos"
   },
   "Pseudoregalia": {
@@ -944,7 +944,7 @@
     "game_name": "Pseudoregalia",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Pseudoregalia.yaml",
+    "template_file": null,
     "world_directory": "pseudoregalia"
   },
   "Rabi-Ribi": {
@@ -956,7 +956,7 @@
     "game_name": "Rabi-Ribi",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Rabi-Ribi.yaml",
+    "template_file": null,
     "world_directory": "rabi_ribi"
   },
   "Rain World": {
@@ -968,7 +968,7 @@
     "game_name": "Rain World",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Rain World.yaml",
+    "template_file": null,
     "world_directory": "rain_world"
   },
   "Ratchet & Clank 2": {
@@ -980,7 +980,7 @@
     "game_name": "Ratchet & Clank 2",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ratchet & Clank 2.yaml",
+    "template_file": null,
     "world_directory": "rac2"
   },
   "Reventure": {
@@ -992,7 +992,7 @@
     "game_name": "Reventure",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Reventure.yaml",
+    "template_file": null,
     "world_directory": "reventure"
   },
   "Rift Wizard": {
@@ -1004,7 +1004,7 @@
     "game_name": "Rift Wizard",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Rift Wizard.yaml",
+    "template_file": null,
     "world_directory": "riftwizard"
   },
   "Rift of the Necrodancer": {
@@ -1016,7 +1016,7 @@
     "game_name": "Rift of the Necrodancer",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Rift of the Necrodancer.yaml",
+    "template_file": null,
     "world_directory": "rotn"
   },
   "Rusted Moss": {
@@ -1028,7 +1028,7 @@
     "game_name": "Rusted Moss",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Rusted Moss.yaml",
+    "template_file": null,
     "world_directory": "rusted_moss"
   },
   "Sentinels of the Multiverse": {
@@ -1040,7 +1040,7 @@
     "game_name": "Sentinels of the Multiverse",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Sentinels of the Multiverse.yaml",
+    "template_file": null,
     "world_directory": "sotm"
   },
   "Shadow The Hedgehog": {
@@ -1052,7 +1052,7 @@
     "game_name": "Shadow The Hedgehog",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Shadow The Hedgehog.yaml",
+    "template_file": null,
     "world_directory": "shadow_the_hedgehog"
   },
   "Ship of Harkinian": {
@@ -1064,7 +1064,7 @@
     "game_name": "Ship of Harkinian",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Ship of Harkinian.yaml",
+    "template_file": null,
     "world_directory": "oot_soh"
   },
   "Simon Tatham's Portable Puzzle Collection": {
@@ -1076,7 +1076,7 @@
     "game_name": "Simon Tatham's Portable Puzzle Collection",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Simon Tatham's Portable Puzzle Collection.yaml",
+    "template_file": null,
     "world_directory": "sgtpuzzles"
   },
   "Sly 2: Band of Thieves": {
@@ -1088,7 +1088,7 @@
     "game_name": "Sly 2: Band of Thieves",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Sly 2 Band of Thieves.yaml",
+    "template_file": null,
     "world_directory": "sly2"
   },
   "Sly Cooper and the Thievius Raccoonus": {
@@ -1100,7 +1100,7 @@
     "game_name": "Sly Cooper and the Thievius Raccoonus",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Sly Cooper and the Thievius Raccoonus.yaml",
+    "template_file": null,
     "world_directory": "sly1"
   },
   "Sonic Adventure DX": {
@@ -1112,7 +1112,7 @@
     "game_name": "Sonic Adventure DX",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Sonic Adventure DX.yaml",
+    "template_file": null,
     "world_directory": "sadx"
   },
   "Sonic Heroes": {
@@ -1124,7 +1124,7 @@
     "game_name": "Sonic Heroes",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Sonic Heroes.yaml",
+    "template_file": null,
     "world_directory": "sonic_heroes"
   },
   "Sonic Rush": {
@@ -1136,7 +1136,7 @@
     "game_name": "Sonic Rush",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Sonic Rush.yaml",
+    "template_file": null,
     "world_directory": "sonic_rush"
   },
   "Sonic the Hedgehog 1": {
@@ -1148,7 +1148,7 @@
     "game_name": "Sonic the Hedgehog 1",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Sonic the Hedgehog 1.yaml",
+    "template_file": null,
     "world_directory": "sonic1"
   },
   "Soul Blazer": {
@@ -1160,7 +1160,7 @@
     "game_name": "Soul Blazer",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Soul Blazer.yaml",
+    "template_file": null,
     "world_directory": "soulblazer"
   },
   "Spinball": {
@@ -1172,7 +1172,7 @@
     "game_name": "Spinball",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Spinball.yaml",
+    "template_file": null,
     "world_directory": "spinball"
   },
   "Spyro 3": {
@@ -1184,7 +1184,7 @@
     "game_name": "Spyro 3",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Spyro 3.yaml",
+    "template_file": null,
     "world_directory": "spyro3"
   },
   "Stacklands": {
@@ -1196,7 +1196,7 @@
     "game_name": "Stacklands",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Stacklands.yaml",
+    "template_file": null,
     "world_directory": "stacklands"
   },
   "Star Fox 64": {
@@ -1208,7 +1208,7 @@
     "game_name": "Star Fox 64",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Star Fox 64.yaml",
+    "template_file": null,
     "world_directory": "star_fox_64"
   },
   "Star Wars Episode I Racer": {
@@ -1220,7 +1220,7 @@
     "game_name": "Star Wars Episode I Racer",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Star Wars Episode I Racer.yaml",
+    "template_file": null,
     "world_directory": "swr"
   },
   "Super Cat Planet": {
@@ -1232,7 +1232,7 @@
     "game_name": "Super Cat Planet",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Super Cat Planet.yaml",
+    "template_file": null,
     "world_directory": "scp"
   },
   "Symphony of the Night": {
@@ -1244,7 +1244,7 @@
     "game_name": "Symphony of the Night",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Symphony of the Night.yaml",
+    "template_file": null,
     "world_directory": "sotn"
   },
   "System Shock 2": {
@@ -1256,7 +1256,7 @@
     "game_name": "System Shock 2",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "System Shock 2.yaml",
+    "template_file": null,
     "world_directory": "ss2"
   },
   "TCG Card Shop Simulator": {
@@ -1268,7 +1268,7 @@
     "game_name": "TCG Card Shop Simulator",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "TCG Card Shop Simulator.yaml",
+    "template_file": null,
     "world_directory": "tcg_card_shop_simulator"
   },
   "TOEM: A Photo Adventure": {
@@ -1280,7 +1280,7 @@
     "game_name": "TOEM: A Photo Adventure",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "TOEM A Photo Adventure.yaml",
+    "template_file": null,
     "world_directory": "toem"
   },
   "Tetris Attack": {
@@ -1292,7 +1292,7 @@
     "game_name": "Tetris Attack",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Tetris Attack.yaml",
+    "template_file": null,
     "world_directory": "tetrisattack"
   },
   "Tevi": {
@@ -1304,7 +1304,7 @@
     "game_name": "Tevi",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Tevi.yaml",
+    "template_file": null,
     "world_directory": "tevi"
   },
   "The Legend of Zelda - Oracle of Seasons": {
@@ -1316,7 +1316,7 @@
     "game_name": "The Legend of Zelda - Oracle of Seasons",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "The Legend of Zelda - Oracle of Seasons.yaml",
+    "template_file": null,
     "world_directory": "tloz_oos"
   },
   "The Legend of Zelda - Phantom Hourglass": {
@@ -1328,7 +1328,7 @@
     "game_name": "The Legend of Zelda - Phantom Hourglass",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "The Legend of Zelda - Phantom Hourglass.yaml",
+    "template_file": null,
     "world_directory": "tloz_ph"
   },
   "The Sims 4": {
@@ -1340,7 +1340,7 @@
     "game_name": "The Sims 4",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "The Sims 4.yaml",
+    "template_file": null,
     "world_directory": "sims4"
   },
   "ToeJam and Earl": {
@@ -1352,7 +1352,7 @@
     "game_name": "ToeJam and Earl",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "ToeJam and Earl.yaml",
+    "template_file": null,
     "world_directory": "tje"
   },
   "TurnipBoy": {
@@ -1364,7 +1364,7 @@
     "game_name": "TurnipBoy",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "TurnipBoy.yaml",
+    "template_file": null,
     "world_directory": "turnipboy"
   },
   "Tyrian": {
@@ -1376,7 +1376,7 @@
     "game_name": "Tyrian",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Tyrian.yaml",
+    "template_file": null,
     "world_directory": "tyrian"
   },
   "Vampire Survivors": {
@@ -1388,7 +1388,7 @@
     "game_name": "Vampire Survivors",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Vampire Survivors.yaml",
+    "template_file": null,
     "world_directory": "vampire_survivors"
   },
   "Wario Land": {
@@ -1400,7 +1400,7 @@
     "game_name": "Wario Land",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Wario Land.yaml",
+    "template_file": null,
     "world_directory": "wl"
   },
   "Watery Words": {
@@ -1412,7 +1412,7 @@
     "game_name": "Watery Words",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Watery Words.yaml",
+    "template_file": null,
     "world_directory": "waterywords"
   },
   "Wordipelago": {
@@ -1424,7 +1424,7 @@
     "game_name": "Wordipelago",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Wordipelago.yaml",
+    "template_file": null,
     "world_directory": "wordipelago"
   },
   "XCOM 2 War of the Chosen": {
@@ -1436,7 +1436,7 @@
     "game_name": "XCOM 2 War of the Chosen",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "XCOM 2 War of the Chosen.yaml",
+    "template_file": null,
     "world_directory": "x2wotc"
   },
   "Yu-Gi-Oh! Dungeon Dice Monsters": {
@@ -1448,7 +1448,7 @@
     "game_name": "Yu-Gi-Oh! Dungeon Dice Monsters",
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
-    "template_file": "Yu-Gi-Oh! Dungeon Dice Monsters.yaml",
+    "template_file": null,
     "world_directory": "yugiohddm"
   },
   "Yu-Gi-Oh! Forbidden Memories": {
@@ -1460,7 +1460,7 @@
     "game_name": "Yu-Gi-Oh! Forbidden Memories",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Yu-Gi-Oh! Forbidden Memories.yaml",
+    "template_file": null,
     "world_directory": "fm"
   },
   "Zelda II: The Adventure of Link": {
@@ -1472,7 +1472,7 @@
     "game_name": "Zelda II: The Adventure of Link",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "Zelda II The Adventure of Link.yaml",
+    "template_file": null,
     "world_directory": "zelda2"
   },
   "osu!": {
@@ -1484,7 +1484,7 @@
     "game_name": "osu!",
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
-    "template_file": "osu!.yaml",
+    "template_file": null,
     "world_directory": "osu"
   }
 }
