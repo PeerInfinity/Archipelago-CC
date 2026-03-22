@@ -1,10 +1,10 @@
 {
-  "game": "A Link to the Past WorldGen_68001895519459201888",
-  "total_locations": 237,
-  "locations_with_explain": 161,
-  "locations_default_rule": 47,
-  "locations_without_explain": 29,
-  "explain_coverage_percent": 84.74,
+  "game": "A Link to the Past WorldGen_59423251658041217331",
+  "total_locations": 225,
+  "locations_with_explain": 114,
+  "locations_default_rule": 84,
+  "locations_without_explain": 27,
+  "explain_coverage_percent": 80.85,
   "locations_without_explain_list": [
     {
       "name": "Desert Palace - Boss",
@@ -19,24 +19,16 @@
       "region": "Eastern Palace"
     },
     {
-      "name": "Sewers - Secret Room - Left",
-      "region": "Sewers Secret Room"
-    },
-    {
-      "name": "Sewers - Secret Room - Middle",
-      "region": "Sewers Secret Room"
-    },
-    {
-      "name": "Sewers - Secret Room - Right",
-      "region": "Sewers Secret Room"
-    },
-    {
-      "name": "Sanctuary",
-      "region": "Sanctuary"
-    },
-    {
       "name": "Tower of Hera - Boss",
       "region": "Tower of Hera (Top)"
+    },
+    {
+      "name": "Mimic Cave",
+      "region": "Mimic Cave"
+    },
+    {
+      "name": "Swamp Palace - Big Chest",
+      "region": "Swamp Palace (Center)"
     },
     {
       "name": "Swamp Palace - Boss",
@@ -51,6 +43,10 @@
       "region": "Blind Fight"
     },
     {
+      "name": "Skull Woods - Big Chest",
+      "region": "Skull Woods First Section (Top)"
+    },
+    {
       "name": "Skull Woods - Boss",
       "region": "Skull Woods Final Section (Mothula)"
     },
@@ -61,10 +57,6 @@
     {
       "name": "Misery Mire - Boss",
       "region": "Misery Mire (Vitreous)"
-    },
-    {
-      "name": "Turtle Rock - Big Key Chest",
-      "region": "Turtle Rock (Second Section)"
     },
     {
       "name": "Turtle Rock - Boss",
@@ -123,41 +115,26 @@
       "region": "Ganons Tower (Bottom)"
     }
   ],
-  "total_entrances": 391,
-  "entrances_with_explain": 170,
-  "entrances_default_rule": 205,
-  "entrances_without_explain": 16,
-  "entrance_explain_coverage_percent": 91.4,
+  "total_entrances": 466,
+  "entrances_with_explain": 220,
+  "entrances_default_rule": 231,
+  "entrances_without_explain": 15,
+  "entrance_explain_coverage_percent": 93.62,
   "entrances_without_explain_list": [
+    {
+      "name": "Inverted Ganons Tower",
+      "from_region": "Hyrule Castle Ledge",
+      "to_region": "Desert Palace North"
+    },
     {
       "name": "Sewers Door",
       "from_region": "Sewers (Dark)",
       "to_region": "Sewers"
     },
     {
-      "name": "Sanctuary Push Door",
-      "from_region": "Sewers",
-      "to_region": "Sanctuary"
-    },
-    {
-      "name": "Sewers Back Door",
-      "from_region": "Sewers",
-      "to_region": "Sewers (Dark)"
-    },
-    {
-      "name": "Sewers Secret Room",
-      "from_region": "Sewers",
-      "to_region": "Sewers Secret Room"
-    },
-    {
       "name": "Tower of Hera Small Key Door",
       "from_region": "Tower of Hera (Bottom)",
       "to_region": "Tower of Hera (Basement)"
-    },
-    {
-      "name": "Ganons Tower",
-      "from_region": "Dark Death Mountain (Top)",
-      "to_region": "Spiral Cave (Bottom)"
     },
     {
       "name": "Ice Palace (East)",
@@ -168,6 +145,16 @@
       "name": "Misery Mire (West)",
       "from_region": "Misery Mire (Main)",
       "to_region": "Misery Mire (West)"
+    },
+    {
+      "name": "Turtle Rock (Pokey Room) (South)",
+      "from_region": "Turtle Rock (Pokey Room)",
+      "to_region": "Turtle Rock (First Section)"
+    },
+    {
+      "name": "Turtle Rock (Chain Chomp Room) (South)",
+      "from_region": "Turtle Rock (Chain Chomp Room)",
+      "to_region": "Turtle Rock (Pokey Room)"
     },
     {
       "name": "Palace of Darkness Big Key Chest Staircase",
