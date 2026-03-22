@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 16:37:44 UTC
+**Generated:** 2026-03-22 17:09:30 UTC
 
 **Source Data Created:** 2026-03-22T05:22:37.374705+00:00
 
@@ -37,8 +37,8 @@
 
 - **Expected Passes:** 37 (passes original mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 49 (doesn't pass original mode per config)
-- **Unexpected Failures (logic):** 2 (expected to pass but had logic mismatch)
+- **Expected Failures:** 51 (doesn't pass original mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
@@ -180,7 +180,7 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Wargroove | 100 | 100 | 0 | 0 | 100.0% |
 | shapez | 100 | 100 | 0 | 0 | 100.0% |
 
-### Expected Failures (49)
+### Expected Failures (51)
 
 Games NOT expected to pass original mode and failed as expected.
 
@@ -192,6 +192,7 @@ Games NOT expected to pass original mode and failed as expected.
 | Castlevania 64 | 100 | 6 | 94 | 0 | 6.0% |
 | Celeste (Open World) | 100 | 46 | 54 | 0 | 46.0% |
 | DLCQuest | 100 | 92 | 8 | 0 | 92.0% |
+| DOOM 1993 | 100 | 99 | 1 | 0 | 99.0% |
 | DepGraph | 100 | 81 | 19 | 0 | 81.0% |
 | Donkey Kong Country 3 | 100 | 52 | 48 | 0 | 52.0% |
 | EarthBound | 100 | 29 | 71 | 0 | 29.0% |
@@ -205,6 +206,7 @@ Games NOT expected to pass original mode and failed as expected.
 | Kingdom Hearts 2 | 100 | 44 | 56 | 0 | 44.0% |
 | Kirby's Dream Land 3 | 100 | 0 | 100 | 0 | 0.0% |
 | Landstalker - The Treasures of King Nole | 100 | 31 | 69 | 0 | 31.0% |
+| Lingo | 100 | 19 | 26 | 0 | 19.0% |
 | Links Awakening DX | 100 | 23 | 77 | 0 | 23.0% |
 | Mega Man 2 | 100 | 95 | 5 | 0 | 95.0% |
 | Mega Man 3 | 100 | 0 | 100 | 0 | 0.0% |
@@ -235,15 +237,6 @@ Games NOT expected to pass original mode and failed as expected.
 | Yoshi's Island | 100 | 25 | 75 | 0 | 25.0% |
 | Yu-Gi-Oh! 2006 | 100 | 34 | 66 | 0 | 34.0% |
 | Zillion | 100 | 0 | 86 | 14 | 0.0% |
-
-### Unexpected Failures (Logic Mismatch) (2)
-
-Games expected to pass original mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| DOOM 1993 | 100 | 99 | 1 | 0 | 99.0% |
-| Lingo | 100 | 19 | 26 | 0 | 19.0% |
 
 ## Notes
 

@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 16:37:44 UTC
+**Generated:** 2026-03-22 17:09:30 UTC
 
 **Source Data Created:** 2026-03-22T02:13:17.097275+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 67 (passes hybrid mode per config)
-- **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 30 (doesn't pass hybrid mode per config)
-- **Unexpected Failures (logic):** 26 (expected to pass but had logic mismatch)
+- **Expected Passes:** 60 (passes hybrid mode per config)
+- **Unexpected Passes:** 7 (expected to fail but passed)
+- **Expected Failures:** 34 (doesn't pass hybrid mode per config)
+- **Unexpected Failures (logic):** 22 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -195,7 +195,7 @@ Of the 67 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (67)
+### Expected Passes (60)
 
 Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 
@@ -214,7 +214,6 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Castlevania: Dawn of Sorrow | 10 | 10 | 0 | 0 | 100.0% |
 | Corn Kidz 64 | 10 | 10 | 0 | 0 | 100.0% |
 | CrossCode | 10 | 9 | 0 | 0 | 90.0% |
-| Crystalis | 10 | 7 | 0 | 0 | 70.0% |
 | DORONKO WANKO | 10 | 10 | 0 | 0 | 100.0% |
 | Diddy Kong Racing | 10 | 10 | 0 | 0 | 100.0% |
 | Digimon World | 10 | 6 | 0 | 0 | 60.0% |
@@ -247,8 +246,6 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Ratchet & Clank 2 | 10 | 10 | 0 | 0 | 100.0% |
 | Rift Wizard | 10 | 10 | 0 | 0 | 100.0% |
 | Rift of the Necrodancer | 10 | 10 | 0 | 0 | 100.0% |
-| Shadow The Hedgehog | 10 | 2 | 0 | 0 | 20.0% |
-| Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Heroes | 10 | 0 | 0 | 0 | 0.0% |
 | Sonic the Hedgehog 1 | 10 | 10 | 0 | 0 | 100.0% |
 | Spinball | 10 | 10 | 0 | 0 | 100.0% |
@@ -261,15 +258,25 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Tetris Attack | 10 | 8 | 0 | 0 | 80.0% |
 | The Sims 4 | 10 | 10 | 0 | 0 | 100.0% |
 | TurnipBoy | 10 | 10 | 0 | 0 | 100.0% |
-| Tyrian | 10 | 7 | 0 | 0 | 70.0% |
 | Vampire Survivors | 10 | 4 | 0 | 0 | 40.0% |
-| Watery Words | 10 | 10 | 0 | 0 | 100.0% |
 | Wordipelago | 10 | 10 | 0 | 0 | 100.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 10 | 0 | 0 | 100.0% |
-| Zelda II: The Adventure of Link | 10 | 10 | 0 | 0 | 100.0% |
 | osu! | 10 | 10 | 0 | 0 | 100.0% |
 
-### Expected Failures (30)
+### Unexpected Passes (7)
+
+Games NOT expected to pass hybrid mode (not in config or mode not listed) but passed anyway.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Crystalis | 10 | 7 | 0 | 0 | 70.0% |
+| Shadow The Hedgehog | 10 | 2 | 0 | 0 | 20.0% |
+| Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
+| Tyrian | 10 | 7 | 0 | 0 | 70.0% |
+| Watery Words | 10 | 10 | 0 | 0 | 100.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 10 | 0 | 0 | 100.0% |
+| Zelda II: The Adventure of Link | 10 | 10 | 0 | 0 | 100.0% |
+
+### Expected Failures (34)
 
 Games NOT expected to pass hybrid mode and failed as expected.
 
@@ -277,12 +284,15 @@ Games NOT expected to pass hybrid mode and failed as expected.
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | A Link Between Worlds | 10 | 2 | 8 | 0 | 20.0% |
 | Against the Storm | 10 | 6 | 4 | 0 | 60.0% |
+| Balatro | 10 | 0 | 3 | 0 | 0.0% |
+| Cavern of Dreams | 10 | 2 | 3 | 0 | 20.0% |
 | ChecksMate | 10 | 8 | 2 | 0 | 80.0% |
 | Chrono Trigger Jets of Time | 10 | 0 | 10 | 0 | 0.0% |
 | ClusterTruck | 10 | 3 | 7 | 0 | 30.0% |
 | Crystal Project | 10 | 3 | 7 | 0 | 30.0% |
 | Cuphead | 10 | 0 | 10 | 0 | 0.0% |
 | Deep Rock Galactic | 10 | 6 | 4 | 0 | 60.0% |
+| Duke Nukem 3D | 10 | 2 | 7 | 0 | 20.0% |
 | Final Fantasy Tactics A2 | 10 | 0 | 9 | 0 | 0.0% |
 | GZDoom | 10 | 0 | 10 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 10 | 0 | 10 | 0 | 0.0% |
@@ -300,13 +310,14 @@ Games NOT expected to pass hybrid mode and failed as expected.
 | Ship of Harkinian | 10 | 2 | 8 | 0 | 20.0% |
 | Sly 2: Band of Thieves | 10 | 0 | 6 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 10 | 8 | 2 | 0 | 80.0% |
+| Sonic Adventure DX | 10 | 0 | 4 | 0 | 0.0% |
 | System Shock 2 | 10 | 6 | 3 | 0 | 60.0% |
 | TCG Card Shop Simulator | 10 | 0 | 10 | 0 | 0.0% |
 | The Legend of Zelda - Oracle of Seasons | 10 | 0 | 10 | 0 | 0.0% |
 | The Legend of Zelda - Phantom Hourglass | 10 | 2 | 8 | 0 | 20.0% |
 | Wario Land | 10 | 0 | 10 | 0 | 0.0% |
 
-### Unexpected Failures (Logic Mismatch) (26)
+### Unexpected Failures (Logic Mismatch) (22)
 
 Games expected to pass hybrid mode but failed due to logic mismatches.
 
@@ -316,9 +327,6 @@ Games expected to pass hybrid mode but failed due to logic mismatches.
 | Anodyne | 10 | 1 | 9 | 0 | 10.0% |
 | Another Crabs Treasure | 10 | 4 | 6 | 0 | 40.0% |
 | Astalon | 10 | 0 | 8 | 0 | 0.0% |
-| Balatro | 10 | 0 | 3 | 0 | 0.0% |
-| Cavern of Dreams | 10 | 2 | 3 | 0 | 20.0% |
-| Duke Nukem 3D | 10 | 2 | 7 | 0 | 20.0% |
 | Final Fantasy Tactics Advance | 10 | 9 | 1 | 0 | 90.0% |
 | Fire Emblem Sacred Stones | 10 | 4 | 6 | 0 | 40.0% |
 | Frogmonster | 10 | 8 | 2 | 0 | 80.0% |
@@ -331,7 +339,6 @@ Games expected to pass hybrid mode but failed due to logic mismatches.
 | Pseudoregalia | 10 | 0 | 10 | 0 | 0.0% |
 | Rabi-Ribi | 10 | 2 | 2 | 0 | 20.0% |
 | Reventure | 10 | 0 | 10 | 0 | 0.0% |
-| Sonic Adventure DX | 10 | 0 | 4 | 0 | 0.0% |
 | Sonic Rush | 10 | 4 | 5 | 0 | 40.0% |
 | Soul Blazer | 10 | 8 | 2 | 0 | 80.0% |
 | Spyro 3 | 10 | 3 | 6 | 0 | 30.0% |
