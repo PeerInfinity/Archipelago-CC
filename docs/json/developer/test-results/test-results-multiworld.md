@@ -6,9 +6,11 @@
 
 [📖 Learn about this test](../tests/test-multiworld.md)
 
+[View APWorld Template Results](./test-results-multiworld-apworld.md)
+
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-03-22 01:12:53 UTC
+**Generated:** 2026-03-22 02:21:25 UTC
 
 **Source Data Created:** 2026-03-21T22:45:03.608052+00:00
 

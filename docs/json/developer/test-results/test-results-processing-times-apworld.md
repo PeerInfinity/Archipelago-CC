@@ -1,6 +1,6 @@
 # Processing Times Chart (APWorld)
 
-**Generated:** 2026-03-22 01:12:53 UTC
+**Generated:** 2026-03-22 02:21:25 UTC
 
 **Source Data Created:** 2026-03-22T00:10:03.442853+00:00
 
@@ -157,8 +157,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Iji | 54.6s | 2 | A Link Between Worlds.yaml, Iji.yaml |
+| 2 | Ship of Harkinian | 50.5s | 8 | Brotato.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Hammerwatch.yaml, Isles Of Sea And Sky.yaml (+3 more) |
+| 3 | Monster Sanctuary | 49.3s | 2 | A Link Between Worlds.yaml, Monster Sanctuary.yaml |
+| 4 | CrossCode | 48.0s | 2 | A Link Between Worlds.yaml, CrossCode.yaml |
+| 5 | Lingo 2 | 42.9s | 5 | Actraiser.yaml, Diddy Kong Racing.yaml, Golden Sun The Lost Age.yaml, Kingdom Hearts Chain of Memories.yaml, Lingo 2.yaml |
+| 6 | The Legend of Zelda - Phantom Hourglass | 41.9s | 6 | Air Delivery.yaml, Final Fantasy Tactics Advance.yaml, Ori and the Blind Forest.yaml, Simon Tatham's Portable Puzzle Collection.yaml, Spinball.yaml (+1 more) |
+| 7 | Sentinels of the Multiverse | 41.0s | 6 | Actraiser.yaml, Diddy Kong Racing.yaml, Golden Sun The Lost Age.yaml, Kingdom Hearts Chain of Memories.yaml, Nine Sols.yaml (+1 more) |
+| 8 | Pokemon FireRed and LeafGreen | 40.7s | 5 | A Dance of Fire and Ice.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Ittle Dew 2.yaml, MetroCUBEvania.yaml, Pokemon FireRed and LeafGreen.yaml |
+| 9 | Spyro 3 | 40.2s | 4 | An Untitled Story.yaml, K-On! After School Live!!.yaml, Rabi-Ribi.yaml, Spyro 3.yaml |
+| 10 | Tevi | 39.4s | 6 | A Dance of Fire and Ice.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Ittle Dew 2.yaml, MetroCUBEvania.yaml, Sonic the Hedgehog 1.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Vampire Survivors | 81.1s | 6 | A Dance of Fire and Ice.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Ittle Dew 2.yaml, MetroCUBEvania.yaml, Sonic the Hedgehog 1.yaml (+1 more) |
+| 2 | Crystal Project | 68.1s | 2 | Ape Escape 3.yaml, Crystal Project.yaml |
+| 3 | Yu-Gi-Oh! Dungeon Dice Monsters | 25.1s | 8 | Brotato.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Hammerwatch.yaml, Isles Of Sea And Sky.yaml (+3 more) |
+| 4 | Hammerwatch | 22.9s | 4 | Brotato.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Hammerwatch.yaml |
+| 5 | Pokemon FireRed and LeafGreen | 21.1s | 5 | A Dance of Fire and Ice.yaml, Hatsune Miku Project Diva Mega Mix+.yaml, Ittle Dew 2.yaml, MetroCUBEvania.yaml, Pokemon FireRed and LeafGreen.yaml |
+| 6 | Against the Storm | 19.9s | 2 | A Difficult Game About Climbing.yaml, Against the Storm.yaml |
+| 7 | Rabi-Ribi | 19.8s | 3 | An Untitled Story.yaml, K-On! After School Live!!.yaml, Rabi-Ribi.yaml |
+| 8 | Majora's Mask Recompiled | 18.9s | 3 | Ape Escape 3.yaml, Kingdom Hearts Birth by Sleep.yaml, Majora's Mask Recompiled.yaml |
+| 9 | Anodyne | 18.4s | 2 | ANIMAL WELL.yaml, Anodyne.yaml |
+| 10 | Mario Kart Double Dash | 18.2s | 6 | Brotato.yaml, ClusterTruck.yaml, Dome Keeper.yaml, Hammerwatch.yaml, Isles Of Sea And Sky.yaml (+1 more) |
