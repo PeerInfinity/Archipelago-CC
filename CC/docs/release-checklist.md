@@ -355,8 +355,11 @@ python Launcher.py
 
 In the Launcher GUI, verify:
 - **JSON Tools Installer** component appears and opens
-- Install completes successfully (dev version, all components)
+- Install completes successfully (dev version, all components including Rule Builder)
 - **JSON Tools Status** shows correct installation state
+- **JSON Tools Scripts** — run the spoiler test to verify export works
+
+**Note:** The Rule Builder component must be installed for the exporter to work. The exporter has a transitive import dependency on the fork's extended `rule_builder/__init__.py` (via `world_generator._sanitization`). Without it, the exporter silently fails to write preset files. A future fix would make the exporter fall back to AST format when the Rule Builder isn't present.
 
 ---
 
