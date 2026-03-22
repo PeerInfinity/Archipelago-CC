@@ -22,6 +22,7 @@ from kivy.uix.label import Label
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 
@@ -405,7 +406,7 @@ class InstallerApp(App):
     def _show_rule_builder_warning(self):
         """Show a warning about rule_builder replacing vanilla files."""
         content = BoxLayout(orientation='vertical', padding=10, spacing=10)
-        warn_label = Label(
+        warn_text = TextInput(
             text=(
                 "WARNING: Installing Rule Builder will replace the vanilla\n"
                 "rule_builder/ directory with the extended version from\n"
@@ -415,12 +416,10 @@ class InstallerApp(App):
                 "You can restore the original files later via the CLI:\n"
                 "  python -m worlds.json_tools_installer.cli.install --restore-rule-builder"
             ),
-            halign='left',
-            valign='top',
+            readonly=True,
             size_hint_y=0.8,
         )
-        warn_label.bind(size=warn_label.setter('text_size'))
-        content.add_widget(warn_label)
+        content.add_widget(warn_text)
 
         ok_btn = Button(text='OK', size_hint_y=None, height=40)
         content.add_widget(ok_btn)
