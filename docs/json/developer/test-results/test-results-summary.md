@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-03-21 23:18:11 UTC
+**Generated:** 2026-03-22 02:21:25 UTC
 
 **Source Data Created:** 2026-03-21T22:05:37.145346+00:00
 
@@ -60,8 +60,8 @@ Of the 74 templates passing all 4 tests:
 **Combined Custom Code Size:**
 
 - **Total Exporter Code:** 502.7KB
-- **Total Game Logic Code:** 263.1KB
-- **Combined Total:** 765.8KB
+- **Total Game Logic Code:** 268.0KB
+- **Combined Total:** 770.7KB
 
 ## Test Results
 
@@ -127,7 +127,7 @@ Of the 74 templates passing all 4 tests:
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 177.7KB |
-| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 61.0KB | 114.5KB | 625.1KB |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 61.0KB | 119.4KB | 625.1KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ | 99.7KB |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.5KB | ✅ | 99.7KB |
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ | 649.2KB |
@@ -202,7 +202,7 @@ Of the 74 templates passing all 4 tests:
 
 | Rank | Game Name | GameLogic Size |
 |------|-----------|----------------|
-| 1 | Super Metroid | 114.5KB |
+| 1 | Super Metroid | 119.4KB |
 | 2 | Starcraft 2 | 90.1KB |
 | 3 | Bomb Rush Cyberfunk | 40.3KB |
 | 4 | Lingo | 10.7KB |
