@@ -10,29 +10,29 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-03-21 23:18:11 UTC
+**Generated:** 2026-03-22 16:37:44 UTC
 
-**Source Data Created:** 2026-03-21T22:45:03.608052+00:00
+**Source Data Created:** 2026-03-22T07:49:55.986774+00:00
 
-**Source Data Last Updated:** 2026-03-21T22:45:03.608064+00:00
+**Source Data Last Updated:** 2026-03-22T07:49:55.986785+00:00
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 74 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Passed:** 75 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 74
-- **Second Pass Passed:** 74
+- **Second Pass Tested:** 75
+- **Second Pass Passed:** 75
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/74 (54.1% of passed)
-- **Passing with Generic Logic:** 70/74 (94.6% of passed)
-- **Passing with Both Generic:** 40/74 (54.1% of passed)
+- **Passing with Generic Exporter:** 40/75 (53.3% of passed)
+- **Passing with Generic Logic:** 70/75 (93.3% of passed)
+- **Passing with Both Generic:** 40/75 (53.3% of passed)
 
 ## Test Results
 
@@ -98,7 +98,7 @@
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Super Metroid | ❌ Failed | — | 7 | 7 | 61.0KB | 114.5KB |
+| Super Metroid | ✅ Passed | ✅ Passed | 7 | 7 | 61.0KB | 119.4KB |
 | TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | 0.6KB | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | 0.5KB | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
@@ -108,7 +108,7 @@
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.6KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
-| Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| Undertale | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 9.2KB | ✅ |
@@ -628,7 +628,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Risk of Rain 2.yaml |
 | 6 | Super Mario World.yaml |
 
-### Super Metroid ❌ (Split 1)
+### Super Metroid ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -758,7 +758,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 ### VVVVVV ✅ (Split 2)
 
@@ -813,31 +814,13 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
-## Bisection Results
-
-When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-### Super Metroid (Super Metroid.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Hat in Time.yaml | ✅ | ✅ | ✅ | ✅ |
-| Castlevania 64.yaml | ✅ | ✅ | ✅ | ✅ |
-| DepGraph.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| MegaMan Battle Network 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Satisfactory.yaml | ✅ | ✅ | ✅ | ✅ |
-
-
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
 
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
-| A Hat in Time | 1 | 7 | 1 | ✅ Passed |
+| A Hat in Time | 1 | 8 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
 | APQuest | 1 | 8 | 1 | ✅ Passed |
@@ -847,7 +830,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
-| Castlevania 64 | 2 | 7 | 2 | ✅ Passed |
+| Castlevania 64 | 2 | 8 | 2 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
@@ -857,7 +840,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
-| DepGraph | 3 | 7 | 3 | ✅ Passed |
+| DepGraph | 3 | 8 | 3 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | EarthBound | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
@@ -868,7 +851,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Journey to Ascension | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 4 | 8 | 4 | ✅ Passed |
-| Kingdom Hearts 2 | 4 | 7 | 4 | ✅ Passed |
+| Kingdom Hearts 2 | 4 | 8 | 4 | ✅ Passed |
 | Kirby's Dream Land 3 | 4 | 8 | 4 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
@@ -877,7 +860,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 3 | 4 | 7 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 | 5 | 7 | 5 | ✅ Passed |
+| MegaMan Battle Network 3 | 5 | 8 | 5 | ✅ Passed |
 | Meritous | 5 | 8 | 5 | ✅ Passed |
 | Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
@@ -887,7 +870,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
-| Satisfactory | 6 | 7 | 6 | ✅ Passed |
+| Satisfactory | 6 | 8 | 6 | ✅ Passed |
 | Saving Princess | 6 | 8 | 6 | ✅ Passed |
 | Secret of Evermore | 6 | 8 | 6 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
@@ -897,6 +880,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario World | 6 | 7 | 6 | ✅ Passed |
+| Super Metroid | 7 | 8 | 7 | ✅ Passed |
 | TOEM original | 7 | 8 | 7 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | TUNIC | 7 | 8 | 7 | ✅ Passed |
@@ -906,7 +890,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
-| Undertale | 7 | 7 | 7 | ✅ Passed |
+| Undertale | 8 | 8 | 8 | ✅ Passed |
 | VVVVVV | 8 | 8 | 8 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
@@ -926,7 +910,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### A Link to the Past ✅ (Split 2)
 
@@ -1050,7 +1035,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### Celeste (Open World) ✅ (Split 2)
 
@@ -1174,7 +1160,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### Donkey Kong Country 3 ✅ (Split 2)
 
@@ -1311,7 +1298,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### Kirby's Dream Land 3 ✅ (Split 3)
 
@@ -1422,7 +1410,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### Meritous ✅ (Split 2)
 
@@ -1546,7 +1535,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### Saving Princess ✅ (Split 2)
 
@@ -1659,6 +1649,19 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Risk of Rain 2.yaml |
 | 6 | Super Mario World.yaml |
 | 7 | Timespinner.yaml |
+
+#### Super Metroid ✅ (Split 1)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Castlevania 64.yaml |
+| 3 | DepGraph.yaml |
+| 4 | Kingdom Hearts 2.yaml |
+| 5 | MegaMan Battle Network 3.yaml |
+| 6 | Satisfactory.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### TOEM original ✅ (Split 2)
 
@@ -1782,7 +1785,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Kingdom Hearts 2.yaml |
 | 5 | MegaMan Battle Network 3.yaml |
 | 6 | Satisfactory.yaml |
-| 7 | Undertale.yaml |
+| 7 | Super Metroid.yaml |
+| 8 | Undertale.yaml |
 
 #### VVVVVV ✅ (Split 2)
 
