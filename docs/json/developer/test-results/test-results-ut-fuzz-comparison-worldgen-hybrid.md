@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-03-22 04:16:53 UTC
+**Generated:** 2026-03-22 05:44:05 UTC
 
 **Source Data Last Updated:** 2026-03-22T02:03:56
 
@@ -18,9 +18,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 ## Summary
 
 - **Total Games Tested:** 88
-- **Passing Both:** 62 (70.5%)
+- **Passing Both:** 63 (71.6%)
 - **Passing Worldgen Only:** 0 (0.0%)
-- **Passing Hybrid Only:** 2 (2.3%)
+- **Passing Hybrid Only:** 1 (1.1%)
 - **Passing Neither:** 24 (27.3%)
 - **Passing Hybrid with no custom code:** 39 (44.3%)
 - **Passing Hybrid Only with no custom code:** 1 (1.1%)
@@ -30,7 +30,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Game Name | Worldgen Result | Hybrid Result | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ | ✅ | 18.2KB | ✅ | 230.2KB |
-| A Link to the Past | ⚠️ 97/98 | ✅ | 14.0KB | ✅ | 664.0KB |
+| A Link to the Past | ✅ | ✅ | 14.0KB | ✅ | 664.0KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 74.4KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | ✅ | ✅ | ✅ | 25.7KB |
@@ -64,7 +64,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Inscryption | ✅ | ✅ | 8.0KB | ✅ | 84.3KB |
 | Jak and Daxter: The Precursor Legacy | ❌ 1/100 | ❌ | 21.7KB | 4.6KB | 257.9KB |
 | Journey to Ascension | ❌ | ❌ | ✅ | ✅ | 48.3KB |
-| Kingdom Hearts | ❌ 20/99 | ❌ 4/10 | ✅ | ✅ | 748.7KB |
+| Kingdom Hearts | ❌ 18/99 | ❌ 4/10 | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | ❌ | ⚠️ 6/10 | 20.4KB | ✅ | 1630.7KB |
 | Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.7KB |
 | Landstalker - The Treasures of King Nole | ✅ | ✅ | 3.6KB | ✅ | 209.2KB |
@@ -83,11 +83,11 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Old School Runescape | ✅ | ✅ | 1.0KB | ✅ | 305.2KB |
 | Overcooked! 2 | ✅ | ✅ | 28.5KB | ✅ | 488.3KB |
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.5KB |
-| Pokemon Emerald | ❌ 32/92 | ❌ 3/7 | 5.2KB | 8.7KB | 1350.2KB |
+| Pokemon Emerald | ❌ 31/92 | ❌ 3/7 | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | ❌ | ❌ | 12.2KB | 13.0KB | 1270.2KB |
 | Raft | ❌ | ❌ | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 131.4KB |
-| SMZ3 | ❌ 1/100 | ❌ 1/10 | 54.2KB | 51.3KB | 1890.6KB |
+| SMZ3 | ❌ | ❌ 1/10 | 54.2KB | 51.3KB | 1890.6KB |
 | Satisfactory | ✅ | ✅ | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ✅ | ✅ | ✅ | ✅ | 33.6KB |
 | Secret of Evermore | ❌ | ❌ | 5.6KB | 7.5KB | 415.0KB |
@@ -112,19 +112,20 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ✅ | ✅ | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.1KB |
-| Yacht Dice | ❌ 2/100 | ❌ | 0.9KB | 285.0KB | 248.5KB |
+| Yacht Dice | ❌ 1/100 | ❌ | 0.9KB | 285.0KB | 248.5KB |
 | Yoshi's Island | ✅ | ✅ | 9.2KB | ✅ | 295.3KB |
 | Yu-Gi-Oh! 2006 | ❌ 34/100 | ⚠️ 5/10 | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.2KB |
 | shapez | ✅ | ✅ | ✅ | ✅ | 153.8KB |
 
-## Games Passing Both (62)
+## Games Passing Both (63)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.2KB | ✅ | 230.2KB |
+| A Link to the Past | 14.0KB | ✅ | 664.0KB |
 | A Short Hike | ✅ | ✅ | 74.4KB |
 | APQuest | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | ✅ | 25.7KB |
@@ -187,13 +188,12 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 295.3KB |
 | shapez | ✅ | ✅ | 153.8KB |
 
-## Games Passing Hybrid Only (2)
+## Games Passing Hybrid Only (1)
 
 These games pass in the Hybrid UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 14.0KB | ✅ | 664.0KB |
 | Metamath | ✅ | ✅ | 56.0KB |
 
 ## Games Passing Neither (24)
