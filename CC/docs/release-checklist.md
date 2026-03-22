@@ -334,6 +334,30 @@ Key options:
 - `--skip-tests` — Skip running verification tests
 - `--test MODE` — Choose test game (`auto`, `adventure`, `alttp`, or `none`)
 
+### 7.3 Manual GUI installer test
+
+Test the installer APWorld the way an end user would — downloading it into a fresh vanilla Archipelago and running it from the Launcher GUI. This verifies the download URL, APWorld loading, and GUI components work end-to-end.
+
+Push all changes before running, since the installer downloads from GitHub:
+
+```bash
+rm -rf ~/CC/Archipelago-vanilla/
+git clone https://github.com/ArchipelagoMW/Archipelago.git ~/CC/Archipelago-vanilla/
+cd ~/CC/Archipelago-vanilla/
+mkdir -p custom_worlds
+wget -O custom_worlds/json_tools_installer.apworld \
+    https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld
+python3 -m venv .venv
+source .venv/bin/activate
+python ModuleUpdate.py -y
+python Launcher.py
+```
+
+In the Launcher GUI, verify:
+- **JSON Tools Installer** component appears and opens
+- Install completes successfully (dev version, all components)
+- **JSON Tools Status** shows correct installation state
+
 ---
 
 ## Phase 8: Stable Release
