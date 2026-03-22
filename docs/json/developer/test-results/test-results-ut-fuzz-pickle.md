@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 23:40:14 UTC
+**Generated:** 2026-03-22 04:16:53 UTC
 
 **Source Data Created:** 2026-03-21T23:01:02.332805+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 71 (passes pickle mode per config)
-- **Unexpected Passes:** 6 (expected to fail but passed)
-- **Expected Failures:** 9 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 2 (expected to pass but had logic mismatch)
+- **Expected Passes:** 77 (passes pickle mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 11 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
@@ -136,7 +136,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (71)
+### Expected Passes (77)
 
 Games that pass pickle mode per tracking-mode-config.json and passed the test.
 
@@ -164,10 +164,13 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | DOOM 1993 | 10 | 10 | 0 | 0 | 100.0% |
 | DOOM II | 10 | 10 | 0 | 0 | 100.0% |
 | Dark Souls III | 10 | 10 | 0 | 0 | 100.0% |
+| DepGraph | 10 | 10 | 0 | 0 | 100.0% |
 | Donkey Kong Country 3 | 10 | 10 | 0 | 0 | 100.0% |
+| EarthBound | 10 | 10 | 0 | 0 | 100.0% |
 | Factorio | 10 | 10 | 0 | 0 | 100.0% |
 | Faxanadu | 10 | 10 | 0 | 0 | 100.0% |
 | Final Fantasy | 10 | 10 | 0 | 0 | 100.0% |
+| Final Fantasy Mystic Quest | 10 | 9 | 0 | 0 | 90.0% |
 | Heretic | 10 | 10 | 0 | 0 | 100.0% |
 | Hollow Knight | 10 | 10 | 0 | 0 | 100.0% |
 | Hylics 2 | 10 | 10 | 0 | 0 | 100.0% |
@@ -180,11 +183,13 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Lufia II Ancient Cave | 10 | 10 | 0 | 0 | 100.0% |
 | Mario & Luigi Superstar Saga | 10 | 10 | 0 | 0 | 100.0% |
 | Mega Man 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Mega Man 3 | 10 | 10 | 0 | 0 | 100.0% |
 | MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
 | Meritous | 10 | 10 | 0 | 0 | 100.0% |
 | Metamath | 10 | 10 | 0 | 0 | 100.0% |
 | Muse Dash | 10 | 10 | 0 | 0 | 100.0% |
 | Noita | 10 | 10 | 0 | 0 | 100.0% |
+| Ocarina of Time | 10 | 8 | 0 | 0 | 80.0% |
 | Old School Runescape | 10 | 10 | 0 | 0 | 100.0% |
 | Overcooked! 2 | 10 | 5 | 0 | 0 | 50.0% |
 | Paint | 10 | 10 | 0 | 0 | 100.0% |
@@ -193,6 +198,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Risk of Rain 2 | 10 | 10 | 0 | 0 | 100.0% |
 | SMZ3 | 10 | 10 | 0 | 0 | 100.0% |
 | Saving Princess | 10 | 10 | 0 | 0 | 100.0% |
+| Secret of Evermore | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Adventure 2 Battle | 10 | 10 | 0 | 0 | 100.0% |
 | Subnautica | 10 | 10 | 0 | 0 | 100.0% |
 | Super Mario 64 | 10 | 10 | 0 | 0 | 100.0% |
@@ -214,20 +220,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Yu-Gi-Oh! 2006 | 10 | 10 | 0 | 0 | 100.0% |
 | shapez | 10 | 10 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (6)
-
-Games NOT expected to pass pickle mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| DepGraph | 10 | 10 | 0 | 0 | 100.0% |
-| EarthBound | 10 | 10 | 0 | 0 | 100.0% |
-| Final Fantasy Mystic Quest | 10 | 9 | 0 | 0 | 90.0% |
-| Mega Man 3 | 10 | 10 | 0 | 0 | 100.0% |
-| Ocarina of Time | 10 | 8 | 0 | 0 | 80.0% |
-| Secret of Evermore | 10 | 10 | 0 | 0 | 100.0% |
-
-### Expected Failures (9)
+### Expected Failures (11)
 
 Games NOT expected to pass pickle mode and failed as expected.
 
@@ -235,6 +228,8 @@ Games NOT expected to pass pickle mode and failed as expected.
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | Journey to Ascension | 10 | 0 | 10 | 0 | 0.0% |
 | Kingdom Hearts 2 | 10 | 7 | 3 | 0 | 70.0% |
+| Links Awakening DX | 10 | 1 | 9 | 0 | 10.0% |
+| Pokemon Emerald | 10 | 5 | 2 | 0 | 50.0% |
 | Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
 | Shivers | 10 | 0 | 9 | 1 | 0.0% |
 | Starcraft 2 | 10 | 0 | 10 | 0 | 0.0% |
@@ -242,15 +237,6 @@ Games NOT expected to pass pickle mode and failed as expected.
 | Super Metroid | 10 | 3 | 2 | 0 | 30.0% |
 | The Messenger | 10 | 1 | 9 | 0 | 10.0% |
 | Zillion | 10 | 8 | 0 | 1 | 80.0% |
-
-### Unexpected Failures (Logic Mismatch) (2)
-
-Games expected to pass pickle mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Links Awakening DX | 10 | 1 | 9 | 0 | 10.0% |
-| Pokemon Emerald | 10 | 5 | 2 | 0 | 50.0% |
 
 ## Notes
 
