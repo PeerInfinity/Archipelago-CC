@@ -6,15 +6,15 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-21 22:05:16 UTC
+**Generated:** 2026-03-22 01:50:32 UTC
 
-**Source Data Created:** 2026-02-04T19:44:47.367772
+**Source Data Created:** 2026-03-21T23:40:14.463856+00:00
 
-**Source Data Last Updated:** 2026-02-04T19:44:47.367777
+**Source Data Last Updated:** 2026-03-21T23:40:14.463871+00:00
 
 **Universal Tracker Version:** Pickle (loads serialized multiworld)
 
-**Seed Mode:** Random
+**Seed Mode:** Fixed (seed=1)
 
 **Runs Per Game:** 10
 
@@ -25,184 +25,169 @@
 ## Summary
 
 - **Total Games:** 123
-- **Games with 100% Pass Rate:** 30 (24.4%)
-- **Games with Failures:** 93 (75.6%)
+- **Games with 100% Pass Rate:** 86 (69.9%)
+- **Games with Failures:** 37 (30.1%)
 - **Total Fuzz Runs:** 1230
-- **Successful Runs:** 277 (22.5%)
-- **Failed Runs:** 818
-- **Timed Out Runs:** 10
-- **Ignored Runs:** 125
+- **Successful Runs:** 891 (72.4%)
+- **Failed Runs:** 218
+- **Timed Out Runs:** 2
+- **Ignored Runs:** 119
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 30 (passes pickle mode per config)
-- **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 93 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Expected Passes:** 25 (passes pickle mode per config)
+- **Unexpected Passes:** 61 (expected to fail but passed)
+- **Expected Failures:** 32 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 5 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
-
-### Explain Support Summary
-
-- **Games with Explain Stats:** 49
-- **Games with 100% Explain Coverage:** 42
-- **Games with No Explain Support:** 3
-- **Locations with Explain Support:** 7,240
-- **Locations without Explain Support:** 1,634
-- **Locations with Default Rule:** 8,285
-- **Overall Explain Coverage:** 81.6%
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|
-| A Dance of Fire and Ice | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| A Dance of Fire and Ice | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | A Difficult Game About Climbing | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
-| *A Link Between Worlds* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *ANIMAL WELL* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| *A Link Between Worlds* | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
+| *ANIMAL WELL* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
 | Actraiser | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
-| *Against the Storm* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Air Delivery* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| An Untitled Story | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Anodyne* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Against the Storm* | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
+| *Air Delivery* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| An Untitled Story | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Anodyne* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
 | Another Crabs Treasure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Ape Escape* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Ape Escape 3* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Astalon* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
-| Autopelago | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Axiom Verge* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Balatro* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
+| *Ape Escape* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Ape Escape 3* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
+| *Astalon* | ❌ | 10 | 5 | 3 | 0 | 2 | ⚠️ 50.0% |
+| Autopelago | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Axiom Verge* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Balatro* | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
 | Brotato | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
-| Castlevania: Dawn of Sorrow | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Cavern of Dreams* | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| *ChecksMate* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Castlevania: Dawn of Sorrow | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Cavern of Dreams* | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% |
+| *ChecksMate* | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | *Chrono Trigger Jets of Time* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | *ClusterTruck* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
-| *Corn Kidz 64* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *CrossCode* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Crystal Project* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Crystalis* | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
-| Cuphead | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
+| *Corn Kidz 64* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *CrossCode* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| *Crystal Project* | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| *Crystalis* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
+| Cuphead | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | DORONKO WANKO | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Deep Rock Galactic* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Diddy Kong Racing | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Digimon World* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
+| *Deep Rock Galactic* | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| Diddy Kong Racing | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Digimon World* | ✅ | 10 | 6 | 0 | 0 | 4 | ⚠️ 60.0% |
 | Dome Keeper | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Duke Nukem 3D* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
-| *Final Fantasy Tactics A2* | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
-| *Final Fantasy Tactics Advance* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Fire Emblem Sacred Stones* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Duke Nukem 3D* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| *Final Fantasy Tactics A2* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| *Final Fantasy Tactics Advance* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Fire Emblem Sacred Stones* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *Frogmonster* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *GZDoom* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | *Garfield Kart - Furious Racing* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Golden Sun The Lost Age | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Grim Dawn* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
-| *Hammerwatch* | ❌ | 10 | 5 | 4 | 0 | 1 | ⚠️ 50.0% |
-| Hatsune Miku Project Diva Mega Mix+ | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Grim Dawn* | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
+| *Hammerwatch* | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| Hatsune Miku Project Diva Mega Mix+ | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Here Comes Niko! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Iji* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Into the Breach* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Isles Of Sea And Sky | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Iji* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Into the Breach* | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
+| Isles Of Sea And Sky | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Ittle Dew 2 | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
-| Jigsaw | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| K-On! After School Live!! | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Keep Talking and Nobody Explodes* | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
-| Kingdom Hearts Birth by Sleep | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Kingdom Hearts Chain of Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Kingdom Hearts RE Chain of Memories | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Kirby Super Star | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
-| League of Legends | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Lego Star Wars: The Complete Saga* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
-| Lil Gator Game | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Lingo 2* | ❌ | 10 | 0 | 9 | 1 | 0 | ❌ 0.0% |
+| Jigsaw | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| K-On! After School Live!! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Keep Talking and Nobody Explodes* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| Kingdom Hearts Birth by Sleep | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Kingdom Hearts Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Kingdom Hearts RE Chain of Memories | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Kirby Super Star | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| League of Legends | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| *Lego Star Wars: The Complete Saga* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| Lil Gator Game | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Lingo 2* | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% |
 | Little Witch Nobeta | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Luigi's Mansion | ❌ | 10 | 0 | 7 | 0 | 3 | ❌ 0.0% |
-| *Lunacid* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
-| *Majora's Mask Recompiled* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
-| *Mario Kart Double Dash* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Luigi's Mansion | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
+| *Lunacid* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Majora's Mask Recompiled* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Mario Kart Double Dash* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | MetroCUBEvania | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Metroid Fusion | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Metroid Zero Mission* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Minishoot Adventures* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Minit* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Monster Sanctuary* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Nine Sols* | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| *Ori and the Blind Forest* | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
-| *Ori and the Will of the Wisps* | ❌ | 10 | 0 | 1 | 6 | 3 | ❌ 0.0% |
-| *Oxygen Not Included* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
-| *Pizza Tower* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Pokemon FireRed and LeafGreen* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Pokemon Mystery Dungeon Explorers of Sky* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Metroid Fusion | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| *Metroid: Zero Mission* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Minishoot Adventures* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Minit* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Monster Sanctuary* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| *Nine Sols* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
+| *Ori and the Blind Forest* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Ori and the Will of the Wisps* | ❌ | 10 | 6 | 1 | 0 | 3 | ⚠️ 60.0% |
+| *Oxygen Not Included* | ❌ | 10 | 8 | 1 | 0 | 1 | ⚠️ 80.0% |
+| *Pizza Tower* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| PlateUp | ❌ | 10 | 2 | 3 | 0 | 5 | ❌ 20.0% |
+| *Pokemon FireRed and LeafGreen* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Pokemon Mystery Dungeon Explorers of Sky* | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | *Pseudoregalia* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Rabi-Ribi* | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% |
+| *Rabi-Ribi* | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% |
 | Rain World | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
-| Ratchet & Clank 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Ratchet & Clank 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *Reventure* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Rift Wizard | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Rift of the Necrodancer* | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% |
-| *Rusted Moss* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Rift Wizard | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Rift of the Necrodancer* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Rusted Moss* | ❌ | 10 | 6 | 4 | 0 | 0 | ⚠️ 60.0% |
 | *Sentinels of the Multiverse* | ❌ | 10 | 0 | 8 | 2 | 0 | ❌ 0.0% |
-| *Shadow The Hedgehog* | ❌ | 10 | 0 | 2 | 0 | 8 | ❌ 0.0% |
-| *Ship of Harkinian* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Shadow The Hedgehog* | ✅ | 10 | 2 | 0 | 0 | 8 | ❌ 20.0% |
+| *Ship of Harkinian* | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
 | Simon Tatham's Portable Puzzle Collection | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | *Sly 2: Band of Thieves* | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
-| *Sly Cooper and the Thievius Raccoonus* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Sonic Adventure DX* | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% |
+| *Sly Cooper and the Thievius Raccoonus* | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| *Sonic Adventure DX* | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
 | Sonic Heroes | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
-| *Sonic Rush* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Sonic the Hedgehog 1 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Soul Blazer* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Sonic Rush* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| Sonic the Hedgehog 1 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Soul Blazer* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | Spinball | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Spyro 3* | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| *Stacklands* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Star Fox 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Star Wars Episode I Racer | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
-| Super Cat Planet | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Symphony of the Night | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *System Shock 2* | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
-| *TCG Card Shop Simulator* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Spyro 3* | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| *Stacklands* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Star Fox 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Star Wars Episode I Racer | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Super Cat Planet | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Symphony of the Night | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *System Shock 2* | ❌ | 10 | 6 | 3 | 0 | 1 | ⚠️ 60.0% |
+| *TCG Card Shop Simulator* | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | TOEM: A Photo Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Tetris Attack* | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
-| Tevi | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *The Legend of Zelda - Oracle of Seasons* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *The Legend of Zelda - Phantom Hourglass* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Tetris Attack* | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
+| *The Legend of Zelda - Oracle of Seasons* | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| *The Legend of Zelda - Phantom Hourglass* | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
 | *The Sims 4* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *ToeJam and Earl* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 | TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| *Tyrian* | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% |
+| *Tyrian* | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% |
 | *Wario Land* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
 | Watery Words | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
-| Wordipelago | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% |
-| *XCOM 2 War of the Chosen* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *Yu-Gi-Oh! Forbidden Memories* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| Zelda II: The Adventure of Link | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Wordipelago | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *XCOM 2 War of the Chosen* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Yu-Gi-Oh! Forbidden Memories* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Zelda II: The Adventure of Link | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
 | osu! | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
-| *plateup* | ❌ | 10 | 4 | 4 | 1 | 1 | ❌ 40.0% |
 
 ## Results Breakdown
 
-### Expected Passes (30)
+### Expected Passes (25)
 
 Games that pass pickle mode per tracking-mode-config.json and passed the test.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| A Dance of Fire and Ice | 10 | 10 | 0 | 0 | 100.0% |
 | A Difficult Game About Climbing | 10 | 9 | 0 | 0 | 90.0% |
 | Actraiser | 10 | 9 | 0 | 0 | 90.0% |
-| Anodyne | 10 | 10 | 0 | 0 | 100.0% |
+| Anodyne | 10 | 9 | 0 | 0 | 90.0% |
 | Another Crabs Treasure | 10 | 10 | 0 | 0 | 100.0% |
-| Astalon | 10 | 8 | 0 | 0 | 80.0% |
 | Brotato | 10 | 7 | 0 | 0 | 70.0% |
-| Cuphead | 10 | 0 | 0 | 0 | 0.0% |
 | DORONKO WANKO | 10 | 10 | 0 | 0 | 100.0% |
 | Dome Keeper | 10 | 10 | 0 | 0 | 100.0% |
 | Frogmonster | 10 | 10 | 0 | 0 | 100.0% |
 | Golden Sun The Lost Age | 10 | 10 | 0 | 0 | 100.0% |
 | Here Comes Niko! | 10 | 10 | 0 | 0 | 100.0% |
 | Ittle Dew 2 | 10 | 9 | 0 | 0 | 90.0% |
-| Kirby Super Star | 10 | 0 | 0 | 0 | 0.0% |
-| Lil Gator Game | 10 | 10 | 0 | 0 | 100.0% |
 | Little Witch Nobeta | 10 | 10 | 0 | 0 | 100.0% |
 | MetroCUBEvania | 10 | 10 | 0 | 0 | 100.0% |
 | Pseudoregalia | 10 | 10 | 0 | 0 | 100.0% |
@@ -211,168 +196,131 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
 | Sonic Heroes | 10 | 0 | 0 | 0 | 0.0% |
 | Spinball | 10 | 10 | 0 | 0 | 100.0% |
-| Star Wars Episode I Racer | 10 | 9 | 0 | 0 | 90.0% |
+| Star Wars Episode I Racer | 10 | 10 | 0 | 0 | 100.0% |
 | TOEM: A Photo Adventure | 10 | 10 | 0 | 0 | 100.0% |
 | TurnipBoy | 10 | 10 | 0 | 0 | 100.0% |
 | Vampire Survivors | 10 | 4 | 0 | 0 | 40.0% |
 | Watery Words | 10 | 10 | 0 | 0 | 100.0% |
-| Wordipelago | 10 | 8 | 0 | 0 | 80.0% |
+| Wordipelago | 10 | 10 | 0 | 0 | 100.0% |
 
-### Expected Failures (93)
+### Unexpected Passes (61)
+
+Games NOT expected to pass pickle mode (not in config or mode not listed) but passed anyway.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| ANIMAL WELL | 10 | 9 | 0 | 0 | 90.0% |
+| Air Delivery | 10 | 10 | 0 | 0 | 100.0% |
+| An Untitled Story | 10 | 10 | 0 | 0 | 100.0% |
+| Ape Escape | 10 | 10 | 0 | 0 | 100.0% |
+| Ape Escape 3 | 10 | 8 | 0 | 0 | 80.0% |
+| Autopelago | 10 | 10 | 0 | 0 | 100.0% |
+| Axiom Verge | 10 | 10 | 0 | 0 | 100.0% |
+| Balatro | 10 | 3 | 0 | 0 | 30.0% |
+| Castlevania: Dawn of Sorrow | 10 | 10 | 0 | 0 | 100.0% |
+| Cavern of Dreams | 10 | 5 | 0 | 0 | 50.0% |
+| Corn Kidz 64 | 10 | 10 | 0 | 0 | 100.0% |
+| CrossCode | 10 | 9 | 0 | 0 | 90.0% |
+| Crystalis | 10 | 8 | 0 | 0 | 80.0% |
+| Diddy Kong Racing | 10 | 10 | 0 | 0 | 100.0% |
+| Digimon World | 10 | 6 | 0 | 0 | 60.0% |
+| Duke Nukem 3D | 10 | 9 | 0 | 0 | 90.0% |
+| Final Fantasy Tactics Advance | 10 | 10 | 0 | 0 | 100.0% |
+| Fire Emblem Sacred Stones | 10 | 10 | 0 | 0 | 100.0% |
+| Grim Dawn | 10 | 7 | 0 | 0 | 70.0% |
+| Hatsune Miku Project Diva Mega Mix+ | 10 | 10 | 0 | 0 | 100.0% |
+| Iji | 10 | 10 | 0 | 0 | 100.0% |
+| Isles Of Sea And Sky | 10 | 10 | 0 | 0 | 100.0% |
+| K-On! After School Live!! | 10 | 10 | 0 | 0 | 100.0% |
+| Keep Talking and Nobody Explodes | 10 | 9 | 0 | 0 | 90.0% |
+| Kingdom Hearts Birth by Sleep | 10 | 10 | 0 | 0 | 100.0% |
+| Kingdom Hearts Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
+| Kingdom Hearts RE Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
+| Lego Star Wars: The Complete Saga | 10 | 9 | 0 | 0 | 90.0% |
+| Lingo 2 | 10 | 4 | 0 | 0 | 40.0% |
+| Luigi's Mansion | 10 | 3 | 0 | 0 | 30.0% |
+| Lunacid | 10 | 10 | 0 | 0 | 100.0% |
+| Majora's Mask Recompiled | 10 | 10 | 0 | 0 | 100.0% |
+| Mario Kart Double Dash | 10 | 10 | 0 | 0 | 100.0% |
+| Metroid Fusion | 10 | 9 | 0 | 0 | 90.0% |
+| Metroid: Zero Mission | 10 | 10 | 0 | 0 | 100.0% |
+| Minishoot Adventures | 10 | 10 | 0 | 0 | 100.0% |
+| Minit | 10 | 10 | 0 | 0 | 100.0% |
+| Nine Sols | 10 | 8 | 0 | 0 | 80.0% |
+| Ori and the Blind Forest | 10 | 10 | 0 | 0 | 100.0% |
+| Pizza Tower | 10 | 10 | 0 | 0 | 100.0% |
+| Pokemon FireRed and LeafGreen | 10 | 10 | 0 | 0 | 100.0% |
+| Rabi-Ribi | 10 | 4 | 0 | 0 | 40.0% |
+| Ratchet & Clank 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Rift Wizard | 10 | 10 | 0 | 0 | 100.0% |
+| Rift of the Necrodancer | 10 | 10 | 0 | 0 | 100.0% |
+| Shadow The Hedgehog | 10 | 2 | 0 | 0 | 20.0% |
+| Sonic Adventure DX | 10 | 3 | 0 | 0 | 30.0% |
+| Sonic Rush | 10 | 9 | 0 | 0 | 90.0% |
+| Sonic the Hedgehog 1 | 10 | 10 | 0 | 0 | 100.0% |
+| Soul Blazer | 10 | 10 | 0 | 0 | 100.0% |
+| Spyro 3 | 10 | 9 | 0 | 0 | 90.0% |
+| Stacklands | 10 | 10 | 0 | 0 | 100.0% |
+| Star Fox 64 | 10 | 10 | 0 | 0 | 100.0% |
+| Super Cat Planet | 10 | 10 | 0 | 0 | 100.0% |
+| Symphony of the Night | 10 | 10 | 0 | 0 | 100.0% |
+| Tetris Attack | 10 | 8 | 0 | 0 | 80.0% |
+| ToeJam and Earl | 10 | 10 | 0 | 0 | 100.0% |
+| Tyrian | 10 | 7 | 0 | 0 | 70.0% |
+| XCOM 2 War of the Chosen | 10 | 10 | 0 | 0 | 100.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 10 | 0 | 0 | 100.0% |
+| Yu-Gi-Oh! Forbidden Memories | 10 | 10 | 0 | 0 | 100.0% |
+
+### Expected Failures (32)
 
 Games NOT expected to pass pickle mode and failed as expected.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| A Link Between Worlds | 10 | 0 | 10 | 0 | 0.0% |
-| ANIMAL WELL | 10 | 0 | 9 | 0 | 0.0% |
-| Against the Storm | 10 | 0 | 10 | 0 | 0.0% |
-| Air Delivery | 10 | 0 | 10 | 0 | 0.0% |
-| An Untitled Story | 10 | 0 | 10 | 0 | 0.0% |
-| Ape Escape | 10 | 0 | 10 | 0 | 0.0% |
-| Ape Escape 3 | 10 | 0 | 10 | 0 | 0.0% |
-| Autopelago | 10 | 0 | 10 | 0 | 0.0% |
-| Axiom Verge | 10 | 0 | 10 | 0 | 0.0% |
-| Balatro | 10 | 0 | 6 | 0 | 0.0% |
-| Castlevania: Dawn of Sorrow | 10 | 0 | 10 | 0 | 0.0% |
-| Cavern of Dreams | 10 | 0 | 8 | 0 | 0.0% |
-| ChecksMate | 10 | 0 | 10 | 0 | 0.0% |
+| A Link Between Worlds | 10 | 2 | 8 | 0 | 20.0% |
+| Against the Storm | 10 | 6 | 4 | 0 | 60.0% |
+| ChecksMate | 10 | 6 | 4 | 0 | 60.0% |
 | Chrono Trigger Jets of Time | 10 | 0 | 10 | 0 | 0.0% |
 | ClusterTruck | 10 | 3 | 7 | 0 | 30.0% |
-| Corn Kidz 64 | 10 | 0 | 10 | 0 | 0.0% |
-| CrossCode | 10 | 0 | 10 | 0 | 0.0% |
-| Crystal Project | 10 | 0 | 10 | 0 | 0.0% |
-| Crystalis | 10 | 0 | 7 | 0 | 0.0% |
-| Deep Rock Galactic | 10 | 0 | 10 | 0 | 0.0% |
-| Diddy Kong Racing | 10 | 0 | 10 | 0 | 0.0% |
-| Digimon World | 10 | 0 | 6 | 0 | 0.0% |
-| Duke Nukem 3D | 10 | 0 | 9 | 0 | 0.0% |
-| Final Fantasy Tactics A2 | 10 | 0 | 7 | 0 | 0.0% |
-| Final Fantasy Tactics Advance | 10 | 0 | 10 | 0 | 0.0% |
-| Fire Emblem Sacred Stones | 10 | 0 | 10 | 0 | 0.0% |
+| Crystal Project | 10 | 8 | 2 | 0 | 80.0% |
+| Deep Rock Galactic | 10 | 9 | 1 | 0 | 90.0% |
+| Final Fantasy Tactics A2 | 10 | 0 | 9 | 0 | 0.0% |
 | GZDoom | 10 | 0 | 10 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 10 | 0 | 10 | 0 | 0.0% |
-| Grim Dawn | 10 | 0 | 9 | 0 | 0.0% |
-| Hammerwatch | 10 | 5 | 4 | 0 | 50.0% |
-| Hatsune Miku Project Diva Mega Mix+ | 10 | 0 | 10 | 0 | 0.0% |
-| Iji | 10 | 0 | 10 | 0 | 0.0% |
-| Into the Breach | 10 | 0 | 10 | 0 | 0.0% |
-| Isles Of Sea And Sky | 10 | 0 | 10 | 0 | 0.0% |
-| Jigsaw | 10 | 0 | 10 | 0 | 0.0% |
-| K-On! After School Live!! | 10 | 0 | 10 | 0 | 0.0% |
-| Keep Talking and Nobody Explodes | 10 | 0 | 7 | 0 | 0.0% |
-| Kingdom Hearts Birth by Sleep | 10 | 0 | 10 | 0 | 0.0% |
-| Kingdom Hearts Chain of Memories | 10 | 0 | 10 | 0 | 0.0% |
-| Kingdom Hearts RE Chain of Memories | 10 | 0 | 10 | 0 | 0.0% |
-| League of Legends | 10 | 0 | 10 | 0 | 0.0% |
-| Lego Star Wars: The Complete Saga | 10 | 0 | 9 | 0 | 0.0% |
-| Lingo 2 | 10 | 0 | 9 | 1 | 0.0% |
-| Luigi's Mansion | 10 | 0 | 7 | 0 | 0.0% |
-| Lunacid | 10 | 3 | 7 | 0 | 30.0% |
-| Majora's Mask Recompiled | 10 | 4 | 6 | 0 | 40.0% |
-| Mario Kart Double Dash | 10 | 0 | 10 | 0 | 0.0% |
-| Metroid Fusion | 10 | 0 | 10 | 0 | 0.0% |
-| Metroid Zero Mission | 10 | 0 | 10 | 0 | 0.0% |
-| Minishoot Adventures | 10 | 0 | 10 | 0 | 0.0% |
-| Minit | 10 | 0 | 10 | 0 | 0.0% |
-| Monster Sanctuary | 10 | 0 | 10 | 0 | 0.0% |
-| Nine Sols | 10 | 0 | 8 | 0 | 0.0% |
-| Ori and the Blind Forest | 10 | 6 | 4 | 0 | 60.0% |
-| Ori and the Will of the Wisps | 10 | 0 | 1 | 6 | 0.0% |
-| Oxygen Not Included | 10 | 0 | 9 | 0 | 0.0% |
-| Pizza Tower | 10 | 0 | 10 | 0 | 0.0% |
-| Pokemon FireRed and LeafGreen | 10 | 0 | 10 | 0 | 0.0% |
-| Pokemon Mystery Dungeon Explorers of Sky | 10 | 0 | 10 | 0 | 0.0% |
-| Rabi-Ribi | 10 | 0 | 4 | 0 | 0.0% |
-| Ratchet & Clank 2 | 10 | 0 | 10 | 0 | 0.0% |
-| Rift Wizard | 10 | 0 | 10 | 0 | 0.0% |
-| Rift of the Necrodancer | 10 | 3 | 3 | 0 | 30.0% |
-| Rusted Moss | 10 | 0 | 10 | 0 | 0.0% |
+| Hammerwatch | 10 | 9 | 1 | 0 | 90.0% |
+| Into the Breach | 10 | 2 | 8 | 0 | 20.0% |
+| Jigsaw | 10 | 3 | 7 | 0 | 30.0% |
+| League of Legends | 10 | 8 | 2 | 0 | 80.0% |
+| Monster Sanctuary | 10 | 4 | 6 | 0 | 40.0% |
+| Ori and the Will of the Wisps | 10 | 6 | 1 | 0 | 60.0% |
+| Oxygen Not Included | 10 | 8 | 1 | 0 | 80.0% |
+| PlateUp | 10 | 2 | 3 | 0 | 20.0% |
+| Pokemon Mystery Dungeon Explorers of Sky | 10 | 8 | 2 | 0 | 80.0% |
+| Rusted Moss | 10 | 6 | 4 | 0 | 60.0% |
 | Sentinels of the Multiverse | 10 | 0 | 8 | 2 | 0.0% |
-| Shadow The Hedgehog | 10 | 0 | 2 | 0 | 0.0% |
-| Ship of Harkinian | 10 | 0 | 10 | 0 | 0.0% |
+| Ship of Harkinian | 10 | 2 | 8 | 0 | 20.0% |
 | Sly 2: Band of Thieves | 10 | 0 | 6 | 0 | 0.0% |
-| Sly Cooper and the Thievius Raccoonus | 10 | 0 | 10 | 0 | 0.0% |
-| Sonic Adventure DX | 10 | 0 | 4 | 0 | 0.0% |
-| Sonic Rush | 10 | 0 | 10 | 0 | 0.0% |
-| Sonic the Hedgehog 1 | 10 | 0 | 10 | 0 | 0.0% |
-| Soul Blazer | 10 | 0 | 10 | 0 | 0.0% |
-| Spyro 3 | 10 | 0 | 8 | 0 | 0.0% |
-| Stacklands | 10 | 0 | 10 | 0 | 0.0% |
-| Star Fox 64 | 10 | 0 | 10 | 0 | 0.0% |
-| Super Cat Planet | 10 | 0 | 10 | 0 | 0.0% |
-| Symphony of the Night | 10 | 0 | 10 | 0 | 0.0% |
-| System Shock 2 | 10 | 0 | 9 | 0 | 0.0% |
-| TCG Card Shop Simulator | 10 | 0 | 10 | 0 | 0.0% |
-| Tetris Attack | 10 | 0 | 8 | 0 | 0.0% |
-| Tevi | 10 | 0 | 10 | 0 | 0.0% |
-| The Legend of Zelda - Oracle of Seasons | 10 | 0 | 10 | 0 | 0.0% |
-| The Legend of Zelda - Phantom Hourglass | 10 | 0 | 10 | 0 | 0.0% |
+| Sly Cooper and the Thievius Raccoonus | 10 | 9 | 1 | 0 | 90.0% |
+| System Shock 2 | 10 | 6 | 3 | 0 | 60.0% |
+| TCG Card Shop Simulator | 10 | 8 | 2 | 0 | 80.0% |
+| The Legend of Zelda - Oracle of Seasons | 10 | 3 | 7 | 0 | 30.0% |
+| The Legend of Zelda - Phantom Hourglass | 10 | 8 | 2 | 0 | 80.0% |
 | The Sims 4 | 10 | 0 | 10 | 0 | 0.0% |
-| Tyrian | 10 | 3 | 3 | 0 | 30.0% |
 | Wario Land | 10 | 0 | 10 | 0 | 0.0% |
-| XCOM 2 War of the Chosen | 10 | 0 | 10 | 0 | 0.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 0 | 10 | 0 | 0.0% |
-| Yu-Gi-Oh! Forbidden Memories | 10 | 0 | 10 | 0 | 0.0% |
-| Zelda II: The Adventure of Link | 10 | 0 | 10 | 0 | 0.0% |
+| Zelda II: The Adventure of Link | 10 | 2 | 8 | 0 | 20.0% |
 | osu! | 10 | 0 | 10 | 0 | 0.0% |
-| plateup | 10 | 4 | 4 | 1 | 40.0% |
 
-## Explain Support Details
+### Unexpected Failures (Logic Mismatch) (5)
 
-This section shows which games have rules that support the `explain_json()` method, which provides human-readable explanations of access rule logic.
+Games expected to pass pickle mode but failed due to logic mismatches.
 
-| Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |
-|-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
-| Axiom Verge | 125 | 0 | 125 | 0 | ❌ 0% |
-| CrossCode | 584 | 0 | 514 | 70 | ❌ 0% |
-| Monster Sanctuary | 572 | 0 | 572 | 0 | ❌ 0% |
-| Tyrian | 330 | 1 | 54 | 275 | 🔶 2% |
-| Crystal Project | 1264 | 235 | 366 | 663 | 🔶 39% |
-| ChecksMate | 76 | 71 | 2 | 3 | ⚠️ 97% |
-| Lunacid | 1238 | 39 | 1 | 1198 | ⚠️ 98% |
-| A Dance of Fire and Ice | 142 | 135 | 0 | 7 | ✅ 100% |
-| A Difficult Game About Climbing | 16 | 0 | 0 | 16 | ✅ 100% |
-| Actraiser | 173 | 55 | 0 | 118 | ✅ 100% |
-| Against the Storm | 217 | 217 | 0 | 0 | ✅ 100% |
-| Another Crabs Treasure | 614 | 181 | 0 | 433 | ✅ 100% |
-| Brotato | 153 | 0 | 0 | 153 | ✅ 100% |
-| Cavern of Dreams | 478 | 0 | 0 | 478 | ✅ 100% |
-| ClusterTruck | 117 | 102 | 0 | 15 | ✅ 100% |
-| Corn Kidz 64 | 191 | 191 | 0 | 0 | ✅ 100% |
-| DORONKO WANKO | 95 | 4 | 0 | 91 | ✅ 100% |
-| Digimon World | 217 | 215 | 0 | 2 | ✅ 100% |
-| Dome Keeper | 83 | 0 | 0 | 83 | ✅ 100% |
-| Golden Sun The Lost Age | 319 | 216 | 0 | 103 | ✅ 100% |
-| Hammerwatch | 1148 | 10 | 0 | 1138 | ✅ 100% |
-| Here Comes Niko! | 979 | 319 | 0 | 660 | ✅ 100% |
-| Iji | 279 | 0 | 0 | 279 | ✅ 100% |
-| Ittle Dew 2 | 235 | 235 | 0 | 0 | ✅ 100% |
-| Keep Talking and Nobody Explodes | 116 | 72 | 0 | 44 | ✅ 100% |
-| Lil Gator Game | 219 | 178 | 0 | 41 | ✅ 100% |
-| Little Witch Nobeta | 55 | 15 | 0 | 40 | ✅ 100% |
-| Majora's Mask Recompiled | 372 | 319 | 0 | 53 | ✅ 100% |
-| MetroCUBEvania | 13 | 2 | 0 | 11 | ✅ 100% |
-| Nine Sols | 318 | 86 | 0 | 232 | ✅ 100% |
-| Ori and the Blind Forest | 254 | 188 | 0 | 66 | ✅ 100% |
-| Rift of the Necrodancer | 294 | 294 | 0 | 0 | ✅ 100% |
-| Rusted Moss | 100 | 0 | 0 | 100 | ✅ 100% |
-| Ship of Harkinian | 1153 | 1153 | 0 | 0 | ✅ 100% |
-| Simon Tatham's Portable Puzzle Collection | 758 | 758 | 0 | 0 | ✅ 100% |
-| Sonic Adventure DX | 125 | 19 | 0 | 106 | ✅ 100% |
-| Spinball | 2 | 1 | 0 | 1 | ✅ 100% |
-| Spyro 3 | 308 | 84 | 0 | 224 | ✅ 100% |
-| Stacklands | 216 | 190 | 0 | 26 | ✅ 100% |
-| Star Wars Episode I Racer | 69 | 40 | 0 | 29 | ✅ 100% |
-| TCG Card Shop Simulator | 1335 | 540 | 0 | 795 | ✅ 100% |
-| TOEM: A Photo Adventure | 214 | 4 | 0 | 210 | ✅ 100% |
-| Tetris Attack | 300 | 300 | 0 | 0 | ✅ 100% |
-| The Legend of Zelda - Oracle of Seasons | 224 | 0 | 0 | 224 | ✅ 100% |
-| TurnipBoy | 45 | 22 | 0 | 23 | ✅ 100% |
-| Vampire Survivors | 329 | 211 | 0 | 118 | ✅ 100% |
-| Watery Words | 150 | 150 | 0 | 0 | ✅ 100% |
-| Wordipelago | 160 | 6 | 0 | 154 | ✅ 100% |
-| plateup | 385 | 382 | 0 | 3 | ✅ 100% |
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| A Dance of Fire and Ice | 10 | 0 | 10 | 0 | 0.0% |
+| Astalon | 10 | 5 | 3 | 0 | 50.0% |
+| Cuphead | 10 | 0 | 10 | 0 | 0.0% |
+| Kirby Super Star | 10 | 0 | 10 | 0 | 0.0% |
+| Lil Gator Game | 10 | 0 | 10 | 0 | 0.0% |
 
 ## Notes
 
@@ -384,14 +332,6 @@ This section shows which games have rules that support the `explain_json()` meth
 - **Timeout:** Number of runs that exceeded the time limit
 - **Ignored:** Number of runs skipped due to option errors
 - **Success Rate:** Percentage of successful runs
-
-### Explain Support Columns
-
-- **Total Locs:** Total number of locations with addresses (excludes events)
-- **With Explain:** Locations with rules that have `explain_json()` support
-- **Without Explain:** Locations with custom rules but no explain support (lambdas/functions)
-- **Default Rule:** Locations with no access rule set (always accessible)
-- **Coverage:** Percentage of custom-rule locations that have explain support
 
 ### About This Test
 
