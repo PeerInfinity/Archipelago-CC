@@ -418,6 +418,8 @@ class InstallerApp(App):
             ),
             readonly=True,
             size_hint_y=0.8,
+            background_color=(0.2, 0.2, 0.2, 1),
+            foreground_color=(1, 1, 1, 1),
         )
         content.add_widget(warn_text)
 
