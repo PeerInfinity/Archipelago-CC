@@ -194,7 +194,6 @@ These tests are **not covered by any workflow** and must be run locally:
 
 ```bash
 python scripts/test/test_ast_format_parsing.py                   # AST format rule parsing
-python scripts/test/test-json-world-builder.py --game "Adventure" # JSON world builder round-trip
 node scripts/test/test-bidirectional-detection.js                 # Exit bidirectionality detection
 npm run bench                                                     # JS rule engine benchmarks
 ```
