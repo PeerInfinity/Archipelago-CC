@@ -4,7 +4,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-14 02:28:14 UTC
+**Generated:** 2026-03-22 00:30:15 UTC
 
 **Source Data Created:** 2026-01-25T04:56:06.693744
 
@@ -167,6 +167,7 @@ These templates are excluded from testing:
 
 ## Notes
 
+- *Italic game names* are in the exclude list for this test type
 - **Result:** ✅ if all fuzz runs passed (0 failures, 0 timeouts), ❌ otherwise
 - **Total:** Number of fuzz runs attempted for this game
 - **Success:** Number of runs where spoiler test completed successfully
