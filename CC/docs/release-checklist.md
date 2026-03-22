@@ -219,6 +219,8 @@ Run **all** of the following workflows (can be started in parallel):
 | Unit Tests | `unittests.yml` | |
 | Unit Tests (JSON) | `unittests_json.yml` | |
 
+The UT Fuzzer workflow should be run for each mode that feeds into the tracking mode config: `original`, `worldgen`, and `pickle`. These can run in parallel.
+
 ### 5.2 Merge workflow results
 
 Test workflows push their results to separate branches (e.g., `test-results-original`, `test-results-worldgen`, `test-results-apworld`). Merge them into `main`:
@@ -243,6 +245,24 @@ Common failure types:
 - Spoiler test failures — may indicate rule export/import issues
 - UT fuzz failures — may indicate tracking discrepancies
 - World generator failures — may indicate new upstream rule types not yet supported
+
+### 5.4 Regenerate tracking mode config
+
+After the UT fuzz results for all modes (original, worldgen, pickle) have been merged, regenerate the tracking mode config that UT Hybrid mode uses to select the best mode per-game:
+
+```bash
+python scripts/test/generate-tracking-mode-config.py
+```
+
+This reads the test result files in `scripts/output/ut-fuzz/` and generates `exporter/tracking-mode-config.json`, which specifies:
+- `fallback_order` — priority order for mode selection (worldgen > pickle > original)
+- `game_results` — which modes pass for each game (bundled and apworld)
+
+The config is used by:
+- **Exporter** (`exporter/exporter.py`) — decides whether to export `_rules.json` (worldgen) or `.pkl` (pickle) per-game
+- **TrackerCore** (`worlds/tracker/TrackerCore.py`) — selects which tracking mode to use per-game
+
+After regenerating, run the UT Fuzzer workflow once more in `hybrid` mode to verify the config produces correct results. Then merge those results and commit the updated config.
 
 ---
 
