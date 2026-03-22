@@ -413,7 +413,9 @@ class InstallerApp(App):
                 "this project.\n\n"
                 "A backup of the existing rule_builder/ directory will be\n"
                 "saved to json_tools_backups/components/rule_builder/.\n\n"
-                "You can restore the original files later via the CLI:\n"
+                "The original will be restored automatically when you\n"
+                "uninstall. To restore manually:\n\n"
+                "  source .venv/bin/activate\n"
                 "  python -m worlds.json_tools_installer.cli.install --restore-rule-builder"
             ),
             readonly=True,
