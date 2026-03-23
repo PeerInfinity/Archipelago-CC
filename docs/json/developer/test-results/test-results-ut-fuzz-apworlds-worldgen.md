@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 08:50:05 UTC
+**Generated:** 2026-03-23 03:48:19 UTC
 
 **Source Data Created:** 2026-03-22T08:50:05.260306+00:00
 
@@ -35,11 +35,11 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 31 (passes worldgen mode per config)
-- **Unexpected Passes:** 11 (expected to fail but passed)
-- **Expected Failures:** 43 (doesn't pass worldgen mode per config)
-- **Unexpected Failures (logic):** 11 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 2 (expected to pass but timed out)
+- **Expected Passes:** 42 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 56 (doesn't pass worldgen mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
 
@@ -170,7 +170,7 @@ Of the 42 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (31)
+### Expected Passes (42)
 
 Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 
@@ -179,54 +179,47 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | A Dance of Fire and Ice | 100 | 100 | 0 | 0 | 100.0% |
 | Actraiser | 100 | 85 | 0 | 0 | 85.0% |
 | An Untitled Story | 100 | 100 | 0 | 0 | 100.0% |
+| Ape Escape 3 | 100 | 91 | 0 | 0 | 91.0% |
+| Axiom Verge | 100 | 99 | 0 | 0 | 99.0% |
 | Brotato | 100 | 79 | 0 | 0 | 79.0% |
 | Castlevania: Dawn of Sorrow | 100 | 100 | 0 | 0 | 100.0% |
+| Corn Kidz 64 | 100 | 98 | 0 | 0 | 98.0% |
 | DORONKO WANKO | 100 | 100 | 0 | 0 | 100.0% |
 | Diddy Kong Racing | 100 | 99 | 0 | 0 | 99.0% |
+| Digimon World | 100 | 75 | 0 | 0 | 75.0% |
 | Golden Sun The Lost Age | 100 | 90 | 0 | 0 | 90.0% |
+| Grim Dawn | 100 | 62 | 0 | 0 | 62.0% |
 | Hatsune Miku Project Diva Mega Mix+ | 100 | 100 | 0 | 0 | 100.0% |
+| Iji | 100 | 100 | 0 | 0 | 100.0% |
 | Isles Of Sea And Sky | 100 | 100 | 0 | 0 | 100.0% |
 | Ittle Dew 2 | 100 | 91 | 0 | 0 | 91.0% |
 | Jigsaw | 100 | 100 | 0 | 0 | 100.0% |
 | K-On! After School Live!! | 100 | 100 | 0 | 0 | 100.0% |
+| Keep Talking and Nobody Explodes | 100 | 79 | 0 | 0 | 79.0% |
 | Kingdom Hearts Chain of Memories | 100 | 100 | 0 | 0 | 100.0% |
 | League of Legends | 100 | 98 | 0 | 0 | 98.0% |
 | Little Witch Nobeta | 100 | 100 | 0 | 0 | 100.0% |
 | Luigi's Mansion | 100 | 49 | 0 | 0 | 49.0% |
 | MetroCUBEvania | 100 | 100 | 0 | 0 | 100.0% |
 | Metroid Fusion | 100 | 97 | 0 | 0 | 97.0% |
+| Minit | 100 | 99 | 0 | 0 | 99.0% |
 | Nine Sols | 100 | 54 | 0 | 0 | 54.0% |
 | Rain World | 100 | 36 | 0 | 0 | 36.0% |
 | Rift of the Necrodancer | 100 | 100 | 0 | 0 | 100.0% |
 | Sonic the Hedgehog 1 | 100 | 100 | 0 | 0 | 100.0% |
 | Spinball | 100 | 100 | 0 | 0 | 100.0% |
+| Stacklands | 100 | 100 | 0 | 0 | 100.0% |
 | Star Fox 64 | 100 | 100 | 0 | 0 | 100.0% |
 | Super Cat Planet | 100 | 100 | 0 | 0 | 100.0% |
 | TOEM: A Photo Adventure | 100 | 100 | 0 | 0 | 100.0% |
+| Tetris Attack | 100 | 83 | 0 | 0 | 83.0% |
 | The Sims 4 | 100 | 100 | 0 | 0 | 100.0% |
 | TurnipBoy | 100 | 100 | 0 | 0 | 100.0% |
+| Vampire Survivors | 100 | 48 | 0 | 0 | 48.0% |
 | Wordipelago | 100 | 95 | 0 | 0 | 95.0% |
 | osu! | 100 | 100 | 0 | 0 | 100.0% |
 
-### Unexpected Passes (11)
-
-Games NOT expected to pass worldgen mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Ape Escape 3 | 100 | 91 | 0 | 0 | 91.0% |
-| Axiom Verge | 100 | 99 | 0 | 0 | 99.0% |
-| Corn Kidz 64 | 100 | 98 | 0 | 0 | 98.0% |
-| Digimon World | 100 | 75 | 0 | 0 | 75.0% |
-| Grim Dawn | 100 | 62 | 0 | 0 | 62.0% |
-| Iji | 100 | 100 | 0 | 0 | 100.0% |
-| Keep Talking and Nobody Explodes | 100 | 79 | 0 | 0 | 79.0% |
-| Minit | 100 | 99 | 0 | 0 | 99.0% |
-| Stacklands | 100 | 100 | 0 | 0 | 100.0% |
-| Tetris Attack | 100 | 83 | 0 | 0 | 83.0% |
-| Vampire Survivors | 100 | 48 | 0 | 0 | 48.0% |
-
-### Expected Failures (43)
+### Expected Failures (56)
 
 Games NOT expected to pass worldgen mode and failed as expected.
 
@@ -234,7 +227,10 @@ Games NOT expected to pass worldgen mode and failed as expected.
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | A Link Between Worlds | 100 | 0 | 100 | 0 | 0.0% |
 | Against the Storm | 100 | 0 | 99 | 1 | 0.0% |
+| Air Delivery | 100 | 71 | 29 | 0 | 71.0% |
+| Anodyne | 100 | 31 | 69 | 0 | 31.0% |
 | Another Crabs Treasure | 100 | 55 | 45 | 0 | 55.0% |
+| Astalon | 100 | 1 | 86 | 0 | 1.0% |
 | Balatro | 100 | 7 | 12 | 0 | 7.0% |
 | Cavern of Dreams | 100 | 20 | 43 | 0 | 20.0% |
 | ChecksMate | 100 | 0 | 98 | 0 | 0.0% |
@@ -244,12 +240,14 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | Cuphead | 100 | 0 | 100 | 0 | 0.0% |
 | Deep Rock Galactic | 100 | 71 | 29 | 0 | 71.0% |
 | Duke Nukem 3D | 100 | 5 | 90 | 0 | 5.0% |
+| Final Fantasy Tactics Advance | 100 | 78 | 22 | 0 | 78.0% |
 | Fire Emblem Sacred Stones | 100 | 42 | 55 | 0 | 42.0% |
 | Frogmonster | 100 | 76 | 24 | 0 | 76.0% |
 | GZDoom | 100 | 0 | 100 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 100 | 0 | 100 | 0 | 0.0% |
 | Into the Breach | 100 | 0 | 100 | 0 | 0.0% |
 | Kirby Super Star | 100 | 4 | 92 | 0 | 4.0% |
+| Lego Star Wars: The Complete Saga | 100 | 69 | 16 | 0 | 69.0% |
 | Lil Gator Game | 100 | 0 | 100 | 0 | 0.0% |
 | Lingo 2 | 100 | 8 | 9 | 0 | 8.0% |
 | Majora's Mask Recompiled | 100 | 89 | 11 | 0 | 89.0% |
@@ -261,47 +259,28 @@ Games NOT expected to pass worldgen mode and failed as expected.
 | PlateUp | 100 | 45 | 14 | 17 | 45.0% |
 | Pokemon FireRed and LeafGreen | 100 | 80 | 20 | 0 | 80.0% |
 | Pokemon Mystery Dungeon Explorers of Sky | 100 | 0 | 100 | 0 | 0.0% |
+| Pseudoregalia | 100 | 0 | 100 | 0 | 0.0% |
 | Rabi-Ribi | 100 | 50 | 13 | 0 | 50.0% |
+| Reventure | 100 | 0 | 100 | 0 | 0.0% |
 | Rusted Moss | 100 | 0 | 100 | 0 | 0.0% |
 | Sentinels of the Multiverse | 100 | 0 | 64 | 35 | 0.0% |
 | Shadow The Hedgehog | 100 | 8 | 7 | 0 | 8.0% |
 | Ship of Harkinian | 100 | 0 | 100 | 0 | 0.0% |
+| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
 | Sly 2: Band of Thieves | 100 | 0 | 53 | 0 | 0.0% |
 | Sonic Adventure DX | 100 | 16 | 28 | 0 | 16.0% |
+| Sonic Rush | 100 | 26 | 73 | 0 | 26.0% |
+| Soul Blazer | 100 | 51 | 49 | 0 | 51.0% |
 | Spyro 3 | 100 | 10 | 89 | 0 | 10.0% |
 | System Shock 2 | 100 | 6 | 55 | 0 | 6.0% |
 | TCG Card Shop Simulator | 100 | 8 | 90 | 0 | 8.0% |
 | The Legend of Zelda - Oracle of Seasons | 100 | 0 | 100 | 0 | 0.0% |
 | The Legend of Zelda - Phantom Hourglass | 100 | 0 | 98 | 0 | 0.0% |
 | Wario Land | 100 | 0 | 100 | 0 | 0.0% |
-| Yu-Gi-Oh! Forbidden Memories | 100 | 15 | 85 | 0 | 15.0% |
-
-### Unexpected Failures (Logic Mismatch) (11)
-
-Games expected to pass worldgen mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Air Delivery | 100 | 71 | 29 | 0 | 71.0% |
-| Anodyne | 100 | 31 | 69 | 0 | 31.0% |
-| Astalon | 100 | 1 | 86 | 0 | 1.0% |
-| Final Fantasy Tactics Advance | 100 | 78 | 22 | 0 | 78.0% |
-| Lego Star Wars: The Complete Saga | 100 | 69 | 16 | 0 | 69.0% |
-| Pseudoregalia | 100 | 0 | 100 | 0 | 0.0% |
-| Reventure | 100 | 0 | 100 | 0 | 0.0% |
-| Sonic Rush | 100 | 26 | 73 | 0 | 26.0% |
-| Soul Blazer | 100 | 51 | 49 | 0 | 51.0% |
+| Watery Words | 100 | 96 | 0 | 4 | 96.0% |
 | XCOM 2 War of the Chosen | 100 | 0 | 86 | 0 | 0.0% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 90 | 10 | 0 | 90.0% |
-
-### Unexpected Failures (Timeout Only) (2)
-
-Games expected to pass worldgen mode but failed only due to timeouts.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
-| Watery Words | 100 | 96 | 0 | 4 | 96.0% |
+| Yu-Gi-Oh! Forbidden Memories | 100 | 15 | 85 | 0 | 15.0% |
 
 ## Explain Support Details
 
