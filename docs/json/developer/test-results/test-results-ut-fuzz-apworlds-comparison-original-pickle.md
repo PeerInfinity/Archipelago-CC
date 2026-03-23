@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle (APWorlds)
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-23 21:46:21 UTC
 
-**Source Data Last Updated:** 2026-03-22T06:18:18
+**Source Data Last Updated:** 2026-03-23T20:52:37
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -18,140 +18,140 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 123
-- **Passing Both:** 37 (30.1%)
+- **Passing Both:** 53 (43.1%)
 - **Passing Original Only:** 1 (0.8%)
-- **Passing Pickle Only:** 38 (30.9%)
-- **Passing Neither:** 47 (38.2%)
+- **Passing Pickle Only:** 33 (26.8%)
+- **Passing Neither:** 36 (29.3%)
 
 ## Full Comparison
 
 | Game Name | Original Result | Pickle Result |
 |-----------|:---------------------:|:---------------------:|
 | A Dance of Fire and Ice | ❌ | ❌ |
-| A Difficult Game About Climbing | ⚠️ 67/100 | ✅ |
-| A Link Between Worlds | ❌ 14/100 | ❌ 14/100 |
-| ANIMAL WELL | ⚠️ 92/100 | ✅ |
-| Actraiser | ⚠️ 86/100 | ✅ |
-| Against the Storm | ⚠️ 64/99 | ⚠️ 64/99 |
+| A Difficult Game About Climbing | ⚠️ 9/10 | ✅ |
+| A Link Between Worlds | ❌ 2/10 | ❌ 2/10 |
+| ANIMAL WELL | ⚠️ 9/10 | ✅ |
+| Actraiser | ⚠️ 9/10 | ✅ |
+| Against the Storm | ⚠️ 6/10 | ⚠️ 6/10 |
 | Air Delivery | ✅ | ✅ |
 | An Untitled Story | ✅ | ✅ |
 | Anodyne | ✅ | ✅ |
-| Another Crabs Treasure | ⚠️ 53/100 | ✅ |
-| Ape Escape | ⚠️ 97/100 | ✅ |
+| Another Crabs Treasure | ⚠️ 5/10 | ✅ |
+| Ape Escape | ✅ | ✅ |
 | Ape Escape 3 | ✅ | ✅ |
 | Astalon | ✅ | ✅ |
 | Autopelago | ✅ | ✅ |
-| Axiom Verge | ⚠️ 65/100 | ✅ |
-| Balatro | ❌ 9/36 | ⚠️ 18/19 |
-| Brotato | ⚠️ 42/79 | ✅ |
+| Axiom Verge | ⚠️ 5/10 | ✅ |
+| Balatro | ❌ | ✅ |
+| Brotato | ❌ 3/7 | ✅ |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ |
-| Cavern of Dreams | ❌ 20/100 | ⚠️ 60/63 |
-| ChecksMate | ⚠️ 85/100 | ⚠️ 83/98 |
+| Cavern of Dreams | ❌ 2/10 | ⚠️ 4/5 |
+| ChecksMate | ⚠️ 8/10 | ⚠️ 8/10 |
 | Chrono Trigger Jets of Time | ❌ | ❌ |
-| ClusterTruck | ⚠️ 52/100 | ⚠️ 51/100 |
-| Corn Kidz 64 | ⚠️ 98/100 | ✅ |
+| ClusterTruck | ❌ 3/10 | ❌ 3/10 |
+| Corn Kidz 64 | ✅ | ✅ |
 | CrossCode | ✅ | ✅ |
-| Crystal Project | ❌ 28/100 | ⚠️ 71/100 |
-| Crystalis | ⚠️ 59/80 | ⚠️ 59/61 |
+| Crystal Project | ❌ 3/10 | ⚠️ 8/10 |
+| Crystalis | ✅ | ✅ |
 | Cuphead | ❌ | ❌ |
 | DORONKO WANKO | ✅ | ✅ |
-| Deep Rock Galactic | ❌ 38/100 | ⚠️ 97/100 |
-| Diddy Kong Racing | ⚠️ 99/100 | ✅ |
-| Digimon World | ⚠️ 75/100 | ✅ |
-| Dome Keeper | ⚠️ 99/100 | ✅ |
-| Duke Nukem 3D | ❌ 4/100 | ⚠️ 89/95 |
-| Final Fantasy Tactics A2 | ❌ 10/100 | ❌ 10/98 |
+| Deep Rock Galactic | ⚠️ 6/10 | ⚠️ 9/10 |
+| Diddy Kong Racing | ✅ | ✅ |
+| Digimon World | ⚠️ 6/10 | ✅ |
+| Dome Keeper | ✅ | ✅ |
+| Duke Nukem 3D | ❌ 2/10 | ✅ |
+| Final Fantasy Tactics A2 | ❌ | ❌ |
 | Final Fantasy Tactics Advance | ✅ | ✅ |
-| Fire Emblem Sacred Stones | ❌ 43/99 | ✅ |
-| Frogmonster | ⚠️ 76/100 | ✅ |
+| Fire Emblem Sacred Stones | ❌ 4/10 | ✅ |
+| Frogmonster | ⚠️ 8/10 | ✅ |
 | GZDoom | ❌ | ❌ |
 | Garfield Kart - Furious Racing | ❌ | ❌ |
-| Golden Sun The Lost Age | ⚠️ 48/90 | ⚠️ 87/90 |
-| Grim Dawn | ⚠️ 62/74 | ✅ |
-| Hammerwatch | ❌ 27/100 | ⚠️ 88/98 |
-| Hatsune Miku Project Diva Mega Mix+ | ❌ 7/100 | ✅ |
-| Here Comes Niko! | ⚠️ 61/100 | ✅ |
-| Iji | ⚠️ 62/100 | ✅ |
-| Into the Breach | ❌ 45/100 | ❌ 45/100 |
+| Golden Sun The Lost Age | ⚠️ 8/10 | ✅ |
+| Grim Dawn | ⚠️ 7/9 | ✅ |
+| Hammerwatch | ❌ 2/10 | ⚠️ 9/10 |
+| Hatsune Miku Project Diva Mega Mix+ | ❌ 2/10 | ✅ |
+| Here Comes Niko! | ⚠️ 8/10 | ✅ |
+| Iji | ⚠️ 8/10 | ✅ |
+| Into the Breach | ❌ 2/10 | ❌ 2/10 |
 | Isles Of Sea And Sky | ✅ | ✅ |
-| Ittle Dew 2 | ⚠️ 66/97 | ✅ |
-| Jigsaw | ❌ 48/100 | ❌ 48/100 |
+| Ittle Dew 2 | ✅ | ✅ |
+| Jigsaw | ❌ 3/10 | ❌ 3/10 |
 | K-On! After School Live!! | ✅ | ✅ |
-| Keep Talking and Nobody Explodes | ⚠️ 79/100 | ✅ |
+| Keep Talking and Nobody Explodes | ⚠️ 9/10 | ✅ |
 | Kingdom Hearts Birth by Sleep | ✅ | ✅ |
 | Kingdom Hearts Chain of Memories | ✅ | ✅ |
-| Kingdom Hearts RE Chain of Memories | ⚠️ 96/100 | ✅ |
-| Kirby Super Star | ❌ 18/98 | ❌ 16/96 |
-| League of Legends | ⚠️ 61/100 | ⚠️ 61/98 |
-| Lego Star Wars: The Complete Saga | ✅ | ❌ 12/85 |
+| Kingdom Hearts RE Chain of Memories | ✅ | ✅ |
+| Kirby Super Star | ❌ | ❌ |
+| League of Legends | ⚠️ 8/10 | ⚠️ 8/10 |
+| Lego Star Wars: The Complete Saga | ✅ | ❌ 1/9 |
 | Lil Gator Game | ❌ | ❌ |
-| Lingo 2 | ⚠️ 9/18 | ✅ |
+| Lingo 2 | ⚠️ 2/4 | ✅ |
 | Little Witch Nobeta | ✅ | ✅ |
 | Luigi's Mansion | ✅ | ✅ |
 | Lunacid | ✅ | ✅ |
-| Majora's Mask Recompiled | ⚠️ 89/100 | ✅ |
-| Mario Kart Double Dash | ⚠️ 99/100 | ✅ |
+| Majora's Mask Recompiled | ✅ | ✅ |
+| Mario Kart Double Dash | ✅ | ✅ |
 | MetroCUBEvania | ✅ | ✅ |
-| Metroid Fusion | ⚠️ 84/100 | ✅ |
-| Metroid: Zero Mission | ❌ 1/100 | ✅ |
-| Minishoot Adventures | ❌ 18/100 | ✅ |
-| Minit | ⚠️ 99/100 | ✅ |
-| Monster Sanctuary | ❌ 18/100 | ❌ 36/100 |
+| Metroid Fusion | ⚠️ 7/10 | ✅ |
+| Metroid: Zero Mission | ❌ | ✅ |
+| Minishoot Adventures | ❌ | ✅ |
+| Minit | ✅ | ✅ |
+| Monster Sanctuary | ❌ 3/10 | ❌ 4/10 |
 | Nine Sols | ✅ | ✅ |
-| Ori and the Blind Forest | ⚠️ 98/100 | ✅ |
-| Ori and the Will of the Wisps | ❌ 19/100 | ⚠️ 56/71 |
-| Oxygen Not Included | ⚠️ 64/100 | ⚠️ 66/91 |
-| Pizza Tower | ❌ 49/100 | ✅ |
-| PlateUp | ❌ 5/90 | ⚠️ 41/64 |
-| Pokemon FireRed and LeafGreen | ⚠️ 80/100 | ✅ |
-| Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 78/100 | ⚠️ 78/100 |
+| Ori and the Blind Forest | ✅ | ✅ |
+| Ori and the Will of the Wisps | ❌ 2/10 | ⚠️ 6/7 |
+| Oxygen Not Included | ⚠️ 8/10 | ⚠️ 8/9 |
+| Pizza Tower | ⚠️ 6/10 | ✅ |
+| PlateUp | ❌ 1/10 | ❌ 2/5 |
+| Pokemon FireRed and LeafGreen | ⚠️ 6/10 | ✅ |
+| Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 8/10 | ⚠️ 8/10 |
 | Pseudoregalia | ✅ | ✅ |
-| Rabi-Ribi | ⚠️ 50/63 | ✅ |
-| Rain World | ⚠️ 36/37 | ✅ |
+| Rabi-Ribi | ⚠️ 2/4 | ✅ |
+| Rain World | ✅ | ✅ |
 | Ratchet & Clank 2 | ✅ | ✅ |
 | Reventure | ✅ | ✅ |
 | Rift Wizard | ✅ | ✅ |
 | Rift of the Necrodancer | ✅ | ✅ |
-| Rusted Moss | ❌ 43/100 | ❌ 43/100 |
+| Rusted Moss | ⚠️ 6/10 | ⚠️ 6/10 |
 | Sentinels of the Multiverse | ❌ | ❌ |
-| Shadow The Hedgehog | ❌ 8/21 | ⚠️ 14/18 |
-| Ship of Harkinian | ❌ 31/100 | ❌ 30/100 |
+| Shadow The Hedgehog | ✅ | ✅ |
+| Ship of Harkinian | ❌ 2/10 | ❌ 2/10 |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ |
 | Sly 2: Band of Thieves | ❌ | ❌ |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 89/100 | ⚠️ 87/100 |
-| Sonic Adventure DX | ❌ 16/66 | ⚠️ 39/43 |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 9/10 | ⚠️ 8/10 |
+| Sonic Adventure DX | ❌ | ✅ |
 | Sonic Heroes | ✅ | ✅ |
-| Sonic Rush | ⚠️ 99/100 | ✅ |
+| Sonic Rush | ⚠️ 9/10 | ✅ |
 | Sonic the Hedgehog 1 | ✅ | ✅ |
 | Soul Blazer | ✅ | ✅ |
 | Spinball | ✅ | ✅ |
-| Spyro 3 | ❌ 9/99 | ✅ |
+| Spyro 3 | ❌ 2/9 | ✅ |
 | Stacklands | ✅ | ✅ |
 | Star Fox 64 | ✅ | ✅ |
-| Star Wars Episode I Racer | ❌ 4/100 | ✅ |
+| Star Wars Episode I Racer | ❌ | ✅ |
 | Super Cat Planet | ✅ | ✅ |
 | Symphony of the Night | ✅ | ✅ |
-| System Shock 2 | ❌ 42/100 | ⚠️ 43/60 |
-| TCG Card Shop Simulator | ❌ | ⚠️ 82/98 |
+| System Shock 2 | ⚠️ 6/10 | ⚠️ 6/9 |
+| TCG Card Shop Simulator | ❌ | ⚠️ 8/10 |
 | TOEM: A Photo Adventure | ✅ | ✅ |
-| Tetris Attack | ⚠️ 83/87 | ✅ |
-| The Legend of Zelda - Oracle of Seasons | ❌ | ❌ 41/100 |
-| The Legend of Zelda - Phantom Hourglass | ❌ 9/100 | ⚠️ 54/98 |
+| Tetris Attack | ⚠️ 8/9 | ✅ |
+| The Legend of Zelda - Oracle of Seasons | ❌ | ❌ 3/10 |
+| The Legend of Zelda - Phantom Hourglass | ❌ 2/10 | ⚠️ 8/10 |
 | The Sims 4 | ❌ | ❌ |
-| ToeJam and Earl | ❌ 4/100 | ✅ |
+| ToeJam and Earl | ❌ 1/10 | ✅ |
 | TurnipBoy | ✅ | ✅ |
-| Tyrian | ⚠️ 41/75 | ⚠️ 70/71 |
+| Tyrian | ⚠️ 7/9 | ✅ |
 | Vampire Survivors | ✅ | ✅ |
 | Wario Land | ❌ | ❌ |
 | Watery Words | ✅ | ✅ |
 | Wordipelago | ✅ | ✅ |
 | XCOM 2 War of the Chosen | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 84/100 | ❌ 47/100 |
-| Yu-Gi-Oh! Forbidden Memories | ❌ 15/100 | ✅ |
-| Zelda II: The Adventure of Link | ❌ 12/100 | ❌ 12/100 |
-| osu! | ❌ 1/100 | ❌ 1/100 |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ✅ | ✅ |
+| Yu-Gi-Oh! Forbidden Memories | ❌ | ✅ |
+| Zelda II: The Adventure of Link | ❌ 2/10 | ✅ |
+| osu! | ❌ | ❌ |
 
-## Games Passing Both (37)
+## Games Passing Both (53)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -160,27 +160,41 @@ These games have 100% success rate in both Universal Tracker versions.
 | Air Delivery |
 | An Untitled Story |
 | Anodyne |
+| Ape Escape |
 | Ape Escape 3 |
 | Astalon |
 | Autopelago |
 | Castlevania: Dawn of Sorrow |
+| Corn Kidz 64 |
 | CrossCode |
+| Crystalis |
 | DORONKO WANKO |
+| Diddy Kong Racing |
+| Dome Keeper |
 | Final Fantasy Tactics Advance |
 | Isles Of Sea And Sky |
+| Ittle Dew 2 |
 | K-On! After School Live!! |
 | Kingdom Hearts Birth by Sleep |
 | Kingdom Hearts Chain of Memories |
+| Kingdom Hearts RE Chain of Memories |
 | Little Witch Nobeta |
 | Luigi's Mansion |
 | Lunacid |
+| Majora's Mask Recompiled |
+| Mario Kart Double Dash |
 | MetroCUBEvania |
+| Minit |
 | Nine Sols |
+| Ori and the Blind Forest |
 | Pseudoregalia |
+| Rain World |
 | Ratchet & Clank 2 |
 | Reventure |
 | Rift Wizard |
 | Rift of the Necrodancer |
+| Shadow The Hedgehog |
+| Simon Tatham's Portable Puzzle Collection |
 | Sonic Heroes |
 | Sonic the Hedgehog 1 |
 | Soul Blazer |
@@ -192,8 +206,10 @@ These games have 100% success rate in both Universal Tracker versions.
 | TOEM: A Photo Adventure |
 | TurnipBoy |
 | Vampire Survivors |
+| Watery Words |
 | Wordipelago |
 | XCOM 2 War of the Chosen |
+| Yu-Gi-Oh! Dungeon Dice Monsters |
 
 ## Games Passing Original Only (1)
 
@@ -203,7 +219,7 @@ These games pass in the Original UT but fail in the Pickle UT.
 |-----------|
 | Lego Star Wars: The Complete Saga |
 
-## Games Passing Pickle Only (38)
+## Games Passing Pickle Only (33)
 
 These games pass in the Pickle UT but fail in the Original UT.
 
@@ -213,42 +229,37 @@ These games pass in the Pickle UT but fail in the Original UT.
 | ANIMAL WELL |
 | Actraiser |
 | Another Crabs Treasure |
-| Ape Escape |
 | Axiom Verge |
+| Balatro |
 | Brotato |
-| Corn Kidz 64 |
-| Diddy Kong Racing |
 | Digimon World |
-| Dome Keeper |
+| Duke Nukem 3D |
 | Fire Emblem Sacred Stones |
 | Frogmonster |
+| Golden Sun The Lost Age |
 | Grim Dawn |
 | Hatsune Miku Project Diva Mega Mix+ |
 | Here Comes Niko! |
 | Iji |
-| Ittle Dew 2 |
 | Keep Talking and Nobody Explodes |
-| Kingdom Hearts RE Chain of Memories |
 | Lingo 2 |
-| Majora's Mask Recompiled |
-| Mario Kart Double Dash |
 | Metroid Fusion |
 | Metroid: Zero Mission |
 | Minishoot Adventures |
-| Minit |
-| Ori and the Blind Forest |
 | Pizza Tower |
 | Pokemon FireRed and LeafGreen |
 | Rabi-Ribi |
-| Rain World |
+| Sonic Adventure DX |
 | Sonic Rush |
 | Spyro 3 |
 | Star Wars Episode I Racer |
 | Tetris Attack |
 | ToeJam and Earl |
+| Tyrian |
 | Yu-Gi-Oh! Forbidden Memories |
+| Zelda II: The Adventure of Link |
 
-## Games Passing Neither (47)
+## Games Passing Neither (36)
 
 These games fail in both Universal Tracker versions.
 
@@ -257,20 +268,16 @@ These games fail in both Universal Tracker versions.
 | A Dance of Fire and Ice |
 | A Link Between Worlds |
 | Against the Storm |
-| Balatro |
 | Cavern of Dreams |
 | ChecksMate |
 | Chrono Trigger Jets of Time |
 | ClusterTruck |
 | Crystal Project |
-| Crystalis |
 | Cuphead |
 | Deep Rock Galactic |
-| Duke Nukem 3D |
 | Final Fantasy Tactics A2 |
 | GZDoom |
 | Garfield Kart - Furious Racing |
-| Golden Sun The Lost Age |
 | Hammerwatch |
 | Into the Breach |
 | Jigsaw |
@@ -284,22 +291,15 @@ These games fail in both Universal Tracker versions.
 | Pokemon Mystery Dungeon Explorers of Sky |
 | Rusted Moss |
 | Sentinels of the Multiverse |
-| Shadow The Hedgehog |
 | Ship of Harkinian |
-| Simon Tatham's Portable Puzzle Collection |
 | Sly 2: Band of Thieves |
 | Sly Cooper and the Thievius Raccoonus |
-| Sonic Adventure DX |
 | System Shock 2 |
 | TCG Card Shop Simulator |
 | The Legend of Zelda - Oracle of Seasons |
 | The Legend of Zelda - Phantom Hourglass |
 | The Sims 4 |
-| Tyrian |
 | Wario Land |
-| Watery Words |
-| Yu-Gi-Oh! Dungeon Dice Monsters |
-| Zelda II: The Adventure of Link |
 | osu! |
 
 ## Notes
