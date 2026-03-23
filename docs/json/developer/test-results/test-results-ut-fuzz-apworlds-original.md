@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 06:27:28 UTC
+**Generated:** 2026-03-23 03:48:19 UTC
 
 **Source Data Created:** 2026-03-22T06:27:28.403788+00:00
 
@@ -37,9 +37,9 @@
 
 - **Expected Passes:** 38 (passes original mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 68 (doesn't pass original mode per config)
-- **Unexpected Failures (logic):** 15 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 2 (expected to pass but timed out)
+- **Expected Failures:** 85 (doesn't pass original mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
 
@@ -216,7 +216,7 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Wordipelago | 100 | 95 | 0 | 0 | 95.0% |
 | XCOM 2 War of the Chosen | 100 | 86 | 0 | 0 | 86.0% |
 
-### Expected Failures (68)
+### Expected Failures (85)
 
 Games NOT expected to pass original mode and failed as expected.
 
@@ -226,8 +226,10 @@ Games NOT expected to pass original mode and failed as expected.
 | A Difficult Game About Climbing | 100 | 67 | 33 | 0 | 67.0% |
 | A Link Between Worlds | 100 | 14 | 86 | 0 | 14.0% |
 | ANIMAL WELL | 100 | 92 | 8 | 0 | 92.0% |
+| Actraiser | 100 | 86 | 14 | 0 | 86.0% |
 | Against the Storm | 100 | 64 | 35 | 1 | 64.0% |
 | Another Crabs Treasure | 100 | 53 | 47 | 0 | 53.0% |
+| Ape Escape | 100 | 97 | 3 | 0 | 97.0% |
 | Axiom Verge | 100 | 65 | 35 | 0 | 65.0% |
 | Balatro | 100 | 9 | 27 | 0 | 9.0% |
 | Brotato | 100 | 42 | 37 | 0 | 42.0% |
@@ -235,10 +237,14 @@ Games NOT expected to pass original mode and failed as expected.
 | ChecksMate | 100 | 85 | 15 | 0 | 85.0% |
 | Chrono Trigger Jets of Time | 100 | 0 | 100 | 0 | 0.0% |
 | ClusterTruck | 100 | 52 | 48 | 0 | 52.0% |
+| Corn Kidz 64 | 100 | 98 | 2 | 0 | 98.0% |
 | Crystal Project | 100 | 28 | 72 | 0 | 28.0% |
+| Crystalis | 100 | 59 | 21 | 0 | 59.0% |
 | Cuphead | 100 | 0 | 100 | 0 | 0.0% |
 | Deep Rock Galactic | 100 | 38 | 62 | 0 | 38.0% |
+| Diddy Kong Racing | 100 | 99 | 1 | 0 | 99.0% |
 | Digimon World | 100 | 75 | 25 | 0 | 75.0% |
+| Dome Keeper | 100 | 99 | 1 | 0 | 99.0% |
 | Duke Nukem 3D | 100 | 4 | 96 | 0 | 4.0% |
 | Final Fantasy Tactics A2 | 100 | 10 | 90 | 0 | 10.0% |
 | Fire Emblem Sacred Stones | 100 | 43 | 56 | 0 | 43.0% |
@@ -252,16 +258,22 @@ Games NOT expected to pass original mode and failed as expected.
 | Here Comes Niko! | 100 | 61 | 39 | 0 | 61.0% |
 | Iji | 100 | 62 | 38 | 0 | 62.0% |
 | Into the Breach | 100 | 45 | 55 | 0 | 45.0% |
+| Ittle Dew 2 | 100 | 66 | 31 | 0 | 66.0% |
 | Jigsaw | 100 | 48 | 52 | 0 | 48.0% |
 | Keep Talking and Nobody Explodes | 100 | 79 | 21 | 0 | 79.0% |
+| Kingdom Hearts RE Chain of Memories | 100 | 96 | 4 | 0 | 96.0% |
 | Kirby Super Star | 100 | 18 | 80 | 0 | 18.0% |
 | League of Legends | 100 | 61 | 39 | 0 | 61.0% |
 | Lil Gator Game | 100 | 0 | 100 | 0 | 0.0% |
 | Lingo 2 | 100 | 9 | 9 | 0 | 9.0% |
+| Majora's Mask Recompiled | 100 | 89 | 11 | 0 | 89.0% |
+| Mario Kart Double Dash | 100 | 99 | 1 | 0 | 99.0% |
 | Metroid Fusion | 100 | 84 | 16 | 0 | 84.0% |
 | Metroid: Zero Mission | 100 | 1 | 99 | 0 | 1.0% |
 | Minishoot Adventures | 100 | 18 | 82 | 0 | 18.0% |
+| Minit | 100 | 99 | 1 | 0 | 99.0% |
 | Monster Sanctuary | 100 | 18 | 82 | 0 | 18.0% |
+| Ori and the Blind Forest | 100 | 98 | 2 | 0 | 98.0% |
 | Ori and the Will of the Wisps | 100 | 19 | 81 | 0 | 19.0% |
 | Oxygen Not Included | 100 | 64 | 36 | 0 | 64.0% |
 | Pizza Tower | 100 | 49 | 51 | 0 | 49.0% |
@@ -269,9 +281,12 @@ Games NOT expected to pass original mode and failed as expected.
 | Pokemon FireRed and LeafGreen | 100 | 80 | 20 | 0 | 80.0% |
 | Pokemon Mystery Dungeon Explorers of Sky | 100 | 78 | 22 | 0 | 78.0% |
 | Rabi-Ribi | 100 | 50 | 13 | 0 | 50.0% |
+| Rain World | 100 | 36 | 1 | 0 | 36.0% |
 | Rusted Moss | 100 | 43 | 57 | 0 | 43.0% |
 | Sentinels of the Multiverse | 100 | 0 | 64 | 35 | 0.0% |
+| Shadow The Hedgehog | 100 | 8 | 13 | 0 | 8.0% |
 | Ship of Harkinian | 100 | 31 | 69 | 0 | 31.0% |
+| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
 | Sly 2: Band of Thieves | 100 | 0 | 53 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 100 | 89 | 11 | 0 | 89.0% |
 | Sonic Adventure DX | 100 | 16 | 50 | 0 | 16.0% |
@@ -287,40 +302,11 @@ Games NOT expected to pass original mode and failed as expected.
 | ToeJam and Earl | 100 | 4 | 96 | 0 | 4.0% |
 | Tyrian | 100 | 41 | 34 | 0 | 41.0% |
 | Wario Land | 100 | 0 | 100 | 0 | 0.0% |
+| Watery Words | 100 | 98 | 0 | 2 | 98.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 84 | 16 | 0 | 84.0% |
 | Yu-Gi-Oh! Forbidden Memories | 100 | 15 | 85 | 0 | 15.0% |
 | Zelda II: The Adventure of Link | 100 | 12 | 88 | 0 | 12.0% |
 | osu! | 100 | 1 | 99 | 0 | 1.0% |
-
-### Unexpected Failures (Logic Mismatch) (15)
-
-Games expected to pass original mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Actraiser | 100 | 86 | 14 | 0 | 86.0% |
-| Ape Escape | 100 | 97 | 3 | 0 | 97.0% |
-| Corn Kidz 64 | 100 | 98 | 2 | 0 | 98.0% |
-| Crystalis | 100 | 59 | 21 | 0 | 59.0% |
-| Diddy Kong Racing | 100 | 99 | 1 | 0 | 99.0% |
-| Dome Keeper | 100 | 99 | 1 | 0 | 99.0% |
-| Ittle Dew 2 | 100 | 66 | 31 | 0 | 66.0% |
-| Kingdom Hearts RE Chain of Memories | 100 | 96 | 4 | 0 | 96.0% |
-| Majora's Mask Recompiled | 100 | 89 | 11 | 0 | 89.0% |
-| Mario Kart Double Dash | 100 | 99 | 1 | 0 | 99.0% |
-| Minit | 100 | 99 | 1 | 0 | 99.0% |
-| Ori and the Blind Forest | 100 | 98 | 2 | 0 | 98.0% |
-| Rain World | 100 | 36 | 1 | 0 | 36.0% |
-| Shadow The Hedgehog | 100 | 8 | 13 | 0 | 8.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 84 | 16 | 0 | 84.0% |
-
-### Unexpected Failures (Timeout Only) (2)
-
-Games expected to pass original mode but failed only due to timeouts.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
-| Watery Words | 100 | 98 | 0 | 2 | 98.0% |
 
 ## Notes
 
