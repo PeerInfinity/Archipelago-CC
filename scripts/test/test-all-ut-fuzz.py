@@ -837,7 +837,7 @@ def main():
             stop_on_first_failure=args.stop_on_first_failure,
             number_by_seed=args.number_by_seed,
             original_seeded=(args.ut_version == "original_seeded"),
-            ut_version=args.ut_version,
+            ut_version=ut_version,
             process_timeout=args.process_timeout
         )
 
