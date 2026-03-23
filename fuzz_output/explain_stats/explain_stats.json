@@ -1,0 +1,200 @@
+{
+  "game": "A Link to the Past WorldGen_59423251658041217331",
+  "total_locations": 225,
+  "locations_with_explain": 114,
+  "locations_default_rule": 84,
+  "locations_without_explain": 27,
+  "explain_coverage_percent": 80.85,
+  "locations_without_explain_list": [
+    {
+      "name": "Desert Palace - Boss",
+      "region": "Desert Palace North"
+    },
+    {
+      "name": "Eastern Palace - Big Key Chest",
+      "region": "Eastern Palace"
+    },
+    {
+      "name": "Eastern Palace - Boss",
+      "region": "Eastern Palace"
+    },
+    {
+      "name": "Tower of Hera - Boss",
+      "region": "Tower of Hera (Top)"
+    },
+    {
+      "name": "Mimic Cave",
+      "region": "Mimic Cave"
+    },
+    {
+      "name": "Swamp Palace - Big Chest",
+      "region": "Swamp Palace (Center)"
+    },
+    {
+      "name": "Swamp Palace - Boss",
+      "region": "Swamp Palace (North)"
+    },
+    {
+      "name": "Thieves' Town - Big Chest",
+      "region": "Thieves Town (Deep)"
+    },
+    {
+      "name": "Thieves' Town - Boss",
+      "region": "Blind Fight"
+    },
+    {
+      "name": "Skull Woods - Big Chest",
+      "region": "Skull Woods First Section (Top)"
+    },
+    {
+      "name": "Skull Woods - Boss",
+      "region": "Skull Woods Final Section (Mothula)"
+    },
+    {
+      "name": "Ice Palace - Boss",
+      "region": "Ice Palace (Kholdstare)"
+    },
+    {
+      "name": "Misery Mire - Boss",
+      "region": "Misery Mire (Vitreous)"
+    },
+    {
+      "name": "Turtle Rock - Boss",
+      "region": "Turtle Rock (Trinexx)"
+    },
+    {
+      "name": "Palace of Darkness - Boss",
+      "region": "Palace of Darkness (Final Section)"
+    },
+    {
+      "name": "Ganons Tower - Compass Room - Top Left",
+      "region": "Ganons Tower (Compass Room)"
+    },
+    {
+      "name": "Ganons Tower - Compass Room - Top Right",
+      "region": "Ganons Tower (Compass Room)"
+    },
+    {
+      "name": "Ganons Tower - Compass Room - Bottom Left",
+      "region": "Ganons Tower (Compass Room)"
+    },
+    {
+      "name": "Ganons Tower - Compass Room - Bottom Right",
+      "region": "Ganons Tower (Compass Room)"
+    },
+    {
+      "name": "Ganons Tower - Firesnake Room",
+      "region": "Ganons Tower (Firesnake Room)"
+    },
+    {
+      "name": "Ganons Tower - Randomizer Room - Top Left",
+      "region": "Ganons Tower (Teleport Room)"
+    },
+    {
+      "name": "Ganons Tower - Randomizer Room - Top Right",
+      "region": "Ganons Tower (Teleport Room)"
+    },
+    {
+      "name": "Ganons Tower - Randomizer Room - Bottom Left",
+      "region": "Ganons Tower (Teleport Room)"
+    },
+    {
+      "name": "Ganons Tower - Randomizer Room - Bottom Right",
+      "region": "Ganons Tower (Teleport Room)"
+    },
+    {
+      "name": "Ganons Tower - Big Key Room - Left",
+      "region": "Ganons Tower (Bottom)"
+    },
+    {
+      "name": "Ganons Tower - Big Key Room - Right",
+      "region": "Ganons Tower (Bottom)"
+    },
+    {
+      "name": "Ganons Tower - Big Key Chest",
+      "region": "Ganons Tower (Bottom)"
+    }
+  ],
+  "total_entrances": 466,
+  "entrances_with_explain": 220,
+  "entrances_default_rule": 231,
+  "entrances_without_explain": 15,
+  "entrance_explain_coverage_percent": 93.62,
+  "entrances_without_explain_list": [
+    {
+      "name": "Inverted Ganons Tower",
+      "from_region": "Hyrule Castle Ledge",
+      "to_region": "Desert Palace North"
+    },
+    {
+      "name": "Sewers Door",
+      "from_region": "Sewers (Dark)",
+      "to_region": "Sewers"
+    },
+    {
+      "name": "Tower of Hera Small Key Door",
+      "from_region": "Tower of Hera (Bottom)",
+      "to_region": "Tower of Hera (Basement)"
+    },
+    {
+      "name": "Ice Palace (East)",
+      "from_region": "Ice Palace (Main)",
+      "to_region": "Ice Palace (East)"
+    },
+    {
+      "name": "Misery Mire (West)",
+      "from_region": "Misery Mire (Main)",
+      "to_region": "Misery Mire (West)"
+    },
+    {
+      "name": "Turtle Rock (Pokey Room) (South)",
+      "from_region": "Turtle Rock (Pokey Room)",
+      "to_region": "Turtle Rock (First Section)"
+    },
+    {
+      "name": "Turtle Rock (Chain Chomp Room) (South)",
+      "from_region": "Turtle Rock (Chain Chomp Room)",
+      "to_region": "Turtle Rock (Pokey Room)"
+    },
+    {
+      "name": "Palace of Darkness Big Key Chest Staircase",
+      "from_region": "Palace of Darkness (Center)",
+      "to_region": "Palace of Darkness (Big Key Chest)"
+    },
+    {
+      "name": "Palace of Darkness Spike Statue Room Door",
+      "from_region": "Palace of Darkness (North)",
+      "to_region": "Palace of Darkness (Harmless Hellway)"
+    },
+    {
+      "name": "Ganons Tower (Tile Room) Key Door",
+      "from_region": "Ganons Tower (Tile Room)",
+      "to_region": "Ganons Tower (Compass Room)"
+    },
+    {
+      "name": "Ganons Tower (Bottom) (East)",
+      "from_region": "Ganons Tower (Compass Room)",
+      "to_region": "Ganons Tower (Bottom)"
+    },
+    {
+      "name": "Ganons Tower (Map Room)",
+      "from_region": "Ganons Tower (Hookshot Room)",
+      "to_region": "Ganons Tower (Map Room)"
+    },
+    {
+      "name": "Ganons Tower (Firesnake Room)",
+      "from_region": "Ganons Tower (Firesnake Room)",
+      "to_region": "Ganons Tower (Teleport Room)"
+    },
+    {
+      "name": "Ganons Tower Torch Rooms",
+      "from_region": "Ganons Tower (Top)",
+      "to_region": "Ganons Tower (Before Moldorm)"
+    },
+    {
+      "name": "Ganons Tower Moldorm Gap",
+      "from_region": "Ganons Tower (Moldorm)",
+      "to_region": "Agahnim 2"
+    }
+  ]
+}
