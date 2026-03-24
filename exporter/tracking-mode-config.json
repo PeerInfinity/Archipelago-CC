@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-03-22T16:38:17.107058+00:00",
+  "generated": "2026-03-24T06:14:33.779938+00:00",
   "fallback_order": [
     "worldgen",
     "pickle",
@@ -344,6 +344,7 @@
         "worldgen"
       ],
       "A Difficult Game About Climbing": [
+        "worldgen",
         "pickle"
       ],
       "ANIMAL WELL": [
@@ -373,20 +374,18 @@
         "pickle"
       ],
       "Ape Escape 3": [
-        "worldgen",
         "pickle",
         "original"
       ],
       "Astalon": [
-        "pickle",
         "original"
       ],
       "Autopelago": [
+        "worldgen",
         "pickle",
         "original"
       ],
       "Axiom Verge": [
-        "worldgen",
         "pickle"
       ],
       "Brotato": [
@@ -399,7 +398,6 @@
         "original"
       ],
       "Corn Kidz 64": [
-        "worldgen",
         "pickle"
       ],
       "CrossCode": [
@@ -416,10 +414,10 @@
         "pickle"
       ],
       "Digimon World": [
-        "worldgen",
         "pickle"
       ],
       "Dome Keeper": [
+        "worldgen",
         "pickle"
       ],
       "Final Fantasy Tactics Advance": [
@@ -436,7 +434,6 @@
         "worldgen"
       ],
       "Grim Dawn": [
-        "worldgen",
         "pickle"
       ],
       "Hatsune Miku Project Diva Mega Mix+": [
@@ -444,10 +441,10 @@
         "pickle"
       ],
       "Here Comes Niko!": [
+        "worldgen",
         "pickle"
       ],
       "Iji": [
-        "worldgen",
         "pickle"
       ],
       "Isles Of Sea And Sky": [
@@ -460,7 +457,8 @@
         "pickle"
       ],
       "Jigsaw": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "K-On! After School Live!!": [
         "worldgen",
@@ -468,7 +466,6 @@
         "original"
       ],
       "Keep Talking and Nobody Explodes": [
-        "worldgen",
         "pickle"
       ],
       "Kingdom Hearts Birth by Sleep": [
@@ -484,7 +481,8 @@
         "pickle"
       ],
       "League of Legends": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "Lego Star Wars: The Complete Saga": [
         "original"
@@ -510,7 +508,8 @@
         "pickle"
       ],
       "Mario Kart Double Dash": [
-        "pickle"
+        "pickle",
+        "original"
       ],
       "MetroCUBEvania": [
         "worldgen",
@@ -528,7 +527,6 @@
         "pickle"
       ],
       "Minit": [
-        "worldgen",
         "pickle"
       ],
       "Nine Sols": [
@@ -540,9 +538,6 @@
         "pickle"
       ],
       "Pizza Tower": [
-        "pickle"
-      ],
-      "Pokemon FireRed and LeafGreen": [
         "pickle"
       ],
       "Pseudoregalia": [
@@ -557,6 +552,7 @@
         "pickle"
       ],
       "Ratchet & Clank 2": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -565,6 +561,7 @@
         "original"
       ],
       "Rift Wizard": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -574,8 +571,8 @@
         "original"
       ],
       "Sonic Heroes": [
-        "pickle",
-        "original"
+        "worldgen",
+        "pickle"
       ],
       "Sonic Rush": [
         "pickle"
@@ -598,7 +595,6 @@
         "pickle"
       ],
       "Stacklands": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -608,6 +604,7 @@
         "original"
       ],
       "Star Wars Episode I Racer": [
+        "worldgen",
         "pickle"
       ],
       "Super Cat Planet": [
@@ -616,6 +613,7 @@
         "original"
       ],
       "Symphony of the Night": [
+        "worldgen",
         "pickle",
         "original"
       ],
@@ -625,11 +623,11 @@
         "original"
       ],
       "Tetris Attack": [
-        "worldgen",
         "pickle"
       ],
       "The Sims 4": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "ToeJam and Earl": [
         "pickle"
@@ -640,7 +638,6 @@
         "original"
       ],
       "Vampire Survivors": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -656,8 +653,13 @@
       "Yu-Gi-Oh! Forbidden Memories": [
         "pickle"
       ],
+      "Zelda II: The Adventure of Link": [
+        "worldgen",
+        "pickle"
+      ],
       "osu!": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ]
     }
   }
