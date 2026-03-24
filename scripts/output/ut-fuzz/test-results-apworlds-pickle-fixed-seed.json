@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-03-24T00:21:39.434036+00:00",
-    "last_updated": "2026-03-24T00:21:39.434046+00:00",
+    "created": "2026-03-24T01:18:36.628975+00:00",
+    "last_updated": "2026-03-24T01:18:36.628986+00:00",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "pickle",
@@ -28,23 +28,23 @@
           "None": [
             0,
             4,
-            5,
-            3,
             2,
+            3,
             1,
             6,
             8,
+            5,
             7,
             9
           ]
         },
-        "elapsed_seconds": 25.44
+        "elapsed_seconds": 24.91
       },
       "world_info": {
         "game_name": "A Dance of Fire and Ice",
         "world_directory": "adofai"
       },
-      "timestamp": "2026-03-24T00:13:31.959408+00:00"
+      "timestamp": "2026-03-24T01:10:55.654618+00:00"
     },
     "Ape Escape 3.yaml": {
       "ut_fuzz": {
@@ -55,13 +55,13 @@
         "timeout": 0,
         "ignored": 9,
         "errors": {},
-        "elapsed_seconds": 26.29
+        "elapsed_seconds": 25.45
       },
       "world_info": {
         "game_name": "Ape Escape 3",
         "world_directory": "ape_escape_3"
       },
-      "timestamp": "2026-03-24T00:13:58.278916+00:00"
+      "timestamp": "2026-03-24T01:11:21.135142+00:00"
     },
     "Chrono Trigger Jets of Time.yaml": {
       "ut_fuzz": {
@@ -81,17 +81,17 @@
             8,
             9,
             1,
-            3,
-            2
+            2,
+            3
           ]
         },
-        "elapsed_seconds": 25.17
+        "elapsed_seconds": 23.89
       },
       "world_info": {
         "game_name": "Chrono Trigger Jets of Time",
         "world_directory": "ctjot"
       },
-      "timestamp": "2026-03-24T00:14:23.452940+00:00"
+      "timestamp": "2026-03-24T01:11:45.036354+00:00"
     },
     "Digimon World.yaml": {
       "ut_fuzz": {
@@ -102,13 +102,13 @@
         "timeout": 0,
         "ignored": 4,
         "errors": {},
-        "elapsed_seconds": 27.96
+        "elapsed_seconds": 26.96
       },
       "world_info": {
         "game_name": "Digimon World",
         "world_directory": "dw1"
       },
-      "timestamp": "2026-03-24T00:14:51.423884+00:00"
+      "timestamp": "2026-03-24T01:12:11.999896+00:00"
     },
     "Grim Dawn.yaml": {
       "ut_fuzz": {
@@ -119,13 +119,13 @@
         "timeout": 0,
         "ignored": 3,
         "errors": {},
-        "elapsed_seconds": 26.3
+        "elapsed_seconds": 24.74
       },
       "world_info": {
         "game_name": "Grim Dawn",
         "world_directory": "grim_dawn"
       },
-      "timestamp": "2026-03-24T00:15:17.734470+00:00"
+      "timestamp": "2026-03-24T01:12:36.753874+00:00"
     },
     "Keep Talking and Nobody Explodes.yaml": {
       "ut_fuzz": {
@@ -136,13 +136,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 25.57
+        "elapsed_seconds": 24.42
       },
       "world_info": {
         "game_name": "Keep Talking and Nobody Explodes",
         "world_directory": "ktane"
       },
-      "timestamp": "2026-03-24T00:15:43.314876+00:00"
+      "timestamp": "2026-03-24T01:13:01.176873+00:00"
     },
     "Luigi's Mansion.yaml": {
       "ut_fuzz": {
@@ -153,13 +153,13 @@
         "timeout": 0,
         "ignored": 7,
         "errors": {},
-        "elapsed_seconds": 26.59
+        "elapsed_seconds": 25.51
       },
       "world_info": {
         "game_name": "Luigi's Mansion",
         "world_directory": "luigismansion"
       },
-      "timestamp": "2026-03-24T00:16:09.927418+00:00"
+      "timestamp": "2026-03-24T01:13:26.718377+00:00"
     },
     "Nine Sols.yaml": {
       "ut_fuzz": {
@@ -170,13 +170,13 @@
         "timeout": 0,
         "ignored": 2,
         "errors": {},
-        "elapsed_seconds": 26.14
+        "elapsed_seconds": 25.01
       },
       "world_info": {
         "game_name": "Nine Sols",
         "world_directory": "nine_sols"
       },
-      "timestamp": "2026-03-24T00:16:36.080406+00:00"
+      "timestamp": "2026-03-24T01:13:51.741287+00:00"
     },
     "Rain World.yaml": {
       "ut_fuzz": {
@@ -187,13 +187,13 @@
         "timeout": 0,
         "ignored": 7,
         "errors": {},
-        "elapsed_seconds": 27.68
+        "elapsed_seconds": 26.12
       },
       "world_info": {
         "game_name": "Rain World",
         "world_directory": "rain_world"
       },
-      "timestamp": "2026-03-24T00:17:03.791120+00:00"
+      "timestamp": "2026-03-24T01:14:17.892798+00:00"
     },
     "Sly 2 Band of Thieves.yaml": {
       "ut_fuzz": {
@@ -208,18 +208,18 @@
             0,
             5,
             9,
-            3,
             1,
+            3,
             2
           ]
         },
-        "elapsed_seconds": 26.29
+        "elapsed_seconds": 25.0
       },
       "world_info": {
         "game_name": "Sly 2: Band of Thieves",
         "world_directory": "sly2"
       },
-      "timestamp": "2026-03-24T00:17:30.099058+00:00"
+      "timestamp": "2026-03-24T01:14:42.905779+00:00"
     },
     "Star Fox 64.yaml": {
       "ut_fuzz": {
@@ -230,43 +230,30 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.06
+        "elapsed_seconds": 26.23
       },
       "world_info": {
         "game_name": "Star Fox 64",
         "world_directory": "star_fox_64"
       },
-      "timestamp": "2026-03-24T00:17:57.179717+00:00"
+      "timestamp": "2026-03-24T01:15:09.149031+00:00"
     },
     "The Sims 4.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            4,
-            1,
-            3,
-            2,
-            5,
-            7,
-            6,
-            9,
-            8
-          ]
-        },
-        "elapsed_seconds": 26.42
+        "errors": {},
+        "elapsed_seconds": 25.58
       },
       "world_info": {
         "game_name": "The Sims 4",
         "world_directory": "sims4"
       },
-      "timestamp": "2026-03-24T00:18:23.606202+00:00"
+      "timestamp": "2026-03-24T01:15:34.740909+00:00"
     },
     "Yu-Gi-Oh! Forbidden Memories.yaml": {
       "ut_fuzz": {
@@ -277,13 +264,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.64
+        "elapsed_seconds": 29.84
       },
       "world_info": {
         "game_name": "Yu-Gi-Oh! Forbidden Memories",
         "world_directory": "fm"
       },
-      "timestamp": "2026-03-24T00:18:54.260287+00:00"
+      "timestamp": "2026-03-24T01:16:04.595996+00:00"
     },
     "Another Crabs Treasure.yaml": {
       "ut_fuzz": {
@@ -294,13 +281,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.25
+        "elapsed_seconds": 25.73
       },
       "world_info": {
         "game_name": "Another Crabs Treasure",
         "world_directory": "another_crab"
       },
-      "timestamp": "2026-03-24T00:13:30.393505+00:00"
+      "timestamp": "2026-03-24T01:11:16.068114+00:00"
     },
     "ChecksMate.yaml": {
       "ut_fuzz": {
@@ -312,18 +299,18 @@
         "ignored": 0,
         "errors": {
           "None": [
-            5,
-            6,
+            0,
+            2,
             9
           ]
         },
-        "elapsed_seconds": 26.5
+        "elapsed_seconds": 25.66
       },
       "world_info": {
         "game_name": "ChecksMate",
         "world_directory": "checksmate"
       },
-      "timestamp": "2026-03-24T00:13:56.914684+00:00"
+      "timestamp": "2026-03-24T01:11:41.743300+00:00"
     },
     "Diddy Kong Racing.yaml": {
       "ut_fuzz": {
@@ -334,13 +321,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.29
+        "elapsed_seconds": 25.51
       },
       "world_info": {
         "game_name": "Diddy Kong Racing",
         "world_directory": "diddy_kong_racing"
       },
-      "timestamp": "2026-03-24T00:14:23.219412+00:00"
+      "timestamp": "2026-03-24T01:12:07.266508+00:00"
     },
     "Golden Sun The Lost Age.yaml": {
       "ut_fuzz": {
@@ -351,13 +338,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.47
+        "elapsed_seconds": 29.5
       },
       "world_info": {
         "game_name": "Golden Sun The Lost Age",
         "world_directory": "gstla"
       },
-      "timestamp": "2026-03-24T00:14:52.727348+00:00"
+      "timestamp": "2026-03-24T01:12:36.801004+00:00"
     },
     "K-On! After School Live!!.yaml": {
       "ut_fuzz": {
@@ -368,13 +355,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.71
+        "elapsed_seconds": 26.98
       },
       "world_info": {
         "game_name": "K-On! After School Live!!",
         "world_directory": "kon"
       },
-      "timestamp": "2026-03-24T00:15:19.444696+00:00"
+      "timestamp": "2026-03-24T01:13:03.795434+00:00"
     },
     "Little Witch Nobeta.yaml": {
       "ut_fuzz": {
@@ -385,13 +372,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.16
+        "elapsed_seconds": 26.08
       },
       "world_info": {
         "game_name": "Little Witch Nobeta",
         "world_directory": "little_witch_nobeta"
       },
-      "timestamp": "2026-03-24T00:15:45.615183+00:00"
+      "timestamp": "2026-03-24T01:13:29.887427+00:00"
     },
     "Monster Sanctuary.yaml": {
       "ut_fuzz": {
@@ -411,13 +398,13 @@
             9
           ]
         },
-        "elapsed_seconds": 53.88
+        "elapsed_seconds": 56.3
       },
       "world_info": {
         "game_name": "Monster Sanctuary",
         "world_directory": "monster_sanctuary"
       },
-      "timestamp": "2026-03-24T00:16:39.521542+00:00"
+      "timestamp": "2026-03-24T01:14:26.215191+00:00"
     },
     "Rabi-Ribi.yaml": {
       "ut_fuzz": {
@@ -428,13 +415,13 @@
         "timeout": 0,
         "ignored": 6,
         "errors": {},
-        "elapsed_seconds": 31.23
+        "elapsed_seconds": 30.83
       },
       "world_info": {
         "game_name": "Rabi-Ribi",
         "world_directory": "rabi_ribi"
       },
-      "timestamp": "2026-03-24T00:17:10.768228+00:00"
+      "timestamp": "2026-03-24T01:14:57.063671+00:00"
     },
     "Simon Tatham's Portable Puzzle Collection.yaml": {
       "ut_fuzz": {
@@ -445,13 +432,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 59.25
+        "elapsed_seconds": 61.35
       },
       "world_info": {
         "game_name": "Simon Tatham's Portable Puzzle Collection",
         "world_directory": "sgtpuzzles"
       },
-      "timestamp": "2026-03-24T00:18:10.033151+00:00"
+      "timestamp": "2026-03-24T01:15:58.429213+00:00"
     },
     "Stacklands.yaml": {
       "ut_fuzz": {
@@ -462,13 +449,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.45
+        "elapsed_seconds": 26.17
       },
       "world_info": {
         "game_name": "Stacklands",
         "world_directory": "stacklands"
       },
-      "timestamp": "2026-03-24T00:18:36.499875+00:00"
+      "timestamp": "2026-03-24T01:16:24.611435+00:00"
     },
     "The Legend of Zelda - Phantom Hourglass.yaml": {
       "ut_fuzz": {
@@ -484,13 +471,13 @@
             5
           ]
         },
-        "elapsed_seconds": 39.0
+        "elapsed_seconds": 38.58
       },
       "world_info": {
         "game_name": "The Legend of Zelda - Phantom Hourglass",
         "world_directory": "tloz_ph"
       },
-      "timestamp": "2026-03-24T00:19:15.529170+00:00"
+      "timestamp": "2026-03-24T01:17:03.221876+00:00"
     },
     "Yu-Gi-Oh! Dungeon Dice Monsters.yaml": {
       "ut_fuzz": {
@@ -506,13 +493,13 @@
             2
           ]
         },
-        "elapsed_seconds": 25.84
+        "elapsed_seconds": 25.32
       },
       "world_info": {
         "game_name": "Yu-Gi-Oh! Dungeon Dice Monsters",
         "world_directory": "yugiohddm"
       },
-      "timestamp": "2026-03-24T00:19:41.383570+00:00"
+      "timestamp": "2026-03-24T01:17:28.555468+00:00"
     },
     "A Difficult Game About Climbing.yaml": {
       "ut_fuzz": {
@@ -523,13 +510,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 25.11
+        "elapsed_seconds": 22.36
       },
       "world_info": {
         "game_name": "A Difficult Game About Climbing",
         "world_directory": "difficult_climbing"
       },
-      "timestamp": "2026-03-24T00:13:25.978094+00:00"
+      "timestamp": "2026-03-24T01:10:49.394970+00:00"
     },
     "Ape Escape.yaml": {
       "ut_fuzz": {
@@ -540,13 +527,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.9
+        "elapsed_seconds": 24.65
       },
       "world_info": {
         "game_name": "Ape Escape",
         "world_directory": "apeescape"
       },
-      "timestamp": "2026-03-24T00:13:53.897955+00:00"
+      "timestamp": "2026-03-24T01:11:14.063561+00:00"
     },
     "ClusterTruck.yaml": {
       "ut_fuzz": {
@@ -563,17 +550,17 @@
             7,
             8,
             2,
-            3,
-            1
+            1,
+            3
           ]
         },
-        "elapsed_seconds": 25.48
+        "elapsed_seconds": 22.41
       },
       "world_info": {
         "game_name": "ClusterTruck",
         "world_directory": "cluster_truck"
       },
-      "timestamp": "2026-03-24T00:14:19.396547+00:00"
+      "timestamp": "2026-03-24T01:11:36.496070+00:00"
     },
     "Dome Keeper.yaml": {
       "ut_fuzz": {
@@ -584,13 +571,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.94
+        "elapsed_seconds": 22.56
       },
       "world_info": {
         "game_name": "Dome Keeper",
         "world_directory": "dome_keeper"
       },
-      "timestamp": "2026-03-24T00:14:45.346836+00:00"
+      "timestamp": "2026-03-24T01:11:59.066937+00:00"
     },
     "Hammerwatch.yaml": {
       "ut_fuzz": {
@@ -605,13 +592,13 @@
             9
           ]
         },
-        "elapsed_seconds": 30.25
+        "elapsed_seconds": 26.63
       },
       "world_info": {
         "game_name": "Hammerwatch",
         "world_directory": "hammerwatch"
       },
-      "timestamp": "2026-03-24T00:15:15.623740+00:00"
+      "timestamp": "2026-03-24T01:12:25.717303+00:00"
     },
     "Kingdom Hearts Birth by Sleep.yaml": {
       "ut_fuzz": {
@@ -622,13 +609,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.02
+        "elapsed_seconds": 23.05
       },
       "world_info": {
         "game_name": "Kingdom Hearts Birth by Sleep",
         "world_directory": "khbbs"
       },
-      "timestamp": "2026-03-24T00:15:41.655315+00:00"
+      "timestamp": "2026-03-24T01:12:48.782734+00:00"
     },
     "Lunacid.yaml": {
       "ut_fuzz": {
@@ -639,13 +626,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.37
+        "elapsed_seconds": 24.69
       },
       "world_info": {
         "game_name": "Lunacid",
         "world_directory": "lunacid"
       },
-      "timestamp": "2026-03-24T00:16:09.057042+00:00"
+      "timestamp": "2026-03-24T01:13:13.487342+00:00"
     },
     "Ori and the Blind Forest.yaml": {
       "ut_fuzz": {
@@ -656,13 +643,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 33.63
+        "elapsed_seconds": 29.84
       },
       "world_info": {
         "game_name": "Ori and the Blind Forest",
         "world_directory": "oribf"
       },
-      "timestamp": "2026-03-24T00:16:42.695716+00:00"
+      "timestamp": "2026-03-24T01:13:43.337028+00:00"
     },
     "Ratchet & Clank 2.yaml": {
       "ut_fuzz": {
@@ -673,13 +660,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.98
+        "elapsed_seconds": 22.73
       },
       "world_info": {
         "game_name": "Ratchet & Clank 2",
         "world_directory": "rac2"
       },
-      "timestamp": "2026-03-24T00:17:08.681564+00:00"
+      "timestamp": "2026-03-24T01:14:06.080105+00:00"
     },
     "Sly Cooper and the Thievius Raccoonus.yaml": {
       "ut_fuzz": {
@@ -694,13 +681,13 @@
             2
           ]
         },
-        "elapsed_seconds": 26.15
+        "elapsed_seconds": 23.52
       },
       "world_info": {
         "game_name": "Sly Cooper and the Thievius Raccoonus",
         "world_directory": "sly1"
       },
-      "timestamp": "2026-03-24T00:17:34.848649+00:00"
+      "timestamp": "2026-03-24T01:14:29.613887+00:00"
     },
     "Star Wars Episode I Racer.yaml": {
       "ut_fuzz": {
@@ -711,13 +698,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.43
+        "elapsed_seconds": 22.67
       },
       "world_info": {
         "game_name": "Star Wars Episode I Racer",
         "world_directory": "swr"
       },
-      "timestamp": "2026-03-24T00:18:00.289380+00:00"
+      "timestamp": "2026-03-24T01:14:52.298222+00:00"
     },
     "ToeJam and Earl.yaml": {
       "ut_fuzz": {
@@ -728,13 +715,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.94
+        "elapsed_seconds": 23.78
       },
       "world_info": {
         "game_name": "ToeJam and Earl",
         "world_directory": "tje"
       },
-      "timestamp": "2026-03-24T00:18:27.251307+00:00"
+      "timestamp": "2026-03-24T01:15:16.102684+00:00"
     },
     "Zelda II The Adventure of Link.yaml": {
       "ut_fuzz": {
@@ -745,13 +732,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.75
+        "elapsed_seconds": 22.9
       },
       "world_info": {
         "game_name": "Zelda II: The Adventure of Link",
         "world_directory": "zelda2"
       },
-      "timestamp": "2026-03-24T00:18:53.010174+00:00"
+      "timestamp": "2026-03-24T01:15:39.017520+00:00"
     },
     "A Link Between Worlds.yaml": {
       "ut_fuzz": {
@@ -763,8 +750,8 @@
         "ignored": 0,
         "errors": {
           "None": [
-            2,
             3,
+            2,
             4,
             6,
             5,
@@ -773,13 +760,13 @@
             9
           ]
         },
-        "elapsed_seconds": 31.89
+        "elapsed_seconds": 32.21
       },
       "world_info": {
         "game_name": "A Link Between Worlds",
         "world_directory": "albw"
       },
-      "timestamp": "2026-03-24T00:13:29.990236+00:00"
+      "timestamp": "2026-03-24T01:11:11.478863+00:00"
     },
     "Astalon.yaml": {
       "ut_fuzz": {
@@ -796,13 +783,13 @@
             8
           ]
         },
-        "elapsed_seconds": 26.51
+        "elapsed_seconds": 26.55
       },
       "world_info": {
         "game_name": "Astalon",
         "world_directory": "astalon"
       },
-      "timestamp": "2026-03-24T00:13:56.515008+00:00"
+      "timestamp": "2026-03-24T01:11:38.045909+00:00"
     },
     "Corn Kidz 64.yaml": {
       "ut_fuzz": {
@@ -813,13 +800,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.86
+        "elapsed_seconds": 25.5
       },
       "world_info": {
         "game_name": "Corn Kidz 64",
         "world_directory": "cornkidz64"
       },
-      "timestamp": "2026-03-24T00:14:22.379891+00:00"
+      "timestamp": "2026-03-24T01:12:03.556063+00:00"
     },
     "Duke Nukem 3D.yaml": {
       "ut_fuzz": {
@@ -830,13 +817,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 26.95
+        "elapsed_seconds": 26.26
       },
       "world_info": {
         "game_name": "Duke Nukem 3D",
         "world_directory": "duke3d"
       },
-      "timestamp": "2026-03-24T00:14:49.340507+00:00"
+      "timestamp": "2026-03-24T01:12:29.828004+00:00"
     },
     "Hatsune Miku Project Diva Mega Mix+.yaml": {
       "ut_fuzz": {
@@ -847,13 +834,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.97
+        "elapsed_seconds": 27.45
       },
       "world_info": {
         "game_name": "Hatsune Miku Project Diva Mega Mix+",
         "world_directory": "megamix"
       },
-      "timestamp": "2026-03-24T00:15:17.323806+00:00"
+      "timestamp": "2026-03-24T01:12:57.290352+00:00"
     },
     "Kingdom Hearts Chain of Memories.yaml": {
       "ut_fuzz": {
@@ -864,13 +851,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.24
+        "elapsed_seconds": 25.08
       },
       "world_info": {
         "game_name": "Kingdom Hearts Chain of Memories",
         "world_directory": "khcom"
       },
-      "timestamp": "2026-03-24T00:15:42.570459+00:00"
+      "timestamp": "2026-03-24T01:13:22.379838+00:00"
     },
     "Majora's Mask Recompiled.yaml": {
       "ut_fuzz": {
@@ -881,34 +868,34 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.08
+        "elapsed_seconds": 26.03
       },
       "world_info": {
         "game_name": "Majora's Mask Recompiled",
         "world_directory": "mm_recomp"
       },
-      "timestamp": "2026-03-24T00:16:08.668681+00:00"
+      "timestamp": "2026-03-24T01:13:48.420895+00:00"
     },
     "Ori and the Will of the Wisps.yaml": {
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 5,
+        "success": 6,
         "failure": 1,
         "timeout": 0,
-        "ignored": 4,
+        "ignored": 3,
         "errors": {
           "None": [
             3
           ]
         },
-        "elapsed_seconds": 50.75
+        "elapsed_seconds": 50.62
       },
       "world_info": {
         "game_name": "Ori and the Will of the Wisps",
         "world_directory": "ori_wotw"
       },
-      "timestamp": "2026-03-24T00:16:59.435325+00:00"
+      "timestamp": "2026-03-24T01:14:39.054651+00:00"
     },
     "Reventure.yaml": {
       "ut_fuzz": {
@@ -919,13 +906,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.48
+        "elapsed_seconds": 25.04
       },
       "world_info": {
         "game_name": "Reventure",
         "world_directory": "reventure"
       },
-      "timestamp": "2026-03-24T00:17:24.928050+00:00"
+      "timestamp": "2026-03-24T01:15:04.100990+00:00"
     },
     "Sonic Adventure DX.yaml": {
       "ut_fuzz": {
@@ -936,96 +923,15 @@
         "timeout": 0,
         "ignored": 5,
         "errors": {},
-        "elapsed_seconds": 29.1
+        "elapsed_seconds": 28.63
       },
       "world_info": {
         "game_name": "Sonic Adventure DX",
         "world_directory": "sadx"
       },
-      "timestamp": "2026-03-24T00:17:54.057575+00:00"
+      "timestamp": "2026-03-24T01:15:32.765679+00:00"
     },
     "Super Cat Planet.yaml": {
-      "ut_fuzz": {
-        "passed": true,
-        "total": 10,
-        "success": 10,
-        "failure": 0,
-        "timeout": 0,
-        "ignored": 0,
-        "errors": {},
-        "elapsed_seconds": 25.84
-      },
-      "world_info": {
-        "game_name": "Super Cat Planet",
-        "world_directory": "scp"
-      },
-      "timestamp": "2026-03-24T00:18:19.908304+00:00"
-    },
-    "TurnipBoy.yaml": {
-      "ut_fuzz": {
-        "passed": true,
-        "total": 10,
-        "success": 10,
-        "failure": 0,
-        "timeout": 0,
-        "ignored": 0,
-        "errors": {},
-        "elapsed_seconds": 25.54
-      },
-      "world_info": {
-        "game_name": "TurnipBoy",
-        "world_directory": "turnipboy"
-      },
-      "timestamp": "2026-03-24T00:18:45.457928+00:00"
-    },
-    "osu!.yaml": {
-      "ut_fuzz": {
-        "passed": false,
-        "total": 10,
-        "success": 0,
-        "failure": 10,
-        "timeout": 0,
-        "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            3,
-            2,
-            4,
-            6,
-            7,
-            5,
-            8,
-            9
-          ]
-        },
-        "elapsed_seconds": 48.1
-      },
-      "world_info": {
-        "game_name": "osu!",
-        "world_directory": "osu"
-      },
-      "timestamp": "2026-03-24T00:19:33.578743+00:00"
-    },
-    "ANIMAL WELL.yaml": {
-      "ut_fuzz": {
-        "passed": true,
-        "total": 10,
-        "success": 9,
-        "failure": 0,
-        "timeout": 0,
-        "ignored": 1,
-        "errors": {},
-        "elapsed_seconds": 25.97
-      },
-      "world_info": {
-        "game_name": "ANIMAL WELL",
-        "world_directory": "animal_well"
-      },
-      "timestamp": "2026-03-24T00:13:27.040750+00:00"
-    },
-    "Autopelago.yaml": {
       "ut_fuzz": {
         "passed": true,
         "total": 10,
@@ -1037,10 +943,78 @@
         "elapsed_seconds": 25.4
       },
       "world_info": {
+        "game_name": "Super Cat Planet",
+        "world_directory": "scp"
+      },
+      "timestamp": "2026-03-24T01:15:58.173940+00:00"
+    },
+    "TurnipBoy.yaml": {
+      "ut_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "failure": 0,
+        "timeout": 0,
+        "ignored": 0,
+        "errors": {},
+        "elapsed_seconds": 25.24
+      },
+      "world_info": {
+        "game_name": "TurnipBoy",
+        "world_directory": "turnipboy"
+      },
+      "timestamp": "2026-03-24T01:16:23.420772+00:00"
+    },
+    "osu!.yaml": {
+      "ut_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "failure": 0,
+        "timeout": 0,
+        "ignored": 0,
+        "errors": {},
+        "elapsed_seconds": 48.14
+      },
+      "world_info": {
+        "game_name": "osu!",
+        "world_directory": "osu"
+      },
+      "timestamp": "2026-03-24T01:17:11.582643+00:00"
+    },
+    "ANIMAL WELL.yaml": {
+      "ut_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 9,
+        "failure": 0,
+        "timeout": 0,
+        "ignored": 1,
+        "errors": {},
+        "elapsed_seconds": 25.4
+      },
+      "world_info": {
+        "game_name": "ANIMAL WELL",
+        "world_directory": "animal_well"
+      },
+      "timestamp": "2026-03-24T01:11:08.203598+00:00"
+    },
+    "Autopelago.yaml": {
+      "ut_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "failure": 0,
+        "timeout": 0,
+        "ignored": 0,
+        "errors": {},
+        "elapsed_seconds": 24.5
+      },
+      "world_info": {
         "game_name": "Autopelago",
         "world_directory": "autopelago"
       },
-      "timestamp": "2026-03-24T00:13:52.447815+00:00"
+      "timestamp": "2026-03-24T01:11:32.710076+00:00"
     },
     "CrossCode.yaml": {
       "ut_fuzz": {
@@ -1051,13 +1025,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 28.54
+        "elapsed_seconds": 27.45
       },
       "world_info": {
         "game_name": "CrossCode",
         "world_directory": "crosscode"
       },
-      "timestamp": "2026-03-24T00:14:21.009794+00:00"
+      "timestamp": "2026-03-24T01:12:00.178061+00:00"
     },
     "Final Fantasy Tactics A2.yaml": {
       "ut_fuzz": {
@@ -1074,19 +1048,19 @@
             1,
             5,
             6,
-            2,
             7,
             8,
+            2,
             9
           ]
         },
-        "elapsed_seconds": 27.27
+        "elapsed_seconds": 25.97
       },
       "world_info": {
         "game_name": "Final Fantasy Tactics A2",
         "world_directory": "ffta2"
       },
-      "timestamp": "2026-03-24T00:14:48.293160+00:00"
+      "timestamp": "2026-03-24T01:12:26.157104+00:00"
     },
     "Here Comes Niko!.yaml": {
       "ut_fuzz": {
@@ -1097,13 +1071,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.4
+        "elapsed_seconds": 25.82
       },
       "world_info": {
         "game_name": "Here Comes Niko!",
         "world_directory": "hcniko"
       },
-      "timestamp": "2026-03-24T00:15:15.720760+00:00"
+      "timestamp": "2026-03-24T01:12:52.003702+00:00"
     },
     "Kingdom Hearts RE Chain of Memories.yaml": {
       "ut_fuzz": {
@@ -1114,13 +1088,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.33
+        "elapsed_seconds": 25.06
       },
       "world_info": {
         "game_name": "Kingdom Hearts RE Chain of Memories",
         "world_directory": "khrecom"
       },
-      "timestamp": "2026-03-24T00:15:42.069442+00:00"
+      "timestamp": "2026-03-24T01:13:17.083604+00:00"
     },
     "Mario Kart Double Dash.yaml": {
       "ut_fuzz": {
@@ -1131,13 +1105,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.8
+        "elapsed_seconds": 26.49
       },
       "world_info": {
         "game_name": "Mario Kart Double Dash",
         "world_directory": "mario_kart_double_dash"
       },
-      "timestamp": "2026-03-24T00:16:09.884579+00:00"
+      "timestamp": "2026-03-24T01:13:43.583006+00:00"
     },
     "Oxygen Not Included.yaml": {
       "ut_fuzz": {
@@ -1152,13 +1126,13 @@
             0
           ]
         },
-        "elapsed_seconds": 25.98
+        "elapsed_seconds": 24.37
       },
       "world_info": {
         "game_name": "Oxygen Not Included",
         "world_directory": "oni"
       },
-      "timestamp": "2026-03-24T00:16:35.868987+00:00"
+      "timestamp": "2026-03-24T01:14:07.965048+00:00"
     },
     "Rift Wizard.yaml": {
       "ut_fuzz": {
@@ -1169,13 +1143,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.06
+        "elapsed_seconds": 23.25
       },
       "world_info": {
         "game_name": "Rift Wizard",
         "world_directory": "riftwizard"
       },
-      "timestamp": "2026-03-24T00:17:00.940499+00:00"
+      "timestamp": "2026-03-24T01:14:31.220645+00:00"
     },
     "Sonic Heroes.yaml": {
       "ut_fuzz": {
@@ -1186,13 +1160,13 @@
         "timeout": 0,
         "ignored": 10,
         "errors": {},
-        "elapsed_seconds": 29.41
+        "elapsed_seconds": 23.68
       },
       "world_info": {
         "game_name": "Sonic Heroes",
         "world_directory": "sonic_heroes"
       },
-      "timestamp": "2026-03-24T00:17:30.366640+00:00"
+      "timestamp": "2026-03-24T01:14:54.921681+00:00"
     },
     "Symphony of the Night.yaml": {
       "ut_fuzz": {
@@ -1203,13 +1177,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.47
+        "elapsed_seconds": 24.25
       },
       "world_info": {
         "game_name": "Symphony of the Night",
         "world_directory": "sotn"
       },
-      "timestamp": "2026-03-24T00:17:55.850774+00:00"
+      "timestamp": "2026-03-24T01:15:19.184499+00:00"
     },
     "Tyrian.yaml": {
       "ut_fuzz": {
@@ -1220,30 +1194,30 @@
         "timeout": 0,
         "ignored": 3,
         "errors": {},
-        "elapsed_seconds": 26.65
+        "elapsed_seconds": 25.58
       },
       "world_info": {
         "game_name": "Tyrian",
         "world_directory": "tyrian"
       },
-      "timestamp": "2026-03-24T00:18:22.518413+00:00"
+      "timestamp": "2026-03-24T01:15:44.781907+00:00"
     },
     "Actraiser.yaml": {
       "ut_fuzz": {
         "passed": true,
         "total": 10,
-        "success": 10,
+        "success": 9,
         "failure": 0,
         "timeout": 0,
-        "ignored": 0,
+        "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 26.06
+        "elapsed_seconds": 26.76
       },
       "world_info": {
         "game_name": "Actraiser",
         "world_directory": "actraiser"
       },
-      "timestamp": "2026-03-24T00:13:50.792448+00:00"
+      "timestamp": "2026-03-24T01:11:17.691458+00:00"
     },
     "Axiom Verge.yaml": {
       "ut_fuzz": {
@@ -1254,13 +1228,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.08
+        "elapsed_seconds": 26.31
       },
       "world_info": {
         "game_name": "Axiom Verge",
         "world_directory": "axiomverge"
       },
-      "timestamp": "2026-03-24T00:14:16.880043+00:00"
+      "timestamp": "2026-03-24T01:11:44.008975+00:00"
     },
     "Crystal Project.yaml": {
       "ut_fuzz": {
@@ -1278,13 +1252,13 @@
             9
           ]
         },
-        "elapsed_seconds": 30.28
+        "elapsed_seconds": 30.93
       },
       "world_info": {
         "game_name": "Crystal Project",
         "world_directory": "crystal_project"
       },
-      "timestamp": "2026-03-24T00:14:47.190666+00:00"
+      "timestamp": "2026-03-24T01:12:14.966352+00:00"
     },
     "Final Fantasy Tactics Advance.yaml": {
       "ut_fuzz": {
@@ -1295,13 +1269,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.56
+        "elapsed_seconds": 27.96
       },
       "world_info": {
         "game_name": "Final Fantasy Tactics Advance",
         "world_directory": "ffta"
       },
-      "timestamp": "2026-03-24T00:15:14.773244+00:00"
+      "timestamp": "2026-03-24T01:12:42.947394+00:00"
     },
     "Iji.yaml": {
       "ut_fuzz": {
@@ -1312,13 +1286,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.61
+        "elapsed_seconds": 28.08
       },
       "world_info": {
         "game_name": "Iji",
         "world_directory": "iji"
       },
-      "timestamp": "2026-03-24T00:15:42.406250+00:00"
+      "timestamp": "2026-03-24T01:13:11.048009+00:00"
     },
     "Kirby Super Star.yaml": {
       "ut_fuzz": {
@@ -1360,13 +1334,13 @@
             2
           ]
         },
-        "elapsed_seconds": 25.18
+        "elapsed_seconds": 25.17
       },
       "world_info": {
         "game_name": "Kirby Super Star",
         "world_directory": "kss"
       },
-      "timestamp": "2026-03-24T00:16:07.595541+00:00"
+      "timestamp": "2026-03-24T01:13:36.229125+00:00"
     },
     "MetroCUBEvania.yaml": {
       "ut_fuzz": {
@@ -1377,13 +1351,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.19
+        "elapsed_seconds": 25.25
       },
       "world_info": {
         "game_name": "MetroCUBEvania",
         "world_directory": "metrocubevania"
       },
-      "timestamp": "2026-03-24T00:16:32.793834+00:00"
+      "timestamp": "2026-03-24T01:14:01.481509+00:00"
     },
     "Pizza Tower.yaml": {
       "ut_fuzz": {
@@ -1394,13 +1368,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.75
+        "elapsed_seconds": 27.14
       },
       "world_info": {
         "game_name": "Pizza Tower",
         "world_directory": "pizza_tower"
       },
-      "timestamp": "2026-03-24T00:16:59.557784+00:00"
+      "timestamp": "2026-03-24T01:14:28.642983+00:00"
     },
     "Rift of the Necrodancer.yaml": {
       "ut_fuzz": {
@@ -1411,13 +1385,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.41
+        "elapsed_seconds": 26.79
       },
       "world_info": {
         "game_name": "Rift of the Necrodancer",
         "world_directory": "rotn"
       },
-      "timestamp": "2026-03-24T00:17:25.977750+00:00"
+      "timestamp": "2026-03-24T01:14:55.450509+00:00"
     },
     "Sonic Rush.yaml": {
       "ut_fuzz": {
@@ -1428,13 +1402,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 25.32
+        "elapsed_seconds": 25.66
       },
       "world_info": {
         "game_name": "Sonic Rush",
         "world_directory": "sonic_rush"
       },
-      "timestamp": "2026-03-24T00:17:51.301345+00:00"
+      "timestamp": "2026-03-24T01:15:21.116403+00:00"
     },
     "System Shock 2.yaml": {
       "ut_fuzz": {
@@ -1447,17 +1421,17 @@
         "errors": {
           "FillError": [
             5,
-            7,
-            8
+            8,
+            6
           ]
         },
-        "elapsed_seconds": 28.92
+        "elapsed_seconds": 29.14
       },
       "world_info": {
         "game_name": "System Shock 2",
         "world_directory": "ss2"
       },
-      "timestamp": "2026-03-24T00:18:20.225066+00:00"
+      "timestamp": "2026-03-24T01:15:50.268705+00:00"
     },
     "Vampire Survivors.yaml": {
       "ut_fuzz": {
@@ -1468,13 +1442,13 @@
         "timeout": 0,
         "ignored": 6,
         "errors": {},
-        "elapsed_seconds": 26.53
+        "elapsed_seconds": 26.92
       },
       "world_info": {
         "game_name": "Vampire Survivors",
         "world_directory": "vampire_survivors"
       },
-      "timestamp": "2026-03-24T00:18:46.773093+00:00"
+      "timestamp": "2026-03-24T01:16:17.201222+00:00"
     },
     "Against the Storm.yaml": {
       "ut_fuzz": {
@@ -1492,13 +1466,13 @@
             9
           ]
         },
-        "elapsed_seconds": 28.48
+        "elapsed_seconds": 27.43
       },
       "world_info": {
         "game_name": "Against the Storm",
         "world_directory": "against_the_storm"
       },
-      "timestamp": "2026-03-24T00:13:32.159726+00:00"
+      "timestamp": "2026-03-24T01:10:59.608778+00:00"
     },
     "Balatro.yaml": {
       "ut_fuzz": {
@@ -1509,13 +1483,13 @@
         "timeout": 0,
         "ignored": 7,
         "errors": {},
-        "elapsed_seconds": 29.39
+        "elapsed_seconds": 28.52
       },
       "world_info": {
         "game_name": "Balatro",
         "world_directory": "balatro"
       },
-      "timestamp": "2026-03-24T00:14:01.563969+00:00"
+      "timestamp": "2026-03-24T01:11:28.147147+00:00"
     },
     "Crystalis.yaml": {
       "ut_fuzz": {
@@ -1526,13 +1500,13 @@
         "timeout": 0,
         "ignored": 2,
         "errors": {},
-        "elapsed_seconds": 27.02
+        "elapsed_seconds": 25.75
       },
       "world_info": {
         "game_name": "Crystalis",
         "world_directory": "crystalis"
       },
-      "timestamp": "2026-03-24T00:14:28.605560+00:00"
+      "timestamp": "2026-03-24T01:11:53.922386+00:00"
     },
     "Fire Emblem Sacred Stones.yaml": {
       "ut_fuzz": {
@@ -1543,13 +1517,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.39
+        "elapsed_seconds": 24.73
       },
       "world_info": {
         "game_name": "Fire Emblem Sacred Stones",
         "world_directory": "fe8"
       },
-      "timestamp": "2026-03-24T00:14:55.007465+00:00"
+      "timestamp": "2026-03-24T01:12:18.663547+00:00"
     },
     "Into the Breach.yaml": {
       "ut_fuzz": {
@@ -1571,35 +1545,30 @@
             2
           ]
         },
-        "elapsed_seconds": 25.89
+        "elapsed_seconds": 24.41
       },
       "world_info": {
         "game_name": "Into the Breach",
         "world_directory": "into_the_breach"
       },
-      "timestamp": "2026-03-24T00:15:20.909079+00:00"
+      "timestamp": "2026-03-24T01:12:43.085273+00:00"
     },
     "League of Legends.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 8,
-        "failure": 2,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2,
-            5
-          ]
-        },
-        "elapsed_seconds": 32.69
+        "errors": {},
+        "elapsed_seconds": 30.95
       },
       "world_info": {
         "game_name": "League of Legends",
         "world_directory": "lol"
       },
-      "timestamp": "2026-03-24T00:15:53.615394+00:00"
+      "timestamp": "2026-03-24T01:13:14.047898+00:00"
     },
     "Metroid Fusion.yaml": {
       "ut_fuzz": {
@@ -1610,13 +1579,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 27.26
+        "elapsed_seconds": 25.33
       },
       "world_info": {
         "game_name": "Metroid Fusion",
         "world_directory": "metroidfusion"
       },
-      "timestamp": "2026-03-24T00:16:20.888569+00:00"
+      "timestamp": "2026-03-24T01:13:39.392169+00:00"
     },
     "PlateUp.yaml": {
       "ut_fuzz": {
@@ -1635,13 +1604,13 @@
             9
           ]
         },
-        "elapsed_seconds": 57.93
+        "elapsed_seconds": 58.38
       },
       "world_info": {
         "game_name": "PlateUp",
         "world_directory": "plateup"
       },
-      "timestamp": "2026-03-24T00:17:18.850916+00:00"
+      "timestamp": "2026-03-24T01:14:37.801258+00:00"
     },
     "Rusted Moss.yaml": {
       "ut_fuzz": {
@@ -1661,13 +1630,13 @@
             8
           ]
         },
-        "elapsed_seconds": 31.86
+        "elapsed_seconds": 30.4
       },
       "world_info": {
         "game_name": "Rusted Moss",
         "world_directory": "rusted_moss"
       },
-      "timestamp": "2026-03-24T00:17:50.724108+00:00"
+      "timestamp": "2026-03-24T01:15:08.211754+00:00"
     },
     "Sonic the Hedgehog 1.yaml": {
       "ut_fuzz": {
@@ -1678,13 +1647,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 49.75
+        "elapsed_seconds": 49.65
       },
       "world_info": {
         "game_name": "Sonic the Hedgehog 1",
         "world_directory": "sonic1"
       },
-      "timestamp": "2026-03-24T00:18:40.482636+00:00"
+      "timestamp": "2026-03-24T01:15:57.877712+00:00"
     },
     "TCG Card Shop Simulator.yaml": {
       "ut_fuzz": {
@@ -1700,13 +1669,13 @@
             5
           ]
         },
-        "elapsed_seconds": 30.17
+        "elapsed_seconds": 28.08
       },
       "world_info": {
         "game_name": "TCG Card Shop Simulator",
         "world_directory": "tcg_card_shop_simulator"
       },
-      "timestamp": "2026-03-24T00:19:10.676818+00:00"
+      "timestamp": "2026-03-24T01:16:25.978113+00:00"
     },
     "Wario Land.yaml": {
       "ut_fuzz": {
@@ -1722,21 +1691,21 @@
             4,
             5,
             6,
-            3,
-            1,
-            2,
             7,
             8,
-            9
+            9,
+            1,
+            3,
+            2
           ]
         },
-        "elapsed_seconds": 26.26
+        "elapsed_seconds": 24.61
       },
       "world_info": {
         "game_name": "Wario Land",
         "world_directory": "wl"
       },
-      "timestamp": "2026-03-24T00:19:36.947499+00:00"
+      "timestamp": "2026-03-24T01:16:50.596416+00:00"
     },
     "Air Delivery.yaml": {
       "ut_fuzz": {
@@ -1747,13 +1716,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.07
+        "elapsed_seconds": 24.51
       },
       "world_info": {
         "game_name": "Air Delivery",
         "world_directory": "air_delivery"
       },
-      "timestamp": "2026-03-24T00:13:34.615298+00:00"
+      "timestamp": "2026-03-24T01:10:59.647550+00:00"
     },
     "Brotato.yaml": {
       "ut_fuzz": {
@@ -1764,13 +1733,13 @@
         "timeout": 0,
         "ignored": 3,
         "errors": {},
-        "elapsed_seconds": 27.16
+        "elapsed_seconds": 25.59
       },
       "world_info": {
         "game_name": "Brotato",
         "world_directory": "brotato"
       },
-      "timestamp": "2026-03-24T00:14:01.795214+00:00"
+      "timestamp": "2026-03-24T01:11:25.264860+00:00"
     },
     "Cuphead.yaml": {
       "ut_fuzz": {
@@ -1802,23 +1771,23 @@
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 9-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             9
           ],
-          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 2-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
-            2
-          ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 3-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             3
           ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 1-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             1
+          ],
+          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 2-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
+            2
           ]
         },
-        "elapsed_seconds": 26.7
+        "elapsed_seconds": 24.79
       },
       "world_info": {
         "game_name": "Cuphead",
         "world_directory": "cuphead"
       },
-      "timestamp": "2026-03-24T00:14:28.517736+00:00"
+      "timestamp": "2026-03-24T01:11:50.072600+00:00"
     },
     "Frogmonster.yaml": {
       "ut_fuzz": {
@@ -1829,13 +1798,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 31.91
+        "elapsed_seconds": 25.88
       },
       "world_info": {
         "game_name": "Frogmonster",
         "world_directory": "frogmonster"
       },
-      "timestamp": "2026-03-24T00:15:00.431471+00:00"
+      "timestamp": "2026-03-24T01:12:15.961187+00:00"
     },
     "Isles Of Sea And Sky.yaml": {
       "ut_fuzz": {
@@ -1846,30 +1815,41 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.09
+        "elapsed_seconds": 26.18
       },
       "world_info": {
         "game_name": "Isles Of Sea And Sky",
         "world_directory": "isles_of_sea_and_sky"
       },
-      "timestamp": "2026-03-24T00:15:28.534592+00:00"
+      "timestamp": "2026-03-24T01:12:42.148550+00:00"
     },
     "Lego Star Wars The Complete Saga.yaml": {
       "ut_fuzz": {
-        "passed": true,
+        "passed": false,
         "total": 10,
-        "success": 9,
-        "failure": 0,
+        "success": 1,
+        "failure": 8,
         "timeout": 0,
         "ignored": 1,
-        "errors": {},
-        "elapsed_seconds": 27.54
+        "errors": {
+          "None": [
+            0,
+            5,
+            6,
+            1,
+            8,
+            7,
+            9,
+            3
+          ]
+        },
+        "elapsed_seconds": 25.98
       },
       "world_info": {
         "game_name": "Lego Star Wars: The Complete Saga",
         "world_directory": "lego_star_wars_tcs"
       },
-      "timestamp": "2026-03-24T00:15:56.128962+00:00"
+      "timestamp": "2026-03-24T01:13:08.179431+00:00"
     },
     "Metroid Zero Mission.yaml": {
       "ut_fuzz": {
@@ -1880,13 +1860,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.6
+        "elapsed_seconds": 27.05
       },
       "world_info": {
         "game_name": "Metroid: Zero Mission",
         "world_directory": "mzm"
       },
-      "timestamp": "2026-03-24T00:16:24.741712+00:00"
+      "timestamp": "2026-03-24T01:13:35.249173+00:00"
     },
     "Pokemon FireRed and LeafGreen.yaml": {
       "ut_fuzz": {
@@ -1897,13 +1877,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 51.53
+        "elapsed_seconds": 49.42
       },
       "world_info": {
         "game_name": "Pokemon FireRed and LeafGreen",
         "world_directory": "pokemon_frlg"
       },
-      "timestamp": "2026-03-24T00:17:16.322377+00:00"
+      "timestamp": "2026-03-24T01:14:24.723152+00:00"
     },
     "Sentinels of the Multiverse.yaml": {
       "ut_fuzz": {
@@ -1916,8 +1896,8 @@
         "errors": {
           "FillError": [
             1,
-            4,
             0,
+            4,
             2,
             6,
             7,
@@ -1929,13 +1909,13 @@
             9
           ]
         },
-        "elapsed_seconds": 105.97
+        "elapsed_seconds": 103.2
       },
       "world_info": {
         "game_name": "Sentinels of the Multiverse",
         "world_directory": "sotm"
       },
-      "timestamp": "2026-03-24T00:19:02.312575+00:00"
+      "timestamp": "2026-03-24T01:16:07.943339+00:00"
     },
     "Soul Blazer.yaml": {
       "ut_fuzz": {
@@ -1946,13 +1926,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.18
+        "elapsed_seconds": 25.67
       },
       "world_info": {
         "game_name": "Soul Blazer",
         "world_directory": "soulblazer"
       },
-      "timestamp": "2026-03-24T00:19:29.501334+00:00"
+      "timestamp": "2026-03-24T01:16:33.626954+00:00"
     },
     "TOEM A Photo Adventure.yaml": {
       "ut_fuzz": {
@@ -1963,13 +1943,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.35
+        "elapsed_seconds": 24.42
       },
       "world_info": {
         "game_name": "TOEM: A Photo Adventure",
         "world_directory": "toem"
       },
-      "timestamp": "2026-03-24T00:19:58.865513+00:00"
+      "timestamp": "2026-03-24T01:16:58.058935+00:00"
     },
     "Watery Words.yaml": {
       "ut_fuzz": {
@@ -1980,13 +1960,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 75.8
+        "elapsed_seconds": 73.0
       },
       "world_info": {
         "game_name": "Watery Words",
         "world_directory": "waterywords"
       },
-      "timestamp": "2026-03-24T00:21:14.669569+00:00"
+      "timestamp": "2026-03-24T01:18:11.064726+00:00"
     },
     "An Untitled Story.yaml": {
       "ut_fuzz": {
@@ -1997,13 +1977,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.68
+        "elapsed_seconds": 24.1
       },
       "world_info": {
         "game_name": "An Untitled Story",
         "world_directory": "aus"
       },
-      "timestamp": "2026-03-24T00:13:28.976915+00:00"
+      "timestamp": "2026-03-24T01:10:54.920545+00:00"
     },
     "Castlevania Dawn of Sorrow.yaml": {
       "ut_fuzz": {
@@ -2014,13 +1994,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.13
+        "elapsed_seconds": 24.43
       },
       "world_info": {
         "game_name": "Castlevania: Dawn of Sorrow",
         "world_directory": "cv_dos"
       },
-      "timestamp": "2026-03-24T00:13:56.116384+00:00"
+      "timestamp": "2026-03-24T01:11:19.366769+00:00"
     },
     "DORONKO WANKO.yaml": {
       "ut_fuzz": {
@@ -2031,13 +2011,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.19
+        "elapsed_seconds": 23.34
       },
       "world_info": {
         "game_name": "DORONKO WANKO",
         "world_directory": "doronko_wanko"
       },
-      "timestamp": "2026-03-24T00:14:22.310976+00:00"
+      "timestamp": "2026-03-24T01:11:42.711914+00:00"
     },
     "GZDoom.yaml": {
       "ut_fuzz": {
@@ -2056,18 +2036,18 @@
             7,
             8,
             9,
-            3,
+            1,
             2,
-            1
+            3
           ]
         },
-        "elapsed_seconds": 26.6
+        "elapsed_seconds": 23.85
       },
       "world_info": {
         "game_name": "GZDoom",
         "world_directory": "gzdoom"
       },
-      "timestamp": "2026-03-24T00:14:48.926024+00:00"
+      "timestamp": "2026-03-24T01:12:06.571695+00:00"
     },
     "Ittle Dew 2.yaml": {
       "ut_fuzz": {
@@ -2078,13 +2058,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 30.81
+        "elapsed_seconds": 28.1
       },
       "world_info": {
         "game_name": "Ittle Dew 2",
         "world_directory": "ittle_dew_2"
       },
-      "timestamp": "2026-03-24T00:15:19.752062+00:00"
+      "timestamp": "2026-03-24T01:12:34.693748+00:00"
     },
     "Lil Gator Game.yaml": {
       "ut_fuzz": {
@@ -2102,19 +2082,19 @@
             6,
             7,
             8,
-            9,
-            1,
             2,
-            3
+            3,
+            1,
+            9
           ]
         },
-        "elapsed_seconds": 26.2
+        "elapsed_seconds": 23.43
       },
       "world_info": {
         "game_name": "Lil Gator Game",
         "world_directory": "lil_gator_game"
       },
-      "timestamp": "2026-03-24T00:15:45.954905+00:00"
+      "timestamp": "2026-03-24T01:12:58.127479+00:00"
     },
     "Minishoot Adventures.yaml": {
       "ut_fuzz": {
@@ -2125,13 +2105,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.59
+        "elapsed_seconds": 26.0
       },
       "world_info": {
         "game_name": "Minishoot Adventures",
         "world_directory": "minishoot"
       },
-      "timestamp": "2026-03-24T00:16:14.556460+00:00"
+      "timestamp": "2026-03-24T01:13:24.144320+00:00"
     },
     "Pokemon Mystery Dungeon Explorers of Sky.yaml": {
       "ut_fuzz": {
@@ -2147,13 +2127,13 @@
             2
           ]
         },
-        "elapsed_seconds": 30.41
+        "elapsed_seconds": 27.78
       },
       "world_info": {
         "game_name": "Pokemon Mystery Dungeon Explorers of Sky",
         "world_directory": "pmd_eos"
       },
-      "timestamp": "2026-03-24T00:16:44.987238+00:00"
+      "timestamp": "2026-03-24T01:13:51.942996+00:00"
     },
     "Shadow The Hedgehog.yaml": {
       "ut_fuzz": {
@@ -2164,13 +2144,13 @@
         "timeout": 0,
         "ignored": 8,
         "errors": {},
-        "elapsed_seconds": 32.07
+        "elapsed_seconds": 29.36
       },
       "world_info": {
         "game_name": "Shadow The Hedgehog",
         "world_directory": "shadow_the_hedgehog"
       },
-      "timestamp": "2026-03-24T00:17:17.096430+00:00"
+      "timestamp": "2026-03-24T01:14:21.347760+00:00"
     },
     "Spinball.yaml": {
       "ut_fuzz": {
@@ -2181,13 +2161,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.12
+        "elapsed_seconds": 23.48
       },
       "world_info": {
         "game_name": "Spinball",
         "world_directory": "spinball"
       },
-      "timestamp": "2026-03-24T00:17:43.217774+00:00"
+      "timestamp": "2026-03-24T01:14:44.834836+00:00"
     },
     "Tetris Attack.yaml": {
       "ut_fuzz": {
@@ -2198,13 +2178,13 @@
         "timeout": 0,
         "ignored": 2,
         "errors": {},
-        "elapsed_seconds": 33.75
+        "elapsed_seconds": 31.28
       },
       "world_info": {
         "game_name": "Tetris Attack",
         "world_directory": "tetrisattack"
       },
-      "timestamp": "2026-03-24T00:18:16.984458+00:00"
+      "timestamp": "2026-03-24T01:15:16.125067+00:00"
     },
     "Wordipelago.yaml": {
       "ut_fuzz": {
@@ -2215,13 +2195,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.5
+        "elapsed_seconds": 24.53
       },
       "world_info": {
         "game_name": "Wordipelago",
         "world_directory": "wordipelago"
       },
-      "timestamp": "2026-03-24T00:18:44.500481+00:00"
+      "timestamp": "2026-03-24T01:15:40.671637+00:00"
     },
     "Anodyne.yaml": {
       "ut_fuzz": {
@@ -2232,13 +2212,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.26
+        "elapsed_seconds": 27.42
       },
       "world_info": {
         "game_name": "Anodyne",
         "world_directory": "anodyne"
       },
-      "timestamp": "2026-03-24T00:13:37.498099+00:00"
+      "timestamp": "2026-03-24T01:11:03.604273+00:00"
     },
     "Cavern of Dreams.yaml": {
       "ut_fuzz": {
@@ -2249,13 +2229,13 @@
         "timeout": 0,
         "ignored": 5,
         "errors": {},
-        "elapsed_seconds": 49.71
+        "elapsed_seconds": 50.34
       },
       "world_info": {
         "game_name": "Cavern of Dreams",
         "world_directory": "cavern_of_dreams"
       },
-      "timestamp": "2026-03-24T00:14:27.220630+00:00"
+      "timestamp": "2026-03-24T01:11:53.960401+00:00"
     },
     "Deep Rock Galactic.yaml": {
       "ut_fuzz": {
@@ -2270,13 +2250,13 @@
             4
           ]
         },
-        "elapsed_seconds": 27.43
+        "elapsed_seconds": 27.54
       },
       "world_info": {
         "game_name": "Deep Rock Galactic",
         "world_directory": "deep_rock_galactic"
       },
-      "timestamp": "2026-03-24T00:14:54.664453+00:00"
+      "timestamp": "2026-03-24T01:12:21.515707+00:00"
     },
     "Garfield Kart - Furious Racing.yaml": {
       "ut_fuzz": {
@@ -2293,8 +2273,8 @@
             7,
             8,
             9,
-            3,
-            1
+            1,
+            3
           ],
           "compared against a str that could never be equal. RandomizeSpoilers(Progressive) == on": [
             4,
@@ -2302,40 +2282,30 @@
             2
           ]
         },
-        "elapsed_seconds": 24.92
+        "elapsed_seconds": 24.78
       },
       "world_info": {
         "game_name": "Garfield Kart - Furious Racing",
         "world_directory": "garfkart"
       },
-      "timestamp": "2026-03-24T00:15:19.591592+00:00"
+      "timestamp": "2026-03-24T01:12:46.306423+00:00"
     },
     "Jigsaw.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 3,
-        "failure": 7,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            4,
-            6,
-            8,
-            9,
-            7
-          ]
-        },
-        "elapsed_seconds": 27.34
+        "errors": {},
+        "elapsed_seconds": 26.86
       },
       "world_info": {
         "game_name": "Jigsaw",
         "world_directory": "jigsaw"
       },
-      "timestamp": "2026-03-24T00:15:46.952532+00:00"
+      "timestamp": "2026-03-24T01:13:13.189360+00:00"
     },
     "Lingo 2.yaml": {
       "ut_fuzz": {
@@ -2346,13 +2316,13 @@
         "timeout": 0,
         "ignored": 6,
         "errors": {},
-        "elapsed_seconds": 35.29
+        "elapsed_seconds": 35.7
       },
       "world_info": {
         "game_name": "Lingo 2",
         "world_directory": "lingo2"
       },
-      "timestamp": "2026-03-24T00:16:22.253636+00:00"
+      "timestamp": "2026-03-24T01:13:48.903738+00:00"
     },
     "Minit.yaml": {
       "ut_fuzz": {
@@ -2363,13 +2333,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.6
+        "elapsed_seconds": 25.48
       },
       "world_info": {
         "game_name": "Minit",
         "world_directory": "minit"
       },
-      "timestamp": "2026-03-24T00:16:47.860824+00:00"
+      "timestamp": "2026-03-24T01:14:14.388163+00:00"
     },
     "Pseudoregalia.yaml": {
       "ut_fuzz": {
@@ -2380,13 +2350,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 25.7
+        "elapsed_seconds": 25.53
       },
       "world_info": {
         "game_name": "Pseudoregalia",
         "world_directory": "pseudoregalia"
       },
-      "timestamp": "2026-03-24T00:17:13.572390+00:00"
+      "timestamp": "2026-03-24T01:14:39.928964+00:00"
     },
     "Ship of Harkinian.yaml": {
       "ut_fuzz": {
@@ -2408,13 +2378,13 @@
             9
           ]
         },
-        "elapsed_seconds": 42.64
+        "elapsed_seconds": 44.13
       },
       "world_info": {
         "game_name": "Ship of Harkinian",
         "world_directory": "oot_soh"
       },
-      "timestamp": "2026-03-24T00:17:56.255514+00:00"
+      "timestamp": "2026-03-24T01:15:24.102114+00:00"
     },
     "Spyro 3.yaml": {
       "ut_fuzz": {
@@ -2425,13 +2395,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 29.75
+        "elapsed_seconds": 29.67
       },
       "world_info": {
         "game_name": "Spyro 3",
         "world_directory": "spyro3"
       },
-      "timestamp": "2026-03-24T00:18:26.035259+00:00"
+      "timestamp": "2026-03-24T01:15:53.802638+00:00"
     },
     "The Legend of Zelda - Oracle of Seasons.yaml": {
       "ut_fuzz": {
@@ -2452,13 +2422,13 @@
             8
           ]
         },
-        "elapsed_seconds": 29.43
+        "elapsed_seconds": 29.48
       },
       "world_info": {
         "game_name": "The Legend of Zelda - Oracle of Seasons",
         "world_directory": "tloz_oos"
       },
-      "timestamp": "2026-03-24T00:18:55.495323+00:00"
+      "timestamp": "2026-03-24T01:16:23.307111+00:00"
     },
     "XCOM 2 War of the Chosen.yaml": {
       "ut_fuzz": {
@@ -2469,13 +2439,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.04
+        "elapsed_seconds": 28.27
       },
       "world_info": {
         "game_name": "XCOM 2 War of the Chosen",
         "world_directory": "x2wotc"
       },
-      "timestamp": "2026-03-24T00:19:23.556907+00:00"
+      "timestamp": "2026-03-24T01:16:51.598171+00:00"
     }
   }
 }
