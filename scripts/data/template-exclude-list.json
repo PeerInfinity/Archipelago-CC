@@ -24,23 +24,11 @@
       "reason": "Causes cascade timeout: all subsequent games in the same split hang after this game runs. Orphaned processes block the next fuzz.py startup."
     },
     {
-      "name": "ClusterTruck.yaml",
-      "reason": "Generation hangs indefinitely (no output produced). Causes cascade timeout for all subsequent games in the same split."
-    },
-    {
       "name": "Hammerwatch.yaml",
       "reason": "Causes cascade timeout: all subsequent games in the same split hang after this game runs. Orphaned processes block the next fuzz.py startup."
     },
     {
-      "name": "Kingdom Hearts Birth by Sleep.yaml",
-      "reason": "Causes cascade timeout: all subsequent games in the same split hang after this game runs. Orphaned processes block the next fuzz.py startup."
-    },
-    {
       "name": "Kingdom Hearts RE Chain of Memories.yaml",
-      "reason": "Causes cascade timeout: all subsequent games in the same split hang after this game runs. Orphaned processes block the next fuzz.py startup."
-    },
-    {
-      "name": "Mario Kart Double Dash.yaml",
       "reason": "Causes cascade timeout: all subsequent games in the same split hang after this game runs. Orphaned processes block the next fuzz.py startup."
     },
     {
