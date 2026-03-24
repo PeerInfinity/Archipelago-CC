@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid (APWorlds)
 
-**Generated:** 2026-03-24 17:15:28 UTC
+**Generated:** 2026-03-24 17:59:07 UTC
 
-**Source Data Last Updated:** 2026-03-24T06:10:59
+**Source Data Last Updated:** 2026-03-24T06:52:51
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
@@ -17,11 +17,11 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 
 ## Summary
 
-- **Total Games Tested:** 117
-- **Passing Both:** 41 (35.0%)
-- **Passing Worldgen Only:** 0 (0.0%)
-- **Passing Hybrid Only:** 37 (31.6%)
-- **Passing Neither:** 39 (33.3%)
+- **Total Games Tested:** 120
+- **Passing Both:** 41 (34.2%)
+- **Passing Worldgen Only:** 1 (0.8%)
+- **Passing Hybrid Only:** 37 (30.8%)
+- **Passing Neither:** 41 (34.2%)
 
 ## Full Comparison
 
@@ -35,32 +35,33 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Against the Storm | ❌ | ⚠️ 64/99 | ✅ | ✅ | N/A |
 | Air Delivery | ⚠️ 71/100 | ✅ | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ | ✅ | 8.7KB | ✅ | N/A |
-| Anodyne | ❌ 31/100 | ✅ | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ⚠️ 97/100 | ✅ | 3.1KB | ✅ | N/A |
+| Anodyne | ❌ 28/100 | ✅ | 10.7KB | ✅ | N/A |
+| Another Crabs Treasure | ⚠️ 94/100 | ✅ | 3.1KB | ✅ | N/A |
 | Ape Escape 3 | ❌ | ✅ | ✅ | ✅ | N/A |
 | Astalon | ❌ 1/87 | ✅ | ✅ | ✅ | N/A |
 | Autopelago | ✅ | ✅ | 9.2KB | ✅ | N/A |
 | Axiom Verge | ❌ | ✅ | ✅ | ✅ | N/A |
-| Balatro | ❌ 8/19 | ❌ 7/19 | ✅ | ✅ | N/A |
+| Balatro | ❌ 7/19 | ❌ 7/19 | ✅ | ✅ | N/A |
 | Brotato | ✅ | ✅ | ✅ | ✅ | N/A |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ | ✅ | ✅ | N/A |
 | Cavern of Dreams | ❌ | ❌ 20/63 | ✅ | ✅ | N/A |
 | ChecksMate | ❌ | ⚠️ 86/98 | ✅ | ✅ | N/A |
 | Chrono Trigger Jets of Time | ❌ | ❌ | ✅ | ✅ | N/A |
+| ClusterTruck | ⚠️ 51/100 | N/A | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ❌ | ✅ | ✅ | ✅ | N/A |
 | CrossCode | ❌ | ✅ | ✅ | ✅ | N/A |
 | Crystal Project | ❌ | ❌ 28/100 | ✅ | ✅ | N/A |
-| Crystalis | ❌ 5/61 | ⚠️ 59/61 | 9.2KB | ✅ | N/A |
+| Crystalis | ❌ 5/62 | ⚠️ 59/61 | 9.2KB | ✅ | N/A |
 | Cuphead | ❌ | ❌ | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ⚠️ 71/100 | ❌ 35/100 | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ✅ | ✅ | ✅ | ✅ | N/A |
 | Digimon World | ❌ 1/75 | ✅ | ✅ | ✅ | N/A |
 | Dome Keeper | ✅ | ✅ | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 4/95 | ❌ 3/95 | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 1/95 | ❌ 3/95 | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 10/98 | ❌ 10/98 | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ⚠️ 78/100 | ✅ | ✅ | ✅ | N/A |
-| Fire Emblem Sacred Stones | ❌ 18/97 | ✅ | ✅ | ✅ | N/A |
+| Fire Emblem Sacred Stones | ❌ 15/97 | ✅ | ✅ | ✅ | N/A |
 | Frogmonster | ❌ | ✅ | ✅ | ✅ | N/A |
 | GZDoom | ❌ | ❌ | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -75,8 +76,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Jigsaw | ✅ | ✅ | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ | ✅ | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ❌ 26/79 | ✅ | ✅ | ✅ | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ | N/A | ✅ | ✅ | N/A |
 | Kingdom Hearts Chain of Memories | ✅ | ✅ | ✅ | ✅ | N/A |
-| Kirby Super Star | ❌ 2/96 | ❌ 16/96 | ✅ | ✅ | N/A |
+| Kirby Super Star | ❌ 3/96 | ❌ 16/96 | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ⚠️ 69/85 | ✅ | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -85,6 +87,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Luigi's Mansion | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lunacid | ❌ 31/100 | ✅ | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | ❌ 35/100 | ✅ | 10.4KB | ✅ | N/A |
+| Mario Kart Double Dash | ❌ | N/A | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid: Zero Mission | ❌ | ✅ | 9.8KB | ✅ | N/A |
@@ -94,7 +97,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Nine Sols | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ❌ 37/98 | ✅ | 23.2KB | ✅ | N/A |
 | Ori and the Will of the Wisps | ❌ | ❌ 20/71 | ✅ | ✅ | N/A |
-| Oxygen Not Included | ⚠️ 66/91 | ⚠️ 64/91 | ✅ | ✅ | N/A |
+| Oxygen Not Included | ⚠️ 65/91 | ⚠️ 64/91 | ✅ | ✅ | N/A |
 | Pizza Tower | ⚠️ 65/86 | ✅ | 7.0KB | ✅ | N/A |
 | PlateUp | ⚠️ 45/59 | ❌ 5/64 | ✅ | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ❌ | ⚠️ 80/100 | ✅ | ✅ | N/A |
@@ -112,7 +115,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Ship of Harkinian | ❌ | ❌ 30/100 | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | ❌ | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 90/100 | ⚠️ 89/100 | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 88/99 | ⚠️ 89/100 | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ | ❌ 12/43 | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ✅ | ✅ | ✅ | ✅ | N/A |
 | Sonic Rush | ❌ 26/99 | ✅ | ✅ | ✅ | N/A |
@@ -125,7 +128,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Star Wars Episode I Racer | ✅ | ✅ | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ 7/64 | ⚠️ 40/60 | 15.1KB | ✅ | N/A |
+| System Shock 2 | ❌ 8/61 | ⚠️ 40/60 | 15.1KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ 8/98 | ❌ | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tetris Attack | ❌ 2/83 | ✅ | 23.1KB | ✅ | N/A |
@@ -193,6 +196,14 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
+## Games Passing Worldgen Only (1)
+
+These games pass in the Worldgen UT but fail in the Hybrid UT.
+
+| Game Name | Exporter | GameLogic | Rules Size |
+|-----------|:--------:|:---------:|:----------:|
+| Kingdom Hearts Birth by Sleep | ✅ | ✅ | N/A |
+
 ## Games Passing Hybrid Only (37)
 
 These games pass in the Hybrid UT but fail in the Worldgen UT.
@@ -237,7 +248,7 @@ These games pass in the Hybrid UT but fail in the Worldgen UT.
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 | Yu-Gi-Oh! Forbidden Memories | ✅ | ✅ | N/A |
 
-## Games Passing Neither (39)
+## Games Passing Neither (41)
 
 These games fail in both Universal Tracker versions.
 
@@ -249,6 +260,7 @@ These games fail in both Universal Tracker versions.
 | Cavern of Dreams | ✅ | ✅ | N/A |
 | ChecksMate | ✅ | ✅ | N/A |
 | Chrono Trigger Jets of Time | ✅ | ✅ | N/A |
+| ClusterTruck | ✅ | ✅ | N/A |
 | Crystal Project | ✅ | ✅ | N/A |
 | Crystalis | 9.2KB | ✅ | N/A |
 | Cuphead | ✅ | ✅ | N/A |
@@ -260,6 +272,7 @@ These games fail in both Universal Tracker versions.
 | Into the Breach | ✅ | ✅ | N/A |
 | Kirby Super Star | ✅ | ✅ | N/A |
 | Lil Gator Game | ✅ | ✅ | N/A |
+| Mario Kart Double Dash | ✅ | ✅ | N/A |
 | Monster Sanctuary | ✅ | ✅ | N/A |
 | Ori and the Will of the Wisps | ✅ | ✅ | N/A |
 | Oxygen Not Included | ✅ | ✅ | N/A |
