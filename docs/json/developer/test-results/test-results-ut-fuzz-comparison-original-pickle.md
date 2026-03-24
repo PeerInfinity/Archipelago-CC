@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle
 
-**Generated:** 2026-03-22 05:22:37 UTC
+**Generated:** 2026-03-23 03:48:19 UTC
 
-**Source Data Last Updated:** 2026-03-21T23:01:02
+**Source Data Last Updated:** 2026-03-22T05:22:37
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -20,8 +20,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 88
 - **Passing Both:** 37 (42.0%)
 - **Passing Original Only:** 0 (0.0%)
-- **Passing Pickle Only:** 40 (45.5%)
-- **Passing Neither:** 11 (12.5%)
+- **Passing Pickle Only:** 37 (42.0%)
+- **Passing Neither:** 14 (15.9%)
 
 ## Full Comparison
 
@@ -63,25 +63,25 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Jak and Daxter: The Precursor Legacy | ⚠️ 62/100 | ✅ |
 | Journey to Ascension | ❌ | ❌ |
 | Kingdom Hearts | ❌ 18/100 | ✅ |
-| Kingdom Hearts 2 | ❌ 44/100 | ⚠️ 7/10 |
+| Kingdom Hearts 2 | ❌ 44/100 | ❌ 44/95 |
 | Kirby's Dream Land 3 | ❌ | ✅ |
 | Landstalker - The Treasures of King Nole | ❌ 31/100 | ✅ |
 | Lingo | ❌ 19/45 | ✅ |
-| Links Awakening DX | ❌ 23/100 | ❌ 1/10 |
+| Links Awakening DX | ❌ 23/100 | ❌ 23/100 |
 | Lufia II Ancient Cave | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ | ✅ |
 | Mega Man 2 | ⚠️ 95/100 | ✅ |
 | Mega Man 3 | ❌ | ✅ |
 | MegaMan Battle Network 3 | ✅ | ✅ |
 | Meritous | ✅ | ✅ |
-| Metamath | ⚠️ 89/100 | ✅ |
+| Metamath | ⚠️ 89/100 | ⚠️ 99/100 |
 | Muse Dash | ❌ | ✅ |
 | Noita | ✅ | ✅ |
-| Ocarina of Time | ❌ | ✅ |
+| Ocarina of Time | ❌ | ⚠️ 96/98 |
 | Old School Runescape | ✅ | ✅ |
 | Overcooked! 2 | ❌ 9/100 | ✅ |
 | Paint | ✅ | ✅ |
-| Pokemon Emerald | ⚠️ 56/92 | ⚠️ 5/7 |
+| Pokemon Emerald | ⚠️ 56/92 | ⚠️ 86/92 |
 | Pokemon Red and Blue | ❌ | ✅ |
 | Raft | ✅ | ✅ |
 | Risk of Rain 2 | ✅ | ✅ |
@@ -92,18 +92,18 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Shivers | ❌ | ❌ |
 | Sonic Adventure 2 Battle | ❌ 6/100 | ✅ |
 | Starcraft 2 | ❌ | ❌ |
-| Stardew Valley | ❌ 10/100 | ❌ 4/10 |
+| Stardew Valley | ❌ 10/100 | ❌ 19/100 |
 | Subnautica | ❌ 12/100 | ✅ |
 | Super Mario 64 | ❌ 28/100 | ✅ |
 | Super Mario Land 2 | ❌ 24/100 | ✅ |
 | Super Mario World | ⚠️ 55/100 | ✅ |
-| Super Metroid | ❌ 6/99 | ⚠️ 3/5 |
+| Super Metroid | ❌ 6/99 | ⚠️ 51/59 |
 | TOEM original | ✅ | ✅ |
 | TOEM rule builder | ✅ | ✅ |
 | TUNIC | ✅ | ✅ |
 | Terraria | ⚠️ 98/100 | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ 9/100 | ❌ 1/10 |
+| The Messenger | ❌ 9/100 | ❌ 7/100 |
 | The Wind Waker | ❌ 4/57 | ✅ |
 | The Witness | ✅ | ✅ |
 | Timespinner | ❌ 6/100 | ✅ |
@@ -160,7 +160,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Wargroove |
 | shapez |
 
-## Games Passing Pickle Only (40)
+## Games Passing Pickle Only (37)
 
 These games pass in the Pickle UT but fail in the Original UT.
 
@@ -181,15 +181,12 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Final Fantasy Mystic Quest |
 | Hollow Knight |
 | Jak and Daxter: The Precursor Legacy |
-| Kingdom Hearts |
 | Kirby's Dream Land 3 |
 | Landstalker - The Treasures of King Nole |
 | Lingo |
 | Mega Man 2 |
 | Mega Man 3 |
-| Metamath |
 | Muse Dash |
-| Ocarina of Time |
 | Overcooked! 2 |
 | Pokemon Red and Blue |
 | SMZ3 |
@@ -207,15 +204,18 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Yoshi's Island |
 | Yu-Gi-Oh! 2006 |
 
-## Games Passing Neither (11)
+## Games Passing Neither (14)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name |
 |-----------|
 | Journey to Ascension |
+| Kingdom Hearts |
 | Kingdom Hearts 2 |
 | Links Awakening DX |
+| Metamath |
+| Ocarina of Time |
 | Pokemon Emerald |
 | Satisfactory |
 | Shivers |
