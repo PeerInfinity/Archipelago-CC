@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-03-24T00:56:07.425158+00:00",
-    "last_updated": "2026-03-24T00:56:07.425167+00:00",
+    "created": "2026-03-24T01:21:21.165383+00:00",
+    "last_updated": "2026-03-24T01:21:21.165396+00:00",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "worldgen",
@@ -25,13 +25,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.64
+        "elapsed_seconds": 27.02
       },
       "world_info": {
         "game_name": "A Dance of Fire and Ice",
         "world_directory": "adofai"
       },
-      "timestamp": "2026-03-24T00:45:42.337889+00:00",
+      "timestamp": "2026-03-24T01:10:50.104628+00:00",
       "explain_stats": {
         "game": "A Dance of Fire and Ice WorldGen_01043188731678011336",
         "total_locations": 142,
@@ -61,13 +61,13 @@
             4
           ]
         },
-        "elapsed_seconds": 28.62
+        "elapsed_seconds": 26.06
       },
       "world_info": {
         "game_name": "Ape Escape 3",
         "world_directory": "ape_escape_3"
       },
-      "timestamp": "2026-03-24T00:46:10.984964+00:00",
+      "timestamp": "2026-03-24T01:11:16.189850+00:00",
       "explain_stats": {
         "game": "Ape Escape 3 WorldGen_96945849220684217413",
         "total_locations": 782,
@@ -101,18 +101,18 @@
             7,
             8,
             9,
-            3,
+            1,
             2,
-            1
+            3
           ]
         },
-        "elapsed_seconds": 25.42
+        "elapsed_seconds": 22.7
       },
       "world_info": {
         "game_name": "Chrono Trigger Jets of Time",
         "world_directory": "ctjot"
       },
-      "timestamp": "2026-03-24T00:46:36.411472+00:00"
+      "timestamp": "2026-03-24T01:11:38.899861+00:00"
     },
     "Digimon World.yaml": {
       "ut_fuzz": {
@@ -132,13 +132,13 @@
             8
           ]
         },
-        "elapsed_seconds": 30.74
+        "elapsed_seconds": 28.37
       },
       "world_info": {
         "game_name": "Digimon World",
         "world_directory": "dw1"
       },
-      "timestamp": "2026-03-24T00:47:07.153608+00:00",
+      "timestamp": "2026-03-24T01:12:07.275839+00:00",
       "explain_stats": {
         "game": "Digimon World WorldGen_96945849220684217413",
         "total_locations": 217,
@@ -169,18 +169,18 @@
             1,
             2,
             3,
+            8,
             5,
-            6,
-            8
+            6
           ]
         },
-        "elapsed_seconds": 29.54
+        "elapsed_seconds": 27.03
       },
       "world_info": {
         "game_name": "Grim Dawn",
         "world_directory": "grim_dawn"
       },
-      "timestamp": "2026-03-24T00:47:36.712511+00:00",
+      "timestamp": "2026-03-24T01:12:34.320100+00:00",
       "explain_stats": {
         "game": "Grim Dawn WorldGen_05594871498841892311",
         "total_locations": 37,
@@ -216,13 +216,13 @@
             7
           ]
         },
-        "elapsed_seconds": 28.54
+        "elapsed_seconds": 25.85
       },
       "world_info": {
         "game_name": "Keep Talking and Nobody Explodes",
         "world_directory": "ktane"
       },
-      "timestamp": "2026-03-24T00:48:05.256453+00:00",
+      "timestamp": "2026-03-24T01:13:00.172683+00:00",
       "explain_stats": {
         "game": "Keep Talking and Nobody Explodes WorldGen_00679259829289197625",
         "total_locations": 116,
@@ -248,13 +248,13 @@
         "timeout": 0,
         "ignored": 7,
         "errors": {},
-        "elapsed_seconds": 30.48
+        "elapsed_seconds": 28.02
       },
       "world_info": {
         "game_name": "Luigi's Mansion",
         "world_directory": "luigismansion"
       },
-      "timestamp": "2026-03-24T00:48:35.759756+00:00",
+      "timestamp": "2026-03-24T01:13:28.219063+00:00",
       "explain_stats": {
         "game": "Luigi's Mansion WorldGen_48205312626925217390",
         "total_locations": 689,
@@ -280,23 +280,23 @@
         "timeout": 0,
         "ignored": 2,
         "errors": {},
-        "elapsed_seconds": 30.47
+        "elapsed_seconds": 27.83
       },
       "world_info": {
         "game_name": "Nine Sols",
         "world_directory": "nine_sols"
       },
-      "timestamp": "2026-03-24T00:49:06.242264+00:00",
+      "timestamp": "2026-03-24T01:13:56.069678+00:00",
       "explain_stats": {
-        "game": "Nine Sols WorldGen_00679259829289197625",
+        "game": "Nine Sols WorldGen_84719271504320872445",
         "total_locations": 318,
         "locations_with_explain": 85,
         "locations_default_rule": 233,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 514,
-        "entrances_with_explain": 259,
+        "total_entrances": 520,
+        "entrances_with_explain": 265,
         "entrances_default_rule": 255,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
@@ -312,13 +312,13 @@
         "timeout": 0,
         "ignored": 7,
         "errors": {},
-        "elapsed_seconds": 32.82
+        "elapsed_seconds": 30.03
       },
       "world_info": {
         "game_name": "Rain World",
         "world_directory": "rain_world"
       },
-      "timestamp": "2026-03-24T00:49:39.092861+00:00"
+      "timestamp": "2026-03-24T01:14:26.134578+00:00"
     },
     "Sly 2 Band of Thieves.yaml": {
       "ut_fuzz": {
@@ -338,24 +338,24 @@
             9
           ]
         },
-        "elapsed_seconds": 30.56
+        "elapsed_seconds": 27.82
       },
       "world_info": {
         "game_name": "Sly 2: Band of Thieves",
         "world_directory": "sly2"
       },
-      "timestamp": "2026-03-24T00:50:09.671182+00:00",
+      "timestamp": "2026-03-24T01:14:53.971365+00:00",
       "explain_stats": {
-        "game": "Sly 2: Band of Thieves WorldGen_01043188731678011336",
-        "total_locations": 170,
-        "locations_with_explain": 39,
+        "game": "Sly 2: Band of Thieves WorldGen_84719271504320872445",
+        "total_locations": 162,
+        "locations_with_explain": 31,
         "locations_default_rule": 131,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 119,
+        "total_entrances": 52,
         "entrances_with_explain": 31,
-        "entrances_default_rule": 88,
+        "entrances_default_rule": 21,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -370,13 +370,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 33.28
+        "elapsed_seconds": 30.77
       },
       "world_info": {
         "game_name": "Star Fox 64",
         "world_directory": "star_fox_64"
       },
-      "timestamp": "2026-03-24T00:50:42.963480+00:00"
+      "timestamp": "2026-03-24T01:15:24.762069+00:00"
     },
     "The Sims 4.yaml": {
       "ut_fuzz": {
@@ -387,18 +387,18 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 32.44
+        "elapsed_seconds": 30.65
       },
       "world_info": {
         "game_name": "The Sims 4",
         "world_directory": "sims4"
       },
-      "timestamp": "2026-03-24T00:51:15.410327+00:00",
+      "timestamp": "2026-03-24T01:15:55.416265+00:00",
       "explain_stats": {
         "game": "The Sims 4 WorldGen_05594871498841892311",
         "total_locations": 706,
-        "locations_with_explain": 392,
-        "locations_default_rule": 314,
+        "locations_with_explain": 419,
+        "locations_default_rule": 287,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -422,8 +422,8 @@
           "None": [
             0,
             3,
-            2,
             1,
+            2,
             4,
             5,
             6,
@@ -432,15 +432,15 @@
             9
           ]
         },
-        "elapsed_seconds": 32.19
+        "elapsed_seconds": 29.64
       },
       "world_info": {
         "game_name": "Yu-Gi-Oh! Forbidden Memories",
         "world_directory": "fm"
       },
-      "timestamp": "2026-03-24T00:51:47.613809+00:00",
+      "timestamp": "2026-03-24T01:16:25.068168+00:00",
       "explain_stats": {
-        "game": "Yu-Gi-Oh! Forbidden Memories WorldGen_01043188731678011336",
+        "game": "Yu-Gi-Oh! Forbidden Memories WorldGen_84719271504320872445",
         "total_locations": 678,
         "locations_with_explain": 678,
         "locations_default_rule": 0,
@@ -468,13 +468,13 @@
             9
           ]
         },
-        "elapsed_seconds": 29.85
+        "elapsed_seconds": 29.62
       },
       "world_info": {
         "game_name": "Another Crabs Treasure",
         "world_directory": "another_crab"
       },
-      "timestamp": "2026-03-24T00:45:27.405649+00:00",
+      "timestamp": "2026-03-24T01:10:57.615517+00:00",
       "explain_stats": {
         "game": "Another Crabs Treasure WorldGen_01043188731678011336",
         "total_locations": 614,
@@ -506,20 +506,20 @@
             1,
             2,
             4,
-            5,
             6,
             7,
+            5,
             8,
             9
           ]
         },
-        "elapsed_seconds": 29.78
+        "elapsed_seconds": 29.89
       },
       "world_info": {
         "game_name": "ChecksMate",
         "world_directory": "checksmate"
       },
-      "timestamp": "2026-03-24T00:45:57.199676+00:00",
+      "timestamp": "2026-03-24T01:11:27.520309+00:00",
       "explain_stats": {
         "game": "ChecksMate WorldGen_84719271504320872445",
         "total_locations": 76,
@@ -554,15 +554,15 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.54
+        "elapsed_seconds": 29.29
       },
       "world_info": {
         "game_name": "Diddy Kong Racing",
         "world_directory": "diddy_kong_racing"
       },
-      "timestamp": "2026-03-24T00:46:26.751074+00:00",
+      "timestamp": "2026-03-24T01:11:56.817769+00:00",
       "explain_stats": {
-        "game": "Diddy Kong Racing WorldGen_01043188731678011336",
+        "game": "Diddy Kong Racing WorldGen_05594871498841892311",
         "total_locations": 59,
         "locations_with_explain": 11,
         "locations_default_rule": 28,
@@ -586,10 +586,6 @@
             "region": "DD: Jungle Falls"
           },
           {
-            "name": "DD: Hot Top Volcano 2",
-            "region": "DD: Hot Top Volcano"
-          },
-          {
             "name": "SM: Everfrost Peak 2",
             "region": "SM: Everfrost Peak"
           },
@@ -608,10 +604,6 @@
           {
             "name": "SM: Frosty Village 2",
             "region": "SM: Frosty Village"
-          },
-          {
-            "name": "SI: Whale Bay 2",
-            "region": "SI: Whale Bay"
           },
           {
             "name": "SI: Crescent Island 2",
@@ -634,10 +626,6 @@
             "region": "DF: Windmill Plains"
           },
           {
-            "name": "DF: Greenwood Village 2",
-            "region": "DF: Greenwood Village"
-          },
-          {
             "name": "DF: Boulder Canyon 2",
             "region": "DF: Boulder Canyon"
           },
@@ -648,6 +636,18 @@
           {
             "name": "DF: Haunted Woods 2",
             "region": "DF: Haunted Woods"
+          },
+          {
+            "name": "FFL: Darkmoon Caverns 2",
+            "region": "FFL: Darkmoon Caverns"
+          },
+          {
+            "name": "FFL: Spaceport Alpha 2",
+            "region": "FFL: Spaceport Alpha"
+          },
+          {
+            "name": "FFL: Star City 2",
+            "region": "FFL: Star City"
           }
         ],
         "total_entrances": 34,
@@ -698,24 +698,24 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 40.29
+        "elapsed_seconds": 39.39
       },
       "world_info": {
         "game_name": "Golden Sun The Lost Age",
         "world_directory": "gstla"
       },
-      "timestamp": "2026-03-24T00:47:07.074507+00:00",
+      "timestamp": "2026-03-24T01:12:36.242297+00:00",
       "explain_stats": {
-        "game": "Golden Sun The Lost Age WorldGen_01043188731678011336",
-        "total_locations": 319,
-        "locations_with_explain": 216,
-        "locations_default_rule": 103,
+        "game": "Golden Sun The Lost Age WorldGen_05594871498841892311",
+        "total_locations": 315,
+        "locations_with_explain": 155,
+        "locations_default_rule": 160,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 76,
-        "entrances_with_explain": 31,
-        "entrances_default_rule": 45,
+        "entrances_with_explain": 32,
+        "entrances_default_rule": 44,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -730,13 +730,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 31.2
+        "elapsed_seconds": 30.67
       },
       "world_info": {
         "game_name": "K-On! After School Live!!",
         "world_directory": "kon"
       },
-      "timestamp": "2026-03-24T00:47:38.280340+00:00",
+      "timestamp": "2026-03-24T01:13:06.925007+00:00",
       "explain_stats": {
         "game": "K-On! After School Live!! WorldGen_01043188731678011336",
         "total_locations": 589,
@@ -762,15 +762,15 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.66
+        "elapsed_seconds": 30.18
       },
       "world_info": {
         "game_name": "Little Witch Nobeta",
         "world_directory": "little_witch_nobeta"
       },
-      "timestamp": "2026-03-24T00:48:08.946132+00:00",
+      "timestamp": "2026-03-24T01:13:37.117255+00:00",
       "explain_stats": {
-        "game": "Little Witch Nobeta WorldGen_01043188731678011336",
+        "game": "Little Witch Nobeta WorldGen_84719271504320872445",
         "total_locations": 55,
         "locations_with_explain": 15,
         "locations_default_rule": 40,
@@ -778,8 +778,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 109,
-        "entrances_with_explain": 63,
-        "entrances_default_rule": 46,
+        "entrances_with_explain": 60,
+        "entrances_default_rule": 49,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -807,13 +807,13 @@
             9
           ]
         },
-        "elapsed_seconds": 60.18
+        "elapsed_seconds": 59.6
       },
       "world_info": {
         "game_name": "Monster Sanctuary",
         "world_directory": "monster_sanctuary"
       },
-      "timestamp": "2026-03-24T00:49:09.154103+00:00",
+      "timestamp": "2026-03-24T01:14:36.745938+00:00",
       "explain_stats": {
         "game": "Monster Sanctuary WorldGen_01043188731678011336",
         "total_locations": 572,
@@ -9526,13 +9526,13 @@
             9
           ]
         },
-        "elapsed_seconds": 41.98
+        "elapsed_seconds": 41.53
       },
       "world_info": {
         "game_name": "Rabi-Ribi",
         "world_directory": "rabi_ribi"
       },
-      "timestamp": "2026-03-24T00:49:51.153705+00:00",
+      "timestamp": "2026-03-24T01:15:18.304587+00:00",
       "explain_stats": {
         "game": "Rabi-Ribi WorldGen_55941320597534372051",
         "total_locations": 225,
@@ -9558,13 +9558,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 66.39
+        "elapsed_seconds": 66.82
       },
       "world_info": {
         "game_name": "Simon Tatham's Portable Puzzle Collection",
         "world_directory": "sgtpuzzles"
       },
-      "timestamp": "2026-03-24T00:50:57.561015+00:00",
+      "timestamp": "2026-03-24T01:16:25.143533+00:00",
       "explain_stats": {
         "game": "Simon Tatham's Portable Puzzle Collection WorldGen_84719271504320872445",
         "total_locations": 758,
@@ -9603,13 +9603,13 @@
             9
           ]
         },
-        "elapsed_seconds": 32.88
+        "elapsed_seconds": 33.07
       },
       "world_info": {
         "game_name": "Stacklands",
         "world_directory": "stacklands"
       },
-      "timestamp": "2026-03-24T00:51:30.469492+00:00",
+      "timestamp": "2026-03-24T01:16:58.235854+00:00",
       "explain_stats": {
         "game": "Stacklands WorldGen_84719271504320872445",
         "total_locations": 216,
@@ -9650,13 +9650,13 @@
             9
           ]
         },
-        "elapsed_seconds": 76.81
+        "elapsed_seconds": 72.01
       },
       "world_info": {
         "game_name": "The Legend of Zelda - Phantom Hourglass",
         "world_directory": "tloz_ph"
       },
-      "timestamp": "2026-03-24T00:52:47.316221+00:00",
+      "timestamp": "2026-03-24T01:18:10.287798+00:00",
       "explain_stats": {
         "game": "The Legend of Zelda - Phantom Hourglass WorldGen_01043188731678011336",
         "total_locations": 291,
@@ -9682,13 +9682,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.58
+        "elapsed_seconds": 29.65
       },
       "world_info": {
         "game_name": "Yu-Gi-Oh! Dungeon Dice Monsters",
         "world_directory": "yugiohddm"
       },
-      "timestamp": "2026-03-24T00:53:16.914754+00:00",
+      "timestamp": "2026-03-24T01:18:39.953899+00:00",
       "explain_stats": {
         "game": "Yu-Gi-Oh! Dungeon Dice Monsters WorldGen_05594871498841892311",
         "total_locations": 183,
@@ -9719,13 +9719,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 26.43
+        "elapsed_seconds": 27.35
       },
       "world_info": {
         "game_name": "A Difficult Game About Climbing",
         "world_directory": "difficult_climbing"
       },
-      "timestamp": "2026-03-24T00:45:20.495916+00:00",
+      "timestamp": "2026-03-24T01:11:13.003960+00:00",
       "explain_stats": {
         "game": "A Difficult Game About Climbing WorldGen_84719271504320872445",
         "total_locations": 16,
@@ -9758,13 +9758,13 @@
             8
           ]
         },
-        "elapsed_seconds": 64.38
+        "elapsed_seconds": 65.96
       },
       "world_info": {
         "game_name": "Ape Escape",
         "world_directory": "apeescape"
       },
-      "timestamp": "2026-03-24T00:46:24.891470+00:00",
+      "timestamp": "2026-03-24T01:12:18.980158+00:00",
       "explain_stats": {
         "game": "Ape Escape WorldGen_14089154938208861744",
         "total_locations": 270,
@@ -9800,13 +9800,13 @@
             8
           ]
         },
-        "elapsed_seconds": 25.68
+        "elapsed_seconds": 26.25
       },
       "world_info": {
         "game_name": "ClusterTruck",
         "world_directory": "cluster_truck"
       },
-      "timestamp": "2026-03-24T00:46:50.590051+00:00",
+      "timestamp": "2026-03-24T01:12:45.252861+00:00",
       "explain_stats": {
         "game": "ClusterTruck WorldGen_55941320597534372051",
         "total_locations": 117,
@@ -9832,13 +9832,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.76
+        "elapsed_seconds": 29.5
       },
       "world_info": {
         "game_name": "Dome Keeper",
         "world_directory": "dome_keeper"
       },
-      "timestamp": "2026-03-24T00:47:19.362151+00:00",
+      "timestamp": "2026-03-24T01:13:14.769788+00:00",
       "explain_stats": {
         "game": "Dome Keeper WorldGen_84719271504320872445",
         "total_locations": 83,
@@ -9875,13 +9875,13 @@
             9
           ]
         },
-        "elapsed_seconds": 35.36
+        "elapsed_seconds": 36.15
       },
       "world_info": {
         "game_name": "Hammerwatch",
         "world_directory": "hammerwatch"
       },
-      "timestamp": "2026-03-24T00:47:54.752005+00:00",
+      "timestamp": "2026-03-24T01:13:50.944929+00:00",
       "explain_stats": {
         "game": "Hammerwatch WorldGen_84719271504320872445",
         "total_locations": 1062,
@@ -9907,13 +9907,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.18
+        "elapsed_seconds": 31.07
       },
       "world_info": {
         "game_name": "Kingdom Hearts Birth by Sleep",
         "world_directory": "khbbs"
       },
-      "timestamp": "2026-03-24T00:48:24.939856+00:00",
+      "timestamp": "2026-03-24T01:14:22.032185+00:00",
       "explain_stats": {
         "game": "Kingdom Hearts Birth by Sleep WorldGen_01043188731678011336",
         "total_locations": 223,
@@ -9944,18 +9944,18 @@
             2,
             1,
             5,
-            6,
             4,
+            6,
             9
           ]
         },
-        "elapsed_seconds": 33.38
+        "elapsed_seconds": 33.59
       },
       "world_info": {
         "game_name": "Lunacid",
         "world_directory": "lunacid"
       },
-      "timestamp": "2026-03-24T00:48:58.343846+00:00",
+      "timestamp": "2026-03-24T01:14:55.644456+00:00",
       "explain_stats": {
         "game": "Lunacid WorldGen_01043188731678011336",
         "total_locations": 1238,
@@ -9987,7 +9987,7 @@
         "ignored": 0,
         "errors": {
           "None": [
-            3,
+            0,
             1,
             2,
             5,
@@ -9995,13 +9995,13 @@
             9
           ]
         },
-        "elapsed_seconds": 36.11
+        "elapsed_seconds": 36.35
       },
       "world_info": {
         "game_name": "Ori and the Blind Forest",
         "world_directory": "oribf"
       },
-      "timestamp": "2026-03-24T00:49:34.470770+00:00",
+      "timestamp": "2026-03-24T01:15:32.006419+00:00",
       "explain_stats": {
         "game": "Ori and the Blind Forest WorldGen_84719271504320872445",
         "total_locations": 255,
@@ -10027,13 +10027,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 31.88
+        "elapsed_seconds": 32.47
       },
       "world_info": {
         "game_name": "Ratchet & Clank 2",
         "world_directory": "rac2"
       },
-      "timestamp": "2026-03-24T00:50:06.361883+00:00",
+      "timestamp": "2026-03-24T01:16:04.485618+00:00",
       "explain_stats": {
         "game": "Ratchet & Clank 2 WorldGen_01043188731678011336",
         "total_locations": 123,
@@ -10054,27 +10054,28 @@
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 9,
-        "failure": 1,
+        "success": 8,
+        "failure": 2,
         "timeout": 0,
         "ignored": 0,
         "errors": {
           "FillError": [
-            2
+            2,
+            7
           ]
         },
-        "elapsed_seconds": 30.02
+        "elapsed_seconds": 30.01
       },
       "world_info": {
         "game_name": "Sly Cooper and the Thievius Raccoonus",
         "world_directory": "sly1"
       },
-      "timestamp": "2026-03-24T00:50:36.391759+00:00",
+      "timestamp": "2026-03-24T01:16:34.504226+00:00",
       "explain_stats": {
-        "game": "Sly Cooper and the Thievius Raccoonus WorldGen_96945849220684217413",
-        "total_locations": 679,
+        "game": "Sly Cooper and the Thievius Raccoonus WorldGen_05594871498841892311",
+        "total_locations": 639,
         "locations_with_explain": 32,
-        "locations_default_rule": 647,
+        "locations_default_rule": 607,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -10095,24 +10096,24 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 29.5
+        "elapsed_seconds": 30.0
       },
       "world_info": {
         "game_name": "Star Wars Episode I Racer",
         "world_directory": "swr"
       },
-      "timestamp": "2026-03-24T00:51:05.903664+00:00",
+      "timestamp": "2026-03-24T01:17:04.518286+00:00",
       "explain_stats": {
-        "game": "Star Wars Episode I Racer WorldGen_05594871498841892311",
-        "total_locations": 94,
-        "locations_with_explain": 56,
-        "locations_default_rule": 38,
+        "game": "Star Wars Episode I Racer WorldGen_01043188731678011336",
+        "total_locations": 101,
+        "locations_with_explain": 91,
+        "locations_default_rule": 10,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 14,
-        "entrances_with_explain": 8,
-        "entrances_default_rule": 6,
+        "entrances_with_explain": 12,
+        "entrances_default_rule": 2,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -10140,13 +10141,13 @@
             9
           ]
         },
-        "elapsed_seconds": 33.23
+        "elapsed_seconds": 34.05
       },
       "world_info": {
         "game_name": "ToeJam and Earl",
         "world_directory": "tje"
       },
-      "timestamp": "2026-03-24T00:51:39.154488+00:00",
+      "timestamp": "2026-03-24T01:17:38.588167+00:00",
       "explain_stats": {
         "game": "ToeJam and Earl WorldGen_01043188731678011336",
         "total_locations": 257,
@@ -10172,13 +10173,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.31
+        "elapsed_seconds": 30.86
       },
       "world_info": {
         "game_name": "Zelda II: The Adventure of Link",
         "world_directory": "zelda2"
       },
-      "timestamp": "2026-03-24T00:52:09.479941+00:00",
+      "timestamp": "2026-03-24T01:18:09.462287+00:00",
       "explain_stats": {
         "game": "Zelda II: The Adventure of Link WorldGen_05594871498841892311",
         "total_locations": 106,
@@ -10223,13 +10224,13 @@
             9
           ]
         },
-        "elapsed_seconds": 39.86
+        "elapsed_seconds": 41.07
       },
       "world_info": {
         "game_name": "A Link Between Worlds",
         "world_directory": "albw"
       },
-      "timestamp": "2026-03-24T00:45:36.814011+00:00",
+      "timestamp": "2026-03-24T01:11:36.039832+00:00",
       "explain_stats": {
         "game": "A Link Between Worlds WorldGen_05594871498841892311",
         "total_locations": 357,
@@ -15031,18 +15032,18 @@
             5,
             1,
             6,
+            8,
             9,
-            7,
-            8
+            7
           ]
         },
-        "elapsed_seconds": 32.18
+        "elapsed_seconds": 32.65
       },
       "world_info": {
         "game_name": "Astalon",
         "world_directory": "astalon"
       },
-      "timestamp": "2026-03-24T00:46:09.009008+00:00",
+      "timestamp": "2026-03-24T01:12:08.709052+00:00",
       "explain_stats": {
         "game": "Astalon WorldGen_01043188731678011336",
         "total_locations": 289,
@@ -15075,19 +15076,19 @@
             2,
             4,
             7,
-            6,
             5,
+            6,
             8,
             9
           ]
         },
-        "elapsed_seconds": 33.75
+        "elapsed_seconds": 34.74
       },
       "world_info": {
         "game_name": "Corn Kidz 64",
         "world_directory": "cornkidz64"
       },
-      "timestamp": "2026-03-24T00:46:42.776343+00:00",
+      "timestamp": "2026-03-24T01:12:43.466767+00:00",
       "explain_stats": {
         "game": "Corn Kidz 64 WorldGen_84719271504320872445",
         "total_locations": 194,
@@ -15108,14 +15109,13 @@
       "ut_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 0,
-        "failure": 9,
+        "success": 1,
+        "failure": 8,
         "timeout": 0,
         "ignored": 1,
         "errors": {
           "None": [
             0,
-            3,
             2,
             1,
             4,
@@ -15125,13 +15125,13 @@
             9
           ]
         },
-        "elapsed_seconds": 30.01
+        "elapsed_seconds": 31.37
       },
       "world_info": {
         "game_name": "Duke Nukem 3D",
         "world_directory": "duke3d"
       },
-      "timestamp": "2026-03-24T00:47:12.799528+00:00"
+      "timestamp": "2026-03-24T01:13:14.859341+00:00"
     },
     "Hatsune Miku Project Diva Mega Mix+.yaml": {
       "ut_fuzz": {
@@ -15142,13 +15142,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 32.52
+        "elapsed_seconds": 32.78
       },
       "world_info": {
         "game_name": "Hatsune Miku Project Diva Mega Mix+",
         "world_directory": "megamix"
       },
-      "timestamp": "2026-03-24T00:47:45.337468+00:00",
+      "timestamp": "2026-03-24T01:13:47.663337+00:00",
       "explain_stats": {
         "game": "Hatsune Miku Project Diva Mega Mix+ WorldGen_01043188731678011336",
         "total_locations": 500,
@@ -15174,13 +15174,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.7
+        "elapsed_seconds": 28.63
       },
       "world_info": {
         "game_name": "Kingdom Hearts Chain of Memories",
         "world_directory": "khcom"
       },
-      "timestamp": "2026-03-24T00:48:14.050693+00:00",
+      "timestamp": "2026-03-24T01:14:16.310515+00:00",
       "explain_stats": {
         "game": "Kingdom Hearts Chain of Memories WorldGen_01043188731678011336",
         "total_locations": 151,
@@ -15215,13 +15215,13 @@
             9
           ]
         },
-        "elapsed_seconds": 32.36
+        "elapsed_seconds": 32.43
       },
       "world_info": {
         "game_name": "Majora's Mask Recompiled",
         "world_directory": "mm_recomp"
       },
-      "timestamp": "2026-03-24T00:48:46.431918+00:00",
+      "timestamp": "2026-03-24T01:14:48.765889+00:00",
       "explain_stats": {
         "game": "Majora's Mask Recompiled WorldGen_01043188731678011336",
         "total_locations": 372,
@@ -15244,25 +15244,26 @@
         "total": 10,
         "success": 0,
         "failure": 0,
-        "timeout": 6,
-        "ignored": 4,
+        "timeout": 7,
+        "ignored": 3,
         "errors": {
           "<class 'TimeoutError'>": [
-            2,
+            4,
             3,
+            2,
             5,
             6,
             7,
             9
           ]
         },
-        "elapsed_seconds": 148.46
+        "elapsed_seconds": 148.51
       },
       "world_info": {
         "game_name": "Ori and the Will of the Wisps",
         "world_directory": "ori_wotw"
       },
-      "timestamp": "2026-03-24T00:51:14.914785+00:00"
+      "timestamp": "2026-03-24T01:17:17.301296+00:00"
     },
     "Reventure.yaml": {
       "ut_fuzz": {
@@ -15275,9 +15276,9 @@
         "errors": {
           "None": [
             0,
+            2,
             1,
             3,
-            2,
             4,
             5,
             6,
@@ -15286,15 +15287,15 @@
             9
           ]
         },
-        "elapsed_seconds": 30.12
+        "elapsed_seconds": 31.2
       },
       "world_info": {
         "game_name": "Reventure",
         "world_directory": "reventure"
       },
-      "timestamp": "2026-03-24T00:51:45.046883+00:00",
+      "timestamp": "2026-03-24T01:17:48.515571+00:00",
       "explain_stats": {
-        "game": "Reventure WorldGen_84719271504320872445",
+        "game": "Reventure WorldGen_05594871498841892311",
         "total_locations": 99,
         "locations_with_explain": 80,
         "locations_default_rule": 19,
@@ -15326,13 +15327,13 @@
             9
           ]
         },
-        "elapsed_seconds": 33.39
+        "elapsed_seconds": 34.98
       },
       "world_info": {
         "game_name": "Sonic Adventure DX",
         "world_directory": "sadx"
       },
-      "timestamp": "2026-03-24T00:52:18.475493+00:00",
+      "timestamp": "2026-03-24T01:18:23.536188+00:00",
       "explain_stats": {
         "game": "Sonic Adventure DX WorldGen_55941320597534372051",
         "total_locations": 325,
@@ -15358,13 +15359,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 31.1
+        "elapsed_seconds": 31.49
       },
       "world_info": {
         "game_name": "Super Cat Planet",
         "world_directory": "scp"
       },
-      "timestamp": "2026-03-24T00:52:49.590251+00:00",
+      "timestamp": "2026-03-24T01:18:55.045616+00:00",
       "explain_stats": {
         "game": "Super Cat Planet WorldGen_05594871498841892311",
         "total_locations": 71,
@@ -15390,13 +15391,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.86
+        "elapsed_seconds": 28.42
       },
       "world_info": {
         "game_name": "TurnipBoy",
         "world_directory": "turnipboy"
       },
-      "timestamp": "2026-03-24T00:53:18.460047+00:00",
+      "timestamp": "2026-03-24T01:19:23.480650+00:00",
       "explain_stats": {
         "game": "TurnipBoy WorldGen_05594871498841892311",
         "total_locations": 45,
@@ -15422,13 +15423,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 57.74
+        "elapsed_seconds": 57.57
       },
       "world_info": {
         "game_name": "osu!",
         "world_directory": "osu"
       },
-      "timestamp": "2026-03-24T00:54:16.229206+00:00",
+      "timestamp": "2026-03-24T01:20:21.078974+00:00",
       "explain_stats": {
         "game": "osu! WorldGen_84719271504320872445",
         "total_locations": 594,
@@ -15464,13 +15465,13 @@
             9
           ]
         },
-        "elapsed_seconds": 29.73
+        "elapsed_seconds": 29.38
       },
       "world_info": {
         "game_name": "ANIMAL WELL",
         "world_directory": "animal_well"
       },
-      "timestamp": "2026-03-24T00:45:33.904636+00:00",
+      "timestamp": "2026-03-24T01:11:11.524200+00:00",
       "explain_stats": {
         "game": "ANIMAL WELL WorldGen_05594871498841892311",
         "total_locations": 214,
@@ -15496,13 +15497,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.32
+        "elapsed_seconds": 28.0
       },
       "world_info": {
         "game_name": "Autopelago",
         "world_directory": "autopelago"
       },
-      "timestamp": "2026-03-24T00:46:02.234982+00:00",
+      "timestamp": "2026-03-24T01:11:39.538265+00:00",
       "explain_stats": {
         "game": "Autopelago WorldGen_01043188731678011336",
         "total_locations": 246,
@@ -15536,17 +15537,17 @@
             6,
             4,
             5,
-            8,
-            9
+            9,
+            8
           ]
         },
-        "elapsed_seconds": 103.53
+        "elapsed_seconds": 103.61
       },
       "world_info": {
         "game_name": "CrossCode",
         "world_directory": "crosscode"
       },
-      "timestamp": "2026-03-24T00:47:45.782461+00:00",
+      "timestamp": "2026-03-24T01:13:23.164056+00:00",
       "explain_stats": {
         "game": "CrossCode WorldGen_84719271504320872445",
         "total_locations": 584,
@@ -17961,20 +17962,20 @@
             6,
             5,
             7,
-            9,
-            2
+            2,
+            9
           ],
           "'' is not in list": [
             8
           ]
         },
-        "elapsed_seconds": 27.44
+        "elapsed_seconds": 27.3
       },
       "world_info": {
         "game_name": "Final Fantasy Tactics A2",
         "world_directory": "ffta2"
       },
-      "timestamp": "2026-03-24T00:48:13.237987+00:00"
+      "timestamp": "2026-03-24T01:13:50.481410+00:00"
     },
     "Here Comes Niko!.yaml": {
       "ut_fuzz": {
@@ -17985,13 +17986,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 40.08
+        "elapsed_seconds": 40.31
       },
       "world_info": {
         "game_name": "Here Comes Niko!",
         "world_directory": "hcniko"
       },
-      "timestamp": "2026-03-24T00:48:53.347626+00:00",
+      "timestamp": "2026-03-24T01:14:30.820733+00:00",
       "explain_stats": {
         "game": "Here Comes Niko! WorldGen_84719271504320872445",
         "total_locations": 979,
@@ -18017,13 +18018,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 32.57
+        "elapsed_seconds": 32.78
       },
       "world_info": {
         "game_name": "Kingdom Hearts RE Chain of Memories",
         "world_directory": "khrecom"
       },
-      "timestamp": "2026-03-24T00:49:25.942955+00:00"
+      "timestamp": "2026-03-24T01:15:03.626927+00:00"
     },
     "Mario Kart Double Dash.yaml": {
       "ut_fuzz": {
@@ -18036,24 +18037,24 @@
         "errors": {
           "None": [
             0,
-            2,
             3,
+            2,
             1,
             4,
-            6,
             5,
+            6,
             7,
             8,
             9
           ]
         },
-        "elapsed_seconds": 36.23
+        "elapsed_seconds": 36.55
       },
       "world_info": {
         "game_name": "Mario Kart Double Dash",
         "world_directory": "mario_kart_double_dash"
       },
-      "timestamp": "2026-03-24T00:50:02.192042+00:00",
+      "timestamp": "2026-03-24T01:15:40.195576+00:00",
       "explain_stats": {
         "game": "Mario Kart Double Dash WorldGen_01043188731678011336",
         "total_locations": 193,
@@ -18728,13 +18729,13 @@
             0
           ]
         },
-        "elapsed_seconds": 28.74
+        "elapsed_seconds": 28.6
       },
       "world_info": {
         "game_name": "Oxygen Not Included",
         "world_directory": "oni"
       },
-      "timestamp": "2026-03-24T00:50:30.946086+00:00"
+      "timestamp": "2026-03-24T01:16:08.807940+00:00"
     },
     "Rift Wizard.yaml": {
       "ut_fuzz": {
@@ -18745,17 +18746,17 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.75
+        "elapsed_seconds": 28.78
       },
       "world_info": {
         "game_name": "Rift Wizard",
         "world_directory": "riftwizard"
       },
-      "timestamp": "2026-03-24T00:50:59.712111+00:00",
+      "timestamp": "2026-03-24T01:16:37.600682+00:00",
       "explain_stats": {
-        "game": "Rift Wizard WorldGen_84719271504320872445",
-        "total_locations": 92,
-        "locations_with_explain": 89,
+        "game": "Rift Wizard WorldGen_01043188731678011336",
+        "total_locations": 83,
+        "locations_with_explain": 80,
         "locations_default_rule": 3,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -18777,13 +18778,13 @@
         "timeout": 0,
         "ignored": 10,
         "errors": {},
-        "elapsed_seconds": 25.3
+        "elapsed_seconds": 25.54
       },
       "world_info": {
         "game_name": "Sonic Heroes",
         "world_directory": "sonic_heroes"
       },
-      "timestamp": "2026-03-24T00:51:25.034964+00:00"
+      "timestamp": "2026-03-24T01:17:03.165217+00:00"
     },
     "Symphony of the Night.yaml": {
       "ut_fuzz": {
@@ -18794,13 +18795,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 34.38
+        "elapsed_seconds": 34.61
       },
       "world_info": {
         "game_name": "Symphony of the Night",
         "world_directory": "sotn"
       },
-      "timestamp": "2026-03-24T00:51:59.432390+00:00",
+      "timestamp": "2026-03-24T01:17:37.789165+00:00",
       "explain_stats": {
         "game": "Symphony of the Night WorldGen_01043188731678011336",
         "total_locations": 187,
@@ -18828,18 +18829,18 @@
         "errors": {
           "None": [
             5,
-            9,
             8,
+            9,
             6
           ]
         },
-        "elapsed_seconds": 35.6
+        "elapsed_seconds": 35.53
       },
       "world_info": {
         "game_name": "Tyrian",
         "world_directory": "tyrian"
       },
-      "timestamp": "2026-03-24T00:52:35.056235+00:00",
+      "timestamp": "2026-03-24T01:18:13.339511+00:00",
       "explain_stats": {
         "game": "Tyrian WorldGen_00679259829289197625",
         "total_locations": 181,
@@ -18865,13 +18866,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 27.95
+        "elapsed_seconds": 28.42
       },
       "world_info": {
         "game_name": "Actraiser",
         "world_directory": "actraiser"
       },
-      "timestamp": "2026-03-24T00:45:30.766403+00:00",
+      "timestamp": "2026-03-24T01:11:01.270922+00:00",
       "explain_stats": {
         "game": "Actraiser WorldGen_05594871498841892311",
         "total_locations": 173,
@@ -18899,26 +18900,26 @@
         "errors": {
           "None": [
             0,
-            2,
             3,
             1,
+            2,
             4,
-            5,
             6,
+            5,
             7,
             8,
             9
           ]
         },
-        "elapsed_seconds": 33.37
+        "elapsed_seconds": 33.33
       },
       "world_info": {
         "game_name": "Axiom Verge",
         "world_directory": "axiomverge"
       },
-      "timestamp": "2026-03-24T00:46:04.144748+00:00",
+      "timestamp": "2026-03-24T01:11:34.609791+00:00",
       "explain_stats": {
-        "game": "Axiom Verge WorldGen_01043188731678011336",
+        "game": "Axiom Verge WorldGen_84719271504320872445",
         "total_locations": 125,
         "locations_with_explain": 0,
         "locations_default_rule": 0,
@@ -19460,13 +19461,13 @@
             9
           ]
         },
-        "elapsed_seconds": 57.57
+        "elapsed_seconds": 58.0
       },
       "world_info": {
         "game_name": "Crystal Project",
         "world_directory": "crystal_project"
       },
-      "timestamp": "2026-03-24T00:47:01.744364+00:00",
+      "timestamp": "2026-03-24T01:12:32.641594+00:00",
       "explain_stats": {
         "game": "Crystal Project WorldGen_01043188731678011336",
         "total_locations": 1263,
@@ -19507,13 +19508,13 @@
             5
           ]
         },
-        "elapsed_seconds": 32.62
+        "elapsed_seconds": 32.1
       },
       "world_info": {
         "game_name": "Final Fantasy Tactics Advance",
         "world_directory": "ffta"
       },
-      "timestamp": "2026-03-24T00:47:34.390155+00:00",
+      "timestamp": "2026-03-24T01:13:04.761312+00:00",
       "explain_stats": {
         "game": "Final Fantasy Tactics Advance WorldGen_01043188731678011336",
         "total_locations": 552,
@@ -19552,13 +19553,13 @@
             9
           ]
         },
-        "elapsed_seconds": 99.57
+        "elapsed_seconds": 99.38
       },
       "world_info": {
         "game_name": "Iji",
         "world_directory": "iji"
       },
-      "timestamp": "2026-03-24T00:49:13.983781+00:00",
+      "timestamp": "2026-03-24T01:14:44.158757+00:00",
       "explain_stats": {
         "game": "Iji WorldGen_84719271504320872445",
         "total_locations": 279,
@@ -19696,23 +19697,23 @@
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 9-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nschema.SchemaMissingKeyError: Missing keys: 'Crystal', 'Garden', 'Old Tower'\n Which caused: Options.OptionError: Error generating option the_great_cave_offensive_gold_thresholds in Kirby Super Star": [
             9
           ],
-          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 3-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nschema.SchemaMissingKeyError: Missing key: 'Garden'\n Which caused: Options.OptionError: Error generating option the_great_cave_offensive_gold_thresholds in Kirby Super Star": [
-            3
-          ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 1-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nschema.SchemaMissingKeyError: Missing keys: 'Crystal', 'Garden', 'Old Tower'\n Which caused: Options.OptionError: Error generating option the_great_cave_offensive_gold_thresholds in Kirby Super Star": [
             1
           ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 2-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nschema.SchemaMissingKeyError: Missing keys: 'Crystal', 'Garden', 'Old Tower'\n Which caused: Options.OptionError: Error generating option the_great_cave_offensive_gold_thresholds in Kirby Super Star": [
             2
+          ],
+          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 3-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nschema.SchemaMissingKeyError: Missing key: 'Garden'\n Which caused: Options.OptionError: Error generating option the_great_cave_offensive_gold_thresholds in Kirby Super Star": [
+            3
           ]
         },
-        "elapsed_seconds": 24.01
+        "elapsed_seconds": 24.38
       },
       "world_info": {
         "game_name": "Kirby Super Star",
         "world_directory": "kss"
       },
-      "timestamp": "2026-03-24T00:49:38.009408+00:00"
+      "timestamp": "2026-03-24T01:15:08.551414+00:00"
     },
     "MetroCUBEvania.yaml": {
       "ut_fuzz": {
@@ -19723,15 +19724,15 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.29
+        "elapsed_seconds": 26.37
       },
       "world_info": {
         "game_name": "MetroCUBEvania",
         "world_directory": "metrocubevania"
       },
-      "timestamp": "2026-03-24T00:50:04.307049+00:00",
+      "timestamp": "2026-03-24T01:15:34.931468+00:00",
       "explain_stats": {
-        "game": "MetroCUBEvania WorldGen_01043188731678011336",
+        "game": "MetroCUBEvania WorldGen_05594871498841892311",
         "total_locations": 9,
         "locations_with_explain": 2,
         "locations_default_rule": 7,
@@ -19761,13 +19762,13 @@
             7
           ]
         },
-        "elapsed_seconds": 32.93
+        "elapsed_seconds": 32.91
       },
       "world_info": {
         "game_name": "Pizza Tower",
         "world_directory": "pizza_tower"
       },
-      "timestamp": "2026-03-24T00:50:37.253271+00:00",
+      "timestamp": "2026-03-24T01:16:07.860477+00:00",
       "explain_stats": {
         "game": "Pizza Tower WorldGen_84719271504320872445",
         "total_locations": 303,
@@ -19793,13 +19794,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.92
+        "elapsed_seconds": 30.01
       },
       "world_info": {
         "game_name": "Rift of the Necrodancer",
         "world_directory": "rotn"
       },
-      "timestamp": "2026-03-24T00:51:08.184623+00:00",
+      "timestamp": "2026-03-24T01:16:37.886224+00:00",
       "explain_stats": {
         "game": "Rift of the Necrodancer WorldGen_01043188731678011336",
         "total_locations": 294,
@@ -19833,13 +19834,13 @@
             9
           ]
         },
-        "elapsed_seconds": 27.39
+        "elapsed_seconds": 27.46
       },
       "world_info": {
         "game_name": "Sonic Rush",
         "world_directory": "sonic_rush"
       },
-      "timestamp": "2026-03-24T00:51:35.587180+00:00",
+      "timestamp": "2026-03-24T01:17:05.350967+00:00",
       "explain_stats": {
         "game": "Sonic Rush WorldGen_01043188731678011336",
         "total_locations": 67,
@@ -19878,13 +19879,13 @@
             9
           ]
         },
-        "elapsed_seconds": 32.89
+        "elapsed_seconds": 33.12
       },
       "world_info": {
         "game_name": "System Shock 2",
         "world_directory": "ss2"
       },
-      "timestamp": "2026-03-24T00:52:08.487121+00:00",
+      "timestamp": "2026-03-24T01:17:38.477041+00:00",
       "explain_stats": {
         "game": "System Shock 2 WorldGen_84719271504320872445",
         "total_locations": 1628,
@@ -19914,23 +19915,23 @@
             9
           ]
         },
-        "elapsed_seconds": 29.33
+        "elapsed_seconds": 29.52
       },
       "world_info": {
         "game_name": "Vampire Survivors",
         "world_directory": "vampire_survivors"
       },
-      "timestamp": "2026-03-24T00:52:37.830923+00:00",
+      "timestamp": "2026-03-24T01:18:08.012245+00:00",
       "explain_stats": {
         "game": "Vampire Survivors WorldGen_55941320597534372051",
-        "total_locations": 459,
-        "locations_with_explain": 371,
-        "locations_default_rule": 88,
+        "total_locations": 469,
+        "locations_with_explain": 373,
+        "locations_default_rule": 96,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 14,
-        "entrances_with_explain": 12,
+        "total_entrances": 15,
+        "entrances_with_explain": 13,
         "entrances_default_rule": 2,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
@@ -19961,13 +19962,13 @@
             8
           ]
         },
-        "elapsed_seconds": 30.42
+        "elapsed_seconds": 30.59
       },
       "world_info": {
         "game_name": "Against the Storm",
         "world_directory": "against_the_storm"
       },
-      "timestamp": "2026-03-24T00:45:37.338530+00:00",
+      "timestamp": "2026-03-24T01:11:12.217670+00:00",
       "explain_stats": {
         "game": "Against the Storm WorldGen_96945849220684217413",
         "total_locations": 217,
@@ -19994,56 +19995,55 @@
         "ignored": 7,
         "errors": {
           "None": [
-            9,
             3,
+            9,
             6
           ]
         },
-        "elapsed_seconds": 40.65
+        "elapsed_seconds": 41.04
       },
       "world_info": {
         "game_name": "Balatro",
         "world_directory": "balatro"
       },
-      "timestamp": "2026-03-24T00:46:18.004928+00:00"
+      "timestamp": "2026-03-24T01:11:53.279751+00:00"
     },
     "Crystalis.yaml": {
       "ut_fuzz": {
         "passed": false,
         "total": 10,
         "success": 1,
-        "failure": 7,
+        "failure": 6,
         "timeout": 0,
-        "ignored": 2,
+        "ignored": 3,
         "errors": {
           "None": [
             0,
-            1,
             2,
-            3,
+            1,
             6,
             7,
             9
           ]
         },
-        "elapsed_seconds": 32.39
+        "elapsed_seconds": 32.05
       },
       "world_info": {
         "game_name": "Crystalis",
         "world_directory": "crystalis"
       },
-      "timestamp": "2026-03-24T00:46:50.417309+00:00",
+      "timestamp": "2026-03-24T01:12:25.349506+00:00",
       "explain_stats": {
-        "game": "Crystalis WorldGen_05594871498841892311",
-        "total_locations": 101,
-        "locations_with_explain": 46,
+        "game": "Crystalis WorldGen_35931773795037525048",
+        "total_locations": 102,
+        "locations_with_explain": 47,
         "locations_default_rule": 55,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 444,
-        "entrances_with_explain": 166,
-        "entrances_default_rule": 278,
+        "total_entrances": 434,
+        "entrances_with_explain": 155,
+        "entrances_default_rule": 279,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -20060,35 +20060,35 @@
         "errors": {
           "None": [
             0,
-            2,
             3,
+            2,
             1,
             4,
-            5,
             6,
             7,
+            5,
             8,
             9
           ]
         },
-        "elapsed_seconds": 28.53
+        "elapsed_seconds": 28.18
       },
       "world_info": {
         "game_name": "Fire Emblem Sacred Stones",
         "world_directory": "fe8"
       },
-      "timestamp": "2026-03-24T00:47:18.964039+00:00",
+      "timestamp": "2026-03-24T01:12:53.544903+00:00",
       "explain_stats": {
-        "game": "Fire Emblem Sacred Stones WorldGen_01043188731678011336",
+        "game": "Fire Emblem Sacred Stones WorldGen_84719271504320872445",
         "total_locations": 52,
         "locations_with_explain": 0,
         "locations_default_rule": 52,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 8,
-        "entrances_with_explain": 6,
-        "entrances_default_rule": 2,
+        "total_entrances": 6,
+        "entrances_with_explain": 1,
+        "entrances_default_rule": 5,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -20118,13 +20118,13 @@
             1
           ]
         },
-        "elapsed_seconds": 25.18
+        "elapsed_seconds": 25.24
       },
       "world_info": {
         "game_name": "Into the Breach",
         "world_directory": "into_the_breach"
       },
-      "timestamp": "2026-03-24T00:47:44.149142+00:00",
+      "timestamp": "2026-03-24T01:13:18.792730+00:00",
       "explain_stats": {
         "game": "Into the Breach WorldGen_01043188731678011336",
         "total_locations": 21,
@@ -20235,13 +20235,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 36.09
+        "elapsed_seconds": 36.57
       },
       "world_info": {
         "game_name": "League of Legends",
         "world_directory": "lol"
       },
-      "timestamp": "2026-03-24T00:48:20.248857+00:00",
+      "timestamp": "2026-03-24T01:13:55.371504+00:00",
       "explain_stats": {
         "game": "League of Legends WorldGen_84719271504320872445",
         "total_locations": 667,
@@ -20267,13 +20267,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 35.16
+        "elapsed_seconds": 34.99
       },
       "world_info": {
         "game_name": "Metroid Fusion",
         "world_directory": "metroidfusion"
       },
-      "timestamp": "2026-03-24T00:48:55.419661+00:00"
+      "timestamp": "2026-03-24T01:14:30.377947+00:00"
     },
     "PlateUp.yaml": {
       "ut_fuzz": {
@@ -20289,13 +20289,13 @@
             7
           ]
         },
-        "elapsed_seconds": 64.83
+        "elapsed_seconds": 63.78
       },
       "world_info": {
         "game_name": "PlateUp",
         "world_directory": "plateup"
       },
-      "timestamp": "2026-03-24T00:50:00.286284+00:00",
+      "timestamp": "2026-03-24T01:15:34.191031+00:00",
       "explain_stats": {
         "game": "PlateUp WorldGen_55941320597534372051",
         "total_locations": 1121,
@@ -20332,21 +20332,21 @@
           "None": [
             0,
             4,
-            2,
             3,
+            2,
             6,
             9
           ]
         },
-        "elapsed_seconds": 34.71
+        "elapsed_seconds": 34.22
       },
       "world_info": {
         "game_name": "Rusted Moss",
         "world_directory": "rusted_moss"
       },
-      "timestamp": "2026-03-24T00:50:35.005648+00:00",
+      "timestamp": "2026-03-24T01:16:08.422959+00:00",
       "explain_stats": {
-        "game": "Rusted Moss WorldGen_05594871498841892311",
+        "game": "Rusted Moss WorldGen_84719271504320872445",
         "total_locations": 100,
         "locations_with_explain": 0,
         "locations_default_rule": 100,
@@ -20370,13 +20370,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 44.27
+        "elapsed_seconds": 43.78
       },
       "world_info": {
         "game_name": "Sonic the Hedgehog 1",
         "world_directory": "sonic1"
       },
-      "timestamp": "2026-03-24T00:51:19.289832+00:00",
+      "timestamp": "2026-03-24T01:16:52.217775+00:00",
       "explain_stats": {
         "game": "Sonic the Hedgehog 1 WorldGen_01043188731678011336",
         "total_locations": 208,
@@ -20409,18 +20409,18 @@
             4,
             6,
             7,
+            8,
             5,
-            9,
-            8
+            9
           ]
         },
-        "elapsed_seconds": 35.66
+        "elapsed_seconds": 35.33
       },
       "world_info": {
         "game_name": "TCG Card Shop Simulator",
         "world_directory": "tcg_card_shop_simulator"
       },
-      "timestamp": "2026-03-24T00:51:54.966805+00:00",
+      "timestamp": "2026-03-24T01:17:27.573143+00:00",
       "explain_stats": {
         "game": "TCG Card Shop Simulator WorldGen_84719271504320872445",
         "total_locations": 1335,
@@ -20450,22 +20450,22 @@
             0,
             4,
             5,
+            6,
             1,
             3,
             2,
-            7,
-            6,
+            9,
             8,
-            9
+            7
           ]
         },
-        "elapsed_seconds": 25.51
+        "elapsed_seconds": 25.38
       },
       "world_info": {
         "game_name": "Wario Land",
         "world_directory": "wl"
       },
-      "timestamp": "2026-03-24T00:52:20.488944+00:00"
+      "timestamp": "2026-03-24T01:17:52.966646+00:00"
     },
     "Air Delivery.yaml": {
       "ut_fuzz": {
@@ -20481,15 +20481,15 @@
             5
           ]
         },
-        "elapsed_seconds": 27.01
+        "elapsed_seconds": 26.77
       },
       "world_info": {
         "game_name": "Air Delivery",
         "world_directory": "air_delivery"
       },
-      "timestamp": "2026-03-24T00:45:20.097117+00:00",
+      "timestamp": "2026-03-24T01:11:02.522553+00:00",
       "explain_stats": {
-        "game": "Air Delivery WorldGen_05594871498841892311",
+        "game": "Air Delivery WorldGen_01043188731678011336",
         "total_locations": 27,
         "locations_with_explain": 17,
         "locations_default_rule": 10,
@@ -20513,13 +20513,13 @@
         "timeout": 0,
         "ignored": 3,
         "errors": {},
-        "elapsed_seconds": 29.7
+        "elapsed_seconds": 29.49
       },
       "world_info": {
         "game_name": "Brotato",
         "world_directory": "brotato"
       },
-      "timestamp": "2026-03-24T00:45:49.817079+00:00",
+      "timestamp": "2026-03-24T01:11:32.035735+00:00",
       "explain_stats": {
         "game": "Brotato WorldGen_84719271504320872445",
         "total_locations": 305,
@@ -20557,17 +20557,17 @@
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 6-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             6
           ],
-          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 1-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
-            1
-          ],
-          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 3-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
-            3
-          ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 2-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             2
           ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 8-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             8
+          ],
+          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 1-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
+            1
+          ],
+          "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 3-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
+            3
           ],
           "Encountered 1 error(s) in player files. See logs for full tracebacks.\n\n1. File 9-0.yaml document #1 (name: None) is invalid. Please fix your yaml.\nNotImplementedError: Cannot Convert from non-dictionary, got <class 'NoneType'>\n Which caused: Options.OptionError: Error generating option level_placements in Cuphead": [
             9
@@ -20576,13 +20576,13 @@
             7
           ]
         },
-        "elapsed_seconds": 25.35
+        "elapsed_seconds": 25.46
       },
       "world_info": {
         "game_name": "Cuphead",
         "world_directory": "cuphead"
       },
-      "timestamp": "2026-03-24T00:46:15.183599+00:00"
+      "timestamp": "2026-03-24T01:11:57.512423+00:00"
     },
     "Frogmonster.yaml": {
       "ut_fuzz": {
@@ -20595,24 +20595,24 @@
         "errors": {
           "None": [
             0,
-            3,
             2,
+            3,
             1,
             4,
-            6,
             5,
             7,
+            6,
             8,
             9
           ]
         },
-        "elapsed_seconds": 34.61
+        "elapsed_seconds": 33.54
       },
       "world_info": {
         "game_name": "Frogmonster",
         "world_directory": "frogmonster"
       },
-      "timestamp": "2026-03-24T00:46:49.798172+00:00",
+      "timestamp": "2026-03-24T01:12:31.059998+00:00",
       "explain_stats": {
         "game": "Frogmonster WorldGen_01043188731678011336",
         "total_locations": 120,
@@ -20638,13 +20638,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 35.81
+        "elapsed_seconds": 35.12
       },
       "world_info": {
         "game_name": "Isles Of Sea And Sky",
         "world_directory": "isles_of_sea_and_sky"
       },
-      "timestamp": "2026-03-24T00:47:25.620929+00:00",
+      "timestamp": "2026-03-24T01:13:06.189017+00:00",
       "explain_stats": {
         "game": "Isles Of Sea And Sky WorldGen_01043188731678011336",
         "total_locations": 586,
@@ -20675,13 +20675,13 @@
             8
           ]
         },
-        "elapsed_seconds": 34.14
+        "elapsed_seconds": 34.23
       },
       "world_info": {
         "game_name": "Lego Star Wars: The Complete Saga",
         "world_directory": "lego_star_wars_tcs"
       },
-      "timestamp": "2026-03-24T00:47:59.811629+00:00"
+      "timestamp": "2026-03-24T01:13:40.465697+00:00"
     },
     "Metroid Zero Mission.yaml": {
       "ut_fuzz": {
@@ -20694,24 +20694,24 @@
         "errors": {
           "None": [
             0,
-            1,
             2,
+            1,
             3,
             4,
-            5,
             6,
+            5,
             7,
             8,
             9
           ]
         },
-        "elapsed_seconds": 32.87
+        "elapsed_seconds": 31.9
       },
       "world_info": {
         "game_name": "Metroid: Zero Mission",
         "world_directory": "mzm"
       },
-      "timestamp": "2026-03-24T00:48:32.701704+00:00",
+      "timestamp": "2026-03-24T01:14:12.376638+00:00",
       "explain_stats": {
         "game": "Metroid: Zero Mission WorldGen_05594871498841892311",
         "total_locations": 101,
@@ -20733,8 +20733,8 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 7,
-        "timeout": 3,
+        "failure": 8,
+        "timeout": 2,
         "ignored": 0,
         "errors": {
           "None": [
@@ -20743,30 +20743,34 @@
             3,
             2,
             7,
+            5,
             8,
             9
           ],
           "<class 'TimeoutError'>": [
-            5,
             4,
             6
           ]
         },
-        "elapsed_seconds": 157.47
+        "elapsed_seconds": 152.42
       },
       "world_info": {
         "game_name": "Pokemon FireRed and LeafGreen",
         "world_directory": "pokemon_frlg"
       },
-      "timestamp": "2026-03-24T00:51:10.218945+00:00",
+      "timestamp": "2026-03-24T01:16:44.846639+00:00",
       "explain_stats": {
-        "game": "Pokemon FireRed and LeafGreen WorldGen_55941320597534372051",
-        "total_locations": 1161,
-        "locations_with_explain": 221,
-        "locations_default_rule": 864,
-        "locations_without_explain": 76,
-        "explain_coverage_percent": 74.41,
+        "game": "Pokemon FireRed and LeafGreen WorldGen_84719271504320872445",
+        "total_locations": 654,
+        "locations_with_explain": 244,
+        "locations_default_rule": 363,
+        "locations_without_explain": 47,
+        "explain_coverage_percent": 83.85,
         "locations_without_explain_list": [
+          {
+            "name": "Cerulean Gym - Hidden Item in Water",
+            "region": "Cerulean Gym"
+          },
           {
             "name": "Celadon Game Corner Prize Room - Prize Item 1",
             "region": "Celadon Game Corner Prize Room"
@@ -20816,92 +20820,28 @@
             "region": "Pokemon Lab Experiment Room"
           },
           {
+            "name": "Diglett's Cave B1F - Item",
+            "region": "Diglett's Cave B1F"
+          },
+          {
             "name": "Rock Tunnel 1F - Northeast Area Item",
             "region": "Rock Tunnel 1F (Northeast)"
-          },
-          {
-            "name": "Rock Tunnel 1F - PokeManiac Ashton Reward",
-            "region": "Rock Tunnel 1F (Northeast)"
-          },
-          {
-            "name": "Rock Tunnel 1F - Hiker Lenny Reward",
-            "region": "Rock Tunnel 1F (Northwest)"
-          },
-          {
-            "name": "Rock Tunnel 1F - Hiker Oliver Reward",
-            "region": "Rock Tunnel 1F (Northwest)"
           },
           {
             "name": "Rock Tunnel 1F - Northwest Area Item",
             "region": "Rock Tunnel 1F (Northwest)"
           },
           {
-            "name": "Rock Tunnel 1F - Hiker Lucas Reward",
-            "region": "Rock Tunnel 1F (Northwest)"
-          },
-          {
-            "name": "Rock Tunnel 1F - Picnicker Leah Reward",
-            "region": "Rock Tunnel 1F (South)"
-          },
-          {
-            "name": "Rock Tunnel 1F - Picnicker Ariana Reward",
-            "region": "Rock Tunnel 1F (South)"
-          },
-          {
             "name": "Rock Tunnel 1F - South Area Item",
             "region": "Rock Tunnel 1F (South)"
-          },
-          {
-            "name": "Rock Tunnel 1F - Picnicker Dana Reward",
-            "region": "Rock Tunnel 1F (South)"
-          },
-          {
-            "name": "Rock Tunnel B1F - PokeManiac Winston Reward",
-            "region": "Rock Tunnel B1F (Southeast)"
           },
           {
             "name": "Rock Tunnel B1F - Southeast Area Item",
             "region": "Rock Tunnel B1F (Southeast)"
           },
           {
-            "name": "Rock Tunnel B1F - Picnicker Martha Reward",
-            "region": "Rock Tunnel B1F (Southeast)"
-          },
-          {
-            "name": "Rock Tunnel B1F - PokeManiac Steve Reward",
-            "region": "Rock Tunnel B1F (Southeast)"
-          },
-          {
-            "name": "Rock Tunnel B1F - Hiker Allen Reward",
-            "region": "Rock Tunnel B1F (Southeast)"
-          },
-          {
-            "name": "Rock Tunnel B1F - Hiker Eric Reward",
-            "region": "Rock Tunnel B1F (Southeast)"
-          },
-          {
-            "name": "Rock Tunnel B1F - Picnicker Sofia Reward",
-            "region": "Rock Tunnel B1F (Northwest)"
-          },
-          {
             "name": "Rock Tunnel B1F - Northwest Area Item",
             "region": "Rock Tunnel B1F (Northwest)"
-          },
-          {
-            "name": "Rock Tunnel B1F - Hiker Dudley Reward",
-            "region": "Rock Tunnel B1F (Northwest)"
-          },
-          {
-            "name": "Rock Tunnel B1F - PokeManiac Cooper Reward",
-            "region": "Rock Tunnel B1F (Northwest)"
-          },
-          {
-            "name": "Victory Road 1F - Cooltrainer Naomi Reward",
-            "region": "Victory Road 1F (North)"
-          },
-          {
-            "name": "Victory Road 1F - North Rock Hidden Item",
-            "region": "Victory Road 1F (North)"
           },
           {
             "name": "Victory Road 1F - North Item (Right)",
@@ -20912,23 +20852,7 @@
             "region": "Victory Road 1F (North)"
           },
           {
-            "name": "Victory Road 1F - Center Rock Hidden Item",
-            "region": "Victory Road 1F (North)"
-          },
-          {
-            "name": "Victory Road 1F - Cooltrainer Rolando Reward",
-            "region": "Victory Road 1F (North)"
-          },
-          {
-            "name": "Victory Road 2F - Black Belt Daisuke Reward",
-            "region": "Victory Road 2F (Center)"
-          },
-          {
             "name": "Victory Road 2F - Item Below Plateau",
-            "region": "Victory Road 2F (Center)"
-          },
-          {
-            "name": "Victory Road 2F - Juggler Nelson Reward",
             "region": "Victory Road 2F (Center)"
           },
           {
@@ -20936,28 +20860,12 @@
             "region": "Victory Road 2F (Center)"
           },
           {
-            "name": "Victory Road 2F - Tamer Vincent Reward",
-            "region": "Victory Road 2F (Center)"
-          },
-          {
-            "name": "Victory Road 2F - Juggler Gregory Reward",
-            "region": "Victory Road 2F (Center)"
-          },
-          {
             "name": "Victory Road 2F - Northeast Item",
             "region": "Victory Road 2F (Center)"
           },
           {
-            "name": "Victory Road 2F - PokeManiac Dawson Reward",
-            "region": "Victory Road 2F (Northwest)"
-          },
-          {
             "name": "Victory Road 2F - Northwest Item",
             "region": "Victory Road 2F (Northwest)"
-          },
-          {
-            "name": "Victory Road 3F - Cooltrainer George Reward",
-            "region": "Victory Road 3F (North)"
           },
           {
             "name": "Victory Road 3F - Northeast Item",
@@ -20966,22 +20874,6 @@
           {
             "name": "Victory Road 3F - Northwest Item",
             "region": "Victory Road 3F (North)"
-          },
-          {
-            "name": "Victory Road 3F - Cooltrainer Alexa Reward",
-            "region": "Victory Road 3F (North)"
-          },
-          {
-            "name": "Victory Road 3F - Cooltrainer Colby Reward",
-            "region": "Victory Road 3F (Southwest)"
-          },
-          {
-            "name": "Victory Road 3F - Cooltrainer Caroline Reward",
-            "region": "Victory Road 3F (Southwest)"
-          },
-          {
-            "name": "Victory Road 3F - Cool Couple Ray & Tyra Reward",
-            "region": "Victory Road 3F (Southeast)"
           },
           {
             "name": "Mt. Ember Exterior - Item Near Summit",
@@ -21012,10 +20904,6 @@
             "region": "One Island Pokemon Center 1F"
           },
           {
-            "name": "One Island Pokemon Center 1F - Celio Gift (Deliver Sapphire)",
-            "region": "One Island Pokemon Center 1F"
-          },
-          {
             "name": "Kindle Road - Plateau Item",
             "region": "Kindle Road (Center)"
           },
@@ -21036,16 +20924,16 @@
             "region": "Three Island Town (North)"
           },
           {
-            "name": "Three Island Town - Hidden Item Behind West Fence",
-            "region": "Three Island Town (North)"
-          },
-          {
             "name": "Four Island Town - Beach Item",
             "region": "Four Island Town"
           },
           {
             "name": "Five Isle Meadow - Item Behind Cuttable Tree",
             "region": "Five Isle Meadow"
+          },
+          {
+            "name": "Selphy's House - Selphy Gift (Show Pokemon)",
+            "region": "Selphy's House"
           },
           {
             "name": "Ruin Valley - Southeast Item",
@@ -21064,19 +20952,15 @@
             "region": "Sevault Canyon"
           },
           {
-            "name": "Route 10 - Hidden Item Behind Cuttable Tree",
-            "region": "Route 10 (North)"
-          },
-          {
             "name": "Route 25 - Item Near Bush",
             "region": "Route 25"
           }
         ],
         "total_entrances": 1830,
-        "entrances_with_explain": 133,
-        "entrances_default_rule": 1478,
-        "entrances_without_explain": 219,
-        "entrance_explain_coverage_percent": 37.78,
+        "entrances_with_explain": 157,
+        "entrances_default_rule": 1444,
+        "entrances_without_explain": 229,
+        "entrance_explain_coverage_percent": 40.67,
         "entrances_without_explain_list": [
           {
             "name": "Pallet Town Surfing Spot",
@@ -21179,6 +21063,11 @@
             "to_region": "Vermilion City (Water)"
           },
           {
+            "name": "Lavender Town Exit (South)",
+            "from_region": "Lavender Town",
+            "to_region": "Route 12 (North)"
+          },
+          {
             "name": "Celadon City Cuttable Tree (Top)",
             "from_region": "Celadon City",
             "to_region": "Celadon City (Near Gym)"
@@ -21214,6 +21103,21 @@
             "to_region": "S.S. Anne Exterior (Water)"
           },
           {
+            "name": "Diglett's Cave B1F Land Battle",
+            "from_region": "Diglett's Cave B1F",
+            "to_region": "Diglett's Cave B1F (Land Encounters)"
+          },
+          {
+            "name": "Diglett's Cave B1F Northwest Ladder",
+            "from_region": "Diglett's Cave B1F",
+            "to_region": "Diglett's Cave North Entrance"
+          },
+          {
+            "name": "Diglett's Cave B1F Southeast Ladder",
+            "from_region": "Diglett's Cave B1F",
+            "to_region": "Diglett's Cave South Entrance"
+          },
+          {
             "name": "Rock Tunnel 1F (Northeast) Land Battle",
             "from_region": "Rock Tunnel 1F (Northeast)",
             "to_region": "Rock Tunnel 1F (Land Encounters)"
@@ -21221,12 +21125,12 @@
           {
             "name": "Rock Tunnel 1F North Ladder",
             "from_region": "Rock Tunnel 1F (Northeast)",
-            "to_region": "Route 10 (North)"
+            "to_region": "Route 23 (North)"
           },
           {
             "name": "Rock Tunnel 1F Northeast Ladder",
             "from_region": "Rock Tunnel 1F (Northeast)",
-            "to_region": "Diglett's Cave B1F"
+            "to_region": "Rock Tunnel B1F (Southeast)"
           },
           {
             "name": "Rock Tunnel 1F (Northwest) Land Battle",
@@ -21236,12 +21140,12 @@
           {
             "name": "Rock Tunnel 1F Northwest Ladder",
             "from_region": "Rock Tunnel 1F (Northwest)",
-            "to_region": "Viridian Forest North Gate"
+            "to_region": "Rock Tunnel B1F (Southeast)"
           },
           {
             "name": "Rock Tunnel 1F Center Ladder",
             "from_region": "Rock Tunnel 1F (Northwest)",
-            "to_region": "Silph Co. 10F"
+            "to_region": "Rock Tunnel B1F (Northwest)"
           },
           {
             "name": "Rock Tunnel 1F (South) Land Battle",
@@ -21256,7 +21160,7 @@
           {
             "name": "Rock Tunnel 1F Exit",
             "from_region": "Rock Tunnel 1F (South)",
-            "to_region": "Route 10 (South)"
+            "to_region": "Route 4 (East)"
           },
           {
             "name": "Rock Tunnel B1F (Southeast) Land Battle",
@@ -21266,12 +21170,12 @@
           {
             "name": "Rock Tunnel B1F Southeast Ladder",
             "from_region": "Rock Tunnel B1F (Southeast)",
-            "to_region": "S.S. Anne B1F Room 2"
+            "to_region": "Rock Tunnel 1F (Northeast)"
           },
           {
             "name": "Rock Tunnel B1F Northeast Ladder",
             "from_region": "Rock Tunnel B1F (Southeast)",
-            "to_region": "Rocket Hideout B2F"
+            "to_region": "Rock Tunnel 1F (Northwest)"
           },
           {
             "name": "Rock Tunnel B1F (Northwest) Land Battle",
@@ -21281,7 +21185,7 @@
           {
             "name": "Rock Tunnel B1F Center Ladder",
             "from_region": "Rock Tunnel B1F (Northwest)",
-            "to_region": "Viridian City (South)"
+            "to_region": "Rock Tunnel 1F (Northwest)"
           },
           {
             "name": "Rock Tunnel B1F Northwest Ladder",
@@ -21426,7 +21330,7 @@
           {
             "name": "Victory Road 1F Exit",
             "from_region": "Victory Road 1F (South)",
-            "to_region": "Route 23 (Near Cave)"
+            "to_region": "Route 20 (Near North Cave)"
           },
           {
             "name": "Victory Road 1F (North) Land Battle",
@@ -21441,7 +21345,7 @@
           {
             "name": "Victory Road 1F Ladder",
             "from_region": "Victory Road 1F (North)",
-            "to_region": "S.S. Anne 2F Corridor"
+            "to_region": "Victory Road 2F (Southwest)"
           },
           {
             "name": "Victory Road 2F (Southwest) Land Battle",
@@ -21456,7 +21360,7 @@
           {
             "name": "Victory Road 2F West Ladder",
             "from_region": "Victory Road 2F (Southwest)",
-            "to_region": "Silph Co. 10F"
+            "to_region": "Victory Road 1F (North)"
           },
           {
             "name": "Victory Road 2F (Center) Land Battle",
@@ -21471,7 +21375,7 @@
           {
             "name": "Victory Road 2F Center Ladder",
             "from_region": "Victory Road 2F (Center)",
-            "to_region": "Safari Zone Center Area (Northwest)"
+            "to_region": "Victory Road 3F (North)"
           },
           {
             "name": "Victory Road 2F (Northwest) Land Battle",
@@ -21486,7 +21390,7 @@
           {
             "name": "Victory Road 2F Northwest Ladder",
             "from_region": "Victory Road 2F (Northwest)",
-            "to_region": "Mt. Ember Summit Path 2F"
+            "to_region": "Victory Road 3F (North)"
           },
           {
             "name": "Victory Road 2F (Southeast) Land Battle",
@@ -21496,7 +21400,7 @@
           {
             "name": "Victory Road 2F Southeast Ladder",
             "from_region": "Victory Road 2F (Southeast)",
-            "to_region": "Cerulean Cave 2F (Center)"
+            "to_region": "Victory Road 3F (Southeast)"
           },
           {
             "name": "Victory Road 2F (East) Land Battle",
@@ -21506,12 +21410,12 @@
           {
             "name": "Victory Road 2F East Ladder",
             "from_region": "Victory Road 2F (East)",
-            "to_region": "Saffron City"
+            "to_region": "Victory Road 3F (Southeast)"
           },
           {
             "name": "Victory Road 2F Exit",
             "from_region": "Victory Road 2F (East)",
-            "to_region": "Route 23 (North)"
+            "to_region": "Green Path (East)"
           },
           {
             "name": "Victory Road 3F (North) Land Battle",
@@ -21526,12 +21430,12 @@
           {
             "name": "Victory Road 3F Northwest Ladder",
             "from_region": "Victory Road 3F (North)",
-            "to_region": "Saffron Poke Mart"
+            "to_region": "Victory Road 2F (Northwest)"
           },
           {
             "name": "Victory Road 3F Northeast Ladder",
             "from_region": "Victory Road 3F (North)",
-            "to_region": "Pokemon Tower 2F"
+            "to_region": "Victory Road 2F (Center)"
           },
           {
             "name": "Victory Road 3F (Southwest) Land Battle",
@@ -21561,12 +21465,12 @@
           {
             "name": "Victory Road 3F Southeast Ladder (Top)",
             "from_region": "Victory Road 3F (Southeast)",
-            "to_region": "Fuchsia City"
+            "to_region": "Victory Road 2F (East)"
           },
           {
             "name": "Victory Road 3F Southeast Ladder (Bottom)",
             "from_region": "Victory Road 3F (Southeast)",
-            "to_region": "Underground Path East-West Tunnel"
+            "to_region": "Victory Road 2F (Southeast)"
           },
           {
             "name": "Mt. Ember Exterior South Ledge (Bottom)",
@@ -21831,7 +21735,7 @@
           {
             "name": "Dotted Hole",
             "from_region": "Ruin Valley",
-            "to_region": "Dotted Hole 1F"
+            "to_region": "Rocket Hideout B1F (North)"
           },
           {
             "name": "Green Path Surfing Spot",
@@ -21899,12 +21803,12 @@
             "to_region": "Route 2 (Southeast)"
           },
           {
-            "name": "Route 2 North Cuttable Tree (Top)",
+            "name": "Route 2 Smashable Rock (Top)",
             "from_region": "Route 2 (Northwest)",
             "to_region": "Route 2 (Northeast)"
           },
           {
-            "name": "Route 2 North Cuttable Tree (Bottom)",
+            "name": "Route 2 Smashable Rock (Bottom)",
             "from_region": "Route 2 (Northeast)",
             "to_region": "Route 2 (Northwest)"
           },
@@ -22004,6 +21908,11 @@
             "to_region": "Route 10 (North Water)"
           },
           {
+            "name": "Route 10 (South) Surfing Spot",
+            "from_region": "Route 10 (South)",
+            "to_region": "Route 10 (South Water)"
+          },
+          {
             "name": "Route 10 Waterfall (Drop)",
             "from_region": "Route 10 (North Water)",
             "to_region": "Route 10 (South Water)"
@@ -22034,9 +21943,24 @@
             "to_region": "Route 11 (Water)"
           },
           {
+            "name": "Route 11 Exit (East)",
+            "from_region": "Route 11 (East)",
+            "to_region": "Route 12 (West)"
+          },
+          {
+            "name": "Route 12 Exit (West)",
+            "from_region": "Route 12 (West)",
+            "to_region": "Route 11 (East)"
+          },
+          {
             "name": "Route 12 (North) Surfing Spot",
             "from_region": "Route 12 (North)",
             "to_region": "Route 12 (North Water)"
+          },
+          {
+            "name": "Route 12 Exit (North)",
+            "from_region": "Route 12 (North)",
+            "to_region": "Lavender Town"
           },
           {
             "name": "Route 12 (Center) Surfing Spot",
@@ -22059,6 +21983,11 @@
             "to_region": "Route 12 (Behind South Tree)"
           },
           {
+            "name": "Route 12 Exit (South)",
+            "from_region": "Route 12 (South)",
+            "to_region": "Route 13"
+          },
+          {
             "name": "Route 13 Surfing Spot",
             "from_region": "Route 13",
             "to_region": "Route 13 (Water)"
@@ -22067,6 +21996,11 @@
             "name": "Route 13 Cuttable Tree",
             "from_region": "Route 13",
             "to_region": "Route 13 (Behind Tree)"
+          },
+          {
+            "name": "Route 13 Exit (North)",
+            "from_region": "Route 13",
+            "to_region": "Route 12 (South)"
           },
           {
             "name": "Route 14 Ledge",
@@ -22097,16 +22031,6 @@
             "name": "Route 16 Cuttable Tree (Top)",
             "from_region": "Route 16 (Northeast)",
             "to_region": "Route 16 (Southeast)"
-          },
-          {
-            "name": "Route 16 Smashable Rock (Top)",
-            "from_region": "Route 16 (Northeast)",
-            "to_region": "Route 16 (Center)"
-          },
-          {
-            "name": "Route 16 Smashable Rock (Bottom)",
-            "from_region": "Route 16 (Center)",
-            "to_region": "Route 16 (Northeast)"
           },
           {
             "name": "Route 19 Surfing Spot",
@@ -22151,6 +22075,16 @@
           {
             "name": "Route 23 (South) Surfing Spot",
             "from_region": "Route 23 (South)",
+            "to_region": "Route 23 (South Water)"
+          },
+          {
+            "name": "Route 23 Waterfall (Climb)",
+            "from_region": "Route 23 (South Water)",
+            "to_region": "Route 23 (North Water)"
+          },
+          {
+            "name": "Route 23 Waterfall (Drop)",
+            "from_region": "Route 23 (North Water)",
             "to_region": "Route 23 (South Water)"
           },
           {
@@ -22200,13 +22134,13 @@
             9
           ]
         },
-        "elapsed_seconds": 132.19
+        "elapsed_seconds": 123.49
       },
       "world_info": {
         "game_name": "Sentinels of the Multiverse",
         "world_directory": "sotm"
       },
-      "timestamp": "2026-03-24T00:53:22.433090+00:00"
+      "timestamp": "2026-03-24T01:18:48.352571+00:00"
     },
     "Soul Blazer.yaml": {
       "ut_fuzz": {
@@ -22222,13 +22156,13 @@
             1
           ]
         },
-        "elapsed_seconds": 31.83
+        "elapsed_seconds": 31.79
       },
       "world_info": {
         "game_name": "Soul Blazer",
         "world_directory": "soulblazer"
       },
-      "timestamp": "2026-03-24T00:53:54.277984+00:00",
+      "timestamp": "2026-03-24T01:19:20.153439+00:00",
       "explain_stats": {
         "game": "Soul Blazer WorldGen_01043188731678011336",
         "total_locations": 300,
@@ -22265,24 +22199,24 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.8
+        "elapsed_seconds": 29.11
       },
       "world_info": {
         "game_name": "TOEM: A Photo Adventure",
         "world_directory": "toem"
       },
-      "timestamp": "2026-03-24T00:54:23.090780+00:00",
+      "timestamp": "2026-03-24T01:19:49.277921+00:00",
       "explain_stats": {
-        "game": "TOEM original WorldGen_01043188731678011336",
-        "total_locations": 191,
+        "game": "TOEM original WorldGen_84719271504320872445",
+        "total_locations": 214,
         "locations_with_explain": 4,
-        "locations_default_rule": 187,
+        "locations_default_rule": 210,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 5,
+        "total_entrances": 6,
         "entrances_with_explain": 5,
-        "entrances_default_rule": 0,
+        "entrances_default_rule": 1,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -22297,13 +22231,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 75.42
+        "elapsed_seconds": 68.37
       },
       "world_info": {
         "game_name": "Watery Words",
         "world_directory": "waterywords"
       },
-      "timestamp": "2026-03-24T00:55:38.515618+00:00",
+      "timestamp": "2026-03-24T01:20:57.657646+00:00",
       "explain_stats": {
         "game": "Watery Words WorldGen_84719271504320872445",
         "total_locations": 150,
@@ -22329,13 +22263,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 28.27
+        "elapsed_seconds": 27.88
       },
       "world_info": {
         "game_name": "An Untitled Story",
         "world_directory": "aus"
       },
-      "timestamp": "2026-03-24T00:45:22.326362+00:00",
+      "timestamp": "2026-03-24T01:11:04.193114+00:00",
       "explain_stats": {
         "game": "An Untitled Story WorldGen_84719271504320872445",
         "total_locations": 166,
@@ -22476,24 +22410,24 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 30.53
+        "elapsed_seconds": 30.37
       },
       "world_info": {
         "game_name": "Castlevania: Dawn of Sorrow",
         "world_directory": "cv_dos"
       },
-      "timestamp": "2026-03-24T00:45:52.869051+00:00",
+      "timestamp": "2026-03-24T01:11:34.574434+00:00",
       "explain_stats": {
-        "game": "Castlevania: Dawn of Sorrow WorldGen_01043188731678011336",
-        "total_locations": 230,
-        "locations_with_explain": 90,
-        "locations_default_rule": 140,
+        "game": "Castlevania: Dawn of Sorrow WorldGen_05594871498841892311",
+        "total_locations": 125,
+        "locations_with_explain": 61,
+        "locations_default_rule": 64,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 383,
-        "entrances_with_explain": 92,
-        "entrances_default_rule": 291,
+        "entrances_with_explain": 88,
+        "entrances_default_rule": 295,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -22508,15 +22442,15 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.63
+        "elapsed_seconds": 26.67
       },
       "world_info": {
         "game_name": "DORONKO WANKO",
         "world_directory": "doronko_wanko"
       },
-      "timestamp": "2026-03-24T00:46:19.501423+00:00",
+      "timestamp": "2026-03-24T01:12:01.249056+00:00",
       "explain_stats": {
-        "game": "DORONKO WANKO WorldGen_05594871498841892311",
+        "game": "DORONKO WANKO WorldGen_84719271504320872445",
         "total_locations": 95,
         "locations_with_explain": 4,
         "locations_default_rule": 91,
@@ -22549,17 +22483,17 @@
             8,
             9,
             1,
-            3,
-            2
+            2,
+            3
           ]
         },
-        "elapsed_seconds": 24.92
+        "elapsed_seconds": 24.43
       },
       "world_info": {
         "game_name": "GZDoom",
         "world_directory": "gzdoom"
       },
-      "timestamp": "2026-03-24T00:46:44.437704+00:00"
+      "timestamp": "2026-03-24T01:12:25.691861+00:00"
     },
     "Ittle Dew 2.yaml": {
       "ut_fuzz": {
@@ -22570,13 +22504,13 @@
         "timeout": 0,
         "ignored": 1,
         "errors": {},
-        "elapsed_seconds": 39.05
+        "elapsed_seconds": 39.4
       },
       "world_info": {
         "game_name": "Ittle Dew 2",
         "world_directory": "ittle_dew_2"
       },
-      "timestamp": "2026-03-24T00:47:23.510770+00:00",
+      "timestamp": "2026-03-24T01:13:05.112613+00:00",
       "explain_stats": {
         "game": "Ittle Dew 2 WorldGen_05594871498841892311",
         "total_locations": 235,
@@ -22605,9 +22539,9 @@
           "'CollectionState' object has no attribute 'rule_builder_cache'": [
             0,
             4,
+            2,
             5,
             3,
-            2,
             1,
             6,
             7,
@@ -22615,13 +22549,13 @@
             9
           ]
         },
-        "elapsed_seconds": 24.58
+        "elapsed_seconds": 24.35
       },
       "world_info": {
         "game_name": "Lil Gator Game",
         "world_directory": "lil_gator_game"
       },
-      "timestamp": "2026-03-24T00:47:48.095418+00:00"
+      "timestamp": "2026-03-24T01:13:29.472219+00:00"
     },
     "Minishoot Adventures.yaml": {
       "ut_fuzz": {
@@ -22638,17 +22572,17 @@
             2,
             4,
             5,
-            6,
-            7
+            7,
+            6
           ]
         },
-        "elapsed_seconds": 30.99
+        "elapsed_seconds": 31.71
       },
       "world_info": {
         "game_name": "Minishoot Adventures",
         "world_directory": "minishoot"
       },
-      "timestamp": "2026-03-24T00:48:19.098980+00:00",
+      "timestamp": "2026-03-24T01:14:01.192631+00:00",
       "explain_stats": {
         "game": "Minishoot Adventures WorldGen_84719271504320872445",
         "total_locations": 129,
@@ -22684,18 +22618,18 @@
             5,
             4,
             6,
-            7,
             9,
+            7,
             8
           ]
         },
-        "elapsed_seconds": 38.38
+        "elapsed_seconds": 42.5
       },
       "world_info": {
         "game_name": "Pokemon Mystery Dungeon Explorers of Sky",
         "world_directory": "pmd_eos"
       },
-      "timestamp": "2026-03-24T00:48:57.499961+00:00",
+      "timestamp": "2026-03-24T01:14:43.721675+00:00",
       "explain_stats": {
         "game": "Pokemon Mystery Dungeon Explorers of Sky WorldGen_96945849220684217413",
         "total_locations": 2643,
@@ -22726,13 +22660,13 @@
             7
           ]
         },
-        "elapsed_seconds": 35.78
+        "elapsed_seconds": 37.23
       },
       "world_info": {
         "game_name": "Shadow The Hedgehog",
         "world_directory": "shadow_the_hedgehog"
       },
-      "timestamp": "2026-03-24T00:49:33.323361+00:00",
+      "timestamp": "2026-03-24T01:15:20.991678+00:00",
       "explain_stats": {
         "game": "Shadow The Hedgehog WorldGen_20777137877808592492",
         "total_locations": 614,
@@ -22758,15 +22692,15 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 26.72
+        "elapsed_seconds": 26.83
       },
       "world_info": {
         "game_name": "Spinball",
         "world_directory": "spinball"
       },
-      "timestamp": "2026-03-24T00:50:00.049594+00:00",
+      "timestamp": "2026-03-24T01:15:47.830402+00:00",
       "explain_stats": {
-        "game": "Spinball WorldGen_84719271504320872445",
+        "game": "Spinball WorldGen_01043188731678011336",
         "total_locations": 2,
         "locations_with_explain": 1,
         "locations_default_rule": 1,
@@ -22801,13 +22735,13 @@
             0
           ]
         },
-        "elapsed_seconds": 36.49
+        "elapsed_seconds": 36.24
       },
       "world_info": {
         "game_name": "Tetris Attack",
         "world_directory": "tetrisattack"
       },
-      "timestamp": "2026-03-24T00:50:36.559939+00:00",
+      "timestamp": "2026-03-24T01:16:24.088495+00:00",
       "explain_stats": {
         "game": "Tetris Attack WorldGen_14089154938208861744",
         "total_locations": 300,
@@ -22833,13 +22767,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 31.83
+        "elapsed_seconds": 32.49
       },
       "world_info": {
         "game_name": "Wordipelago",
         "world_directory": "wordipelago"
       },
-      "timestamp": "2026-03-24T00:51:08.409007+00:00",
+      "timestamp": "2026-03-24T01:16:56.597415+00:00",
       "explain_stats": {
         "game": "Wordipelago WorldGen_01043188731678011336",
         "total_locations": 167,
@@ -22877,13 +22811,13 @@
             9
           ]
         },
-        "elapsed_seconds": 33.85
+        "elapsed_seconds": 32.98
       },
       "world_info": {
         "game_name": "Anodyne",
         "world_directory": "anodyne"
       },
-      "timestamp": "2026-03-24T00:45:22.768767+00:00",
+      "timestamp": "2026-03-24T01:11:03.345315+00:00",
       "explain_stats": {
         "game": "Anodyne WorldGen_01043188731678011336",
         "total_locations": 364,
@@ -22917,13 +22851,13 @@
             0
           ]
         },
-        "elapsed_seconds": 52.63
+        "elapsed_seconds": 51.38
       },
       "world_info": {
         "game_name": "Cavern of Dreams",
         "world_directory": "cavern_of_dreams"
       },
-      "timestamp": "2026-03-24T00:46:15.411867+00:00",
+      "timestamp": "2026-03-24T01:11:54.739986+00:00",
       "explain_stats": {
         "game": "Cavern of Dreams WorldGen_14089154938208861744",
         "total_locations": 478,
@@ -22957,13 +22891,13 @@
             3
           ]
         },
-        "elapsed_seconds": 36.43
+        "elapsed_seconds": 35.13
       },
       "world_info": {
         "game_name": "Deep Rock Galactic",
         "world_directory": "deep_rock_galactic"
       },
-      "timestamp": "2026-03-24T00:46:51.860833+00:00",
+      "timestamp": "2026-03-24T01:12:29.887425+00:00",
       "explain_stats": {
         "game": "Deep Rock Galactic WorldGen_05594871498841892311",
         "total_locations": 661,
@@ -22992,11 +22926,11 @@
           "compared against a str that could never be equal. RandomizeSpoilers(Off) == on": [
             0,
             5,
+            3,
+            1,
             7,
             8,
-            9,
-            3,
-            1
+            9
           ],
           "compared against a str that could never be equal. RandomizeSpoilers(Progressive) == on": [
             4,
@@ -23004,13 +22938,13 @@
             2
           ]
         },
-        "elapsed_seconds": 24.64
+        "elapsed_seconds": 23.44
       },
       "world_info": {
         "game_name": "Garfield Kart - Furious Racing",
         "world_directory": "garfkart"
       },
-      "timestamp": "2026-03-24T00:47:16.514630+00:00"
+      "timestamp": "2026-03-24T01:12:53.341304+00:00"
     },
     "Jigsaw.yaml": {
       "ut_fuzz": {
@@ -23021,13 +22955,13 @@
         "timeout": 0,
         "ignored": 0,
         "errors": {},
-        "elapsed_seconds": 33.23
+        "elapsed_seconds": 31.38
       },
       "world_info": {
         "game_name": "Jigsaw",
         "world_directory": "jigsaw"
       },
-      "timestamp": "2026-03-24T00:47:49.763068+00:00",
+      "timestamp": "2026-03-24T01:13:24.740746+00:00",
       "explain_stats": {
         "game": "Jigsaw WorldGen_84719271504320872445",
         "total_locations": 759,
@@ -23060,13 +22994,13 @@
             7
           ]
         },
-        "elapsed_seconds": 42.65
+        "elapsed_seconds": 41.57
       },
       "world_info": {
         "game_name": "Lingo 2",
         "world_directory": "lingo2"
       },
-      "timestamp": "2026-03-24T00:48:32.428542+00:00",
+      "timestamp": "2026-03-24T01:14:06.323299+00:00",
       "explain_stats": {
         "game": "Lingo 2 WorldGen_20777137877808592492",
         "total_locations": 510,
@@ -32936,15 +32870,15 @@
             8
           ]
         },
-        "elapsed_seconds": 29.16
+        "elapsed_seconds": 28.19
       },
       "world_info": {
         "game_name": "Minit",
         "world_directory": "minit"
       },
-      "timestamp": "2026-03-24T00:49:01.604771+00:00",
+      "timestamp": "2026-03-24T01:14:34.529785+00:00",
       "explain_stats": {
-        "game": "Minit WorldGen_01043188731678011336",
+        "game": "Minit WorldGen_05594871498841892311",
         "total_locations": 50,
         "locations_with_explain": 43,
         "locations_default_rule": 2,
@@ -32997,24 +32931,24 @@
         "errors": {
           "None": [
             0,
-            1,
-            4,
             2,
+            1,
             3,
+            4,
             6,
-            8,
             7,
+            8,
             5,
             9
           ]
         },
-        "elapsed_seconds": 31.23
+        "elapsed_seconds": 30.05
       },
       "world_info": {
         "game_name": "Pseudoregalia",
         "world_directory": "pseudoregalia"
       },
-      "timestamp": "2026-03-24T00:49:32.859661+00:00",
+      "timestamp": "2026-03-24T01:15:04.602234+00:00",
       "explain_stats": {
         "game": "Pseudoregalia WorldGen_05594871498841892311",
         "total_locations": 87,
@@ -33053,13 +32987,13 @@
             9
           ]
         },
-        "elapsed_seconds": 55.96
+        "elapsed_seconds": 54.6
       },
       "world_info": {
         "game_name": "Ship of Harkinian",
         "world_directory": "oot_soh"
       },
-      "timestamp": "2026-03-24T00:50:28.879365+00:00",
+      "timestamp": "2026-03-24T01:15:59.253776+00:00",
       "explain_stats": {
         "game": "Ship of Harkinian WorldGen_84719271504320872445",
         "total_locations": 1153,
@@ -33097,13 +33031,13 @@
             8
           ]
         },
-        "elapsed_seconds": 56.41
+        "elapsed_seconds": 55.74
       },
       "world_info": {
         "game_name": "Spyro 3",
         "world_directory": "spyro3"
       },
-      "timestamp": "2026-03-24T00:51:25.326076+00:00",
+      "timestamp": "2026-03-24T01:16:55.035144+00:00",
       "explain_stats": {
         "game": "Spyro 3 WorldGen_01043188731678011336",
         "total_locations": 4197,
@@ -33144,13 +33078,13 @@
             9
           ]
         },
-        "elapsed_seconds": 33.71
+        "elapsed_seconds": 32.55
       },
       "world_info": {
         "game_name": "The Legend of Zelda - Oracle of Seasons",
         "world_directory": "tloz_oos"
       },
-      "timestamp": "2026-03-24T00:51:59.075549+00:00",
+      "timestamp": "2026-03-24T01:17:27.618014+00:00",
       "explain_stats": {
         "game": "The Legend of Zelda - Oracle of Seasons WorldGen_55941320597534372051",
         "total_locations": 235,
@@ -33184,18 +33118,18 @@
             4,
             7,
             6,
-            8,
             5,
+            8,
             9
           ]
         },
-        "elapsed_seconds": 36.07
+        "elapsed_seconds": 34.75
       },
       "world_info": {
         "game_name": "XCOM 2 War of the Chosen",
         "world_directory": "x2wotc"
       },
-      "timestamp": "2026-03-24T00:52:35.168259+00:00",
+      "timestamp": "2026-03-24T01:18:02.390263+00:00",
       "explain_stats": {
         "game": "XCOM 2 War of the Chosen WorldGen_84719271504320872445",
         "total_locations": 141,
