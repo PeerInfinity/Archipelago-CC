@@ -163,16 +163,18 @@ Use the freshness report to identify which test workflows need to be run and whi
 
 Quick local checks that don't require workflow infrastructure. Run these before triggering CI workflows.
 
-### 4.1 Run local unit tests
+### 4.1 Run unit tests locally (optional early check)
+
+These are also run by workflows in Phase 5 (`unittests.yml` and `unittests_json.yml`). Running them locally first gives faster feedback before committing to workflow runs.
 
 ```bash
 pytest                    # Python unit tests (test/, test_json/, worlds/)
 npm run test:unit         # JavaScript unit tests (Vitest)
 ```
 
-### 4.2 Run documentation and coverage checks
+### 4.2 Run documentation and coverage checks (optional)
 
-These scripts are read-only by default — they report discrepancies without modifying files. Note: `generate-freshness-report.py` (Phase 3) automatically runs these same scripts with `--json` and includes their results in the freshness report. Running them here gives more detailed interactive output.
+These scripts are read-only by default — they report discrepancies without modifying files. They are already run automatically by `generate-freshness-report.py` in Phase 3 (with `--json`). Running them here gives more detailed interactive output.
 
 ```bash
 python scripts/docs/sync-rule-docs.py        # Check rule types are documented
@@ -186,13 +188,12 @@ python scripts/docs/find_orphaned_docs.py     # Check all .md files are linked f
 - `sync-script-docs.py` — Scans `scripts/` for executables and checks they're documented in `scripts/README.md`. Use `--generate` to create stubs.
 - `find_orphaned_docs.py` — Crawls markdown links from entry points (`README.md`, `docs/json/README.md`, etc.) and reports `.md` files not reachable from any entry point.
 
-### 4.3 Run additional local-only tests
+### 4.3 Run local-only tests
 
-These tests are not covered by any workflow:
+These tests are **not covered by any workflow** and must be run locally:
 
 ```bash
 python scripts/test/test_ast_format_parsing.py                   # AST format rule parsing
-python scripts/test/test-json-world-builder.py --game "Adventure" # JSON world builder round-trip
 node scripts/test/test-bidirectional-detection.js                 # Exit bidirectionality detection
 npm run bench                                                     # JS rule engine benchmarks
 ```
@@ -214,7 +215,6 @@ Run **all** of the following workflows (can be started in parallel):
 | Test All Templates (Sequential) | `test-all-sequential.yml` | `template_type`: original, worldgen, apworld |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | All UT modes (original, worldgen, hybrid, etc.) |
 | Test Spoiler Fuzzer | `test-spoiler-fuzz.yml` | Bundled and apworld modes |
-| Test Multiworld UT Fuzz | `test-multiworld-ut-fuzz.yml` | Default settings |
 | Test World Generator | `test-world-generator.yml` | `test_mode`: both |
 | Unit Tests | `unittests.yml` | |
 | Unit Tests (JSON) | `unittests_json.yml` | |
@@ -333,6 +333,33 @@ Key options:
 - `--fresh` — Delete existing target directory before cloning
 - `--skip-tests` — Skip running verification tests
 - `--test MODE` — Choose test game (`auto`, `adventure`, `alttp`, or `none`)
+
+### 7.3 Manual GUI installer test
+
+Test the installer APWorld the way an end user would — downloading it into a fresh vanilla Archipelago and running it from the Launcher GUI. This verifies the download URL, APWorld loading, and GUI components work end-to-end.
+
+Push all changes before running, since the installer downloads from GitHub:
+
+```bash
+rm -rf ~/CC/Archipelago-vanilla/
+git clone https://github.com/ArchipelagoMW/Archipelago.git ~/CC/Archipelago-vanilla/
+cd ~/CC/Archipelago-vanilla/
+mkdir -p custom_worlds
+wget -O custom_worlds/json_tools_installer.apworld \
+    https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld
+python3 -m venv .venv
+source .venv/bin/activate
+python ModuleUpdate.py -y
+python Launcher.py
+```
+
+In the Launcher GUI, verify:
+- **JSON Tools Installer** component appears and opens
+- Install completes successfully (dev version, all components including Rule Builder)
+- **JSON Tools Status** shows correct installation state
+- **JSON Tools Scripts** — run the spoiler test to verify export works
+
+**Note:** The Rule Builder component must be installed for the exporter to work. The exporter has a transitive import dependency on the fork's extended `rule_builder/__init__.py` (via `world_generator._sanitization`). Without it, the exporter silently fails to write preset files. A future fix would make the exporter fall back to AST format when the Rule Builder isn't present.
 
 ---
 
