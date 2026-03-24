@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Orig Seeded
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-24 03:06:02 UTC
 
-**Source Data Last Updated:** 2026-03-22T05:22:37
+**Source Data Last Updated:** 2026-03-23T03:33:56
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Original Universal Tracker with generation seed number.
 
@@ -31,14 +31,14 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | A Link to the Past | ❌ | ❌ 3/98 |
 | A Short Hike | ✅ | ✅ |
 | APQuest | ✅ | ✅ |
-| Adventure | ⚠️ 86/100 | ⚠️ 87/99 |
+| Adventure | ⚠️ 89/100 | ⚠️ 87/99 |
 | Aquaria | ✅ | ✅ |
 | Baking Adventure | ✅ | ✅ |
 | Blasphemous | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ | ✅ |
 | Bumper Stickers | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ | ✅ |
-| Castlevania 64 | ❌ 6/100 | ❌ 11/100 |
+| Castlevania 64 | ❌ 10/100 | ❌ 11/100 |
 | Celeste (Open World) | ❌ 46/100 | ✅ |
 | Celeste 64 | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ |
@@ -49,11 +49,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM 1993 | ⚠️ 99/100 | ✅ |
 | DOOM II | ✅ | ✅ |
 | Dark Souls III | ✅ | ✅ |
-| DepGraph | ⚠️ 81/100 | ⚠️ 81/100 |
+| DepGraph | ⚠️ 82/100 | ⚠️ 81/100 |
 | Donkey Kong Country 3 | ⚠️ 52/100 | ⚠️ 52/100 |
-| EarthBound | ❌ 29/100 | ❌ 28/100 |
+| EarthBound | ❌ 30/100 | ❌ 28/100 |
 | Factorio | ❌ | ❌ |
-| Faxanadu | ❌ 17/100 | ❌ 15/100 |
+| Faxanadu | ❌ 16/100 | ❌ 15/100 |
 | Final Fantasy | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ⚠️ 89/100 | ✅ |
 | Heretic | ✅ | ✅ |
@@ -62,26 +62,26 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Inscryption | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ⚠️ 62/100 | ✅ |
 | Journey to Ascension | ❌ | ❌ |
-| Kingdom Hearts | ❌ 18/100 | ❌ 20/99 |
+| Kingdom Hearts | ❌ 19/99 | ❌ 20/99 |
 | Kingdom Hearts 2 | ❌ 44/100 | ❌ 44/95 |
 | Kirby's Dream Land 3 | ❌ | ❌ |
 | Landstalker - The Treasures of King Nole | ❌ 31/100 | ❌ 25/100 |
-| Lingo | ❌ 19/45 | ❌ 19/45 |
+| Lingo | ❌ 20/45 | ❌ 19/45 |
 | Links Awakening DX | ❌ 23/100 | ❌ 23/100 |
 | Lufia II Ancient Cave | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ | ✅ |
-| Mega Man 2 | ⚠️ 95/100 | ⚠️ 94/99 |
+| Mega Man 2 | ⚠️ 93/100 | ⚠️ 94/99 |
 | Mega Man 3 | ❌ | ❌ |
 | MegaMan Battle Network 3 | ✅ | ✅ |
 | Meritous | ✅ | ✅ |
-| Metamath | ⚠️ 89/100 | ⚠️ 91/100 |
+| Metamath | ⚠️ 90/100 | ⚠️ 91/100 |
 | Muse Dash | ❌ | ❌ 33/99 |
 | Noita | ✅ | ✅ |
 | Ocarina of Time | ❌ | ❌ |
 | Old School Runescape | ✅ | ✅ |
 | Overcooked! 2 | ❌ 9/100 | ❌ 33/67 |
 | Paint | ✅ | ✅ |
-| Pokemon Emerald | ⚠️ 56/92 | ⚠️ 58/92 |
+| Pokemon Emerald | ⚠️ 55/92 | ⚠️ 58/92 |
 | Pokemon Red and Blue | ❌ | ❌ |
 | Raft | ✅ | ✅ |
 | Risk of Rain 2 | ✅ | ✅ |
@@ -92,26 +92,26 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Shivers | ❌ | ❌ |
 | Sonic Adventure 2 Battle | ❌ 6/100 | ❌ 12/100 |
 | Starcraft 2 | ❌ | ❌ |
-| Stardew Valley | ❌ 10/100 | ❌ 19/97 |
-| Subnautica | ❌ 12/100 | ❌ 12/100 |
+| Stardew Valley | ❌ 6/99 | ❌ 19/97 |
+| Subnautica | ❌ 13/100 | ❌ 12/100 |
 | Super Mario 64 | ❌ 28/100 | ❌ 28/99 |
-| Super Mario Land 2 | ❌ 24/100 | ❌ 21/100 |
+| Super Mario Land 2 | ❌ 20/100 | ❌ 21/100 |
 | Super Mario World | ⚠️ 55/100 | ⚠️ 55/99 |
-| Super Metroid | ❌ 6/99 | ❌ 5/57 |
+| Super Metroid | ❌ 6/100 | ❌ 5/57 |
 | TOEM original | ✅ | ✅ |
 | TOEM rule builder | ✅ | ✅ |
 | TUNIC | ✅ | ✅ |
 | Terraria | ⚠️ 98/100 | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ 9/100 | ❌ 8/100 |
+| The Messenger | ❌ 7/100 | ❌ 8/100 |
 | The Wind Waker | ❌ 4/57 | ❌ 5/54 |
 | The Witness | ✅ | ✅ |
-| Timespinner | ❌ 6/100 | ❌ 5/100 |
+| Timespinner | ❌ 4/100 | ❌ 5/100 |
 | Undertale | ✅ | ✅ |
 | VVVVVV | ⚠️ 64/100 | ⚠️ 63/100 |
 | Wargroove | ✅ | ✅ |
 | Yacht Dice | ❌ 1/100 | ❌ |
-| Yoshi's Island | ❌ 25/100 | ❌ 22/100 |
+| Yoshi's Island | ❌ 22/100 | ❌ 22/100 |
 | Yu-Gi-Oh! 2006 | ❌ 34/100 | ❌ 34/100 |
 | Zillion | ❌ | ❌ |
 | shapez | ✅ | ✅ |
