@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-24 03:34:39 UTC
 
 **Source Data Last Updated:** 2026-03-22T05:22:37
 
@@ -89,10 +89,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Satisfactory | ❌ | ❌ |
 | Saving Princess | ❌ 24/100 | ✅ |
 | Secret of Evermore | ✅ | ✅ |
-| Shivers | ❌ | ❌ |
+| Shivers | ❌ | ✅ |
 | Sonic Adventure 2 Battle | ❌ 6/100 | ✅ |
 | Starcraft 2 | ❌ | ❌ |
-| Stardew Valley | ❌ 10/100 | ❌ 19/100 |
+| Stardew Valley | ❌ 10/100 | ❌ 14/100 |
 | Subnautica | ❌ 12/100 | ✅ |
 | Super Mario 64 | ❌ 28/100 | ✅ |
 | Super Mario Land 2 | ❌ 24/100 | ✅ |
@@ -103,7 +103,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | TUNIC | ✅ | ✅ |
 | Terraria | ⚠️ 98/100 | ✅ |
 | The Legend of Zelda | ✅ | ✅ |
-| The Messenger | ❌ 9/100 | ❌ 7/100 |
+| The Messenger | ❌ 9/100 | ⚠️ 81/100 |
 | The Wind Waker | ❌ 4/57 | ✅ |
 | The Witness | ✅ | ✅ |
 | Timespinner | ❌ 6/100 | ✅ |

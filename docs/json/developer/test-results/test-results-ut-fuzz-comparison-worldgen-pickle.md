@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-24 03:34:39 UTC
 
-**Source Data Last Updated:** 2026-03-22T05:31:57
+**Source Data Last Updated:** 2026-03-22T05:44:04
 
 This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
@@ -91,10 +91,10 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Satisfactory | ✅ | ❌ | 41.8KB | ✅ | 1619.5KB |
 | Saving Princess | ✅ | ✅ | ✅ | ✅ | 33.6KB |
 | Secret of Evermore | ❌ | ✅ | 5.6KB | 7.5KB | 415.0KB |
-| Shivers | ✅ | ❌ | ✅ | ✅ | 150.1KB |
+| Shivers | ✅ | ✅ | ✅ | ✅ | 150.1KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | 262.2KB |
 | Starcraft 2 | ❌ | ❌ | 29.3KB | 90.1KB | 1086.9KB |
-| Stardew Valley | ❌ | ❌ 19/100 | 20.0KB | 9.8KB | 2558.2KB |
+| Stardew Valley | ❌ | ❌ 14/100 | 20.0KB | 9.8KB | 2558.2KB |
 | Subnautica | ✅ | ✅ | 2.2KB | ✅ | 205.5KB |
 | Super Mario 64 | ✅ | ✅ | ✅ | ✅ | 101.2KB |
 | Super Mario Land 2 | ✅ | ✅ | 96.3KB | ✅ | 919.1KB |
@@ -105,7 +105,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | TUNIC | ⚠️ 58/100 | ✅ | 3.1KB | ✅ | 649.2KB |
 | Terraria | ✅ | ✅ | 16.9KB | ✅ | 279.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 554.6KB |
-| The Messenger | ✅ | ❌ 7/100 | 15.2KB | ✅ | 210.4KB |
+| The Messenger | ✅ | ⚠️ 81/100 | 15.2KB | ✅ | 210.4KB |
 | The Wind Waker | ✅ | ✅ | 7.0KB | ✅ | 250.2KB |
 | The Witness | ❌ 15/100 | ✅ | 14.6KB | ✅ | 468.1KB |
 | Timespinner | ✅ | ✅ | 2.2KB | ✅ | 262.9KB |
