@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-03-22T01:54:45.403408+00:00",
+  "generated": "2026-03-24T01:00:19.690530+00:00",
   "fallback_order": [
     "worldgen",
     "pickle",
@@ -41,12 +41,10 @@
         "original"
       ],
       "Blasphemous": [
-        "worldgen",
         "pickle",
         "original"
       ],
       "Bomb Rush Cyberfunk": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -65,7 +63,6 @@
         "pickle"
       ],
       "Celeste (Open World)": [
-        "worldgen",
         "pickle"
       ],
       "Celeste 64": [
@@ -99,8 +96,7 @@
       ],
       "DOOM 1993": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "DOOM II": [
         "worldgen",
@@ -160,10 +156,6 @@
         "original"
       ],
       "Jak and Daxter: The Precursor Legacy": [
-        "worldgen",
-        "pickle"
-      ],
-      "Kingdom Hearts": [
         "pickle"
       ],
       "Kirby's Dream Land 3": [
@@ -174,9 +166,7 @@
         "pickle"
       ],
       "Lingo": [
-        "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Links Awakening DX": [
         "worldgen"
@@ -209,10 +199,6 @@
         "pickle",
         "original"
       ],
-      "Metamath": [
-        "worldgen",
-        "pickle"
-      ],
       "Muse Dash": [
         "worldgen",
         "pickle"
@@ -221,9 +207,6 @@
         "worldgen",
         "pickle",
         "original"
-      ],
-      "Ocarina of Time": [
-        "pickle"
       ],
       "Old School Runescape": [
         "worldgen",
@@ -243,7 +226,6 @@
         "pickle"
       ],
       "Raft": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -263,7 +245,6 @@
         "pickle"
       ],
       "Secret of Evermore": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -301,7 +282,6 @@
         "original"
       ],
       "TUNIC": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -322,7 +302,6 @@
         "pickle"
       ],
       "The Witness": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -377,7 +356,6 @@
         "original"
       ],
       "Air Delivery": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -387,9 +365,7 @@
         "original"
       ],
       "Anodyne": [
-        "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Another Crabs Treasure": [
         "pickle"
@@ -403,7 +379,6 @@
         "original"
       ],
       "Astalon": [
-        "worldgen",
         "original"
       ],
       "Autopelago": [
@@ -463,7 +438,6 @@
         "pickle"
       ],
       "Final Fantasy Tactics Advance": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -502,7 +476,8 @@
         "original"
       ],
       "Jigsaw": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "K-On! After School Live!!": [
         "worldgen",
@@ -528,11 +503,10 @@
         "original"
       ],
       "League of Legends": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "Lego Star Wars: The Complete Saga": [
-        "worldgen",
-        "pickle",
         "original"
       ],
       "Lingo 2": [
@@ -595,7 +569,6 @@
         "pickle"
       ],
       "Pseudoregalia": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -613,7 +586,6 @@
         "original"
       ],
       "Reventure": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -645,7 +617,6 @@
         "original"
       ],
       "Sonic Rush": [
-        "worldgen",
         "pickle"
       ],
       "Sonic the Hedgehog 1": [
@@ -654,7 +625,6 @@
         "original"
       ],
       "Soul Blazer": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -698,7 +668,8 @@
         "pickle"
       ],
       "The Sims 4": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "ToeJam and Earl": [
         "pickle"
@@ -726,23 +697,23 @@
         "original"
       ],
       "XCOM 2 War of the Chosen": [
-        "worldgen",
         "pickle",
         "original"
       ],
       "Yu-Gi-Oh! Dungeon Dice Monsters": [
         "worldgen",
-        "pickle",
         "original"
       ],
       "Yu-Gi-Oh! Forbidden Memories": [
         "pickle"
       ],
       "Zelda II: The Adventure of Link": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ],
       "osu!": [
-        "worldgen"
+        "worldgen",
+        "pickle"
       ]
     }
   }

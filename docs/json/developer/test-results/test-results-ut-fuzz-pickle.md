@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-22 05:31:57 UTC
+**Generated:** 2026-03-23 03:48:19 UTC
 
 **Source Data Created:** 2026-03-22T05:31:57.675742+00:00
 
@@ -37,9 +37,9 @@
 
 - **Expected Passes:** 74 (passes pickle mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 11 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 2 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 1 (expected to pass but timed out)
+- **Expected Failures:** 14 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
 
@@ -217,15 +217,18 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Yu-Gi-Oh! 2006 | 100 | 100 | 0 | 0 | 100.0% |
 | shapez | 100 | 100 | 0 | 0 | 100.0% |
 
-### Expected Failures (11)
+### Expected Failures (14)
 
 Games NOT expected to pass pickle mode and failed as expected.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
 | Journey to Ascension | 100 | 0 | 100 | 0 | 0.0% |
+| Kingdom Hearts | 100 | 99 | 0 | 1 | 99.0% |
 | Kingdom Hearts 2 | 100 | 44 | 51 | 0 | 44.0% |
 | Links Awakening DX | 100 | 23 | 77 | 0 | 23.0% |
+| Metamath | 100 | 99 | 1 | 0 | 99.0% |
+| Ocarina of Time | 100 | 96 | 2 | 0 | 96.0% |
 | Pokemon Emerald | 100 | 86 | 6 | 0 | 86.0% |
 | Satisfactory | 100 | 0 | 100 | 0 | 0.0% |
 | Shivers | 100 | 0 | 99 | 1 | 0.0% |
@@ -234,23 +237,6 @@ Games NOT expected to pass pickle mode and failed as expected.
 | Super Metroid | 100 | 51 | 8 | 0 | 51.0% |
 | The Messenger | 100 | 7 | 93 | 0 | 7.0% |
 | Zillion | 100 | 79 | 0 | 14 | 79.0% |
-
-### Unexpected Failures (Logic Mismatch) (2)
-
-Games expected to pass pickle mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Metamath | 100 | 99 | 1 | 0 | 99.0% |
-| Ocarina of Time | 100 | 96 | 2 | 0 | 96.0% |
-
-### Unexpected Failures (Timeout Only) (1)
-
-Games expected to pass pickle mode but failed only due to timeouts.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Kingdom Hearts | 100 | 99 | 0 | 1 | 99.0% |
 
 ## Notes
 
