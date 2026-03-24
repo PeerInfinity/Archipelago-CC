@@ -227,6 +227,13 @@ jobs:
           echo "Installed APWorlds:"
           ls -la custom_worlds/ || echo "No apworlds installed"
 
+      - name: Generate templates for APWorlds
+        if: inputs.template_type == 'apworld'
+        run: |
+          source .venv/bin/activate
+          echo "Generating templates for installed apworlds..."
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
       - name: Generate world mapping for apworlds
         if: inputs.template_type == 'apworld'
         run: |
