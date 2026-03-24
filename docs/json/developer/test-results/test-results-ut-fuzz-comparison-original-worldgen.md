@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-24 03:35:37 UTC
 
 **Source Data Last Updated:** 2026-03-22T05:22:37
 
@@ -59,14 +59,14 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Final Fantasy | ✅ | ✅ | ✅ | ✅ | 50.3KB |
 | Final Fantasy Mystic Quest | ⚠️ 89/100 | ✅ | 13.9KB | ✅ | 548.1KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 367.6KB |
-| Hollow Knight | ❌ 9/100 | ❌ 8/100 | ✅ | ✅ | 3501.1KB |
+| Hollow Knight | ❌ 9/100 | ❌ | ✅ | ✅ | 3501.1KB |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 100.4KB |
 | Inscryption | ✅ | ✅ | 8.0KB | ✅ | 84.3KB |
 | Jak and Daxter: The Precursor Legacy | ⚠️ 62/100 | ❌ 1/100 | 21.7KB | 4.6KB | 257.9KB |
 | Journey to Ascension | ❌ | ❌ | ✅ | ✅ | 48.3KB |
-| Kingdom Hearts | ❌ 18/100 | ❌ 18/99 | ✅ | ✅ | 748.7KB |
+| Kingdom Hearts | ❌ 18/100 | ❌ 45/100 | ✅ | ✅ | 748.7KB |
 | Kingdom Hearts 2 | ❌ 44/100 | ❌ | 20.4KB | ✅ | 1630.7KB |
-| Kirby's Dream Land 3 | ❌ | ❌ | 10.1KB | ✅ | 528.7KB |
+| Kirby's Dream Land 3 | ❌ | ⚠️ 88/98 | 10.1KB | ✅ | 528.7KB |
 | Landstalker - The Treasures of King Nole | ❌ 31/100 | ✅ | 3.6KB | ✅ | 209.2KB |
 | Lingo | ❌ 19/45 | ❌ 2/45 | 38.2KB | 10.7KB | 940.0KB |
 | Links Awakening DX | ❌ 23/100 | ✅ | 7.3KB | ✅ | 703.1KB |
@@ -83,7 +83,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Old School Runescape | ✅ | ✅ | 1.0KB | ✅ | 305.2KB |
 | Overcooked! 2 | ❌ 9/100 | ✅ | 28.5KB | ✅ | 488.3KB |
 | Paint | ✅ | ✅ | 2.7KB | ✅ | 123.5KB |
-| Pokemon Emerald | ⚠️ 56/92 | ❌ 31/92 | 5.2KB | 8.7KB | 1350.2KB |
+| Pokemon Emerald | ⚠️ 56/92 | ❌ 32/92 | 5.2KB | 8.7KB | 1350.2KB |
 | Pokemon Red and Blue | ❌ | ❌ | 12.2KB | 13.0KB | 1270.2KB |
 | Raft | ✅ | ❌ | 6.5KB | ✅ | 198.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 131.4KB |
@@ -112,9 +112,9 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Undertale | ✅ | ✅ | ✅ | ✅ | 56.3KB |
 | VVVVVV | ⚠️ 64/100 | ✅ | 3.8KB | ✅ | 22.7KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | 44.1KB |
-| Yacht Dice | ❌ 1/100 | ❌ 1/100 | 0.9KB | 285.0KB | 248.5KB |
+| Yacht Dice | ❌ 1/100 | ❌ | 0.9KB | 285.0KB | 248.5KB |
 | Yoshi's Island | ❌ 25/100 | ✅ | 9.2KB | ✅ | 295.3KB |
-| Yu-Gi-Oh! 2006 | ❌ 34/100 | ❌ 34/100 | 1.3KB | 21.4KB | 644.0KB |
+| Yu-Gi-Oh! 2006 | ❌ 34/100 | ❌ | 1.3KB | 21.4KB | 644.0KB |
 | Zillion | ❌ | ❌ | ✅ | ✅ | 321.2KB |
 | shapez | ✅ | ✅ | ✅ | ✅ | 153.8KB |
 
