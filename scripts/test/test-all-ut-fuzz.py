@@ -375,14 +375,18 @@ def run_fuzzer_test(
             start_new_session=True
         )
 
+        # Save PGID immediately — we need it even after fuzz.py exits, because
+        # orphan child processes (Pool workers, Manager, world-spawned processes)
+        # may still be alive with this PGID.
+        pgid = os.getpgid(proc.pid)
+
         def _kill_process_group(reason: str):
             """Kill fuzz.py and all its child processes (Pool workers, Manager)."""
             try:
-                pgid = os.getpgid(proc.pid)
                 print(f"    {reason}")
                 os.killpg(pgid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass  # Already dead
+            except (ProcessLookupError, PermissionError):
+                pass  # Already dead or not permitted
 
         # Set up a timer to kill the process if it exceeds the overall timeout
         process_timed_out = [False]  # Use list to allow modification in nested function
@@ -443,6 +447,21 @@ def run_fuzzer_test(
             returncode = proc.returncode
         finally:
             timer.cancel()
+            # Always kill the entire process group after each game, even on
+            # normal completion. Some worlds spawn background processes during
+            # generation (network servers, file watchers, etc.) that survive
+            # fuzz.py's os._exit(). These orphan processes can hold resources
+            # (ports, locks, shared memory) that block subsequent fuzz.py
+            # invocations from importing worlds, causing a cascade of timeouts.
+            try:
+                os.killpg(pgid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass  # All processes already exited cleanly
+            # Reap fuzz.py to avoid zombies
+            try:
+                proc.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                pass
 
         # Check if we timed out (either overall process timeout or inactivity timeout)
         if process_timed_out[0]:
