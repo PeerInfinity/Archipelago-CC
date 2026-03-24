@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen (APWorlds)
 
-**Generated:** 2026-03-24 17:15:28 UTC
+**Generated:** 2026-03-24 17:54:52 UTC
 
 **Source Data Last Updated:** 2026-03-24T02:03:30
 
@@ -18,8 +18,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 123
-- **Passing Both:** 22 (17.9%)
-- **Passing Original Only:** 16 (13.0%)
+- **Passing Both:** 23 (18.7%)
+- **Passing Original Only:** 15 (12.2%)
 - **Passing Worldgen Only:** 19 (15.4%)
 - **Passing Worldgen Only with Generic Exporter:** 15 (12.2%)
 - **Passing Neither:** 66 (53.7%)
@@ -36,34 +36,34 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Against the Storm | ⚠️ 64/99 | ❌ | ✅ | ✅ | N/A |
 | Air Delivery | ✅ | ⚠️ 71/100 | 6.6KB | ✅ | N/A |
 | An Untitled Story | ✅ | ✅ | 8.7KB | ✅ | N/A |
-| Anodyne | ✅ | ❌ 31/100 | 10.7KB | ✅ | N/A |
-| Another Crabs Treasure | ⚠️ 53/100 | ⚠️ 97/100 | 3.1KB | ✅ | N/A |
+| Anodyne | ✅ | ❌ 28/100 | 10.7KB | ✅ | N/A |
+| Another Crabs Treasure | ⚠️ 53/100 | ⚠️ 94/100 | 3.1KB | ✅ | N/A |
 | Ape Escape | ⚠️ 98/100 | N/A | ✅ | ✅ | N/A |
 | Ape Escape 3 | ✅ | ❌ | ✅ | ✅ | N/A |
 | Astalon | ✅ | ❌ 1/87 | ✅ | ✅ | N/A |
 | Autopelago | ✅ | ✅ | 9.2KB | ✅ | N/A |
 | Axiom Verge | ⚠️ 65/100 | ❌ | ✅ | ✅ | N/A |
-| Balatro | ❌ 7/36 | ❌ 8/19 | ✅ | ✅ | N/A |
+| Balatro | ❌ 7/36 | ❌ 7/19 | ✅ | ✅ | N/A |
 | Brotato | ⚠️ 42/79 | ✅ | ✅ | ✅ | N/A |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ | ✅ | ✅ | N/A |
 | Cavern of Dreams | ❌ 20/100 | ❌ | ✅ | ✅ | N/A |
 | ChecksMate | ⚠️ 89/100 | ❌ | ✅ | ✅ | N/A |
 | Chrono Trigger Jets of Time | ❌ | ❌ | ✅ | ✅ | N/A |
-| ClusterTruck | ⚠️ 53/100 | N/A | ✅ | ✅ | N/A |
+| ClusterTruck | ⚠️ 53/100 | ⚠️ 51/100 | ✅ | ✅ | N/A |
 | Corn Kidz 64 | ⚠️ 98/100 | ❌ | ✅ | ✅ | N/A |
 | CrossCode | ✅ | ❌ | ✅ | ✅ | N/A |
 | Crystal Project | ❌ 28/100 | ❌ | ✅ | ✅ | N/A |
-| Crystalis | ⚠️ 59/81 | ❌ 5/61 | 9.2KB | ✅ | N/A |
+| Crystalis | ⚠️ 59/81 | ❌ 5/62 | 9.2KB | ✅ | N/A |
 | Cuphead | ❌ | ❌ | ✅ | ✅ | N/A |
 | DORONKO WANKO | ✅ | ✅ | ✅ | ✅ | N/A |
 | Deep Rock Galactic | ❌ 36/100 | ⚠️ 71/100 | ✅ | ✅ | N/A |
 | Diddy Kong Racing | ⚠️ 99/100 | ✅ | ✅ | ✅ | N/A |
 | Digimon World | ⚠️ 75/100 | ❌ 1/75 | ✅ | ✅ | N/A |
 | Dome Keeper | ⚠️ 99/100 | ✅ | ✅ | ✅ | N/A |
-| Duke Nukem 3D | ❌ 1/100 | ❌ 4/95 | ✅ | ✅ | N/A |
+| Duke Nukem 3D | ❌ 1/100 | ❌ 1/95 | ✅ | ✅ | N/A |
 | Final Fantasy Tactics A2 | ❌ 10/100 | ❌ 10/98 | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ✅ | ⚠️ 78/100 | ✅ | ✅ | N/A |
-| Fire Emblem Sacred Stones | ❌ 43/99 | ❌ 18/97 | ✅ | ✅ | N/A |
+| Fire Emblem Sacred Stones | ❌ 43/99 | ❌ 15/97 | ✅ | ✅ | N/A |
 | Frogmonster | ⚠️ 76/100 | ❌ | ✅ | ✅ | N/A |
 | GZDoom | ❌ | ❌ | ✅ | ✅ | N/A |
 | Garfield Kart - Furious Racing | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -79,10 +79,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Jigsaw | ❌ 48/100 | ✅ | 1.6KB | ✅ | N/A |
 | K-On! After School Live!! | ✅ | ✅ | ✅ | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ⚠️ 79/100 | ❌ 26/79 | ✅ | ✅ | N/A |
-| Kingdom Hearts Birth by Sleep | ✅ | N/A | ✅ | ✅ | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts Chain of Memories | ✅ | ✅ | ✅ | ✅ | N/A |
 | Kingdom Hearts RE Chain of Memories | ⚠️ 96/100 | N/A | ✅ | ✅ | N/A |
-| Kirby Super Star | ❌ 15/95 | ❌ 2/96 | ✅ | ✅ | N/A |
+| Kirby Super Star | ❌ 15/95 | ❌ 3/96 | ✅ | ✅ | N/A |
 | League of Legends | ⚠️ 61/100 | ✅ | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ⚠️ 69/85 | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ | ❌ | ✅ | ✅ | N/A |
@@ -91,7 +91,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Luigi's Mansion | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lunacid | ✅ | ❌ 31/100 | 8.2KB | ✅ | N/A |
 | Majora's Mask Recompiled | ⚠️ 89/100 | ❌ 35/100 | 10.4KB | ✅ | N/A |
-| Mario Kart Double Dash | ✅ | N/A | ✅ | ✅ | N/A |
+| Mario Kart Double Dash | ✅ | ❌ | ✅ | ✅ | N/A |
 | MetroCUBEvania | ✅ | ✅ | ✅ | ✅ | N/A |
 | Metroid Fusion | ⚠️ 84/100 | ✅ | ✅ | ✅ | N/A |
 | Metroid: Zero Mission | ❌ 1/100 | ❌ | 9.8KB | ✅ | N/A |
@@ -101,7 +101,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Nine Sols | ✅ | ✅ | ✅ | ✅ | N/A |
 | Ori and the Blind Forest | ⚠️ 97/100 | ❌ 37/98 | 23.2KB | ✅ | N/A |
 | Ori and the Will of the Wisps | ❌ 19/100 | ❌ | ✅ | ✅ | N/A |
-| Oxygen Not Included | ⚠️ 65/100 | ⚠️ 66/91 | ✅ | ✅ | N/A |
+| Oxygen Not Included | ⚠️ 65/100 | ⚠️ 65/91 | ✅ | ✅ | N/A |
 | Pizza Tower | ❌ 49/100 | ⚠️ 65/86 | 7.0KB | ✅ | N/A |
 | PlateUp | ❌ 6/88 | ⚠️ 45/59 | ✅ | ✅ | N/A |
 | Pokemon FireRed and LeafGreen | ⚠️ 80/100 | ❌ | ✅ | ✅ | N/A |
@@ -119,7 +119,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Ship of Harkinian | ❌ 29/100 | ❌ | ✅ | ✅ | N/A |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ | ✅ | ✅ | N/A |
 | Sly 2: Band of Thieves | ❌ | ❌ | ✅ | ✅ | N/A |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 89/100 | ⚠️ 90/100 | ✅ | ✅ | N/A |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 89/100 | ⚠️ 88/99 | ✅ | ✅ | N/A |
 | Sonic Adventure DX | ❌ 15/66 | ❌ | 29.9KB | ✅ | N/A |
 | Sonic Heroes | ❌ | ✅ | ✅ | ✅ | N/A |
 | Sonic Rush | ⚠️ 99/100 | ❌ 26/99 | ✅ | ✅ | N/A |
@@ -132,7 +132,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Star Wars Episode I Racer | ❌ 4/100 | ✅ | 5.7KB | ✅ | N/A |
 | Super Cat Planet | ✅ | ✅ | ✅ | ✅ | N/A |
 | Symphony of the Night | ✅ | ✅ | ✅ | ✅ | N/A |
-| System Shock 2 | ❌ 43/100 | ❌ 7/64 | 15.1KB | ✅ | N/A |
+| System Shock 2 | ❌ 43/100 | ❌ 8/61 | 15.1KB | ✅ | N/A |
 | TCG Card Shop Simulator | ❌ | ❌ 8/98 | ✅ | ✅ | N/A |
 | TOEM: A Photo Adventure | ✅ | ✅ | ✅ | ✅ | N/A |
 | Tetris Attack | ⚠️ 83/87 | ❌ 2/83 | 23.1KB | ✅ | N/A |
@@ -152,7 +152,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Zelda II: The Adventure of Link | ❌ 12/100 | ✅ | ✅ | ✅ | N/A |
 | osu! | ❌ 1/100 | ✅ | ✅ | ✅ | N/A |
 
-## Games Passing Both (22)
+## Games Passing Both (23)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -164,6 +164,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | DORONKO WANKO | ✅ | ✅ | N/A |
 | Isles Of Sea And Sky | ✅ | ✅ | N/A |
 | K-On! After School Live!! | ✅ | ✅ | N/A |
+| Kingdom Hearts Birth by Sleep | ✅ | ✅ | N/A |
 | Kingdom Hearts Chain of Memories | ✅ | ✅ | N/A |
 | Little Witch Nobeta | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | N/A |
@@ -181,7 +182,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | TurnipBoy | ✅ | ✅ | N/A |
 | Wordipelago | 19.5KB | ✅ | N/A |
 
-## Games Passing Original Only (16)
+## Games Passing Original Only (15)
 
 These games pass in the Original UT but fail in the Worldgen UT.
 
@@ -193,7 +194,6 @@ These games pass in the Original UT but fail in the Worldgen UT.
 | Astalon | ✅ | ✅ | N/A |
 | CrossCode | ✅ | ✅ | N/A |
 | Final Fantasy Tactics Advance | ✅ | ✅ | N/A |
-| Kingdom Hearts Birth by Sleep | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | N/A |
 | Lunacid | 8.2KB | ✅ | N/A |
 | Mario Kart Double Dash | ✅ | ✅ | N/A |
