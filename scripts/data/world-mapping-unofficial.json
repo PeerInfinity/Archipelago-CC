@@ -899,6 +899,30 @@
     "template_file": "Pizza Tower.yaml",
     "world_directory": "pizza_tower"
   },
+  "PlateUp": {
+    "apworld_path": "custom_worlds/plateup.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "PlateUp",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "PlateUp.yaml",
+    "world_directory": "plateup"
+  },
+  "Pokemon FireRed and LeafGreen": {
+    "apworld_path": "custom_worlds/pokemon_frlg.apworld",
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Pokemon FireRed and LeafGreen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Pokemon FireRed and LeafGreen.yaml",
+    "world_directory": "pokemon_frlg"
+  },
   "Pokemon Mystery Dungeon Explorers of Sky": {
     "apworld_path": "custom_worlds/pmd_eos.apworld",
     "exporter_path": null,

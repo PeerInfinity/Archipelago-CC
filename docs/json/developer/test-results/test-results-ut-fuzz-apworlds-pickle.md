@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 02:03:05 UTC
+**Generated:** 2026-03-24 17:15:28 UTC
 
 **Source Data Created:** 2026-03-24T02:03:05.135896+00:00
 
@@ -37,9 +37,9 @@
 
 - **Expected Passes:** 78 (passes pickle mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 33 (doesn't pass pickle mode per config)
-- **Unexpected Failures (logic):** 8 (expected to pass but had logic mismatch)
-- **Unexpected Failures (timeout only):** 2 (expected to pass but timed out)
+- **Expected Failures:** 43 (doesn't pass pickle mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ## Test Results
 
@@ -254,7 +254,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Zelda II: The Adventure of Link | 100 | 100 | 0 | 0 | 100.0% |
 | osu! | 100 | 100 | 0 | 0 | 100.0% |
 
-### Expected Failures (33)
+### Expected Failures (43)
 
 Games NOT expected to pass pickle mode and failed as expected.
 
@@ -264,15 +264,20 @@ Games NOT expected to pass pickle mode and failed as expected.
 | A Link Between Worlds | 100 | 14 | 86 | 0 | 14.0% |
 | Against the Storm | 100 | 64 | 35 | 1 | 64.0% |
 | Astalon | 100 | 46 | 41 | 0 | 46.0% |
+| Balatro | 100 | 18 | 1 | 0 | 18.0% |
+| Cavern of Dreams | 100 | 61 | 2 | 0 | 61.0% |
 | ChecksMate | 100 | 84 | 14 | 0 | 84.0% |
 | Chrono Trigger Jets of Time | 100 | 0 | 100 | 0 | 0.0% |
 | ClusterTruck | 100 | 52 | 48 | 0 | 52.0% |
 | Crystal Project | 100 | 71 | 29 | 0 | 71.0% |
+| Crystalis | 100 | 60 | 1 | 0 | 60.0% |
 | Cuphead | 100 | 0 | 100 | 0 | 0.0% |
 | Deep Rock Galactic | 100 | 97 | 3 | 0 | 97.0% |
+| Duke Nukem 3D | 100 | 89 | 6 | 0 | 89.0% |
 | Final Fantasy Tactics A2 | 100 | 10 | 88 | 0 | 10.0% |
 | GZDoom | 100 | 0 | 100 | 0 | 0.0% |
 | Garfield Kart - Furious Racing | 100 | 0 | 100 | 0 | 0.0% |
+| Golden Sun The Lost Age | 100 | 87 | 3 | 0 | 87.0% |
 | Hammerwatch | 100 | 88 | 10 | 0 | 88.0% |
 | Into the Breach | 100 | 45 | 55 | 0 | 45.0% |
 | Kirby Super Star | 100 | 15 | 80 | 0 | 15.0% |
@@ -284,39 +289,20 @@ Games NOT expected to pass pickle mode and failed as expected.
 | Pokemon Mystery Dungeon Explorers of Sky | 100 | 78 | 22 | 0 | 78.0% |
 | Rusted Moss | 100 | 43 | 57 | 0 | 43.0% |
 | Sentinels of the Multiverse | 100 | 0 | 66 | 33 | 0.0% |
+| Shadow The Hedgehog | 100 | 12 | 4 | 0 | 12.0% |
 | Ship of Harkinian | 100 | 30 | 70 | 0 | 30.0% |
+| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
 | Sly 2: Band of Thieves | 100 | 0 | 53 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 100 | 89 | 11 | 0 | 89.0% |
+| Sonic Adventure DX | 100 | 41 | 3 | 0 | 41.0% |
 | System Shock 2 | 100 | 39 | 22 | 0 | 39.0% |
 | TCG Card Shop Simulator | 100 | 81 | 17 | 0 | 81.0% |
 | The Legend of Zelda - Oracle of Seasons | 100 | 41 | 59 | 0 | 41.0% |
 | The Legend of Zelda - Phantom Hourglass | 100 | 54 | 44 | 0 | 54.0% |
-| Wario Land | 100 | 0 | 100 | 0 | 0.0% |
-| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 47 | 53 | 0 | 47.0% |
-
-### Unexpected Failures (Logic Mismatch) (8)
-
-Games expected to pass pickle mode but failed due to logic mismatches.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Balatro | 100 | 18 | 1 | 0 | 18.0% |
-| Cavern of Dreams | 100 | 61 | 2 | 0 | 61.0% |
-| Crystalis | 100 | 60 | 1 | 0 | 60.0% |
-| Duke Nukem 3D | 100 | 89 | 6 | 0 | 89.0% |
-| Golden Sun The Lost Age | 100 | 87 | 3 | 0 | 87.0% |
-| Shadow The Hedgehog | 100 | 12 | 4 | 0 | 12.0% |
-| Sonic Adventure DX | 100 | 41 | 3 | 0 | 41.0% |
 | Tyrian | 100 | 70 | 1 | 0 | 70.0% |
-
-### Unexpected Failures (Timeout Only) (2)
-
-Games expected to pass pickle mode but failed only due to timeouts.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
+| Wario Land | 100 | 0 | 100 | 0 | 0.0% |
 | Watery Words | 100 | 98 | 0 | 2 | 98.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 47 | 53 | 0 | 47.0% |
 
 ## Notes
 

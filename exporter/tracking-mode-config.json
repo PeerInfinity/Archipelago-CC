@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-03-24T01:00:19.690530+00:00",
+  "generated": "2026-03-24T17:22:56.094832+00:00",
   "fallback_order": [
     "worldgen",
     "pickle",
@@ -352,8 +352,7 @@
       ],
       "Actraiser": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Air Delivery": [
         "pickle",
@@ -365,14 +364,14 @@
         "original"
       ],
       "Anodyne": [
-        "pickle"
+        "pickle",
+        "original"
       ],
       "Another Crabs Treasure": [
         "pickle"
       ],
       "Ape Escape": [
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Ape Escape 3": [
         "pickle",
@@ -389,9 +388,6 @@
       "Axiom Verge": [
         "pickle"
       ],
-      "Balatro": [
-        "pickle"
-      ],
       "Brotato": [
         "worldgen",
         "pickle"
@@ -401,18 +397,10 @@
         "pickle",
         "original"
       ],
-      "Cavern of Dreams": [
+      "Corn Kidz 64": [
         "pickle"
       ],
-      "Corn Kidz 64": [
-        "pickle",
-        "original"
-      ],
       "CrossCode": [
-        "pickle",
-        "original"
-      ],
-      "Crystalis": [
         "pickle",
         "original"
       ],
@@ -423,18 +411,13 @@
       ],
       "Diddy Kong Racing": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Digimon World": [
         "pickle"
       ],
       "Dome Keeper": [
         "worldgen",
-        "pickle",
-        "original"
-      ],
-      "Duke Nukem 3D": [
         "pickle"
       ],
       "Final Fantasy Tactics Advance": [
@@ -448,8 +431,7 @@
         "pickle"
       ],
       "Golden Sun The Lost Age": [
-        "worldgen",
-        "pickle"
+        "worldgen"
       ],
       "Grim Dawn": [
         "pickle"
@@ -472,8 +454,7 @@
       ],
       "Ittle Dew 2": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Jigsaw": [
         "worldgen",
@@ -498,9 +479,7 @@
         "original"
       ],
       "Kingdom Hearts RE Chain of Memories": [
-        "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "League of Legends": [
         "worldgen",
@@ -527,8 +506,7 @@
         "original"
       ],
       "Majora's Mask Recompiled": [
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Mario Kart Double Dash": [
         "pickle",
@@ -550,8 +528,7 @@
         "pickle"
       ],
       "Minit": [
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Nine Sols": [
         "worldgen",
@@ -559,13 +536,9 @@
         "original"
       ],
       "Ori and the Blind Forest": [
-        "pickle",
-        "original"
-      ],
-      "Pizza Tower": [
         "pickle"
       ],
-      "Pokemon FireRed and LeafGreen": [
+      "Pizza Tower": [
         "pickle"
       ],
       "Pseudoregalia": [
@@ -577,8 +550,7 @@
       ],
       "Rain World": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Ratchet & Clank 2": [
         "worldgen",
@@ -599,22 +571,9 @@
         "pickle",
         "original"
       ],
-      "Shadow The Hedgehog": [
-        "pickle",
-        "original"
-      ],
-      "Simon Tatham's Portable Puzzle Collection": [
-        "worldgen",
-        "pickle",
-        "original"
-      ],
-      "Sonic Adventure DX": [
-        "pickle"
-      ],
       "Sonic Heroes": [
         "worldgen",
-        "pickle",
-        "original"
+        "pickle"
       ],
       "Sonic Rush": [
         "pickle"
@@ -679,15 +638,7 @@
         "pickle",
         "original"
       ],
-      "Tyrian": [
-        "pickle"
-      ],
       "Vampire Survivors": [
-        "pickle",
-        "original"
-      ],
-      "Watery Words": [
-        "worldgen",
         "pickle",
         "original"
       ],
@@ -698,10 +649,6 @@
       ],
       "XCOM 2 War of the Chosen": [
         "pickle",
-        "original"
-      ],
-      "Yu-Gi-Oh! Dungeon Dice Monsters": [
-        "worldgen",
         "original"
       ],
       "Yu-Gi-Oh! Forbidden Memories": [
