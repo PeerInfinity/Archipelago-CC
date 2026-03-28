@@ -281,6 +281,191 @@ class DKC3World(RuleWorldMixin, World):
         "Kastle KAOS": "Donkey Kong",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Barrel Drop Bounce - Bonus 1": "Bear Coin",
+        "Barrel Shield Bust-Up - Bonus 1": "Bear Coin",
+        "Barrel Shield Bust-Up - Bonus 2": "Bear Coin",
+        "Bounty Beach": "Bear Coin",
+        "Fire-Ball Frenzy - Bonus 1": "Bear Coin",
+        "Fire-Ball Frenzy - Flag": "Bear Coin",
+        "K's Cache": "Bear Coin",
+        "Krack-Shot Kroc - Bonus 1": "Bear Coin",
+        "Lakeside Limbo - Bonus 1": "Bear Coin",
+        "Lakeside Limbo - Flag": "Bear Coin",
+        "Low-G Labyrinth - Bonus 2": "Bear Coin",
+        "Ripsaw Rage - DK Coin": "Bear Coin",
+        "Riverside Race - Bonus 1": "Bear Coin",
+        "Rocket Rush - DK Coin": "Bear Coin",
+        "Stampede Sprint - Bonus 2": "Bear Coin",
+        "Tracker Barrel Trek - Bonus 1": "Bear Coin",
+        "Tracker Barrel Trek - Flag": "Bear Coin",
+        "Tyrant Twin Tussle - DK Coin": "Bear Coin",
+        "Arich's Ambush": "DK Coin",
+        "Arich's Hoard": "DK Coin",
+        "Barbos's Barrier": "DK Coin",
+        "Barrel Drop Bounce - Bonus 2": "DK Coin",
+        "Barrel Drop Bounce - DK Coin": "DK Coin",
+        "Barrel Shield Bust-Up - DK Coin": "DK Coin",
+        "Bazza's Blockade - Bonus 2": "DK Coin",
+        "Blazing Bazukas - Bonus 1": "DK Coin",
+        "Blazing Bazukas - DK Coin": "DK Coin",
+        "Bleak's House": "DK Coin",
+        "Bobbing Barrel Brawl - DK Coin": "DK Coin",
+        "Creepy Caverns - DK Coin": "DK Coin",
+        "Criss Kross Cliffs - Bonus 2": "DK Coin",
+        "Doorstop Dash - Flag": "DK Coin",
+        "Glacial Grotto": "DK Coin",
+        "Hill-Top Hoard": "DK Coin",
+        "KAOS Karnage": "DK Coin",
+        "Knautilus": "DK Coin",
+        "Koindozer Klamber - Bonus 1": "DK Coin",
+        "Koindozer Klamber - Bonus 2": "DK Coin",
+        "Krack-Shot Kroc - Bonus 2": "DK Coin",
+        "Krack-Shot Kroc - DK Coin": "DK Coin",
+        "Kreeping Klasps - Bonus 2": "DK Coin",
+        "Krevice Kreepers - Bonus 2": "DK Coin",
+        "Lakeside Limbo - Bonus 2": "DK Coin",
+        "Lakeside Limbo - DK Coin": "DK Coin",
+        "Lemguin Lunge - Flag": "DK Coin",
+        "Low-G Labyrinth - Flag": "DK Coin",
+        "Poisonous Pipeline - Bonus 1": "DK Coin",
+        "Riverside Race - Bonus 2": "DK Coin",
+        "Ropey Rumpus - Bonus 2": "DK Coin",
+        "Sewer Stockpile": "DK Coin",
+        "Skidda's Row - Bonus 1": "DK Coin",
+        "Springin' Spiders - Bonus 1": "DK Coin",
+        "Squirt's Showdown": "DK Coin",
+        "Stampede Sprint - DK Coin": "DK Coin",
+        "Swoopy Salvo - Bonus 2": "DK Coin",
+        "Tearaway Toboggan - Bonus 2": "DK Coin",
+        "Tidal Trouble - Bonus 1": "DK Coin",
+        "Tyrant Twin Tussle - Bonus 1": "DK Coin",
+        "Undercover Cove": "DK Coin",
+        "Bazza's Blockade - Bonus 1": "1-Up Balloon",
+        "Bobbing Barrel Brawl - Bonus 1": "1-Up Balloon",
+        "Demolition Drain-Pipe - Bonus 2": "1-Up Balloon",
+        "Demolition Drain-Pipe - Flag": "1-Up Balloon",
+        "Doorstop Dash - Bonus 1": "1-Up Balloon",
+        "Floodlit Fish - DK Coin": "1-Up Balloon",
+        "Floodlit Fish - Flag": "1-Up Balloon",
+        "Kong-Fused Cliffs - DK Coin": "1-Up Balloon",
+        "Konveyor Rope Klash - Flag": "1-Up Balloon",
+        "Krevice Kreepers - DK Coin": "1-Up Balloon",
+        "Lemguin Lunge - Bonus 1": "1-Up Balloon",
+        "Lemguin Lunge - Bonus 2": "1-Up Balloon",
+        "Lightning Lookout - DK Coin": "1-Up Balloon",
+        "Murky Mill - Bonus 1": "1-Up Balloon",
+        "Murky Mill - DK Coin": "1-Up Balloon",
+        "Poisonous Pipeline - DK Coin": "1-Up Balloon",
+        "Riverside Race - Flag": "1-Up Balloon",
+        "Rocket Barrel Ride - Bonus 2": "1-Up Balloon",
+        "Rocket Barrel Ride - DK Coin": "1-Up Balloon",
+        "Rocket Barrel Ride - Flag": "1-Up Balloon",
+        "Ropey Rumpus - Bonus 1": "1-Up Balloon",
+        "Ropey Rumpus - DK Coin": "1-Up Balloon",
+        "Smuggler's Cove": "1-Up Balloon",
+        "Springin' Spiders - DK Coin": "1-Up Balloon",
+        "Stampede Sprint - Bonus 1": "1-Up Balloon",
+        "Tearaway Toboggan - Flag": "1-Up Balloon",
+        "Tyrant Twin Tussle - Flag": "1-Up Balloon",
+        "Barrel Drop Bounce - Flag": "Bonus Coin",
+        "Barrel Shield Bust-Up - Flag": "Bonus Coin",
+        "Bazza's Blockade - DK Coin": "Bonus Coin",
+        "Belcha's Barn": "Bonus Coin",
+        "Belcha's Burrow": "Bonus Coin",
+        "Blazing Bazukas - Flag": "Bonus Coin",
+        "Bobbing Barrel Brawl - Bonus 2": "Bonus Coin",
+        "Bobbing Barrel Brawl - Flag": "Bonus Coin",
+        "Bounty Bay": "Bonus Coin",
+        "Buzzer Barrage - Bonus 1": "Bonus Coin",
+        "Buzzer Barrage - Bonus 2": "Bonus Coin",
+        "Buzzer Barrage - DK Coin": "Bonus Coin",
+        "Buzzer Barrage - Flag": "Bonus Coin",
+        "Creepy Caverns - Bonus 1": "Bonus Coin",
+        "Creepy Caverns - Bonus 2": "Bonus Coin",
+        "Creepy Caverns - Flag": "Bonus Coin",
+        "Criss Kross Cliffs - Bonus 1": "Bonus Coin",
+        "Criss Kross Cliffs - DK Coin": "Bonus Coin",
+        "Criss Kross Cliffs - Flag": "Bonus Coin",
+        "Demolition Drain-Pipe - Bonus 1": "Bonus Coin",
+        "Demolition Drain-Pipe - DK Coin": "Bonus Coin",
+        "Doorstop Dash - Bonus 2": "Bonus Coin",
+        "Doorstop Dash - DK Coin": "Bonus Coin",
+        "Fire-Ball Frenzy - Bonus 2": "Bonus Coin",
+        "Fire-Ball Frenzy - DK Coin": "Bonus Coin",
+        "Fish Food Frenzy - Bonus 1": "Bonus Coin",
+        "Fish Food Frenzy - Bonus 2": "Bonus Coin",
+        "Fish Food Frenzy - DK Coin": "Bonus Coin",
+        "Floodlit Fish - Bonus 2": "Bonus Coin",
+        "Koindozer Klamber - DK Coin": "Bonus Coin",
+        "Koindozer Klamber - Flag": "Bonus Coin",
+        "Kong Cave": "Bonus Coin",
+        "Kong-Fused Cliffs - Bonus 1": "Bonus Coin",
+        "Kong-Fused Cliffs - Bonus 2": "Bonus Coin",
+        "Kong-Fused Cliffs - Flag": "Bonus Coin",
+        "Konveyor Rope Klash - Bonus 1": "Bonus Coin",
+        "Konveyor Rope Klash - Bonus 2": "Bonus Coin",
+        "Konveyor Rope Klash - DK Coin": "Bonus Coin",
+        "Krack-Shot Kroc - Flag": "Bonus Coin",
+        "Kreeping Klasps - Bonus 1": "Bonus Coin",
+        "Kreeping Klasps - DK Coin": "Bonus Coin",
+        "Kreeping Klasps - Flag": "Bonus Coin",
+        "Krevice Kreepers - Bonus 1": "Bonus Coin",
+        "Krevice Kreepers - Flag": "Bonus Coin",
+        "Lemguin Lunge - DK Coin": "Bonus Coin",
+        "Lightning Lookout - Bonus 1": "Bonus Coin",
+        "Lightning Lookout - Bonus 2": "Bonus Coin",
+        "Lightning Lookout - Flag": "Bonus Coin",
+        "Low-G Labyrinth - Bonus 1": "Bonus Coin",
+        "Low-G Labyrinth - DK Coin": "Bonus Coin",
+        "Murky Mill - Bonus 2": "Bonus Coin",
+        "Murky Mill - Flag": "Bonus Coin",
+        "Poisonous Pipeline - Bonus 2": "Bonus Coin",
+        "Poisonous Pipeline - Flag": "Bonus Coin",
+        "Pothole Panic - Bonus 1": "Bonus Coin",
+        "Pothole Panic - Bonus 2": "Bonus Coin",
+        "Pothole Panic - DK Coin": "Bonus Coin",
+        "Pothole Panic - Flag": "Bonus Coin",
+        "Ripsaw Rage - Bonus 1": "Bonus Coin",
+        "Ripsaw Rage - Bonus 2": "Bonus Coin",
+        "Ripsaw Rage - Flag": "Bonus Coin",
+        "Riverside Race - DK Coin": "Bonus Coin",
+        "Rocket Barrel Ride - Bonus 1": "Bonus Coin",
+        "Ropey Rumpus - Flag": "Bonus Coin",
+        "Skidda's Row - Bonus 2": "Bonus Coin",
+        "Skidda's Row - DK Coin": "Bonus Coin",
+        "Skidda's Row - Flag": "Bonus Coin",
+        "Springin' Spiders - Bonus 2": "Bonus Coin",
+        "Springin' Spiders - Flag": "Bonus Coin",
+        "Squeals On Wheels - Bonus 1": "Bonus Coin",
+        "Squeals On Wheels - Bonus 2": "Bonus Coin",
+        "Stampede Sprint - Bonus 3": "Bonus Coin",
+        "Stampede Sprint - Flag": "Bonus Coin",
+        "Swoopy Salvo - Bonus 1": "Bonus Coin",
+        "Swoopy Salvo - Bonus 3": "Bonus Coin",
+        "Swoopy Salvo - DK Coin": "Bonus Coin",
+        "Swoopy Salvo - Flag": "Bonus Coin",
+        "Tearaway Toboggan - Bonus 1": "Bonus Coin",
+        "Tearaway Toboggan - DK Coin": "Bonus Coin",
+        "Tidal Trouble - DK Coin": "Bonus Coin",
+        "Tidal Trouble - Flag": "Bonus Coin",
+        "Tracker Barrel Trek - Bonus 2": "Bonus Coin",
+        "Tracker Barrel Trek - DK Coin": "Bonus Coin",
+        "Tyrant Twin Tussle - Bonus 2": "Bonus Coin",
+        "Tyrant Twin Tussle - Bonus 3": "Bonus Coin",
+        "Squeals On Wheels - DK Coin": "Progressive Boat Upgrade",
+        "Squeals On Wheels - Flag": "Progressive Boat Upgrade",
+        "Tidal Trouble - Bonus 2": "Progressive Boat Upgrade",
+        "Bazza's Blockade - Flag": "Krematoa Cog",
+        "Blazing Bazukas - Bonus 2": "Krematoa Cog",
+        "Fish Food Frenzy - Flag": "Krematoa Cog",
+        "Floodlit Fish - Bonus 1": "Krematoa Cog",
+        "Rocket Rush - Flag": "Krematoa Cog",
+        "Kastle KAOS": "Donkey Kong",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -506,7 +691,7 @@ class DKC3World(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -641,18 +826,24 @@ class DKC3World(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

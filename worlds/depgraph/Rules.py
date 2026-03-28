@@ -220,7 +220,7 @@ def parse_dot_graph(path: str) -> GraphStructure:
     for node_id in sorted_ids:
         index = id_to_index[node_id]
         label = labels.get(node_id, node_id)
-        dep_indices = [id_to_index[d] for d in dependencies[node_id]]
+        dep_indices = sorted(id_to_index[d] for d in dependencies[node_id])
 
         structure.add_node(GraphNode(
             index=index,

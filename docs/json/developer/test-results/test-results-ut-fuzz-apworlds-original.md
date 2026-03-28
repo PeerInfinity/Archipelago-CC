@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 17:55:13 UTC
+**Generated:** 2026-03-24 19:12:10 UTC
 
 **Source Data Created:** 2026-03-24T17:55:13.137666+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 38 (passes original mode per config)
-- **Unexpected Passes:** 1 (expected to fail but passed)
+- **Expected Passes:** 39 (passes original mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
 - **Expected Failures:** 81 (doesn't pass original mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -168,7 +168,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (38)
+### Expected Passes (39)
 
 Games that pass original mode per tracking-mode-config.json and passed the test.
 
@@ -200,6 +200,7 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Reventure | 100 | 100 | 0 | 0 | 100.0% |
 | Rift Wizard | 100 | 100 | 0 | 0 | 100.0% |
 | Rift of the Necrodancer | 100 | 100 | 0 | 0 | 100.0% |
+| Sonic Heroes | 100 | 0 | 0 | 0 | 0.0% |
 | Sonic the Hedgehog 1 | 100 | 100 | 0 | 0 | 100.0% |
 | Soul Blazer | 100 | 100 | 0 | 0 | 100.0% |
 | Spinball | 100 | 100 | 0 | 0 | 100.0% |
@@ -212,14 +213,6 @@ Games that pass original mode per tracking-mode-config.json and passed the test.
 | Vampire Survivors | 100 | 48 | 0 | 0 | 48.0% |
 | Wordipelago | 100 | 95 | 0 | 0 | 95.0% |
 | XCOM 2 War of the Chosen | 100 | 86 | 0 | 0 | 86.0% |
-
-### Unexpected Passes (1)
-
-Games NOT expected to pass original mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Sonic Heroes | 100 | 0 | 0 | 0 | 0.0% |
 
 ### Expected Failures (81)
 

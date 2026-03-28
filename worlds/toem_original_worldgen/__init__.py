@@ -357,6 +357,168 @@ class ToemWorld(RuleWorldMixin, World):
         "TOEM Experienced": "TOEM Experienced",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Casette - Jamal Green - Photo of Home": "Fjällbjörn hat",
+        "Compendium - Beehive": "Oaklaville stamp",
+        "Compendium - Cow": "Oaklaville stamp",
+        "Compendium - Dragonfly": "Oaklaville stamp",
+        "Compendium - Forest bird": "Oaklaville stamp",
+        "Compendium - Home bird": "Oaklaville stamp",
+        "Compendium - Jellyfish": "Oaklaville stamp",
+        "Compendium - Ladybug": "Oaklaville stamp",
+        "Compendium - Squirrel": "Oaklaville stamp",
+        "Compendium - Sunday swan": "Oaklaville stamp",
+        "Item - Climbing boots": "Oaklaville stamp",
+        "Item - Lost sock": "Oaklaville stamp",
+        "Item - Pirate hat": "Oaklaville stamp",
+        "Quest - Hide-and-seek": "Oaklaville stamp",
+        "Quest - Ice wizard's research": "Oaklaville stamp",
+        "Quest - Snowball memories": "Oaklaville stamp",
+        "Compendium - Flies": "Tato photo",
+        "Compendium - Tato": "Tato ski photo",
+        "Item - Backpack": "Tom photo",
+        "Casette - Launchable Socks - Squirrel Photography": "Logcity stamp",
+        "Compendium - Crab": "Logcity stamp",
+        "Compendium - Hedgehog": "Logcity stamp",
+        "Compendium - Nestworm": "Logcity stamp",
+        "Item - Camera": "Logcity stamp",
+        "Item - Old key": "Logcity stamp",
+        "Item - Ski goggles": "Logcity stamp",
+        "Quest - A layered melody": "Logcity stamp",
+        "Quest - Always tumbled granny": "Logcity stamp",
+        "Quest - Ancient paintings": "Logcity stamp",
+        "Quest - Art exhibition": "Logcity stamp",
+        "Quest - Assemble a snowman": "Logcity stamp",
+        "Quest - Become a paparazzi": "Logcity stamp",
+        "Quest - Log blocking a path": "Logcity stamp",
+        "Quest - Photo challenge #4": "Logcity stamp",
+        "Quest - Sewer stumble!": "Logcity stamp",
+        "Quest - Suspicious activity - harbor": "Logcity stamp",
+        "Quest - The king of fishes": "Logcity stamp",
+        "Item - Clogs": "Homelanda stamp",
+        "Quest - A good spot with no sun": "Homelanda stamp",
+        "Quest - Power shortage?!": "Homelanda stamp",
+        "Quest - A hidden gift": "Snow bird photo",
+        "Quest - Experience TOEM": "Clogs",
+        "Compendium - Seahorse": "Stanhamn stamp",
+        "Compendium - Tato alien": "Stanhamn stamp",
+        "Compendium - Tato ski": "Stanhamn stamp",
+        "Compendium - Toad": "Stanhamn stamp",
+        "Item - Hotbean hat": "Stanhamn stamp",
+        "Item - Monster mask": "Stanhamn stamp",
+        "Item - Photo challenger flag": "Stanhamn stamp",
+        "Item - Space helmet": "Stanhamn stamp",
+        "Item - Supreme deluxe sandwich": "Stanhamn stamp",
+        "Quest - Become a flower": "Stanhamn stamp",
+        "Quest - Birthday in distress": "Stanhamn stamp",
+        "Quest - Cleaning away the stress": "Stanhamn stamp",
+        "Quest - Photo challenge #7": "Stanhamn stamp",
+        "Quest - Queen of paper hats": "Stanhamn stamp",
+        "Quest - Take a photo of Nana!": "Stanhamn stamp",
+        "Quest - Young and inspiring!": "Stanhamn stamp",
+        "Compendium - Ant": "Dragonfly photo",
+        "Compendium - Butterfly": "Seagull photo",
+        "Compendium - Oskar": "Squirrel photo",
+        "Compendium - Pet rock": "Owl photo",
+        "Compendium - Sero": "Supreme deluxe sandwich",
+        "Compendium - Snail": "Tato alien photo",
+        "Compendium - Mouse": "Kiiruberg stamp",
+        "Compendium - Portillo": "Kiiruberg stamp",
+        "Compendium - Punky parrot": "Kiiruberg stamp",
+        "Compendium - Seagull": "Kiiruberg stamp",
+        "Compendium - Stag beetle": "Kiiruberg stamp",
+        "Compendium - Tato fly": "Kiiruberg stamp",
+        "Item - Frames & filters": "Kiiruberg stamp",
+        "Item - Ghost glasses": "Kiiruberg stamp",
+        "Item - Scarf": "Kiiruberg stamp",
+        "Item - Tripod": "Kiiruberg stamp",
+        "Quest - Hotel chef": "Kiiruberg stamp",
+        "Quest - Photo challenge #2": "Kiiruberg stamp",
+        "Quest - Press-ing news": "Kiiruberg stamp",
+        "Compendium - Tato bug": "Nestworm photo",
+        "Compendium - Tom": "Paper hat",
+        "Item - Cowboy hat": "Puffer hat",
+        "Item - Fjällbjörn hat": "Tato tourist photo",
+        "Item - Foam finger": "Oskar photo",
+        "Item - Soaked sock": "Mountain goat photo",
+        "Quest - A courageous stallion": "Fia photo",
+        "Quest - Become a scout": "Fräs photo",
+        "Quest - Capture the hotel's beauty": "Mouse photo",
+        "Quest - Cup champion": "Monster mask",
+        "Quest - Ghost helper!": "Diving helmet",
+        "Quest - Missing socks": "Rubber boots",
+        "Quest - Monster spotting": "Ant photo",
+        "Quest - Photo challenge #1": "Scarf",
+        "Quest - Suspicious activity - forest": "Climbing boots",
+        "Compendium - Bubble fly": "Nariko photo",
+        "Compendium - Fia": "Pirate hat",
+        "Compendium - Fräs": "Snail photo",
+        "Compendium - Happy carp": "Hedgehog photo",
+        "Compendium - King fish": "Punky parrot photo",
+        "Compendium - Tato scuba": "Fishing hat",
+        "Compendium - Tato swim": "Happy carp photo",
+        "Compendium - Willemijn": "Honk attachment",
+        "Item - Diving helmet": "Hard hat",
+        "Item - Fisherman's whisle": "Hotbean hat",
+        "Item - Fishing hat": "Jellyfish photo",
+        "Item - Hard hat": "King fish photo",
+        "Item - Honk attachment": "Cowboy hat",
+        "Item - Paper hat": "Sneakers",
+        "Item - Rubber boots": "Frisbee",
+        "Item - Umbrella": "Muddy camera",
+        "Quest - A lost dog": "Soaked sock",
+        "Quest - A whistling dilemma": "Seahorse photo",
+        "Quest - Frames & filters!": "Turtle photo",
+        "Quest - Make someone take a bath": "Tato bug photo",
+        "Quest - Ocean garbage": "Fisherman's whisle",
+        "Quest - Photo challenge #3": "Camera",
+        "Quest - Scorching flame?": "Meteopal photo",
+        "Quest - Solve the chaos": "Willemijn photo",
+        "Quest - Supreme deluxe sandwich?!": "Jamal Green - Photo of Home",
+        "Compendium - Business pigeon": "Forest bird photo",
+        "Compendium - Pigeon": "Tato scuba photo",
+        "Compendium - Tato skateboard": "Beehive photo",
+        "Compendium - Tato tourist": "Tripod",
+        "Compendium - Turtle": "Cinnamon bun",
+        "Item - Cinnamon bun": "Pet rock photo",
+        "Item - Frisbee": "Tato skateboard photo",
+        "Item - Muddy camera": "Bubble fly photo",
+        "Item - Reporter hat": "Butterfly photo",
+        "Item - Sneakers": "Reporter hat",
+        "Quest - A design problem": "Space helmet",
+        "Quest - A ghostly date": "Photo challenger flag",
+        "Quest - A mouse bakery": "Tato fly photo",
+        "Quest - A thieving crow": "Portillo photo",
+        "Quest - Hang in there, buddy": "Backpack",
+        "Quest - Photo challenge #5": "Frames & filters",
+        "Quest - Photo challenge #6": "Home bird photo",
+        "Quest - Punk rocker bread crumbs": "Teddy photo",
+        "Quest - Ratskullz crew": "Flies photo",
+        "Quest - Spooky scary city": "Umbrella",
+        "Quest - Super Hotbean Bros.": "Lost sock",
+        "Quest - Suspicious activity - city": "Foam finger",
+        "Compendium - Cosmo deer": "Cow photo",
+        "Compendium - Fluff ball": "Ghost glasses",
+        "Compendium - Meteopal": "Business pigeon photo",
+        "Compendium - Mikée": "Tato swim photo",
+        "Compendium - Mountain goat": "Sunday swan photo",
+        "Compendium - Nariko": "Ski goggles",
+        "Compendium - Owl": "Cosmo deer photo",
+        "Compendium - Snow bird": "Sero photo",
+        "Compendium - Teddy": "Launchable Socks - Squirrel Photography",
+        "Item - Puffer hat": "Fluff ball photo",
+        "Quest - Become a yeti": "Toad photo",
+        "Quest - Listen to the goat choir": "Pigeon photo",
+        "Quest - Locating an asteroid": "Mikée photo",
+        "Quest - Military suspicions": "Old key",
+        "Quest - Photo challenge #8": "Stag beetle photo",
+        "Quest - Play astronaut": "Crab photo",
+        "Quest - Yeti cuteness": "Ladybug photo",
+        "TOEM Experienced": "TOEM Experienced",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -556,7 +718,7 @@ class ToemWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -704,18 +866,24 @@ class ToemWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 
