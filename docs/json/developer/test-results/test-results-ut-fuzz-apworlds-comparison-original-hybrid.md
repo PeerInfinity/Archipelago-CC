@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-03-28 03:14:04 UTC
 
 **Source Data Last Updated:** 2026-03-24T17:55:13
 
@@ -83,7 +83,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | League of Legends | ⚠️ 61/100 | ✅ | ✅ | ✅ | N/A |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ | ❌ | ✅ | ✅ | N/A |
-| Lingo 2 | ⚠️ 9/18 | ✅ | 17.1KB | ✅ | N/A |
+| Lingo 2 | ⚠️ 9/18 | ✅ | N/A | N/A | N/A |
 | Little Witch Nobeta | ✅ | ✅ | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | ✅ | ✅ | ✅ | N/A |
 | Lunacid | ✅ | ✅ | 8.2KB | ✅ | N/A |
@@ -223,7 +223,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Jigsaw | 1.6KB | ✅ | N/A |
 | Keep Talking and Nobody Explodes | ✅ | ✅ | N/A |
 | League of Legends | ✅ | ✅ | N/A |
-| Lingo 2 | 17.1KB | ✅ | N/A |
+| Lingo 2 | N/A | N/A | N/A |
 | Majora's Mask Recompiled | 10.4KB | ✅ | N/A |
 | Metroid Fusion | ✅ | ✅ | N/A |
 | Metroid: Zero Mission | 9.8KB | ✅ | N/A |
