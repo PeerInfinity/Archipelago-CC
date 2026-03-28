@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-spoilers-full.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-03-28 17:13:11 UTC
 
 **Source Data Created:** 2026-03-22T00:25:21.031601+00:00
 
@@ -88,7 +88,7 @@
 | Kirby Super Star | ❌ Failed | 0 | 1.1 | 13.1 | 🟡 8.4% | ✅ | ✅ |
 | League of Legends | ✅ Passed | 0 | 7.8 | 7.8 | 🟢 Complete | ✅ | ✅ |
 | Lil Gator Game | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
-| Lingo 2 | ❌ Failed | 0 | 0 | 45.4 | 🔴 0.0% | 17.1KB | ✅ |
+| Lingo 2 | ❌ Failed | 0 | 0 | 45.4 | 🔴 0.0% | ⚫ | ✅ |
 | Little Witch Nobeta | ❌ Failed | 0 | 1.3 | 2.41 | 🟡 53.9% | ✅ | ✅ |
 | Luigi's Mansion | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | ✅ | ✅ |
 | Lunacid | ❌ Failed | 0 | 0 | 5.4 | 🔴 0.0% | 8.2KB | ✅ |
