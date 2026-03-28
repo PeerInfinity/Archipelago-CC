@@ -2169,8 +2169,8 @@
             "label": "metalworking",
             "expression": "Metalworking",
             "dependencies": [
-              3,
-              5
+              5,
+              3
             ],
             "full_text": "metalworking: Forge metal into advanced components"
           },

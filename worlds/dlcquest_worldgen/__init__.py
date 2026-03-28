@@ -186,6 +186,53 @@ class DLCqworld(RuleWorldMixin, World):
         "Winning Basic": "Victory Basic",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Movement Pack": "Movement Pack",
+        "Animation Pack": "Psychological Warfare Pack",
+        "Audio Pack": "Name Change Pack",
+        "Between Trees Sheep": "Name Change Pack",
+        "Hole in the Wall Sheep": "Name Change Pack",
+        "Sexy Outfits Pack": "Name Change Pack",
+        "Pause Menu Pack": "Time is Money Pack",
+        "Move Right coins": "4 coins",
+        "Time is Money Pack": "Zombie Sheep",
+        "Psychological Warfare Pack": "Animation Pack",
+        "Armor for your Horse Pack": "Loading Screen",
+        "Cutscene Sheep": "Loading Screen",
+        "Double Jump Pack": "Loading Screen",
+        "Night Map Pack": "Loading Screen",
+        "Sexy Outfits Sheep": "Loading Screen",
+        "Shepherd Sheep": "Loading Screen",
+        "Top Hat Pack": "Loading Screen",
+        "Movement Pack coins": "46 coins",
+        "Map Pack": "Armor for your Horse Pack",
+        "Behind Tree coins": "60 coins",
+        "West Cave Sheep": "Double Jump Pack",
+        "Psychological Warfare coins": "100 coins",
+        "Pet Pack": "Map Pack",
+        "North West Alcove Sheep": "Audio Pack",
+        "Double Jump Total Left coins": "50 coins",
+        "Top Hat Sheep": "Pause Menu Pack",
+        "Double Jump Total Left Cave coins": "9 coins",
+        "North West Ceiling Sheep": "Pet Pack",
+        "Double Jump Total Left Roof coins": "10 coins",
+        "Double Jump Alcove Sheep": "Night Map Pack",
+        "Double Jump Behind Tree coins": "89 coins",
+        "Double Jump Floating Sheep": "Sexy Outfits Pack",
+        "True Double Jump Behind Tree coins": "7 coins",
+        "Gun Pack": "Temporary Spike",
+        "The Forest coins": "171 coins",
+        "The Zombie Pack": "Top Hat Pack",
+        "Forest Low Sheep": "The Zombie Pack",
+        "The Forest with double Jump coins": "76 coins",
+        "Forest High Sheep": "Gun Pack",
+        "The Forest with double Jump Part 2 coins": "203 coins",
+        "Finish the Fight Pack": "Finish the Fight Pack",
+        "Winning Basic": "Victory Basic",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -271,7 +318,7 @@ class DLCqworld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -451,18 +498,24 @@ class DLCqworld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

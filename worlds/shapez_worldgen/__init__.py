@@ -313,6 +313,151 @@ class ShapezWorld(RuleWorldMixin, World):
         "Shapesanity 39": "Rotator (CCW)",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "My eyes no longer hurt": "Switch",
+        "Getting into it": "Quad Painter",
+        "Belt Upgrade Tier V": "Small Processors Upgrade",
+        "GPS": "Small Processors Upgrade",
+        "Level 20": "Small Processors Upgrade",
+        "Level 21": "Small Processors Upgrade",
+        "Painting Upgrade Tier V": "Small Processors Upgrade",
+        "Painting Upgrade Tier VIII": "Small Processors Upgrade",
+        "Shapesanity 16": "Small Processors Upgrade",
+        "Shapesanity 43": "Small Processors Upgrade",
+        "Shapesanity 5": "Small Processors Upgrade",
+        "SpaceY": "Small Processors Upgrade",
+        "Belt Upgrade Tier VII": "Big Processors Upgrade",
+        "Even faster": "Big Processors Upgrade",
+        "I need trains": "Big Processors Upgrade",
+        "Level 16": "Big Processors Upgrade",
+        "Level 5": "Big Processors Upgrade",
+        "Level 7": "Big Processors Upgrade",
+        "Painting Upgrade Tier IV": "Big Processors Upgrade",
+        "Processors Upgrade Tier III": "Big Processors Upgrade",
+        "Shapesanity 27": "Big Processors Upgrade",
+        "Shapesanity 31": "Big Processors Upgrade",
+        "Shapesanity 32": "Big Processors Upgrade",
+        "To the moon": "Big Processors Upgrade",
+        "Level 1": "Balancer",
+        "Level 1 Additional": "Storage",
+        "Efficiency 1": "Small Painting Upgrade",
+        "Level 11": "Small Painting Upgrade",
+        "Level 2": "Small Painting Upgrade",
+        "Level 23": "Small Painting Upgrade",
+        "Rotater": "Small Painting Upgrade",
+        "Shapesanity 17": "Small Painting Upgrade",
+        "Shapesanity 50": "Small Painting Upgrade",
+        "Cutter": "Big Belt Upgrade",
+        "Level 22": "Big Belt Upgrade",
+        "Level 3": "Big Belt Upgrade",
+        "Preparing to launch": "Big Belt Upgrade",
+        "Shapesanity 28": "Big Belt Upgrade",
+        "Shapesanity 4": "Big Belt Upgrade",
+        "Shapesanity 42": "Big Belt Upgrade",
+        "Storage": "Big Belt Upgrade",
+        "Wires": "Big Belt Upgrade",
+        "Belt Upgrade Tier II": "Small Miner Upgrade",
+        "Faster": "Small Miner Upgrade",
+        "It's piling up": "Small Miner Upgrade",
+        "Miner Upgrade Tier III": "Small Miner Upgrade",
+        "Perfectionist": "Small Miner Upgrade",
+        "Shapesanity 11": "Small Miner Upgrade",
+        "Shapesanity 15": "Small Miner Upgrade",
+        "Shapesanity 21": "Small Miner Upgrade",
+        "Shapesanity 29": "Small Miner Upgrade",
+        "Shapesanity 41": "Small Miner Upgrade",
+        "Shapesanity 49": "Small Miner Upgrade",
+        "Shapesanity 8": "Small Miner Upgrade",
+        "The logo!": "Small Miner Upgrade",
+        "Belt Upgrade Tier IV": "Blueprint Shapes Bundle",
+        "Branding specialist 1": "Blueprint Shapes Bundle",
+        "Miner Upgrade Tier II": "Blueprint Shapes Bundle",
+        "Miner Upgrade Tier V": "Blueprint Shapes Bundle",
+        "Painter": "Blueprint Shapes Bundle",
+        "Painting Upgrade Tier III": "Blueprint Shapes Bundle",
+        "Painting Upgrade Tier VII": "Blueprint Shapes Bundle",
+        "Shapesanity 26": "Blueprint Shapes Bundle",
+        "Shapesanity 3": "Blueprint Shapes Bundle",
+        "Shapesanity 36": "Blueprint Shapes Bundle",
+        "Processors Upgrade Tier II": "Wires",
+        "Level 12": "Level Shapes Bundle",
+        "Level 14": "Level Shapes Bundle",
+        "Miner Upgrade Tier VII": "Level Shapes Bundle",
+        "Painting Upgrade Tier II": "Level Shapes Bundle",
+        "Processors Upgrade Tier IV": "Level Shapes Bundle",
+        "Shapesanity 38": "Level Shapes Bundle",
+        "Shapesanity 45": "Level Shapes Bundle",
+        "Stack overflow": "Level Shapes Bundle",
+        "It's a mess": "Virtual Processing",
+        "Oops": "Item Filter",
+        "Belt Upgrade Tier VI": "Big Miner Upgrade",
+        "Level 19": "Big Miner Upgrade",
+        "Level 24": "Big Miner Upgrade",
+        "Level 4": "Big Miner Upgrade",
+        "Level 9": "Big Miner Upgrade",
+        "Now it's easy": "Big Miner Upgrade",
+        "Shapesanity 1": "Big Miner Upgrade",
+        "Shapesanity 19": "Big Miner Upgrade",
+        "Shapesanity 30": "Big Miner Upgrade",
+        "Shapesanity 46": "Big Miner Upgrade",
+        "The next dimension": "Big Miner Upgrade",
+        "Wait, they stack?": "Big Miner Upgrade",
+        "Belt Upgrade Tier III": "Small Belt Upgrade",
+        "Level 13": "Small Belt Upgrade",
+        "Level 18": "Small Belt Upgrade",
+        "Level 20 Additional": "Small Belt Upgrade",
+        "Level 25": "Small Belt Upgrade",
+        "Level 6": "Small Belt Upgrade",
+        "Miner Upgrade Tier VI": "Small Belt Upgrade",
+        "Shapesanity 10": "Small Belt Upgrade",
+        "Shapesanity 2": "Small Belt Upgrade",
+        "Shapesanity 23": "Small Belt Upgrade",
+        "Shapesanity 25": "Small Belt Upgrade",
+        "Shapesanity 40": "Small Belt Upgrade",
+        "Shapesanity 9": "Small Belt Upgrade",
+        "Efficiency 2": "Upgrade Shapes Bundle",
+        "Level 8": "Upgrade Shapes Bundle",
+        "Miner Upgrade Tier IV": "Upgrade Shapes Bundle",
+        "Processors Upgrade Tier VI": "Upgrade Shapes Bundle",
+        "Shapesanity 14": "Upgrade Shapes Bundle",
+        "Shapesanity 24": "Upgrade Shapes Bundle",
+        "Shapesanity 37": "Upgrade Shapes Bundle",
+        "Shapesanity 6": "Upgrade Shapes Bundle",
+        "Level 10": "Stacker",
+        "Belt Upgrade Tier VIII": "Big Painting Upgrade",
+        "Copy-Pasta": "Big Painting Upgrade",
+        "Get rid of them": "Big Painting Upgrade",
+        "Level 15": "Big Painting Upgrade",
+        "Level 17": "Big Painting Upgrade",
+        "Shapesanity 18": "Big Painting Upgrade",
+        "Shapesanity 33": "Big Painting Upgrade",
+        "Shapesanity 47": "Big Painting Upgrade",
+        "Shapesanity 48": "Big Painting Upgrade",
+        "Shapesanity 7": "Big Painting Upgrade",
+        "Level 20 Additional 2": "Tunnel Tier II",
+        "Goal": "Goal",
+        "Processors Upgrade Tier V": "Compact Merger",
+        "Painting Upgrade Tier VI": "Painter",
+        "Processors Upgrade Tier VII": "Chaining Extractor",
+        "Miner Upgrade Tier VIII": "Rotator (180°)",
+        "Processors Upgrade Tier VIII": "Blueprints",
+        "Computer Guy": "Color Mixer",
+        "I'll use it later": "Constant Signal",
+        "I've seen that before ...": "Double Painter",
+        "Memories from the past": "Tunnel",
+        "Branding specialist 2": "Compact Splitter",
+        "Shapesanity 22": "Cutter",
+        "Shapesanity 20": "Logic Gates",
+        "Shapesanity 13": "Quad Cutter",
+        "Shapesanity 12": "Display",
+        "Shapesanity 34": "Belt Reader",
+        "Shapesanity 35": "Rotator",
+        "Shapesanity 44": "Trash",
+        "Shapesanity 39": "Rotator (CCW)",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -511,7 +656,7 @@ class ShapezWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -659,18 +804,24 @@ class ShapezWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

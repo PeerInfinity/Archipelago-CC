@@ -2408,8 +2408,8 @@
             "label": "parry",
             "expression": "Parry",
             "dependencies": [
-              2,
-              5
+              5,
+              2
             ],
             "full_text": "parry: Parry"
           },
@@ -2433,8 +2433,8 @@
             "label": "dual_wield",
             "expression": "Dual Wield",
             "dependencies": [
-              2,
-              8
+              8,
+              2
             ],
             "full_text": "dual_wield: Dual Wield"
           },
