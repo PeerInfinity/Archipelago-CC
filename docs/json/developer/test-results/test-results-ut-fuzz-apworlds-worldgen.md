@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 16:47:34 UTC
+**Generated:** 2026-03-24 19:12:10 UTC
 
 **Source Data Created:** 2026-03-24T16:47:34.069116+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 41 (passes worldgen mode per config)
-- **Unexpected Passes:** 1 (expected to fail but passed)
+- **Expected Passes:** 42 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
 - **Expected Failures:** 78 (doesn't pass worldgen mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -192,7 +192,7 @@ Of the 42 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (41)
+### Expected Passes (42)
 
 Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 
@@ -215,6 +215,7 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Ittle Dew 2 | 100 | 91 | 0 | 0 | 91.0% |
 | Jigsaw | 100 | 100 | 0 | 0 | 100.0% |
 | K-On! After School Live!! | 100 | 100 | 0 | 0 | 100.0% |
+| Kingdom Hearts Birth by Sleep | 100 | 100 | 0 | 0 | 100.0% |
 | Kingdom Hearts Chain of Memories | 100 | 100 | 0 | 0 | 100.0% |
 | League of Legends | 100 | 98 | 0 | 0 | 98.0% |
 | Little Witch Nobeta | 100 | 100 | 0 | 0 | 100.0% |
@@ -239,14 +240,6 @@ Games that pass worldgen mode per tracking-mode-config.json and passed the test.
 | Wordipelago | 100 | 95 | 0 | 0 | 95.0% |
 | Zelda II: The Adventure of Link | 100 | 100 | 0 | 0 | 100.0% |
 | osu! | 100 | 100 | 0 | 0 | 100.0% |
-
-### Unexpected Passes (1)
-
-Games NOT expected to pass worldgen mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Kingdom Hearts Birth by Sleep | 100 | 100 | 0 | 0 | 100.0% |
 
 ### Expected Failures (78)
 

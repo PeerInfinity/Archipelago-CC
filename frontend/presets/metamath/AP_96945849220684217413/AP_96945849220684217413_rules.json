@@ -3300,8 +3300,8 @@
             "label": "eleq12d",
             "expression": "|- ( ph -> ( A e. C <-> B e. D ) )",
             "dependencies": [
-              4,
-              5
+              5,
+              4
             ],
             "full_text": "eleq12d: Theorem eleq12i is the congruence law for elementhood. $) $( $j congruence 'eleq12i'; $) $} $} ${ eleq12d.1 $e |- ( ph -> A = B ) $. eleq12d.2 $e |- ( ph -> C = D ) $. $( Deduction from equality to equivalence of membership.  (Contributed by NM, 31-May-1994.)",
             "instantiated_expression": "|- ( x = y -> ( x e. ( F ` x ) <-> y e. ( F ` y ) ) )"
@@ -3332,8 +3332,8 @@
             "label": "elrab",
             "expression": "|- ( A e. { x e. B | ph } <-> ( A e. B /\\ ps ) )",
             "dependencies": [
-              8,
-              9
+              9,
+              8
             ],
             "full_text": "elrab: Membership in a restricted class abstraction, using implicit substitution.  (Contributed by NM, 21-May-1999.)  Remove dependency on ~ ax-13 .  (Revised by Steven Nguyen, 23-Nov-2022.)",
             "instantiated_expression": "|- ( y e. { x e. A | -. x e. ( F ` x ) } <-> ( y e. A /\\ -. y e. ( F ` y ) ) )"
@@ -3369,8 +3369,8 @@
             "label": "eleqtrrid",
             "expression": "|- ( ph -> A e. C )",
             "dependencies": [
-              3,
-              13
+              13,
+              3
             ],
             "full_text": "eleqtrrid: A membership and equality inference.  (Contributed by NM, 4-Jan-2006.)",
             "instantiated_expression": "|- ( F : A -onto-> ~P A -> { x e. A | -. x e. ( F ` x ) } e. ran F )"
@@ -3379,8 +3379,8 @@
             "label": "sylib",
             "expression": "|- ( ph -> ch )",
             "dependencies": [
-              7,
-              11
+              11,
+              7
             ],
             "full_text": "sylib: A mixed syllogism inference from an implication and a biconditional.",
             "instantiated_expression": "|- ( y e. A -> -. ( y e. ( F ` y ) <-> y e. { x e. A | -. x e. ( F ` x ) } ) )"
@@ -3389,8 +3389,8 @@
             "label": "nsyl",
             "expression": "|- ( ph -> -. ch )",
             "dependencies": [
-              1,
-              15
+              15,
+              1
             ],
             "full_text": "nsyl: A negated syllogism inference.  (Contributed by NM, 31-Dec-1993.) (Proof shortened by Wolf Lammen, 2-Mar-2013.)",
             "instantiated_expression": "|- ( y e. A -> -. ( F ` y ) = { x e. A | -. x e. ( F ` x ) } )"
@@ -3414,8 +3414,8 @@
             "label": "nrex",
             "expression": "|- -. E. x e. A ps",
             "dependencies": [
-              16,
-              17
+              17,
+              16
             ],
             "full_text": "nrex: Inference adding restricted existential quantifier to negated wff.",
             "instantiated_expression": "|- -. E. y e. A ( F ` y ) = { x e. A | -. x e. ( F ` x ) }"

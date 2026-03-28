@@ -23,13 +23,22 @@ def stop_server(port):
     """
     print(f"Stopping any existing server on port {port}...")
     try:
-        # Find processes using the port and kill them
-        result = subprocess.run(
-            f"lsof -ti:{port} | xargs kill -9 2>/dev/null || true",
-            shell=True,
-            capture_output=True,
-            text=True
-        )
+        if sys.platform == "win32":
+            # Use netstat to find the PID listening on the port, then taskkill
+            result = subprocess.run(
+                f'for /f "tokens=5" %a in (\'netstat -aon ^| findstr :{port} ^| findstr LISTENING\') do taskkill /F /PID %a',
+                shell=True,
+                capture_output=True,
+                text=True
+            )
+        else:
+            # Find processes using the port and kill them
+            result = subprocess.run(
+                f"lsof -ti:{port} | xargs kill -9 2>/dev/null || true",
+                shell=True,
+                capture_output=True,
+                text=True
+            )
         print("Stopped any existing server")
     except Exception as e:
         # Ignore errors - server might not be running
@@ -68,7 +77,7 @@ def start_server(game, seed, port, project_root, log_file='server_log.txt'):
     # Start the server (run from project root)
     server_proc = subprocess.Popen(
         [
-            'python3',
+            sys.executable,
             'MultiServer.py',
             '--host', 'localhost',
             '--port', str(port),
@@ -179,7 +188,8 @@ Examples:
 
     parser.add_argument(
         '--seed',
-        default='1',
+        type=int,
+        default=1,
         help='Seed number (default: 1)'
     )
 
