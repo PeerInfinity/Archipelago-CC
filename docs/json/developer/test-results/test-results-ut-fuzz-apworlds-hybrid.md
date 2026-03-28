@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-03-28 04:39:33 UTC
 
 **Source Data Created:** 2026-03-24T19:01:46.693437+00:00
 
@@ -35,10 +35,10 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 80 (passes hybrid mode per config)
-- **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 39 (doesn't pass hybrid mode per config)
-- **Unexpected Failures (logic):** 1 (expected to pass but had logic mismatch)
+- **Expected Passes:** 78 (passes hybrid mode per config)
+- **Unexpected Passes:** 2 (expected to fail but passed)
+- **Expected Failures:** 37 (doesn't pass hybrid mode per config)
+- **Unexpected Failures (logic):** 3 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
@@ -55,15 +55,15 @@
 
 Of the 80 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 54/80 (67.5%)
+- **Passing with Generic Exporter:** 55/80 (68.8%)
 - **Passing with Generic Logic:** 80/80 (100.0%)
-- **Passing with Both Generic:** 54/80 (67.5%)
+- **Passing with Both Generic:** 55/80 (68.8%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 397.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 397.4KB
 
 ## Test Results
 
@@ -124,7 +124,7 @@ Of the 80 games with 100% pass rate:
 | League of Legends | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | ✅ | ✅ | N/A |
 | *Lego Star Wars: The Complete Saga* | ✅ | 100 | 85 | 0 | 0 | 15 | ⚠️ 85.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| *Lingo 2* | ✅ | 100 | 17 | 0 | 0 | 83 | ❌ 17.0% | 17.1KB | ✅ | N/A |
+| *Lingo 2* | ✅ | 100 | 17 | 0 | 0 | 83 | ❌ 17.0% | N/A | N/A | N/A |
 | Little Witch Nobeta | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | 100 | 49 | 0 | 0 | 51 | ❌ 49.0% | ✅ | ✅ | N/A |
 | *Lunacid* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.2KB | ✅ | N/A |
@@ -192,7 +192,7 @@ Of the 80 games with 100% pass rate:
 
 ## Results Breakdown
 
-### Expected Passes (80)
+### Expected Passes (78)
 
 Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 
@@ -235,7 +235,6 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Kingdom Hearts Chain of Memories | 100 | 100 | 0 | 0 | 100.0% |
 | League of Legends | 100 | 98 | 0 | 0 | 98.0% |
 | Lego Star Wars: The Complete Saga | 100 | 85 | 0 | 0 | 85.0% |
-| Lingo 2 | 100 | 17 | 0 | 0 | 17.0% |
 | Little Witch Nobeta | 100 | 100 | 0 | 0 | 100.0% |
 | Luigi's Mansion | 100 | 49 | 0 | 0 | 49.0% |
 | Lunacid | 100 | 100 | 0 | 0 | 100.0% |
@@ -246,7 +245,6 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Metroid: Zero Mission | 100 | 94 | 0 | 0 | 94.0% |
 | Minishoot Adventures | 100 | 100 | 0 | 0 | 100.0% |
 | Nine Sols | 100 | 54 | 0 | 0 | 54.0% |
-| Ori and the Blind Forest | 100 | 97 | 0 | 0 | 97.0% |
 | Pizza Tower | 100 | 86 | 0 | 0 | 86.0% |
 | Pokemon FireRed and LeafGreen | 100 | 100 | 0 | 0 | 100.0% |
 | Pseudoregalia | 100 | 100 | 0 | 0 | 100.0% |
@@ -279,7 +277,16 @@ Games that pass hybrid mode per tracking-mode-config.json and passed the test.
 | Zelda II: The Adventure of Link | 100 | 100 | 0 | 0 | 100.0% |
 | osu! | 100 | 100 | 0 | 0 | 100.0% |
 
-### Expected Failures (39)
+### Unexpected Passes (2)
+
+Games NOT expected to pass hybrid mode (not in config or mode not listed) but passed anyway.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Lingo 2 | 100 | 17 | 0 | 0 | 17.0% |
+| Ori and the Blind Forest | 100 | 97 | 0 | 0 | 97.0% |
+
+### Expected Failures (37)
 
 Games NOT expected to pass hybrid mode and failed as expected.
 
@@ -299,7 +306,6 @@ Games NOT expected to pass hybrid mode and failed as expected.
 | Duke Nukem 3D | 100 | 6 | 89 | 0 | 6.0% |
 | Final Fantasy Tactics A2 | 100 | 10 | 88 | 0 | 10.0% |
 | GZDoom | 100 | 0 | 100 | 0 | 0.0% |
-| Garfield Kart - Furious Racing | 100 | 0 | 100 | 0 | 0.0% |
 | Into the Breach | 100 | 45 | 55 | 0 | 45.0% |
 | Kirby Super Star | 100 | 16 | 80 | 0 | 16.0% |
 | Lil Gator Game | 100 | 0 | 100 | 0 | 0.0% |
@@ -315,7 +321,6 @@ Games NOT expected to pass hybrid mode and failed as expected.
 | Simon Tatham's Portable Puzzle Collection | 100 | 94 | 0 | 6 | 94.0% |
 | Sly 2: Band of Thieves | 100 | 0 | 53 | 0 | 0.0% |
 | Sly Cooper and the Thievius Raccoonus | 100 | 88 | 11 | 0 | 88.0% |
-| Sonic Adventure DX | 100 | 16 | 26 | 0 | 16.0% |
 | System Shock 2 | 100 | 40 | 21 | 0 | 40.0% |
 | TCG Card Shop Simulator | 100 | 0 | 98 | 0 | 0.0% |
 | The Legend of Zelda - Oracle of Seasons | 100 | 0 | 100 | 0 | 0.0% |
@@ -325,13 +330,15 @@ Games NOT expected to pass hybrid mode and failed as expected.
 | Watery Words | 100 | 96 | 0 | 4 | 96.0% |
 | Yu-Gi-Oh! Dungeon Dice Monsters | 100 | 85 | 15 | 0 | 85.0% |
 
-### Unexpected Failures (Logic Mismatch) (1)
+### Unexpected Failures (Logic Mismatch) (3)
 
 Games expected to pass hybrid mode but failed due to logic mismatches.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Garfield Kart - Furious Racing | 100 | 0 | 100 | 0 | 0.0% |
 | Minit | 100 | 98 | 1 | 0 | 98.0% |
+| Sonic Adventure DX | 100 | 16 | 26 | 0 | 16.0% |
 
 ## Explain Support Details
 
