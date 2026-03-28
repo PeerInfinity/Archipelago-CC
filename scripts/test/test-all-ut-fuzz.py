@@ -788,7 +788,8 @@ def main():
         return 1
 
     # Get skip list (permanent + ut_fuzz exclusions for games that hang/timeout)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='ut_fuzz')
+    # TEMPORARY: disabled ut_fuzz exclude list to test diagnostics on poisoning games
+    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
