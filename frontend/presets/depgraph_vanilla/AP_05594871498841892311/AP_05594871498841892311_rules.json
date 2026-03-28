@@ -2452,8 +2452,8 @@
             "label": "warrior_stance",
             "expression": "Warrior Stance",
             "dependencies": [
-              7,
-              10
+              10,
+              7
             ],
             "full_text": "warrior_stance: Warrior Stance"
           },

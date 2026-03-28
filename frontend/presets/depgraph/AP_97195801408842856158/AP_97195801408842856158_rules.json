@@ -2442,8 +2442,8 @@
             "label": "whirlwind",
             "expression": "Whirlwind",
             "dependencies": [
-              9,
-              4
+              4,
+              9
             ],
             "full_text": "whirlwind: Whirlwind"
           },

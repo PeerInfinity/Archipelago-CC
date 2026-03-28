@@ -2408,8 +2408,8 @@
             "label": "parry",
             "expression": "Parry",
             "dependencies": [
-              5,
-              2
+              2,
+              5
             ],
             "full_text": "parry: Parry"
           },
@@ -2451,8 +2451,8 @@
             "label": "warrior_stance",
             "expression": "Warrior Stance",
             "dependencies": [
-              7,
-              10
+              10,
+              7
             ],
             "full_text": "warrior_stance: Warrior Stance"
           },
