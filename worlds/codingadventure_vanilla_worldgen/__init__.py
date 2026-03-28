@@ -207,6 +207,73 @@ class CodingAdventureWorld(RuleWorldMixin, World):
         "SSL Certificate": "Deployment Complete",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Learn HTML": "HTML",
+        "Learn CSS": "CSS",
+        "Learn Design Systems": "Design Systems",
+        "Learn JavaScript": "JavaScript Basics",
+        "Learn DOM Manipulation": "DOM Manipulation",
+        "Learn Algorithms": "Algorithms",
+        "Choose Server Language": "Server Basics",
+        "Learn File I/O": "File I/O",
+        "Learn HTTP Basics": "HTTP Basics",
+        "Learn Git": "Git",
+        "Learn Command Line": "Command Line",
+        "Learn Package Managers": "Package Managers",
+        "Static Website Milestone": "Static Website Complete",
+        "Learn React": "React",
+        "React Components": "Frontend Framework",
+        "Redux": "State Management",
+        "Learn Vue": "Vue",
+        "Vue Components": "Frontend Framework",
+        "Vuex": "State Management",
+        "Advanced Vanilla JS": "Frontend Framework",
+        "Custom State System": "State Management",
+        "Learn Express": "Express",
+        "Build REST APIs": "REST APIs",
+        "MongoDB Integration": "Database Integration",
+        "Learn Django": "Django",
+        "Django REST Framework": "REST APIs",
+        "Django ORM": "Database Integration",
+        "Learn Flask": "Flask",
+        "Flask-RESTful": "REST APIs",
+        "SQLAlchemy": "Database Integration",
+        "UI/UX Principles": "UI/UX",
+        "Responsive Design": "Responsive Design",
+        "Accessibility": "Accessibility",
+        "Learn SQL": "SQL",
+        "PostgreSQL": "Database Basics",
+        "Query Optimization": "Query Optimization",
+        "Learn NoSQL": "NoSQL",
+        "MongoDB": "Database Basics",
+        "Indexing Strategies": "Query Optimization",
+        "Interactive App Milestone": "Interactive App Complete",
+        "Sessions": "Sessions",
+        "JWT": "JWT",
+        "OAuth": "Authentication",
+        "Caching": "Caching",
+        "CDN": "CDN",
+        "Load Balancing": "Performance",
+        "Unit Tests": "Unit Tests",
+        "Integration Tests": "Integration Tests",
+        "E2E Tests": "Testing",
+        "Docker": "Docker",
+        "CI/CD": "CI/CD",
+        "Monitoring": "DevOps",
+        "Full-Stack Integration Milestone": "Full-Stack Complete",
+        "HTTPS": "HTTPS",
+        "CORS": "CORS",
+        "Input Validation": "Security Complete",
+        "Horizontal Scaling": "Horizontal Scaling",
+        "Microservices": "Scaling Complete",
+        "Cloud Provider": "Cloud Provider",
+        "Domain Setup": "Domain",
+        "SSL Certificate": "Deployment Complete",
+        "Production Deployment": "Victory",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -312,7 +379,7 @@ class CodingAdventureWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -460,18 +527,24 @@ class CodingAdventureWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

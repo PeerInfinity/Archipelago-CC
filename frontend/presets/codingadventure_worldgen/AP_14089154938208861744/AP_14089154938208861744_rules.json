@@ -96,7 +96,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "HTML",
+              "name": "Package Managers",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -113,7 +113,7 @@
               }
             },
             "item": {
-              "name": "CSS",
+              "name": "Design Systems",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -130,7 +130,7 @@
               }
             },
             "item": {
-              "name": "Design Systems",
+              "name": "Server Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -150,7 +150,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "JavaScript Basics",
+              "name": "HTML",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -167,7 +167,7 @@
               }
             },
             "item": {
-              "name": "DOM Manipulation",
+              "name": "UI/UX",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -184,7 +184,7 @@
               }
             },
             "item": {
-              "name": "Algorithms",
+              "name": "Database Integration",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -204,7 +204,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Server Basics",
+              "name": "REST APIs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -221,7 +221,7 @@
               }
             },
             "item": {
-              "name": "File I/O",
+              "name": "CI/CD",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -238,7 +238,7 @@
               }
             },
             "item": {
-              "name": "HTTP Basics",
+              "name": "Testing",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -258,7 +258,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Git",
+              "name": "CSS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -272,7 +272,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Command Line",
+              "name": "Database Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -289,7 +289,7 @@
               }
             },
             "item": {
-              "name": "Package Managers",
+              "name": "Integration Tests",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -365,7 +365,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Static Website Complete",
+              "name": "Interactive App Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -418,7 +418,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "React",
+              "name": "Unit Tests",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -435,7 +435,7 @@
               }
             },
             "item": {
-              "name": "Frontend Framework",
+              "name": "Sessions",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -452,7 +452,7 @@
               }
             },
             "item": {
-              "name": "State Management",
+              "name": "Domain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -472,7 +472,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Vue",
+              "name": "SQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -489,7 +489,7 @@
               }
             },
             "item": {
-              "name": "Frontend Framework",
+              "name": "Performance",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -506,7 +506,7 @@
               }
             },
             "item": {
-              "name": "State Management",
+              "name": "CDN",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -526,7 +526,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Frontend Framework",
+              "name": "Cloud Provider",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -543,7 +543,7 @@
               }
             },
             "item": {
-              "name": "State Management",
+              "name": "HTTPS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -599,7 +599,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Express",
+              "name": "Static Website Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -616,7 +616,7 @@
               }
             },
             "item": {
-              "name": "REST APIs",
+              "name": "Frontend Framework",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -633,7 +633,7 @@
               }
             },
             "item": {
-              "name": "Database Integration",
+              "name": "State Management",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -653,7 +653,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Django",
+              "name": "HTTP Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -670,7 +670,7 @@
               }
             },
             "item": {
-              "name": "REST APIs",
+              "name": "Authentication",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -687,7 +687,7 @@
               }
             },
             "item": {
-              "name": "Database Integration",
+              "name": "Frontend Framework",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -707,7 +707,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Flask",
+              "name": "Query Optimization",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -724,7 +724,7 @@
               }
             },
             "item": {
-              "name": "REST APIs",
+              "name": "Frontend Framework",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -741,7 +741,7 @@
               }
             },
             "item": {
-              "name": "Database Integration",
+              "name": "Full-Stack Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -764,7 +764,7 @@
               }
             },
             "item": {
-              "name": "UI/UX",
+              "name": "DevOps",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -781,7 +781,7 @@
               }
             },
             "item": {
-              "name": "Responsive Design",
+              "name": "Security Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -798,7 +798,7 @@
               }
             },
             "item": {
-              "name": "Accessibility",
+              "name": "Docker",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -838,7 +838,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "SQL",
+              "name": "Deployment Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -855,7 +855,7 @@
               }
             },
             "item": {
-              "name": "Database Basics",
+              "name": "Express",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -872,7 +872,7 @@
               }
             },
             "item": {
-              "name": "Query Optimization",
+              "name": "REST APIs",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -892,7 +892,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "NoSQL",
+              "name": "Git",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -909,7 +909,7 @@
               }
             },
             "item": {
-              "name": "Database Basics",
+              "name": "Django",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -926,7 +926,7 @@
               }
             },
             "item": {
-              "name": "Query Optimization",
+              "name": "JavaScript Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1022,7 +1022,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Interactive App Complete",
+              "name": "State Management",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1045,7 +1045,7 @@
               }
             },
             "item": {
-              "name": "Sessions",
+              "name": "File I/O",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1062,7 +1062,7 @@
               }
             },
             "item": {
-              "name": "JWT",
+              "name": "CORS",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1079,7 +1079,7 @@
               }
             },
             "item": {
-              "name": "Authentication",
+              "name": "Accessibility",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1105,7 +1105,7 @@
               }
             },
             "item": {
-              "name": "Caching",
+              "name": "Flask",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1122,7 +1122,7 @@
               }
             },
             "item": {
-              "name": "CDN",
+              "name": "State Management",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1139,7 +1139,7 @@
               }
             },
             "item": {
-              "name": "Performance",
+              "name": "Database Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1159,7 +1159,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Unit Tests",
+              "name": "Horizontal Scaling",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1176,7 +1176,7 @@
               }
             },
             "item": {
-              "name": "Integration Tests",
+              "name": "Responsive Design",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1193,7 +1193,7 @@
               }
             },
             "item": {
-              "name": "Testing",
+              "name": "Algorithms",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1216,7 +1216,7 @@
               }
             },
             "item": {
-              "name": "Docker",
+              "name": "DOM Manipulation",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1236,7 +1236,7 @@
               }
             },
             "item": {
-              "name": "CI/CD",
+              "name": "Query Optimization",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1253,7 +1253,7 @@
               }
             },
             "item": {
-              "name": "DevOps",
+              "name": "NoSQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1309,7 +1309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Full-Stack Complete",
+              "name": "Caching",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1329,7 +1329,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "HTTPS",
+              "name": "Command Line",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1346,7 +1346,7 @@
               }
             },
             "item": {
-              "name": "CORS",
+              "name": "Vue",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1363,7 +1363,7 @@
               }
             },
             "item": {
-              "name": "Security Complete",
+              "name": "JWT",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1386,7 +1386,7 @@
               }
             },
             "item": {
-              "name": "Horizontal Scaling",
+              "name": "Scaling Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1403,7 +1403,7 @@
               }
             },
             "item": {
-              "name": "Scaling Complete",
+              "name": "Database Integration",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1426,7 +1426,7 @@
               }
             },
             "item": {
-              "name": "Cloud Provider",
+              "name": "React",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1443,7 +1443,7 @@
               }
             },
             "item": {
-              "name": "Domain",
+              "name": "Database Integration",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1463,7 +1463,7 @@
               }
             },
             "item": {
-              "name": "Deployment Complete",
+              "name": "REST APIs",
               "player": 1,
               "advancement": true,
               "type": "None"

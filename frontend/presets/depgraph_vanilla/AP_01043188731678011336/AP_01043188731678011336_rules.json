@@ -2613,9 +2613,9 @@
             "label": "butter_sugar_base",
             "expression": "Butter Sugar Base",
             "dependencies": [
+              8,
               1,
-              5,
-              8
+              5
             ],
             "full_text": "butter_sugar_base: Cream butter and sugars until fluffy"
           },
@@ -2639,8 +2639,8 @@
             "label": "basic_dough",
             "expression": "Basic Dough",
             "dependencies": [
-              4,
-              11
+              11,
+              4
             ],
             "full_text": "basic_dough: Gradually mix dry ingredients into wet"
           },
@@ -2656,8 +2656,8 @@
             "label": "shaped_cookies",
             "expression": "Shaped Cookies",
             "dependencies": [
-              7,
-              13
+              13,
+              7
             ],
             "full_text": "shaped_cookies: Scoop dough onto prepared baking sheets"
           },
@@ -2665,8 +2665,8 @@
             "label": "baked_cookies",
             "expression": "Baked Cookies",
             "dependencies": [
-              6,
-              14
+              14,
+              6
             ],
             "full_text": "baked_cookies: Bake for 9-11 minutes until golden brown"
           }

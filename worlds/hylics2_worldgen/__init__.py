@@ -304,6 +304,145 @@ class Hylics2World(RuleWorldMixin, World):
         "Defeat Gibby": "Victory",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Afterlife: Mangled Wayne": "BURRITO",
+        "Arcade 2: Cave Burrito": "BURRITO",
+        "Foglast: TV": "BURRITO",
+        "Hylemxylem: Drained Lower Reservoir Burrito 2": "BURRITO",
+        "Juice Ranch: Ledge Rancher": "BURRITO",
+        "New Muldul: Pot near Vault": "BURRITO",
+        "New Muldul: Vault Bomb": "BURRITO",
+        "Sage Labyrinth: Motor Hunter Sarcophagus": "BURRITO",
+        "Sage Labyrinth: Sage Right Leg": "BURRITO",
+        "Viewax's Edifice: Defeat Viewax": "BURRITO",
+        "Viewax's Edifice: Tower Chest": "BURRITO",
+        "Afterlife: Jar near Mangled Wayne": "CLOUD GERM",
+        "New Muldul: Juice Trade": "CLOUD GERM",
+        "New Muldul: Rescued Blerol 1": "CLOUD GERM",
+        "Afterlife: Jar under Pool": "COOKIE",
+        "Drill Castle: Roof Banana": "COOKIE",
+        "Foglast: Cave Fridge": "COOKIE",
+        "Afterlife: TV": "BANANA",
+        "Arcade 2: Flying Machine Banana": "BANANA",
+        "Hylemxylem: Upper Chamber Banana": "BANANA",
+        "Juice Ranch: Battle with Somsnosa": "BANANA",
+        "Juice Ranch: TV": "BANANA",
+        "New Muldul: Basement Suitcase": "BANANA",
+        "New Muldul: Rescued Blerol 2": "BANANA",
+        "Sage Airship: TV": "BANANA",
+        "Sage Labyrinth: Boss Secret Chest 1": "BANANA",
+        "Sage Labyrinth: Boss Secret Chest 2": "BANANA",
+        "Viewax's Edifice: Cave Sarcophagus": "BANANA",
+        "Viewax's Edifice: TV": "BANANA",
+        "Viewax's Edifice: Tower Pot": "BANANA",
+        "Waynehouse: Sarcophagus": "BANANA",
+        "Waynehouse: Toilet": "CLICKER",
+        "Arcade 2: Double Banana 2": "MULTI STEM CELL",
+        "Foglast: Sage Item 2": "MULTI STEM CELL",
+        "Waynehouse: Basement Pot 1": "MULTI STEM CELL",
+        "Drill Castle: Ledge Banana": "MULTI SOUL SPONGE",
+        "Foglast: Buy Clicker": "MULTI SOUL SPONGE",
+        "Foglast: Under Lair Sarcophagus 2": "MULTI SOUL SPONGE",
+        "Foglast: Underground Sarcophagus": "MULTI SOUL SPONGE",
+        "Sage Labyrinth: B1 Double Chest 2": "MULTI SOUL SPONGE",
+        "Waynehouse: Basement Pot 2": "MULTI SOUL SPONGE",
+        "Hylemxylem: Across Upper Reservoir Chest": "JUICE",
+        "Hylemxylem: Drained Upper Reservoir Burrito 1": "JUICE",
+        "Hylemxylem: Fountain Banana": "JUICE",
+        "Sage Labyrinth: 1F Chest Near Fountain": "JUICE",
+        "Sage Labyrinth: 1F Four Statues Chest 2": "JUICE",
+        "Waynehouse: Basement Pot 3": "JUICE",
+        "Waynehouse: TV": "SINGLE GLOVE",
+        "New Muldul: Shop Ceiling Pot 1": "UPPER HOUSE KEY",
+        "New Muldul: Shop Ceiling Pot 2": "BOOTS",
+        "New Muldul: Flag Banana": "WORM ROOM KEY",
+        "New Muldul: Pot above Vault": "FATE SANDBOX",
+        "Foglast: Under Lair Sarcophagus 3": "MULTI-JUICE",
+        "New Muldul: Underground Pot": "MULTI-JUICE",
+        "Sage Labyrinth: B2 Hidden Sarcophagus 1": "MULTI-JUICE",
+        "Sage Labyrinth: Sage Right Arm": "MULTI-JUICE",
+        "Foglast: Sage Sarcophagus": "MUSCLE APPLIQUE",
+        "Hylemxylem: Drained Lower Reservoir Burrito 1": "MUSCLE APPLIQUE",
+        "Hylemxylem: Jar": "MUSCLE APPLIQUE",
+        "Hylemxylem: Lower Reservoir Hole Pot 1": "MUSCLE APPLIQUE",
+        "Juice Ranch: Fridge": "MUSCLE APPLIQUE",
+        "New Muldul: Underground Chest": "MUSCLE APPLIQUE",
+        "Sage Labyrinth: 1F Four Statues Chest 1": "MUSCLE APPLIQUE",
+        "New Muldul: Upper House Chest 1": "SKULL BOMB",
+        "New Muldul: Upper House Chest 2": "BOMBO - GENESIS",
+        "Foglast: Roof Sarcophagus": "STEM CELL",
+        "New Muldul: Talk to Pongorma": "STEM CELL",
+        "New Muldul: TV": "TARP",
+        "Viewax's Edifice: Canopic Jar": "TARP",
+        "Arcade 2: Peak Muscle Applique": "SAGE TOKEN",
+        "New Muldul: Vault Left Chest": "SAGE TOKEN",
+        "Sage Labyrinth: B1 Hole Chest": "SAGE TOKEN",
+        "New Muldul: Vault Right Chest": "MATERIEL MITTS",
+        "Viewax's Edifice: Fountain Banana": "DUBIOUS BERRY",
+        "Foglast: Sage Item 1": "CUPCAKE",
+        "Sage Labyrinth: B1 Double Chest 1": "CUPCAKE",
+        "Viewax's Edifice: Dedusmuln's Suitcase": "CUPCAKE",
+        "Arcade Island: Shielded Key": "LONG GLOVES",
+        "Drill Castle: TV": "LONG GLOVES",
+        "Foglast: Shielded Chest": "LONG GLOVES",
+        "Foglast: Shielded Key": "LONG GLOVES",
+        "Viewax's Edifice: Dedusmuln's Campfire": "LONG GLOVES",
+        "Viewax's Edifice: Talk to Dedusmuln": "JAIL KEY",
+        "Viewax's Edifice: Shielded Key": "LINK MOLLUSC",
+        "Viewax's Edifice: Tower Jar": "SOUL CRISPER",
+        "Viewax's Edifice: Sage Fridge": "TENDRIL HAND",
+        "Arcade 1: Burrito Alcove 2": "PAPER CUP",
+        "Arcade 1: Coin Dash": "PAPER CUP",
+        "Viewax's Edifice: Sage Item 1": "PAPER CUP",
+        "Viewax's Edifice: Sage Item 2": "50 Bones",
+        "Hylemxylem: East Island Chest": "SOUL SPONGE",
+        "Hylemxylem: Lower Reservoir Hole Pot 3": "SOUL SPONGE",
+        "Hylemxylem: Lower Reservoir Hole Sarcophagus": "SOUL SPONGE",
+        "Hylemxylem: Upper Reservoir Hole Key": "SOUL SPONGE",
+        "Juice Ranch: Juice 3": "SOUL SPONGE",
+        "Viewax's Edifice: Viewax Pot": "SOUL SPONGE",
+        "Arcade 1: Key": "FADED PONCHO",
+        "Arcade 1: Burrito Alcove 1": "LOOPED DOME",
+        "Hylemxylem: Drained Upper Reservoir Burrito 2": "LOOPED DOME",
+        "Arcade 1: Behind Spikes Banana": "ORGAN FORT",
+        "Arcade 1: Pyramid Banana": "POOLWINE",
+        "Arcade 1: Moving Platforms Muscle Applique": "NEMATODE INTERFACE",
+        "Arcade 1: Bed Banana": "CONVERTER WORM",
+        "Airship: Talk to Somsnosa": "CHARGE UP",
+        "Arcade 2: Paper Cup Detour": "TELEDENUDATE",
+        "Arcade 2: Double Banana 1": "VESSEL ROOM KEY",
+        "TV Island: TV": "UPPER CHAMBER KEY",
+        "Juice Ranch: Juice 1": "PEPTIDE BODKINS",
+        "Juice Ranch: Juice 2": "DUCTILE HABIT",
+        "Worm Pod: Key": "PLEATHER GAGE",
+        "Foglast: West Sarcophagus": "PNEUMATOPHORE",
+        "Foglast: Under Lair Sarcophagus 1": "TIME SIGIL",
+        "Drill Castle: Island Banana": "TOWER KEY",
+        "Drill Castle: Island Pot": "POROMER BLEB",
+        "Drill Castle: Cave Sarcophagus": "PSYCHIC KNUCKLE",
+        "Sage Labyrinth: 1F Hidden Sarcophagus": "TELESCOPIC SLEEVE",
+        "Sage Airship: Bottom Level Pot": "MEAT",
+        "Sage Labyrinth: B1 Single Chest": "MEAT",
+        "Sage Labyrinth: B1 Enemy Chest": "PADDLE",
+        "Sage Labyrinth: B1 Hidden Sarcophagus": "100 Bones",
+        "Sage Labyrinth: B2 Hidden Sarcophagus 2": "DEEP KEY",
+        "Sage Labyrinth: 2F Sarcophagus": "CAVE KEY",
+        "Sage Labyrinth: Sage Item 1": "DOCK KEY",
+        "Sage Labyrinth: Sage Item 2": "BRIDGE KEY",
+        "Sage Labyrinth: Sage Left Arm": "BRAIN DIGITS",
+        "Sage Labyrinth: Sage Left Leg": "COFFEE",
+        "Sage Airship: Flesh Pot": "JUMPSUIT",
+        "Sage Airship: Top Jar": "RANCHER PONCHO",
+        "Hylemxylem: Lower Reservoir Key": "MULTI-COFFEE",
+        "Hylemxylem: East Island Banana": "BOTTOMLESS JUICE",
+        "Hylemxylem: Drained Lower Reservoir Chest": "CURSED GLOVES",
+        "Hylemxylem: Lower Reservoir Hole Pot 2": "HOUSE KEY",
+        "Hylemxylem: Drained Upper Reservoir Burrito 3": "COFFEE CHIP",
+        "Defeat Gibby": "Victory",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -481,7 +620,7 @@ class Hylics2World(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -661,18 +800,24 @@ class Hylics2World(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

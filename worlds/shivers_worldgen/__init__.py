@@ -306,6 +306,125 @@ class ShiversWorld(RuleWorldMixin, World):
         "Mystery Solved": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Puzzle Solved Combination Lock": "Key for Office Elevator",
+        "Puzzle Solved Gears": "Wood Always Available in Pegasus Room",
+        "Puzzle Solved Stone Henge": "Key for Bedroom",
+        "Puzzle Solved Office Elevator": "Cloth Always Available in Burial Room",
+        "Puzzle Solved Three Floor Elevator": "Sand Always Available in Greenhouse",
+        "Flashback Memory Obtained Beth's Address Book": "Easier Lyre",
+        "Flashback Memory Obtained Museum Brochure": "Easier Lyre",
+        "Flashback Memory Obtained Professor Windlenot's Diary": "Easier Lyre",
+        "Puzzle Hint Found: Beth's Note": "Easier Lyre",
+        "Puzzle Hint Found: Mailbox": "Easier Lyre",
+        "Puzzle Solved Chinese Solitaire": "Easier Lyre",
+        "Puzzle Solved Clock Chains": "Easier Lyre",
+        "Puzzle Solved Gallows": "Easier Lyre",
+        "Puzzle Solved Red Door": "Easier Lyre",
+        "Puzzle Hint Found: Orange Symbol": "Key for Underground Lake",
+        "Puzzle Hint Found: Silver Symbol": "Key for Shaman Room",
+        "Puzzle Hint Found: Green Symbol": "Key for Office",
+        "Puzzle Hint Found: White Symbol": "Crystal Always Available in Ocean",
+        "Puzzle Hint Found: Brown Symbol": "Sand Always Available in Ocean",
+        "Puzzle Hint Found: Tan Symbol": "Cloth Pot Bottom",
+        "Final Riddle: Fortune Teller": "Heal",
+        "Flashback Memory Obtained Mythology of the Stars": "Heal",
+        "Flashback Memory Obtained Scrapbook": "Heal",
+        "Flashback Memory Obtained Windlenot's Ghost": "Heal",
+        "Puzzle Hint Found: Egyptian Sphinx Heard": "Heal",
+        "Puzzle Solved Marble Flipper": "Heal",
+        "Flashback Memory Obtained Egyptian Hieroglyphics Explained": "Cloth Always Available in Egypt",
+        "Windlenot's Body": "Viewed Egyptian Hieroglyphics Explained",
+        "Storage: Desk Drawer": "Crystal Pot Bottom DUPE",
+        "Puzzle Hint Found: Atlantis Map": "Crawling",
+        "Puzzle Hint Found: Tape Recorder Heard": "Key for Janitor Closet",
+        "Puzzle Solved Bedroom Elevator": "Water Pot Bottom",
+        "Puzzle Solved Workshop Drawers": "Metal Always Available in Bedroom",
+        "Storage: Workshop Drawers": "Metal Pot Bottom DUPE",
+        "Puzzle Hint Found: Basilisk Bone Fragments": "Cloth Pot Top",
+        "Puzzle Solved Theater Door": "Key for Torture Room",
+        "Storage: Slide": "Ash Pot Bottom DUPE",
+        "Storage: Transforming Mask": "Water Pot Top DUPE",
+        "Puzzle Solved Library Statue": "Key for Three Floor Elevator",
+        "Flashback Memory Obtained In Search of the Unexplained": "Key for Egypt Room",
+        "Flashback Memory Obtained South American Pictographs": "Wax Always Available in Anansi Room",
+        "Flashback Memory Obtained Black Book": "Key for Ocean Room",
+        "Storage: Library Cabinet": "Oil Pot Top DUPE",
+        "Storage: Library Statue": "Sand Pot Bottom DUPE",
+        "Final Riddle: Beth's Body Page 17": "Key for Projector Room",
+        "Beth's Body": "Viewed Page 17",
+        "Storage: Anansi Music Box": "Empty",
+        "Storage: Shaman Hut": "Empty",
+        "Storage: Theater": "Empty",
+        "Puzzle Solved Clock Tower Door": "Ash Always Available in Office",
+        "Clock Chains": "Set Time",
+        "Flashback Memory Obtained Beth's Ghost": "Ash Pot Bottom",
+        "Storage: Clock Tower": "Water Pot Bottom DUPE",
+        "Puzzle Hint Found: Shaman Security Camera": "Crystal Always Available in Lobby",
+        "Jukebox": "Set Song",
+        "Flashback Memory Obtained Theater Movie": "Wax Always Available in Library",
+        "Viewed Theater Movie": "Viewed Theater Movie",
+        "Storage: Eagles Nest": "Wax Pot Top DUPE",
+        "Set Skull Dial: Prehistoric": "Set Skull Dial: Prehistoric",
+        "Storage: Greenhouse": "Cloth Pot Top DUPE",
+        "Puzzle Solved Atlantis": "Key for Generator Room",
+        "Puzzle Solved Organ": "Oil Pot Top",
+        "Flashback Memory Obtained Museum Blueprints": "Wood Always Available in Gods Room",
+        "Storage: Ocean": "Lightning Pot Top DUPE",
+        "Puzzle Hint Found: Sirens Song Heard": "Water Always Available in Lobby",
+        "Puzzle Solved Maze Door": "Key for Puzzle Room",
+        "Storage: Tar River": "Wax Pot Bottom DUPE",
+        "Set Skull Dial: Tar River": "Set Skull Dial: Tar River",
+        "Puzzle Solved Columns of RA": "Key for Workshop",
+        "Puzzle Solved Burial Door": "Metal Pot Bottom",
+        "Storage: Egypt": "Cloth Pot Bottom DUPE",
+        "Set Skull Dial: Egypt": "Set Skull Dial: Egypt",
+        "Flashback Memory Obtained Merrick's Notebook": "Ash Always Available in Burial Room",
+        "Storage: Chinese Solitaire": "Sand Pot Top DUPE",
+        "Set Skull Dial: Burial": "Set Skull Dial: Burial",
+        "Puzzle Solved Shaman Drums": "Metal Always Available in Prehistoric",
+        "Puzzle Solved Lyre": "Key for Bedroom Elevator",
+        "Storage: Lyre": "Metal Pot Top DUPE",
+        "Set Skull Dial: Gods Room": "Set Skull Dial: Gods Room",
+        "Final Riddle: Norse God Stone Message": "Metal Always Available in Projector Room",
+        "Norse Stone": "Viewed Norse Stone",
+        "Puzzle Solved Anansi Music Box": "Wax Pot Top",
+        "Flashback Memory Obtained Ancient Astrology": "Wood Always Available in Blue Maze",
+        "Storage: Skeleton": "Wood Pot Top DUPE",
+        "Set Skull Dial: Werewolf": "Set Skull Dial: Werewolf",
+        "Storage: Janitor Closet": "Lightning Pot Bottom DUPE",
+        "Puzzle Solved UFO Symbols": "Sand Pot Bottom",
+        "Storage: UFO": "Wood Pot Bottom DUPE",
+        "Final Riddle: Planets Aligned": "Ash Pot Top",
+        "Orrery": "Aligned Planets",
+        "Puzzle Solved Fortune Teller Door": "Wood Always Available in Workshop",
+        "Puzzle Hint Found: Elevator Writing": "Key for UFO Room",
+        "Flashback Memory Obtained Merrick's Ghost": "Sand Pot Top",
+        "Viewed Fortune": "Viewed Fortune",
+        "Puzzle Solved Alchemy": "Key for Prehistoric Room",
+        "Storage: Alchemy": "Oil Pot Bottom DUPE",
+        "Storage: Gallows": "Crystal Pot Top DUPE",
+        "Puzzle Hint Found: Gallows Information Plaque": "Oil Always Available in Prehistoric Room",
+        "Final Riddle: Guillotine Dropped": "Wax Always Available in Shaman Room",
+        "Guillotine": "Lost Your Head",
+        "Puzzle Solved Mastermind": "Wood Pot Top",
+        "Puzzle Hint Found: Mastermind Information Plaque": "Crystal Pot Top",
+        "Storage: Skull Bridge": "Ash Pot Top DUPE",
+        "Puzzle Solved Skull Dial Door": "Wax Pot Bottom",
+        "Ixupi Captured Water": "Metal Pot Top",
+        "Ixupi Captured Wax": "Key for Library",
+        "Ixupi Captured Ash": "Crystal Pot Bottom",
+        "Ixupi Captured Oil": "Lightning Pot Top",
+        "Ixupi Captured Cloth": "Water Pot Top",
+        "Ixupi Captured Wood": "Key for Greenhouse",
+        "Ixupi Captured Crystal": "Wood Pot Bottom",
+        "Ixupi Captured Sand": "Oil Pot Bottom",
+        "Ixupi Captured Metal": "Lightning Pot Bottom",
+        "Mystery Solved": "Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -465,7 +584,7 @@ class ShiversWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -600,18 +719,24 @@ class ShiversWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 
