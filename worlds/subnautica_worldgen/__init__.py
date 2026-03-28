@@ -303,6 +303,146 @@ class SubnauticaWorld(RuleWorldMixin, World):
         "Repair Aurora Drive": "Repair Aurora Drive",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Blood Kelp Trench Wreck - Outside Databox": "Cyclops Engine Fragment",
+        "Degasi Seabase - Deep Grand Reef - Lab PDA": "Cyclops Engine Fragment",
+        "Dunes North Wreck - PDA": "Cyclops Engine Fragment",
+        "Lifepod 2 - PDA": "Cyclops Engine Fragment",
+        "Quarantine Enforcement Platform's - Upper Alien Data Terminal": "Cyclops Engine Fragment",
+        "Blood Kelp Trench Wreck - Inside Databox": "Spotlight",
+        "Blood Kelp Trench Wreck - PDA": "Large Room",
+        "Bulb Zone West Wreck - Outside Databox": "Cyclops Fire Suppression System",
+        "Aurora - Lab PDA": "Laser Cutter Fragment",
+        "Bulb Zone West Wreck - Under Databox": "Laser Cutter Fragment",
+        "Degasi Seabase - Deep Grand Reef - Outside PDA": "Laser Cutter Fragment",
+        "Underwater Islands Wreck - Hangar Databox": "Laser Cutter Fragment",
+        "Bulb Zone West Wreck - Inside Databox": "Cyclops Shield Generator",
+        "Bulb Zone West Wreck - PDA": "Crystalline Sulfur",
+        "Jellyshroom Cave - PDA": "Crystalline Sulfur",
+        "Bulb Zone East Wreck - Databox": "Beacon Fragment",
+        "Degasi Seabase - Floating Island - Room PDA": "Beacon Fragment",
+        "Dunes North Wreck - Outside Databox": "Creature Decoy",
+        "Aurora - Locker PDA": "Cyclops Bridge Fragment",
+        "Aurora - Seamoth Bay PDA": "Cyclops Bridge Fragment",
+        "Dunes North Wreck - Office Databox": "Cyclops Bridge Fragment",
+        "Mountains East Wreck - Outside Databox": "Cyclops Bridge Fragment",
+        "Safe Shallows Wreck - PDA": "Cyclops Bridge Fragment",
+        "Dunes North Wreck - Cargo Databox": "Bioreactor Fragment",
+        "Lifepod 3 - Databox": "Bioreactor Fragment",
+        "Aurora - Cabin 7 PDA": "Cyclops Hull Fragment",
+        "Deep Sparse Reef Sanctuary - Alien Data Terminal": "Cyclops Hull Fragment",
+        "Dunes West Wreck - Databox": "Cyclops Hull Fragment",
+        "Grand Reef South Wreck - Comms Databox": "Cyclops Hull Fragment",
+        "Mountains East Wreck - Comms Databox": "Cyclops Hull Fragment",
+        "Dunes East Wreck - Outside Databox": "Power Cell Charger Fragment",
+        "Underwater Islands Wreck - Pipes Databox 1": "Power Cell Charger Fragment",
+        "Dunes East Wreck - Inside Databox": "Cyclops Thermal Reactor Module",
+        "Aurora - Medkit Locker PDA": "Seaglide Fragment",
+        "Grand Reef North Wreck - Outside Databox": "Seaglide Fragment",
+        "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
+        "Kelp Forest Wreck - Databox": "Seaglide Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Locker PDA": "Seamoth Fragment",
+        "Grand Reef North Wreck - Elevator Databox": "Seamoth Fragment",
+        "Kelp Forest Wreck - PDA": "Seamoth Fragment",
+        "Lifepod 13 - Databox": "Seamoth Fragment",
+        "Lifepod 19 - Databox": "Seamoth Fragment",
+        "Lifepod 3 - PDA": "Seamoth Fragment",
+        "Grand Reef North Wreck - Bottom Databox": "Alien Containment",
+        "Aurora - Cabin 1 PDA": "Thermal Plant Fragment",
+        "Grand Reef North Wreck - Hangar PDA": "Thermal Plant Fragment",
+        "Aurora - Canteen PDA": "Grav Trap Fragment",
+        "Grand Reef South Wreck - Trench Databox": "Grav Trap Fragment",
+        "Degasi Seabase - Deep Grand Reef - Observatory PDA": "Modification Station Fragment",
+        "Degasi Seabase - Floating Island - Databox": "Modification Station Fragment",
+        "Grand Reef South Wreck - Outside Databox": "Modification Station Fragment",
+        "Sparse Reef Wreck - Lab Databox": "Modification Station Fragment",
+        "Grand Reef South Wreck - PDA": "Resources Bundle",
+        "Lifepod 12 - Databox": "Resources Bundle",
+        "Grassy Plateaus South Wreck - PDA": "Cyclops Decoy Tube Upgrade",
+        "Alien Thermal Plant - Entrance Alien Data Terminal": "Prawn Suit Fragment",
+        "Aurora - Ring PDA": "Prawn Suit Fragment",
+        "Aurora Seamoth Bay - Upgrade Console": "Prawn Suit Fragment",
+        "Disease Research Facility - Upper Alien Data Terminal": "Prawn Suit Fragment",
+        "Grassy Plateaus East Wreck - Breach Databox": "Prawn Suit Fragment",
+        "Lifepod 17 - PDA": "Prawn Suit Fragment",
+        "Lifepod 19 - Inside PDA": "Prawn Suit Fragment",
+        "Grassy Plateaus East Wreck - Hangar Databox": "Exterior Growbed",
+        "Northwestern Mushroom Forest Wreck - Office Databox": "Exterior Growbed",
+        "Grassy Plateaus West Wreck - Locker PDA": "Lightweight High Capacity Tank",
+        "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": "Mobile Vehicle Bay Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Detached PDA": "Mobile Vehicle Bay Fragment",
+        "Floating Island - Lake PDA": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus West Wreck - Beam PDA": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+        "Mountains West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus Southwest Wreck - Databox": "Moonpool Fragment",
+        "Mountains West Wreck - Hangar Databox": "Moonpool Fragment",
+        "Sea Treader's Path Wreck - Hangar Databox": "Moonpool Fragment",
+        "Mountains West Wreck - Outside Databox": "Propulsion Cannon Fragment",
+        "Sea Treader's Path Wreck - Lobby Databox": "Propulsion Cannon Fragment",
+        "Aurora Prawn Suit Bay - Upgrade Console": "Nuclear Reactor Fragment",
+        "Lifepod 6 - Outside PDA": "Nuclear Reactor Fragment",
+        "Mountains West Wreck - Office Databox": "Nuclear Reactor Fragment",
+        "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": "Stasis Rifle Fragment",
+        "Northwestern Mushroom Forest Wreck - Cargo Databox": "Stasis Rifle Fragment",
+        "Northwestern Mushroom Forest Wreck - PDA": "Ultra High Capacity Tank",
+        "Degasi Seabase - Deep Grand Reef - Observatory Databox": "Scanner Room Fragment",
+        "Sea Treader's Path Wreck - Outside Databox": "Scanner Room Fragment",
+        "Underwater Islands Wreck - Outside Databox": "Scanner Room Fragment",
+        "Sea Treader's Path Wreck - PDA": "Cyclops Depth Module MK1",
+        "Sparse Reef Wreck - Locker Databox": "Swim Charge Fins",
+        "Degasi Seabase - Deep Grand Reef - Bedroom Databox": "Prawn Suit Propulsion Cannon Fragment",
+        "Sparse Reef Wreck - Outside Databox": "Prawn Suit Propulsion Cannon Fragment",
+        "Underwater Islands Wreck - Data Terminal": "Power Transmitter Fragment",
+        "Aurora - Lab Data Terminal": "Battery Charger fragment",
+        "Underwater Islands Wreck - Cable Databox": "Battery Charger fragment",
+        "Underwater Islands Wreck - Pipes Databox 2": "Ultra Glide Fins",
+        "Degasi Seabase - Deep Grand Reef - Bedroom PDA": "Neptune Cockpit",
+        "Degasi Seabase - Floating Island - Green Wall PDA": "Ion Power Cell",
+        "Degasi Seabase - Floating Island - Corridor PDA": "Prawn Suit Torpedo Arm Fragment",
+        "Degasi Seabase - Floating Island - North Observatory PDA": "Prawn Suit Torpedo Arm Fragment",
+        "Alien Thermal Plant - Yellow Alien Data Terminal": "Prawn Suit Grappling Arm Fragment",
+        "Degasi Seabase - Floating Island - South Observatory PDA": "Prawn Suit Grappling Arm Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Office PDA": "Gold",
+        "Degasi Seabase - Jellyshroom Cave - Bedroom PDA": "Silver Ore",
+        "Dunes Sanctuary - Alien Data Terminal": "Silver Ore",
+        "Degasi Seabase - Jellyshroom Cave - Observatory PDA": "Neptune Gantry",
+        "Lifepod 2 - Databox": "Observatory",
+        "Degasi Seabase - Jellyshroom Cave - Outside PDA": "Prawn Suit Drill Arm Fragment",
+        "Lifepod 4 - Databox": "Prawn Suit Drill Arm Fragment",
+        "Lifepod 4 - PDA": "Repulsion Cannon",
+        "Lifepod 6 - Databox": "Neptune Fuel Reserve",
+        "Aurora - Cabin 4 PDA": "Furniture",
+        "Lifepod 6 - Inside PDA": "Furniture",
+        "Lifepod 7 - PDA": "Multipurpose Room",
+        "Lifepod 12 - PDA": "Salt Deposit",
+        "Lifepod 13 - PDA": "Kyanite",
+        "Lifepod 19 - Outside PDA": "Compass",
+        "Aurora Drive Room - Upgrade Console": "Titanium",
+        "Aurora - Office PDA": "Water Filtration Machine",
+        "Aurora - Corridor PDA": "Bulkhead",
+        "Aurora - Cargo Bay PDA": "Cyclops Docking Bay Repair Module",
+        "Aurora - Captain PDA": "Water Filtration Suit",
+        "Aurora - Office Data Terminal": "Lithium",
+        "Aurora - Captain Data Terminal": "Neptune Launch Platform",
+        "Aurora - Battery Room Data Terminal": "Ion Battery",
+        "Quarantine Enforcement Platform's - Mid Alien Data Terminal": "Vehicle Upgrade Console",
+        "Lost River Laboratory Cache - Alien Data Terminal": "Neptune Boosters",
+        "Disease Research Facility - Mid Alien Data Terminal": "Radiation Suit",
+        "Disease Research Facility - Lower Alien Data Terminal": "Cyclops Sonar Upgrade",
+        "Alien Thermal Plant - Green Alien Data Terminal": "Floodlight",
+        "Primary Containment Facility's Antechamber - Alien Data Terminal": "Farming",
+        "Primary Containment Facility's Pipe Room - Alien Data Terminal": "Farming",
+        "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": "Diamond",
+        "Floating Island - Cave Entrance PDA": "Reinforced Dive Suit",
+        "Neptune Launch": "Victory",
+        "Disable Quarantine": "Disable Quarantine",
+        "Full Infection": "Full Infection",
+        "Repair Aurora Drive": "Repair Aurora Drive",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -482,7 +622,7 @@ class SubnauticaWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -630,18 +770,24 @@ class SubnauticaWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

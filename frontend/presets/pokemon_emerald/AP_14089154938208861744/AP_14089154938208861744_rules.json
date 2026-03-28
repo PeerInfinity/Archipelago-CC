@@ -8387,50 +8387,6 @@
           }
         ]
       },
-      "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS": {
-        "name": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
-        "exits": [],
-        "locations": [
-          {
-            "name": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS_1",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CATCH_SPECIES_SMEARGLE",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "show_in_spoiler": false
-          }
-        ]
-      },
-      "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS": {
-        "name": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
-        "exits": [],
-        "locations": [
-          {
-            "name": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS_1",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CATCH_SPECIES_SMEARGLE",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "show_in_spoiler": false
-          }
-        ]
-      },
       "MAP_PETALBURG_CITY_FISHING_ENCOUNTERS": {
         "name": "MAP_PETALBURG_CITY_FISHING_ENCOUNTERS",
         "exits": [],
@@ -9825,6 +9781,50 @@
             },
             "item": {
               "name": "CATCH_SPECIES_CORSOLA",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "show_in_spoiler": false
+          }
+        ]
+      },
+      "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS": {
+        "name": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
+        "exits": [],
+        "locations": [
+          {
+            "name": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS_1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CATCH_SPECIES_SMEARGLE",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "show_in_spoiler": false
+          }
+        ]
+      },
+      "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS": {
+        "name": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
+        "exits": [],
+        "locations": [
+          {
+            "name": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS_1",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CATCH_SPECIES_SMEARGLE",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -22914,782 +22914,6 @@
         ],
         "locations": []
       },
-      "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_RECEPTION_GATE:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:8",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_RECEPTION_GATE:1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:9",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK -> REGION_SS_TIDAL_CORRIDOR/MAIN",
-            "connected_region": "REGION_SS_TIDAL_CORRIDOR/MAIN",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "S.S. Ticket"
-              }
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:8/MAP_BATTLE_FRONTIER_RECEPTION_GATE:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:0/MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:1/MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:2/MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:3/MAP_BATTLE_FRONTIER_LOUNGE2:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:4/MAP_BATTLE_FRONTIER_MART:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_MART/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:5/MAP_BATTLE_FRONTIER_SCOTTS_HOUSE:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:6/MAP_BATTLE_FRONTIER_LOUNGE4:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:7/MAP_BATTLE_FRONTIER_LOUNGE7:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:9/MAP_BATTLE_FRONTIER_RECEPTION_GATE:1",
-            "connected_region": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Balance Badge",
-                  "HM03 Surf"
-                ]
-              }
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:10/MAP_ARTISAN_CAVE_B1F:0",
-            "connected_region": "REGION_ARTISAN_CAVE_B1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Balance Badge"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "HM03 Surf"
-                        }
-                      ]
-                    },
-                    "_original_ast_type": "function_call"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wailmer Pail"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:0/MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:1/MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:10/MAP_BATTLE_FRONTIER_LOUNGE8:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:11/MAP_BATTLE_FRONTIER_LOUNGE9:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:12/MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:2/MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:3/MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:4/MAP_BATTLE_FRONTIER_RANKING_HALL:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:5/MAP_BATTLE_FRONTIER_LOUNGE1:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:6/MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:7/MAP_BATTLE_FRONTIER_LOUNGE5:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:8/MAP_BATTLE_FRONTIER_LOUNGE6:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:9/MAP_BATTLE_FRONTIER_LOUNGE3:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:13/MAP_ARTISAN_CAVE_1F:0",
-            "connected_region": "REGION_ARTISAN_CAVE_1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Wailmer Pail"
-              }
-            }
-          },
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER": {
-        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
-        "exits": [
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "HM07 Waterfall",
-                  "Rain Badge"
-                ]
-              }
-            }
-          },
-          {
-            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:2",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY:0,1,2/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:1",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:3",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:1",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:2",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:2/MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM:0,1/MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:2",
-            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER:0,1,2/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:6",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_RANKING_HALL:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:4",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:12",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:2/MAP_BATTLE_FRONTIER_POKEMON_CENTER_2F:0",
-            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_2F:0/MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:2",
-            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_MART/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_MART/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_MART:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:4",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_SCOTTS_HOUSE:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:5",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE1:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:5",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE2:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:3",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE3:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:9",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE4:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:6",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE5:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:7",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE6:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:8",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE7:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:7",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE8:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:10",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN": {
-        "name": "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BATTLE_FRONTIER_LOUNGE9:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:11",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_ARTISAN_CAVE_1F/MAIN": {
-        "name": "REGION_ARTISAN_CAVE_1F/MAIN",
-        "exits": [
-          {
-            "name": "REGION_ARTISAN_CAVE_1F/MAIN -> MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
-            "connected_region": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_ARTISAN_CAVE_1F:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:13",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_ARTISAN_CAVE_1F:1/MAP_ARTISAN_CAVE_B1F:1",
-            "connected_region": "REGION_ARTISAN_CAVE_B1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Artisan Cave 1F - Item",
-            "id": 3861163,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Letter",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "default_item_code": 3860066,
-            "item_address": 2710416,
-            "key": "ITEM_ARTISAN_CAVE_1F_CARBOS"
-          }
-        ]
-      },
-      "REGION_ARTISAN_CAVE_B1F/MAIN": {
-        "name": "REGION_ARTISAN_CAVE_B1F/MAIN",
-        "exits": [
-          {
-            "name": "REGION_ARTISAN_CAVE_B1F/MAIN -> MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
-            "connected_region": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_ARTISAN_CAVE_B1F:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:10",
-            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "MAP_ARTISAN_CAVE_B1F:1/MAP_ARTISAN_CAVE_1F:1",
-            "connected_region": "REGION_ARTISAN_CAVE_1F/MAIN",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Artisan Cave B1F - Item",
-            "id": 3861162,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HM08 Dive",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "default_item_code": 3860063,
-            "item_address": 2710403,
-            "key": "ITEM_ARTISAN_CAVE_B1F_HP_UP"
-          }
-        ]
-      },
       "REGION_POKEDEX": {
         "name": "REGION_POKEDEX",
         "exits": [],
@@ -30689,6 +29913,782 @@
           }
         ],
         "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_RECEPTION_GATE:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:8",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_RECEPTION_GATE:1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:9",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/DOCK -> REGION_SS_TIDAL_CORRIDOR/MAIN",
+            "connected_region": "REGION_SS_TIDAL_CORRIDOR/MAIN",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "S.S. Ticket"
+              }
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:8/MAP_BATTLE_FRONTIER_RECEPTION_GATE:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:0/MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:1/MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:2/MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:3/MAP_BATTLE_FRONTIER_LOUNGE2:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:4/MAP_BATTLE_FRONTIER_MART:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_MART/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:5/MAP_BATTLE_FRONTIER_SCOTTS_HOUSE:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:6/MAP_BATTLE_FRONTIER_LOUNGE4:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:7/MAP_BATTLE_FRONTIER_LOUNGE7:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:9/MAP_BATTLE_FRONTIER_RECEPTION_GATE:1",
+            "connected_region": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Balance Badge",
+                  "HM03 Surf"
+                ]
+              }
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST:10/MAP_ARTISAN_CAVE_B1F:0",
+            "connected_region": "REGION_ARTISAN_CAVE_B1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Balance Badge"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "HM03 Surf"
+                        }
+                      ]
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wailmer Pail"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:0/MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:1/MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:10/MAP_BATTLE_FRONTIER_LOUNGE8:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:11/MAP_BATTLE_FRONTIER_LOUNGE9:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:12/MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:2/MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:3/MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:4/MAP_BATTLE_FRONTIER_RANKING_HALL:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:5/MAP_BATTLE_FRONTIER_LOUNGE1:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:6/MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:7/MAP_BATTLE_FRONTIER_LOUNGE5:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:8/MAP_BATTLE_FRONTIER_LOUNGE6:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:9/MAP_BATTLE_FRONTIER_LOUNGE3:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST:13/MAP_ARTISAN_CAVE_1F:0",
+            "connected_region": "REGION_ARTISAN_CAVE_1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Wailmer Pail"
+              }
+            }
+          },
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER": {
+        "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER",
+        "exits": [
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "HM07 Waterfall",
+                  "Rain Badge"
+                ]
+              }
+            }
+          },
+          {
+            "name": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/WATER -> REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/WATER",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:2",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY:0,1,2/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:1",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:3",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_DOME_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:1",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:2",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:2/MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM:0,1/MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY:2",
+            "connected_region": "REGION_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER:0,1,2/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:6",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_RANKING_HALL/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_RANKING_HALL:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:4",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:12",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:2/MAP_BATTLE_FRONTIER_POKEMON_CENTER_2F:0",
+            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_2F/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_2F:0/MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F:2",
+            "connected_region": "REGION_BATTLE_FRONTIER_POKEMON_CENTER_1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_MART/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_MART/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_MART:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:4",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_SCOTTS_HOUSE/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_SCOTTS_HOUSE:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:5",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE1/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE1:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:5",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE2/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE2:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:3",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE3/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE3:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:9",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE4/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE4:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:6",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE5/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE5:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:7",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE6/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE6:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:8",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE7/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE7:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:7",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE8/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE8:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:10",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN": {
+        "name": "REGION_BATTLE_FRONTIER_LOUNGE9/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BATTLE_FRONTIER_LOUNGE9:0,1/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:11",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_ARTISAN_CAVE_1F/MAIN": {
+        "name": "REGION_ARTISAN_CAVE_1F/MAIN",
+        "exits": [
+          {
+            "name": "REGION_ARTISAN_CAVE_1F/MAIN -> MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
+            "connected_region": "MAP_ARTISAN_CAVE_1F_LAND_ENCOUNTERS",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_ARTISAN_CAVE_1F:0/MAP_BATTLE_FRONTIER_OUTSIDE_EAST:13",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_EAST/CAVE_ENTRANCE",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_ARTISAN_CAVE_1F:1/MAP_ARTISAN_CAVE_B1F:1",
+            "connected_region": "REGION_ARTISAN_CAVE_B1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Artisan Cave 1F - Item",
+            "id": 3861163,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Letter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false,
+            "default_item_code": 3860066,
+            "item_address": 2710416,
+            "key": "ITEM_ARTISAN_CAVE_1F_CARBOS"
+          }
+        ]
+      },
+      "REGION_ARTISAN_CAVE_B1F/MAIN": {
+        "name": "REGION_ARTISAN_CAVE_B1F/MAIN",
+        "exits": [
+          {
+            "name": "REGION_ARTISAN_CAVE_B1F/MAIN -> MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
+            "connected_region": "MAP_ARTISAN_CAVE_B1F_LAND_ENCOUNTERS",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_ARTISAN_CAVE_B1F:0/MAP_BATTLE_FRONTIER_OUTSIDE_WEST:10",
+            "connected_region": "REGION_BATTLE_FRONTIER_OUTSIDE_WEST/CAVE_ENTRANCE",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "MAP_ARTISAN_CAVE_B1F:1/MAP_ARTISAN_CAVE_1F:1",
+            "connected_region": "REGION_ARTISAN_CAVE_1F/MAIN",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Artisan Cave B1F - Item",
+            "id": 3861162,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HM08 Dive",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false,
+            "default_item_code": 3860063,
+            "item_address": 2710403,
+            "key": "ITEM_ARTISAN_CAVE_B1F_HP_UP"
+          }
+        ]
       },
       "REGION_PETALBURG_WOODS/WEST_PATH": {
         "name": "REGION_PETALBURG_WOODS/WEST_PATH",
@@ -43862,18 +43862,6 @@
         "type": "Event",
         "max_count": 3
       },
-      "CATCH_SPECIES_SMEARGLE": {
-        "name": "CATCH_SPECIES_SMEARGLE",
-        "hint_text": "CATCH SPECIES SMEARGLE",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 2
-      },
       "EVENT_VISITED_LITTLEROOT_TOWN": {
         "name": "EVENT_VISITED_LITTLEROOT_TOWN",
         "hint_text": "EVENT VISITED LITTLEROOT TOWN",
@@ -44365,6 +44353,18 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "CATCH_SPECIES_SMEARGLE": {
+        "name": "CATCH_SPECIES_SMEARGLE",
+        "hint_text": "CATCH SPECIES SMEARGLE",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": true,
+        "type": "Event",
+        "max_count": 2
       },
       "CATCH_SPECIES_SHROOMISH": {
         "name": "CATCH_SPECIES_SHROOMISH",
@@ -46052,8 +46052,6 @@
         "Star Piece",
         "Carbos",
         "Star Piece",
-        "Carbos",
-        "HP Up",
         "S.S. Ticket",
         "Max Revive",
         "Ether",
@@ -46079,6 +46077,8 @@
         "HM08 Dive",
         "HM07 Waterfall",
         "Rain Badge",
+        "Carbos",
+        "HP Up",
         "Ether",
         "Paralyze Heal",
         "Great Ball",

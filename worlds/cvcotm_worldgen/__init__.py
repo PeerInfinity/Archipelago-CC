@@ -261,6 +261,136 @@ class CVCotMWorld(RuleWorldMixin, World):
         "Dracula": "The Count Downed",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Audience Room: Lower Devil Tower hallway fake wall": "Heart Max Up",
+        "Audience Room: Push crate gallery": "Heart Max Up",
+        "Audience Room: Tackle block gallery": "Heart Max Up",
+        "Catacomb: Below right column save room": "Heart Max Up",
+        "Catacomb: Muddy Mudman platforms room - Upper": "Heart Max Up",
+        "Catacomb: Right column Spirit room": "Heart Max Up",
+        "Catacomb: Right column fake wall": "Heart Max Up",
+        "Chapel Tower: Beastly wall kicks room - Brawn side": "Heart Max Up",
+        "Chapel Tower: Behind Adramelech iron maiden": "Heart Max Up",
+        "Chapel Tower: Middle chapel push crate room": "Heart Max Up",
+        "Chapel Tower: Outside Battle Arena - Lower": "Heart Max Up",
+        "Eternal Corridor: Midway fake wall": "Heart Max Up",
+        "Eternal Corridor: Skelly-rang fake wall": "Heart Max Up",
+        "Eternal Corridor: Skelly-rang wall kicks room": "Heart Max Up",
+        "Machine Tower: Fake Lilim wall": "Heart Max Up",
+        "Machine Tower: Stone fox hallway": "Heart Max Up",
+        "Machine Tower: Thunderous zone fake wall": "Heart Max Up",
+        "Observation Tower: Alraune garden": "Heart Max Up",
+        "Observation Tower: Behind Hugh": "Heart Max Up",
+        "Observation Tower: Legion plaza Minotaur hallway": "Heart Max Up",
+        "Observation Tower: Near warp room fake wall": "Heart Max Up",
+        "Outer Wall: Left roc ledge": "Heart Max Up",
+        "Sealed Room: Main shaft left fake wall": "Heart Max Up",
+        "Triumph Hallway: Entrance Flame Armor climb": "Heart Max Up",
+        "Triumph Hallway: Skeleton slopes fake wall": "Heart Max Up",
+        "Underground Gallery: Crumble bridge fake wall": "Heart Max Up",
+        "Underground Gallery: Harpy climb room - Upper": "Heart Max Up",
+        "Underground Warehouse: Crate-nudge fake wall": "Heart Max Up",
+        "Underground Warehouse: Entrance push crate room": "Heart Max Up",
+        "Underground Warehouse: Fake Lilith wall": "Heart Max Up",
+        "Underground Warehouse: Optional puzzle ceiling fake wall": "Heart Max Up",
+        "Underground Waterway: Entrance fake wall": "Heart Max Up",
+        "Underground Waterway: Lizard-man turf - Bottom": "Heart Max Up",
+        "Underground Waterway: Lizard-man turf - Top": "Heart Max Up",
+        "Underground Waterway: Roc exit shaft fake wall": "Heart Max Up",
+        "Underground Waterway: Wicked Fishhead moat - Bottom": "Heart Max Up",
+        "Underground Waterway: Wicked Fishhead moat - Top": "Heart Max Up",
+        "Abyss Staircase: Loopback drop": "MP Max Up",
+        "Audience Room: 100 meter skelly dash hallway": "MP Max Up",
+        "Audience Room: Behind Necromancer": "MP Max Up",
+        "Audience Room: Below Machine Tower push crate room": "MP Max Up",
+        "Audience Room: Below coyote jump": "MP Max Up",
+        "Audience Room: Past coyote jump": "MP Max Up",
+        "Audience Room: Right exterior - Lower": "MP Max Up",
+        "Audience Room: Right exterior fake wall": "MP Max Up",
+        "Audience Room: Upper Devil Tower hallway": "MP Max Up",
+        "Catacomb: Earth Demon bone pit - Lower": "MP Max Up",
+        "Catacomb: Earth Demon bone pit - Upper": "MP Max Up",
+        "Catacomb: Push crate treasure room": "MP Max Up",
+        "Chapel Tower: Upper chapel fake wall": "MP Max Up",
+        "Machine Tower: Pre-Iron Golem fake wall": "MP Max Up",
+        "Machine Tower: Top lone Stone Armor room": "MP Max Up",
+        "Observation Tower: Legion plaza fake wall": "MP Max Up",
+        "Observation Tower: Wind Armor rampart": "MP Max Up",
+        "Outer Wall: Fake Nightmare floor": "MP Max Up",
+        "Underground Gallery: Conveyor lower push crate room": "MP Max Up",
+        "Underground Gallery: Conveyor platform ride": "MP Max Up",
+        "Underground Gallery: Myconid fake wall": "MP Max Up",
+        "Underground Warehouse: Forever pushing room": "MP Max Up",
+        "Underground Waterway: Before illusory wall": "MP Max Up",
+        "Underground Waterway: Behind Camilla": "MP Max Up",
+        "Abyss Staircase: Roc ledge": "HP Max Up",
+        "Abyss Staircase: Upper fake wall": "HP Max Up",
+        "Audience Room: Main gallery fake wall": "HP Max Up",
+        "Audience Room: Roc horse jaguar armory - Left": "HP Max Up",
+        "Audience Room: Wicked roc chamber - Lower": "HP Max Up",
+        "Catacomb: Behind Cerberus": "HP Max Up",
+        "Catacomb: Earth Demon dash room": "HP Max Up",
+        "Catacomb: Fleamen brain room - Lower": "HP Max Up",
+        "Catacomb: Fleamen brain room - Upper": "HP Max Up",
+        "Catacomb: Mummies' fake wall": "HP Max Up",
+        "Catacomb: Pre-Cerberus Hopper treasure room": "HP Max Up",
+        "Catacomb: Tackle block treasure room": "HP Max Up",
+        "Chapel Tower: Beastly wall kicks room - Brain side": "HP Max Up",
+        "Chapel Tower: Flame Armor climb room": "HP Max Up",
+        "Chapel Tower: Lower chapel fake wall": "HP Max Up",
+        "Chapel Tower: Middle chapel fake wall": "HP Max Up",
+        "Chapel Tower: Sharp mind climb room": "HP Max Up",
+        "Chapel Tower: Upper chapel Marionette wall kicks": "HP Max Up",
+        "Machine Tower: Behind Iron Golem": "HP Max Up",
+        "Machine Tower: Foxy platforms ledge": "HP Max Up",
+        "Machine Tower: Knight fox meeting room": "HP Max Up",
+        "Machine Tower: Skelly-rang wall kicks room": "HP Max Up",
+        "Observation Tower: Catoblepeas hallway": "HP Max Up",
+        "Observation Tower: Dark Armor's domain fake wall": "HP Max Up",
+        "Observation Tower: Evil Pillar pit fake wall": "HP Max Up",
+        "Underground Gallery: Behind Dragon Zombies": "HP Max Up",
+        "Underground Gallery: Conveyor upper push crate room": "HP Max Up",
+        "Underground Gallery: Handy bee hallway": "HP Max Up",
+        "Underground Gallery: Harpy climb room - Lower": "HP Max Up",
+        "Underground Gallery: Harpy mantis tackle hallway": "HP Max Up",
+        "Underground Warehouse: Behind Death fake wall": "HP Max Up",
+        "Underground Warehouse: Crate-nudge fox room": "HP Max Up",
+        "Underground Warehouse: Dryad expulsion chamber": "HP Max Up",
+        "Underground Waterway: Brain freeze room": "HP Max Up",
+        "Catacomb: Muddy Mudman platforms room - Lower": "Unicorn Card",
+        "Catacomb: Slide space zone": "Double",
+        "Catacomb: Pre-Cerberus lone Skeleton room": "Last Key",
+        "Abyss Staircase: Lower fake wall": "Cleansing",
+        "Audience Room: Skeleton foyer fake wall": "Tackle",
+        "Audience Room: Wicked roc chamber - Upper": "Black Dog Card",
+        "Audience Room: Right exterior - Upper": "Pluto Card",
+        "Audience Room: Below Machine Tower roc ledge": "Griffin Card",
+        "Audience Room: Roc horse jaguar armory - Right": "Mercury Card",
+        "Outer Wall: Right-brained ledge": "Heavy Ring",
+        "Machine Tower: Boneheaded argument wall kicks room": "Thunderbird Card",
+        "Machine Tower: Foxy fake wall": "Mars Card",
+        "Machine Tower: Thunderous zone lone Stone Armor room": "Roc Wing",
+        "Chapel Tower: Lower chapel push crate room": "Uranus Card",
+        "Chapel Tower: Upper belfry fake wall": "Mandragora Card",
+        "Chapel Tower: Iron maiden switch": "Maiden Detonator",
+        "Underground Warehouse: Succubus shaft roc ledge": "Maiden Detonator",
+        "Chapel Tower: Outside Battle Arena - Upper": "Jupiter Card",
+        "Underground Warehouse: Holy fox hideout - Left": "Salamander Card",
+        "Underground Warehouse: Holy fox hideout - Right roc ledge": "Cockatrice Card",
+        "Underground Warehouse: Forest Armor's domain fake wall": "Serpent Card",
+        "Underground Warehouse: Behind Death": "Golem Card",
+        "Underground Waterway: Beyond illusory wall": "Manticore Card",
+        "Underground Waterway: Ice Armor's domain fake wall": "Kick Boots",
+        "Underground Waterway: Middle lone Ice Armor room": "Saturn Card",
+        "Underground Waterway: Roc fake ceiling": "Neptune Card",
+        "Underground Waterway: Roc exit shaft": "Apollo Card",
+        "Observation Tower: Siren balcony fake wall": "Diana Card",
+        "Ceremonial Room: Fake floor": "Venus Card",
+        "Dracula": "The Count Downed",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -431,7 +561,7 @@ class CVCotMWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -579,18 +709,24 @@ class CVCotMWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

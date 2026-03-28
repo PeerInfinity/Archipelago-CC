@@ -6151,8 +6151,8 @@
         "type": null,
         "max_count": 50,
         "classification_counts": {
-          "progression_skip_balancing": 40,
-          "progression": 10
+          "progression": 10,
+          "progression_skip_balancing": 40
         }
       },
       "Time Piece": {

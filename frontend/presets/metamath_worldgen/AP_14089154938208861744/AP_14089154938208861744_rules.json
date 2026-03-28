@@ -15,35 +15,35 @@
         "exits": [
           {
             "name": "To 2cn",
-            "connected_region": "Prove Statement 1",
+            "connected_region": "Given 2cn: |- 2 e. CC",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To ax-1cn",
-            "connected_region": "Prove Statement 2",
+            "connected_region": "Axiom ax-1cn: |- 1 e. CC",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To df-2",
-            "connected_region": "Prove Statement 4",
+            "connected_region": "Definition df-2: |- 2 = ( 1 + 1 )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To df-3",
-            "connected_region": "Prove Statement 5",
+            "connected_region": "Definition df-3: |- 3 = ( 2 + 1 )",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
             "name": "To df-4",
-            "connected_region": "Prove Statement 6",
+            "connected_region": "Definition df-4: |- 4 = ( 3 + 1 )",
             "access_rule": {
               "rule": "True_"
             }
@@ -51,19 +51,19 @@
         ],
         "locations": []
       },
-      "Prove Statement 1": {
-        "name": "Prove Statement 1",
+      "Given 2cn: |- 2 e. CC": {
+        "name": "Given 2cn: |- 2 e. CC",
         "exits": [
           {
             "name": "From 2cn to addassi",
-            "connected_region": "Prove Statement 3",
+            "connected_region": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 2",
-                  "Statement 1"
+                  "2cn: |- 2 e. CC",
+                  "Axiom ax-1cn: |- 1 e. CC",
+                  "Given 2cn: |- 2 e. CC"
                 ]
               }
             }
@@ -71,19 +71,19 @@
         ],
         "locations": []
       },
-      "Prove Statement 2": {
-        "name": "Prove Statement 2",
+      "Axiom ax-1cn: |- 1 e. CC": {
+        "name": "Axiom ax-1cn: |- 1 e. CC",
         "exits": [
           {
             "name": "From ax-1cn to addassi",
-            "connected_region": "Prove Statement 3",
+            "connected_region": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 1",
-                  "Proved Statement 2",
-                  "Statement 2"
+                  "Axiom ax-1cn: |- 1 e. CC",
+                  "Given 2cn: |- 2 e. CC",
+                  "ax-1cn: |- 1 e. CC"
                 ]
               }
             }
@@ -91,13 +91,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 2",
+            "name": "Axiom ax-1cn: |- 1 e. CC",
             "id": 234790002,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 8",
+              "name": "ax-1cn: |- 1 e. CC",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -111,7 +111,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 2",
+              "name": "Axiom ax-1cn: |- 1 e. CC",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -121,20 +121,20 @@
           }
         ]
       },
-      "Prove Statement 3": {
-        "name": "Prove Statement 3",
+      "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": {
+        "name": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
         "exits": [
           {
             "name": "From addassi to 3eqtri",
-            "connected_region": "Prove Statement 8",
+            "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 3",
-                  "Proved Statement 6",
-                  "Proved Statement 7",
-                  "Statement 3"
+                  "Definition df-4: |- 4 = ( 3 + 1 )",
+                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
+                  "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )"
                 ]
               }
             }
@@ -142,13 +142,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 3",
+            "name": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "id": 234790003,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 9",
+              "name": "eqtr4i: |- A = C",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -162,7 +162,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 3",
+              "name": "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -172,18 +172,18 @@
           }
         ]
       },
-      "Prove Statement 4": {
-        "name": "Prove Statement 4",
+      "Definition df-2: |- 2 = ( 1 + 1 )": {
+        "name": "Definition df-2: |- 2 = ( 1 + 1 )",
         "exits": [
           {
             "name": "From df-2 to oveq2i",
-            "connected_region": "Prove Statement 9",
+            "connected_region": "Prove oveq2i: |- ( C F A ) = ( C F B )",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 4",
-                  "Statement 4"
+                  "Definition df-2: |- 2 = ( 1 + 1 )",
+                  "df-2: |- 2 = ( 1 + 1 )"
                 ]
               }
             }
@@ -191,13 +191,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 4",
+            "name": "Definition df-2: |- 2 = ( 1 + 1 )",
             "id": 234790004,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 5",
+              "name": "oveq1i: |- ( A F C ) = ( B F C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -211,7 +211,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 4",
+              "name": "Definition df-2: |- 2 = ( 1 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -221,18 +221,18 @@
           }
         ]
       },
-      "Prove Statement 5": {
-        "name": "Prove Statement 5",
+      "Definition df-3: |- 3 = ( 2 + 1 )": {
+        "name": "Definition df-3: |- 3 = ( 2 + 1 )",
         "exits": [
           {
             "name": "From df-3 to oveq1i",
-            "connected_region": "Prove Statement 7",
+            "connected_region": "Prove oveq1i: |- ( A F C ) = ( B F C )",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 5",
-                  "Statement 5"
+                  "Definition df-3: |- 3 = ( 2 + 1 )",
+                  "df-3: |- 3 = ( 2 + 1 )"
                 ]
               }
             }
@@ -240,13 +240,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 5",
+            "name": "Definition df-3: |- 3 = ( 2 + 1 )",
             "id": 234790005,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 6",
+              "name": "df-2: |- 2 = ( 1 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -260,7 +260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 5",
+              "name": "Definition df-3: |- 3 = ( 2 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -270,20 +270,20 @@
           }
         ]
       },
-      "Prove Statement 6": {
-        "name": "Prove Statement 6",
+      "Definition df-4: |- 4 = ( 3 + 1 )": {
+        "name": "Definition df-4: |- 4 = ( 3 + 1 )",
         "exits": [
           {
             "name": "From df-4 to 3eqtri",
-            "connected_region": "Prove Statement 8",
+            "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 3",
-                  "Proved Statement 6",
-                  "Proved Statement 7",
-                  "Statement 6"
+                  "Definition df-4: |- 4 = ( 3 + 1 )",
+                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
+                  "df-4: |- 4 = ( 3 + 1 )"
                 ]
               }
             }
@@ -291,13 +291,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 6",
+            "name": "Definition df-4: |- 4 = ( 3 + 1 )",
             "id": 234790006,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 7",
+              "name": "df-3: |- 3 = ( 2 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -311,7 +311,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 6",
+              "name": "Definition df-4: |- 4 = ( 3 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -321,20 +321,20 @@
           }
         ]
       },
-      "Prove Statement 7": {
-        "name": "Prove Statement 7",
+      "Prove oveq1i: |- ( A F C ) = ( B F C )": {
+        "name": "Prove oveq1i: |- ( A F C ) = ( B F C )",
         "exits": [
           {
             "name": "From oveq1i to 3eqtri",
-            "connected_region": "Prove Statement 8",
+            "connected_region": "Prove 3eqtri: |- A = D",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 3",
-                  "Proved Statement 6",
-                  "Proved Statement 7",
-                  "Statement 7"
+                  "Definition df-4: |- 4 = ( 3 + 1 )",
+                  "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+                  "Proved oveq1i: |- ( A F C ) = ( B F C )",
+                  "oveq1i: |- ( A F C ) = ( B F C )"
                 ]
               }
             }
@@ -342,13 +342,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 7",
+            "name": "Prove oveq1i: |- ( A F C ) = ( B F C )",
             "id": 234790007,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 4",
+              "name": "3eqtri: |- A = D",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -362,7 +362,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 7",
+              "name": "Proved oveq1i: |- ( A F C ) = ( B F C )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -372,19 +372,19 @@
           }
         ]
       },
-      "Prove Statement 8": {
-        "name": "Prove Statement 8",
+      "Prove 3eqtri: |- A = D": {
+        "name": "Prove 3eqtri: |- A = D",
         "exits": [
           {
             "name": "From 3eqtri to eqtr4i",
-            "connected_region": "Prove Statement 10",
+            "connected_region": "Prove eqtr4i: |- A = C",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 8",
-                  "Proved Statement 9",
-                  "Statement 8"
+                  "3eqtri: |- A = D",
+                  "Proved 3eqtri: |- A = D",
+                  "Proved oveq2i: |- ( C F A ) = ( C F B )"
                 ]
               }
             }
@@ -392,13 +392,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 8",
+            "name": "Prove 3eqtri: |- A = D",
             "id": 234790008,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 10",
+              "name": "df-4: |- 4 = ( 3 + 1 )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -412,7 +412,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 8",
+              "name": "Proved 3eqtri: |- A = D",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -422,19 +422,19 @@
           }
         ]
       },
-      "Prove Statement 9": {
-        "name": "Prove Statement 9",
+      "Prove oveq2i: |- ( C F A ) = ( C F B )": {
+        "name": "Prove oveq2i: |- ( C F A ) = ( C F B )",
         "exits": [
           {
             "name": "From oveq2i to eqtr4i",
-            "connected_region": "Prove Statement 10",
+            "connected_region": "Prove eqtr4i: |- A = C",
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Proved Statement 8",
-                  "Proved Statement 9",
-                  "Statement 9"
+                  "Proved 3eqtri: |- A = D",
+                  "Proved oveq2i: |- ( C F A ) = ( C F B )",
+                  "oveq2i: |- ( C F A ) = ( C F B )"
                 ]
               }
             }
@@ -442,13 +442,13 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 9",
+            "name": "Prove oveq2i: |- ( C F A ) = ( C F B )",
             "id": 234790009,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 2",
+              "name": "oveq2i: |- ( C F A ) = ( C F B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -462,7 +462,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 9",
+              "name": "Proved oveq2i: |- ( C F A ) = ( C F B )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -472,18 +472,18 @@
           }
         ]
       },
-      "Prove Statement 10": {
-        "name": "Prove Statement 10",
+      "Prove eqtr4i: |- A = C": {
+        "name": "Prove eqtr4i: |- A = C",
         "exits": [],
         "locations": [
           {
-            "name": "Prove Statement 10",
+            "name": "Prove eqtr4i: |- A = C",
             "id": 234790010,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Statement 3",
+              "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -497,7 +497,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Proved Statement 10",
+              "name": "Proved eqtr4i: |- A = C",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -519,8 +519,9 @@
   },
   "items": {
     "1": {
-      "Statement 1": {
-        "name": "Statement 1",
+      "2cn: |- 2 e. CC": {
+        "name": "2cn: |- 2 e. CC",
+        "hint_text": "2cn: |  2 e. CC",
         "id": 234790000,
         "groups": [
           "Everything",
@@ -530,8 +531,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 2": {
-        "name": "Statement 2",
+      "ax-1cn: |- 1 e. CC": {
+        "name": "ax-1cn: |- 1 e. CC",
+        "hint_text": "ax 1cn: |  1 e. CC",
         "id": 234790001,
         "groups": [
           "Everything",
@@ -541,8 +543,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 3": {
-        "name": "Statement 3",
+      "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": {
+        "name": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+        "hint_text": "addassi: |  ( ( A + B ) + C ) = ( A + ( B + C ) )",
         "id": 234790002,
         "groups": [
           "Everything",
@@ -552,8 +555,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 4": {
-        "name": "Statement 4",
+      "df-2: |- 2 = ( 1 + 1 )": {
+        "name": "df-2: |- 2 = ( 1 + 1 )",
+        "hint_text": "df 2: |  2 = ( 1 + 1 )",
         "id": 234790003,
         "groups": [
           "Everything",
@@ -563,8 +567,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 5": {
-        "name": "Statement 5",
+      "df-3: |- 3 = ( 2 + 1 )": {
+        "name": "df-3: |- 3 = ( 2 + 1 )",
+        "hint_text": "df 3: |  3 = ( 2 + 1 )",
         "id": 234790004,
         "groups": [
           "Everything",
@@ -574,8 +579,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 6": {
-        "name": "Statement 6",
+      "df-4: |- 4 = ( 3 + 1 )": {
+        "name": "df-4: |- 4 = ( 3 + 1 )",
+        "hint_text": "df 4: |  4 = ( 3 + 1 )",
         "id": 234790005,
         "groups": [
           "Everything",
@@ -585,8 +591,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 7": {
-        "name": "Statement 7",
+      "oveq1i: |- ( A F C ) = ( B F C )": {
+        "name": "oveq1i: |- ( A F C ) = ( B F C )",
+        "hint_text": "oveq1i: |  ( A F C ) = ( B F C )",
         "id": 234790006,
         "groups": [
           "Everything",
@@ -596,8 +603,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 8": {
-        "name": "Statement 8",
+      "3eqtri: |- A = D": {
+        "name": "3eqtri: |- A = D",
+        "hint_text": "3eqtri: |  A = D",
         "id": 234790007,
         "groups": [
           "Everything",
@@ -607,8 +615,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 9": {
-        "name": "Statement 9",
+      "oveq2i: |- ( C F A ) = ( C F B )": {
+        "name": "oveq2i: |- ( C F A ) = ( C F B )",
+        "hint_text": "oveq2i: |  ( C F A ) = ( C F B )",
         "id": 234790008,
         "groups": [
           "Everything",
@@ -618,8 +627,9 @@
         "type": null,
         "max_count": 1
       },
-      "Statement 10": {
-        "name": "Statement 10",
+      "eqtr4i: |- A = C": {
+        "name": "eqtr4i: |- A = C",
+        "hint_text": "eqtr4i: |  A = C",
         "id": 234790009,
         "groups": [
           "Everything",
@@ -1619,8 +1629,9 @@
         "type": null,
         "max_count": 1
       },
-      "Proved Statement 2": {
-        "name": "Proved Statement 2",
+      "Axiom ax-1cn: |- 1 e. CC": {
+        "name": "Axiom ax-1cn: |- 1 e. CC",
+        "hint_text": "Axiom ax 1cn: |  1 e. CC",
         "id": null,
         "groups": [
           "Event"
@@ -1630,8 +1641,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 3": {
-        "name": "Proved Statement 3",
+      "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": {
+        "name": "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+        "hint_text": "Proved addassi: |  ( ( A + B ) + C ) = ( A + ( B + C ) )",
         "id": null,
         "groups": [
           "Event"
@@ -1641,8 +1653,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 4": {
-        "name": "Proved Statement 4",
+      "Definition df-2: |- 2 = ( 1 + 1 )": {
+        "name": "Definition df-2: |- 2 = ( 1 + 1 )",
+        "hint_text": "Definition df 2: |  2 = ( 1 + 1 )",
         "id": null,
         "groups": [
           "Event"
@@ -1652,8 +1665,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 5": {
-        "name": "Proved Statement 5",
+      "Definition df-3: |- 3 = ( 2 + 1 )": {
+        "name": "Definition df-3: |- 3 = ( 2 + 1 )",
+        "hint_text": "Definition df 3: |  3 = ( 2 + 1 )",
         "id": null,
         "groups": [
           "Event"
@@ -1663,8 +1677,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 6": {
-        "name": "Proved Statement 6",
+      "Definition df-4: |- 4 = ( 3 + 1 )": {
+        "name": "Definition df-4: |- 4 = ( 3 + 1 )",
+        "hint_text": "Definition df 4: |  4 = ( 3 + 1 )",
         "id": null,
         "groups": [
           "Event"
@@ -1674,8 +1689,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 7": {
-        "name": "Proved Statement 7",
+      "Proved oveq1i: |- ( A F C ) = ( B F C )": {
+        "name": "Proved oveq1i: |- ( A F C ) = ( B F C )",
+        "hint_text": "Proved oveq1i: |  ( A F C ) = ( B F C )",
         "id": null,
         "groups": [
           "Event"
@@ -1685,8 +1701,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 8": {
-        "name": "Proved Statement 8",
+      "Proved 3eqtri: |- A = D": {
+        "name": "Proved 3eqtri: |- A = D",
+        "hint_text": "Proved 3eqtri: |  A = D",
         "id": null,
         "groups": [
           "Event"
@@ -1696,8 +1713,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 9": {
-        "name": "Proved Statement 9",
+      "Proved oveq2i: |- ( C F A ) = ( C F B )": {
+        "name": "Proved oveq2i: |- ( C F A ) = ( C F B )",
+        "hint_text": "Proved oveq2i: |  ( C F A ) = ( C F B )",
         "id": null,
         "groups": [
           "Event"
@@ -1707,8 +1725,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 10": {
-        "name": "Proved Statement 10",
+      "Proved eqtr4i: |- A = C": {
+        "name": "Proved eqtr4i: |- A = C",
+        "hint_text": "Proved eqtr4i: |  A = C",
         "id": null,
         "groups": [
           "Event"
@@ -1718,8 +1737,9 @@
         "type": "Event",
         "max_count": 1
       },
-      "Proved Statement 1": {
-        "name": "Proved Statement 1",
+      "Given 2cn: |- 2 e. CC": {
+        "name": "Given 2cn: |- 2 e. CC",
+        "hint_text": "Given 2cn: |  2 e. CC",
         "id": null,
         "groups": [],
         "classification": "progression",
@@ -1737,38 +1757,38 @@
   },
   "itempool_counts": {
     "1": {
-      "Proved Statement 1": 1,
-      "Proved Statement 10": 1,
-      "Proved Statement 2": 1,
-      "Proved Statement 3": 1,
-      "Proved Statement 4": 1,
-      "Proved Statement 5": 1,
-      "Proved Statement 6": 1,
-      "Proved Statement 7": 1,
-      "Proved Statement 8": 1,
-      "Proved Statement 9": 1,
-      "Statement 1": 1,
-      "Statement 10": 1,
-      "Statement 2": 1,
-      "Statement 3": 1,
-      "Statement 4": 1,
-      "Statement 5": 1,
-      "Statement 6": 1,
-      "Statement 7": 1,
-      "Statement 8": 1,
-      "Statement 9": 1
+      "2cn: |- 2 e. CC": 1,
+      "3eqtri: |- A = D": 1,
+      "Axiom ax-1cn: |- 1 e. CC": 1,
+      "Definition df-2: |- 2 = ( 1 + 1 )": 1,
+      "Definition df-3: |- 3 = ( 2 + 1 )": 1,
+      "Definition df-4: |- 4 = ( 3 + 1 )": 1,
+      "Given 2cn: |- 2 e. CC": 1,
+      "Proved 3eqtri: |- A = D": 1,
+      "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": 1,
+      "Proved eqtr4i: |- A = C": 1,
+      "Proved oveq1i: |- ( A F C ) = ( B F C )": 1,
+      "Proved oveq2i: |- ( C F A ) = ( C F B )": 1,
+      "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": 1,
+      "ax-1cn: |- 1 e. CC": 1,
+      "df-2: |- 2 = ( 1 + 1 )": 1,
+      "df-3: |- 3 = ( 2 + 1 )": 1,
+      "df-4: |- 4 = ( 3 + 1 )": 1,
+      "eqtr4i: |- A = C": 1,
+      "oveq1i: |- ( A F C ) = ( B F C )": 1,
+      "oveq2i: |- ( C F A ) = ( C F B )": 1
     }
   },
   "canonical_placements": {
     "1": {
-      "Prove Statement 2": "Statement 2",
-      "Prove Statement 3": "Statement 3",
-      "Prove Statement 4": "Statement 4",
-      "Prove Statement 5": "Statement 5",
-      "Prove Statement 6": "Statement 6",
-      "Prove Statement 7": "Statement 7",
-      "Prove Statement 8": "Statement 8",
-      "Prove Statement 9": "Statement 9"
+      "Axiom ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
+      "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+      "Definition df-2: |- 2 = ( 1 + 1 )": "df-2: |- 2 = ( 1 + 1 )",
+      "Definition df-3: |- 3 = ( 2 + 1 )": "df-3: |- 3 = ( 2 + 1 )",
+      "Definition df-4: |- 4 = ( 3 + 1 )": "df-4: |- 4 = ( 3 + 1 )",
+      "Prove oveq1i: |- ( A F C ) = ( B F C )": "oveq1i: |- ( A F C ) = ( B F C )",
+      "Prove 3eqtri: |- A = D": "3eqtri: |- A = D",
+      "Prove oveq2i: |- ( C F A ) = ( C F B )": "oveq2i: |- ( C F A ) = ( C F B )"
     }
   },
   "progression_mapping": {
@@ -1776,8 +1796,8 @@
   },
   "starting_items": {
     "1": [
-      "Statement 1",
-      "Proved Statement 1"
+      "2cn: |- 2 e. CC",
+      "Given 2cn: |- 2 e. CC"
     ]
   },
   "world": {
@@ -1914,236 +1934,188 @@
       },
       "num_statements": 10,
       "preset_label": "2p2e4 s1",
-      "name_substitutions": {
-        "items": {
-          "Statement 1": "2cn: |- 2 e. CC",
-          "Proved Statement 1": "Given 2cn: |- 2 e. CC",
-          "Statement 2": "ax-1cn: |- 1 e. CC",
-          "Proved Statement 2": "Axiom ax-1cn: |- 1 e. CC",
-          "Statement 3": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-          "Proved Statement 3": "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-          "Statement 4": "df-2: |- 2 = ( 1 + 1 )",
-          "Proved Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
-          "Statement 5": "df-3: |- 3 = ( 2 + 1 )",
-          "Proved Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
-          "Statement 6": "df-4: |- 4 = ( 3 + 1 )",
-          "Proved Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
-          "Statement 7": "oveq1i: |- ( A F C ) = ( B F C )",
-          "Proved Statement 7": "Proved oveq1i: |- ( A F C ) = ( B F C )",
-          "Statement 8": "3eqtri: |- A = D",
-          "Proved Statement 8": "Proved 3eqtri: |- A = D",
-          "Statement 9": "oveq2i: |- ( C F A ) = ( C F B )",
-          "Proved Statement 9": "Proved oveq2i: |- ( C F A ) = ( C F B )",
-          "Statement 10": "eqtr4i: |- A = C",
-          "Proved Statement 10": "Proved eqtr4i: |- A = C"
-        },
-        "locations": {
-          "Prove Statement 1": "Given 2cn: |- 2 e. CC",
-          "Prove Statement 2": "Axiom ax-1cn: |- 1 e. CC",
-          "Prove Statement 3": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-          "Prove Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
-          "Prove Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
-          "Prove Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
-          "Prove Statement 7": "Prove oveq1i: |- ( A F C ) = ( B F C )",
-          "Prove Statement 8": "Prove 3eqtri: |- A = D",
-          "Prove Statement 9": "Prove oveq2i: |- ( C F A ) = ( C F B )",
-          "Prove Statement 10": "Prove eqtr4i: |- A = C"
-        },
-        "regions": {
-          "Prove Statement 1": "Given 2cn: |- 2 e. CC",
-          "Prove Statement 2": "Axiom ax-1cn: |- 1 e. CC",
-          "Prove Statement 3": "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-          "Prove Statement 4": "Definition df-2: |- 2 = ( 1 + 1 )",
-          "Prove Statement 5": "Definition df-3: |- 3 = ( 2 + 1 )",
-          "Prove Statement 6": "Definition df-4: |- 4 = ( 3 + 1 )",
-          "Prove Statement 7": "Prove oveq1i: |- ( A F C ) = ( B F C )",
-          "Prove Statement 8": "Prove 3eqtri: |- A = D",
-          "Prove Statement 9": "Prove oveq2i: |- ( C F A ) = ( C F B )",
-          "Prove Statement 10": "Prove eqtr4i: |- A = C"
-        }
-      },
       "canonical_placements": {
-        "Prove Statement 2": "Statement 2",
-        "Prove Statement 3": "Statement 3",
-        "Prove Statement 4": "Statement 4",
-        "Prove Statement 5": "Statement 5",
-        "Prove Statement 6": "Statement 6",
-        "Prove Statement 7": "Statement 7",
-        "Prove Statement 8": "Statement 8",
-        "Prove Statement 9": "Statement 9"
+        "Axiom ax-1cn: |- 1 e. CC": "ax-1cn: |- 1 e. CC",
+        "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+        "Definition df-2: |- 2 = ( 1 + 1 )": "df-2: |- 2 = ( 1 + 1 )",
+        "Definition df-3: |- 3 = ( 2 + 1 )": "df-3: |- 3 = ( 2 + 1 )",
+        "Definition df-4: |- 4 = ( 3 + 1 )": "df-4: |- 4 = ( 3 + 1 )",
+        "Prove oveq1i: |- ( A F C ) = ( B F C )": "oveq1i: |- ( A F C ) = ( B F C )",
+        "Prove 3eqtri: |- A = D": "3eqtri: |- A = D",
+        "Prove oveq2i: |- ( C F A ) = ( C F B )": "oveq2i: |- ( C F A ) = ( C F B )"
       },
       "location_dependencies": {
-        "Prove Statement 3": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
-        ],
         "Proved Statement 3": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
-        ],
-        "Prove Statement 7": [
-          "Statement 5",
-          "Proved Statement 5"
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
         ],
         "Proved Statement 7": [
-          "Statement 5",
-          "Proved Statement 5"
-        ],
-        "Prove Statement 8": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "df-3: |- 3 = ( 2 + 1 )",
+          "Definition df-3: |- 3 = ( 2 + 1 )"
         ],
         "Proved Statement 8": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
-        ],
-        "Prove Statement 9": [
-          "Statement 4",
-          "Proved Statement 4"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "Proved Statement 9": [
-          "Statement 4",
-          "Proved Statement 4"
-        ],
-        "Prove Statement 10": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "df-2: |- 2 = ( 1 + 1 )",
+          "Definition df-2: |- 2 = ( 1 + 1 )"
         ],
         "Proved Statement 10": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
+        ],
+        "Prove addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )": [
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
+        ],
+        "Prove oveq1i: |- ( A F C ) = ( B F C )": [
+          "df-3: |- 3 = ( 2 + 1 )",
+          "Definition df-3: |- 3 = ( 2 + 1 )"
+        ],
+        "Prove 3eqtri: |- A = D": [
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
+        ],
+        "Prove oveq2i: |- ( C F A ) = ( C F B )": [
+          "df-2: |- 2 = ( 1 + 1 )",
+          "Definition df-2: |- 2 = ( 1 + 1 )"
+        ],
+        "Prove eqtr4i: |- A = C": [
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
         ]
       },
       "entrance_dependencies": {
         "From 2cn to addassi": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
         ],
         "From ax-1cn to addassi": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
         ],
         "From df-3 to oveq1i": [
-          "Statement 5",
-          "Proved Statement 5"
+          "df-3: |- 3 = ( 2 + 1 )",
+          "Definition df-3: |- 3 = ( 2 + 1 )"
         ],
         "From addassi to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From df-4 to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From oveq1i to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From df-2 to oveq2i": [
-          "Statement 4",
-          "Proved Statement 4"
+          "df-2: |- 2 = ( 1 + 1 )",
+          "Definition df-2: |- 2 = ( 1 + 1 )"
         ],
         "From 3eqtri to eqtr4i": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
         ],
         "From oveq2i to eqtr4i": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
         ]
       },
       "exit_dependencies": {
         "From 2cn to addassi": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
         ],
         "From ax-1cn to addassi": [
-          "Statement 1",
-          "Proved Statement 1",
-          "Statement 2",
-          "Proved Statement 2"
+          "2cn: |- 2 e. CC",
+          "Given 2cn: |- 2 e. CC",
+          "ax-1cn: |- 1 e. CC",
+          "Axiom ax-1cn: |- 1 e. CC"
         ],
         "From addassi to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From df-2 to oveq2i": [
-          "Statement 4",
-          "Proved Statement 4"
+          "df-2: |- 2 = ( 1 + 1 )",
+          "Definition df-2: |- 2 = ( 1 + 1 )"
         ],
         "From df-3 to oveq1i": [
-          "Statement 5",
-          "Proved Statement 5"
+          "df-3: |- 3 = ( 2 + 1 )",
+          "Definition df-3: |- 3 = ( 2 + 1 )"
         ],
         "From df-4 to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From oveq1i to 3eqtri": [
-          "Statement 3",
-          "Proved Statement 3",
-          "Statement 6",
-          "Proved Statement 6",
-          "Statement 7",
-          "Proved Statement 7"
+          "addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "Proved addassi: |- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+          "df-4: |- 4 = ( 3 + 1 )",
+          "Definition df-4: |- 4 = ( 3 + 1 )",
+          "oveq1i: |- ( A F C ) = ( B F C )",
+          "Proved oveq1i: |- ( A F C ) = ( B F C )"
         ],
         "From 3eqtri to eqtr4i": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
         ],
         "From oveq2i to eqtr4i": [
-          "Statement 8",
-          "Proved Statement 8",
-          "Statement 9",
-          "Proved Statement 9"
+          "3eqtri: |- A = D",
+          "Proved 3eqtri: |- A = D",
+          "oveq2i: |- ( C F A ) = ( C F B )",
+          "Proved oveq2i: |- ( C F A ) = ( C F B )"
         ]
       },
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
@@ -2260,7 +2232,7 @@
     "1": {
       "completion_condition": {
         "type": "item_check",
-        "item": "Proved Statement 10"
+        "item": "Proved eqtr4i: |- A = C"
       }
     }
   },
