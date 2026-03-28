@@ -91,10 +91,10 @@ If you want a non-randomized experience, enable `vanilla_placement` in your YAML
 
 ## Playing with JSON Tools
 
-The JSON Tools web client provides two dedicated panels for MetaMath games:
+MetaMath is played through the JSON Tools web client, which requires the [JSON Export Tools](../../../docs/json/user/overview.md) to be installed (see the [Setup Guide](setup_en.md) for installation instructions). The client provides two dedicated panels for MetaMath games:
 
-- **[Proof Queue](../../../../docs/json/user/modules/proofQueue.md)** — A table-based interface showing your proof in standard MetaMath format. Steps are automatically queued as their dependencies become available. Supports multiple difficulty modes for assigning hypothesis references.
-- **[Proof Graph](../../../../docs/json/user/modules/proofGraph.md)** — An interactive graph where proof steps are nodes and you draw edges to connect dependencies. Provides a visual overview of the proof structure.
+- **[Proof Queue](../../../docs/json/user/modules/proofQueue.md)** — A table-based interface showing your proof in standard MetaMath format. Steps are automatically queued as their dependencies become available. Supports multiple difficulty modes for assigning hypothesis references.
+- **[Proof Graph](../../../docs/json/user/modules/proofGraph.md)** — An interactive graph where proof steps are nodes and you draw edges to connect dependencies. Provides a visual overview of the proof structure.
 
 Both panels appear automatically when a MetaMath game is loaded. In Easy difficulty mode, correct assignments in one panel are synchronized with the other.
 

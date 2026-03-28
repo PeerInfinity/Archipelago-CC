@@ -61,7 +61,6 @@ MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
 # Used by sort_lists_for_consistency() to ensure deterministic JSON output.
 SAFE_TO_SORT_KEYS = {
     'allowed_legendary_hunt_encounters',
-    'dependencies',
     'dexsanity_encounter_types',  # Pokemon Emerald: OptionList from set, order non-deterministic
     'disabled_entities',
     'enabled_filler_buffs',
@@ -78,6 +77,7 @@ SAFE_TO_SORT_KEYS = {
 # (e.g., set iteration in original world code) but the order has no semantic meaning.
 SAFE_TO_SORT_DICT_KEYS = {
     'AVAILABLE_EASTER_EGGS_PER_REGION',  # The Witness: built from set/dict iteration
+    'classification_counts',  # Exporter: built from location iteration, key order depends on fill
     'EVENT_ITEM_PAIRS',  # The Witness: built from dict iteration, order non-deterministic
     'item_classification_overrides',
     'ter_goals',  # Terraria: built from set iteration order

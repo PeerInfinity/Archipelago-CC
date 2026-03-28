@@ -276,6 +276,131 @@ class DepGraphWorld(RuleWorldMixin, World):
         "Deployment Complete": "Deployment Complete",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Git": "Accessibility",
+        "Completed Node 2": "Event: Git",
+        "HTML": "UI/UX",
+        "Completed Node 3": "Event: HTML",
+        "CSS": "Express",
+        "Completed Node 4": "Event: CSS",
+        "Design Systems": "Responsive Design",
+        "Completed Node 5": "Event: Design Systems",
+        "JavaScript Basics": "HTML",
+        "Completed Node 6": "Event: JavaScript Basics",
+        "Algorithms": "Cloud Provider",
+        "Completed Node 7": "Event: Algorithms",
+        "DOM Manipulation": "React Mastery",
+        "Completed Node 8": "Event: DOM Manipulation",
+        "Package Managers": "Static Website Complete",
+        "Completed Node 9": "Event: Package Managers",
+        "Server Basics": "Flask",
+        "Completed Node 10": "Event: Server Basics",
+        "HTTP Basics": "JavaScript Basics",
+        "Completed Node 11": "Event: HTTP Basics",
+        "Static Website Complete": "Custom State System",
+        "Completed Node 12": "Event: Static Website Complete",
+        "Django": "Domain",
+        "Completed Node 13": "Event: Django",
+        "Django APIs": "PostgreSQL",
+        "Completed Node 14": "Event: Django APIs",
+        "Django ORM": "Deployment Complete",
+        "Completed Node 15": "Event: Django ORM",
+        "Express": "Caching",
+        "Completed Node 16": "Event: Express",
+        "Express APIs": "Django APIs",
+        "Completed Node 17": "Event: Express APIs",
+        "Express DB Integration": "Full-Stack Complete",
+        "Completed Node 18": "Event: Express DB Integration",
+        "Flask": "CSS",
+        "Completed Node 19": "Event: Flask",
+        "Flask APIs": "Vuex",
+        "Completed Node 20": "Event: Flask APIs",
+        "SQLAlchemy": "Vue",
+        "Completed Node 21": "Event: SQLAlchemy",
+        "NoSQL": "Django",
+        "Completed Node 22": "Event: NoSQL",
+        "MongoDB Basics": "Server Basics",
+        "Completed Node 23": "Event: MongoDB Basics",
+        "NoSQL Indexing": "Vanilla JS Mastery",
+        "Completed Node 24": "Event: NoSQL Indexing",
+        "React": "Express APIs",
+        "Completed Node 25": "Event: React",
+        "React Mastery": "Security Complete",
+        "Completed Node 26": "Event: React Mastery",
+        "Redux": "Unit Tests",
+        "Completed Node 27": "Event: Redux",
+        "SQL": "Scaling Complete",
+        "Completed Node 28": "Event: SQL",
+        "PostgreSQL": "React",
+        "Completed Node 29": "Event: PostgreSQL",
+        "SQL Optimization": "Redux",
+        "Completed Node 30": "Event: SQL Optimization",
+        "UI/UX": "Flask APIs",
+        "Completed Node 31": "Event: UI/UX",
+        "Responsive Design": "NoSQL",
+        "Completed Node 32": "Event: Responsive Design",
+        "Accessibility": "SQL",
+        "Completed Node 33": "Event: Accessibility",
+        "Vanilla JS Mastery": "Interactive App Complete",
+        "Completed Node 34": "Event: Vanilla JS Mastery",
+        "Custom State System": "Vue Mastery",
+        "Completed Node 35": "Event: Custom State System",
+        "Vue": "MongoDB Basics",
+        "Completed Node 36": "Event: Vue",
+        "Vue Mastery": "Algorithms",
+        "Completed Node 37": "Event: Vue Mastery",
+        "Vuex": "JWT",
+        "Completed Node 38": "Event: Vuex",
+        "Interactive App Complete": "Design Systems",
+        "Completed Node 39": "Event: Interactive App Complete",
+        "Caching": "Authentication",
+        "Completed Node 40": "Event: Caching",
+        "CDN": "DevOps",
+        "Completed Node 41": "Event: CDN",
+        "Docker": "CDN",
+        "Completed Node 42": "Event: Docker",
+        "CI/CD": "Integration Tests",
+        "Completed Node 43": "Event: CI/CD",
+        "Performance": "CORS",
+        "Completed Node 44": "Event: Performance",
+        "DevOps": "Horizontal Scaling",
+        "Completed Node 45": "Event: DevOps",
+        "Sessions": "Sessions",
+        "Completed Node 46": "Event: Sessions",
+        "JWT": "Docker",
+        "Completed Node 47": "Event: JWT",
+        "Authentication": "Git",
+        "Completed Node 48": "Event: Authentication",
+        "Unit Tests": "Testing",
+        "Completed Node 49": "Event: Unit Tests",
+        "Integration Tests": "SQLAlchemy",
+        "Completed Node 50": "Event: Integration Tests",
+        "Testing": "CI/CD",
+        "Completed Node 51": "Event: Testing",
+        "Full-Stack Complete": "Package Managers",
+        "Completed Node 52": "Event: Full-Stack Complete",
+        "Cloud Provider": "Express DB Integration",
+        "Completed Node 53": "Event: Cloud Provider",
+        "Domain": "HTTPS",
+        "Completed Node 54": "Event: Domain",
+        "Horizontal Scaling": "NoSQL Indexing",
+        "Completed Node 55": "Event: Horizontal Scaling",
+        "HTTPS": "HTTP Basics",
+        "Completed Node 56": "Event: HTTPS",
+        "CORS": "DOM Manipulation",
+        "Completed Node 57": "Event: CORS",
+        "Security Complete": "SQL Optimization",
+        "Completed Node 58": "Event: Security Complete",
+        "Scaling Complete": "Django ORM",
+        "Completed Node 59": "Event: Scaling Complete",
+        "Deployment Complete": "Performance",
+        "Completed Node 60": "Event: Deployment Complete",
+        "Production Deployment": "Production Deployment",
+        "Completed Node 61": "Event: Production Deployment",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -446,7 +571,7 @@ class DepGraphWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -581,18 +706,24 @@ class DepGraphWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 

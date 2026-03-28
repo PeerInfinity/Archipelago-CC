@@ -5,6 +5,7 @@
 ### Required Software
 - **Archipelago** 0.6.4 or later
 - **Python** 3.8 or later
+- **JSON Export Tools** — MetaMath is played entirely through the JSON Tools web client, which requires a `rules.json` file produced during seed generation. Install the tools using the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) (recommended) or by [cloning the repository](../../../docs/json/user/overview.md). See the [JSON Tools Installer README](../../json_tools_installer/README.md) for full setup instructions.
 - **metamath-py** library (automatically installed)
 
 ### Optional Downloads
@@ -12,9 +13,27 @@
 
 ## Installation Steps
 
-### 1. Install the Metamath World
+### 1. Install JSON Export Tools
 
-Place the `metamath` folder in your Archipelago `worlds` directory:
+MetaMath has no standalone game client — it is played through the JSON Tools web client. Before installing MetaMath itself, you need the JSON Export Tools suite so that seed generation produces the `rules.json` file the client needs.
+
+The easiest method is the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld):
+
+1. Download the file and place it in your Archipelago `custom_worlds/` directory
+2. Restart the Archipelago Launcher
+3. Open **JSON Tools Installer** from the Launcher and click Install
+
+The installer's **Demo Worlds** component includes MetaMath, so both JSON Tools and the MetaMath world can be installed in one step.
+
+See the [JSON Tools overview](../../../docs/json/user/overview.md) for alternative setup methods.
+
+### 2. Install the Metamath World (if not using the installer)
+
+If you installed via the JSON Tools Installer with Demo Worlds enabled, MetaMath is already installed and you can skip this step.
+
+Otherwise, download the [MetaMath apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/metamath.apworld) and place it in your Archipelago `custom_worlds/` directory, then restart the Launcher.
+
+You can also place the `metamath` folder directly in your Archipelago `worlds` directory:
 
 ```
 Archipelago/
@@ -30,7 +49,7 @@ Archipelago/
 │   └── ...other worlds...
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 
 The required Python libraries will be installed automatically when you first generate a game. If you want to install them manually:
 
@@ -38,7 +57,7 @@ The required Python libraries will be installed automatically when you first gen
 pip install metamath-py numpy
 ```
 
-### 3. Metamath Database Setup
+### 4. Metamath Database Setup
 
 The Metamath database (`set.mm`) is needed to parse theorem proofs. You have three options:
 
@@ -112,6 +131,8 @@ starting_statements: 0  # Start with nothing unlocked
 
 ## Generating Your Game
 
+With JSON Export Tools installed, seed generation automatically produces a `rules.json` file alongside the normal `.archipelago` output. This is what the JSON Tools web client uses to track your game.
+
 ### Using the Archipelago Launcher
 
 1. Open the Archipelago Launcher
@@ -125,6 +146,12 @@ starting_statements: 0  # Start with nothing unlocked
 ```bash
 python Generate.py --weights_file_path "Players/YourName.yaml"
 ```
+
+### Playing Your Game
+
+1. Start the Archipelago server with the generated `.archipelago` file
+2. Open the JSON Tools web client (see the [Quick Start Guide](../../../docs/json/user/quick-start.md))
+3. Load the generated preset — the Proof Queue and Proof Graph panels appear automatically
 
 ## Troubleshooting
 
