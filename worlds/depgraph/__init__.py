@@ -304,7 +304,7 @@ class DepGraphWorld(World):
                 i: {
                     "label": node.node_id,
                     "expression": node.expression,
-                    "dependencies": node.dependencies,
+                    "dependencies": sorted(node.dependencies),
                     "full_text": node.full_text,
                 }
                 for i, node in self.graph_structure.nodes.items()

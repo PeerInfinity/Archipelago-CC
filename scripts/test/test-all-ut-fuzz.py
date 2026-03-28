@@ -317,6 +317,24 @@ def run_fuzzer_test(
     if FUZZ_OUTPUT_DIR.exists():
         shutil.rmtree(FUZZ_OUTPUT_DIR)
 
+    # Clean up worldgen seed directories from previous games.
+    # Each fuzz run with save_rules_json=True creates worldgen directories like
+    # worlds/apeescape_worldgen_29341579621450226128/. These accumulate across
+    # games and are loaded by `from worlds import AutoWorldRegister` in the next
+    # fuzz.py process. Some can hang during import, causing the cascade timeout.
+    worlds_dir = PROJECT_ROOT / "worlds"
+    if worlds_dir.exists():
+        removed = 0
+        for entry in worlds_dir.iterdir():
+            if entry.is_dir() and "_worldgen_" in entry.name:
+                # Match pattern: {game}_worldgen_{seed_id} (long numeric suffix)
+                parts = entry.name.rsplit("_", 1)
+                if len(parts) == 2 and parts[1].isdigit() and len(parts[1]) > 10:
+                    shutil.rmtree(entry, ignore_errors=True)
+                    removed += 1
+        if removed:
+            print(f"  Cleaned up {removed} worldgen seed directories")
+
     # Build fuzzer command
     cmd = [
         sys.executable, str(PROJECT_ROOT / "fuzz.py"),
