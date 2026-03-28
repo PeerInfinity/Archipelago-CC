@@ -7534,11 +7534,11 @@
             "label": "static_website",
             "expression": "Static Website Complete",
             "dependencies": [
+              1,
+              2,
               4,
               6,
-              10,
-              2,
-              1
+              10
             ],
             "full_text": "static_website: Build your first static website"
           },
@@ -7642,8 +7642,8 @@
             "label": "react",
             "expression": "React",
             "dependencies": [
-              12,
-              8
+              8,
+              12
             ],
             "full_text": "react: Learn the React framework"
           },
@@ -7691,8 +7691,8 @@
             "label": "ui_ux",
             "expression": "UI/UX",
             "dependencies": [
-              12,
-              5
+              5,
+              12
             ],
             "full_text": "ui_ux: Learn user interface and experience principles"
           },
@@ -7716,8 +7716,8 @@
             "label": "vanilla_js",
             "expression": "Vanilla JS Mastery",
             "dependencies": [
-              12,
-              7
+              7,
+              12
             ],
             "full_text": "vanilla_js: Master advanced vanilla JavaScript"
           },
@@ -7757,15 +7757,15 @@
             "label": "interactive_app",
             "expression": "Interactive App Complete",
             "dependencies": [
-              27,
-              38,
-              35,
-              18,
               15,
+              18,
               21,
-              33,
+              24,
+              27,
               30,
-              24
+              33,
+              35,
+              38
             ],
             "full_text": "interactive_app: Build a full interactive application"
           },
@@ -7821,8 +7821,8 @@
             "label": "sessions",
             "expression": "Sessions",
             "dependencies": [
-              39,
-              11
+              11,
+              39
             ],
             "full_text": "sessions: Implement user sessions"
           },
@@ -7870,10 +7870,10 @@
             "label": "fullstack",
             "expression": "Full-Stack Complete",
             "dependencies": [
-              48,
               44,
-              51,
-              45
+              45,
+              48,
+              51
             ],
             "full_text": "fullstack: Complete full-stack integration"
           },
