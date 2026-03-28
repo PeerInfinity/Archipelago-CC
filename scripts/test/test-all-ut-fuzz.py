@@ -247,6 +247,28 @@ def get_apworld_download_url(world_directory: str, world_mapping: Dict) -> Optio
     return None
 
 
+def _check_leaked_semaphores():
+    """Check /dev/shm for leaked POSIX semaphores from multiprocessing.
+
+    When fuzz.py is killed with SIGKILL, Python's multiprocessing.Manager
+    and synchronization primitives may leave behind named semaphores.
+    These can exhaust system limits or cause deadlocks in subsequent processes.
+    """
+    shm_path = Path("/dev/shm")
+    if not shm_path.exists():
+        return
+    try:
+        sem_files = list(shm_path.glob("sem.*"))
+        if sem_files:
+            print(f"  Warning: {len(sem_files)} leaked semaphore(s) in /dev/shm:")
+            for f in sem_files[:10]:
+                print(f"    {f.name}")
+            if len(sem_files) > 10:
+                print(f"    ... and {len(sem_files) - 10} more")
+    except PermissionError:
+        pass  # Can't read /dev/shm
+
+
 def run_fuzzer_test(
     world_dir: str,
     runs: int,
@@ -462,6 +484,8 @@ def run_fuzzer_test(
                 proc.wait(timeout=10)
             except subprocess.TimeoutExpired:
                 pass
+            # Check for leaked POSIX semaphores in /dev/shm
+            _check_leaked_semaphores()
 
         # Check if we timed out (either overall process timeout or inactivity timeout)
         if process_timed_out[0]:
