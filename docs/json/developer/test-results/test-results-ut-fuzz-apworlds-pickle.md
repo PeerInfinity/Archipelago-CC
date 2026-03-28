@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 17:59:07 UTC
+**Generated:** 2026-03-24 19:12:10 UTC
 
 **Source Data Created:** 2026-03-24T17:59:06.943350+00:00
 
@@ -35,8 +35,8 @@
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 76 (passes pickle mode per config)
-- **Unexpected Passes:** 1 (expected to fail but passed)
+- **Expected Passes:** 77 (passes pickle mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
 - **Expected Failures:** 43 (doesn't pass pickle mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
@@ -168,7 +168,7 @@
 
 ## Results Breakdown
 
-### Expected Passes (76)
+### Expected Passes (77)
 
 Games that pass pickle mode per tracking-mode-config.json and passed the test.
 
@@ -221,6 +221,7 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Nine Sols | 100 | 54 | 0 | 0 | 54.0% |
 | Ori and the Blind Forest | 100 | 99 | 0 | 0 | 99.0% |
 | Pizza Tower | 100 | 86 | 0 | 0 | 86.0% |
+| Pokemon FireRed and LeafGreen | 100 | 100 | 0 | 0 | 100.0% |
 | Pseudoregalia | 100 | 100 | 0 | 0 | 100.0% |
 | Rabi-Ribi | 100 | 63 | 0 | 0 | 63.0% |
 | Rain World | 100 | 36 | 0 | 0 | 36.0% |
@@ -250,14 +251,6 @@ Games that pass pickle mode per tracking-mode-config.json and passed the test.
 | Yu-Gi-Oh! Forbidden Memories | 100 | 100 | 0 | 0 | 100.0% |
 | Zelda II: The Adventure of Link | 100 | 100 | 0 | 0 | 100.0% |
 | osu! | 100 | 100 | 0 | 0 | 100.0% |
-
-### Unexpected Passes (1)
-
-Games NOT expected to pass pickle mode (not in config or mode not listed) but passed anyway.
-
-| Game Name | Total | Success | Failure | Timeout | Success Rate |
-|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| Pokemon FireRed and LeafGreen | 100 | 100 | 0 | 0 | 100.0% |
 
 ### Expected Failures (43)
 

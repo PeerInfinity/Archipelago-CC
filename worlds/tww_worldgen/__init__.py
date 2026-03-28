@@ -294,6 +294,120 @@ class TWWWorld(RuleWorldMixin, World):
         "Northern Fairy Island - Great Fairy": "Triforce Shard 5",
     }
 
+    # Original seed placements - actual item placements from the original seed generation
+    # Used by _place_original_items() to reproduce exact original item placement
+    original_seed_placements: ClassVar[Dict[str, str]] = {
+        "Defeat Ganondorf": "Victory",
+        "Forsaken Fortress - Chest Guarded By Bokoblin": "FF Dungeon Map",
+        "Forsaken Fortress - Chest Inside Lower Jail Cell": "Triforce Shard 2",
+        "Forsaken Fortress - Chest Outside Upper Jail Cell": "FF Compass",
+        "Angular Isles - Cave": "Orange Rupee",
+        "Dragon Roost Cavern - Chest Across Lava Pit": "Orange Rupee",
+        "Forsaken Fortress - Chest on Bed": "Orange Rupee",
+        "Forsaken Fortress - Phantom Ganon": "Orange Rupee",
+        "Private Oasis - Cabana Labyrinth - Lower Floor Chest": "Orange Rupee",
+        "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item": "Orange Rupee",
+        "Tower of the Gods - Hop Across Floating Boxes": "Orange Rupee",
+        "Ganon's Tower - Maze Chest": "Earth God's Lyric",
+        "Outset Island - Great Fairy": "Hero's Charm",
+        "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item": "Bomb Bag Capacity Upgrade",
+        "Forbidden Woods - Vine Maze Right Chest": "Progressive Shield",
+        "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item": "Progressive Shield",
+        "Diamond Steppe Island - Warp Maze Cave - First Chest": "Silver Rupee",
+        "Dragon Roost Cavern - Rat Room": "Silver Rupee",
+        "Earth Temple - Many Mirrors Room Left Chest": "Silver Rupee",
+        "Forbidden Woods - Vine Maze Left Chest": "Silver Rupee",
+        "Pawprint Isle - Chuchu Cave - Behind Left Boulder": "Silver Rupee",
+        "Pawprint Isle - Chuchu Cave - Behind Right Boulder": "Silver Rupee",
+        "The Great Sea - Salvage Corp Gift": "Silver Rupee",
+        "Western Fairy Island - Great Fairy": "Silver Rupee",
+        "Windfall Island - Jail - Tingle - First Gift": "Wind Waker",
+        "Cliff Plateau Isles - Cave": "Piece of Heart",
+        "Dragon Roost Cavern - Gohma Heart Container": "Piece of Heart",
+        "Dragon Roost Cavern - Under Rope Bridge": "Piece of Heart",
+        "Forbidden Woods - Chest Across Red Hanging Flower": "Piece of Heart",
+        "Forbidden Woods - Past Seeds Hanging by Vines": "Piece of Heart",
+        "Hyrule - Master Sword Chamber": "Piece of Heart",
+        "Pawprint Isle - Chuchu Cave - Scale the Wall": "Piece of Heart",
+        "Tower of the Gods - Top of Floating Platforms Room": "Piece of Heart",
+        "Wind Temple - Chest In Middle Of Hub Room": "Piece of Heart",
+        "Windfall Island - Jail - Tingle - Second Gift": "Piece of Heart",
+        "Windfall Island - Maggie - Free Item": "Triforce Shard 8",
+        "Windfall Island - Tott - Teach Rhythm": "Magic Armor",
+        "Dragon Roost Cavern - Alcove With Water Jugs": "DRC Small Key",
+        "Dragon Roost Cavern - Bird's Nest": "DRC Small Key",
+        "Dragon Roost Cavern - First Room": "DRC Small Key",
+        "Dragon Roost Cavern - Rat Room Boarded Up Chest": "DRC Small Key",
+        "Dragon Roost Cavern - Big Key Chest": "Nayru's Pearl",
+        "Dragon Roost Cavern - Boarded Up Chest": "Wind's Requiem",
+        "Dragon Roost Cavern - Boss Stairs Left Chest": "DRC Dungeon Map",
+        "Dragon Roost Cavern - Boss Stairs Right Chest": "Deku Leaf",
+        "Dragon Roost Cavern - Dark Room": "DRC Compass",
+        "Dragon Roost Cavern - Miniboss": "Progressive Magic Meter",
+        "Wind Temple - Molgera Heart Container": "Progressive Magic Meter",
+        "Dragon Roost Cavern - Pot Room Chest": "DRC Big Key",
+        "Forbidden Woods - Big Key Chest": "FW Dungeon Map",
+        "Forbidden Woods - Chest in Locked Tree Trunk": "Command Melody",
+        "Forbidden Woods - Climb to Top Using Boko Baba Bulbs": "Progressive Sword",
+        "Forbidden Woods - Double Mothula Room": "Progressive Sword",
+        "Forbidden Woods - Inside Hollow Tree's Mouth": "Progressive Sword",
+        "Forbidden Woods - First Room": "Skull Hammer",
+        "Forbidden Woods - Hole in Tree": "FW Small Key",
+        "Forbidden Woods - Morth Pit": "FW Big Key",
+        "Forbidden Woods - Tall Room Before Miniboss": "Triforce Shard 3",
+        "Earth Temple - Stalfos Crypt Room": "Empty Bottle",
+        "Private Oasis - Cabana Labyrinth - Upper Floor Chest": "Empty Bottle",
+        "Tower of the Gods - Big Key Chest": "Empty Bottle",
+        "Tower of the Gods - Stone Tablet": "Empty Bottle",
+        "Tower of the Gods - Chest Behind Bombable Walls": "Heart Container",
+        "Tower of the Gods - First Chest Guarded by Armos Knights": "TotG Big Key",
+        "Tower of the Gods - Floating Platforms Room": "Song of Passing",
+        "Tower of the Gods - Light Two Torches": "TotG Dungeon Map",
+        "Tower of the Gods - Second Chest Guarded by Armos Knights": "TotG Small Key",
+        "Tower of the Gods - Skulls Room Chest": "TotG Small Key",
+        "Tower of the Gods - Shoot Eye Above Skulls Room Chest": "Tingle Tuner",
+        "Bomb Island - Cave": "Progressive Bow",
+        "Cliff Plateau Isles - Highest Isle": "Progressive Bow",
+        "Earth Temple - Big Key Chest": "Progressive Bow",
+        "Earth Temple - Casket in Second Crypt": "ET Dungeon Map",
+        "Earth Temple - Chest Behind Destructible Walls": "Note to Mom",
+        "Earth Temple - Chest Behind Statues": "Farore's Pearl",
+        "Earth Temple - Chest In Three Blocks Room": "ET Small Key",
+        "Earth Temple - Kill All Floormasters in Foggy Room": "ET Small Key",
+        "Earth Temple - Transparent Chest in First Crypt": "ET Small Key",
+        "Earth Temple - Chest in Third Crypt": "Wallet Capacity Upgrade",
+        "Wind Temple - Spike Wall Room - Destroy All Cracked Floors": "Wallet Capacity Upgrade",
+        "Earth Temple - End of Foggy Room With Floormasters": "ET Big Key",
+        "Earth Temple - Many Mirrors Room Right Chest": "ET Compass",
+        "Earth Temple - Transparent Chest In Warp Pot Room": "Hookshot",
+        "Wind Temple - Big Key Chest": "Triforce Shard 1",
+        "Wind Temple - Chest Behind Seven Armos": "WT Big Key",
+        "Wind Temple - Chest Behind Stone Head": "Triforce Shard 7",
+        "Wind Temple - Chest Between Two Dirt Patches": "Delivery Bag",
+        "Wind Temple - Chest In Many Cyclones Room": "WT Small Key",
+        "Wind Temple - Chest at Top of Hub Room": "WT Small Key",
+        "Wind Temple - Chest in Left Alcove": "Triforce Shard 4",
+        "Wind Temple - Kill All Enemies in Tall Basement Room": "Wind God's Aria",
+        "Wind Temple - Spike Wall Room - First Chest": "WT Compass",
+        "Forbidden Woods - Mothula Miniboss Room": "FW Compass",
+        "Tower of the Gods - Darknut Miniboss Room": "Telescope",
+        "Earth Temple - Stalfos Miniboss Room": "Cabana Deed",
+        "Wind Temple - Wizzrobe Miniboss Room": "WT Dungeon Map",
+        "Forbidden Woods - Kalle Demos Heart Container": "Iron Boots",
+        "Tower of the Gods - Gohdan Heart Container": "TotG Compass",
+        "Forsaken Fortress - Helmaroc King Heart Container": "Triforce Shard 6",
+        "Earth Temple - Jalhalla Heart Container": "Ghost Ship Chart",
+        "Ice Ring Isle - Cave - Chest": "Ballad of Gales",
+        "Needle Rock Isle - Cave": "Boomerang",
+        "Bird's Peak Rock - Cave": "Power Bracelets",
+        "Pawprint Isle - Chuchu Cave - Chest": "Grappling Hook",
+        "Diamond Steppe Island - Warp Maze Cave - Second Chest": "Din's Pearl",
+        "Thorned Fairy Island - Great Fairy": "Bombs",
+        "Eastern Fairy Island - Great Fairy": "Bait Bag",
+        "Southern Fairy Island - Great Fairy": "Hurricane Spin",
+        "Northern Fairy Island - Great Fairy": "Triforce Shard 5",
+    }
+
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
@@ -462,7 +576,7 @@ class TWWWorld(RuleWorldMixin, World):
             return  # No options file, use defaults
 
         try:
-            with open(options_path, 'r') as f:
+            with open(options_path, 'r', encoding='utf-8') as f:
                 options_data = json.load(f)
         except (json.JSONDecodeError, IOError):
             return  # Can't read options, use defaults
@@ -610,18 +724,24 @@ class TWWWorld(RuleWorldMixin, World):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized.
+        """Place items in their original seed locations when not randomized.
 
+        Uses original_seed_placements (actual seed 1 placements) rather than
+        canonical_placements (vanilla locations) to match the original world's output.
         Process advancement locations first to ensure they get advancement items.
         This is critical for cross-validation in spoiler tests, where item
         advancement flags determine whether items are counted.
         """
+        # Use original_seed_placements (actual seed 1 placements) for placement.
+        # canonical_placements contains vanilla locations for the exporter.
+        placements = getattr(self, 'original_seed_placements', self.canonical_placements)
+
         # Two-pass placement: first advancement locations, then the rest
         advancement_locs = getattr(self, 'advancement_locations', set())
 
         # Sort locations to process advancement locations first
         sorted_placements = sorted(
-            self.canonical_placements.items(),
+            placements.items(),
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 
