@@ -2433,8 +2433,8 @@
             "label": "dual_wield",
             "expression": "Dual Wield",
             "dependencies": [
-              8,
-              2
+              2,
+              8
             ],
             "full_text": "dual_wield: Dual Wield"
           },
