@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-24 19:12:10 UTC
+**Generated:** 2026-03-28 03:52:29 UTC
 
 **Source Data Created:** 2026-03-24T19:01:46.693437+00:00
 
@@ -55,15 +55,15 @@
 
 Of the 80 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 54/80 (67.5%)
+- **Passing with Generic Exporter:** 55/80 (68.8%)
 - **Passing with Generic Logic:** 80/80 (100.0%)
-- **Passing with Both Generic:** 54/80 (67.5%)
+- **Passing with Both Generic:** 55/80 (68.8%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 414.4KB
+- **Total Exporter Code:** 397.4KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 414.4KB
+- **Combined Total:** 397.4KB
 
 ## Test Results
 
@@ -124,7 +124,7 @@ Of the 80 games with 100% pass rate:
 | League of Legends | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | ✅ | ✅ | N/A |
 | *Lego Star Wars: The Complete Saga* | ✅ | 100 | 85 | 0 | 0 | 15 | ⚠️ 85.0% | ✅ | ✅ | N/A |
 | Lil Gator Game | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| *Lingo 2* | ✅ | 100 | 17 | 0 | 0 | 83 | ❌ 17.0% | 17.1KB | ✅ | N/A |
+| *Lingo 2* | ✅ | 100 | 17 | 0 | 0 | 83 | ❌ 17.0% | N/A | N/A | N/A |
 | Little Witch Nobeta | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Luigi's Mansion | ✅ | 100 | 49 | 0 | 0 | 51 | ❌ 49.0% | ✅ | ✅ | N/A |
 | *Lunacid* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.2KB | ✅ | N/A |
