@@ -4977,8 +4977,8 @@
             "expression": "|- ( ph -> th )",
             "dependencies": [
               8,
-              10,
-              12
+              12,
+              10
             ],
             "full_text": "3syl: Inference chaining two syllogisms ~ syl .  Inference associated with ~ imim12i .  (Contributed by NM, 28-Dec-1992.)",
             "instantiated_expression": "|- ( ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) /\\ n e. ( 2 ... ( N - 1 ) ) ) -> ( ! ` ( N - 1 ) ) e. NN )"
@@ -5070,9 +5070,9 @@
             "label": "syl2anc",
             "expression": "|- ( ph -> th )",
             "dependencies": [
-              1,
+              23,
               4,
-              23
+              1
             ],
             "full_text": "syl2anc: Syllogism inference combined with contraction.  (Contributed by NM, 16-Mar-2012.)",
             "instantiated_expression": "|- ( ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) /\\ n e. ( 2 ... ( N - 1 ) ) ) -> n || ( ! ` ( N - 1 ) ) )"
@@ -5081,10 +5081,10 @@
             "label": "syl3anc",
             "expression": "|- ( ph -> ta )",
             "dependencies": [
-              11,
               14,
               23,
-              23
+              23,
+              11
             ],
             "full_text": "syl3anc: Syllogism combined with contraction.  (Contributed by NM, 11-Mar-2012.)",
             "instantiated_expression": "|- ( ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) /\\ n e. ( 2 ... ( N - 1 ) ) ) -> ( n || ( ! ` ( N - 1 ) ) -> -. n || ( ( ! ` ( N - 1 ) ) + 1 ) ) )"
@@ -5113,8 +5113,8 @@
             "label": "mtod",
             "expression": "|- ( ph -> -. ps )",
             "dependencies": [
-              26,
-              27
+              27,
+              26
             ],
             "full_text": "mtod: Modus tollens deduction.  (Contributed by NM, 3-Apr-1994.)  (Proof shortened by Wolf Lammen, 11-Sep-2013.)",
             "instantiated_expression": "|- ( ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) /\\ n e. ( 2 ... ( N - 1 ) ) ) -> -. n || N )"
@@ -5138,8 +5138,8 @@
             "label": "ralrimiva",
             "expression": "|- ( ph -> A. x e. A ps )",
             "dependencies": [
-              28,
-              29
+              29,
+              28
             ],
             "full_text": "ralrimiva: Inference from Theorem 19.21 of [Margaris] p. 90.  (Restricted quantifier version.)  (Contributed by NM, 2-Jan-2006.)",
             "instantiated_expression": "|- ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) -> A. n e. ( 2 ... ( N - 1 ) ) -. n || N )"
@@ -5149,8 +5149,8 @@
             "expression": "|- ( ph -> th )",
             "dependencies": [
               21,
-              30,
-              31
+              31,
+              30
             ],
             "full_text": "sylanbrc: Syllogism inference.  (Contributed by Jeff Madsen, 2-Sep-2009.)",
             "instantiated_expression": "|- ( ( N e. ( ZZ>= ` 2 ) /\\ N || ( ( ! ` ( N - 1 ) ) + 1 ) ) -> N e. Prime )"
@@ -5187,8 +5187,8 @@
             "label": "eleq2w",
             "expression": "|- ( x = y -> ( A e. x <-> A e. y ) )",
             "dependencies": [
-              34,
-              36
+              36,
+              34
             ],
             "full_text": "eleq2w: $j usage 'eleq1w' avoids 'ax-9' 'ax-10' 'ax-11' 'ax-12' 'ax-13' 'ax-ext' 'df-clab' 'df-cleq'; $) $( Weaker version of ~ eleq2 (but more general than ~ elequ2 ) not depending on ~ ax-ext nor ~ df-cleq .  (Contributed by BJ, 29-Sep-2019.)",
             "instantiated_expression": "|- ( z = x -> ( ( N - 1 ) e. z <-> ( N - 1 ) e. x ) )"

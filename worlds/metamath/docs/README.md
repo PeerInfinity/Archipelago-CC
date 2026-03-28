@@ -24,9 +24,10 @@ Metamath is a unique Archipelago world that transforms mathematical proofs into 
 
 ## Quick Start
 
-1. **Installation**: Place the `metamath` folder in your Archipelago `worlds` directory
-2. **Generate**: Use a YAML configuration file to specify your theorem
-3. **Play**: Use the JSON Tools web client — the Proof Queue and Proof Graph panels load automatically
+1. **Install JSON Export Tools**: MetaMath is played through the JSON Tools web client, which requires the JSON Export Tools suite. Install them using the [JSON Tools Installer apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/json_tools_installer.apworld) (see the [JSON Tools overview](../../../docs/json/user/overview.md) for details). MetaMath is included in the installer's **Demo Worlds** component, so both steps can be done at once.
+2. **Install MetaMath** (if not using the installer): Download the [MetaMath apworld](https://github.com/PeerInfinity/Archipelago-CC/raw/main/apworlds/metamath.apworld) and place it in your Archipelago `custom_worlds/` directory
+3. **Generate**: Use a YAML configuration file to specify your theorem — generation will produce a `rules.json` file automatically
+4. **Play**: Open the JSON Tools web client and load the generated preset — the Proof Queue and Proof Graph panels appear automatically
 
 ## Available Theorems
 
@@ -57,13 +58,13 @@ Metamath:
 ## Documentation
 
 ### Getting Started
-- [Setup Guide](setup.md) - Detailed installation and configuration
+- [Setup Guide](setup_en.md) - Detailed installation and configuration
 - [Settings Guide](settings.md) - All available options explained
 - [Gameplay Guide](gameplay.md) - How to play and strategies
 
 ### JSON Tools Panels
-- [Proof Queue Guide](../../../../docs/json/user/modules/proofQueue.md) - Table-based proof interface with difficulty modes
-- [Proof Graph Guide](../../../../docs/json/user/modules/proofGraph.md) - Interactive dependency graph visualization
+- [Proof Queue Guide](../../../docs/json/user/modules/proofQueue.md) - Table-based proof interface with difficulty modes
+- [Proof Graph Guide](../../../docs/json/user/modules/proofGraph.md) - Interactive dependency graph visualization
 
 ### Resources
 - [Database Overview](database.md) - Statistics, theorem catalog, and difficulty analysis

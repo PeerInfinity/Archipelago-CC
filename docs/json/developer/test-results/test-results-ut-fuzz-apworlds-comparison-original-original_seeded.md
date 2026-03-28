@@ -1,8 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Orig Seeded (APWorlds)
 
-**Generated:** 2026-03-23 03:48:19 UTC
+**Generated:** 2026-03-24 19:12:10 UTC
 
-**Source Data Last Updated:** 2026-03-22T06:27:28
+**Source Data Last Updated:** 2026-03-24T17:54:52
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Original Universal Tracker with generation seed number.
 
@@ -17,11 +17,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 123
-- **Passing Both:** 37 (30.1%)
+- **Total Games Tested:** 120
+- **Passing Both:** 38 (31.7%)
 - **Passing Original Only:** 1 (0.8%)
-- **Passing Orig Seeded Only:** 19 (15.4%)
-- **Passing Neither:** 66 (53.7%)
+- **Passing Orig Seeded Only:** 17 (14.2%)
+- **Passing Neither:** 64 (53.3%)
 
 ## Full Comparison
 
@@ -29,47 +29,45 @@ This report compares fuzz test results between the Original Universal Tracker (F
 |-----------|:---------------------:|:---------------------:|
 | A Dance of Fire and Ice | ❌ | ❌ |
 | A Difficult Game About Climbing | ⚠️ 67/100 | ✅ |
-| A Link Between Worlds | ❌ 14/100 | ❌ 16/100 |
+| A Link Between Worlds | ❌ 15/100 | ❌ 14/100 |
 | ANIMAL WELL | ⚠️ 92/100 | ✅ |
-| Actraiser | ⚠️ 86/100 | ✅ |
+| Actraiser | ⚠️ 82/100 | ✅ |
 | Against the Storm | ⚠️ 64/99 | ⚠️ 64/99 |
 | Air Delivery | ✅ | ✅ |
 | An Untitled Story | ✅ | ✅ |
 | Anodyne | ✅ | ✅ |
-| Another Crabs Treasure | ⚠️ 53/100 | ⚠️ 53/100 |
-| Ape Escape | ⚠️ 97/100 | ⚠️ 98/99 |
+| Another Crabs Treasure | ⚠️ 51/100 | ❌ 46/100 |
 | Ape Escape 3 | ✅ | ✅ |
 | Astalon | ✅ | ✅ |
 | Autopelago | ✅ | ✅ |
 | Axiom Verge | ⚠️ 65/100 | ✅ |
-| Balatro | ❌ 9/36 | ❌ 7/19 |
+| Balatro | ❌ 7/36 | ❌ 7/19 |
 | Brotato | ⚠️ 42/79 | ⚠️ 43/79 |
 | Castlevania: Dawn of Sorrow | ✅ | ✅ |
 | Cavern of Dreams | ❌ 20/100 | ❌ 20/63 |
-| ChecksMate | ⚠️ 85/100 | ⚠️ 85/98 |
+| ChecksMate | ⚠️ 86/100 | ⚠️ 83/98 |
 | Chrono Trigger Jets of Time | ❌ | ❌ |
 | ClusterTruck | ⚠️ 52/100 | ⚠️ 51/100 |
 | Corn Kidz 64 | ⚠️ 98/100 | ✅ |
 | CrossCode | ✅ | ✅ |
 | Crystal Project | ❌ 28/100 | ❌ 28/100 |
-| Crystalis | ⚠️ 59/80 | ⚠️ 59/62 |
+| Crystalis | ⚠️ 59/81 | ⚠️ 59/62 |
 | Cuphead | ❌ | ❌ |
 | DORONKO WANKO | ✅ | ✅ |
-| Deep Rock Galactic | ❌ 38/100 | ❌ 36/100 |
+| Deep Rock Galactic | ❌ 34/100 | ❌ 36/100 |
 | Diddy Kong Racing | ⚠️ 99/100 | ✅ |
 | Digimon World | ⚠️ 75/100 | ✅ |
 | Dome Keeper | ⚠️ 99/100 | ✅ |
 | Duke Nukem 3D | ❌ 4/100 | ❌ 4/95 |
 | Final Fantasy Tactics A2 | ❌ 10/100 | ❌ 10/98 |
 | Final Fantasy Tactics Advance | ✅ | ✅ |
-| Fire Emblem Sacred Stones | ❌ 43/99 | ❌ 40/97 |
+| Fire Emblem Sacred Stones | ❌ 45/99 | ❌ 43/97 |
 | Frogmonster | ⚠️ 76/100 | ⚠️ 76/100 |
 | GZDoom | ❌ | ❌ |
 | Garfield Kart - Furious Racing | ❌ | ❌ |
-| Golden Sun The Lost Age | ⚠️ 48/90 | ⚠️ 85/90 |
+| Golden Sun The Lost Age | ⚠️ 47/90 | ⚠️ 83/90 |
 | Grim Dawn | ⚠️ 62/74 | ✅ |
-| Hammerwatch | ❌ 27/100 | ❌ 27/98 |
-| Hatsune Miku Project Diva Mega Mix+ | ❌ 7/100 | ✅ |
+| Hatsune Miku Project Diva Mega Mix+ | ❌ 17/100 | ✅ |
 | Here Comes Niko! | ⚠️ 61/100 | ⚠️ 61/99 |
 | Iji | ⚠️ 62/100 | ✅ |
 | Into the Breach | ❌ 45/100 | ❌ 45/100 |
@@ -80,8 +78,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Keep Talking and Nobody Explodes | ⚠️ 79/100 | ✅ |
 | Kingdom Hearts Birth by Sleep | ✅ | ✅ |
 | Kingdom Hearts Chain of Memories | ✅ | ✅ |
-| Kingdom Hearts RE Chain of Memories | ⚠️ 96/100 | ✅ |
-| Kirby Super Star | ❌ 18/98 | ❌ 16/96 |
+| Kirby Super Star | ❌ 15/95 | ❌ 17/97 |
 | League of Legends | ⚠️ 61/100 | ⚠️ 61/98 |
 | Lego Star Wars: The Complete Saga | ✅ | ✅ |
 | Lil Gator Game | ❌ | ❌ |
@@ -90,19 +87,19 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Luigi's Mansion | ✅ | ✅ |
 | Lunacid | ✅ | ✅ |
 | Majora's Mask Recompiled | ⚠️ 89/100 | ⚠️ 89/100 |
-| Mario Kart Double Dash | ⚠️ 99/100 | ✅ |
+| Mario Kart Double Dash | ✅ | ✅ |
 | MetroCUBEvania | ✅ | ✅ |
 | Metroid Fusion | ⚠️ 84/100 | ✅ |
 | Metroid: Zero Mission | ❌ 1/100 | ❌ 8/94 |
 | Minishoot Adventures | ❌ 18/100 | ❌ 18/100 |
 | Minit | ⚠️ 99/100 | ✅ |
-| Monster Sanctuary | ❌ 18/100 | ❌ 22/100 |
+| Monster Sanctuary | ❌ 17/100 | ❌ 17/100 |
 | Nine Sols | ✅ | ✅ |
-| Ori and the Blind Forest | ⚠️ 98/100 | ⚠️ 97/98 |
-| Ori and the Will of the Wisps | ❌ 19/100 | ❌ 20/69 |
+| Ori and the Blind Forest | ⚠️ 97/100 | ⚠️ 96/97 |
+| Ori and the Will of the Wisps | ❌ 19/100 | ❌ 20/72 |
 | Oxygen Not Included | ⚠️ 64/100 | ⚠️ 64/91 |
 | Pizza Tower | ❌ 49/100 | ⚠️ 49/86 |
-| PlateUp | ❌ 5/90 | ❌ 5/65 |
+| PlateUp | ❌ 5/89 | ❌ 5/64 |
 | Pokemon FireRed and LeafGreen | ⚠️ 80/100 | ⚠️ 80/100 |
 | Pokemon Mystery Dungeon Explorers of Sky | ⚠️ 78/100 | ⚠️ 78/100 |
 | Pseudoregalia | ✅ | ✅ |
@@ -115,43 +112,43 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Rusted Moss | ❌ 43/100 | ❌ 43/100 |
 | Sentinels of the Multiverse | ❌ | ❌ |
 | Shadow The Hedgehog | ❌ 8/21 | ⚠️ 8/15 |
-| Ship of Harkinian | ❌ 31/100 | ❌ 30/100 |
+| Ship of Harkinian | ❌ 30/100 | ❌ 30/100 |
 | Simon Tatham's Portable Puzzle Collection | ✅ | ✅ |
 | Sly 2: Band of Thieves | ❌ | ❌ |
-| Sly Cooper and the Thievius Raccoonus | ⚠️ 89/100 | ⚠️ 87/99 |
-| Sonic Adventure DX | ❌ 16/66 | ❌ 15/42 |
+| Sly Cooper and the Thievius Raccoonus | ⚠️ 89/100 | ⚠️ 90/100 |
+| Sonic Adventure DX | ❌ 16/66 | ❌ 13/46 |
 | Sonic Heroes | ✅ | ❌ |
 | Sonic Rush | ⚠️ 99/100 | ✅ |
 | Sonic the Hedgehog 1 | ✅ | ✅ |
 | Soul Blazer | ✅ | ✅ |
 | Spinball | ✅ | ✅ |
-| Spyro 3 | ❌ 9/99 | ❌ 11/99 |
+| Spyro 3 | ❌ 9/99 | ❌ 10/99 |
 | Stacklands | ✅ | ✅ |
 | Star Fox 64 | ✅ | ✅ |
 | Star Wars Episode I Racer | ❌ 4/100 | ❌ 4/100 |
 | Super Cat Planet | ✅ | ✅ |
 | Symphony of the Night | ✅ | ✅ |
-| System Shock 2 | ❌ 42/100 | ⚠️ 40/60 |
+| System Shock 2 | ❌ 41/100 | ⚠️ 39/60 |
 | TCG Card Shop Simulator | ❌ | ❌ |
 | TOEM: A Photo Adventure | ✅ | ✅ |
 | Tetris Attack | ⚠️ 83/87 | ✅ |
 | The Legend of Zelda - Oracle of Seasons | ❌ | ❌ |
-| The Legend of Zelda - Phantom Hourglass | ❌ 9/100 | ❌ 13/97 |
+| The Legend of Zelda - Phantom Hourglass | ❌ 10/100 | ❌ 13/98 |
 | The Sims 4 | ❌ | ❌ |
-| ToeJam and Earl | ❌ 4/100 | ❌ 5/92 |
+| ToeJam and Earl | ❌ 4/100 | ❌ 4/92 |
 | TurnipBoy | ✅ | ✅ |
-| Tyrian | ⚠️ 41/75 | ⚠️ 37/71 |
+| Tyrian | ⚠️ 38/75 | ⚠️ 39/71 |
 | Vampire Survivors | ✅ | ✅ |
 | Wario Land | ❌ | ❌ |
 | Watery Words | ✅ | ✅ |
 | Wordipelago | ✅ | ✅ |
 | XCOM 2 War of the Chosen | ✅ | ✅ |
-| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 84/100 | ⚠️ 83/100 |
-| Yu-Gi-Oh! Forbidden Memories | ❌ 15/100 | ❌ 15/100 |
+| Yu-Gi-Oh! Dungeon Dice Monsters | ⚠️ 83/100 | ⚠️ 83/100 |
+| Yu-Gi-Oh! Forbidden Memories | ❌ 17/100 | ❌ 17/100 |
 | Zelda II: The Adventure of Link | ❌ 12/100 | ❌ 12/100 |
 | osu! | ❌ 1/100 | ❌ 1/100 |
 
-## Games Passing Both (37)
+## Games Passing Both (38)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -175,6 +172,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Little Witch Nobeta |
 | Luigi's Mansion |
 | Lunacid |
+| Mario Kart Double Dash |
 | MetroCUBEvania |
 | Nine Sols |
 | Pseudoregalia |
@@ -203,7 +201,7 @@ These games pass in the Original UT but fail in the Orig Seeded UT.
 |-----------|
 | Sonic Heroes |
 
-## Games Passing Orig Seeded Only (19)
+## Games Passing Orig Seeded Only (17)
 
 These games pass in the Orig Seeded UT but fail in the Original UT.
 
@@ -221,15 +219,13 @@ These games pass in the Orig Seeded UT but fail in the Original UT.
 | Hatsune Miku Project Diva Mega Mix+ |
 | Iji |
 | Keep Talking and Nobody Explodes |
-| Kingdom Hearts RE Chain of Memories |
-| Mario Kart Double Dash |
 | Metroid Fusion |
 | Minit |
 | Rain World |
 | Sonic Rush |
 | Tetris Attack |
 
-## Games Passing Neither (66)
+## Games Passing Neither (64)
 
 These games fail in both Universal Tracker versions.
 
@@ -239,7 +235,6 @@ These games fail in both Universal Tracker versions.
 | A Link Between Worlds |
 | Against the Storm |
 | Another Crabs Treasure |
-| Ape Escape |
 | Balatro |
 | Brotato |
 | Cavern of Dreams |
@@ -257,7 +252,6 @@ These games fail in both Universal Tracker versions.
 | GZDoom |
 | Garfield Kart - Furious Racing |
 | Golden Sun The Lost Age |
-| Hammerwatch |
 | Here Comes Niko! |
 | Into the Breach |
 | Ittle Dew 2 |
