@@ -2,6 +2,7 @@ __version__ = "0.5.1-modified"
 
 import sys
 import os
+import time as _time
 
 ap_path = os.path.abspath(os.path.dirname(sys.argv[0]))
 sys.path.insert(0, ap_path)
@@ -11,7 +12,10 @@ sys.path.insert(0, ap_path)
 if __name__ == "__mp_main__":
     sys.stderr = None
 
+_fuzz_start = _time.perf_counter()
+print(f"[fuzz.py] Loading worlds...", flush=True)
 from worlds import AutoWorldRegister
+print(f"[fuzz.py] Worlds loaded in {_time.perf_counter() - _fuzz_start:.1f}s", flush=True)
 from Options import (
     get_option_groups,
     Choice,
@@ -1016,7 +1020,9 @@ if __name__ == "__main__":
 
 
         global MANAGER
+        print(f"[fuzz.py] Creating Manager...", flush=True)
         MANAGER = multiprocessing.Manager()
+        print(f"[fuzz.py] Manager created in {_time.perf_counter() - _fuzz_start:.1f}s", flush=True)
         queue = MANAGER.Queue(1000)
         def handle_timeouts():
             while True:
@@ -1155,6 +1161,7 @@ if __name__ == "__main__":
     # so that a first run on a new installation doesn't throw out failures until
     # the host.yaml from the first gen is written
     get_settings()
+    print(f"[fuzz.py] Settings loaded in {_time.perf_counter() - _fuzz_start:.1f}s", flush=True)
     crashed = False
     try:
         can_fork = hasattr(os, "fork")
@@ -1162,8 +1169,10 @@ if __name__ == "__main__":
         # forking for every job also has the advantage of being sure that the process is "clean". Although I don't know if that actually matters
         start_method = "fork" if can_fork else "spawn"
         multiprocessing.set_start_method(start_method)
+        print(f"[fuzz.py] Creating Pool ({args.jobs} workers, {start_method})...", flush=True)
         tmp = tempfile.TemporaryDirectory(prefix="apfuzz")
         with Pool(processes=args.jobs, maxtasksperchild=None) as p:
+            print(f"[fuzz.py] Pool created in {_time.perf_counter() - _fuzz_start:.1f}s", flush=True)
             START = time.perf_counter()
             main(p, args, tmp.name)
     except KeyboardInterrupt:

@@ -77,6 +77,7 @@ SAFE_TO_SORT_KEYS = {
 # (e.g., set iteration in original world code) but the order has no semantic meaning.
 SAFE_TO_SORT_DICT_KEYS = {
     'AVAILABLE_EASTER_EGGS_PER_REGION',  # The Witness: built from set/dict iteration
+    'classification_counts',  # Exporter: built from location iteration, key order depends on fill
     'EVENT_ITEM_PAIRS',  # The Witness: built from dict iteration, order non-deterministic
     'item_classification_overrides',
     'ter_goals',  # Terraria: built from set iteration order
